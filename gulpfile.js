@@ -2,7 +2,6 @@ var browserify, clean, coffee, concat, gulp, log, react, server,haml;
 
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
-    connect = require('gulp-connect'),
     browserSync = require('browser-sync'),
     autoprefixer = require('gulp-autoprefixer'),
     rename = require('gulp-rename'),
@@ -12,8 +11,12 @@ var gulp = require('gulp'),
     log  = require('gulp-util').log,
     source = require('vinyl-source-stream');
 
-gulp.task('connect', function() {
-  connect.server();
+gulp.task('browser-sync', function() {
+  browserSync({
+    server: {
+      baseDir: './'
+    }
+  });
 });
 
 gulp.task('coffee', function() {
@@ -21,7 +24,7 @@ gulp.task('coffee', function() {
     .pipe(coffee({bare: true}))
     .on('error', log)
     .pipe(gulp.dest('./static/scripts'))
-    .pipe(connect.reload());
+    .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('scss', function() {
@@ -32,16 +35,16 @@ gulp.task('scss', function() {
     .pipe(rename({suffix: '.min'}))
     .pipe(minifycss())
     .pipe(gulp.dest('./static/styles/css/'))
-    .pipe(connect.reload());
+    .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('watch:coffee', function() {
-  return gulp.watch('./static/coffee/**/*.coffee', ['coffee']);
+  return gulp.watch('./static/coffee/**/*.coffee', ['coffee', browserSync.reload]);
 });
 
 // Watch for SCSS source changes
 gulp.task('watch:scss', function() {
-  return gulp.watch('./static/styles/scss/*.scss', ['scss']);
+  return gulp.watch('./static/styles/scss/*.scss', ['scss', browserSync.reload]);
 });
 
-gulp.task('default', ['coffee', 'scss', 'connect', 'watch:coffee', 'watch:scss']);
+gulp.task('default', ['coffee', 'scss', 'watch:coffee', 'watch:scss', 'browser-sync']);
