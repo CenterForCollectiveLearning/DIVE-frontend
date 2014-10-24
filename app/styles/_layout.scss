@@ -1,0 +1,771 @@
+html, body {
+    height: 100%;
+    max-height: 100%;
+    min-width: 980px;
+    overflow-y: scroll;
+    font-family: 'Karbon', 'DIN', Helvetica, Sans Serif;
+}
+
+div.wrapper {
+    max-height: 100%;
+    height: 100%;
+    // overflow-y: hidden;
+}
+
+section.landing-top {
+    font-family: 'DIN';
+    font-weight: light;
+
+    div.dive {
+        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGElEQVQIW2NkYGD4D8SMQAwHKByYKIWCAGagAQanLNDFAAAAAElFTkSuQmCC) repeat;
+        background-color: #1C1D1D;
+        padding: 100px 0;
+        div {
+            text-align: center;
+            color: $active-white;
+        }
+
+        div.title {
+            font-size: 60px;
+        }
+
+        div.subtitle {
+            font-size: 24px;
+        }
+    }
+
+    div.user-status {
+        @include small-caps;
+        position: absolute;
+        top: 5px;
+        right: 15px;
+        color: white;
+        span.username {
+            border-bottom: 1px dotted $active-white;
+        }
+    }
+}
+
+section.landing-projects {
+    $block-width: 250px;
+    $block-height: 175px;
+
+    div.new-project-button {
+        @include button(675px, $ontology-blue);
+        margin: 30px auto 0 auto;
+    }
+    div.new-project-form {
+        position: relative;
+        width: 600px;
+        padding: 10px;
+        margin: 20px auto 0 auto;
+        background-color: $light-gray;
+        border: 1px solid $light-gray;
+        border-radius: 2px;
+
+        div.close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+
+        label {
+            width: 100%;
+            text-align: center;
+            color: black;
+            @include small-caps;
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid $dark-gray;
+            margin-bottom: 10px;
+        }
+
+        div.create-project {
+            @include button(80px, $ontology-blue);
+        }
+    }
+    ul.projects {
+        width: 785px;
+        padding: 0;
+        margin: 10px auto 0 auto;
+        a {
+            color: black;
+        }
+        li.project {
+            @include border-transition();
+            @include background-transition();
+            cursor: pointer;
+            margin-top: 10px;
+            height: $block-height;
+            width: $block-width;
+            background-color: $light-gray;
+            border-radius: 2px;
+            display: inline-block;
+            margin-right: 10px;
+
+
+            &:hover {
+                // border-color: $dive-black;
+                background-color: $ontology-blue;
+            }
+
+            div.title {
+                font-size: 24px;
+                line-height: 75px;
+                text-align: center;
+            }
+            div.description {
+                @include small-caps;
+                line-height: 20px;
+                padding: 0 20px;
+                text-align: center;
+            }
+        }
+    }
+}
+
+/* Layout */
+nav.navbar {
+    margin: 0;
+    border: 0;
+    min-width: 980px;
+    min-height: 35px;
+
+    div.navbar-header {
+        width: 50%;
+        height: 35px;
+        float: left;
+    }
+
+    div.login {
+        font-size: 16px;
+        color: white;
+        font-weight: normal;
+        line-height: 35px;
+        float: right;
+        margin-right: 20px;
+    }
+
+    ul {
+        padding-left: 0;
+        li {
+            @include small-caps;
+            @include background-transition();
+            cursor: pointer;
+            float: left;
+            padding: 0 20px;
+
+            a {
+                color: black;
+            }
+
+            &.active {
+                background-color: $light-gray;
+            }
+
+            &:hover {
+                background-color: $ontology-blue;
+                cursor: pointer;
+
+                a {
+                    position: relative;
+                    bottom: 1px;
+                }
+            }
+        }
+    }
+
+    &.top {
+        background-image: none;
+        background-color: $dive-black;
+
+        border-radius: 0;
+
+        a.navbar-brand {
+            height: 40px;
+            font-family: 'Karbon';
+            text-transform: uppercase;
+            text-shadow: none;
+            font-size: 20px;
+            color: white;
+            font-weight: normal;
+            letter-spacing: 2px;
+            line-height: 6px;
+            padding: 15px;
+            padding-left: 20px;
+            padding-right: 5px;
+        }
+
+        a.project-title {
+            padding-left: 0px;
+            text-transform: capitalize;
+        }
+    }
+
+    div.hamburger {
+        float: right;
+        margin-right: 20px;
+        margin-top: 12px;
+        cursor: pointer;
+
+        div.line {
+            width: 14px;
+            border-bottom: 2px solid white;
+            padding-bottom: 3px;
+        }
+    }
+
+    &.sections {
+        background-image: none;
+        // background-color: $light-blue;
+        background-color: white;
+        border-bottom: 1px solid $dive-black;
+        border-radius: 0;
+
+        p.navbar-text {
+            font-family: 'Karbon';
+            font-weight: normal;            
+            // color: $dark-blue;
+            color: $dive-black;
+            float: left;
+            margin-left: 15px;
+            margin-right: 15px;
+            font-size: 16px;
+
+            &.active {
+                font-weight: normal;
+            }
+
+            &:hover {
+                // text-decoration: underline;
+                // font-weight: normal;
+                position: relative;
+                bottom: 1px;
+            }
+        }
+    }
+}
+
+section.left-pane, section.right-pane {
+    background-color: white;
+    font-size: 16px;
+    position: relative;
+    float: left;
+    width: 250px;
+    height: 100%;
+    overflow-y: auto;
+
+    &.closed {
+        display: none;
+    }
+
+    div.pane-title {
+        text-align: center;
+        line-height: 35px;
+        // font-weight: bold;
+        border-bottom: 1px solid $dive-black;
+        background-color: $dive-black;
+        color: $active-white;
+
+        @include small-caps;
+    }
+
+    div.element-description {
+        div.type {
+            text-align: center;
+            font-size: 22px;
+            margin: 20px 0;
+        }
+
+        ul {
+            padding-left: 15px;
+            li {
+                span.key {
+                    @include small-caps;
+                }
+
+                div:hover {
+                    position: relative;
+                    bottom: 1px;
+                }
+            }
+        }
+    }
+
+    ul.pane-items {
+        padding-left: 0;
+        list-style-type: none;
+        li {
+            @include background-transition();
+            position: relative;
+            list-style-type: none;
+            height: 80px;
+            font-size: 14px;
+            border-bottom: 1px solid $light-gray;
+
+            cursor: pointer;
+            padding: 12px;
+
+            div.right {
+                position: absolute;
+                top: 20px;
+                right: 10px;
+
+                img {
+                    width: 40px;
+                }
+            }
+
+            .vertical-center {
+                line-height: 56px;
+            }
+
+            .count {
+                position: absolute;
+                right: 62px;
+                line-height: 60px;
+                font-size: 30px;
+            }
+
+            &.inactive {
+                color: $dark-gray;
+                pointer-events: none;
+                cursor: default;
+                opacity: 0.7;
+            }
+
+            div.choose {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                height: 100px;
+                width: 40px;
+
+
+                div {
+                    height: 40px;
+                    i {
+                        width: 100%;
+                        line-height: 40px;
+                        text-align: center;
+                        color: black;
+                    }
+                }
+
+                div.select {
+                    background-color: $assemble-green;
+
+                    img {
+                        width: 16px;
+                        margin-top: 16px;
+                        margin-left: 12px
+                    }
+                }
+
+                div.reject {
+                    background-color: $project-red;
+                    img {
+                        width: 14px;
+                        margin-top: 14px;
+                        margin-left: 13px;
+                    }
+                }
+            }
+
+            &.add-dataset {
+                cursor: pointer;
+                width: 100%;
+                height: 50px;
+                font-size: 30px;
+                line-height: 50px;
+                text-align: center;
+                color: $light-gray;
+                &:hover {
+                    color: $dark-gray;
+                }
+            }
+
+            &.selected {
+              background-color: $light-gray;
+            }
+
+            &:hover {
+                background-color: $ontology-blue;
+                cursor: pointer; 
+                div.title {
+                    position: relative;
+                    bottom: 1px;
+                }
+            }
+
+            &.chosen {
+                background-color: $assemble-green;
+            }
+
+            &.chosen {
+                background-color: $assemble-green;
+            }
+
+            div.title {
+                // font-size: 1.5rem;
+            }
+
+            div.dimensions {
+                float: left;
+                width: 200px;
+                padding-top: 20px;
+            }
+            div.type {
+                text-align: right;
+                margin-top: 20px;
+            }
+        }
+    }
+    div.drag {
+        position: absolute;
+        top: 500px;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+section.left-pane {
+    border-right: 1px solid $dive-black;
+    li.selected {
+        border-right: 5px solid $dive-black;
+    }
+}
+
+section.right-pane {
+    position: relative;
+    float: right;
+    border-left: 1px solid $dive-black;
+    font-size: 16px;
+
+    li.selected {
+        border-left: 5px solid $dive-black;
+    }
+}
+
+/* Upload */
+section.upload-dataset {
+    height: 100%;
+    margin-left: 300px;
+    ul, li {
+        padding: 0;
+        list-style-type: none;
+    }
+
+    ul.data-rows {
+        li.data-row {
+            ul.data-cells {
+                li.data-cell {
+                    float: left;
+                }
+            }
+        }
+    }
+}
+
+@mixin left-arrow {
+    &::before {
+        margin-top: -5px;
+        margin-left: -7px;
+        border: 5px solid $gray;
+        border-left-color: transparent;
+        border-top-color: transparent;
+        border-bottom-color: transparent;
+    }
+}
+
+@mixin right-arrow {
+    &::before {
+        margin-top: -5px;
+        margin-left: -1px;
+        border: 5px solid $gray;
+        border-right-color: transparent;
+        border-top-color: transparent;
+        border-bottom-color: transparent;  
+    } 
+}
+
+div.toggle-pane {
+    width: 20px;
+    height: 20px;
+    border: 1px solid $gray;
+    position: absolute;
+    top: 5px;
+    cursor: pointer;
+
+    &.left { 
+        left: 5px; 
+        @include left-arrow;
+    }
+    &.right { 
+        right: 5px; 
+        @include right-arrow;
+    }
+
+    &.left-closed { @include right-arrow; }
+    &.right-closed { @include left-arrow; }
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+    }
+}
+
+/* Viewport */
+section.viewport {
+    background-color: #E9EAED;
+
+    div.title {
+        text-align: center;
+        font-size: 20px;
+    }
+    padding-top: 30px;
+    position: relative;
+    margin-left: 250px;
+    margin-right: 250px;
+    height: 100%;
+    overflow-x: scroll;
+
+    &.left-closed {
+        margin-left: 0px;
+    }
+
+    &.right-closed {
+        margin-right: 0px;
+    }
+
+    div.dataset-preview {
+        padding-left: 5px;
+        padding-right: 5px;
+        input {
+            font-size: 14px;
+            padding: 4px;
+            -webkit-appearance: none;
+            border: none;
+            background-color: $light-gray;
+            width: 100%;
+            min-width: 150px;
+            &:focus {
+                outline: none;
+                background-color: #C0C0C0;
+            }
+        }
+    }
+}
+
+section.conditionals, #viz-container {
+    border-radius: 3px;
+    border: 1px solid $dark-gray;
+    background-color: white;
+    margin: 0px 12px;
+    border-bottom-color: #D0D1D5;
+    border-left-color: #DFE0E4;
+    border-right-color: #DFE0E4;
+    border-top-color: #E5E6E9;
+    padding: 12px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+
+    ul.conditional-options {
+        // position: absolute;
+        top: 50%;
+        left: 50%;
+        padding-left: 0px;
+        margin-top:10px;
+        height: auto;
+        background-color: white;
+
+        li.conditional-option {
+            @include background-transition();
+            margin-left: 4px;
+
+            @include small-caps;
+            text-align: center;
+            display: inline;
+            cursor: pointer;
+            border-radius: 3px;
+            padding: 7px 10px;
+            border: 1px solid $dark-gray;
+            border-bottom-color: #D0D1D5;
+            border-left-color: #DFE0E4;
+            border-right-color: #DFE0E4;
+            border-top-color: #E5E6E9;
+
+            &.selected {
+                background-color: $ontology-blue;
+            }
+        }
+    }
+
+    div.dropdowns {
+        padding: 0;
+        width: auto;
+        margin: 20px -12px;
+        border-top: 1px solid #E5E6E9;
+
+        ul {
+            overflow: hidden;
+        }
+
+        div.delete-dropdown {
+            width: 12px;
+            height: 12px;
+            float: right;
+            position: relative;
+            bottom: 23px;
+            right: 5px;
+            img {
+                width: 12px;
+                height: 12px;
+                cursor: pointer;
+            }
+        }
+
+        li {
+            margin-left: 15px;
+            // &:nth-child(3n + 1) { margin-left: 0px; }
+            width: 200px;
+            float: left;
+            label.dropdown-label {
+                @include small-caps;
+                text-align: center;
+                display: block;
+            }
+
+            select {
+                width: 200px;
+            }
+        }
+    }
+}
+
+div.button {
+    &.upload {
+        @include button(200px, $ontology-blue);                
+    }
+    &.cancel, &.delete {
+        @include button(200px, $project-red);                
+    }
+    &.add-dropdown {
+       @include button(200px, $ontology-blue);    
+    }
+}
+
+/* Data Upload */
+div.choose-data-set {
+    div.file-upload {
+
+        div.drop {
+            margin: 20px 0;
+            $height: 300px;
+            background-color: $light-gray;
+            text-align: center;
+            @include small-caps;
+            line-height: $height;
+            width: 100%;
+            height: $height;
+            &.dropped-file {
+                background-color: $ontology-blue;
+            }
+        }
+        input {
+            -webkit-appearance: default;
+        }
+    }
+}
+
+select.type-select {
+    width: 100%;
+}
+
+/* Table */
+tr.ng-scope {
+    td {
+        font-size: 14px;
+        padding: 4px;
+        border: 1px solid $light-gray;
+    }
+}
+
+#loader {
+    height: 20px;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    margin-left: -30px;
+}
+
+@-webkit-keyframes load1 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 0 $dark-gray;
+    height: 4em;
+  }
+  40% {
+    box-shadow: 0 -2em $dark-gray;
+    height: 5em;
+  }
+}
+@keyframes load1 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 0 $dark-gray;
+    height: 4em;
+  }
+  40% {
+    box-shadow: 0 -2em $dark-gray;
+    height: 5em;
+  }
+}
+
+ontology-editor {
+    .title {
+        font-size: 20px;
+    }
+
+    text, path {
+        cursor: pointer;
+    }
+
+    rect {
+        cursor: pointer;
+        &.hover {
+            fill-opacity: 1.0;
+            fill: $light-gray;
+        }
+    }
+}
+
+// Dropdown styling
+select{
+    font-size: 14px;
+    padding: 4px;
+    background-color: $light-gray;
+    border-radius: 0px;
+    border: 1px solid $light-gray;
+    // -webkit-appearance: none;
+    height: 23px;
+}
+
+div#viz-container {
+    width: inherit !important;
+    height: 640px !important;
+}
+
+
+/* Ontology Editor */
+g {
+    cursor: default;
+}

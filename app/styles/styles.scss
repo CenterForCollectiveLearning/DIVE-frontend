@@ -1,0 +1,109 @@
+// Resource imports and universal styling rules
+// $dive-black: #1C1D1D;
+$dive-black: #1E1E20;
+$dark-blue: #122e43;
+$light-blue: #a5cdd4;
+
+$light-gray: #e0e5e9;
+$dark-gray: #222222;
+$data-yellow: #F8E71C;
+$ontology-blue: #4A90E2;
+$visualize-purple: #BD10E0;
+$assemble-green: #7ED321;
+$project-red: #D0021B;
+
+// Reddit colors
+$light-gray: #F1EFEF;
+$gray: #AEAEAE;
+$active-white: #EEEEEE;
+$dark-gray: #666;
+
+// Universal Link Styling
+a {
+    text-decoration: none !important;
+    &:hover {
+        color: black;
+    }
+}
+
+// Universal List Styling
+ul {
+    list-style-type: none;
+    li {
+        list-style-type: none;
+    }
+}
+
+@mixin transition($property, $duration, $timing-function) {
+    -webkit-transition: $property $duration $timing-function;
+    -moz-transition: $property $duration $timing-function;
+    -o-transition: $property $duration $timing-function;
+    transition: $property $duration $timing-function;
+}
+
+@mixin opacity-transition { @include transition(opacity, 0.1s, ease-in) }
+@mixin border-transition { @include transition(border, 0.1s, ease-in) }
+@mixin background-transition { @include transition(background, 0.1s, ease-in) }
+
+@mixin small-caps {
+    font-family: "Lato",helvetica,sans-serif;
+    font-size: 9px;
+    letter-spacing: 1px;
+    line-height: 35px;
+    text-transform: uppercase;
+}
+
+@mixin button($width, $hover-color) {
+    cursor: pointer;
+    input {
+        cursor: pointer;
+    }
+    background-color: $dark-gray;
+    width: $width;
+    margin: 10px auto 0 auto;
+    text-align: center;
+    border-radius: 2px;
+    padding: 8px 5px;
+    color: $active-white;
+    @include small-caps;
+    line-height: 20px;
+    &:hover {
+        @include background-transition;
+        background-color: $hover-color;
+    }
+}
+
+/* Fonts */
+@font-face {
+    font-family: 'DIN';
+    src: url('../../assets/fonts/DINLight.ttf') format('ttf'), url('../../assets/fonts/DINLight.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Karbon';
+    src: url('../../assets/fonts/karbon-medium-webfont.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Karbon';
+    src: url('../../assets/fonts/karbon-light-webfont.woff') format('woff');
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: 'Karbon';
+    src: url('../../assets/fonts/karbon-regular-webfont.woff') format('woff');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Karbon';
+    src: url('../../assets/fonts/karbon-semibold-webfont.woff') format('woff');
+    font-weight: bold;
+}
+
+*, *:before, *:after {
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+
+@import 'layout';

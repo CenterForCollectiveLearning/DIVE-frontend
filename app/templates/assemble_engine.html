@@ -1,0 +1,15 @@
+<section class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
+	<div class="pane-title">
+		Selected Visualizations
+	</div>
+</section>
+
+<section class="right-pane" ng-class="{'closed': rightClosed}" maxheight>
+	<div class="pane-title">
+		Export
+	</div>
+</section>
+
+<section class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
+	<pane-toggle></pane-toggle>
+</section>
