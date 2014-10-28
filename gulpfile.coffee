@@ -2,12 +2,15 @@ gulp = require 'gulp'
 gutil = require 'gulp-util'
 
 sass = require 'gulp-sass'
-browserSync = require 'browser-sync'
+rename = require 'gulp-rename'
+browserify = require 'gulp-browserify'
+ngAnnotate =  require 'gulp-ng-annotate'
 coffeelint = require 'gulp-coffeelint'
 coffee = require 'gulp-coffee'
+autoprefixer = require 'gulp-autoprefixer'
 concat = require 'gulp-concat'
 uglify = require 'gulp-uglify'
-clean = require 'gulp-clean'
+rimraf = require 'gulp-rimraf'
 runSequence = require 'run-sequence'
 
 # CONFIG ---------------------------------------------------------
@@ -15,42 +18,66 @@ runSequence = require 'run-sequence'
 isProd = gutil.env.type is 'prod'
 
 sources =
-  sass: 'app/**/*.scss'
+  sass: 'app/styles/*.scss'
   html: 'app/**/*.html'
   coffee: 'app/**/*.coffee'
   assets: 'app/assets/**/*'
+  lib: 'app/scripts/lib/*.js'
 
 destinations =
   css: 'dist/'
   html: 'dist/'
   js: 'dist/'
   assets: 'dist/assets'
+  lib: 'dist/scripts/lib/'
 
 # TASKS -------------------------------------------------------------
 
-gulp.task('browser-sync', ->
-    browserSync.init null,
-    open: false
-    server:
-      baseDir: "app"
-    watchOptions:
-      debounceDelay: 1000
-)
+# gulp.task('browser-sync', ->
+#     browserSync.init null,
+#     open: false
+#     server:
+#       baseDir: "dist"
+#     watchOptions:
+#       debounceDelay: 1000
+# )
+
+express = require('express')
+refresh = require('gulp-livereload')
+livereload = require('connect-livereload')
+
+LIVERELOADPORT = 35729
+SERVERPORT = 5000
+
+server = express()
+server.use(livereload(port: LIVERELOADPORT))
+server.use(express.static('./dist'))
+server.all('/*', (req, res) -> res.sendFile('index.html', root: 'dist' ))
 
 # Compile and concatenate scripts
-gulp.task('src', ->
+gulp.task('coffee', ->
   gulp.src(sources.coffee)
   .pipe(coffee({bare: true})
   .on('error', gutil.log))
-  .pipe(concat('app.js'))
-  .pipe(if isProd then uglify() else gutil.noop())
+  # .pipe(concat('app.js'))
+  # .pipe(if isProd then uglify() else gutil.noop())
   .pipe(gulp.dest(destinations.js))
+  # .pipe(browserify({
+  #   insertGlobals: true,
+  #   debug: true
+  # }))
+  # .pipe(concat('bundle.js')) # Bundle to a single file
+  # .pipe(ngAnnotate())
+  # # .pipe(uglify())
+  # .pipe(gulp.dest('dist/'));
 )
 
 # Compile stylesheets
-gulp.task('style', ->
-  gulp.src(sources.sass) # we defined that at the top of the file
-  .pipe(sass())
+gulp.task('sass', ->
+  # gulp.src('app/**/*.scss')  # Not working (malloc error)
+  gulp.src('app/styles/*.scss')
+  .pipe(sass(onError: (e) -> console.log(e)))
+  .pipe(autoprefixer('last 2 versions', '> 1%', 'ie 8'))
   .pipe(gulp.dest(destinations.css))
 )
 
@@ -66,34 +93,58 @@ gulp.task('html', ->
   gulp.src(sources.html).pipe(gulp.dest(destinations.html))
 )
 
-gulp.task('static', ->
+gulp.task('assets', ->
   gulp.src(sources.assets).pipe(gulp.dest(destinations.assets))
 )
 
+gulp.task('lib', ->
+  gulp.src(sources.lib).pipe(gulp.dest(destinations.lib))
+)
+
+# Browserify task
+gulp.task('browserify', ->
+  # Single point of entry (make sure not to src ALL your files, browserify will figure it out)
+  gulp.src(['dist/scripts/main.js'])
+  .pipe(browserify({
+    insertGlobals: true,
+    debug: true
+  }))
+  .pipe(concat('bundle.js')) # Bundle to a single file
+  .pipe(ngAnnotate())
+  # .pipe(uglify())
+  .pipe(gulp.dest('dist/'));
+);
+
+
 # Watched tasks
 gulp.task('watch', ->
-  gulp.watch sources.sass, ['style']
-  gulp.watch sources.static, ['static']
-  gulp.watch sources.html, ['html']
-  gulp.watch sources.coffee, ['src']
+  server.listen(SERVERPORT)
+  refresh.listen(LIVERELOADPORT)
 
-  # Reload browser
-  gulp.watch 'dist/**/**', (file) -> 
-    browserSync.reload(file.path) if file.type is "changed"
+  gulp.watch sources.sass, ['sass']
+  gulp.watch sources.assets, ['assets']
+  gulp.watch sources.html, ['html']
+  gulp.watch sources.coffee, ['coffee', 'lint']
+  gulp.watch sources.lib, ['lib']
+
+  gulp.watch('./dist/**').on('change', refresh.changed);
+  # # Reload browser
+  # gulp.watch 'dist/**/**', (file) -> 
+  #   browserSync.reload(file.path) if file.type is "changed"
 )
 
 # Remove /dist directory
 gulp.task('clean', ->
-  gulp.src(['dist/'], {read: false}).pipe(clean())
+  gulp.src(['dist/'], read: false)
+  .pipe(rimraf(force: true))
 )
 
 # Build sequence
 gulp.task('build', ->
-  runSequence 'clean', ['style', 'src', 'html', 'static']  # 'lint'
+  runSequence('clean', ['coffee', 'sass', 'html', 'lib', 'assets'])
 )
 
 gulp.task('default', [
   'build'
-  'browser-sync'
   'watch'
 ])

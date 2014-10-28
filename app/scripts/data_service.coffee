@@ -1,5 +1,7 @@
+angular.module('diveApp.services', ['ui.router', 'angularFileUpload'])
+
 # Container for data services
-diveApp.service "AllProjectsService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "AllProjectsService", ($http, $rootScope) ->
   promise: (userName, callback) ->
     # console.log("[REQUEST] all projects for user:", userName)
     $http.get('http://localhost:8888/api/project',
@@ -10,7 +12,7 @@ diveApp.service "AllProjectsService", ($http, $rootScope) ->
     )
 
 # TODO Eventually deprecate this in favor of real session handling
-engineApp.service "ProjectIDService", ($http, $stateParams, $rootScope) ->
+angular.module('diveApp.services').service "ProjectIDService", ($http, $stateParams, $rootScope) ->
   promise: (formattedProjectTitle) ->
     # console.log("[REQUEST] projectID for project title:", formattedProjectTitle)
     $http.get("http://localhost:8888/api/getProjectID",
@@ -22,7 +24,7 @@ engineApp.service "ProjectIDService", ($http, $stateParams, $rootScope) ->
     )
 
 # Dataset Samples
-engineApp.service "DataService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "DataService", ($http, $rootScope) ->
   promise: (callback) ->
     # console.log("[REQUEST] data for pID", $rootScope.pID)
     $http.get("http://localhost:8888/api/data",
@@ -34,7 +36,7 @@ engineApp.service "DataService", ($http, $rootScope) ->
       callback(data.datasets)
     )
 
-engineApp.service "PropertyService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "PropertyService", ($http, $rootScope) ->
   promise: (callback) ->
     # console.log("[REQUEST] properties for pID", $rootScope.pID)
     $http.get("http://localhost:8888/api/property",
@@ -45,7 +47,7 @@ engineApp.service "PropertyService", ($http, $rootScope) ->
       callback(data)
     )
 
-engineApp.service "SpecificationService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "SpecificationService", ($http, $rootScope) ->
   promise: (callback) ->
     # console.log("[REQUEST] specifications for pID", $rootScope.pID)
     $http.get("http://localhost:8888/api/specification",
@@ -56,7 +58,7 @@ engineApp.service "SpecificationService", ($http, $rootScope) ->
       callback(data)
     )
 
-engineApp.service "ConditionalDataService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "ConditionalDataService", ($http, $rootScope) ->
   # TODO Generalize service for other vizTypes
   promise: (dID, spec, callback) ->
     # console.log('[REQUEST] Conditional Data for Type', type, 'and Specification ', spec)
@@ -70,7 +72,7 @@ engineApp.service "ConditionalDataService", ($http, $rootScope) ->
       callback(data)
     )
 
-engineApp.service "VizDataService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "VizDataService", ($http, $rootScope) ->
   # TODO Generalize service for other vizTypes
   promise: (type, spec, conditional, callback) ->
     # console.log('[REQUEST] Viz Data for Type', type, 'and Specification ', spec)
@@ -85,7 +87,7 @@ engineApp.service "VizDataService", ($http, $rootScope) ->
       callback(data)
     )
 
-engineApp.service "ExportedVisualizationDataService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "ExportedVisualizationDataService", ($http, $rootScope) ->
   # TODO Generalize service for other vizTypes
   promise: (type, spec, conditional, callback) ->
     # console.log('[REQUEST] Viz Data for Type', type, 'and Specification ', spec)

@@ -1,3 +1,17 @@
+# angular = require('angular')
+# d3 = require('d3')
+# # d3Plus = require('d3plus')
+# routes = require('./routes')
+
+# landingPage = require('../modules/landing/landing.module')
+# projectPage = require('../modules/project/project.module')
+# dataPage = require('../modules/data/data.module')
+# propertyPage = require('../modules/property/property.module')
+# visualizationPage = require('../modules/visualization/visualization.module')
+# exportPage = require('../modules/export/export.module')
+
+diveApp = angular.module('diveApp', ['diveApp.routes', 'diveApp.project', 'diveApp.landing', 'diveApp.data', 'diveApp.property', 'diveApp.visualization', 'diveApp.export'])
+
 # Utility Functions
 window.SC = (selector) -> angular.element(selector).scope()
 
@@ -10,59 +24,9 @@ window.objectToQueryString = (obj) ->
 window.formatRouteParam = (str) ->
     str.trim().replace(/"/g, "")
 
-# What's the purpose of two separate applications?
-# diveApp is top-level encompassing the engineApp
-window.diveApp = angular.module("diveApp", ["ui.router", "engineApp"])
-window.engineApp = angular.module("engineApp", ["d3", "d3Plus", "ui.router", "angularFileUpload", "engineControllers"])
-
-engineApp.directive("engineTopBar", ->
-    return {
-        restrict: 'E',
-        templateUrl: '/static/views/engine_top_bar.html'
-    }
-)
-
-engineApp.directive("loader", ->
-    return {
-        restrict: 'E',
-        templateUrl: '/static/views/loader.html'
-    }
-)
-
-engineApp.directive("paneToggle", ->
-    return {
-        restrict: 'E',
-        templateUrl: '/static/views/engine_pane_toggle.html'
-        controller: "PaneToggleCtrl"
-    }
-)
-
-# TODO Refactor top-level directives into another module
-diveApp.directive("landingTop", ->
-    return {
-        restrict: 'E',
-        templateUrl: '/static/views/landing_top.html'
-        controller: 'ProjectListCtrl'
-    }
-)
-
-diveApp.directive("landingProjects", ->
-    return {
-        restrict: 'E',
-        scope: {}
-        # TODO Bind to a call scoped by user
-        controller: "ProjectListCtrl"
-        templateUrl: '/static/views/landing_projects.html'
-    }
-)
-
-engineApp.directive("topBar", ->
-    return {
-        restrict: "EA"
-        scope: {},
-        templateUrl: '/static/views/top_bar.html'
-    }
-)
+window.onresize = (e) ->
+    mainViewHeight = $(window).height() - $("header").height()
+    $("div.wrapper").height mainViewHeight
 
 # Need to return function
 diveApp.filter "capitalize", -> 
@@ -73,8 +37,4 @@ diveApp.filter "capitalize", ->
 # Resizing viewport for no overflow
 angular.element(document).ready ->
   mainViewHeight = $(window).height() - $("header").height()                             
-  $("div.wrapper").height mainViewHeight
-
-window.onresize = (e) ->
-  mainViewHeight = $(window).height() - $("header").height()
   $("div.wrapper").height mainViewHeight

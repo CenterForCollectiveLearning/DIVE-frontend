@@ -1,23 +1,24 @@
-diveApp.config(($stateProvider, $urlRouterProvider) ->
+angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRouterProvider) ->
+
   $urlRouterProvider.otherwise("/")
 
   $stateProvider
     .state('landing',
       url: '/'
-      templateUrl: 'static/views/landing.html'
-      resolve:
-        allProjectsService: (AllProjectsService) -> AllProjectsService.promise
+      templateUrl: 'modules/landing/landing.html'
+#      resolve:
+#        allProjectsService: (AllProjectsService) -> AllProjectsService.promise
     )
     .state('embed',
       url: '/embed/:visualizationID'
-      templateUrl: 'static/views/embed.html'
+      templateUrl: 'modules/views/embed.html'
       controller: 'EmbedCtrl'
       resolve:
         embedVizDataService: (EmbedVizDataService) -> EmbedVizDataService.promise
     )
     .state('engine',
       url: '/:formattedUserName/:formattedProjectTitle'
-      templateUrl: 'static/views/project.html'
+      templateUrl: 'modules/project/project.html'
       controller: ($scope, $state, $stateParams) ->
         $scope.projectTitle = $stateParams.formattedProjectTitle.split('-').join(' ')
 
@@ -30,19 +31,19 @@ diveApp.config(($stateProvider, $urlRouterProvider) ->
     )
     .state('engine.overview'
       url: '/overview'
-      templateUrl: 'static/views/project_overview.html'
+      templateUrl: 'modules/project/project_overview.html'
       controller: 'OverviewCtrl'
     )
     .state('engine.data'
       url: '/data'
-      templateUrl: 'static/views/data_view.html'
+      templateUrl: 'modules/data/data.html'
       controller: 'DatasetListCtrl'
       resolve:
         initialData: (DataService) -> DataService.promise
     )
     .state('engine.ontology'
       url: '/ontology'
-      templateUrl: 'static/views/edit_ontology.html'
+      templateUrl: 'modules/property/property.html'
       controller: 'OntologyEditorCtrl'
       resolve:
         initialData: (DataService) -> DataService.promise
@@ -50,7 +51,7 @@ diveApp.config(($stateProvider, $urlRouterProvider) ->
     )
     .state('engine.visualize'
       url: '/visualize'
-      templateUrl: 'static/views/create_viz.html'
+      templateUrl: 'modules/visualization/visualization.html'
       controller: 'CreateVizCtrl'
       resolve:
         specificationService: (SpecificationService) -> SpecificationService.promise
@@ -59,7 +60,7 @@ diveApp.config(($stateProvider, $urlRouterProvider) ->
     )
     .state('engine.assemble'
       url: '/assemble'
-      templateUrl: 'static/views/assemble_engine.html'
+      templateUrl: 'modules/export/export.html'
       controller: 'AssembleCtrl'
     )
   )
