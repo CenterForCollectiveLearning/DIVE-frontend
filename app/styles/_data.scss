@@ -1,0 +1,20 @@
+section.viewport {
+	div.dataset-preview {
+        padding-left: 5px;
+        padding-right: 5px;
+        input, select {
+        	@include font;
+            font-size: 14px;
+            padding: 4px;
+            -webkit-appearance: none;
+            border: none;
+            background-color: $light-gray;
+            width: 100%;
+            min-width: 150px;
+            &:focus {
+                outline: none;
+                background-color: #C0C0C0;
+            }
+        }
+    }
+}

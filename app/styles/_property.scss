@@ -1,0 +1,21 @@
+ontology-editor {
+    .title {
+        font-size: 20px;
+    }
+
+    text, path {
+        cursor: pointer;
+    }
+
+    rect {
+        cursor: pointer;
+        &.hover {
+            fill-opacity: 1.0;
+            fill: $light-gray;
+        }
+    }
+
+    g {
+        cursor: default;
+    }
+}

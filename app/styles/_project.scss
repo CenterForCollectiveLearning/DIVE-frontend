@@ -1,0 +1,313 @@
+/* Layout */
+nav.navbar {
+    margin: 0;
+    border: 0;
+    min-width: 980px;
+    min-height: 35px;
+
+    div.navbar-header {
+        width: 50%;
+        height: 35px;
+        float: left;
+    }
+
+    div.login {
+        font-size: 16px;
+        color: white;
+        font-weight: normal;
+        line-height: 35px;
+        float: right;
+        margin-right: 20px;
+    }
+
+    ul {
+        margin: 0;
+        padding-left: 0;
+        li {
+            @include small-caps;
+            @include background-transition();
+            cursor: pointer;
+            float: left;
+            padding: 0 20px;
+            line-height: 34px;
+
+            a {
+                color: black;
+            }
+
+            &.active {
+                background-color: $light-gray;
+            }
+
+            &:hover {
+                background-color: $ontology-blue;
+                cursor: pointer;
+
+                a {
+                    position: relative;
+                    bottom: 1px;
+                }
+            }
+        }
+    }
+
+    &.top {
+        background-image: none;
+        background-color: $dive-black;
+
+        border-radius: 0;
+
+        a.navbar-brand {
+            height: 40px;
+            font-family: 'Karbon';
+            text-transform: uppercase;
+            text-shadow: none;
+            font-size: 20px;
+            color: white;
+            font-weight: normal;
+            letter-spacing: 2px;
+            line-height: 35px;
+            padding: 15px;
+            padding-left: 20px;
+            padding-right: 5px;
+        }
+
+        a.project-title {
+            padding-left: 0px;
+            text-transform: capitalize;
+        }
+    }
+
+    div.hamburger {
+        float: right;
+        margin-right: 20px;
+        margin-top: 12px;
+        cursor: pointer;
+
+        div.line {
+            width: 14px;
+            border-bottom: 2px solid white;
+            padding-bottom: 3px;
+        }
+    }
+
+    &.sections {
+        background-image: none;
+        // background-color: $light-blue;
+        background-color: white;
+        border-bottom: 1px solid $dive-black;
+        border-radius: 0;
+
+        p.navbar-text {
+            font-family: 'Karbon';
+            font-weight: normal;            
+            // color: $dark-blue;
+            color: $dive-black;
+            float: left;
+            margin-left: 15px;
+            margin-right: 15px;
+            font-size: 16px;
+
+            &.active {
+                font-weight: normal;
+            }
+
+            &:hover {
+                // text-decoration: underline;
+                // font-weight: normal;
+                position: relative;
+                bottom: 1px;
+            }
+        }
+    }
+}
+
+section.left-pane {
+    float: left;
+}
+
+section.right-pane {
+    float: right;
+}
+
+section.left-pane, section.right-pane {
+    background-color: white;
+    font-size: 16px;
+    position: relative;
+    width: 250px;
+    height: 100%;
+    overflow-y: auto;
+
+    &.closed {
+        display: none;
+    }
+
+    div.pane-title {
+        text-align: center;
+        line-height: 35px;
+        // font-weight: bold;
+        border-bottom: 1px solid $dive-black;
+        background-color: $dive-black;
+        color: $active-white;
+
+        @include small-caps;
+    }
+
+    div.element-description {
+        div.type {
+            text-align: center;
+            font-size: 22px;
+            margin: 20px 0;
+        }
+
+        ul {
+            padding-left: 15px;
+            li {
+                span.key {
+                    @include small-caps;
+                }
+
+                div:hover {
+                    position: relative;
+                    bottom: 1px;
+                }
+            }
+        }
+    }
+
+    ul.pane-items {
+        padding-left: 0;
+        list-style-type: none;
+        li {
+            @include background-transition();
+            position: relative;
+            list-style-type: none;
+            height: 80px;
+            font-size: 14px;
+            border-bottom: 1px solid $light-gray;
+
+            cursor: pointer;
+            padding: 12px;
+
+            div.right {
+                position: absolute;
+                top: 20px;
+                right: 10px;
+
+                img {
+                    width: 40px;
+                }
+            }
+
+            .vertical-center {
+                line-height: 56px;
+            }
+
+            .count {
+                position: absolute;
+                right: 62px;
+                line-height: 60px;
+                font-size: 30px;
+            }
+
+            &.inactive {
+                color: $dark-gray;
+                pointer-events: none;
+                cursor: default;
+                opacity: 0.7;
+            }
+
+            div.choose {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                height: 100px;
+                width: 40px;
+
+
+                div {
+                    height: 40px;
+                    i {
+                        width: 100%;
+                        line-height: 40px;
+                        text-align: center;
+                        color: black;
+                    }
+                }
+
+                div.select {
+                    background-color: $assemble-green;
+
+                    img {
+                        width: 16px;
+                        margin-top: 16px;
+                        margin-left: 12px
+                    }
+                }
+
+                div.reject {
+                    background-color: $project-red;
+                    img {
+                        width: 14px;
+                        margin-top: 14px;
+                        margin-left: 13px;
+                    }
+                }
+            }
+
+            &.add-dataset {
+                cursor: pointer;
+                width: 100%;
+                height: 50px;
+                font-size: 30px;
+                line-height: 50px;
+                text-align: center;
+                color: $light-gray;
+                &:hover {
+                    color: $dark-gray;
+                }
+            }
+
+            &.selected {
+              background-color: $light-gray;
+            }
+
+            &:hover {
+                background-color: $ontology-blue;
+                cursor: pointer; 
+                div.title {
+                    position: relative;
+                    bottom: 1px;
+                }
+            }
+
+            &.chosen {
+                background-color: $assemble-green;
+            }
+
+            &.chosen {
+                background-color: $assemble-green;
+            }
+
+            div.title {
+                // font-size: 1.5rem;
+            }
+
+            div.dimensions {
+                float: left;
+                width: 200px;
+                padding-top: 20px;
+            }
+            div.type {
+                text-align: right;
+                margin-top: 20px;
+            }
+        }
+    }
+    div.drag {
+        position: absolute;
+        top: 500px;
+        width: 100%;
+        text-align: center;
+    }
+}

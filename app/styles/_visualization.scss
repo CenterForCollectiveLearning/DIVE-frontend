@@ -1,0 +1,85 @@
+section.conditionals, #viz-container {
+    border-radius: 3px;
+    border: 1px solid $dark-gray;
+    background-color: white;
+    margin: 0px 12px;
+    border-bottom-color: #D0D1D5;
+    border-left-color: #DFE0E4;
+    border-right-color: #DFE0E4;
+    border-top-color: #E5E6E9;
+    padding: 12px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+
+    ul.conditional-options {
+        // position: absolute;
+        top: 50%;
+        left: 50%;
+        padding-left: 0px;
+        margin-top:10px;
+        height: auto;
+        background-color: white;
+
+        li.conditional-option {
+            @include background-transition();
+            margin-left: 4px;
+
+            @include small-caps;
+            text-align: center;
+            display: inline;
+            cursor: pointer;
+            border-radius: 3px;
+            padding: 7px 10px;
+            border: 1px solid $dark-gray;
+            border-bottom-color: #D0D1D5;
+            border-left-color: #DFE0E4;
+            border-right-color: #DFE0E4;
+            border-top-color: #E5E6E9;
+
+            &.selected {
+                background-color: $ontology-blue;
+            }
+        }
+    }
+
+    div.dropdowns {
+        padding: 0;
+        width: auto;
+        margin: 20px -12px;
+        border-top: 1px solid #E5E6E9;
+
+        ul {
+            overflow: hidden;
+        }
+
+        div.delete-dropdown {
+            width: 12px;
+            height: 12px;
+            float: right;
+            position: relative;
+            bottom: 23px;
+            right: 5px;
+            img {
+                width: 12px;
+                height: 12px;
+                cursor: pointer;
+            }
+        }
+
+        li {
+            margin-left: 15px;
+            // &:nth-child(3n + 1) { margin-left: 0px; }
+            width: 200px;
+            float: left;
+            label.dropdown-label {
+                @include small-caps;
+                text-align: center;
+                display: block;
+            }
+
+            select {
+                width: 200px;
+            }
+        }
+    }
+}

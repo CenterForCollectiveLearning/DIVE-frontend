@@ -1,0 +1,113 @@
+section.landing-top {
+    font-family: 'DIN';
+    font-weight: light;
+
+    div.dive {
+        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGElEQVQIW2NkYGD4D8SMQAwHKByYKIWCAGagAQanLNDFAAAAAElFTkSuQmCC) repeat;
+        background-color: #1C1D1D;
+        padding: 100px 0;
+        div {
+            text-align: center;
+            color: $active-white;
+        }
+
+        div.title {
+            font-size: 60px;
+        }
+
+        div.subtitle {
+            font-size: 24px;
+        }
+    }
+
+    div.user-status {
+        @include small-caps;
+        position: absolute;
+        top: 5px;
+        right: 15px;
+        color: white;
+        span.username {
+            border-bottom: 1px dotted $active-white;
+        }
+    }
+}
+
+section.landing-projects {
+    $block-width: 250px;
+    $block-height: 175px;
+
+    div.new-project-button {
+        @include button(675px, $ontology-blue);
+        margin: 30px auto 0 auto;
+    }
+    div.new-project-form {
+        position: relative;
+        width: 600px;
+        padding: 10px;
+        margin: 20px auto 0 auto;
+        background-color: $light-gray;
+        border: 1px solid $light-gray;
+        border-radius: 2px;
+
+        div.close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+
+        label {
+            width: 100%;
+            text-align: center;
+            color: black;
+            @include small-caps;
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid $dark-gray;
+            margin-bottom: 10px;
+        }
+
+        div.create-project {
+            @include button(80px, $ontology-blue);
+        }
+    }
+    ul.projects {
+        width: 785px;
+        padding: 0;
+        margin: 10px auto 0 auto;
+        a {
+            color: black;
+        }
+        li.project {
+            @include border-transition();
+            @include background-transition();
+            cursor: pointer;
+            margin-top: 10px;
+            height: $block-height;
+            width: $block-width;
+            background-color: $light-gray;
+            border-radius: 2px;
+            display: inline-block;
+            margin-right: 10px;
+
+
+            &:hover {
+                // border-color: $dive-black;
+                background-color: $ontology-blue;
+            }
+
+            div.title {
+                font-size: 24px;
+                line-height: 75px;
+                text-align: center;
+            }
+            div.description {
+                @include small-caps;
+                line-height: 20px;
+                padding: 0 20px;
+                text-align: center;
+            }
+        }
+    }
+}
