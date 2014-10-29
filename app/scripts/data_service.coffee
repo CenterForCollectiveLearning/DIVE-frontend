@@ -1,3 +1,7 @@
+angular = require('angular')
+angularFileUpload = require('angular-file-upload')
+_ = require('underscore')
+
 angular.module('diveApp.services', ['ui.router', 'angularFileUpload'])
 
 # Container for data services

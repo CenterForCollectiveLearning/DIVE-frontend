@@ -1,16 +1,21 @@
-# angular = require('angular')
-# d3 = require('d3')
-# # d3Plus = require('d3plus')
-# routes = require('./routes')
+angular = require('angular')
 
-# landingPage = require('../modules/landing/landing.module')
-# projectPage = require('../modules/project/project.module')
-# dataPage = require('../modules/data/data.module')
-# propertyPage = require('../modules/property/property.module')
-# visualizationPage = require('../modules/visualization/visualization.module')
-# exportPage = require('../modules/export/export.module')
+# Top-level
+require('./routes')
+require('./data_service')
+
+# Modules
+require('../modules/landing/landing.module')
+require('../modules/project/project.module')
+require('../modules/data/data.module')
+require('../modules/property/property.module')
+require('../modules/visualization/visualization.module')
+require('../modules/export/export.module')
 
 diveApp = angular.module('diveApp', ['diveApp.routes', 'diveApp.project', 'diveApp.landing', 'diveApp.data', 'diveApp.property', 'diveApp.visualization', 'diveApp.export'])
+
+# TODO Change API endpoint as a function of configuration
+diveApp.constant('API')
 
 # Utility Functions
 window.SC = (selector) -> angular.element(selector).scope()
@@ -27,6 +32,8 @@ window.formatRouteParam = (str) ->
 window.onresize = (e) ->
     mainViewHeight = $(window).height() - $("header").height()
     $("div.wrapper").height mainViewHeight
+
+$ = require('jquery')
 
 # Need to return function
 diveApp.filter "capitalize", -> 

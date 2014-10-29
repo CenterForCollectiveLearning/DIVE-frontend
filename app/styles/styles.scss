@@ -73,6 +73,10 @@ ul {
     }
 }
 
+@mixin font {
+   font-family: 'Karbon', 'DIN', Helvetica, Sans Serif;
+}
+
 /* Fonts */
 @font-face {
     font-family: 'DIN';

@@ -56,20 +56,20 @@ server.all('/*', (req, res) -> res.sendFile('index.html', root: 'dist' ))
 
 # Compile and concatenate scripts
 gulp.task('coffee', ->
-  gulp.src(sources.coffee)
-  .pipe(coffee({bare: true})
-  .on('error', gutil.log))
-  # .pipe(concat('app.js'))
-  # .pipe(if isProd then uglify() else gutil.noop())
-  .pipe(gulp.dest(destinations.js))
-  # .pipe(browserify({
-  #   insertGlobals: true,
-  #   debug: true
-  # }))
-  # .pipe(concat('bundle.js')) # Bundle to a single file
-  # .pipe(ngAnnotate())
-  # # .pipe(uglify())
-  # .pipe(gulp.dest('dist/'));
+  # gulp.src(sources.coffee)
+  # .pipe(coffee({bare: true})
+  # .on('error', gutil.log))
+  # # .pipe(concat('app.js'))
+  # # .pipe(if isProd then uglify() else gutil.noop())
+  # .pipe(gulp.dest(destinations.js))
+
+  gulp.src('app/scripts/main.coffee', read: false)  
+    .pipe(browserify(
+      transform: ['coffeeify']
+      extensions: ['.coffee']
+      ))
+    .pipe(rename('app.js'))
+    .pipe(gulp.dest(destinations.js))
 )
 
 # Compile stylesheets

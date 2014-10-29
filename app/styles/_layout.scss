@@ -1,11 +1,11 @@
 html, body {
+    @include font;
     margin: 0;
     width: 100%;
     min-width: 980px;
     height: 100%;
     max-height: 100%;
     overflow-y: scroll;
-    font-family: 'Karbon', 'DIN', Helvetica, Sans Serif;
 }
 
 ul, li {

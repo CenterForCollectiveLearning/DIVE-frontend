@@ -1,3 +1,6 @@
+angular = require('angular')
+require('angular-ui-router')
+
 angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRouterProvider) ->
 
   $urlRouterProvider.otherwise("/")
