@@ -91,7 +91,19 @@ angular.module('diveApp.services').service "VizDataService", ($http, $rootScope)
       callback(data)
     )
 
-angular.module('diveApp.services').service "ExportedVisualizationDataService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "ExportedVizSpecService", ($http, $rootScope) ->
+  # TODO Generalize service for other vizTypes
+  promise: (callback) ->
+    # console.log('[REQUEST] Viz Data for Type', type, 'and Specification ', spec)
+    $http.get("http://localhost:8888/api/exported_spec",
+      params:
+        pID: $rootScope.pID
+    ).success((data) ->
+      # console.log("[DATA] Viz Data:", data)
+      callback(data)
+    )
+
+angular.module('diveApp.services').service "ExportedVizDataService", ($http, $rootScope) ->
   # TODO Generalize service for other vizTypes
   promise: (type, spec, conditional, callback) ->
     # console.log('[REQUEST] Viz Data for Type', type, 'and Specification ', spec)

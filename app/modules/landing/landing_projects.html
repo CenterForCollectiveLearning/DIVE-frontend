@@ -1,6 +1,6 @@
 <section class="landing-projects">
 	<ul class="projects" ng-if="!newProject">
-		<a ng-repeat="project in projects" href="#/{{user.userName}}/{{project.formattedTitle}}" ng-click="select_project(project.pID)" >
+		<a ng-repeat="project in projects" href="{{user.userName}}/{{project.formattedTitle}}" ng-click="select_project(project.pID)" >
 			<li class="project">
 				<div class="title">{{project.title}}</div>
 				<div class="description">{{project.description}}</div>

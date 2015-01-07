@@ -1,5 +1,5 @@
 section.landing-top {
-    font-family: 'DIN';
+    // font-family: 'DIN';
     font-weight: light;
 
     div.dive {
@@ -33,8 +33,8 @@ section.landing-top {
 }
 
 section.landing-projects {
-    $block-width: 250px;
-    $block-height: 175px;
+    $block-width: 785px;
+    $block-height: 100px;
 
     div.new-project-button {
         @include button(675px, $ontology-blue);

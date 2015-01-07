@@ -17,7 +17,7 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
       link: (scope, ele, attrs) ->
         renderTimeout = undefined
         $window.onresize = ->
-          scope.$apply()
+          scope.$apply() 
         # Resizing
         scope.$watch ( ->
           angular.element($window)[0].innerWidth
@@ -59,40 +59,41 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
               scatterplot: 'scatter'
               linechart: 'line'
               geomap: 'geo_map'
+
             viz = d3plus.viz()
+              .type(d3PlusTitleMapping[vizType])
               .container("div#viz-container")
               .width($("section.viewport").width() - 40)
               .margin("20px")
               .height(600)
               .data(vizData)
               .font(family: "Karbon")
+
             if vizType in ["treemap", "piechart"]
-              viz.type(d3PlusTitleMapping[vizType])
-                .title(getTitle(vizType, vizSpec))
+              viz.title(getTitle(vizType, vizSpec))
                 .id(vizSpec.groupBy.title.toString())
                 .size("count")
                 .draw()
+
             else if vizType in ["scatterplot", "barchart", "linechart"]
               x = vizSpec.x.title
               agg = vizSpec.aggregation
+              console.log(vizType, d3PlusTitleMapping[vizType])
               if agg
-                viz.type(d3PlusTitleMapping[vizType])
-                  .title(getTitle(vizType, vizSpec))
+                viz.title(getTitle(vizType, vizSpec))
                   .x(x)
                   .y("count")
                   .id(x)
                   .draw()
               else
                 y = vizSpec.y.title
-                viz.type("scatter")
-                  .title(getTitle(vizType, vizSpec))
+                viz.title(getTitle(vizType, vizSpec))
                   .x(x)
                   .y(y)
                   .id(x)
                   .draw()
             else if vizType in ["geomap"]
-              viz.type(d3PlusTitleMapping[vizType])
-                .title(getTitle(vizType, vizSpec))
+              viz.title(getTitle(vizType, vizSpec))
                 .coords("/assets/countries.json")
                 .id(vizSpec.groupBy.title.toString())
                 .color("count")

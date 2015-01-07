@@ -1,9 +1,10 @@
 angular = require('angular')
 require('angular-ui-router')
 
-angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRouterProvider) ->
+angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRouterProvider, $locationProvider) ->
 
   $urlRouterProvider.otherwise("/")
+  $locationProvider.html5Mode(true)
 
   $stateProvider
     .state('landing',
@@ -14,7 +15,7 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
     )
     .state('embed',
       url: '/embed/:visualizationID'
-      templateUrl: 'modules/views/embed.html'
+      templateUrl: 'modules/embed/embed.html'
       controller: 'EmbedCtrl'
       resolve:
         embedVizDataService: (EmbedVizDataService) -> EmbedVizDataService.promise
@@ -65,5 +66,7 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
       url: '/assemble'
       templateUrl: 'modules/export/export.html'
       controller: 'AssembleCtrl'
+      resolve:
+        exportedVizSpecService: (ExportedVizSpecService) -> ExportedVizSpecService.promise
     )
   )

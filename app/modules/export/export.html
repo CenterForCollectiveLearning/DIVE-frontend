@@ -2,6 +2,11 @@
 	<div class="pane-title">
 		Selected Visualizations
 	</div>
+	<ul class="pane-items">
+		<li ng-repeat="spec in specs" ng-click="select_spec($index);" ng-class="{'selected':$index==selected_spec_index, 'chosen':spec.chosen}">
+		  {{spec}}
+		</li>
+	</ul>
 </section>
 
 <section class="right-pane" ng-class="{'closed': rightClosed}" maxheight>

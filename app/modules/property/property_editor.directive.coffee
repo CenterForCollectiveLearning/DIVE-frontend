@@ -1,3 +1,5 @@
+d3 = require('d3')
+
 angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$timeout",
   ($window, $timeout) ->
     return (
