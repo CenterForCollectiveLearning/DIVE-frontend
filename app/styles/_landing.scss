@@ -34,11 +34,11 @@ section.landing-top {
 
 section.landing-projects {
     @include font;
-    $block-width: 785px;
+    $block-width: 600px;
     $block-height: 100px;
 
     div.new-project-button {
-        @include button(675px, $ontology-blue);
+        @include button(600px, $ontology-blue);
         margin: 30px auto 0 auto;
     }
     div.new-project-form {
@@ -74,7 +74,7 @@ section.landing-projects {
         }
     }
     ul.projects {
-        width: 785px;
+        width: 600px;
         padding: 0;
         margin: 10px auto 0 auto;
         a {
@@ -96,10 +96,10 @@ section.landing-projects {
             -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
             box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
 
-            &:hover {
-                // border-color: $dive-black;
-                background-color: $ontology-blue;
-            }
+            // &:hover {
+            //     // border-color: $dive-black;
+            //     background-color: $ontology-blue;
+            // }
 
             div.title {
                 font-size: 24px;
@@ -122,11 +122,6 @@ section.landing-projects {
                 &.active {
                     border-top: 1px solid $light-gray;
                     height: 100px;
-                }
-
-                div.open-project-button {
-                    @include button(200px, $ontology-blue);
-                    margin: 30px auto 0 auto;
                 }
             }
         }

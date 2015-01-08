@@ -1,5 +1,5 @@
 # Landing page project list / navigation
-angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, $location, $rootScope, AllProjectsService) ->
+angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, $state, $rootScope, AllProjectsService) ->
   console.log("[CONTROLLER] Project List")
   $scope.newProjectData = {}
   $scope.newProject = false
@@ -10,7 +10,8 @@ angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, 
   }
 
   AllProjectsService.promise($scope.user.userName, (projects) ->
-    $scope.projects = projects)
+    $scope.projects = projects
+  )
 
 
   $scope.selectProject = (pID) ->
@@ -20,7 +21,23 @@ angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, 
       $scope.selectedProject = pID
 
   $scope.openProject = (project) ->
-    $location.path('/' + $scope.user.userName + '/' + project.formattedTitle)
+    $state.go('engine', 
+      formattedUserName: $scope.user.userName
+      formattedProjectTitle: project.formattedTitle
+    )
+
+  $scope.removeProject = (project, index) ->
+    pID = project.pID
+    console.log('Removing project, pID:', pID)
+    $scope.projects.splice(index, 1)
+
+    # TODO Turn this into a service
+    $http.delete('http://localhost:8888/api/project',
+      params:
+        pID: pID
+    ).success((result) ->
+      console.log("Deleted project pID", pID)
+    )
 
   $scope.newProjectToggle = ->
     $scope.newProject = !$scope.newProject
