@@ -152,6 +152,9 @@ section.viewport {
 
 
 div.button {
+    &.open {
+        @include button(200px, $assemble-green);                
+    }
     &.upload {
         @include button(200px, $ontology-blue);                
     }

@@ -1,11 +1,11 @@
 section.landing-top {
-    // font-family: 'DIN';
+    @include font;
     font-weight: light;
 
     div.dive {
         background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGElEQVQIW2NkYGD4D8SMQAwHKByYKIWCAGagAQanLNDFAAAAAElFTkSuQmCC) repeat;
         background-color: #1C1D1D;
-        padding: 100px 0;
+        padding: 60px 0;
         div {
             text-align: center;
             color: $active-white;
@@ -33,6 +33,7 @@ section.landing-top {
 }
 
 section.landing-projects {
+    @include font;
     $block-width: 785px;
     $block-height: 100px;
 
@@ -84,13 +85,16 @@ section.landing-projects {
             @include background-transition();
             cursor: pointer;
             margin-top: 10px;
-            height: $block-height;
+            // height: $block-height;
             width: $block-width;
-            background-color: $light-gray;
+            // background-color: $light-gray;
             border-radius: 2px;
             display: inline-block;
             margin-right: 10px;
 
+            -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
 
             &:hover {
                 // border-color: $dive-black;
@@ -99,14 +103,31 @@ section.landing-projects {
 
             div.title {
                 font-size: 24px;
-                line-height: 75px;
-                text-align: center;
+                line-height: 24px;
+                padding: 20px 20px;
+                text-align: left;
             }
             div.description {
                 @include small-caps;
                 line-height: 20px;
                 padding: 0 20px;
-                text-align: center;
+                padding-bottom: 15px;
+                text-align: left;
+            }
+
+            div.menu {
+                height: 0px;
+                transition: .2s ease-in-out height;
+                overflow: hidden;
+                &.active {
+                    border-top: 1px solid $light-gray;
+                    height: 100px;
+                }
+
+                div.open-project-button {
+                    @include button(200px, $ontology-blue);
+                    margin: 30px auto 0 auto;
+                }
             }
         }
     }
