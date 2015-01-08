@@ -3,8 +3,8 @@
 		Selected Visualizations
 	</div>
 	<ul class="pane-items">
-		<li ng-repeat="spec in specs" ng-click="select_spec($index);" ng-class="{'selected':$index==selected_spec_index, 'chosen':spec.chosen}">
-		  {{spec}}
+		<li ng-repeat="spec in specs" ng-click="selectSpec($index);" ng-class="{'selected':$index==selectedSpecIndex, 'chosen':spec.chosen}">
+		  {{spec.spec.viz_type | capitalize}}
 		</li>
 	</ul>
 </section>
@@ -13,8 +13,50 @@
 	<div class="pane-title">
 		Export
 	</div>
+	<ul class="pane-items">
+		<li class="option">
+      <div class="vertical-center title">
+        Interactive
+      </div>
+    </li>
+		<li class="option">
+      <div class="vertical-center title">
+        SVG
+      </div>
+    </li>
+		<li class="option">
+      <div class="vertical-center title">
+        Image
+      </div>
+    </li>
+	</ul>
 </section>
 
 <section class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
-	<pane-toggle></pane-toggle>
+  <pane-toggle></pane-toggle>
+  <loader></loader>
+  <div id="viz-container" class="card"></div>
+  <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selectedConditionalValues"></visualization-preview>
+
+  <section class="card">
+    <div class="title">Embed Options</div>
+    <input ng-model="embedURL"></input>
+  </section>
+
+  <section class="conditionals card">
+    <div class="title">Conditionals</div>
+    <ul class="conditional-options">
+      <li class="conditional-option" ng-repeat="conditionalOption in conditionalOptions" ng-click="selectConditional(conditionalOption)" ng-class="{'selected':selectedConditional(conditionalOption.name)}">
+        {{conditionalOption.name}}
+      </li>
+    </ul>
+    <div class="dropdowns">
+    <ul class="dropdowns">
+      <li ng-repeat="(title, data) in selectedConditionalData">
+        <label class="dropdown-label">{{title}}</label>
+        <select ng-model="selectedConditionalValues[currentdID][title]" ng-options="datum for datum in data" ng-change="changedConditional()" ng-init="selectedConditionalValues[currentdID][title]=data[0]"></select>
+      </li>
+    </ul>
+  </div>
+  </section>
 </section>

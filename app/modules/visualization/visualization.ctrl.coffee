@@ -26,18 +26,18 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     scatterplot: 'scatterplot.svg'
     linechart: 'linechart.svg'
 
-  $scope.selected_type_index = 0
-  $scope.selected_spec_index = 0
+  $scope.selectedTypeIndex = 0
+  $scope.selectedSpecIndex = 0
   SpecificationService.promise((specs) ->
     $scope.types = ({'name': k, 'length': v.length, 'icon': icons[k.toLowerCase()]} for k, v of specs)
     $scope.allSpecs = specs
-    $scope.selected_type = $scope.types[$scope.selected_type_index].name
-    $scope.specs = $scope.allSpecs[$scope.types[$scope.selected_type_index].name]
+    $scope.selectedType = $scope.types[$scope.selectedTypeIndex].name
+    $scope.specs = $scope.allSpecs[$scope.types[$scope.selectedTypeIndex].name]
 
-    $scope.select_spec(0)
+    $scope.selectSpec(0)
   )
 
-  $scope.choose_spec = (index) ->
+  $scope.chooseSpec = (index) ->
     spec = $scope.specs[index]
     console.log("Chose spec", spec.sID)
     $http.get('http://localhost:8888/api/choose_spec',
@@ -49,7 +49,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
       spec.chosen = true
     )
 
-  $scope.reject_spec = (index) ->
+  $scope.rejectSpec = (index) ->
     spec = $scope.specs[index]
     console.log("Reject spec", spec.sID)
     $http.get('http://localhost:8888/api/reject_spec',
@@ -60,26 +60,30 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
       spec.chosen = false
     )
 
-  $scope.select_type = (index) ->
-    $scope.selected_type_index = index
-    $scope.selected_type = $scope.types[index].name
+  $scope.selectType = (index) ->
+    $scope.selectedTypeIndex = index
+    $scope.selectedType = $scope.types[index].name
     $scope.specs = $scope.allSpecs[$scope.types[index].name]
 
-  $scope.select_spec = (index) ->
-    $scope.selected_spec_index = index
-    $scope.selected_spec = $scope.specs[index]
+  $scope.selectSpec = (index) ->
+    $scope.selectedSpecIndex = index
+    $scope.selectedSpec = $scope.specs[index]
 
-    if $scope.selected_spec.aggregate
-      dID = $scope.selected_spec.aggregate.dID
+    if $scope.selectedSpec.aggregate
+      dID = $scope.selectedSpec.aggregate.dID
     else
-      dID = $scope.selected_spec.object.dID
+      dID = $scope.selectedSpec.object.dID
     $scope.currentdID = dID
     unless $scope.selectedConditionalValues[dID]
       $scope.selectedConditionalValues[dID] = {}
     $scope.conditionalOptions = $scope.datasetsByDID[dID]
     console.log( $scope.conditionalData )
 
-    VizDataService.promise($scope.selected_type, $scope.selected_spec, $scope.selectedConditionalValues, (result) ->
+    params = 
+      type: $scope.selectedType
+      spec: $scope.selectedSpec
+      conditional: $scope.selectedConditionalValues
+    VizDataService.promise(params, (result) ->
       $scope.vizData = result.result
       $scope.loading = false
     )
@@ -99,13 +103,21 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
         data = result.result.unshift('All')
         $scope.selectedConditionalData[spec.name] = result.result
       )
-      VizDataService.promise($scope.selected_type, $scope.selected_spec, $scope.selectedConditionalValues, (result) ->
+      params = 
+        type: $scope.selectedType
+        spec: $scope.selectedSpec
+        conditional: $scope.selectedConditionalValues
+      VizDataService.promise(params, (result) ->
         $scope.vizData = result.result
         $scope.loading = false
       )
 
   $scope.changedConditional = (title) ->
-    VizDataService.promise($scope.selected_type, $scope.selected_spec, $scope.selectedConditionalValues, (result) ->
+    params = 
+      type: $scope.selectedType
+      spec: $scope.selectedSpec
+      conditional: $scope.selectedConditionalValues
+    VizDataService.promise(params, (result) ->
       $scope.vizData = result.result
       $scope.loading = false
     )

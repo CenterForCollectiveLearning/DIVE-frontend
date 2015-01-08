@@ -78,42 +78,37 @@ angular.module('diveApp.services').service "ConditionalDataService", ($http, $ro
 
 angular.module('diveApp.services').service "VizDataService", ($http, $rootScope) ->
   # TODO Generalize service for other vizTypes
-  promise: (type, spec, conditional, callback) ->
-    # console.log('[REQUEST] Viz Data for Type', type, 'and Specification ', spec)
+  promise: (params, callback) ->
+    unless params.pID then params.pID = $rootScope.pID
+    console.log('[REQUEST] Viz Data for Type', params.type, 'and Specification ', params.spec)
     $http.get("http://localhost:8888/api/visualization_data",
-      params:
-        pID: $rootScope.pID
-        type: type
-        spec: spec
-        conditional: conditional
+      params: params
     ).success((data) ->
-      # console.log("[DATA] Viz Data:", data)
       callback(data)
     )
 
 angular.module('diveApp.services').service "ExportedVizSpecService", ($http, $rootScope) ->
   # TODO Generalize service for other vizTypes
-  promise: (callback) ->
-    # console.log('[REQUEST] Viz Data for Type', type, 'and Specification ', spec)
+  promise: (params, callback) ->
+    unless params.pID then params.pID = $rootScope.pID
     $http.get("http://localhost:8888/api/exported_spec",
-      params:
-        pID: $rootScope.pID
+      params: params
     ).success((data) ->
       # console.log("[DATA] Viz Data:", data)
       callback(data)
     )
 
-angular.module('diveApp.services').service "ExportedVizDataService", ($http, $rootScope) ->
-  # TODO Generalize service for other vizTypes
-  promise: (type, spec, conditional, callback) ->
-    # console.log('[REQUEST] Viz Data for Type', type, 'and Specification ', spec)
-    $http.get("http://localhost:8888/api/visualization_data",
-      params:
-        pID: $rootScope.pID
-        type: type
-        spec: spec
-        conditional: conditional
-    ).success((data) ->
-      # console.log("[DATA] Viz Data:", data)
-      callback(data)
-    )
+# angular.module('diveApp.services').service "ExportedVizDataService", ($http, $rootScope) ->
+#   # TODO Generalize service for other vizTypes
+#   promise: (type, spec, conditional, callback) ->
+#     # console.log('[REQUEST] Viz Data for Type', type, 'and Specification ', spec)
+#     $http.get("http://localhost:8888/api/visualization_data",
+#       params:
+#         pID: $rootScope.pID
+#         type: type
+#         spec: spec
+#         conditional: conditional
+#     ).success((data) ->
+#       # console.log("[DATA] Viz Data:", data)
+#       callback(data)
+#     )

@@ -13,7 +13,6 @@ angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, 
     $scope.projects = projects
   )
 
-
   $scope.selectProject = (pID) ->
     if $scope.selectedProject is pID
       $scope.selectedProject = null

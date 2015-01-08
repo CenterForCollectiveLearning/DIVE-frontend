@@ -11,8 +11,9 @@ require('../modules/data/data.module')
 require('../modules/property/property.module')
 require('../modules/visualization/visualization.module')
 require('../modules/export/export.module')
+require('../modules/embed/embed.module')
 
-diveApp = angular.module('diveApp', ['diveApp.routes', 'diveApp.project', 'diveApp.landing', 'diveApp.data', 'diveApp.property', 'diveApp.visualization', 'diveApp.export'])
+diveApp = angular.module('diveApp', ['diveApp.routes', 'diveApp.project', 'diveApp.landing', 'diveApp.data', 'diveApp.property', 'diveApp.visualization', 'diveApp.export', 'diveApp.embed'])
 
 # TODO Change API endpoint as a function of configuration
 diveApp.constant('API')
@@ -38,8 +39,11 @@ $ = require('jquery')
 # Need to return function
 diveApp.filter "capitalize", -> 
   (input, scope) ->
-    input = input.toLowerCase()
-    input.substring(0, 1).toUpperCase() + input.substring(1)
+    if input
+      input = input.toLowerCase()
+      input.substring(0, 1).toUpperCase() + input.substring(1)
+    else
+      input
 
 # Resizing viewport for no overflow
 angular.element(document).ready ->
