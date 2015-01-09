@@ -1,4 +1,5 @@
 section.landing-top {
+    @include card-shadow;
     @include font;
     font-weight: light;
 
@@ -81,6 +82,7 @@ section.landing-projects {
             color: black;
         }
         li.project {
+            @include card-shadow;
             @include border-transition();
             @include background-transition();
             cursor: pointer;
@@ -91,10 +93,6 @@ section.landing-projects {
             border-radius: 2px;
             display: inline-block;
             margin-right: 10px;
-
-            -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
-            -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
 
             // &:hover {
             //     // border-color: $dive-black;

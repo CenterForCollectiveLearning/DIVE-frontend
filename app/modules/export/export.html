@@ -38,9 +38,12 @@
   <div id="viz-container" class="card"></div>
   <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selectedConditionalValues"></visualization-preview>
 
-  <section class="card">
+  <section class="embed-options card">
     <div class="title">Embed Options</div>
-    <input ng-model="embedURL"></input>
+    <div class="label">URL</div>
+    <input ng-model="embedURL" select-on-click></input>
+    <div class="label">HTML</div>
+    <input ng-model="embedHTML" select-on-click></input>
   </section>
 
   <section class="conditionals card">

@@ -1,3 +1,11 @@
+angular.module('diveApp.export').directive('selectOnClick', ->
+    return {
+        restrict: 'A'
+        link: (scope, element, attrs) ->
+            element.on('click', -> this.select())
+        }
+)
+
 angular.module('diveApp.export').controller "AssembleCtrl", ($scope, $rootScope, $http, $state, $location, VizDataService, ExportedVizSpecService) ->
     $scope.conditionalOptions = []  # All conditionals by name
     $scope.selectedConditionalData = {}  # Data corresponding to selected conditionals (k: list)
@@ -18,6 +26,7 @@ angular.module('diveApp.export').controller "AssembleCtrl", ($scope, $rootScope,
         conditional = $scope.specs[index].conditional
 
         $scope.embedURL = $location.absUrl().split('//')[1].split('/')[0] + '/#' + $state.href('embed', {pID: $rootScope.pID, eID: eID})
+        $scope.embedHTML = '<iframe width="560" height="315" src="' + $scope.embedURL + '" frameborder="0" allowfullscreen></iframe>'
     
         if $scope.selectedSpec.aggregate
             dID = $scope.selectedSpec.aggregate.dID

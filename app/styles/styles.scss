@@ -47,7 +47,7 @@ ul {
 
 @mixin small-caps {
     font-family: "Titillium Web", "Lato", helvetica, sans-serif;
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 1px;
     line-height: 35px;
     text-transform: uppercase;
@@ -114,6 +114,7 @@ ul {
 @import '_embed';
 @import '_landing';
 @import '_project';
+@import '_export';
 @import '_data';
 @import '_property';
 @import '_visualization';
