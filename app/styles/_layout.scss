@@ -56,6 +56,12 @@ section.upload-dataset {
     }
 }
 
+@mixin card-shadow {
+    -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
+}
+
 @mixin left-arrow {
     &::before {
         margin-top: -5px;
@@ -109,6 +115,10 @@ div.toggle-pane {
 }
 
 section.card, #viz-container {
+    @include card-shadow;
+}
+
+section.card, #viz-container {
     border-radius: 3px;
     border: 1px solid $dark-gray;
     background-color: white;
@@ -120,11 +130,18 @@ section.card, #viz-container {
     padding: 12px;
     margin-top: 12px;
     margin-bottom: 12px;
+
+    div.title {
+        margin: 0 -12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid $light-gray;
+    }
 }
 
 /* Viewport */
 section.viewport {
     background-color: #E9EAED;
+    background-color: white;
 
     div.title {
         text-align: center;

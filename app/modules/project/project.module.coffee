@@ -2,6 +2,7 @@ angular = require('angular')
 
 angular.module('diveApp.project', ['diveApp.services', 'ui.router'])
 
+require('./project_overview.ctrl')
 require('./pane_toggle.ctrl')
 require('./tabs.ctrl')
 

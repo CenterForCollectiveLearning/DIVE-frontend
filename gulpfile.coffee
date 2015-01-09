@@ -5,12 +5,9 @@ browserSync = require 'browser-sync'
 sass = require 'gulp-sass'
 rename = require 'gulp-rename'
 browserify = require 'gulp-browserify'
-ngAnnotate =  require 'gulp-ng-annotate'
 coffeelint = require 'gulp-coffeelint'
 coffee = require 'gulp-coffee'
 autoprefixer = require 'gulp-autoprefixer'
-concat = require 'gulp-concat'
-uglify = require 'gulp-uglify'
 rimraf = require 'gulp-rimraf'
 runSequence = require 'run-sequence'
 
@@ -57,7 +54,6 @@ gulp.task('coffee', ->
 
 # Compile stylesheets
 gulp.task('sass', ->
-  # gulp.src('app/**/*.scss')  # Not working (malloc error)
   gulp.src('app/styles/*.scss')
   .pipe(sass(onError: (e) -> console.log(e)))
   .pipe(autoprefixer('last 2 versions', '> 1%', 'ie 8'))
@@ -66,7 +62,6 @@ gulp.task('sass', ->
 )
 
 # Lint coffeescript
-# TODO Fix this
 gulp.task('lint', ->
   gulp.src(sources.coffee)
   .pipe(coffeelint())
@@ -92,8 +87,6 @@ gulp.task('watch', ->
   gulp.watch sources.html, ['html']
   gulp.watch sources.coffee, ['coffee', 'lint']
   gulp.watch sources.lib, ['lib']
-
-  gulp.watch('./dist/**').on('change', browserSync.reload);
  )
 
 # Remove /dist directory

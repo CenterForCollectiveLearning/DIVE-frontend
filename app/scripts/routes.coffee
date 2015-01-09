@@ -24,9 +24,10 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
     .state('engine',
       url: '/:formattedUserName/:formattedProjectTitle'
       templateUrl: 'modules/project/project.html'
+      onEnter: ->
+        $urlRouterProvider.when('', 'engine.overview')        
       controller: ($scope, $state, $stateParams) ->
         $scope.projectTitle = $stateParams.formattedProjectTitle.split('-').join(' ')
-
         # TODO Only redirect if exact URL match
         # $state.go('engine.overview')
       resolve:
