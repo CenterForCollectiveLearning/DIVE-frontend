@@ -1,10 +1,37 @@
+section.right-pane.viz-selection {
+    div.filter, div.sort {
+        @include small-caps;
+        text-align: center;
+        cursor: pointer;
+        border-bottom: 1px solid black;
+    }
+
+    select {
+        margin-bottom: 8px;
+        margin-left: 12px;
+        @include font;
+        display: block;
+    }
+
+    ul.pane-items {
+        li {
+            height: 100px;
+            div.stats {
+                border-top: 1px solid $light-gray;
+                font-size: 10px;
+                padding-top: 8px;
+                padding-bottom: 12px;
+            }
+        }
+    }
+}
+
 section.conditionals, #viz-container {
     ul.conditional-options {
-        // position: absolute;
         top: 50%;
         left: 50%;
         padding-left: 0px;
-        margin-top:10px;
+        margin-top: 10px;
         height: auto;
         background-color: white;
 

@@ -1,3 +1,5 @@
+_ = require('underscore')
+
 # TODO Make this controller thinner!
 angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $http, $rootScope, DataService, PropertyService, VizDataService, ConditionalDataService, SpecificationService) ->
 
@@ -29,11 +31,14 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
   $scope.selectedTypeIndex = 0
   $scope.selectedSpecIndex = 0
   SpecificationService.promise((specs) ->
+    console.log("SPECS", specs)
     $scope.types = ({'name': k, 'length': v.length, 'icon': icons[k.toLowerCase()]} for k, v of specs)
     $scope.allSpecs = specs
     $scope.selectedType = $scope.types[$scope.selectedTypeIndex].name
-    $scope.specs = $scope.allSpecs[$scope.types[$scope.selectedTypeIndex].name]
 
+    $scope.specs = _.sortBy($scope.allSpecs[$scope.types[$scope.selectedTypeIndex].name], (e) ->
+      $scope.selectedSortOrder * e['stats'][$scope.selectedSorting]
+    )
     $scope.selectSpec(0)
   )
 
@@ -63,7 +68,9 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
   $scope.selectType = (index) ->
     $scope.selectedTypeIndex = index
     $scope.selectedType = $scope.types[index].name
-    $scope.specs = $scope.allSpecs[$scope.types[index].name]
+    $scope.specs = _.sortBy($scope.allSpecs[$scope.types[$scope.selectedTypeIndex].name], (e) ->
+      $scope.selectedSortOrder * e['stats'][$scope.selectedSorting]
+    )
 
   $scope.selectSpec = (index) ->
     $scope.selectedSpecIndex = index
@@ -86,6 +93,35 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     VizDataService.promise(params, (result) ->
       $scope.vizData = result.result
       $scope.loading = false
+    )
+
+  ###############################
+  # Sortings
+  ###############################
+  $scope.sortings = [
+    property: 'num_elements'
+    display: 'Number of Elements'
+  ,
+    property: 'std'
+    display: 'Standard Deviation'
+  ]
+
+  $scope.sortOrders = [
+    property: 1
+    display: 'Ascending'
+  ,
+    property: -1
+    display: 'Descending'
+  ]
+
+  $scope.selectedSorting = $scope.sortings[0].property
+  $scope.selectedSortOrder = $scope.sortOrders[0].property
+
+  $scope.sortSpecs = ->
+    console.log("sorting!")
+    console.log($scope.specs)
+    $scope.specs = _.sortBy($scope.specs, (e) ->
+      $scope.selectedSortOrder * e['stats'][$scope.selectedSorting]
     )
 
   ###############################
