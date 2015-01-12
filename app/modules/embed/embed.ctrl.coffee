@@ -1,15 +1,15 @@
 angular.module('diveApp.embed').controller "EmbedCtrl", ($scope, $http, $stateParams, VizDataService, ExportedVizSpecService) ->
-    console.log("pID", $stateParams.pID, "eID", $stateParams.eID)
+    console.log("pID", $stateParams.pID, "sID", $stateParams.sID)
 
-    # Get full vizSpec from eID
+    # Get full vizSpec from sID
     params = 
         pID: $stateParams.pID
-        eID: $stateParams.eID
+        sID: $stateParams.sID
     ExportedVizSpecService.promise(params, (result) ->
         spec = result.result[0]
-        $scope.selectedType = spec.spec.viz_type
-        $scope.selectedSpec = spec.spec
-        $scope.selectedConditionalValues = spec.conditional
+        $scope.selectedType = spec.viz_type
+        $scope.selectedSpec = spec
+        $scope.selectedConditionalValues = spec.condition
 
         # Get vizData from vizSpec
         params = 

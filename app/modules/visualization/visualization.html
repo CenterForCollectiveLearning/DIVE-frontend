@@ -26,7 +26,7 @@
     <select ng-options="sortOrder.property as sortOrder.display for sortOrder in sortOrders" ng-model="selectedSortOrder" ng-change='sortSpecs()'></select>
   </div>
   <ul class="pane-items">
-    <li ng-repeat="spec in specs" ng-click="selectSpec($index);" ng-class="{'selected':$index==selectedSpecIndex, 'chosen':spec.chosen}">
+    <li ng-repeat="spec in specs" ng-click="selectSpec($index);" ng-class="{'selected':$index==selectedSpecIndex, 'chosen':spec.chosen==true, 'rejected': spec.chosen==false}">
       <div ng-if="selectedType=='treemap' || selectedType=='geomap' || selectedType=='piechart'">
         <div>Group all <b>{{spec.aggregate.title}}</b></div>
         <div>by <b>{{spec.groupBy.title}}</b></div>

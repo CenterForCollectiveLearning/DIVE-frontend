@@ -28,12 +28,12 @@ angular.module('diveApp.export').controller "AssembleCtrl", ($scope, $rootScope,
 
     $scope.selectSpec = (index) ->
         $scope.selectedSpecIndex = index
-        $scope.selectedType = $scope.specs[index].spec.viz_type
-        $scope.selectedSpec = $scope.specs[index].spec
-        eID = $scope.specs[index].eID
-        conditional = $scope.specs[index].conditional
+        $scope.selectedType = $scope.specs[index].viz_type
+        $scope.selectedSpec = $scope.specs[index]
+        sID = $scope.specs[index].sID
+        condition = $scope.specs[index].condition
 
-        $scope.embedURL = $location.absUrl().split('//')[1].split('/')[0] + '/#' + $state.href('embed', {pID: $rootScope.pID, eID: eID})
+        $scope.embedURL = $location.absUrl().split('//')[1].split('/')[0] + '/#' + $state.href('embed', {pID: $rootScope.pID, sID: sID})
         $scope.embedHTML = '<iframe width="560" height="315" src="' + $scope.embedURL + '" frameborder="0" allowfullscreen></iframe>'
     
         if $scope.selectedSpec.aggregate
@@ -42,7 +42,7 @@ angular.module('diveApp.export').controller "AssembleCtrl", ($scope, $rootScope,
             dID = $scope.selectedSpec.object.dID
         $scope.currentdID = dID
         unless $scope.selectedConditionalValues[dID]
-            $scope.selectedConditionalValues[dID] = conditional[dID]
+            $scope.selectedConditionalValues[dID] = condition[dID]
     
         params = 
             type: $scope.selectedType

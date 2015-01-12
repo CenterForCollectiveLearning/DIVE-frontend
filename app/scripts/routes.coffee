@@ -14,7 +14,7 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
 #        allProjectsService: (AllProjectsService) -> AllProjectsService.promise
     )
     .state('embed',
-      url: '/embed/:pID/:eID'
+      url: '/embed/:pID/:sID'
       templateUrl: 'modules/embed/embed.html'
       controller: 'EmbedCtrl'
       resolve:

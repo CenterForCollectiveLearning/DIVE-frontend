@@ -278,8 +278,8 @@ section.left-pane, section.right-pane {
                 background-color: $assemble-green;
             }
 
-            &.chosen {
-                background-color: $assemble-green;
+            &.rejected {
+                opacity: 0.5;
             }
 
             div.title {
