@@ -36,6 +36,18 @@ nav.navbar {
             width: 190px;
             border-right: 1px solid black;
 
+            // &:before {
+            //     content: "";
+            //     position: absolute;
+            //     top: 35px;
+            //     width: 0;
+            //     margin-left: 170px;
+            //     height: 0;
+            //     border-top: 17px solid transparent;
+            //     border-left: 9px solid white;
+            //     border-bottom: 18px solid transparent;
+            // }
+
             a {
                 color: black;
             }

@@ -19,9 +19,15 @@ angular.module('diveApp.export').controller "AssembleCtrl", ($scope, $rootScope,
         scatterplot: 'scatterplot.svg'
         linechart: 'linechart.svg'
 
+    $scope.modes = [
+        'modify'
+        'export'
+    ]
+    $scope.selectedMode = $scope.modes[1]
+    $scope.selectMode = (mode) -> $scope.selectedMode = mode
+
     params = {}
     ExportedVizSpecService.promise(params, (specs) ->
-        console.log("SPECS:", specs)
         $scope.specs = specs.result
         $scope.selectSpec(0)
     )

@@ -15,6 +15,6 @@ angular.module('diveApp.project').controller 'TabsCtrl', ($scope, $state, $rootS
     }
     {
       route: 'engine.assemble'
-      label: '4. Assemble Engine'
+      label: '4. Edit and Export'
     }
   ]
