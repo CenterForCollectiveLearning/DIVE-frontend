@@ -61,7 +61,9 @@ angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope
         return
       ).success((data, status, headers, config) ->
         # file is uploaded successfully
-        $scope.datasets.push(data)
+        for dataset in data.datasets
+          $scope.datasets.push(dataset)
+        console.log $scope.datasets
       )
       i++
   ###############
