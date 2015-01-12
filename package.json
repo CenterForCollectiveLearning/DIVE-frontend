@@ -46,10 +46,12 @@
   },
   "browser": {
     "angular": "./node_modules/angular/angular.js",
-    "d3plus": "./dist/scripts/lib/d3plus.min.js"
+    "d3plus": "./dist/scripts/lib/d3plus.min.js",
+    "topojson": "./dist/scripts/lib/topojson.js"
   },
   "browserify-shim": {
     "angular": "angular",
-    "d3plus": "d3plus"
+    "d3plus": "d3plus",
+    "topojson": "topojson"
   }
 }

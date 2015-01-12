@@ -1,6 +1,7 @@
 $ = require('jquery')
 d3 = require('d3')
 d3plus = require('d3plus')
+topojson = require('topojson')
 
 angular.module('diveApp.visualization').directive "visualizationPreview", ["$window", "$timeout",
   ($window, $timeout) ->
