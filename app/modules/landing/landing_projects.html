@@ -20,7 +20,7 @@
 	</ul>
 	
 	<div class="new-project-form" ng-if="newProject">
-		<div class="close" ng-click="newProjectToggle()"><i class="fa fa-times"></i></div>
+		<div class="close" ng-click="newProjectToggle()">x</div>
 		<label>New Project</label>
 
 		<form name="createProjectForm" ng-controller="CreateProjectFormCtrl as createProject" ng-submit="createProjectForm.$valid && createProject.login()" novalidate>
