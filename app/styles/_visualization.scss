@@ -1,3 +1,12 @@
+section.right-pane {
+    div.filter, div.sort {
+        @include small-caps;
+        cursor: pointer;
+        padding-left: 12px;
+        border-bottom: 1px solid black;
+    }
+}
+
 section.conditionals, #viz-container {
     ul.conditional-options {
         // position: absolute;
