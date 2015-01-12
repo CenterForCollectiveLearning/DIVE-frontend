@@ -67,7 +67,7 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
               .margin("20px")
               .height(600)
               .data(vizData)
-              .font(family: "Karbon")
+              .font(family: "Titillium Web")
 
             if vizType in ["treemap", "piechart"]
               viz.title(getTitle(vizType, vizSpec))
@@ -94,7 +94,7 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
                   .draw()
             else if vizType in ["geomap"]
               viz.title(getTitle(vizType, vizSpec))
-                .coords("/assets/countries.json")
+                .coords("/assets/misc/countries.json")
                 .id(vizSpec.groupBy.title.toString())
                 .color("count")
                 .size("count")

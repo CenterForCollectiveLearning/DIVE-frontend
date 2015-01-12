@@ -11,6 +11,14 @@ angular.module('diveApp.export').controller "AssembleCtrl", ($scope, $rootScope,
     $scope.selectedConditionalData = {}  # Data corresponding to selected conditionals (k: list)
     $scope.selectedConditionalValues = {}  # All selected conditional values (k: val)
 
+    $scope.icons =
+        treemap: 'treemap.svg'
+        barchart: 'barchart.svg'
+        piechart: 'piechart.svg'
+        geomap: 'geomap.svg'
+        scatterplot: 'scatterplot.svg'
+        linechart: 'linechart.svg'
+
     params = {}
     ExportedVizSpecService.promise(params, (specs) ->
         console.log("SPECS:", specs)
