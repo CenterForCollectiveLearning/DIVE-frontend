@@ -94,9 +94,10 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
                   .id(x)
                   .draw()
             else if vizType in ["geomap"]
+              console.log("Rendering geomap with id:", vizSpec.groupBy.title.toString())
               viz.title(getTitle(vizType, vizSpec))
                 .coords("/assets/misc/countries.json")
-                .id(vizSpec.groupBy.title.toString())
+                .id("id")  # vizSpec.groupBy.title.toString())  # Needs to match ID in country json
                 .color("count")
                 .size("count")
                 .draw()

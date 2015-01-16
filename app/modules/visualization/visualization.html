@@ -79,12 +79,15 @@
       </li>
     </ul>
     <div class="dropdowns">
-    <ul class="dropdowns">
-      <li ng-repeat="(title, data) in selectedConditionalData">
-        <label class="dropdown-label">{{title}}</label>
-        <select ng-model="selectedConditionalValues[currentdID][title]" ng-options="datum for datum in data" ng-change="changedConditional()" ng-init="selectedConditionalValues[currentdID][title]=data[0]"></select>
-      </li>
-    </ul>
-  </div>
+      <ul class="dropdowns">
+        <li ng-repeat="(title, data) in selectedConditionalData">
+          <label class="dropdown-label">{{title}}</label>
+          <select ng-model="selectedConditionalValues[currentdID][title]" ng-options="datum for datum in data" ng-change="changedConditional()" ng-init="selectedConditionalValues[currentdID][title]=data[0]"></select>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <section class="configurations card">
+    <div class="title">Configuration</div>
   </section>
 </section>

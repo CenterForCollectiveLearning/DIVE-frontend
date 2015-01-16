@@ -10,19 +10,19 @@ angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope
       inactive: false
       icon: 'file.svg'
     },
-    {
-      label: 'Connect to Database'
-      inactive: true
-      icon: 'database.svg'
-    },
-    {
-      label: 'Connect to API'
-      inactive: true
-      icon: 'link.svg'
-    },
+    # {
+    #   label: 'Connect to Database'
+    #   inactive: true
+    #   icon: 'database.svg'
+    # },
+    # {
+    #   label: 'Connect to API'
+    #   inactive: true
+    #   icon: 'link.svg'
+    # },
     {
       label: 'Search DIVE Datasets'
-      inactive: true
+      inactive: false
       icon: 'search.svg'
     }
   ]
