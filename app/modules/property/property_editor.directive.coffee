@@ -30,18 +30,23 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
         ), true
         scope.render = (data, overlaps, hierarchies, uniques, stats) ->
           svg.selectAll("*").remove()
+
           unless (data and overlaps and hierarchies and uniques and stats)
             return
           if renderTimeout
             clearTimeout(renderTimeout)
           # Margins and Positioning
           boxWidth = 200
+          boxHeight = 500
           margins =
             left: 20
           boxMargins =
             x: 20
             y: 20
           attributesYOffset = 80
+          
+          selection_made = false
+
           renderTimeout = $timeout( ->
             # Arrowhead marker definition
             svg.append("defs").append("marker").attr("id", "arrowhead").attr("refX", 3).attr("refY", 2).attr("markerWidth", 6).attr("markerHeight", 4).attr("orient", "auto").append("path").attr("d", "M 0,0 V 4 L3,3 Z")
@@ -52,24 +57,253 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
             for dataset in data
               dIDToDataset[dataset.dID] = dataset
             # Create parent group elements for each dataset
+            extractTransform = (str) ->
+              split = str.split(',')
+              x = split[0].split('(')[1]
+              y = split[1].split(')')[0]
+              [parseInt(x), parseInt(y)]
+
+            attributePositions = {}
+            calculateAttributePositions = (dID) ->
+              calcPos = (selection) ->
+                selection.each( (d, i) ->
+                  dID = d3.select(@parentNode).datum().dID
+                  column_id = d.column_id
+
+                  bbox = d3.select(this).node().getBBox()
+                  h = bbox.height
+                  w = bbox.width
+
+                  box_t = d3.transform(d3.select(this.parentNode.parentNode).attr("transform")).translate
+                  col_t = d3.transform(d3.select(this.parentNode).attr("transform")).translate
+                  attr_t = d3.transform(d3.select(this).attr("transform")).translate
+                  overall_t = [
+                    box_t[0] + col_t[0] + attr_t[0],
+                    box_t[1] + col_t[1] + attr_t[1]
+                  ]
+
+                  attributePositions[dID] = {} unless dID of attributePositions
+                  attributePositions[dID][column_id] = {
+                    left: [overall_t[0], overall_t[1] + h/2 ]
+                    right: [overall_t[0] + w, overall_t[1] + h/2 ]
+                  }
+
+                )
+              if (!dID)
+                attributePositions = {}
+                calcPos(d3.selectAll("g.attr"))
+              else
+                attributePositions[dID] = {}
+                calcPos(d3.select("#box_" + dID).selectAll("g.attr"))
+            
+            links = []
+            linkValues = []
+            calculateLinks = () ->
+              links = []
+              linkValues = []
+              OVERLAP_THRESHOLD = 0.25
+              # Reshape overlaps into pairs of (dID, columnID)
+              for datasetPair, columnPairs of overlaps
+                datasets = datasetPair.split("\t")
+                for columnPair, overlap of columnPairs
+                  columns = columnPair.split("\t")
+                  if overlap > OVERLAP_THRESHOLD
+                    linkValues.push(overlap)
+                    links.push [
+                      [datasets[0], columns[0]]
+                      [datasets[1], columns[1]]
+                    ]
+              # console.log links
+              # console.log linkValues
+
+            drawLinks = (dID) ->
+              redrawLink = (link, selection) ->
+                [l_dID, l_col] = link[0]
+                [r_dID, r_col] = link[1]
+                attrA_pos = attributePositions[l_dID][l_col]
+                attrB_pos = attributePositions[r_dID][r_col]
+
+                if attrA_pos and attrB_pos
+
+                  l_box_x = extractTransform(d3.select("#box_" + l_dID).attr("transform"))[0]
+                  r_box_x = extractTransform(d3.select("#box_" + r_dID).attr("transform"))[0]
+
+                  if l_box_x > r_box_x
+                    finalA_pos = attrA_pos.left
+                    finalB_pos = attrB_pos.right
+                  else
+                    finalA_pos = attrA_pos.right
+                    finalB_pos = attrB_pos.left
+
+                  d3.select(selection)
+                    .attr("d", "M" + finalA_pos[0] + ", " + finalA_pos[1] + "L" + finalB_pos[0] + "," + finalB_pos[1])
+
+              if (!dID)
+                for link, i in links
+                  overlap = linkValues[i]
+                  [l_dID, l_col] = link[0]
+                  [r_dID, r_col] = link[1]
+
+                  l_dTitle = dIDToDataset[l_dID].title
+                  r_dTitle = dIDToDataset[r_dID].title
+                  l_cTitle = dIDToDataset[l_dID].column_attrs[l_col]?.name
+                  r_cTitle = dIDToDataset[r_dID].column_attrs[r_col]?.name
+
+                  attrA_pos = attributePositions[l_dID][l_col]
+                  attrB_pos = attributePositions[r_dID][r_col]
+
+                  if attrA_pos and attrB_pos 
+
+                    finalA_pos = attrA_pos.right
+                    finalB_pos = attrB_pos.left
+
+                    line_g = svg.append("g").attr("class", "arrow-container")
+                      .each(() ->
+                        third_child = this.parentNode.children[2]
+                        if third_child
+                          this.parentNode.insertBefore(this, third_child)
+                      )
+                    arrow = line_g.append("path").datum(link)
+                      .attr("marker-end", "url(#arrowhead)")
+                      .attr("d", "M" + finalA_pos[0] + ", " + finalA_pos[1] + "L" + finalB_pos[0] + "," + finalB_pos[1])
+                      .attr("stroke", "black")
+                      .attr("stroke-width", 1)
+                      .attr("class", "visible-arrow arrow_" + l_dID + "_" + r_dID)
+
+                    hoverArrow = line_g.append("path")
+                      .datum(
+                        link: link
+                        overlap: overlap
+                        l_dTitle: l_dTitle
+                        r_dTitle: r_dTitle
+                        l_cTitle: l_cTitle
+                        r_cTitle: r_cTitle
+                      )
+                      .attr("marker-end", "url(#arrowhead)")
+                      .attr("d", "M" + finalA_pos[0] + "," + finalA_pos[1] + "L" + finalB_pos[0] + "," + finalB_pos[1])
+                      .attr('shape-rendering', 'crispEdges')
+                      .style('opacity', 0.0)
+                      .attr("stroke-width", 15)
+                      .attr("stroke", "white")
+                      .attr("class", "hover-arrow arrow_" + l_dID + "_" + r_dID)
+                      .on("mousemove", (p) ->
+                        d3.select(@parentNode).select("path.visible-arrow").classed("hover", true)
+                        if !selection_made
+                          d = d3.select(this).datum()
+                          scope.selected =
+                            type: 'relationship'
+                            l_dTitle: p.l_dTitle
+                            r_dTitle: p.r_dTitle
+                            l_cTitle: p.l_cTitle
+                            r_cTitle: p.r_cTitle
+                            overlap: p.overlap
+                          scope.$apply()
+                      )      
+                      .on("mouseout", (p) ->
+                        d3.select(@parentNode).select("path.visible-arrow").classed("hover", false)
+                        if !selection_made
+                          console.log "mouseout!"
+                          scope.selected = null
+                          scope.$apply()
+                      )
+                      .on("click", (p) ->
+                        if d3.event.defaultPrevented
+                          return
+                        d3.selectAll(".selected").classed("selected", false)
+                        d3.select(@parentNode).select("path.visible-arrow").classed("selected", true)
+                        selection_made = true
+                        scope.selected =
+                          type: 'relationship'
+                          l_dTitle: p.l_dTitle
+                          r_dTitle: p.r_dTitle
+                          l_cTitle: p.l_cTitle
+                          r_cTitle: p.r_cTitle
+                          overlap: p.overlap
+                        scope.$apply()
+                      )
+              else 
+                d3.selectAll(".visible-arrow").filter((d, i) -> dID in d.map (j) -> j[0])
+                  .each((d, i) -> redrawLink(d, this))
+                d3.selectAll(".hover-arrow").filter((d, i) -> dID in d.link.map (j) -> j[0])
+                  .each((d, i) -> redrawLink(d.link, this))
+
+            dragDataset = d3.behavior.drag()
+              .on("dragstart", (d) ->
+                d3.event.sourceEvent.stopPropagation()
+
+                el = d3.select(this.parentNode)[0][0]
+                el.parentNode.appendChild(el)
+                d.dragstart = d3.mouse(this)
+                svg_w = parseInt(svg.style("width").split("px")[0])
+                svg_h = parseInt(svg.style("height").split("px")[0])
+                d.dragmax = [svg_w - boxMargins.x, svg_h - boxMargins.y]
+              )
+              .on("drag", (d) ->
+                m = d3.mouse(this)
+                [x, y] = extractTransform(d3.select(this.parentNode).attr("transform"))                
+                x += m[0] - d.dragstart[0]
+                y += m[1] - d.dragstart[1]
+                x = Math.min(Math.max(boxMargins.x, x), d.dragmax[0])
+                y = Math.min(Math.max(boxMargins.y, y), d.dragmax[1])
+                d3.select(this.parentNode).attr("transform", "translate(" + x + ", " + y + ")")
+                dID = d3.select(this.parentNode).attr("id").split("_")[1]
+                calculateAttributePositions(dID)
+                drawLinks(dID)
+                # console.log attributePositions
+              )
+
+            svg.append("rect")
+              .attr("width", "100%")
+              .attr("height", "100%")
+              .style("opacity", 0)
+              .on("click", () -> 
+                svg.selectAll("*").classed("selected", false)
+                selection_made = false
+                scope.selected = null
+                scope.$apply()
+              )
             g = svg.selectAll("g")
               .data(data)
-            .enter()
+              .enter()
               .append("g")
               .attr("class", "box")
-              .attr("transform", "translate(" + boxMargins.x + "," + boxMargins.y + ")")
-            # Box
-            rect = g.append("rect")
-              .attr("height", 500)
-              .attr("width", boxWidth)
-              .attr("x", (d, i) -> i * (boxWidth + margins.left))
-              .attr("rx", 3)
-              .attr("ry", 3)
-              .attr("stroke", "#AEAEAE")
-              .attr("stroke-width", 1)
-              .attr("fill", (d) -> "#FFFFFF")
+              .attr("id", (d) -> "box_" + d.dID)
+              # .attr("transform", "translate(" + boxMargins.x + "," + boxMargins.y + ")")
+              .attr("transform", (d, i) ->
+                x = boxMargins.x + i * (boxWidth + margins.left)
+                y = boxMargins.y
+                "translate(" + x + ", " + y + ")"
+              )
+            
+            # Title #
+            title_g = g.append("g")
+              .attr("class", "title")
+              .attr("transform", "translate(0, 0)")
+              .call(dragDataset)
               .on("mousemove", (p) ->
-                d3.select(this).classed("hover", true)
+                d3.select(this).selectAll("rect").classed("hover", true)
+                if !selection_made
+                  d = d3.select(@parentNode).datum()
+                  scope.selected =
+                    type: 'object'
+                    title: d.title
+                    filetype: d.filetype
+                    rows: d.rows
+                    cols: d.cols
+                  scope.$apply()
+              )
+              .on("mouseout", (p) ->
+                d3.select(this).selectAll("rect").classed("hover", false)
+                if !selection_made
+                  scope.selected = null
+                  scope.$apply()
+              )
+              .on("click", (p) ->
+                if (d3.event.defaultPrevented)
+                  return
+                d3.selectAll(".selected").classed("selected", false)
+                d3.select(this).selectAll("rect").classed("selected", true)
+                selection_made = true
                 d = d3.select(@parentNode).datum()
                 scope.selected =
                   type: 'object'
@@ -79,15 +313,18 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   cols: d.cols
                 scope.$apply()
               )
-              .on("mouseout", (p) ->
-                d3.select(this).classed("hover", false)
-                # scope.selected = null
-                # scope.$apply()
-              )
-            # Title #
-            text = g.append("text")
+            title_g.append("rect")
+              .attr("height", attributesYOffset)
+              .attr("width", boxWidth)
+              .attr("x", 0).attr("y", 0)
+              .attr("rx", 3).attr("ry", 3)
+              .attr("stroke", "#AEAEAE")
+              .attr("stroke-width", 1)
+              .attr("fill", "#FFFFFF")
+              # .style("fill-opacity", 0)
+            title_g.append("text")
               .attr("fill", "#000000")
-              .attr("x", (d, i) -> (i * (boxWidth + margins.left)) + (boxWidth / 2))
+              .attr("x", boxWidth/2)
               .attr("y", 30)
               .attr("text-anchor", "middle")
               .attr("class", "title")
@@ -95,174 +332,98 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
             # Attributes
             # TODO Unpack this
             tspan = g.append("g")
-            .attr("transform", (d, i) ->
-              x = i * (boxWidth + margins.left)
-              y = attributesYOffset
-              "translate(" + x + "," + y + ")"
-            ).attr("class", "attributes")
-            .each((d) ->
-              dID = d.dID
-              unique_cols = uniques[dID]
-              texts = d3.select(this)
-                .selectAll("g text")
-                .data(d.column_attrs)
-              .enter()
-              .append("g")
-                .attr("class", "attr")
-                .attr("transform", (d, i) -> "translate(0," + (i * 35) + ")")
-              .on("mousemove", (p) ->
-                d3.select(this).selectAll('rect').classed("hover", true)
-                dID = d3.select(@parentNode).datum().dID
-                d = d3.select(this).datum()
-                columnID = d.column_id
-                unique = uniques[dID][columnID]
-                columnStats = stats[dID][d.name]
-                scope.selected =
-                  type: 'attribute'
-                  columnType: d.type
-                  unique: unique
-                  columnStats: columnStats
-                scope.$apply()
+              .attr("transform", (d, i) ->
+                x = i * (boxWidth + margins.left)
+                y = attributesYOffset
+                "translate(" + 0 + "," + y + ")"
               )
-              .on("mouseout", (p) ->
-                d3.select(this).selectAll('rect').classed("hover", false)
-                scope.selected = null
-                scope.$apply()
-              )
-              .on("click", (p) ->
-                dID = d3.select(@parentNode).datum().dID
-                d3.select(this)
+              .attr("class", "attributes")
+              .each((d) ->
+                dID = d.dID
+                unique_cols = uniques[dID]
+                texts = d3.select(this)
+                  .selectAll("g text")
+                  .data(d.column_attrs)
+                  .enter()
                   .append("g")
-                  .text("test")
-                  .classed("expanded", true)
-              )
-              texts.append("rect")
-                .attr("height", 35)
-                .attr("width", boxWidth)
-                .attr("fill-opacity", 0.0)
-                .attr("stroke", "#AEAEAE")
-              texts.append("text")
-                .attr("x", 10)
-                .attr("y", 22)
-                .attr("fill", "#000000")
-                .attr("font-size", 14)
-                .attr("font-weight", "light")
-                .text((d, i) ->
-                  # Add asterisk if column is unique
-                  unique = (if unique_cols[i] then "*" else "")
-                  d.name + unique + " (" + d.type + ")"
-                )
-            )
-            ##############
-            # Relationships and hierarchies
-            ##############
-            attributePositions = {}
-            extractTransform = (str) ->
-              split = str.split(',')
-              x = split[0].split('(')[1]
-              y = split[1].split(')')[0]
-              [parseInt(x), parseInt(y)]
-            # Get left and right positions for each node (relative to parent)
-            d3.selectAll("g.attr").each (d, i) ->
-              attrName = d.name
-              column_id = d.column_id
-              [x, y] = extractTransform(d3.select(this).attr("transform"))
-              bbox = d3.select(this).node().getBBox()
-              h = bbox.height
-              w = bbox.width
-              # Top-level parent boxes
-              parentBBox = d3.select(@parentNode.parentNode).node().getBBox()
-              parentLeft = parentBBox.x
-              parentTop = parentBBox.y
-             # Final Positions
-              finalLeftX = parentLeft + margins.left + 5
-              finalLeftY = parentTop + y + boxMargins.y + attributesYOffset + (h / 2)
-              finalRightX = parentLeft + margins.left + w - 5
-              finalRightY = parentTop + y + boxMargins.y + attributesYOffset + (h / 2)
-              dID = d3.select(@parentNode).datum().dID
-              attributePositions[dID] = {} unless dID of attributePositions
-              attributePositions[dID][column_id] =
-                l: [
-                  finalLeftX
-                  finalLeftY
-                ]
-                r: [
-                  finalRightX
-                  finalRightY
-                ]
-              return
-            links = []
-            linkValues = []
-            OVERLAP_THRESHOLD = 0.25
-            # Reshape overlaps into pairs of (dID, columnID)
-            for datasetPair, columnPairs of overlaps
-              datasets = datasetPair.split("\t")
-              for columnPair, overlap of columnPairs
-                columns = columnPair.split("\t")
-                if overlap > OVERLAP_THRESHOLD
-                  linkValues.push(overlap)
-                  links.push [
-                    [datasets[0], columns[0]]
-                    [datasets[1], columns[1]]
-                  ]
-            for link, i in links
-              overlap = linkValues[i]
-              [l_dID, l_col] = link[0]
-              [r_dID, r_col] = link[1]
-              l_dTitle = dIDToDataset[l_dID].title
-              r_dTitle = dIDToDataset[r_dID].title
-              l_cTitle = dIDToDataset[l_dID].column_attrs[l_col]?.name
-              r_cTitle = dIDToDataset[r_dID].column_attrs[r_col]?.name
-              attrPositionsA = attributePositions[l_dID][l_col]
-              attrPositionsB = attributePositions[r_dID][r_col]
-              if attrPositionsA and attrPositionsB
-                attrAL = attrPositionsA.l
-                attrAR = attrPositionsA.r
-                attrBL = attrPositionsB.l
-                attrBR = attrPositionsB.r
-                finalAPos = attrAR
-                finalBPos = attrBL
-                g = svg
-                  .append("g")
-                  .attr("class", "arrow-container")
-                visibleArrow = g.append("path")
-                  .datum(link)
-                  .attr("marker-end", "url(#arrowhead)")
-                  .attr("d", "M" + finalAPos[0] + "," + finalAPos[1] + "L" + finalBPos[0] + "," + finalBPos[1])
-                  .attr("stroke", "black")
-                  .attr("stroke-width", 1)
-                  .attr("class", "visible-arrow")
-                hoverArrow = g.append("path")
-                  .datum(
-                    overlap: overlap
-                    l_dTitle: l_dTitle
-                    r_dTitle: r_dTitle
-                    l_cTitle: l_cTitle
-                    r_cTitle: r_cTitle
-                  )
-                  .attr("marker-end", "url(#arrowhead)")
-                  .attr("d", "M" + finalAPos[0] + "," + finalAPos[1] + "L" + finalBPos[0] + "," + finalBPos[1])
-                  .attr('shape-rendering', 'crispEdges')
-                  .style('opacity', 0.0)
-                  .attr("stroke-width", 10)
-                  .attr("stroke", "white")
+                  .attr("class", "attr")
+                  .attr("id", (d, i) -> "attr_" + dID + "_" + i)
+                  .attr("transform", (d, i) -> "translate(0," + (i * 35) + ")")
                   .on("mousemove", (p) ->
-                    d3.select(@parentNode).select("path.visible-arrow").attr("stroke-width", 2)
-                    d = d3.select(this).datum()
-                    scope.selected =
-                      type: 'relationship'
-                      l_dTitle: p.l_dTitle
-                      r_dTitle: p.r_dTitle
-                      l_cTitle: p.l_cTitle
-                      r_cTitle: p.r_cTitle
-                      overlap: p.overlap
-                    scope.$apply()
+                    d3.select(this).selectAll('rect').classed("hover", true)
+                    if !selection_made
+                      dID = d3.select(@parentNode).datum().dID
+                      d = d3.select(this).datum()
+                      columnID = d.column_id
+                      unique = uniques[dID][columnID]
+                      columnStats = stats[dID][d.name]
+                      scope.selected =
+                        type: 'attribute'
+                        columnType: d.type
+                        unique: unique
+                        columnStats: columnStats
+                      scope.$apply()
                   )
                   .on("mouseout", (p) ->
-                    d3.select(@parentNode).select("path.visible-arrow").attr("stroke-width", 1)
-                    scope.selected = null
-                    scope.$apply()
+                    d3.select(this).selectAll('rect').classed("hover", false)
+                    if !selection_made
+                      scope.selected = null
+                      scope.$apply()
                   )
+                  .on("click", (p) ->
+                    if d3.event.defaultPrevented
+                      return
+                    selection_made = true
+                    d3.selectAll(".selected").classed("selected", false)
+                    d3.select(this).selectAll("rect").classed("selected", true)
+                    dID = d3.select(@parentNode).datum().dID
+                    dID = d3.select(@parentNode).datum().dID
+                    d = d3.select(this).datum()
+                    columnID = d.column_id
+                    unique = uniques[dID][columnID]
+                    columnStats = stats[dID][d.name]
+                    scope.selected =
+                      type: 'attribute'
+                      columnType: d.type
+                      unique: unique
+                      columnStats: columnStats
+                    scope.$apply()
+                    # d3.select(this)
+                    #   .append("g")
+                    #   .text("test")
+                    #   .classed("expanded", true)
+                  )
+                texts.append("rect")
+                  .attr("height", 35)
+                  .attr("width", boxWidth)
+                  # .attr("fill-opacity", 0.0)
+                  .attr("stroke", "#AEAEAE")
+                  .attr("stroke-width", 1)
+                  .attr("fill", "#FFFFFF")
+                texts.append("text")
+                  .attr("x", 10)
+                  .attr("y", 22)
+                  .attr("fill", "#000000")
+                  .attr("font-size", 14)
+                  .attr("font-weight", "light")
+                  .text((d, i) ->
+                    # Add asterisk if column is unique
+                    unique = (if unique_cols[i] then "*" else "")
+                    d.name + unique + " (" + d.type + ")"
+                  )
+              )
+            ##############
+            # Relationships and hierarchies
+            ##############            
+
+            calculateLinks()
+            # console.log links, linkValues
+
+            calculateAttributePositions()
+            # console.log attributePositions
+
+            drawLinks()
+
           , 200)
     )
 ])

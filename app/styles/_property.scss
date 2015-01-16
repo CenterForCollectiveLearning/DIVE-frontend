@@ -7,10 +7,23 @@ ontology-editor {
         cursor: pointer;
     }
 
+    .visible-arrow {
+        &.hover {
+            stroke-width: 2
+        }
+        &.selected {
+            stroke-width: 2
+        }
+    }
+
     rect {
         cursor: pointer;
         &.hover {
             fill-opacity: 1.0;
+            fill: $light-gray;
+        }
+        &.selected {
+            fill-capacity: 1.0;
             fill: $light-gray;
         }
     }
