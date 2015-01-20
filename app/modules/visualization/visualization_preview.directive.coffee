@@ -82,6 +82,8 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
               console.log(vizType, d3PlusTitleMapping[vizType])
               if agg
                 viz.title(getTitle(vizType, vizSpec))
+                  .color("#000000")
+                  .size(20)
                   .x(x)
                   .y("count")
                   .id(x)
@@ -98,6 +100,7 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
               viz.title(getTitle(vizType, vizSpec))
                 .coords("/assets/misc/countries.json")
                 .id("id")  # vizSpec.groupBy.title.toString())  # Needs to match ID in country json
+                .text("label")
                 .color("count")
                 .size("count")
                 .draw()

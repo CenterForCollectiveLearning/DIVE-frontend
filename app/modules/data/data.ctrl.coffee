@@ -36,7 +36,7 @@ angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope
     $scope.currentPane = 'right'
     $scope.selectedIndex = index
 
-  $scope.types = [ "integer", "float", "string", "country", "continent", "datetime" ]
+  $scope.types = [ "integer", "float", "string", "countryCode2", "countryCode3", "countryName", "continent", "datetime" ]
 
   # Initialize datasets
   DataService.promise((datasets) ->

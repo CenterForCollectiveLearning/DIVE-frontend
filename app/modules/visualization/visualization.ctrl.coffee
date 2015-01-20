@@ -6,7 +6,6 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
   # Initialize datasets
   DataService.promise((datasets) ->
     $scope.datasets = datasets
-    console.log($scope.datasets)
     $scope.datasetsByDID = {}
     for d in datasets
       dID = d.dID
@@ -71,6 +70,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     $scope.specs = _.sortBy($scope.allSpecs[$scope.types[$scope.selectedTypeIndex].name], (e) ->
       $scope.selectedSortOrder * e['stats'][$scope.selectedSorting]
     )
+    $scope.selectSpec(0)
 
   $scope.selectSpec = (index) ->
     $scope.selectedSpecIndex = index
@@ -143,6 +143,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
         type: $scope.selectedType
         spec: $scope.selectedSpec
         conditional: $scope.selectedConditionalValues
+
       VizDataService.promise(params, (result) ->
         $scope.vizData = result.result
         $scope.loading = false
