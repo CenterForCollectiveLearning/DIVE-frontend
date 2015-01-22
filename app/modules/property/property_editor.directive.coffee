@@ -49,7 +49,19 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
 
           renderTimeout = $timeout( ->
             # Arrowhead marker definition
-            svg.append("defs").append("marker").attr("id", "arrowhead").attr("refX", 3).attr("refY", 2).attr("markerWidth", 6).attr("markerHeight", 4).attr("orient", "auto").append("path").attr("d", "M 0,0 V 4 L3,3 Z")
+            defs = svg.append("defs")
+
+            defs.append("marker").attr("id", "arrowhead")
+              .attr("refX", 3).attr("refY", 2)
+              .attr("markerWidth", 6).attr("markerHeight", 4)
+              .attr("orient", "auto").append("path").attr("d", "M 0,0 V 4 L3,3 Z")
+            defs.append("marker").attr("id", "circlehead")
+              .attr("refX", 5).attr("refY", 5)
+              .attr("markerWidth", 10).attr("markerHeight", 10)
+              .attr("orient", "auto").append("circle")
+              .attr("cx", 5).attr("cy", 5).attr("r", 2)
+              .style("fill", "black")
+
             # Attribute overlap color scale
             colorScale = d3.scale.category10()
             colorScale.domain(Object.keys(overlaps))
@@ -96,8 +108,10 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 attributePositions[dID] = {}
                 calcPos(d3.select("#box_" + dID).selectAll("g.attr"))
             
+            # links = []
+            # linkValues = []
+            # link_overlaps = {}
             links = []
-            linkValues = []
             calculateLinks = () ->
               links = []
               linkValues = []
@@ -107,24 +121,24 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 datasets = datasetPair.split("\t")
                 for columnPair, overlap of columnPairs
                   columns = columnPair.split("\t")
+
                   if overlap > OVERLAP_THRESHOLD
-                    linkValues.push(overlap)
+                    ind = links.length
                     links.push [
                       [datasets[0], columns[0]]
                       [datasets[1], columns[1]]
+                      overlap
                     ]
-              # console.log links
-              # console.log linkValues
 
             drawLinks = (dID) ->
-              redrawLink = (link, selection) ->
+
+              calculatePath = (link) ->
                 [l_dID, l_col] = link[0]
                 [r_dID, r_col] = link[1]
                 attrA_pos = attributePositions[l_dID][l_col]
                 attrB_pos = attributePositions[r_dID][r_col]
 
                 if attrA_pos and attrB_pos
-
                   l_box_x = extractTransform(d3.select("#box_" + l_dID).attr("transform"))[0]
                   r_box_x = extractTransform(d3.select("#box_" + r_dID).attr("transform"))[0]
 
@@ -135,97 +149,87 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                     finalA_pos = attrA_pos.right
                     finalB_pos = attrB_pos.left
 
-                  d3.select(selection)
-                    .attr("d", "M" + finalA_pos[0] + ", " + finalA_pos[1] + "L" + finalB_pos[0] + "," + finalB_pos[1])
+                  "M" + finalA_pos[0] + "," + finalA_pos[1] + "L" + finalB_pos[0] + "," + finalB_pos[1]
+                else
+                  [[0, 0], [0, 0]]
 
               if (!dID)
-                for link, i in links
-                  overlap = linkValues[i]
-                  [l_dID, l_col] = link[0]
-                  [r_dID, r_col] = link[1]
+                line_g = svg.selectAll("g.arrow-container").data(links)
+                console.log links
+                enter_g = line_g.enter()
+                  .append("g").attr("class", "arrow-container")
 
-                  l_dTitle = dIDToDataset[l_dID].title
-                  r_dTitle = dIDToDataset[r_dID].title
-                  l_cTitle = dIDToDataset[l_dID].column_attrs[l_col]?.name
-                  r_cTitle = dIDToDataset[r_dID].column_attrs[r_col]?.name
+                enter_g.append("path").attr("class", "visible-arrow")
+                  .attr("marker-end", "url(#circlehead)")
+                  .attr("marker-start", "url(#circlehead)")
+                  .attr("d", (d) -> calculatePath(d))
+                  .attr("stroke", "black").attr("stroke-width", 1)
 
-                  attrA_pos = attributePositions[l_dID][l_col]
-                  attrB_pos = attributePositions[r_dID][r_col]
+                enter_g.append("path").attr("class", "hover-arrow")
+                  .attr("d", (d) -> calculatePath(d))
+                  .attr("shape-rendering", "crispEdges")
+                  .attr("stroke-width", 15)
+                  .attr("stroke", "white")
+                  .style("opacity", 0)
+                  .on("mousemove", (p) ->                    
+                    d3.select(@parentNode).select("path.visible-arrow").classed("hover", true)
+                    
+                    if !selection_made
+                      [l_dID, l_col] = p[0]
+                      [r_dID, r_col] = p[1]
+                      l_dTitle = dIDToDataset[l_dID].title
+                      r_dTitle = dIDToDataset[r_dID].title
+                      l_cTitle = dIDToDataset[l_dID].column_attrs[l_col]?.name
+                      r_cTitle = dIDToDataset[r_dID].column_attrs[r_col]?.name
 
-                  if attrA_pos and attrB_pos 
-
-                    finalA_pos = attrA_pos.right
-                    finalB_pos = attrB_pos.left
-
-                    line_g = svg.append("g").attr("class", "arrow-container")
-                      .each(() ->
-                        third_child = this.parentNode.children[2]
-                        if third_child
-                          this.parentNode.insertBefore(this, third_child)
-                      )
-                    arrow = line_g.append("path").datum(link)
-                      .attr("marker-end", "url(#arrowhead)")
-                      .attr("d", "M" + finalA_pos[0] + ", " + finalA_pos[1] + "L" + finalB_pos[0] + "," + finalB_pos[1])
-                      .attr("stroke", "black")
-                      .attr("stroke-width", 1)
-                      .attr("class", "visible-arrow arrow_" + l_dID + "_" + r_dID)
-
-                    hoverArrow = line_g.append("path")
-                      .datum(
-                        link: link
-                        overlap: overlap
+                      scope.selected =
+                        type: 'relationship'
                         l_dTitle: l_dTitle
                         r_dTitle: r_dTitle
                         l_cTitle: l_cTitle
                         r_cTitle: r_cTitle
-                      )
-                      .attr("marker-end", "url(#arrowhead)")
-                      .attr("d", "M" + finalA_pos[0] + "," + finalA_pos[1] + "L" + finalB_pos[0] + "," + finalB_pos[1])
-                      .attr('shape-rendering', 'crispEdges')
-                      .style('opacity', 0.0)
-                      .attr("stroke-width", 15)
-                      .attr("stroke", "white")
-                      .attr("class", "hover-arrow arrow_" + l_dID + "_" + r_dID)
-                      .on("mousemove", (p) ->
-                        d3.select(@parentNode).select("path.visible-arrow").classed("hover", true)
-                        if !selection_made
-                          d = d3.select(this).datum()
-                          scope.selected =
-                            type: 'relationship'
-                            l_dTitle: p.l_dTitle
-                            r_dTitle: p.r_dTitle
-                            l_cTitle: p.l_cTitle
-                            r_cTitle: p.r_cTitle
-                            overlap: p.overlap
-                          scope.$apply()
-                      )      
-                      .on("mouseout", (p) ->
-                        d3.select(@parentNode).select("path.visible-arrow").classed("hover", false)
-                        if !selection_made
-                          console.log "mouseout!"
-                          scope.selected = null
-                          scope.$apply()
-                      )
-                      .on("click", (p) ->
-                        if d3.event.defaultPrevented
-                          return
-                        d3.selectAll(".selected").classed("selected", false)
-                        d3.select(@parentNode).select("path.visible-arrow").classed("selected", true)
-                        selection_made = true
-                        scope.selected =
-                          type: 'relationship'
-                          l_dTitle: p.l_dTitle
-                          r_dTitle: p.r_dTitle
-                          l_cTitle: p.l_cTitle
-                          r_cTitle: p.r_cTitle
-                          overlap: p.overlap
-                        scope.$apply()
-                      )
-              else 
-                d3.selectAll(".visible-arrow").filter((d, i) -> dID in d.map (j) -> j[0])
-                  .each((d, i) -> redrawLink(d, this))
-                d3.selectAll(".hover-arrow").filter((d, i) -> dID in d.link.map (j) -> j[0])
-                  .each((d, i) -> redrawLink(d.link, this))
+                        overlap: p[2]
+                      scope.$apply()
+                  )
+                  .on("mouseout", (p) ->
+                    d3.select(@parentNode).select("path.visible-arrow").classed("hover", false)
+                    if !selection_made
+                      scope.selected = null
+                      scope.$apply()
+                  )
+                  .on("click", (p, i) ->
+                    if d3.event.defaultPrevented
+                      return
+                    d3.selectAll(".selected").classed("selected", false)
+                    d3.select(@parentNode).select("path.visible-arrow").classed("selected", true)
+                    selection_made = true
+                    [l_dID, l_col] = p[0]
+                    [r_dID, r_col] = p[1]
+                    l_dTitle = dIDToDataset[l_dID].title
+                    r_dTitle = dIDToDataset[r_dID].title
+                    l_cTitle = dIDToDataset[l_dID].column_attrs[l_col]?.name
+                    r_cTitle = dIDToDataset[r_dID].column_attrs[r_col]?.name
+
+                    scope.selected =
+                      type: 'relationship'
+                      l_dTitle: l_dTitle
+                      r_dTitle: r_dTitle
+                      l_cTitle: l_cTitle
+                      r_cTitle: r_cTitle
+                      overlap: p[2]
+                    scope.$apply()
+                  )
+                  .on("dblclick", (p, i) ->
+                    d3.select(@parentNode).select("path.visible-arrow").classed("selected", false)
+                    selection_made = false
+                    links.splice(i, 1)
+                    d3.select(@parentNode).remove()
+                  )
+
+              else
+                d3.selectAll(".arrow-container").filter((d, i) -> dID in d.map (j) -> j[0])
+                  .selectAll("path")
+                  .attr("d", (d) -> calculatePath(d))
 
             dragDataset = d3.behavior.drag()
               .on("dragstart", (d) ->
@@ -251,17 +255,87 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 drawLinks(dID)
                 # console.log attributePositions
               )
+              .on("dragend", (d) ->
+                el = d3.select(this.parentNode)[0][0]
+                child = d3.select(this.parentNode.parentNode).select(".arrow-container")[0][0]
+                el.parentNode.insertBefore(el, child)
+              )
+
+            dragLink = d3.behavior.drag()
+              .on("dragstart", (d) ->
+                d3.event.sourceEvent.stopPropagation()
+                dID = d3.select(@parentNode).datum().dID
+                column_id = d3.select(this).datum().column_id
+                m = d3.mouse(svg[0][0])
+                temp_arrow = svg.append("path").datum([[dID, column_id], null])
+                  .attr("id", "temp_link")
+                  .attr("marker-end", "url(#arrowhead)")
+                  .attr("d", "M" + m[0] + "," + m[1])
+                  .attr("stroke", "black")
+                  .attr("stroke-width", 2)
+              )
+              .on("drag", (d) ->
+                # console.log d3.mouse(svg[0][0])
+                m = d3.mouse(svg[0][0])
+                path_str = d3.select("#temp_link").attr("d").split("L")[0] + "L" + m[0] + "," + m[1]
+                d3.select("#temp_link").attr("d", path_str)
+              )
+              .on("dragend", (d) ->
+                link_data = d3.select("#temp_link").datum()
+                
+                start = d3.select("#temp_link").attr("d").split("M")[1].split("L")[0].split(",").map (j) -> parseInt(j)
+
+                dst = d3.selectAll("g.attr").filter((d, i) ->
+                  m = d3.mouse(this)
+                  (m[0] > 0) and (m[1] > 0) and (m[0] < boxWidth) and (m[1] < 35)
+                )
+
+                if dst[0].length > 0
+                  dID = d3.select(dst[0][0].parentNode).datum().dID
+                  column_id = dst.datum().column_id
+
+                  dID2 = link_data[0][0]
+                  column_id2 = link_data[0][1]
+
+                  if (dID != dID2)
+
+                    link_data[1] = [dID, column_id]
+                    link_data.push 0
+
+                    ## more efficient search?
+                    for datasetPair, columnPairs of overlaps
+                      datasets = datasetPair.split("\t")
+                      if (dID == datasets[0] and dID2 == datasets[1]) or (dID == datasets[1] and dID2 == datasets[0]) 
+                        for columnPair, overlap of columnPairs
+                          columns = columnPair.split("\t").map (j) -> parseInt(j)
+                          if (column_id == columns[0] and column_id2 == columns[1]) or (column_id == columns[1] and column_id2 == columns[0])
+                            link_data[2] = overlap
+                            break
+                        break                    
+                    links.push(link_data)
+                    drawLinks()
+                
+                d3.select("#temp_link").remove()
+              )
+
+            # d3.select("body").on("keydown", () ->
+            #   if d3.event.keyCode == 68
+            #     svg.selectAll(".arrow-container").remove()
+            #     alert "draw now!"
+            #     drawLinks()
+            # )
 
             svg.append("rect")
               .attr("width", "100%")
               .attr("height", "100%")
               .style("opacity", 0)
               .on("click", () -> 
-                svg.selectAll("*").classed("selected", false)
+                svg.selectAll(".selected").classed("selected", false)
                 selection_made = false
                 scope.selected = null
                 scope.$apply()
               )
+
             g = svg.selectAll("g")
               .data(data)
               .enter()
@@ -349,6 +423,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   .attr("class", "attr")
                   .attr("id", (d, i) -> "attr_" + dID + "_" + i)
                   .attr("transform", (d, i) -> "translate(0," + (i * 35) + ")")
+                  .call(dragLink)
                   .on("mousemove", (p) ->
                     d3.select(this).selectAll('rect').classed("hover", true)
                     if !selection_made
