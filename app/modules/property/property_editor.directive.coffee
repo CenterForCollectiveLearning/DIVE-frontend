@@ -141,15 +141,28 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 if attrA_pos and attrB_pos
                   l_box_x = extractTransform(d3.select("#box_" + l_dID).attr("transform"))[0]
                   r_box_x = extractTransform(d3.select("#box_" + r_dID).attr("transform"))[0]
-
-                  if l_box_x > r_box_x
-                    finalA_pos = attrA_pos.left
-                    finalB_pos = attrB_pos.right
+                  
+                  if l_dID != r_dID
+                    if l_box_x > r_box_x
+                      finalA_pos = attrA_pos.left
+                      finalB_pos = attrB_pos.right
+                    else
+                      finalA_pos = attrA_pos.right
+                      finalB_pos = attrB_pos.left
+                    "M" + finalA_pos[0] + "," + finalA_pos[1] + "L" + finalB_pos[0] + "," + finalB_pos[1]
                   else
-                    finalA_pos = attrA_pos.right
-                    finalB_pos = attrB_pos.left
+                    svg_w = parseInt(svg.style("width").split("px")[0])
 
-                  "M" + finalA_pos[0] + "," + finalA_pos[1] + "L" + finalB_pos[0] + "," + finalB_pos[1]
+                    if l_box_x > svg_w / 2
+                      finalA_pos = attrA_pos.right
+                      finalB_pos = attrB_pos.right
+                      ctrl_pt = [finalA_pos[0] + Math.abs(finalA_pos[1] - finalB_pos[1]), (finalA_pos[1] + finalB_pos[1])/2]
+                    else
+                      finalA_pos = attrA_pos.left
+                      finalB_pos = attrB_pos.left
+                      ctrl_pt = [finalA_pos[0] - Math.abs(finalA_pos[1] - finalB_pos[1]), (finalA_pos[1] + finalB_pos[1])/2]
+
+                    "M" + finalA_pos[0] + " " + finalA_pos[1] + "Q" + ctrl_pt[0] + " " + ctrl_pt[1] + "," + finalB_pos[0] + " " + finalB_pos[1]
                 else
                   "M0,0"
 
@@ -163,6 +176,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   .attr("marker-end", "url(#circlehead)")
                   .attr("marker-start", "url(#circlehead)")
                   .attr("d", (d) -> calculatePath(d))
+                  .attr("fill", "transparent")
                   .attr("stroke", "black").attr("stroke-width", 1)
 
                 enter_g.append("path").attr("class", "hover-arrow")
@@ -297,7 +311,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   dID2 = link_data[0][0]
                   column_id2 = link_data[0][1]
 
-                  if (dID != dID2)
+                  if dID != dID2 or (dID == dID2 and column_id != column_id2)
 
                     link_data[1] = [dID, column_id]
                     link_data.push 0
