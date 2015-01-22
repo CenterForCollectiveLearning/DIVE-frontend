@@ -33,7 +33,7 @@ nav.navbar {
             float: left;
             padding: 0 20px;
             line-height: 34px;
-            width: 190px;
+            width: 200px;
             border-right: 1px solid black;
 
             // &:before {
@@ -231,7 +231,7 @@ section.left-pane, section.right-pane {
 
 
                 div {
-                    height: 40px;
+                    height: 50px;
                     i {
                         width: 100%;
                         line-height: 40px;
@@ -244,7 +244,7 @@ section.left-pane, section.right-pane {
                     background-color: $assemble-green;
 
                     img {
-                        width: 16px;
+                        width: 20px;
                         margin-top: 16px;
                         margin-left: 12px
                     }
@@ -254,7 +254,7 @@ section.left-pane, section.right-pane {
                     background-color: $project-red;
                     img {
                         width: 14px;
-                        margin-top: 14px;
+                        margin-top: 17px;
                         margin-left: 13px;
                     }
                 }

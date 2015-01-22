@@ -10,19 +10,19 @@ angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope
       inactive: false
       icon: 'file.svg'
     },
-    {
-      label: 'Connect to Database'
-      inactive: true
-      icon: 'database.svg'
-    },
-    {
-      label: 'Connect to API'
-      inactive: true
-      icon: 'link.svg'
-    },
+    # {
+    #   label: 'Connect to Database'
+    #   inactive: true
+    #   icon: 'database.svg'
+    # },
+    # {
+    #   label: 'Connect to API'
+    #   inactive: true
+    #   icon: 'link.svg'
+    # },
     {
       label: 'Search DIVE Datasets'
-      inactive: true
+      inactive: false
       icon: 'search.svg'
     }
   ]
@@ -36,7 +36,7 @@ angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope
     $scope.currentPane = 'right'
     $scope.selectedIndex = index
 
-  $scope.types = [ "integer", "float", "string", "country", "continent", "datetime" ]
+  $scope.types = [ "integer", "float", "string", "countryCode2", "countryCode3", "countryName", "continent", "datetime" ]
 
   # Initialize datasets
   DataService.promise((datasets) ->

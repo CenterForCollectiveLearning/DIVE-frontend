@@ -4,6 +4,11 @@ _ = require('underscore')
 
 angular.module('diveApp.services', ['ui.router', 'angularFileUpload'])
 
+# User Registration
+# angular.module('diveApp.services').service "AccountService", ($http) ->
+#   promise:
+    
+
 # Container for data services
 angular.module('diveApp.services').service "AllProjectsService", ($http, $rootScope) ->
   promise: (userName, callback) ->
