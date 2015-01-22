@@ -151,7 +151,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
 
                   "M" + finalA_pos[0] + "," + finalA_pos[1] + "L" + finalB_pos[0] + "," + finalB_pos[1]
                 else
-                  [[0, 0], [0, 0]]
+                  "M0,0"
 
               if (!dID)
                 line_g = svg.selectAll("g.arrow-container").data(links)
