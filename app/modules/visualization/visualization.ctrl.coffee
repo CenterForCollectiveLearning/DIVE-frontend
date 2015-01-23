@@ -3,6 +3,8 @@ _ = require('underscore')
 # TODO Make this controller thinner!
 angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $http, $rootScope, DataService, PropertyService, VizDataService, ConditionalDataService, SpecificationService) ->
 
+  $scope.loading = true
+
   # Initialize datasets
   DataService.promise((datasets) ->
     $scope.datasets = datasets
@@ -39,6 +41,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
       $scope.selectedSortOrder * e['stats'][$scope.selectedSorting]
     )
     $scope.selectSpec(0)
+    $scope.loading = false
   )
 
   $scope.chooseSpec = (index) ->

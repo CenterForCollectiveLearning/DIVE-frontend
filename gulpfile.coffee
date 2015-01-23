@@ -35,6 +35,7 @@ gulp.task('browser-sync', ->
   browserSync(
     server:
       baseDir: 'dist/'
+    port: 5000
   )
 )
 

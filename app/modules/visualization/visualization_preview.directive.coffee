@@ -53,7 +53,7 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
                   .type("drop")
                   .title(condition)
                   .draw()
-            d3PlusTitleMapping =
+            d3PlusTypeMapping =
               treemap: 'tree_map'
               piechart: 'pie'
               barchart: 'bar'
@@ -62,7 +62,7 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
               geomap: 'geo_map'
 
             viz = d3plus.viz()
-              .type(d3PlusTitleMapping[vizType])
+              .type(d3PlusTypeMapping[vizType])
               .container("div#viz-container")
               .width($("section.viewport").width() - 40)
               .margin("20px")
@@ -79,15 +79,47 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
             else if vizType in ["scatterplot", "barchart", "linechart"]
               x = vizSpec.x.title
               agg = vizSpec.aggregation
-              console.log(vizType, d3PlusTitleMapping[vizType])
+              console.log(vizType, d3PlusTypeMapping[vizType])
+              console.log("viz data", vizData)
               if agg
+                sample_data = [
+                  {"year": 1991, "name":"alpha", "value": 17},
+                  {"year": 1992, "name":"alpha", "value": 20},
+                  {"year": 1993, "name":"alpha", "value": 25},
+                  {"year": 1994, "name":"alpha", "value": 33},
+                  {"year": 1995, "name":"alpha", "value": 52},
+                  {"year": 1991, "name":"beta", "value": 36},
+                  {"year": 1992, "name":"beta", "value": 32},
+                  {"year": 1993, "name":"beta", "value": 40},
+                  {"year": 1994, "name":"beta", "value": 58},
+                  {"year": 1995, "name":"beta", "value": 13},
+                  {"year": 1991, "name":"gamma", "value": 24},
+                  {"year": 1992, "name":"gamma", "value": 27},
+                  {"year": 1994, "name":"gamma", "value": 35},
+                  {"year": 1995, "name":"gamma", "value": 40}
+                ]
+                # viz.data(sample_data)
+                #   .title(getTitle(vizType, vizSpec))
+                #   .type(d3PlusTypeMapping[vizType])
+                #   .id("name")
+                #   .x("year")
+                #   .y("value")
+                #   .draw()
+                console.log(x)
                 viz.title(getTitle(vizType, vizSpec))
-                  .color("#000000")
-                  .size(20)
+                  .type(d3PlusTypeMapping[vizType])
+                  # .color("#000000")
                   .x(x)
                   .y("count")
-                  .id(x)
-                  .draw()
+
+
+                  if vizType is "linechart"
+                    viz.id("id")
+                    .draw()
+                  else
+                    viz.id(x)
+                    .size(10)
+                    .draw()
               else
                 y = vizSpec.y.title
                 viz.title(getTitle(vizType, vizSpec))
