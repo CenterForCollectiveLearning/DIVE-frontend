@@ -38,6 +38,8 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
           # Margins and Positioning
           boxWidth = 200
           boxHeight = 500
+          cellHeight = 35
+          cellWidth = 200
           margins =
             left: 20
           boxMargins =
@@ -166,27 +168,13 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 else
                   "M0,0"
 
+              console.log "Links: ", links.length
               if (!dID)
                 line_g = svg.selectAll("g.arrow-container").data(links)
-                console.log links
                 enter_g = line_g.enter()
                   .append("g").attr("class", "arrow-container")
-
-                enter_g.append("path").attr("class", "visible-arrow")
-                  .attr("marker-end", "url(#circlehead)")
-                  .attr("marker-start", "url(#circlehead)")
-                  .attr("d", (d) -> calculatePath(d))
-                  .attr("fill", "transparent")
-                  .attr("stroke", "black").attr("stroke-width", 1)
-
-                enter_g.append("path").attr("class", "hover-arrow")
-                  .attr("d", (d) -> calculatePath(d))
-                  .attr("shape-rendering", "crispEdges")
-                  .attr("stroke-width", 15)
-                  .attr("stroke", "white")
-                  .style("opacity", 0)
-                  .on("mousemove", (p) ->                    
-                    d3.select(@parentNode).select("path.visible-arrow").classed("hover", true)
+                  .on("mouseenter", (p) ->                    
+                    hoverEle(this)                    
                     
                     if !selection_made
                       [l_dID, l_col] = p[0]
@@ -205,18 +193,12 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                         overlap: p[2]
                       scope.$apply()
                   )
-                  .on("mouseout", (p) ->
-                    d3.select(@parentNode).select("path.visible-arrow").classed("hover", false)
-                    if !selection_made
-                      scope.selected = null
-                      scope.$apply()
-                  )
+                  .on("mouseleave", dehoverAllEle)
                   .on("click", (p, i) ->
                     if d3.event.defaultPrevented
                       return
-                    d3.selectAll(".selected").classed("selected", false)
-                    d3.select(@parentNode).select("path.visible-arrow").classed("selected", true)
-                    selection_made = true
+                    selectEle(this)
+
                     [l_dID, l_col] = p[0]
                     [r_dID, r_col] = p[1]
                     l_dTitle = dIDToDataset[l_dID].title
@@ -234,16 +216,154 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                     scope.$apply()
                   )
                   .on("dblclick", (p, i) ->
-                    d3.select(@parentNode).select("path.visible-arrow").classed("selected", false)
-                    selection_made = false
+                    deselectAllEle()
+                    dehoverAllEle()
                     links.splice(i, 1)
-                    d3.select(@parentNode).remove()
+                    d3.select(this).remove()
                   )
+                  .on("contextmenu", showLinkMenu)                
+                enter_g.append("path").attr("class", "visible-arrow")
+                  .attr("marker-end", "url(#circlehead)")
+                  .attr("marker-start", "url(#circlehead)")
+                  .attr("d", (d) -> calculatePath(d))
+                  .attr("fill", "transparent")
+                  .attr("stroke", "black").attr("stroke-width", 1)
 
+                enter_g.append("path").attr("class", "hover-arrow")
+                  .attr("d", (d) -> calculatePath(d))
+                  .attr("shape-rendering", "crispEdges")
+                  .attr("stroke-width", 15)
+                  .attr("stroke", "white")
+                  .style("opacity", 0)
+                  
               else
                 d3.selectAll(".arrow-container").filter((d, i) -> dID in d.map (j) -> j[0])
                   .selectAll("path")
                   .attr("d", (d) -> calculatePath(d))
+
+            link_types = ["1 -> 1", "1 -> many", "many -> 1"]
+            showLinkMenu = (p, i) ->
+              m = d3.mouse(this)
+              el = svg.select("#link_menu").attr("display", "")
+                .attr("transform", "translate(" + (m[0] - 10) + "," + (m[1] - 10) + ")")[0][0]
+                # .attr("transform", "translate(" + (m[0] - 10) + "," + (m[1] - 10) + ")")[0][0]
+              el.parentNode.appendChild(el)
+
+            buildMenus = () ->
+              # data menu
+              for p in data
+                menu = svg.append("g").attr("class", "menu")
+                  .attr("id", "menu_" + p.dID)
+                  .attr("display", "none")
+                  .on("mouseleave", () ->
+                    d3.select(this).attr("display", "none")
+                  )
+                menu.append("rect")
+                  .attr("width", cellWidth).attr("height", cellHeight)
+                  .attr("x", 0).attr("y", 0)
+                  .attr("rx", 3).attr("ry", 3)
+                  .attr("fill", "#FFFFFF")
+                  .style("stroke", "#AEAEAE").style("stroke-width", 1)
+              # link menu
+              link_menu = svg.append("g").attr("id", "link_menu")
+                # .attr("display", "none")
+                # .attr("transform", "translate(100, 100)")
+                .on("mouseleave", () -> d3.select(this).attr("display", "none"))
+              link_menu.append("rect")
+              # console.log "HI"
+              # console.log link_types
+              # console.log link_menu.append("circle")
+              # link_option = link_menu.data(link_types).enter()
+              #   .append("g").attr("transform", (d, i) -> "translate(0," + (i * cellHeight) + ")")
+              link_menu.append("rect")
+                .attr("width", cellWidth).attr("height", cellHeight)
+                .attr("x", 0).attr("y", 0).attr("rx", 3).attr("ry", 3)
+                .attr("fill", "#FFFFFF").style("stroke", "#AEAEAE").style("stroke-width", 1)
+
+            addToMenu = (p, dID, g_attr) ->
+              
+              column_id = p.column_id
+              menu = svg.select("g#menu_"+ dID)
+              offset = menu.selectAll("g.menu_attr")[0].length
+
+              option = menu.append("g").attr("class", "menu_attr")
+                .attr("transform", "translate(0," + (cellHeight * offset) + ")")
+                .on("mouseenter", () -> 
+                  hoverEle(this)
+                  if !selection_made
+                    scope.selected =
+                      type: 'attribute'
+                      columnType: p.type
+                      unique: uniques[dID][column_id]
+                      columnStats: stats[dID][p.name]
+                    scope.$apply()
+                )
+                .on("mouseleave", dehoverAllEle)
+                .on("click", () ->
+                  # min_y = null
+                  min_y = cellHeight * d3.select("#box_" + dID).selectAll("g.attr")[0].length
+                  d3.select("#box_" + dID).selectAll("g.attr").filter((d, i) ->
+                    d.column_id > column_id
+                  )
+                  .attr("transform", (d, i) ->
+                    [x, y] = extractTransform(d3.select(this).attr("transform"))
+                    min_y = Math.min(min_y, y)
+                    "translate(" + x + "," + (y + cellHeight) + ")"
+                  )
+                  d3.select(g_attr).attr("transform", "translate(0," + min_y + ")")
+                  d3.select("#box_" + dID).select(".attributes")[0][0].appendChild(g_attr)
+
+                  [x, y] = extractTransform(d3.select(this).attr("transform"))
+
+                  d3.select("#menu_" + dID).selectAll(".menu_attr").attr("transform", () -> 
+                    [dx, dy] = extractTransform(d3.select(this).attr("transform"))
+                    if dy > y
+                      "translate(0," + (dy - cellHeight) + ")"
+                    else
+                      "translate(0," + dy + ")"
+                  )
+                  calculateAttributePositions(dID)
+                  drawLinks(dID)
+                  d3.select(this).remove()
+                )
+
+              option.append("rect").attr("width", cellWidth).attr("height", cellHeight)
+                .attr("x", 0).attr("y", 0).attr("rx", 3).attr("ry", 3)
+                .attr("fill", "#FFFFFF").attr("stroke", "#AEAEAE")
+                .style("stroke-width", 1)
+
+              option.append("text")
+                .attr("x", 10).attr("y", 22).attr("fill", "#000000")
+                .attr("font-size", 14).attr("font-weight", "light")
+                .text(() ->
+                  unique = if uniques[dID][column_id] then "*" else ""
+                  p.name + unique + " (" + p.type + ")"
+                )
+
+            showMenu = (dID, m) ->
+              el = svg.select("g.menu#menu_" + dID).attr("display", "")
+                .attr("transform", "translate(" + (m[0] - 10) + "," + (m[1] - 10) + ")")[0][0]
+              el.parentNode.appendChild(el)
+
+            selectEle = (g) ->
+              deselectAllEle()
+              d3.select(g).selectAll("path.visible-arrow,rect").classed("selected", true)
+              selection_made = true
+            
+            deselectAllEle = () ->
+              svg.selectAll(".selected").classed("selected", false)
+              selection_made = false
+              scope.selected = null
+              scope.$apply()
+
+            hoverEle = (g) ->
+              dehoverAllEle()
+              d3.select(g).selectAll("path.visible-arrow,rect").classed("hover", true)
+            dehoverAllEle = () ->
+              svg.selectAll(".hover").classed("hover", false)
+              if (!selection_made)
+                scope.selected = null
+                scope.$apply()
 
             dragDataset = d3.behavior.drag()
               .on("dragstart", (d) ->
@@ -267,7 +387,6 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 dID = d3.select(this.parentNode).attr("id").split("_")[1]
                 calculateAttributePositions(dID)
                 drawLinks(dID)
-                # console.log attributePositions
               )
               .on("dragend", (d) ->
                 el = d3.select(this.parentNode)[0][0]
@@ -289,7 +408,6 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   .attr("stroke-width", 2)
               )
               .on("drag", (d) ->
-                # console.log d3.mouse(svg[0][0])
                 m = d3.mouse(svg[0][0])
                 path_str = d3.select("#temp_link").attr("d").split("L")[0] + "L" + m[0] + "," + m[1]
                 d3.select("#temp_link").attr("d", path_str)
@@ -301,7 +419,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
 
                 dst = d3.selectAll("g.attr").filter((d, i) ->
                   m = d3.mouse(this)
-                  (m[0] > 0) and (m[1] > 0) and (m[0] < boxWidth) and (m[1] < 35)
+                  (m[0] > 0) and (m[1] > 0) and (m[0] < cellWidth) and (m[1] < cellHeight)
                 )
 
                 if dst[0].length > 0
@@ -332,23 +450,22 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 d3.select("#temp_link").remove()
               )
 
-            # d3.select("body").on("keydown", () ->
-            #   if d3.event.keyCode == 68
-            #     svg.selectAll(".arrow-container").remove()
-            #     alert "draw now!"
-            #     drawLinks()
-            # )
+            d3.select("body").on("keydown", () ->
+              if d3.event.keyCode == 68
+                svg.selectAll(".arrow-container").remove()
+                alert "redrawing all links!"
+                drawLinks()
+            )
 
             svg.append("rect")
               .attr("width", "100%")
               .attr("height", "100%")
               .style("opacity", 0)
-              .on("click", () -> 
-                svg.selectAll(".selected").classed("selected", false)
-                selection_made = false
-                scope.selected = null
-                scope.$apply()
-              )
+              .on("click", deselectAllEle)
+            svg.on("contextmenu", () ->
+              console.log "default prevented"
+              d3.event.preventDefault()
+            )
 
             g = svg.selectAll("g")
               .data(data)
@@ -356,7 +473,6 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
               .append("g")
               .attr("class", "box")
               .attr("id", (d) -> "box_" + d.dID)
-              # .attr("transform", "translate(" + boxMargins.x + "," + boxMargins.y + ")")
               .attr("transform", (d, i) ->
                 x = boxMargins.x + i * (boxWidth + margins.left)
                 y = boxMargins.y
@@ -368,8 +484,8 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
               .attr("class", "title")
               .attr("transform", "translate(0, 0)")
               .call(dragDataset)
-              .on("mousemove", (p) ->
-                d3.select(this).selectAll("rect").classed("hover", true)
+              .on("mouseenter", (p) ->
+                hoverEle(this)
                 if !selection_made
                   d = d3.select(@parentNode).datum()
                   scope.selected =
@@ -380,18 +496,12 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                     cols: d.cols
                   scope.$apply()
               )
-              .on("mouseout", (p) ->
-                d3.select(this).selectAll("rect").classed("hover", false)
-                if !selection_made
-                  scope.selected = null
-                  scope.$apply()
-              )
-              .on("click", (p) ->
+              .on("mouseleave", dehoverAllEle)
+              .on("click", (p) ->               
                 if (d3.event.defaultPrevented)
                   return
-                d3.selectAll(".selected").classed("selected", false)
-                d3.select(this).selectAll("rect").classed("selected", true)
-                selection_made = true
+                selectEle(this)
+
                 d = d3.select(@parentNode).datum()
                 scope.selected =
                   type: 'object'
@@ -401,9 +511,14 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   cols: d.cols
                 scope.$apply()
               )
+              .on("contextmenu", (p, i) ->
+                m = d3.mouse(svg[0][0])
+                showMenu(p.dID, d3.mouse(svg[0][0]))
+              )
+
             title_g.append("rect")
               .attr("height", attributesYOffset)
-              .attr("width", boxWidth)
+              .attr("width", cellWidth)
               .attr("x", 0).attr("y", 0)
               .attr("rx", 3).attr("ry", 3)
               .attr("stroke", "#AEAEAE")
@@ -412,7 +527,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
               # .style("fill-opacity", 0)
             title_g.append("text")
               .attr("fill", "#000000")
-              .attr("x", boxWidth/2)
+              .attr("x", cellWidth/2)
               .attr("y", 30)
               .attr("text-anchor", "middle")
               .attr("class", "title")
@@ -420,11 +535,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
             # Attributes
             # TODO Unpack this
             tspan = g.append("g")
-              .attr("transform", (d, i) ->
-                x = i * (boxWidth + margins.left)
-                y = attributesYOffset
-                "translate(" + 0 + "," + y + ")"
-              )
+              .attr("transform", (d, i) -> "translate(0," + attributesYOffset + ")")
               .attr("class", "attributes")
               .each((d) ->
                 dID = d.dID
@@ -436,10 +547,10 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   .append("g")
                   .attr("class", "attr")
                   .attr("id", (d, i) -> "attr_" + dID + "_" + i)
-                  .attr("transform", (d, i) -> "translate(0," + (i * 35) + ")")
+                  .attr("transform", (d, i) -> "translate(0," + (i * cellHeight) + ")")
                   .call(dragLink)
-                  .on("mousemove", (p) ->
-                    d3.select(this).selectAll('rect').classed("hover", true)
+                  .on("mouseenter", (p) ->
+                    hoverEle(this)
                     if !selection_made
                       dID = d3.select(@parentNode).datum().dID
                       d = d3.select(this).datum()
@@ -453,19 +564,11 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                         columnStats: columnStats
                       scope.$apply()
                   )
-                  .on("mouseout", (p) ->
-                    d3.select(this).selectAll('rect').classed("hover", false)
-                    if !selection_made
-                      scope.selected = null
-                      scope.$apply()
-                  )
+                  .on("mouseleave", (p) -> dehoverAllEle)
                   .on("click", (p) ->
                     if d3.event.defaultPrevented
                       return
-                    selection_made = true
-                    d3.selectAll(".selected").classed("selected", false)
-                    d3.select(this).selectAll("rect").classed("selected", true)
-                    dID = d3.select(@parentNode).datum().dID
+                    selectEle(this)
                     dID = d3.select(@parentNode).datum().dID
                     d = d3.select(this).datum()
                     columnID = d.column_id
@@ -477,14 +580,42 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                       unique: unique
                       columnStats: columnStats
                     scope.$apply()
-                    # d3.select(this)
-                    #   .append("g")
-                    #   .text("test")
-                    #   .classed("expanded", true)
                   )
+                  .on("dblclick", (p) ->
+                    d3.event.preventDefault()
+                    [x, y] = extractTransform(d3.select(this).attr("transform"))
+                    d3.select(this.parentNode).selectAll(".attr").attr("transform", () ->
+                      [dx, dy] = extractTransform(d3.select(this).attr("transform"))
+                      if (dy > y)
+                        "translate(" + dx + ", " + (dy - cellHeight) + ")"
+                      else
+                        "translate(" + dx + "," + dy + ")"
+                    )
+                    dID = d3.select(@parentNode).datum().dID
+                    column_id = d3.select(this).datum().column_id
+                    ind = []
+                    selection = d3.selectAll("g.arrow-container").filter((d, i) ->
+                      if (d[0][0] == dID and parseInt(d[0][1]) == column_id) or (d[1][0] == dID and parseInt(d[1][1]) == column_id)
+                        ind.push i
+                        true
+                      else
+                        false
+                    ).remove()
+                    ind.reverse()
+                    for i in ind
+                      links.splice(i, 1)
+
+                    calculateAttributePositions(dID)
+                    drawLinks(dID)
+                    deselectAllEle()
+                    dehoverAllEle()
+                    g_attr = d3.select(this).remove()
+                    addToMenu(p, dID, g_attr[0][0])
+                  )
+
                 texts.append("rect")
-                  .attr("height", 35)
-                  .attr("width", boxWidth)
+                  .attr("height", cellHeight)
+                  .attr("width", cellWidth)
                   # .attr("fill-opacity", 0.0)
                   .attr("stroke", "#AEAEAE")
                   .attr("stroke-width", 1)
@@ -509,9 +640,10 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
             # console.log links, linkValues
 
             calculateAttributePositions()
-            # console.log attributePositions
+            # # console.log attributePositions
 
             drawLinks()
+            buildMenus()
 
           , 200)
     )
