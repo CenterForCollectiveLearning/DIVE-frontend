@@ -54,14 +54,15 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
             defs = svg.append("defs")
 
             defs.append("marker").attr("id", "arrowhead")
-              .attr("refX", 3).attr("refY", 2)
-              .attr("markerWidth", 6).attr("markerHeight", 4)
-              .attr("orient", "auto").append("path").attr("d", "M 0,0 V 4 L3,3 Z")
+              .attr("refX", 6).attr("refY", 3)
+              .attr("markerWidth", 6).attr("markerHeight", 6)
+              .attr("orient", "auto").append("path").attr("d", "M 0,0 L 6,3 L 0,6 Q 3,3 0,0 Z ")
+              # .attr("fill", "transparent").attr("stroke", "black").attr("stroke-width", 1)
             defs.append("marker").attr("id", "circlehead")
-              .attr("refX", 5).attr("refY", 5)
-              .attr("markerWidth", 10).attr("markerHeight", 10)
+              .attr("refX", 2).attr("refY", 2)
+              .attr("markerWidth", 4).attr("markerHeight", 4)
               .attr("orient", "auto").append("circle")
-              .attr("cx", 5).attr("cy", 5).attr("r", 2)
+              .attr("cx", 2).attr("cy", 2).attr("r", 2)
               .style("fill", "black")
 
             # Attribute overlap color scale
@@ -70,6 +71,14 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
             dIDToDataset = {}
             for dataset in data
               dIDToDataset[dataset.dID] = dataset
+            
+            link_types = [
+              [0, "1 -> 1"], 
+              [1, "1 -> many"], 
+              [2, "many -> 1"], 
+              [3, "many -> many"],
+              [4, "hierarchy"]
+            ]
             # Create parent group elements for each dataset
             extractTransform = (str) ->
               split = str.split(',')
@@ -125,11 +134,13 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   columns = columnPair.split("\t")
 
                   if overlap > OVERLAP_THRESHOLD
+                    link_type = Math.floor(Math.random() * link_types.length) ## random type for now
                     ind = links.length
                     links.push [
                       [datasets[0], columns[0]]
                       [datasets[1], columns[1]]
-                      overlap
+                      overlap              
+                      link_type        
                     ]
 
             drawLinks = (dID) ->
@@ -197,6 +208,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   .on("click", (p, i) ->
                     if d3.event.defaultPrevented
                       return
+                    deselectAllEle()
                     selectEle(this)
 
                     [l_dID, l_col] = p[0]
@@ -223,7 +235,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   )
                   .on("contextmenu", showLinkMenu)                
                 enter_g.append("path").attr("class", "visible-arrow")
-                  .attr("marker-end", "url(#circlehead)")
+                  .attr("marker-end", "url(#arrowhead)")
                   .attr("marker-start", "url(#circlehead)")
                   .attr("d", (d) -> calculatePath(d))
                   .attr("fill", "transparent")
@@ -241,13 +253,59 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   .selectAll("path")
                   .attr("d", (d) -> calculatePath(d))
 
-            link_types = ["1 -> 1", "1 -> many", "many -> 1"]
+
             showLinkMenu = (p, i) ->
-              m = d3.mouse(this)
+              organizeMenu = () ->
+                option = svg.select("#link_menu").selectAll("g.link_type").filter((d, i) -> d[0] == p[3])
+                  .on("click", (d, i) ->
+                    svg.select("#link_menu").selectAll("g.link_type").filter((d, i) -> d[0] != p[3])
+                      .attr("transform", (d, i) -> "translate(0," + (i+1) * cellHeight + ")")
+                    svg.select("#link_menu").selectAll("g.link_type")
+                      .on("click", (d, i) ->
+                        p[3] = d[0]
+                        svg.select("#link_menu").selectAll("g.link_type").attr("transform", "translate(0, 0)")
+                        organizeMenu()
+                        # selection = svg.select("#link_menu").selectAll("g.link_type").filter((d, i) -> d[0] == p[3])[0][0]
+                        # selection.parentNode.appendChild(selection)
+                        # selectEle(selection)
+                      )
+                  )
+                option = option[0][0]
+                option.parentNode.appendChild(option)
+              
+              deselectAllEle()
+              selectEle(this)
+
+              m = d3.mouse(this)              
               el = svg.select("#link_menu").attr("display", "")
-                .attr("transform", "translate(" + (m[0] - 10) + "," + (m[1] - 10) + ")")[0][0]
-                # .attr("transform", "translate(" + (m[0] - 10) + "," + (m[1] - 10) + ")")[0][0]
+                .attr("transform", "translate(" + (m[0] - (boxWidth*2/3) + 10) + "," + (m[1] - 10) + ")")              
+              el = el[0][0]
               el.parentNode.appendChild(el)
+              organizeMenu()
+
+              # option = option[0][0]
+              # option.parentNode.appendChild(option)
+
+                # .attr("transform", (d, i) ->
+                #   if d[0] == p[3]
+                #     selectEle(this)
+                #     "translate(0,0)"
+                #   else
+                #     offset += 1
+                #     "translate(0," + (offset * cellHeight) + ")"
+                # )
+                # .on("click", (d, i) ->
+                #   p[3] = d[0]
+                #   d3.select(this).attr("transform", "translate(0, 0)")
+                #   svg.select("#link_menu").selectAll("g.link_type")
+                #     .filter((d) -> d[0] != p[3])
+                #     .attr("transform", (d, i) -> "translate(0," + (i+1) * cellHeight + ")")
+                #   deselectAllEle()
+                #   selectEle(link)
+                #   selectEle(this)
+                # )
+
+
 
             buildMenus = () ->
               # data menu
@@ -266,19 +324,34 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   .style("stroke", "#AEAEAE").style("stroke-width", 1)
               # link menu
               link_menu = svg.append("g").attr("id", "link_menu")
-                # .attr("display", "none")
+                .attr("display", "none")
                 # .attr("transform", "translate(100, 100)")
-                .on("mouseleave", () -> d3.select(this).attr("display", "none"))
+                .on("mouseleave", () -> 
+                  deselectAllEle()
+                  d3.select(this).attr("display", "none")
+                  d3.select(this).selectAll("g.link_type").attr("transform", "translate(0,0)")
+                )
+
               link_menu.append("rect")
-              # console.log "HI"
-              # console.log link_types
-              # console.log link_menu.append("circle")
-              # link_option = link_menu.data(link_types).enter()
-              #   .append("g").attr("transform", (d, i) -> "translate(0," + (i * cellHeight) + ")")
-              link_menu.append("rect")
-                .attr("width", cellWidth).attr("height", cellHeight)
+                .attr("x", 0).attr("y", 0).attr("rx", 3).attr("ry", 3)
+                .attr("width", boxWidth * 2/3).attr("height", link_types.length * cellHeight)
+                .style("opacity", 0)
+
+              link_option = link_menu.selectAll("g.link_type").data(link_types).enter()
+                .append("g").attr("class", "link_type")
+                .attr("transform", "translate(0, 0)")
+                # .attr("transform", (d, i) -> "translate(0," + i * cellHeight + ")")
+                .on("mouseenter", () -> hoverEle(this))
+                .on("mouseleave", dehoverAllEle)
+
+              link_option.append("rect").attr("width", cellWidth * 2/3).attr("height", cellHeight)
                 .attr("x", 0).attr("y", 0).attr("rx", 3).attr("ry", 3)
                 .attr("fill", "#FFFFFF").style("stroke", "#AEAEAE").style("stroke-width", 1)
+
+              link_option.append("text")
+                .attr("x", 10).attr("y", 22).attr("fill", "#000000")
+                .attr("font-size", 14).attr("font-weight", "light")
+                .text((d) -> d[1])
 
             addToMenu = (p, dID, g_attr) ->
               
@@ -346,7 +419,6 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
               el.parentNode.appendChild(el)
 
             selectEle = (g) ->
-              deselectAllEle()
               d3.select(g).selectAll("path.visible-arrow,rect").classed("selected", true)
               selection_made = true
             
@@ -359,6 +431,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
             hoverEle = (g) ->
               dehoverAllEle()
               d3.select(g).selectAll("path.visible-arrow,rect").classed("hover", true)
+
             dehoverAllEle = () ->
               svg.selectAll(".hover").classed("hover", false)
               if (!selection_made)
@@ -444,6 +517,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                             link_data[2] = overlap
                             break
                         break                    
+                    link_data.push Math.floor(Math.random() * link_types.length) ## random type for now
                     links.push(link_data)
                     drawLinks()
                 
@@ -461,9 +535,11 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
               .attr("width", "100%")
               .attr("height", "100%")
               .style("opacity", 0)
-              .on("click", deselectAllEle)
+              .on("click", () ->
+                deselectAllEle()
+                svg.selectAll("#link_menu,.menu").attr("display", "none")
+              )
             svg.on("contextmenu", () ->
-              console.log "default prevented"
               d3.event.preventDefault()
             )
 
@@ -500,6 +576,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
               .on("click", (p) ->               
                 if (d3.event.defaultPrevented)
                   return
+                deselectAllEle()
                 selectEle(this)
 
                 d = d3.select(@parentNode).datum()
@@ -568,6 +645,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   .on("click", (p) ->
                     if d3.event.defaultPrevented
                       return
+                    deselectAllEle()
                     selectEle(this)
                     dID = d3.select(@parentNode).datum().dID
                     d = d3.select(this).datum()
