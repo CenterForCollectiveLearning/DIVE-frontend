@@ -53,7 +53,7 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
       controller: 'OntologyEditorCtrl'
       resolve:
         initialData: (DataService) -> DataService.promise
-        propertyService: (PropertyService) -> PropertyService.promise
+        propertyService: (PropertyService) -> PropertyService.getProperties
     )
     .state('engine.visualize'
       url: '/visualize'

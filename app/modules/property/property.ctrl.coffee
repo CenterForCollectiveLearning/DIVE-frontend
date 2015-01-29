@@ -38,7 +38,7 @@ angular.module('diveApp.property').controller "OntologyEditorCtrl", ($scope, $ht
 
   $scope.loading = true
 
-  PropertyService.promise((properties) ->
+  PropertyService.getProperties((properties) ->
     $scope.loading = false
     $scope.properties = properties
     $scope.overlaps = properties.overlaps

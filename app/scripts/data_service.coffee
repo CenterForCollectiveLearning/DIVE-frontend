@@ -45,8 +45,20 @@ angular.module('diveApp.services').service "DataService", ($http, $rootScope) ->
       callback(data.datasets)
     )
 
-angular.module('diveApp.services').service "PropertyService", ($http, $rootScope) ->
-  promise: (callback) ->
+# angular.module('diveApp.services').service "PropertyService", ($http, $rootScope) ->
+#   promise: (callback) ->
+#     console.log("[REQUEST] properties for pID", $rootScope.pID)
+#     $http.get("http://localhost:8888/api/property",
+#       params:
+#         pID: $rootScope.pID
+#     ).success((data) ->
+#       console.log ("PROCESSED!")
+#       console.log("[DATA] properties:", data)
+#       callback(data)
+#     )
+
+angular.module('diveApp.services').factory "PropertyService", ["$http", "$rootScope", ($http, $rootScope) ->
+  getProperties: (callback) ->
     # console.log("[REQUEST] properties for pID", $rootScope.pID)
     $http.get("http://localhost:8888/api/property",
       params:
@@ -55,6 +67,18 @@ angular.module('diveApp.services').service "PropertyService", ($http, $rootScope
       # console.log("[DATA] properties:", data)
       callback(data)
     )
+  updateProperties: (ontologies, callback) ->
+    # console.log("[UPDATE] properties for pID", $rootScope.pID)
+    # console.log ontologies
+    $http.put("http://localhost:8888/api/property",
+      params:
+        pID: $rootScope.pID
+        ontologies: ontologies
+    ).success((data) ->
+      # console.log("[DATA] properties:", data)
+      callback(data)
+    )
+]
 
 angular.module('diveApp.services').service "SpecificationService", ($http, $rootScope) ->
   promise: (callback) ->

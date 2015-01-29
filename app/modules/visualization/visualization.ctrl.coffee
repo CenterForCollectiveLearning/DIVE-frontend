@@ -15,7 +15,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     console.log("cond options", $scope.conditionalOptions)
   )
 
-  PropertyService.promise((properties) ->
+  PropertyService.getProperties((properties) ->
     $scope.properties = properties
     $scope.overlaps = properties.overlaps
     $scope.hierarchies = properties.hierarchies

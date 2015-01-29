@@ -1,7 +1,7 @@
 d3 = require('d3')
 
-angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$timeout",
-  ($window, $timeout) ->
+angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$timeout", "PropertyService"
+  ($window, $timeout, PropertyService) ->
     return (
       restrict: "EA"
       scope:
@@ -18,6 +18,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
         barHeight = parseInt(attrs.barHeight) or 20
         barPadding = parseInt(attrs.barPadding) or 5
         svg = d3.select(ele[0]).append("svg").style("width", "100%").style("height", "100%")
+
         $window.onresize = ->
           scope.$apply()
           return
@@ -30,7 +31,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
         ), true
         scope.render = (data, overlaps, hierarchies, uniques, stats) ->
           svg.selectAll("*").remove()
-
+          
           unless (data and overlaps and hierarchies and uniques and stats)
             return
           if renderTimeout
@@ -54,9 +55,9 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
             defs = svg.append("defs")
 
             defs.append("marker").attr("id", "arrowhead")
-              .attr("refX", 6).attr("refY", 3)
-              .attr("markerWidth", 6).attr("markerHeight", 6)
-              .attr("orient", "auto").append("path").attr("d", "M 0,0 L 6,3 L 0,6 Q 3,3 0,0 Z ")
+              .attr("refX", 8).attr("refY", 4)
+              .attr("markerWidth", 8).attr("markerHeight", 8)
+              .attr("orient", "auto").append("path").attr("d", "M 0,0 L 8,4 L 0,8 Q 4,4 0,0 Z ")
               # .attr("fill", "transparent").attr("stroke", "black").attr("stroke-width", 1)
             defs.append("marker").attr("id", "circlehead")
               .attr("refX", 2).attr("refY", 2)
@@ -72,13 +73,6 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
             for dataset in data
               dIDToDataset[dataset.dID] = dataset
             
-            link_types = [
-              [0, "1 -> 1"], 
-              [1, "1 -> many"], 
-              [2, "many -> 1"], 
-              [3, "many -> many"],
-              [4, "hierarchy"]
-            ]
             # Create parent group elements for each dataset
             extractTransform = (str) ->
               split = str.split(',')
@@ -119,10 +113,17 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 attributePositions[dID] = {}
                 calcPos(d3.select("#box_" + dID).selectAll("g.attr"))
             
-            # links = []
-            # linkValues = []
-            # link_overlaps = {}
+            hierarchyLibrary = {}
+            calculateHierarchies = () ->
+              for datasetPair, columnPairs of hierarchies
+                datasets = datasetPair.split("\t")
+                for columnPair, rel of columnPairs
+                  columns = columnPair.split("\t")
+                  hierarchyLibrary[[datasets.join(), columns.join()].join()] = rel
+            
             links = []
+            link_types = ["11", "1N", "N1"]
+            overlapLibrary = {}
             calculateLinks = () ->
               links = []
               linkValues = []
@@ -133,40 +134,42 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 for columnPair, overlap of columnPairs
                   columns = columnPair.split("\t")
 
-                  if overlap > OVERLAP_THRESHOLD
-                    link_type = Math.floor(Math.random() * link_types.length) ## random type for now
-                    ind = links.length
-                    links.push [
-                      [datasets[0], columns[0]]
-                      [datasets[1], columns[1]]
-                      overlap              
-                      link_type        
-                    ]
+                  key = [datasets.join(),columns.join()].join()
+                  overlapLibrary[key] = overlap
+
+                  # if overlap > OVERLAP_THRESHOLD
+                  links.push key
 
             drawLinks = (dID) ->
 
               calculatePath = (link) ->
-                [l_dID, l_col] = link[0]
-                [r_dID, r_col] = link[1]
-                attrA_pos = attributePositions[l_dID][l_col]
-                attrB_pos = attributePositions[r_dID][r_col]
+                [l_dID, r_dID, l_col, r_col] = link.split(",")
+                link_type = hierarchyLibrary[link]
+
+                if link_type == "1N"
+                  attrA_pos = attributePositions[l_dID][l_col]
+                  attrB_pos = attributePositions[r_dID][r_col]
+                else
+                  attrA_pos = attributePositions[r_dID][r_col]
+                  attrB_pos = attributePositions[l_dID][l_col]
 
                 if attrA_pos and attrB_pos
-                  l_box_x = extractTransform(d3.select("#box_" + l_dID).attr("transform"))[0]
-                  r_box_x = extractTransform(d3.select("#box_" + r_dID).attr("transform"))[0]
+                  a_box_x = attrA_pos.left[0]
+                  b_box_x = attrB_pos.left[0]
                   
                   if l_dID != r_dID
-                    if l_box_x > r_box_x
+                    if a_box_x > b_box_x
                       finalA_pos = attrA_pos.left
                       finalB_pos = attrB_pos.right
                     else
                       finalA_pos = attrA_pos.right
                       finalB_pos = attrB_pos.left
+
                     "M" + finalA_pos[0] + "," + finalA_pos[1] + "L" + finalB_pos[0] + "," + finalB_pos[1]
                   else
                     svg_w = parseInt(svg.style("width").split("px")[0])
 
-                    if l_box_x > svg_w / 2
+                    if a_box_x > svg_w / 2
                       finalA_pos = attrA_pos.right
                       finalB_pos = attrB_pos.right
                       ctrl_pt = [finalA_pos[0] + Math.abs(finalA_pos[1] - finalB_pos[1]), (finalA_pos[1] + finalB_pos[1])/2]
@@ -188,8 +191,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                     hoverEle(this)                    
                     
                     if !selection_made
-                      [l_dID, l_col] = p[0]
-                      [r_dID, r_col] = p[1]
+                      [l_dID, r_dID, l_col, r_col] = p.split(",")
                       l_dTitle = dIDToDataset[l_dID].title
                       r_dTitle = dIDToDataset[r_dID].title
                       l_cTitle = dIDToDataset[l_dID].column_attrs[l_col]?.name
@@ -201,7 +203,8 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                         r_dTitle: r_dTitle
                         l_cTitle: l_cTitle
                         r_cTitle: r_cTitle
-                        overlap: p[2]
+                        overlap: overlapLibrary[p]
+                        hierarchy: hierarchyLibrary[p]
                       scope.$apply()
                   )
                   .on("mouseleave", dehoverAllEle)
@@ -211,8 +214,8 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                     deselectAllEle()
                     selectEle(this)
 
-                    [l_dID, l_col] = p[0]
-                    [r_dID, r_col] = p[1]
+                    [l_dID, r_dID, l_col, r_col] = p.split(",")
+
                     l_dTitle = dIDToDataset[l_dID].title
                     r_dTitle = dIDToDataset[r_dID].title
                     l_cTitle = dIDToDataset[l_dID].column_attrs[l_col]?.name
@@ -224,18 +227,21 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                       r_dTitle: r_dTitle
                       l_cTitle: l_cTitle
                       r_cTitle: r_cTitle
-                      overlap: p[2]
+                      # overlap: overlapLibrary[p] or overlapLibrary[[r_dID, l_dID, r_col, l_col].join()] or 0
+                      overlap: overlapLibrary[p]
+                      hierarchy: hierarchyLibrary[p]
                     scope.$apply()
                   )
                   .on("dblclick", (p, i) ->
                     deselectAllEle()
                     dehoverAllEle()
+                    delete hierarchyLibrary[p]
                     links.splice(i, 1)
                     d3.select(this).remove()
                   )
                   .on("contextmenu", showLinkMenu)                
                 enter_g.append("path").attr("class", "visible-arrow")
-                  .attr("marker-end", "url(#arrowhead)")
+                  .attr("marker-end", (d) -> if hierarchyLibrary[d] != "11" then "url(#arrowhead)" else "url(#circlehead)")
                   .attr("marker-start", "url(#circlehead)")
                   .attr("d", (d) -> calculatePath(d))
                   .attr("fill", "transparent")
@@ -249,63 +255,55 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                   .style("opacity", 0)
                   
               else
-                d3.selectAll(".arrow-container").filter((d, i) -> dID in d.map (j) -> j[0])
+                d3.selectAll(".arrow-container").filter((d, i) -> dID in d.split(","))
                   .selectAll("path")
                   .attr("d", (d) -> calculatePath(d))
-
+                  .attr("marker-end", (d) -> if hierarchyLibrary[d] != "11" then "url(#arrowhead)" else "url(#circlehead)")
 
             showLinkMenu = (p, i) ->
+              link = this
+              [l_dID, r_dID, l_col, r_col] = p.split(",")
+              l_x = attributePositions[l_dID][l_col].left[0]
+              r_x = attributePositions[r_dID][r_col].left[0]
+
               organizeMenu = () ->
-                option = svg.select("#link_menu").selectAll("g.link_type").filter((d, i) -> d[0] == p[3])
+
+                svg.select("#link_menu").selectAll("g.link_type")
+                  .selectAll("text").text((d, i) ->
+                    if d == "11"
+                      "1 - 1"
+                    else if d == "1N"
+                      if l_x < r_x then "1 -> N" else "N <- 1"
+                    else if d == "N1"
+                      if l_x < r_x then "N <- 1" else "1 -> N"
+                    else
+                      "??"
+                  )
+                option = svg.select("#link_menu").selectAll("g.link_type").filter((d, i) -> d == hierarchyLibrary[p])
                   .on("click", (d, i) ->
-                    svg.select("#link_menu").selectAll("g.link_type").filter((d, i) -> d[0] != p[3])
+                    svg.select("#link_menu").selectAll("g.link_type").filter((d, i) -> d != hierarchyLibrary[p])
                       .attr("transform", (d, i) -> "translate(0," + (i+1) * cellHeight + ")")
                     svg.select("#link_menu").selectAll("g.link_type")
                       .on("click", (d, i) ->
-                        p[3] = d[0]
+                        hierarchyLibrary[p] = d
                         svg.select("#link_menu").selectAll("g.link_type").attr("transform", "translate(0, 0)")
+                        drawLinks(p.split(",")[0])
                         organizeMenu()
-                        # selection = svg.select("#link_menu").selectAll("g.link_type").filter((d, i) -> d[0] == p[3])[0][0]
-                        # selection.parentNode.appendChild(selection)
-                        # selectEle(selection)
                       )
                   )
+
                 option = option[0][0]
+                deselectAllEle()
+                selectEle(option)
+                selectEle(link)
                 option.parentNode.appendChild(option)
-              
-              deselectAllEle()
-              selectEle(this)
 
               m = d3.mouse(this)              
               el = svg.select("#link_menu").attr("display", "")
-                .attr("transform", "translate(" + (m[0] - (boxWidth*2/3) + 10) + "," + (m[1] - 10) + ")")              
+                .attr("transform", "translate(" + (m[0] - (cellWidth/2) + 10) + "," + (m[1] - 10) + ")")              
               el = el[0][0]
               el.parentNode.appendChild(el)
               organizeMenu()
-
-              # option = option[0][0]
-              # option.parentNode.appendChild(option)
-
-                # .attr("transform", (d, i) ->
-                #   if d[0] == p[3]
-                #     selectEle(this)
-                #     "translate(0,0)"
-                #   else
-                #     offset += 1
-                #     "translate(0," + (offset * cellHeight) + ")"
-                # )
-                # .on("click", (d, i) ->
-                #   p[3] = d[0]
-                #   d3.select(this).attr("transform", "translate(0, 0)")
-                #   svg.select("#link_menu").selectAll("g.link_type")
-                #     .filter((d) -> d[0] != p[3])
-                #     .attr("transform", (d, i) -> "translate(0," + (i+1) * cellHeight + ")")
-                #   deselectAllEle()
-                #   selectEle(link)
-                #   selectEle(this)
-                # )
-
-
 
             buildMenus = () ->
               # data menu
@@ -344,14 +342,14 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 .on("mouseenter", () -> hoverEle(this))
                 .on("mouseleave", dehoverAllEle)
 
-              link_option.append("rect").attr("width", cellWidth * 2/3).attr("height", cellHeight)
+              link_option.append("rect").attr("width", cellWidth / 2).attr("height", cellHeight)
                 .attr("x", 0).attr("y", 0).attr("rx", 3).attr("ry", 3)
                 .attr("fill", "#FFFFFF").style("stroke", "#AEAEAE").style("stroke-width", 1)
 
               link_option.append("text")
                 .attr("x", 10).attr("y", 22).attr("fill", "#000000")
                 .attr("font-size", 14).attr("font-weight", "light")
-                .text((d) -> d[1])
+                # .text((d) -> d)
 
             addToMenu = (p, dID, g_attr) ->
               
@@ -438,6 +436,18 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 scope.selected = null
                 scope.$apply()
 
+            saveOntology = () ->
+              alert "saving ontology!"
+              ontologies = {}
+              for link in links
+                dist = overlapLibrary[link]
+                hier = hierarchyLibrary[link]
+                # console.log link, dist, hier
+                ontologies[link] = [dist, hier]
+              PropertyService.updateProperties(ontologies, (data) -> 
+                console.log data
+              )
+
             dragDataset = d3.behavior.drag()
               .on("dragstart", (d) ->
                 d3.event.sourceEvent.stopPropagation()
@@ -496,29 +506,19 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 )
 
                 if dst[0].length > 0
-                  dID = d3.select(dst[0][0].parentNode).datum().dID
-                  column_id = dst.datum().column_id
+                  dID2 = d3.select(dst[0][0].parentNode).datum().dID
+                  column_id2 = dst.datum().column_id
 
-                  dID2 = link_data[0][0]
-                  column_id2 = link_data[0][1]
+                  dID = link_data[0][0]
+                  column_id = link_data[0][1]
 
                   if dID != dID2 or (dID == dID2 and column_id != column_id2)
-
-                    link_data[1] = [dID, column_id]
-                    link_data.push 0
-
-                    ## more efficient search?
-                    for datasetPair, columnPairs of overlaps
-                      datasets = datasetPair.split("\t")
-                      if (dID == datasets[0] and dID2 == datasets[1]) or (dID == datasets[1] and dID2 == datasets[0]) 
-                        for columnPair, overlap of columnPairs
-                          columns = columnPair.split("\t").map (j) -> parseInt(j)
-                          if (column_id == columns[0] and column_id2 == columns[1]) or (column_id == columns[1] and column_id2 == columns[0])
-                            link_data[2] = overlap
-                            break
-                        break                    
-                    link_data.push Math.floor(Math.random() * link_types.length) ## random type for now
-                    links.push(link_data)
+                    key = [dID, dID2, column_id, column_id2].join()
+                    key2 = [dID2, dID, column_id2, column_id].join()
+                    overlap = if overlapLibrary[key] then overlapLibrary[key] else 0
+                    overlapLibrary[key] = overlapLibrary[key] or overlapLibrary[key2] or 0
+                    hierarchyLibrary[key] = "1N"
+                    links.push key
                     drawLinks()
                 
                 d3.select("#temp_link").remove()
@@ -529,6 +529,8 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 svg.selectAll(".arrow-container").remove()
                 alert "redrawing all links!"
                 drawLinks()
+              else if d3.event.keyCode == 83
+                saveOntology()
             )
 
             svg.append("rect")
@@ -670,10 +672,11 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                         "translate(" + dx + "," + dy + ")"
                     )
                     dID = d3.select(@parentNode).datum().dID
-                    column_id = d3.select(this).datum().column_id
+                    column_id = '' + d3.select(this).datum().column_id
                     ind = []
                     selection = d3.selectAll("g.arrow-container").filter((d, i) ->
-                      if (d[0][0] == dID and parseInt(d[0][1]) == column_id) or (d[1][0] == dID and parseInt(d[1][1]) == column_id)
+                      key = d.split(",")
+                      if (dID == key[0] and column_id == key[2]) or (dID == key[1] and column_id == key[3])
                         ind.push i
                         true
                       else
@@ -713,13 +716,12 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
             ##############
             # Relationships and hierarchies
             ##############            
-
+            calculateHierarchies()
             calculateLinks()
             # console.log links, linkValues
 
             calculateAttributePositions()
             # # console.log attributePositions
-
             drawLinks()
             buildMenus()
 
