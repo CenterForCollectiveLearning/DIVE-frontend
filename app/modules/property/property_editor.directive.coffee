@@ -45,7 +45,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
             left: 20
           boxMargins =
             x: 20
-            y: 20
+            y: 20 + 36
           attributesYOffset = 80
           
           selection_made = false
@@ -437,15 +437,23 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 scope.$apply()
 
             saveOntology = () ->
-              alert "saving ontology!"
               ontologies = {}
+              svg.select(".save").select("text").text("Saving...")
+              
+              el = svg.select(".cover")[0][0]
+              el.parentNode.appendChild(el)
+
               for link in links
                 dist = overlapLibrary[link]
                 hier = hierarchyLibrary[link]
-                # console.log link, dist, hier
                 ontologies[link] = [dist, hier]
+
               PropertyService.updateProperties(ontologies, (data) -> 
-                console.log data
+                setTimeout( () ->
+                  svg.select(".save").select("text").text("Save Ontologies")
+                  el = svg.select(".cover")[0][0]
+                  el.parentNode.insertBefore(el, el.parentNode.firstChild)
+                , 200)
               )
 
             dragDataset = d3.behavior.drag()
@@ -534,6 +542,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
             )
 
             svg.append("rect")
+              .attr("class", "cover")
               .attr("width", "100%")
               .attr("height", "100%")
               .style("opacity", 0)
@@ -545,7 +554,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
               d3.event.preventDefault()
             )
 
-            g = svg.selectAll("g")
+            g = svg.selectAll("g.box")
               .data(data)
               .enter()
               .append("g")
@@ -643,7 +652,7 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                         columnStats: columnStats
                       scope.$apply()
                   )
-                  .on("mouseleave", (p) -> dehoverAllEle)
+                  .on("mouseleave", dehoverAllEle)
                   .on("click", (p) ->
                     if d3.event.defaultPrevented
                       return
@@ -724,6 +733,18 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
             # # console.log attributePositions
             drawLinks()
             buildMenus()
+
+            save_g = svg.append("g").attr("class", "save")
+              .attr("transform", () ->
+                svg_w = parseInt(svg.style("width").split("px")[0])
+                "translate(" + (svg_w - 250)/2 + ", 0)"
+              )
+              .on("mouseenter", () -> hoverEle(this))
+              .on("mouseleave", dehoverAllEle)
+              .on("click", () -> saveOntology())
+            save_g.append("rect").attr("width", 250).attr("height", 36)
+            save_g.append("text").attr("text-anchor", "middle")
+              .attr("x", 250/2).attr("y", 23).text("Save Ontologies")
 
           , 200)
     )

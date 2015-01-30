@@ -28,6 +28,15 @@ ontology-editor {
         }
     }
 
+    g.save rect {
+        fill: $light-gray;
+        fill-opacity: 1.0;
+        &.hover {
+            fill-opacity: 1.0;
+            fill: $ontology-blue;
+        }
+    }
+
     g {
         cursor: default;
     }

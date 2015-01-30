@@ -69,7 +69,6 @@ angular.module('diveApp.services').factory "PropertyService", ["$http", "$rootSc
     )
   updateProperties: (ontologies, callback) ->
     # console.log("[UPDATE] properties for pID", $rootScope.pID)
-    # console.log ontologies
     $http.put("http://localhost:8888/api/property",
       params:
         pID: $rootScope.pID
