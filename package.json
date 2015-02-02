@@ -47,11 +47,13 @@
   "browser": {
     "angular": "./node_modules/angular/angular.js",
     "d3plus": "./dist/scripts/lib/d3plus.min.js",
-    "topojson": "./dist/scripts/lib/topojson.js"
+    "topojson": "./dist/scripts/lib/topojson.js",
+    "filesaver": "./dist/scripts/lib/FileSaver.min.js"
   },
   "browserify-shim": {
     "angular": "angular",
     "d3plus": "d3plus",
-    "topojson": "topojson"
+    "topojson": "topojson",
+    "filesaver": "filesaver"
   }
 }

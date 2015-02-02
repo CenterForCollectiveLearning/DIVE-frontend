@@ -1,3 +1,6 @@
+$ = require('jquery')
+FileSaver = require('filesaver')
+
 angular.module('diveApp.export').directive('selectOnClick', ->
     return {
         restrict: 'A'
@@ -31,6 +34,22 @@ angular.module('diveApp.export').controller "AssembleCtrl", ($scope, $rootScope,
         $scope.specs = specs.result
         $scope.selectSpec(0)
     )
+
+    $scope.save = (format) ->
+        tmp = document.getElementById("viz-container")
+        svg = tmp.getElementsByTagName("svg")[0]
+        svg_xml = (new XMLSerializer).serializeToString(svg)
+
+        $http.post("http://localhost:8888/api/render_svg",
+            data: JSON.stringify(
+                format: format
+                svg: svg_xml
+            )
+        ).success((data) ->
+            console.log("Data:", data)
+            file = new Blob([data], type: 'application/' + format)
+            saveAs(file, 'test.' + format)
+        )
 
     $scope.selectSpec = (index) ->
         $scope.selectedSpecIndex = index

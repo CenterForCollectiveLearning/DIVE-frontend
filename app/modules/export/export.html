@@ -42,6 +42,14 @@
   <div id="viz-container" class="card"></div>
   <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selectedConditionalValues"></visualization-preview>
 
+  <section ng-if="selectedMode=='modify'" class="embed-options card">
+    <div class="title">Export Parameters</div>
+    <div class="label">Width</div>
+    <input ng-model="embedURL" select-on-click></input>
+    <div class="label">Height</div>
+    <input ng-model="embedHTML" select-on-click></input>
+  </section>
+
   <section ng-if="selectedMode=='export'" class="embed-options card">
     <div class="title">Interactive Embed</div>
     <div class="label">URL</div>
@@ -52,6 +60,15 @@
 
   <section ng-if="selectedMode=='export'" class="embed-options card">
     <div class="title">Static Download</div>
+    <div class="button" ng-click="save('svg')">
+      Download SVG
+    </div>
+    <div class="button" ng-click="save('png')">
+      Download PNG
+    </div>
+    <div class="button" ng-click="save('pdf')">
+      Download PDF
+    </div>
 <!--     <div class="label">SVG</div>
     <input ng-model="embedURL" select-on-click></input>
     <div class="label">PNG</div>

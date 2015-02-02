@@ -183,6 +183,8 @@ section.viewport {
 
 
 div.button {
+    @include button(200px, $ontology-blue);                
+
     &.open {
         @include button(200px, $assemble-green);                
     }
