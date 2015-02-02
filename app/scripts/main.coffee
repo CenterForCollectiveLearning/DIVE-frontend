@@ -14,9 +14,7 @@ require('../modules/export/export.module')
 require('../modules/embed/embed.module')
 
 diveApp = angular.module('diveApp', ['diveApp.routes', 'diveApp.project', 'diveApp.landing', 'diveApp.data', 'diveApp.property', 'diveApp.visualization', 'diveApp.export', 'diveApp.embed'])
-
-# TODO Change API endpoint as a function of configuration
-diveApp.constant('API')
+  .constant('API_URL', 'http://localhost:8888')
 
 # Utility Functions
 window.SC = (selector) -> angular.element(selector).scope()

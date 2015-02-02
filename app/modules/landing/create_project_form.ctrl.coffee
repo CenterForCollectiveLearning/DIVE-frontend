@@ -1,4 +1,4 @@
-angular.module('diveApp.landing').controller "CreateProjectFormCtrl", ($scope, $http, $location) ->
+angular.module('diveApp.landing').controller "CreateProjectFormCtrl", ($scope, $http, $location, API_URL) ->
   $scope.create_project = ->
     params = {
       title: $scope.newProjectData.title
@@ -7,7 +7,7 @@ angular.module('diveApp.landing').controller "CreateProjectFormCtrl", ($scope, $
     }
     $http(
       method: 'POST'
-      url: 'http://localhost:8888/api/project'
+      url: API_URL + '/api/project'
       data: params
       transformRequest: objectToQueryString
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}

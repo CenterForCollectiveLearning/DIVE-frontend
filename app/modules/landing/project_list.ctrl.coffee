@@ -1,5 +1,5 @@
 # Landing page project list / navigation
-angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, $state, $rootScope, AllProjectsService) ->
+angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, $state, $rootScope, AllProjectsService, API_URL) ->
   console.log("[CONTROLLER] Project List")
   $scope.newProjectData = {}
   $scope.newProject = false
@@ -31,7 +31,7 @@ angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, 
     $scope.projects.splice(index, 1)
 
     # TODO Turn this into a service
-    $http.delete('http://localhost:8888/api/project',
+    $http.delete(API_URL + '/api/project',
       params:
         pID: pID
     ).success((result) ->

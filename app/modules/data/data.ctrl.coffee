@@ -1,4 +1,4 @@
-angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope, projectID, $http, $upload, $timeout, $stateParams, DataService) ->
+angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope, projectID, $http, $upload, $timeout, $stateParams, DataService, API_URL) ->
   $scope.selectedIndex = 0
   $scope.currentPane = 'left'
 
@@ -52,7 +52,7 @@ angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope
     while i < $files.length
       file = $files[i]
       $scope.upload = $upload.upload(
-        url: "http://localhost:8888/api/upload"
+        url: API_URL + "/api/upload"
         data:
           pID: $rootScope.pID
         file: file
@@ -71,7 +71,7 @@ angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope
   ###############
   $scope.removeDataset = (dID) ->
     console.log('Removing dataset, dID:', dID)
-    $http.delete('http://localhost:8888/api/data',
+    $http.delete(API_URL + '/api/data',
       params:
         pID: $rootScope.pID
         dID: dID

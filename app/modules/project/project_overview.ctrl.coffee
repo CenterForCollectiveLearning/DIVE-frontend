@@ -1,9 +1,9 @@
-angular.module('diveApp.project').controller "OverviewCtrl", ($scope, $http, $state) ->
+angular.module('diveApp.project').controller "OverviewCtrl", ($scope, $http, $state, API_URL) ->
   console.log("[CONTROLLER] Overview")
   # TODO: How to deal with same method?
   $scope.removeProject = (pID) ->
     console.log('Removing project, pID:', pID)
-    $http.delete('http://localhost:8888/api/project',
+    $http.delete(API_URL + '/api/project',
       params:
         pID: pID
     ).success((result) ->

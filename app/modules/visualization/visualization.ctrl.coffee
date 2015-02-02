@@ -1,7 +1,7 @@
 _ = require('underscore')
 
 # TODO Make this controller thinner!
-angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $http, $rootScope, DataService, PropertyService, VizDataService, ConditionalDataService, SpecificationService) ->
+angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $http, $rootScope, DataService, PropertyService, VizDataService, ConditionalDataService, SpecificationService, API_URL) ->
 
   $scope.loading = true
 
@@ -47,7 +47,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
   $scope.chooseSpec = (index) ->
     spec = $scope.specs[index]
     console.log("Chose spec", spec.sID)
-    $http.get('http://localhost:8888/api/choose_spec',
+    $http.get(API_URL + '/api/choose_spec',
       params:
         pID: $rootScope.pID
         sID: spec.sID
@@ -59,7 +59,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
   $scope.rejectSpec = (index) ->
     spec = $scope.specs[index]
     console.log("Reject spec", spec.sID)
-    $http.get('http://localhost:8888/api/reject_spec',
+    $http.get(API_URL + '/api/reject_spec',
       params:
         pID: $rootScope.pID
         sID: $scope.specs[index].sID

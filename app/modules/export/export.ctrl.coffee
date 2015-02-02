@@ -9,7 +9,7 @@ angular.module('diveApp.export').directive('selectOnClick', ->
         }
 )
 
-angular.module('diveApp.export').controller "AssembleCtrl", ($scope, $rootScope, $http, $state, $location, VizDataService, ExportedVizSpecService) ->
+angular.module('diveApp.export').controller "AssembleCtrl", ($scope, $rootScope, $http, $state, $location, VizDataService, ExportedVizSpecService, API_URL) ->
     $scope.conditionalOptions = []  # All conditionals by name
     $scope.selectedConditionalData = {}  # Data corresponding to selected conditionals (k: list)
     $scope.selectedConditionalValues = {}  # All selected conditional values (k: val)
@@ -40,7 +40,7 @@ angular.module('diveApp.export').controller "AssembleCtrl", ($scope, $rootScope,
         svg = tmp.getElementsByTagName("svg")[0]
         svg_xml = (new XMLSerializer).serializeToString(svg)
 
-        $http.post("http://localhost:8888/api/render_svg",
+        $http.post(API_URL + "/api/render_svg",
             data: JSON.stringify(
                 format: format
                 svg: svg_xml

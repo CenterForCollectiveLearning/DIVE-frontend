@@ -10,10 +10,10 @@ angular.module('diveApp.services', ['ui.router', 'angularFileUpload'])
     
 
 # Container for data services
-angular.module('diveApp.services').service "AllProjectsService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "AllProjectsService", ($http, $rootScope, API_URL) ->
   promise: (userName, callback) ->
     # console.log("[REQUEST] all projects for user:", userName)
-    $http.get('http://localhost:8888/api/project',
+    $http.get(API_URL + '/api/project',
       params:
         user_name: userName
     ).success((result) ->
@@ -21,10 +21,10 @@ angular.module('diveApp.services').service "AllProjectsService", ($http, $rootSc
     )
 
 # TODO Eventually deprecate this in favor of real session handling
-angular.module('diveApp.services').service "ProjectIDService", ($http, $stateParams, $rootScope) ->
+angular.module('diveApp.services').service "ProjectIDService", ($http, $stateParams, $rootScope, API_URL) ->
   promise: (formattedProjectTitle) ->
     # console.log("[REQUEST] projectID for project title:", formattedProjectTitle)
-    $http.get("http://localhost:8888/api/getProjectID",
+    $http.get(API_URL + "/api/getProjectID",
       params:
         formattedProjectTitle: formattedProjectTitle
     ).success((pID) ->
@@ -33,10 +33,10 @@ angular.module('diveApp.services').service "ProjectIDService", ($http, $statePar
     )
 
 # Dataset Samples
-angular.module('diveApp.services').service "DataService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "DataService", ($http, $rootScope, API_URL) ->
   promise: (callback) ->
     # console.log("[REQUEST] data for pID", $rootScope.pID)
-    $http.get("http://localhost:8888/api/data",
+    $http.get(API_URL + "/api/data",
       params:
         pID: $rootScope.pID
         sample: true
@@ -45,22 +45,10 @@ angular.module('diveApp.services').service "DataService", ($http, $rootScope) ->
       callback(data.datasets)
     )
 
-# angular.module('diveApp.services').service "PropertyService", ($http, $rootScope) ->
-#   promise: (callback) ->
-#     console.log("[REQUEST] properties for pID", $rootScope.pID)
-#     $http.get("http://localhost:8888/api/property",
-#       params:
-#         pID: $rootScope.pID
-#     ).success((data) ->
-#       console.log ("PROCESSED!")
-#       console.log("[DATA] properties:", data)
-#       callback(data)
-#     )
-
-angular.module('diveApp.services').factory "PropertyService", ["$http", "$rootScope", ($http, $rootScope) ->
+angular.module('diveApp.services').factory "PropertyService", ($http, $rootScope, API_URL) ->
   getProperties: (callback) ->
     # console.log("[REQUEST] properties for pID", $rootScope.pID)
-    $http.get("http://localhost:8888/api/property",
+    $http.get(API_URL + "/api/property",
       params:
         pID: $rootScope.pID
     ).success((data) ->
@@ -69,7 +57,7 @@ angular.module('diveApp.services').factory "PropertyService", ["$http", "$rootSc
     )
   updateProperties: (ontologies, callback) ->
     # console.log("[UPDATE] properties for pID", $rootScope.pID)
-    $http.put("http://localhost:8888/api/property",
+    $http.put(API_URL + "/api/property",
       params:
         pID: $rootScope.pID
         ontologies: ontologies
@@ -77,12 +65,11 @@ angular.module('diveApp.services').factory "PropertyService", ["$http", "$rootSc
       # console.log("[DATA] properties:", data)
       callback(data)
     )
-]
 
-angular.module('diveApp.services').service "SpecificationService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "SpecificationService", ($http, $rootScope, API_URL) ->
   promise: (callback) ->
     # console.log("[REQUEST] specifications for pID", $rootScope.pID)
-    $http.get("http://localhost:8888/api/specification",
+    $http.get(API_URL + "/api/specification",
       params:
         pID: $rootScope.pID
     ).success((data) ->
@@ -90,11 +77,11 @@ angular.module('diveApp.services').service "SpecificationService", ($http, $root
       callback(data)
     )
 
-angular.module('diveApp.services').service "ConditionalDataService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "ConditionalDataService", ($http, $rootScope, API_URL) ->
   # TODO Generalize service for other vizTypes
   promise: (dID, spec, callback) ->
     # console.log('[REQUEST] Conditional Data for Type', type, 'and Specification ', spec)
-    $http.get("http://localhost:8888/api/conditional_data",
+    $http.get(API_URL + "/api/conditional_data",
       params:
         pID: $rootScope.pID
         dID: dID
@@ -104,33 +91,33 @@ angular.module('diveApp.services').service "ConditionalDataService", ($http, $ro
       callback(data)
     )
 
-angular.module('diveApp.services').service "VizDataService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "VizDataService", ($http, $rootScope, API_URL) ->
   # TODO Generalize service for other vizTypes
   promise: (params, callback) ->
     unless params.pID then params.pID = $rootScope.pID
     console.log('[REQUEST] Viz Data for Type', params.type, 'and Specification ', params.spec)
-    $http.get("http://localhost:8888/api/visualization_data",
+    $http.get(API_URL + "/api/visualization_data",
       params: params
     ).success((data) ->
       callback(data)
     )
 
-angular.module('diveApp.services').service "ExportedVizSpecService", ($http, $rootScope) ->
+angular.module('diveApp.services').service "ExportedVizSpecService", ($http, $rootScope, API_URL) ->
   # TODO Generalize service for other vizTypes
   promise: (params, callback) ->
     unless params.pID then params.pID = $rootScope.pID
-    $http.get("http://localhost:8888/api/exported_spec",
+    $http.get(API_URL + "/api/exported_spec",
       params: params
     ).success((data) ->
       # console.log("[DATA] Viz Data:", data)
       callback(data)
     )
 
-# angular.module('diveApp.services').service "ExportedVizDataService", ($http, $rootScope) ->
+# angular.module('diveApp.services').service "ExportedVizDataService", ["API_URL", ($http, $rootScope, API_URL) ->
 #   # TODO Generalize service for other vizTypes
 #   promise: (type, spec, conditional, callback) ->
 #     # console.log('[REQUEST] Viz Data for Type', type, 'and Specification ', spec)
-#     $http.get("http://localhost:8888/api/visualization_data",
+#     $http.get(API_URL + "/api/visualization_data",
 #       params:
 #         pID: $rootScope.pID
 #         type: type
