@@ -18,6 +18,7 @@
   },
   "license": "ISC",
   "devDependencies": {
+    "browser-sync": "^2.0.0-rc4",
     "browserify": "^6.1.0",
     "browserify-shim": "^3.8.0",
     "coffee-script": "^1.8.0",
