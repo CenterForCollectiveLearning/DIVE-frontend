@@ -4,6 +4,7 @@
 		<div class="subtitle">Data Integration and Visualization Engine (BETA)</div>
 	</div>
 	<div class="user-status">
-		Logged in as <span class="username">{{user.displayName}}</span>
+		<span ng-if="loggedIn">Logged in as <span class="username"> {{ user.displayName }}</span>
+        <span class='logout' ng-click="logoutUser()">(Logout)</span></span>
 	</div>
 </section>

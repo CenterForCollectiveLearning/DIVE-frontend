@@ -1,4 +1,5 @@
 angular = require('angular')
+angularCookies = require('angular-cookies')
 
 # Top-level
 require('./routes')

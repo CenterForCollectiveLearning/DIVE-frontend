@@ -14,7 +14,6 @@ angular.module('diveApp.landing').directive('landingTop', ->
 
 angular.module('diveApp.landing').directive('landingProjects', ->
     restrict: 'E',
-    scope: {}
     controller: 'ProjectListCtrl'
     templateUrl: 'modules/landing/landing_projects.html'
 )

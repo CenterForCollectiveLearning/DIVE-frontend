@@ -12,6 +12,7 @@
     "angular": "^1.3.0",
     "angular-file-upload": "^1.6.4",
     "angular-ui-router": "^0.2.11",
+    "angular-cookies" : "*",
     "d3": "^3.4.13",
     "jquery": "^2.1.1",
     "underscore": "^1.7.0"

@@ -1,13 +1,9 @@
 angular = require('angular')
 angularFileUpload = require('angular-file-upload')
 _ = require('underscore')
+angularCookies = require('angular-cookies')
 
-angular.module('diveApp.services', ['ui.router', 'angularFileUpload'])
-
-# User Registration
-# angular.module('diveApp.services').service "AccountService", ($http) ->
-#   promise:
-    
+angular.module('diveApp.services', ['ui.router', 'angularFileUpload', 'ngCookies'])
 
 # Container for data services
 angular.module('diveApp.services').service "AllProjectsService", ($http, $rootScope, API_URL) ->
@@ -32,6 +28,14 @@ angular.module('diveApp.services').service "ProjectIDService", ($http, $statePar
       $rootScope.pID = pID
     )
 
+angular.module('diveApp.services').service "ProjectService", ($http, $stateParams, $rootScope, API_URL) ->
+  promise: (pID, userName, callback) ->
+    console.log "Get specific project", pID, userName
+    $http.get(API_URL + "/api/project",
+      params:
+        user_name: userName
+        pID: pID
+    ).success(callback)
 # Dataset Samples
 angular.module('diveApp.services').service "DataService", ($http, $rootScope, API_URL) ->
   promise: (callback) ->
@@ -44,6 +48,48 @@ angular.module('diveApp.services').service "DataService", ($http, $rootScope, AP
       # console.log("[DATA] datasets:", data)
       callback(data.datasets)
     )
+
+angular.module('diveApp.services').factory "UserService", ($http, $rootScope, $cookieStore, API_URL) ->
+    
+  $cookieStore.put('user', {
+    userName: null,
+    displayName: "Guest",
+    uID: null
+  })
+
+  loginUser: (userName, password, callback) ->
+    $http.get(API_URL + "/login",
+      params:
+        userName: userName
+        password: password
+    ).success((data) ->
+      if (data['success'] == 1)
+        $cookieStore.put('user', data['user'])
+      callback(data)
+    )
+
+  logoutUser: (callback) ->
+    $cookieStore.put('user', {
+      userName: null,
+      displayName: "Guest",
+      uID: null
+    })
+    if (callback)
+      callback()
+
+  registerUser: (userName, displayName, password, callback) ->
+    $http.post(API_URL + "/register",
+      params:
+        userName: userName
+        displayName: displayName
+        password: password
+    ).success((data) ->
+      if (data['success'] == 1)
+        $cookieStore.put('user', data)
+      callback(data)
+    )
+  
+  getCurrentUser : () -> $cookieStore.get('user')
 
 angular.module('diveApp.services').factory "PropertyService", ($http, $rootScope, API_URL) ->
   getProperties: (callback) ->

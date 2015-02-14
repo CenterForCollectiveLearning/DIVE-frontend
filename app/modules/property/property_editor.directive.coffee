@@ -532,14 +532,14 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 d3.select("#temp_link").remove()
               )
 
-            d3.select("body").on("keydown", () ->
-              if d3.event.keyCode == 68
-                svg.selectAll(".arrow-container").remove()
-                alert "redrawing all links!"
-                drawLinks()
-              else if d3.event.keyCode == 83
-                saveOntology()
-            )
+            # d3.select("body").on("keydown", () ->
+            #   if d3.event.keyCode == 68
+            #     svg.selectAll(".arrow-container").remove()
+            #     alert "redrawing all links!"
+            #     drawLinks()
+            #   else if d3.event.keyCode == 83
+            #     saveOntology()
+            # )
 
             svg.append("rect")
               .attr("class", "cover")

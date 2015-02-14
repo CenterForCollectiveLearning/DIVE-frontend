@@ -1,17 +1,53 @@
 # Landing page project list / navigation
-angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, $state, $rootScope, AllProjectsService, API_URL) ->
+angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, $state, $rootScope, AllProjectsService, UserService, API_URL) ->
   console.log("[CONTROLLER] Project List")
-  $scope.newProjectData = {}
-  $scope.newProject = false
-  $scope.selectedProject = null
-  $scope.user = {
-    userName: 'demo-user'
-    displayName: 'Demo User'
-  }
 
-  AllProjectsService.promise($scope.user.userName, (projects) ->
-    $scope.projects = projects
-  )
+  init = () ->
+    $scope.newProjectData = {}
+    $scope.newProject = false
+    $scope.selectedProject = null
+    $scope.user = UserService.getCurrentUser()
+    $scope.loggedIn = ($scope.user.userName != null)
+    $scope.loginErr = false
+    $scope.regErr = false
+
+  $scope.loginUser = (userName, password) ->
+    if (userName && password)
+      UserService.loginUser(userName, password, (data) ->
+        if (data['success'] == 1)
+          $scope.loggedIn = true        
+          $scope.user = UserService.getCurrentUser()
+                
+          AllProjectsService.promise($scope.user.userName, (projects) ->
+            $scope.projects = projects
+          )
+        else 
+          $scope.loginErr = true
+      )
+    else
+      $scope.loginErr = true
+
+  $scope.registerUser = (userName, displayName, password) ->
+
+    if (userName && displayName && password)
+
+      UserService.registerUser(userName, displayName, password, (data) ->
+        console.log "Successfully registered user: ", data
+        if (data['success'] == 1)
+          $scope.loginUser(userName, password)
+        else 
+          $scope.regErr = true
+      )
+      
+    else
+      $scope.regErr = true
+
+  $scope.logoutUser = () ->
+    # console.log userName
+    UserService.logoutUser(() ->
+      $scope.user = UserService.getCurrentUser()
+      init()
+    )
 
   $scope.selectProject = (pID) ->
     if $scope.selectedProject is pID
@@ -40,4 +76,6 @@ angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, 
 
   $scope.newProjectToggle = ->
     $scope.newProject = !$scope.newProject
+
+  init()
 )
