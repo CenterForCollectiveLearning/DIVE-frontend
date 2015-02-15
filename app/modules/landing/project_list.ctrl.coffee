@@ -6,10 +6,15 @@ angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, 
     $scope.newProjectData = {}
     $scope.newProject = false
     $scope.selectedProject = null
-    $scope.user = UserService.getCurrentUser()
-    $scope.loggedIn = ($scope.user.userName != null)
+    $scope.user = UserService.getCurrentUser(true)
+    $scope.loggedIn = Boolean($scope.user.userName)
     $scope.loginErr = false
     $scope.regErr = false
+    
+    if ($scope.loggedIn)
+      AllProjectsService.promise($scope.user.userName, (projects) ->
+        $scope.projects = projects
+      )
 
   $scope.loginUser = (userName, password) ->
     if (userName && password)
@@ -32,7 +37,7 @@ angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, 
     if (userName && displayName && password)
 
       UserService.registerUser(userName, displayName, password, (data) ->
-        console.log "Successfully registered user: ", data
+        # console.log "Successfully registered user: ", data
         if (data['success'] == 1)
           $scope.loginUser(userName, password)
         else 

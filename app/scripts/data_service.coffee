@@ -30,7 +30,7 @@ angular.module('diveApp.services').service "ProjectIDService", ($http, $statePar
 
 angular.module('diveApp.services').service "ProjectService", ($http, $stateParams, $rootScope, API_URL) ->
   promise: (pID, userName, callback) ->
-    console.log "Get specific project", pID, userName
+    # console.log "Get specific project", pID, userName
     $http.get(API_URL + "/api/project",
       params:
         user_name: userName
@@ -49,13 +49,7 @@ angular.module('diveApp.services').service "DataService", ($http, $rootScope, AP
       callback(data.datasets)
     )
 
-angular.module('diveApp.services').factory "UserService", ($http, $rootScope, $cookieStore, API_URL) ->
-    
-  $cookieStore.put('user', {
-    userName: null,
-    displayName: "Guest",
-    uID: null
-  })
+angular.module('diveApp.services').factory "UserService", ($http, $rootScope, $cookieStore, $window, API_URL) ->
 
   loginUser: (userName, password, callback) ->
     $http.get(API_URL + "/login",
@@ -64,16 +58,18 @@ angular.module('diveApp.services').factory "UserService", ($http, $rootScope, $c
         password: password
     ).success((data) ->
       if (data['success'] == 1)
-        $cookieStore.put('user', data['user'])
+        $window.localStorage['userName'] = data['user']['userName']
+        $window.localStorage['displayName'] = data['user']['displayName']
+        # now = new Date()
+        # expire = new Date(now.valueOf() + 10 * 1000)
+        expire = new Date()
+        expire.setDate(expire.getDate() + 1)
+        $window.localStorage['expiration'] = expire.valueOf()
       callback(data)
     )
 
   logoutUser: (callback) ->
-    $cookieStore.put('user', {
-      userName: null,
-      displayName: "Guest",
-      uID: null
-    })
+    $window.localStorage.clear()
     if (callback)
       callback()
 
@@ -85,11 +81,21 @@ angular.module('diveApp.services').factory "UserService", ($http, $rootScope, $c
         password: password
     ).success((data) ->
       if (data['success'] == 1)
-        $cookieStore.put('user', data)
+        # $cookieStore.put('user', data)
+        $window.localStorage['userName'] = data['user']['userName']
+        $window.localStorage['displayName'] = data['user']['displayName']
       callback(data)
     )
   
-  getCurrentUser : () -> $cookieStore.get('user')
+  getCurrentUser : (init) ->
+    expire = $window.localStorage['expiration']
+    if (init and expire)
+      now = new Date()
+      if (now > expire)      
+        $window.localStorage.clear()
+
+    {"userName" : $window.localStorage['userName'], "displayName" : $window.localStorage['displayName'] }
+
 
 angular.module('diveApp.services').factory "PropertyService", ($http, $rootScope, API_URL) ->
   getProperties: (callback) ->
