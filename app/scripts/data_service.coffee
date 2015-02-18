@@ -3,11 +3,7 @@ angularFileUpload = require('angular-file-upload')
 _ = require('underscore')
 angularCookies = require('angular-cookies')
 
-<<<<<<< Updated upstream
 angular.module('diveApp.services', ['ui.router', 'angularFileUpload', 'ngCookies'])
-=======
-angular.module('diveApp.services', ['ui.router', 'angularFileUpload'])
->>>>>>> Stashed changes
 
 # Container for data services
 angular.module('diveApp.services').service "AllProjectsService", ($http, $rootScope, API_URL) ->
