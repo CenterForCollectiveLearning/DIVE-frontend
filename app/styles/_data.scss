@@ -1,5 +1,7 @@
 section.viewport {
 	div.dataset-preview {
+        max-height: 500px;
+        overflow-y: scroll;
         padding-left: 5px;
         padding-right: 5px;
         input, select {

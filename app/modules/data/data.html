@@ -42,9 +42,9 @@
     </div>
   </div>
 
-  <!-- TODO Change depending on which pane is active-->
   <div ng-repeat="dataset in datasets" ng-if="$index==selectedIndex && currentPane=='right'">
-    <div class="dataset-preview" ng-if="dataset.sample">
+    <div class="dataset-preview card" ng-if="dataset.sample">
+      <div class="title">Dataset Preview</div>
       <input type="text" ng-model="dataset.title">
       <table>
         <tr>
@@ -55,15 +55,32 @@
         <tr>
           <td ng-repeat="attr in dataset.column_attrs">
             <select ng-model="attr.type" ng-options="type for type in types" class="type-select">
-          </td>
-        </tr>
+            </td>
+          </tr>
 
-       <tr ng-repeat="(index, row) in dataset.sample track by $index">
-          <td ng-repeat="elem in row track by $index"> {{elem}} </td>
-        </tr>
-      </table>
+          <tr ng-repeat="(index, row) in dataset.sample track by $index">
+            <td ng-repeat="elem in row track by $index"> {{elem}} </td>
+          </tr>
+        </table>
+      </div>
+
+
+      <div class="dataset-structure-select card">
+        <div class="title">Dataset Structure</div>
+        <ul class="structure-options options">
+          <li class="structure-option option" ng-repeat="structure in structures" ng-click="selectStructure(structure.name)" ng-class="{'selected': selectedStructure(structure.name)}">
+            {{structure.displayName}}
+          </li>
+        </ul>
+<!--         <div class="button ng-class=">Long (Sample-based)</div>
+        <div class="button">Wide (Matrix-like)</div>
+        <div class="button">Network</div> -->
+      </div>
+      <div class="dataset-delete-select card">
+        <div class="title">Modify Dataset</div>
+        <div class="button delete" ng-click="removeDataset(dataset.dID)">Delete Dataset</div>
+      </div>
     </div>
-    <div class="button delete" ng-click="removeDataset(dataset.dID)">Delete Dataset</div>
   </div>
 
-</section> 
+  </section> 

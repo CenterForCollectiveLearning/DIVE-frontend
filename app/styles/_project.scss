@@ -89,7 +89,7 @@ nav.navbar {
 
         a.project-title, a.user-display {
             padding-left: 0px;
-            text-transform: capitalize;
+            // text-transform: capitalize;
         }
     }
 
@@ -242,6 +242,7 @@ section.left-pane, section.right-pane {
 
                 div.select {
                     background-color: $assemble-green;
+                    border-left: 1px solid $light-gray;
 
                     img {
                         width: 20px;
@@ -252,6 +253,7 @@ section.left-pane, section.right-pane {
 
                 div.reject {
                     background-color: $project-red;
+                    border-left: 1px solid $light-gray;
                     img {
                         width: 14px;
                         margin-top: 17px;

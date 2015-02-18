@@ -62,18 +62,33 @@
 
   <section class="conditionals card">
     <div class="title">Conditionals</div>
-    <ul class="conditional-options">
-      <li class="conditional-option" ng-repeat="conditionalOption in conditionalOptions" ng-click="selectConditional(conditionalOption)" ng-class="{'selected':selectedConditional(conditionalOption.name)}">
+    <ul class="conditional-options options">
+      <li class="conditional-option option" ng-repeat="conditionalOption in conditionalOptions" ng-click="selectConditional(conditionalOption)" ng-class="{'selected':selectedConditional(conditionalOption.name)}">
         {{conditionalOption.name}}
       </li>
     </ul>
     <div class="dropdowns">
-      <ul class="dropdowns">
+      <ul class="dropdowns" ng-if="!numeric">
         <li ng-repeat="(title, data) in selectedConditionalData">
           <label class="dropdown-label">{{title}}</label>
           <select ng-model="selectedConditionalValues[currentdID][title]" ng-options="datum for datum in data" ng-change="changedConditional()" ng-init="selectedConditionalValues[currentdID][title]=data[0]"></select>
+          {{selectedConditionalStats[title].min}}
+          {{selectedConditionalStats[title].max}}
+          {{selectedConditionalSliders[title]}}
+
+          <slider 
+            ng-if="isNumeric(selectedConditionalTypes[title])" 
+            floor="0" 
+            ceiling="10"
+            step="selectedConditionalStats[title].step" 
+            ng-model-low="selectedConditionalStats[title].min" 
+            ng-model-high="selectedConditionalStats[title].max">
+          </slider>
         </li>
       </ul>
+      {{selectedConditionalStats}}
+      {{selectedConditionalTypes}}
+
     </div>
   </section>
   <section class="configurations card">

@@ -26,6 +26,36 @@ section.right-pane.viz-selection {
     }
 }
 
+ul.options {
+    top: 50%;
+    left: 50%;
+    padding-left: 0px;
+    margin-top: 10px;
+    height: auto;
+    background-color: white;
+
+    li.option {
+        @include background-transition();
+        margin-left: 4px;
+
+        @include small-caps;
+        text-align: center;
+        display: inline;
+        cursor: pointer;
+        border-radius: 3px;
+        padding: 7px 10px;
+        border: 1px solid $dark-gray;
+        border-bottom-color: #D0D1D5;
+        border-left-color: #DFE0E4;
+        border-right-color: #DFE0E4;
+        border-top-color: #E5E6E9;
+
+        &.selected {
+            background-color: $ontology-blue;
+        }
+    }
+}
+
 section.conditionals, #viz-container {
     ul.conditional-options {
         top: 50%;

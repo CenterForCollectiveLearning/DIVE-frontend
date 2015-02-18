@@ -45,6 +45,27 @@ angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope
   )
 
   ###############
+  # Dataset Structure
+  ###############
+  $scope.structures = [
+    {
+      name: 'long'
+      displayName: 'Long (Record or stacked format)'
+    },
+    {
+      name: 'wide'
+      displayName: 'Wide (Matrix-like)'
+    }
+  ]
+
+  $scope.selectedStructure = (structure) ->
+    datasetStructure = $scope.datasets[$scope.selectedIndex].structure 
+    if structure is datasetStructure then true else false
+
+  $scope.selectStructure = (structure) ->
+    $scope.datasets[$scope.selectedIndex].structure = structure
+
+  ###############
   # File Upload
   ###############
   $scope.onFileSelect = ($files) ->

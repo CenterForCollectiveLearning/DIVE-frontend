@@ -14,6 +14,11 @@ angular.module('diveApp.export').controller "AssembleCtrl", ($scope, $rootScope,
     $scope.selectedConditionalData = {}  # Data corresponding to selected conditionals (k: list)
     $scope.selectedConditionalValues = {}  # All selected conditional values (k: val)
 
+    $scope.config =
+        width: 600
+        height: 500
+        backgroundColor: '#000000'
+
     $scope.icons =
         treemap: 'treemap.svg'
         barchart: 'barchart.svg'
@@ -46,7 +51,7 @@ angular.module('diveApp.export').controller "AssembleCtrl", ($scope, $rootScope,
                 svg: svg_xml
             )
         ).success((data) ->
-            console.log("Data:", data)
+            # console.log("Data:", data)
             file = new Blob([data], type: 'application/' + format)
             saveAs(file, 'test.' + format)
         )

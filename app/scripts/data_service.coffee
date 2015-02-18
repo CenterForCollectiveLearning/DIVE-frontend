@@ -3,7 +3,11 @@ angularFileUpload = require('angular-file-upload')
 _ = require('underscore')
 angularCookies = require('angular-cookies')
 
+<<<<<<< Updated upstream
 angular.module('diveApp.services', ['ui.router', 'angularFileUpload', 'ngCookies'])
+=======
+angular.module('diveApp.services', ['ui.router', 'angularFileUpload'])
+>>>>>>> Stashed changes
 
 # Container for data services
 angular.module('diveApp.services').service "AllProjectsService", ($http, $rootScope, API_URL) ->
@@ -164,18 +168,3 @@ angular.module('diveApp.services').service "ExportedVizSpecService", ($http, $ro
       # console.log("[DATA] Viz Data:", data)
       callback(data)
     )
-
-# angular.module('diveApp.services').service "ExportedVizDataService", ["API_URL", ($http, $rootScope, API_URL) ->
-#   # TODO Generalize service for other vizTypes
-#   promise: (type, spec, conditional, callback) ->
-#     # console.log('[REQUEST] Viz Data for Type', type, 'and Specification ', spec)
-#     $http.get(API_URL + "/api/visualization_data",
-#       params:
-#         pID: $rootScope.pID
-#         type: type
-#         spec: spec
-#         conditional: conditional
-#     ).success((data) ->
-#       # console.log("[DATA] Viz Data:", data)
-#       callback(data)
-#     )
