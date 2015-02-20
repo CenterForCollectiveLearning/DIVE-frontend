@@ -13,6 +13,7 @@ angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, 
     
     if ($scope.loggedIn)
       AllProjectsService.promise($scope.user.userName, (projects) ->
+        console.log "Projects retrieved", projects
         $scope.projects = projects
       )
 
@@ -61,7 +62,8 @@ angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, 
       $scope.selectedProject = pID
 
   $scope.openProject = (project) ->
-    $state.go('engine.overview', 
+    # $rootScope.pID = project.pID
+    $state.go('engine.overview',
       formattedUserName: $scope.user.userName
       formattedProjectTitle: project.formattedTitle
     )

@@ -18,10 +18,11 @@ angular.module('diveApp.services').service "AllProjectsService", ($http, $rootSc
 
 # TODO Eventually deprecate this in favor of real session handling
 angular.module('diveApp.services').service "ProjectIDService", ($http, $stateParams, $rootScope, API_URL) ->
-  promise: (formattedProjectTitle) ->
+  promise: (formattedProjectTitle, userName) ->
     # console.log("[REQUEST] projectID for project title:", formattedProjectTitle)
     $http.get(API_URL + "/api/getProjectID",
       params:
+        user_name: userName
         formattedProjectTitle: formattedProjectTitle
     ).success((pID) ->
       # console.log("[DATA] projectID:", pID)
@@ -95,7 +96,6 @@ angular.module('diveApp.services').factory "UserService", ($http, $rootScope, $c
         $window.localStorage.clear()
 
     {"userName" : $window.localStorage['userName'], "displayName" : $window.localStorage['displayName'] }
-
 
 angular.module('diveApp.services').factory "PropertyService", ($http, $rootScope, API_URL) ->
   getProperties: (callback) ->

@@ -6,7 +6,7 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
   $urlRouterProvider.otherwise("/")
   # $locationProvider.html5Mode(true)
 
-  checkAuth = ($rootScope, $state, $stateParams, UserService, ProjectService, ProjectIDService, formattedUserName, projectID) ->
+  checkAuth = ($rootScope, $state, $stateParams, UserService, ProjectService, formattedUserName, projectID) ->
     user = UserService.getCurrentUser()
 
     if ((user.userName == formattedUserName) && ($rootScope.pID == projectID.data))
@@ -40,17 +40,19 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
       url: '/:formattedUserName/:formattedProjectTitle'
       templateUrl: 'modules/project/project.html'
       onEnter: checkAuth
-      controller: ($scope, $rootScope, $state, $stateParams, $window, UserService, ProjectService) ->
+      controller: ($scope, $rootScope, $state, $stateParams, $window, UserService, ProjectService, projectID) ->
         $scope.projectTitle = $stateParams.formattedProjectTitle.split('-').join(' ')
         $scope.user = UserService.getCurrentUser()
         $scope.logoutUser = () ->
           UserService.logoutUser()
           $state.go('landing')
+        console.log "ROOT", $rootScope
 
       resolve:
         formattedUserName: ($stateParams) -> $stateParams.formattedUserName
         formattedProjectTitle: ($stateParams) -> $stateParams.formattedProjectTitle
-        projectID: ($stateParams, ProjectIDService) -> ProjectIDService.promise($stateParams.formattedProjectTitle)
+        projectID: ($stateParams, UserService, ProjectIDService) -> 
+          ProjectIDService.promise($stateParams.formattedProjectTitle, UserService.getCurrentUser()['userName'])
     )
     .state('engine.overview'
       url: '/overview'
