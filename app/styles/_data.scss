@@ -19,4 +19,52 @@ section.viewport {
             }
         }
     }
+
+    div.public-datasets {
+        $block-width: 600px;
+        ul.datasets {
+            width: 600px;
+            padding: 0;
+            margin: 10px auto 0 auto;
+            a {
+                color: black;
+            }
+            li.dataset {
+                @include card-shadow;
+                @include border-transition();
+                @include background-transition();
+                background-color: white;
+                cursor: pointer;
+                margin-top: 10px;
+                width: $block-width;
+                border-radius: 2px;
+                display: inline-block;
+                margin-right: 10px;
+
+                div.title {
+                    font-size: 24px;
+                    line-height: 24px;
+                    padding: 20px 20px;
+                    text-align: left;
+                }
+                div.description {
+                    @include small-caps;
+                    line-height: 20px;
+                    padding: 0 20px;
+                    padding-bottom: 15px;
+                    text-align: left;
+                }
+
+                div.menu {
+                    height: 0px;
+                    transition: .2s ease-in-out height;
+                    overflow: hidden;
+                    &.active {
+                        border-top: 1px solid $light-gray;
+                        height: 60px;
+                    }
+                }
+            }
+        }
+    }
 }

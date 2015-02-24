@@ -71,10 +71,21 @@
       <ul class="dropdowns" ng-if="!numeric">
         <li ng-repeat="(title, data) in selectedConditionalData">
           <label class="dropdown-label">{{title}}</label>
-          <select ng-model="selectedConditionalValues[currentdID][title]" ng-options="datum for datum in data" ng-change="changedConditional()" ng-init="selectedConditionalValues[currentdID][title]=data[0]"></select>
+          <select 
+            ng-if="!isNumeric(selectedConditionalTypes[title])" 
+            ng-model="selectedConditionalValues[currentdID][title]" 
+            ng-options="datum for datum in data" 
+            ng-change="changedConditional()" ng-init="selectedConditionalValues[currentdID][title]=data[0]">
+          </select>
           {{selectedConditionalStats[title].min}}
           {{selectedConditionalStats[title].max}}
           {{selectedConditionalSliders[title]}}
+
+
+          <slider floor="100" ceiling="1000" step="50" precision="2" ng-model="item"></slider>
+
+          <slider ng-if="isNumeric(selectedConditionalTypes[title])" floor="0"  ceiling="10" ng-model-low="low" ng-model-high="high">
+          </slider>
 
           <slider 
             ng-if="isNumeric(selectedConditionalTypes[title])" 

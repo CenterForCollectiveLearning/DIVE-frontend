@@ -37,6 +37,7 @@ angular.module('diveApp.services').service "ProjectService", ($http, $stateParam
         user_name: userName
         pID: pID
     ).success(callback)
+
 # Dataset Samples
 angular.module('diveApp.services').service "DataService", ($http, $rootScope, API_URL) ->
   promise: (callback) ->
@@ -49,6 +50,17 @@ angular.module('diveApp.services').service "DataService", ($http, $rootScope, AP
       # console.log("[DATA] datasets:", data)
       callback(data.datasets)
     )
+
+# Dataset Samples
+angular.module('diveApp.services').service "PublicDataService", ($http, API_URL) ->
+  promise: (method, params, callback) ->
+    if method is 'GET'
+      $http.get(API_URL + "/api/public_data",
+        params:
+          sample: true
+      ).success((data) -> callback(data.datasets))
+    else if method is 'POST'
+      $http.post(API_URL + "/api/public_data", params).success((data) -> callback(data.datasets))
 
 angular.module('diveApp.services').factory "UserService", ($http, $rootScope, $cookieStore, $window, API_URL) ->
 

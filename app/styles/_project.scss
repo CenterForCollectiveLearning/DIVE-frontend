@@ -8,6 +8,7 @@ nav.navbar {
 
 
     div.navbar-header {
+        padding-left: 15px;
         width: 50%;
         height: 35px;
         float: left;
@@ -93,19 +94,7 @@ nav.navbar {
         }
     }
 
-    div.hamburger {
-        float: right;
-        margin-right: 20px;
-        margin-top: 12px;
-        cursor: pointer;
-
-        div.line {
-            width: 14px;
-            border-bottom: 2px solid white;
-            padding-bottom: 3px;
-        }
-    }
-
+   
     &.sections {
         background-image: none;
         background-color: white;
@@ -126,6 +115,20 @@ nav.navbar {
         }
     }
 }
+
+div.hamburger {
+    float: right;
+    margin-right: 20px;
+    margin-top: 8px;
+    cursor: pointer;
+
+    div.line {
+        width: 14px;
+        border-bottom: 2px solid white;
+        padding-bottom: 3px;
+    }
+}
+
 
 section.left-pane {
     float: left;
@@ -318,3 +321,41 @@ section.left-pane, section.right-pane {
         text-align: center;
     }
 }
+
+div.project-right-pane {
+    transition: .2s ease-in-out width;
+    background-color: $dive-black;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 0;
+    z-index: 10;
+
+    &.open {
+        width: 250px;
+    }
+
+    ul {
+        margin-top: 35px;
+        li {
+            @include background-transition;
+            cursor: pointer;
+            padding-left: 10px;
+            line-height: 50px;
+            color: white;
+            border-top: 1px solid $light-gray;
+
+            &:hover {
+                background-color: $ontology-blue;
+            }
+
+            &:last-child {
+                border-bottom: 1px solid $light-gray;
+            }
+        }
+    }
+}
+
+
+

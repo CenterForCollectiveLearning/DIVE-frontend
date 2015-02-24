@@ -1,33 +1,35 @@
 <section class="landing-projects">
 
+	<login></login>
+	<register></register>
+
 	<div class='login-form' ng-if='!loggedIn'>
-		<label>Login</label>
+		<div class="title">Login</div>
 		<form name='loginForm'>
 			<label>Username</label>
 			<input type='text' ng-model='login_userName'>
 			<label>Password</label>
-			<input type='password' ng-model='login_password'>
+			<input type='password' ng-model='login_password' ng-enter='loginUser(login_userName, login_password)'>
 			<div class='login-user' ng-click='loginUser(login_userName, login_password)'>Login</div>
 			<label ng-if='loginErr'>**Invalid username and/or password.</label>
 		</form>
 	</div>
 
 	<div class='reg-form' ng-if='!loggedIn'>
-		<label>Sign Up</label>
+		<div class="title">Sign Up</div>
 		<form name='signUpForm'>
 			<label>Username</label>
 			<input type='text' ng-model='reg_userName'>
 			<label>Display Name</label>
 			<input type='text' ng-model='reg_displayName'>
 			<label>Password</label>
-			<input type='password' ng-model='reg_password'>
+			<input type='password' ng-model='reg_password' ng-enter='registerUser(reg_userName, reg_displayName, reg_password)'>
 			<div class='reg-user' ng-click='registerUser(reg_userName, reg_displayName, reg_password)'>Sign Up</div>
 			<label ng-if='regErr'>**Username must be unique and all fields are required.</label>
 		</form>
 	</div>
 
 	<div class='project-list' ng-if="loggedIn && !newProject">
-
 		<ul class="projects" ng-if="!newProject">
 			<li class="project" ng-repeat="project in projects" ng-click="selectProject(project.pID)">
 				<div class="title">{{project.title}}</div>
@@ -45,12 +47,11 @@
 				Create New Project
 			</div>
 		</ul>
-
 	</div>
 
 	<div class="new-project-form" ng-if="loggedIn && newProject">
 		<div class="close" ng-click="newProjectToggle()">x</div>
-		<label>New Project</label>
+		<div class="title">New Project</div>
 
 		<form name="createProjectForm" ng-controller="CreateProjectFormCtrl as createProject" ng-submit="createProjectForm.$val && createProject.login()" novalidate>
 
@@ -60,7 +61,7 @@
 			</label>
 			<input type="text" ng-model="newProjectData.title" placeholder="Chicago Demographic Visualization" required>
 			<label class="description label">Project Description</label>
-			<input type="text" ng-model="newProjectData.description" placeholder="Visualization based on the 2006-2012 ACS">
+			<input type="text" ng-model="newProjectData.description" placeholder="Visualization based on the 2006-2012 ACS" ng-enter="create_project()">
 			<div class="create-project" ng-click="create_project()">Create</div>
 		</form>
 	</div>
