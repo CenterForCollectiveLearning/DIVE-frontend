@@ -1,5 +1,5 @@
 section.right-pane.viz-selection {
-    div.filter, div.sort {
+    div.filter, div.sort, div.choose-stats {
         @include small-caps;
         text-align: center;
         cursor: pointer;
@@ -16,11 +16,16 @@ section.right-pane.viz-selection {
     ul.pane-items {
         li {
             height: 100px;
+            overflow: hidden;
             div.stats {
                 border-top: 1px solid $light-gray;
                 font-size: 10px;
                 padding-top: 8px;
                 padding-bottom: 12px;
+            }
+            &.selected {
+                height: 200px;
+                overflow: auto;
             }
         }
     }

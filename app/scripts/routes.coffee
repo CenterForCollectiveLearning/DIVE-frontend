@@ -10,7 +10,6 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
     user = UserService.getCurrentUser()
 
     if ((user.userName == formattedUserName) && ($rootScope.pID == projectID.data))
-      console.log user.userName, $rootScope.pID
       ProjectService.promise($rootScope.pID, user.userName, (project) ->
         if (project.length != 1)
           UserService.logoutUser()
@@ -46,7 +45,6 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
         $scope.logoutUser = () ->
           UserService.logoutUser()
           $state.go('landing')
-        console.log "ROOT", $rootScope
 
       resolve:
         formattedUserName: ($stateParams) -> $stateParams.formattedUserName

@@ -20,6 +20,11 @@
   <div class="filter fixed">
     Filter
   </div>
+  <div class="choose-stats fixed">
+    Stats<br>
+    <span ng-repeat="stat in availableStats[selectedType]">
+      <input ng-click="toggleStat(stat)" type='checkbox'>{{stat.name}}<br></span>
+  </div>
   <div class="sort fixed">
     Sorting
     <select ng-options="sorting.property as sorting.display for sorting in sortings" ng-model="selectedSorting" ng-change='sortSpecs()'></select>
@@ -39,7 +44,14 @@
       
       <div class="stats">
         <div>Number of elements: <b>{{spec.stats.num_elements}}</b></div>
-        <div>Standard Deviation: <b>{{spec.stats.std | number: 3}}</b></div>
+        <!-- <div>Standard Deviation: <b>{{spec.stats.std | number: 3}}</b></div> -->
+        <div class="extra-stats" ng-if="$index==selectedSpecIndex">
+          <span ng-repeat="statType in selectedStats">
+            <br><div>{{statType.name}}</div>
+            <div ng-repeat="(stat, val) in vizStats[statType.val]">{{stat}}: {{val | number : 2}}</div>
+          </span>
+          <!-- <div ng-repeat="statType in selectedStats">{{statType}}</div> -->
+        </div>
       </div>
 
       <div class="choose" ng-if="$index==selectedSpecIndex">

@@ -125,7 +125,7 @@ angular.module('diveApp.services').service "SpecificationService", ($http, $root
       params:
         pID: $rootScope.pID
     ).success((data) ->
-      # console.log("[DATA] specifications:", data)
+      console.log("[DATA] specifications:", data)
       callback(data)
     )
 
@@ -151,6 +151,7 @@ angular.module('diveApp.services').service "VizDataService", ($http, $rootScope,
     $http.get(API_URL + "/api/visualization_data",
       params: params
     ).success((data) ->
+      console.log data
       callback(data)
     )
 

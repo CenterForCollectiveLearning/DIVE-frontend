@@ -38,13 +38,38 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     $scope.specs = _.sortBy($scope.allSpecs[$scope.types[$scope.selectedTypeIndex].name], (e) ->
       $scope.selectedSortOrder * e['stats'][$scope.selectedSorting]
     )
+
     $scope.selectSpec(0)
     $scope.loading = false
+
+    $scope.availableStats = {
+      "geomap" : [
+        { name: 'Geomap 1', val: "Geomap 1" } ]
+      "linechart" : [
+        { name: 'Linechart 1', val: "Linechart 1" } ]
+      "piechart" : [
+        { name: 'Piechart 1', val: "Piechart 1" } ]
+      "scatterplot" : [
+        { name: "Descriptive", val: 'describe' }, 
+        { name: "Gaussian", val: 'gaussian' },
+        { name: "Linear Regression", val: 'linregress'} ]
+      "treemap" : [
+        { name: 'Treemap 1', val: "Treemap 1" } ]
+    }
+    $scope.selectedStats = []
   )
+
+  $scope.toggleStat = (stat) ->
+    idx = $scope.selectedStats.indexOf(stat)
+    if idx < 0
+      $scope.selectedStats.push(stat)
+    else
+      $scope.selectedStats.splice(idx, 1)
+    console.log "Selected Stats: ", $scope.selectedStats
 
   $scope.chooseSpec = (index) ->
     spec = $scope.specs[index]
-    console.log("Chose spec", spec.sID)
+    # console.log("Chose spec", spec.sID)
     $http.get(API_URL + '/api/choose_spec',
       params:
         pID: $rootScope.pID
@@ -56,7 +81,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
 
   $scope.rejectSpec = (index) ->
     spec = $scope.specs[index]
-    console.log("Reject spec", spec.sID)
+    # console.log("Reject spec", spec.sID)
     $http.get(API_URL + '/api/reject_spec',
       params:
         pID: $rootScope.pID
@@ -72,8 +97,10 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
       $scope.selectedSortOrder * e['stats'][$scope.selectedSorting]
     )
     $scope.selectSpec(0)
+    $scope.selectedStats = []
 
   $scope.selectSpec = (index) ->
+    # console.log "Select Spec!"
     $scope.selectedSpecIndex = index
     $scope.selectedSpec = $scope.specs[index]
 
@@ -98,6 +125,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
       conditional: $scope.selectedConditionalValues
     VizDataService.promise(params, (result) ->
       $scope.vizData = result.result
+      $scope.vizStats = result.stats
       $scope.loading = false
     )
 
@@ -124,8 +152,8 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
   $scope.selectedSortOrder = $scope.sortOrders[0].property
 
   $scope.sortSpecs = ->
-    console.log("sorting!")
-    console.log($scope.specs)
+    # console.log("sorting!")
+    # console.log($scope.specs)
     $scope.specs = _.sortBy($scope.specs, (e) ->
       $scope.selectedSortOrder * e['stats'][$scope.selectedSorting]
     )
@@ -160,8 +188,6 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
         step: 1
       }
 
-
-
       ConditionalDataService.promise($scope.currentdID, spec, (result) ->
         data = result.result.unshift('All')
         $scope.selectedConditionalData[spec.name] = result.result
@@ -174,16 +200,19 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
 
       VizDataService.promise(params, (result) ->
         $scope.vizData = result.result
+        $scope.vizStats = result.stats
         $scope.loading = false
       )
 
   $scope.changedConditional = (title) ->
+    # console.log "changed conditional! ", title
     params = 
       type: $scope.selectedType
       spec: $scope.selectedSpec
       conditional: $scope.selectedConditionalValues
     VizDataService.promise(params, (result) ->
       $scope.vizData = result.result
+      $scope.vizStats = result.stats
       $scope.loading = false
     )
 

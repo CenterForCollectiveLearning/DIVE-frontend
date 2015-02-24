@@ -79,8 +79,8 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
             else if vizType in ["scatterplot", "barchart", "linechart"]
               x = vizSpec.x.title
               agg = vizSpec.aggregation
-              console.log(vizType, d3PlusTypeMapping[vizType])
-              console.log("viz data", vizData)
+              # console.log(vizType, d3PlusTypeMapping[vizType])
+              # console.log("viz data", vizData)
               if agg
                 sample_data = [
                   {"year": 1991, "name":"alpha", "value": 17},
