@@ -7,7 +7,7 @@
     <li ng-repeat="option in options" class="option" ng-class="{'selected':$index==selectedIndex && currentPane=='left', 'inactive': option.inactive}">
       <div class="vertical-center title" ng-click="select_option($index)">{{option.label}}</div>
       <div class="right">
-        <img src="assets/images/{{option.icon}}" />
+        <img ng-src="assets/images/{{option.icon}}" />
       </div>
     </li>
   </ul>

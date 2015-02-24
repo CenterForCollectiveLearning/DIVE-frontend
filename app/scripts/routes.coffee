@@ -10,11 +10,11 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
     user = UserService.getCurrentUser()
 
     if ((user.userName == formattedUserName) && ($rootScope.pID == projectID.data))
-      console.log user.userName, $rootScope.pID
+      console.log("YES")
+      console.log("User:", user.userName, "project:", $rootScope.pID)
       ProjectService.promise($rootScope.pID, user.userName, (project) ->
-        if (project.length != 1)
-          UserService.logoutUser()
-          $state.go('landing')
+        if project.length
+          return
       )
     else
       UserService.logoutUser()

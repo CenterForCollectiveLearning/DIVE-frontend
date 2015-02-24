@@ -323,6 +323,7 @@ section.left-pane, section.right-pane {
 }
 
 div.project-right-pane {
+    margin-top: 35px;
     transition: .2s ease-in-out width;
     background-color: $dive-black;
     height: 100%;
@@ -337,7 +338,6 @@ div.project-right-pane {
     }
 
     ul {
-        margin-top: 35px;
         li {
             @include background-transition;
             cursor: pointer;
