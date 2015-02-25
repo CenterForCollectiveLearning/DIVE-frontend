@@ -182,11 +182,12 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
       console.log("BEFORE ASSIGNMENT", $scope.conditionalTypes[conditionalColumnID], $scope.conditionalStats[conditionalName])
       $scope.selectedConditionalTypes[spec.name] = $scope.conditionalTypes[conditionalColumnID]
       $scope.selectedConditionalStats[spec.name] = $scope.conditionalStats[conditionalName]
-      $scope.selectedConditionalSliders[spec.name] = {
-        min: $scope.selectedConditionalStats[spec.name].min
-        max: $scope.selectedConditionalStats[spec.name].max
-        step: 1
-      }
+      if $scope.isNumeric($scope.selectedConditionalTypes[spec.name])
+        $scope.selectedConditionalSliders[spec.name] = {
+          min: $scope.selectedConditionalStats[spec.name].min
+          max: $scope.selectedConditionalStats[spec.name].max
+          step: 1
+        }
 
       ConditionalDataService.promise($scope.currentdID, spec, (result) ->
         data = result.result.unshift('All')

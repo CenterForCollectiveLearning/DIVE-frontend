@@ -1,11 +1,11 @@
 <header>
 	<nav class="navbar navbar-default top" role="navigation">
 		<div class="navbar-header">
-			<a class="navbar-brand expand" id="logo" ui-sref="landing">DIVE /</a>
-			<a class="navbar-brand user-display" ui-sref="landing">{{user.displayName}} /</a>
+<!-- 			<a class="navbar-brand expand" id="logo" ui-sref="landing">DIVE /</a>
+			<a class="navbar-brand user-display" ui-sref="landing">{{user.displayName}} /</a> -->
 			<a class="navbar-brand project-title" ui-sref="engine.overview">{{projectTitle}}</a>
 		</div>
-		<div class="hamburger" ng-click='logoutUser()'>
+		<div class="hamburger" ng-click='toggleRightPane()'>
 			<div class="line"></div>
 			<div class="line"></div>
 			<div class="line"></div>
@@ -21,3 +21,17 @@
 		</ul>
 	</nav>
 </header>
+
+<div class="project-right-pane" ng-class="{ 'open': rightPaneOpen }">
+	<ul>
+		<li ui-sref="landing">
+			Project List
+		</li>
+		<li ui-sref="landing">
+			Account
+		</li>
+		<li ng-click="logoutUser()">
+			Logout
+		</li>
+	</ul>
+</div>

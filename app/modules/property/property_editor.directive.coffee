@@ -146,12 +146,14 @@ angular.module('diveApp.property').directive("ontologyEditor", ["$window", "$tim
                 [l_dID, r_dID, l_col, r_col] = link.split(",")
                 link_type = hierarchyLibrary[link]
 
-                if link_type == "1N"
-                  attrA_pos = attributePositions[l_dID][l_col]
-                  attrB_pos = attributePositions[r_dID][r_col]
-                else
-                  attrA_pos = attributePositions[r_dID][r_col]
-                  attrB_pos = attributePositions[l_dID][l_col]
+                console.log(l_dID, r_dID, l_col, r_col)
+                try
+                  if link_type == "N1"
+                    attrA_pos = attributePositions[l_dID][l_col]
+                    attrB_pos = attributePositions[r_dID][r_col]
+                  else
+                    attrA_pos = attributePositions[r_dID][r_col]
+                    attrB_pos = attributePositions[l_dID][l_col]
 
                 if attrA_pos and attrB_pos
                   a_box_x = attrA_pos.left[0]

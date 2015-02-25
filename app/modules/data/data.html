@@ -7,7 +7,7 @@
     <li ng-repeat="option in options" class="option" ng-class="{'selected':$index==selectedIndex && currentPane=='left', 'inactive': option.inactive}">
       <div class="vertical-center title" ng-click="select_option($index)">{{option.label}}</div>
       <div class="right">
-        <img src="assets/images/{{option.icon}}" />
+        <img ng-src="assets/images/{{option.icon}}" />
       </div>
     </li>
   </ul>
@@ -18,7 +18,7 @@
     Inspect Datasets
   </div>
   <ul class="pane-items">
-    <li ng-repeat="dataset in datasets" class="dataset" ng-click="select_dataset($index)" ng-class="{'selected':$index==selectedIndex && currentPane=='right'}">
+    <li ng-repeat="dataset in datasets track by dataset.dID" class="dataset" ng-click="select_dataset($index)" ng-class="{'selected':$index==selectedIndex && currentPane=='right'}">
       <div class="title">{{dataset.filename}}</div>
       <div class="dimensions">
         <span class="rows">{{dataset.rows}} Rows</span> x <span class="columns">{{dataset.cols}} Columns</span>
@@ -36,13 +36,31 @@
     <!-- File Upload UI -->
     <div class="file-upload" ng-if="selectedIndex==0">
       <div class="button upload" ng-file-select="onFileSelect($files)" data-multiple="true" title="select file" onclick="this.value = null" class="upload-button">Click here to select file</div>
-<!--       <div class="button cancel" ng-click="uploadabort()">Cancel Upload</div> -->
+      <!--       <div class="button cancel" ng-click="uploadabort()">Cancel Upload</div> -->
       <div class="drop" ng-show="dropSupported" class="drop-box" ng-file-drop="onFileSelect($files)" ng-file-drop-available="dropSupported=true"
       ng-file-drag-over-class="dragOverClass($event)" ng-file-drag-over-delay="100">or drop files here</div>
     </div>
+
+    <div class="public-datasets" ng-if="selectedIndex==1">
+      <div class="title">
+        PUBLIC DATASETS
+      </div>
+      <ul class="datasets">
+        <li ng-repeat="d in publicDatasets" class="dataset" ng-click="selectPublicDataset(d.dID)">
+          <div class="title">{{d.filename}}</div>
+          <div class="description">Description</div>
+          <div class="menu" ng-class="{active: d.dID==selectedPublicDataset}">
+            <div class="button open" ng-click="addPublicDataset(d)">
+              Use Dataset
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 
-  <div ng-repeat="dataset in datasets" ng-if="$index==selectedIndex && currentPane=='right'">
+
+  <div ng-repeat="dataset in datasets track by dataset.dID" ng-if="$index==selectedIndex && currentPane=='right'">
     <div class="dataset-preview card" ng-if="dataset.sample">
       <div class="title">Dataset Preview</div>
       <input type="text" ng-model="dataset.title">

@@ -36,6 +36,14 @@ window.onresize = (e) ->
 
 $ = require('jquery')
 
+angular.module('diveApp').directive 'ngEnter', ->
+  (scope, element, attrs) ->
+    element.bind 'keydown keypress', (event) ->
+      if event.which == 13
+        scope.$apply ->
+          scope.$eval attrs.ngEnter, 'event': event
+        event.preventDefault()
+
 # Need to return function
 diveApp.filter "capitalize", -> 
   (input, scope) ->

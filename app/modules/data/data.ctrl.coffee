@@ -1,8 +1,10 @@
-angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope, projectID, $http, $upload, $timeout, $stateParams, DataService, API_URL) ->
-  $scope.selectedIndex = 0
+angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope, projectID, $http, $upload, $timeout, $stateParams, DataService, PublicDataService, API_URL) ->
+  $scope.selectedIndex = 1
   $scope.currentPane = 'left'
 
   $scope.datasets = []
+  $scope.publicDatasets = []
+  $scope.dIDs = []  # Avoid adding duplicates to $scope.datasets
 
   $scope.options = [
     {
@@ -10,6 +12,11 @@ angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope
       inactive: false
       icon: 'file.svg'
     },
+    {
+      label: 'Search DIVE Datasets'
+      inactive: false
+      icon: 'search.svg'
+    }
     # {
     #   label: 'Connect to Database'
     #   inactive: true
@@ -20,11 +27,6 @@ angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope
     #   inactive: true
     #   icon: 'link.svg'
     # },
-    {
-      label: 'Search DIVE Datasets'
-      inactive: false
-      icon: 'search.svg'
-    }
   ]
   $scope.select_option = (index) ->
     $scope.currentPane = 'left'
@@ -36,12 +38,40 @@ angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope
     $scope.currentPane = 'right'
     $scope.selectedIndex = index
 
+  #############
+  # Public Dataset interaction
+  #############
+
+  # Select a public dataset UI element for more options and info
+  $scope.selectedPublicDataset = null
+  $scope.selectPublicDataset = (dID) ->
+    if $scope.selectedPublicDataset is dID
+      $scope.selectedPublicDataset = null
+    else
+      $scope.selectedPublicDataset = dID
+
+  # Add public dataset to your project
+  $scope.addPublicDataset = (d) -> 
+    # unless d.dID in $scope.dIDs
+    #   $scope.datasets.push(d)
+    #   $scope.dIDs.push(d.dID)
+    console.log("adding Public Dataset", d)
+    params =
+      dID: d.dID
+      pID: $rootScope.pID
+    PublicDataService.promise('POST', params, (datasets) -> 
+      for d in datasets
+        $scope.datasets.push(d)
+        $scope.dIDs.push(d.dID)
+    )
+
   $scope.types = [ "integer", "float", "string", "countryCode2", "countryCode3", "countryName", "continent", "datetime" ]
 
   # Initialize datasets
-  DataService.promise((datasets) ->
-    $scope.datasets = datasets
-    console.log($scope.datasets)
+  DataService.promise( (datasets) -> $scope.datasets = datasets )
+  PublicDataService.promise('GET', { sample: true }, (datasets) -> 
+    $scope.publicDatasets = datasets 
+    console.log("Public datasets:", $scope.publicDatasets)
   )
 
   ###############
@@ -84,6 +114,7 @@ angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope
         # file is uploaded successfully
         for dataset in data.datasets
           $scope.datasets.push(dataset)
+          $scope.dIDs.push(dataset.dID)
         console.log $scope.datasets
       )
       i++
@@ -98,9 +129,13 @@ angular.module("diveApp.data").controller "DatasetListCtrl", ($scope, $rootScope
         dID: dID
     ).success((result) ->
       deleted_dIDs = result
+
+      newDIDs = []
       newDatasets = []
       for dataset in $scope.datasets
         unless dataset.dID in deleted_dIDs
           newDatasets.push(dataset)
+          newDIDs.push(dataset.dID)
       $scope.datasets = newDatasets
+      $scope.dIDs = newDIDs
     )

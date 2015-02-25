@@ -2,6 +2,7 @@ angular = require('angular')
 
 angular.module('diveApp.project', ['diveApp.services', 'ui.router'])
 
+require('./engine_top_bar.ctrl')
 require('./project_overview.ctrl')
 require('./pane_toggle.ctrl')
 require('./tabs.ctrl')
@@ -14,6 +15,7 @@ angular.module('diveApp.project').directive('loader', ->
 angular.module('diveApp.project').directive('engineTopBar', ->
     restrict: 'E',
     templateUrl: 'modules/project/engine_top_bar.html'
+    controller: 'EngineTopBarCtrl'
 )
 
 angular.module('diveApp.project').directive('paneToggle', ->
