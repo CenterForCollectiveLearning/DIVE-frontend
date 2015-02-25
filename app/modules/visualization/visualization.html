@@ -43,7 +43,9 @@
       </div>
       
       <div class="stats">
-        <div>Number of elements: <b>{{spec.stats.num_elements}}</b></div>
+        <div>Number of elements: <b>
+          {{ ($index == selectedSpecIndex) ? (vizStats[describe] ? vizStats[describe].count : spec.stats.num_elements) 
+                  : spec.stats.num_elements }}</b></div>
         <!-- <div>Standard Deviation: <b>{{spec.stats.std | number: 3}}</b></div> -->
         <div class="extra-stats" ng-if="$index==selectedSpecIndex">
           <span ng-repeat="statType in selectedStats">
