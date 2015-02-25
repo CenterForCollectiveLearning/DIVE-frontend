@@ -1,4 +1,4 @@
-<section class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
+<div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
   <div class="pane-title">
     Visualization Types
   </div>
@@ -11,9 +11,9 @@
       </div>      
     </li>
   </ul>
-</section>
+</div>
 
-<section class="right-pane viz-selection" ng-class="{'closed': rightClosed}" maxheight>
+<div class="right-pane viz-selection" ng-class="{'closed': rightClosed}" maxheight>
   <div class="pane-title">
     Visualization Specifications
   </div>
@@ -52,15 +52,15 @@
       </div>
     </li>
   </ul>
-</section>
+</div>
 
-<section class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
+<div class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
   <pane-toggle></pane-toggle>
   <loader></loader>
   <div id="viz-container"></div>
   <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selectedConditionalValues"></visualization-preview>
 
-  <section class="conditionals card">
+  <div class="conditionals card">
     <div class="title">Conditionals</div>
     <ul class="conditional-options options">
       <li class="conditional-option option" ng-repeat="conditionalOption in conditionalOptions" ng-click="selectConditional(conditionalOption)" ng-class="{'selected':selectedConditional(conditionalOption.name)}">
@@ -97,12 +97,9 @@
           </slider>
         </li>
       </ul>
-      {{selectedConditionalStats}}
-      {{selectedConditionalTypes}}
-
     </div>
-  </section>
-  <section class="configurations card">
+  </div>
+  <div class="configurations card">
     <div class="title">Configuration</div>
-  </section>
-</section>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-section.landing-top {
+div.landing-top {
     @include card-shadow;
     @include font;
     font-weight: light;
@@ -36,7 +36,7 @@ section.landing-top {
     }
 }
 
-section.landing-projects {
+div.landing-projects {
     @include font;
     $block-width: 600px;
     $block-height: 100px;

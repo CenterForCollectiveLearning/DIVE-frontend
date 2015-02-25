@@ -64,7 +64,7 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
             viz = d3plus.viz()
               .type(d3PlusTypeMapping[vizType])
               .container("div#viz-container")
-              .width($("section.viewport").width() - 40)
+              .width($("div.viewport").width() - 40)
               .margin("20px")
               .height(600)
               .data(vizData)
