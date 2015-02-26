@@ -1,5 +1,6 @@
 _ = require('underscore')
 
+
 # TODO Make this controller thinner!
 angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $http, $rootScope, DataService, PropertyService, VizDataService, ConditionalDataService, SpecificationService, API_URL) ->
 
@@ -85,11 +86,12 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     unless $scope.selectedConditionalValues[dID]
       $scope.selectedConditionalValues[dID] = {}
 
-    $scope.conditionalOptions = $scope.columnAttrsByDID[dID]
-    $scope.conditionalStats = $scope.properties.stats[dID]
-    $scope.conditionalTypes = $scope.properties.types[dID]
+    # Populate conditional info given spec
+    $scope.condList = $scope.columnAttrsByDID[dID]
+    $scope.condStats = $scope.properties.stats[dID]
 
-    console.log($scope.conditionalOptions, $scope.conditionalStats, $scope.conditionalTypes)
+    console.log("condList", $scope.condList)
+    console.log("condStats", $scope.condStats)
 
     # Get visualization data
     params = 
@@ -134,8 +136,14 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
   # Conditionals (TODO Refactor into directive)
   ###############################
 
+  $scope.condList = []  # Conditional options by name for a given spec (loaded with all options on load)
+  $scope.condStats = {}  # Stats about all conditionals for a given spec
+  $scope.condData = {}  # Data corresponding to selected conditionals (k: list) (only loaded on conditional select)
+  $scope.selectedCondValues = {}  # Selected values for selected conditionals
+
+
   # TODO Make the naming conventions clearer
-  $scope.conditionalOptions = []  # All conditionals by name for a given specification
+  $scope.conditionalOptions = []  # All conditional {stats, types, name} for a given specification
   $scope.selectedConditionalData = {}  # Data corresponding to selected conditionals (k: list)
   $scope.selectedConditionalValues = {}  # { dID: { k: v } }
   $scope.selectedConditionalStats = {}  # { columnTitle: { stats } 
@@ -146,41 +154,52 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     if type in ["float", "integer"] then true else false
 
   $scope.selectConditional = (spec) ->
+    console.log("selectedConditional", spec)
     if spec.name of $scope.selectedConditionalData
       delete $scope.selectedConditionalData[spec.name]
     else
+      console.log("SPEC:", spec)
       conditionalColumnID = spec.column_id
       conditionalName = spec.name
-      console.log("BEFORE ASSIGNMENT", $scope.conditionalTypes[conditionalColumnID], $scope.conditionalStats[conditionalName])
       $scope.selectedConditionalTypes[spec.name] = $scope.conditionalTypes[conditionalColumnID]
       $scope.selectedConditionalStats[spec.name] = $scope.conditionalStats[conditionalName]
       if $scope.isNumeric($scope.selectedConditionalTypes[spec.name])
-        $scope.selectedConditionalSliders[spec.name] = {
-          min: $scope.selectedConditionalStats[spec.name].min
-          max: $scope.selectedConditionalStats[spec.name].max
+
+        $scope.selectedConditionalValues[$scope.currentdID][spec.name] = {
+          low: parseFloat(Math.floor($scope.selectedConditionalStats[spec.name].min))
+          high: parseFloat(Math.ceil($scope.selectedConditionalStats[spec.name].max))
+          min: parseFloat(Math.floor($scope.selectedConditionalStats[spec.name].min))
+          max: parseFloat(Math.ceil($scope.selectedConditionalStats[spec.name].max))
           step: 1
         }
+        
 
       ConditionalDataService.promise($scope.currentdID, spec, (result) ->
         data = result.result.unshift('All')
         $scope.selectedConditionalData[spec.name] = result.result
-
       )
+
       params = 
         type: $scope.selectedType
         spec: $scope.selectedSpec
         conditional: $scope.selectedConditionalValues
-
       VizDataService.promise(params, (result) ->
+        console.log("CONDITIONAL CHANGE, params:", params.conditional)
         $scope.vizData = result.result
         $scope.loading = false
       )
+    $scope.$broadcast('refreshSlider')
+
+  $scope.item =
+    cost: 10
 
   $scope.changedConditional = (title) ->
+
     params = 
       type: $scope.selectedType
       spec: $scope.selectedSpec
       conditional: $scope.selectedConditionalValues
+    console.log("CONDITIONAL CHANGE, params:", params.conditional)
     VizDataService.promise(params, (result) ->
       $scope.vizData = result.result
       $scope.loading = false

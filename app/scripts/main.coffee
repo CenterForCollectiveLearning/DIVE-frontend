@@ -1,6 +1,7 @@
 angular = require('angular')
+angularTouch = require('angular-touch')
 angularCookies = require('angular-cookies')
-require('angular-slider')
+require('slider')
 
 # Top-level
 require('./routes')
@@ -15,7 +16,7 @@ require('../modules/visualization/visualization.module')
 require('../modules/export/export.module')
 require('../modules/embed/embed.module')
 
-diveApp = angular.module('diveApp', ['ui.slider', 'diveApp.routes', 'diveApp.project', 'diveApp.landing', 'diveApp.data', 'diveApp.property', 'diveApp.visualization', 'diveApp.export', 'diveApp.embed'])
+diveApp = angular.module('diveApp', ['vr.directives.slider', 'diveApp.routes', 'diveApp.project', 'diveApp.landing', 'diveApp.data', 'diveApp.property', 'diveApp.visualization', 'diveApp.export', 'diveApp.embed'])
   .constant('API_URL', 'http://localhost:8888')
 
 # Utility Functions

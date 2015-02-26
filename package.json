@@ -10,10 +10,10 @@
   },
   "dependencies": {
     "angular": "^1.3.0",
+    "angular-cookies": "*",
     "angular-file-upload": "^1.6.4",
-    "angular-slider": "^0.2.3",
+    "angular-touch": "^1.3.14",
     "angular-ui-router": "^0.2.11",
-    "angular-cookies" : "*",
     "d3": "^3.4.13",
     "jquery": "^2.1.1",
     "underscore": "^1.7.0"
@@ -50,11 +50,13 @@
   "browser": {
     "angular": "./node_modules/angular/angular.js",
     "d3plus": "./dist/scripts/lib/d3plus.min.js",
+    "slider": "./dist/scripts/lib/angular-slider.min.js",
     "topojson": "./dist/scripts/lib/topojson.js",
     "filesaver": "./dist/scripts/lib/FileSaver.min.js"
   },
   "browserify-shim": {
     "angular": "angular",
+    "slider": "slider",
     "d3plus": "d3plus",
     "topojson": "topojson",
     "filesaver": "filesaver"
