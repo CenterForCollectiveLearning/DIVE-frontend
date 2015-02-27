@@ -10,8 +10,6 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
     user = UserService.getCurrentUser()
 
     if ((user.userName == formattedUserName) && ($rootScope.pID == projectID.data))
-      console.log("YES")
-      console.log("User:", user.userName, "project:", $rootScope.pID)
       ProjectService.promise($rootScope.pID, user.userName, (project) ->
         if project.length
           return

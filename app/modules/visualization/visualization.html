@@ -58,36 +58,38 @@
   <pane-toggle></pane-toggle>
   <loader></loader>
   <div id="viz-container"></div>
-  <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selectedConditionalValues"></visualization-preview>
+  <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selCondVals"></visualization-preview>
 
   <div class="conditionals card">
     <div class="title">Conditionals</div>
     <ul class="conditional-options options">
-      <li class="conditional-option option" ng-repeat="conditionalOption in conditionalOptions" ng-click="selectConditional(conditionalOption)" ng-class="{'selected':selectedConditional(conditionalOption.name)}">
-        {{conditionalOption.name}}
+      <li class="conditional-option option" ng-repeat="c in condList" ng-click="selectConditional(c)" ng-class="{'selected':selectedConditional(c.name)}">
+        {{c.name}}
       </li>
     </ul>
     <div class="dropdowns">
       <ul class="dropdowns">
-        <li ng-repeat="(title, data) in selectedConditionalData">
+        <li ng-repeat="(title, data) in condData">
           <label class="dropdown-label">{{title}}</label>
+
+          <!-- Dropdown for factors -->
           <select 
-            ng-if="!isNumeric(selectedConditionalTypes[title])" 
-            ng-model="selectedConditionalValues[currentdID][title]" 
-            ng-options="datum for datum in data" 
-            ng-change="changedConditional()" ng-init="selectedConditionalValues[currentdID][title]=data[0]">
+            ng-if="!isNumeric(condTypes[title])" 
+            ng-model="selCondVals[currentdID][title]" 
+            ng-options="d for d in data" 
+            ng-change="changedConditional()" ng-init="selCondVals[currentdID][title]=data[0]">
           </select>
 
+          <!-- Slider for numeric -->
           <slider 
-            ng-if="isNumeric(selectedConditionalTypes[title])" 
+            ng-if="isNumeric(condTypes[title])" 
             ng-change="changedConditional()"
-            floor="{{ selectedConditionalValues[currentdID][title].min }}" 
-            ceiling="{{ selectedConditionalValues[currentdID][title].max }}" 
-            step="{{ selectedConditionalValues[currentdID][title].step }}" 
-            ng-model="selectedConditionalValues[currentdID][title].low"
-            ng-model-range="selectedConditionalValues[currentdID][title].high">
+            floor="{{ condData[title].floor }}" 
+            ceiling="{{ condData[title].ceiling }}" 
+            step="1" 
+            ng-model="selCondVals[currentdID][title].low"
+            ng-model-range="selCondVals[currentdID][title].high">
           </slider>
-<!--           {{selectedConditionalSliders[title]}} -->
         </li>
       </ul>
     </div>
