@@ -5,7 +5,10 @@ nav.navbar {
     border: 0;
     min-width: 980px;
     min-height: 35px;
-
+    -webkit-box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+    -moz-box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+    box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+    background-color: white;
 
     div.navbar-header {
         padding-left: 15px;
@@ -13,6 +16,7 @@ nav.navbar {
         height: 35px;
         float: left;
         font-weight: 300;
+
     }
 
     div.login {
@@ -24,16 +28,23 @@ nav.navbar {
         margin-right: 20px;
     }
 
+    &.divs {
+        -webkit-box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+        -moz-box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+        box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+    }
+
     ul {
         margin: 0;
         padding-left: 0;
         li {
             @include small-caps;
             @include background-transition();
+            background-color: white;
             cursor: pointer;
             float: left;
             padding: 0 20px;
-            line-height: 34px;
+            line-height: 35px;
             width: 200px;
             border-right: 1px solid black;
 
@@ -95,11 +106,12 @@ nav.navbar {
     }
 
    
-    &.sections {
+    &.divs {
         background-image: none;
         background-color: white;
-        border-bottom: 1px solid $dive-black;
+
         border-radius: 0;
+
 
         p.navbar-text {
             color: $dive-black;
@@ -130,15 +142,15 @@ div.hamburger {
 }
 
 
-section.left-pane {
+div.left-pane {
     float: left;
 }
 
-section.right-pane {
+div.right-pane {
     float: right;
 }
 
-section.left-pane, section.right-pane {
+div.left-pane, div.right-pane {
     background-color: white;
     font-size: 16px;
     position: relative;
@@ -331,7 +343,11 @@ div.project-right-pane {
     top: 0;
     right: 0;
     width: 0;
-    z-index: 10;
+    z-index: 11;
+    
+    -webkit-box-shadow: -2px 0px 5px 0 rgba(0, 0, 0, 0.26);
+    -moz-box-shadow: -2px 0px 5px 0 rgba(0, 0, 0, 0.26);
+    box-shadow: -2px 0px 5px 0 rgba(0, 0, 0, 0.26);
 
     &.open {
         width: 250px;

@@ -1,4 +1,4 @@
-<section class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
+<div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
   <div class="pane-title">
     Visualization Types
   </div>
@@ -11,9 +11,9 @@
       </div>      
     </li>
   </ul>
-</section>
+</div>
 
-<section class="right-pane viz-selection" ng-class="{'closed': rightClosed}" maxheight>
+<div class="right-pane viz-selection" ng-class="{'closed': rightClosed}" maxheight>
   <div class="pane-title">
     Visualization Specifications
   </div>
@@ -64,57 +64,49 @@
       </div>
     </li>
   </ul>
-</section>
+</div>
 
-<section class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
+<div class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
   <pane-toggle></pane-toggle>
   <loader></loader>
   <div id="viz-container"></div>
-  <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selectedConditionalValues"></visualization-preview>
+  <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selCondVals"></visualization-preview>
 
-  <section class="conditionals card">
+  <div class="conditionals card">
     <div class="title">Conditionals</div>
     <ul class="conditional-options options">
-      <li class="conditional-option option" ng-repeat="conditionalOption in conditionalOptions" ng-click="selectConditional(conditionalOption)" ng-class="{'selected':selectedConditional(conditionalOption.name)}">
-        {{conditionalOption.name}}
+      <li class="conditional-option option" ng-repeat="c in condList" ng-click="selectConditional(c)" ng-class="{'selected':selectedConditional(c.name)}">
+        {{c.name}}
       </li>
     </ul>
     <div class="dropdowns">
-      <ul class="dropdowns" ng-if="!numeric">
-        <li ng-repeat="(title, data) in selectedConditionalData">
+      <ul class="dropdowns">
+        <li ng-repeat="(title, data) in condData">
           <label class="dropdown-label">{{title}}</label>
+
+          <!-- Dropdown for factors -->
           <select 
-            ng-if="!isNumeric(selectedConditionalTypes[title])" 
-            ng-model="selectedConditionalValues[currentdID][title]" 
-            ng-options="datum for datum in data" 
-            ng-change="changedConditional()" ng-init="selectedConditionalValues[currentdID][title]=data[0]">
+            ng-if="!isNumeric(condTypes[title])" 
+            ng-model="selCondVals[currentdID][title]" 
+            ng-options="d for d in data" 
+            ng-change="changedConditional()" ng-init="selCondVals[currentdID][title]=data[0]">
           </select>
-<!--           {{selectedConditionalStats[title].min}}
-          {{selectedConditionalStats[title].max}}
-          {{selectedConditionalSliders[title]}} -->
 
-
-          <slider floor="100" ceiling="1000" step="50" precision="2" ng-model="item"></slider>
-
-          <slider ng-if="isNumeric(selectedConditionalTypes[title])" floor="0"  ceiling="10" ng-model-low="low" ng-model-high="high">
-          </slider>
-
+          <!-- Slider for numeric -->
           <slider 
-            ng-if="isNumeric(selectedConditionalTypes[title])" 
-            floor="0" 
-            ceiling="10"
-            step="selectedConditionalStats[title].step" 
-            ng-model-low="selectedConditionalStats[title].min" 
-            ng-model-high="selectedConditionalStats[title].max">
+            ng-if="isNumeric(condTypes[title])" 
+            ng-change="changedConditional()"
+            floor="{{ condData[title].floor }}" 
+            ceiling="{{ condData[title].ceiling }}" 
+            step="1" 
+            ng-model="selCondVals[currentdID][title].low"
+            ng-model-range="selCondVals[currentdID][title].high">
           </slider>
         </li>
       </ul>
-      {{selectedConditionalStats}}
-      {{selectedConditionalTypes}}
-
     </div>
-  </section>
-  <section class="configurations card">
+  </div>
+  <div class="configurations card">
     <div class="title">Configuration</div>
-  </section>
-</section>
+  </div>
+</div>

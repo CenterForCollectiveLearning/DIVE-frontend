@@ -151,7 +151,7 @@ angular.module('diveApp.services').service "ConditionalDataService", ($http, $ro
         dID: dID
         spec: spec
     ).success((data) ->
-      console.log("[DATA] Conditional Data:", data)
+      # console.log("[DATA] Conditional Data:", data)
       callback(data)
     )
 
@@ -159,7 +159,7 @@ angular.module('diveApp.services').service "VizDataService", ($http, $rootScope,
   # TODO Generalize service for other vizTypes
   promise: (params, callback) ->
     unless params.pID then params.pID = $rootScope.pID
-    console.log('[REQUEST] Viz Data for Type', params.type, 'and Specification ', params.spec)
+    # console.log('[REQUEST] Viz Data for Type', params.type, 'and Specification ', params.spec)
     $http.get(API_URL + "/api/visualization_data",
       params: params
     ).success((data) ->

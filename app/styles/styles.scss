@@ -1,6 +1,6 @@
 // Resource imports and universal styling rules
 // $dive-black: #1C1D1D;
-$dive-black: #1E1E20;
+$dive-black: #1a1a1a; //#1E1E20;
 $dark-blue: #122e43;
 $light-blue: #a5cdd4;
 
@@ -119,7 +119,7 @@ ul {
 @import '_data';
 @import '_property';
 @import '_visualization';
+@import '_widgets';
 
 // Libraries
-@import 'libraries/angular-slider.scss';
 @import 'libraries/d3plus.scss';

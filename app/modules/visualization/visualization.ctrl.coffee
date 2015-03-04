@@ -1,5 +1,6 @@
 _ = require('underscore')
 
+
 # TODO Make this controller thinner!
 angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $http, $rootScope, DataService, PropertyService, VizDataService, ConditionalDataService, SpecificationService, API_URL) ->
 
@@ -75,7 +76,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
       params:
         pID: $rootScope.pID
         sID: spec.sID
-        conditional: $scope.selectedConditionalValues
+        conditional: $scope.selCondVals
     ).success((result) ->
       spec.chosen = true
     )
@@ -111,20 +112,27 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     else
       dID = $scope.selectedSpec.object.dID
     $scope.currentdID = dID
-    unless $scope.selectedConditionalValues[dID]
-      $scope.selectedConditionalValues[dID] = {}
+    unless $scope.selCondVals[dID]
+      $scope.selCondVals[dID] = {}
 
-    $scope.conditionalOptions = $scope.columnAttrsByDID[dID]
-    $scope.conditionalStats = $scope.properties.stats[dID]
-    $scope.conditionalTypes = $scope.properties.types[dID]
+    # Populate conditional info given spec
+    colAttrs = $scope.columnAttrsByDID[dID]
+    colStatsByName = $scope.properties.stats[dID]
+    $scope.condList = []
+    for cond in colAttrs
+      name = cond.name
 
-    console.log($scope.conditionalOptions, $scope.conditionalStats, $scope.conditionalTypes)
+      $scope.condTypes[name] = cond.type
+
+      if name of colStatsByName
+        cond.stats = colStatsByName[name]
+      $scope.condList.push(cond)
 
     # Get visualization data
     params = 
       type: $scope.selectedType
       spec: $scope.selectedSpec
-      conditional: $scope.selectedConditionalValues
+      conditional: $scope.selCondVals
     VizDataService.promise(params, (result) ->
       $scope.vizData = result.result
       $scope.vizStats = result.stats
@@ -165,55 +173,56 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
   # Conditionals (TODO Refactor into directive)
   ###############################
 
-  # TODO Make the naming conventions clearer
-  $scope.conditionalOptions = []  # All conditionals by name for a given specification
-  $scope.selectedConditionalData = {}  # Data corresponding to selected conditionals (k: list)
-  $scope.selectedConditionalValues = {}  # { dID: { k: v } }
-  $scope.selectedConditionalStats = {}  # { columnTitle: { stats } 
-  $scope.selectedConditionalTypes = {}  # { columnTitle: type }
-  $scope.selectedConditionalSliders = {}  # { columnTitle: { bottom: x, top: y } }
+  $scope.condList = []  # Conditional {stats, types, name, data} for a given spec (loaded with all options on load)
+  $scope.condTypes = {}
+  $scope.condData = {}
+  $scope.selCondVals = {}  # Selected values for selected conditionals
 
   $scope.isNumeric = (type) ->
     if type in ["float", "integer"] then true else false
 
   $scope.selectConditional = (spec) ->
-    if spec.name of $scope.selectedConditionalData
-      delete $scope.selectedConditionalData[spec.name]
+    if spec.name of $scope.condData
+      delete $scope.condData[spec.name]
     else
-      conditionalColumnID = spec.column_id
-      conditionalName = spec.name
-      console.log("BEFORE ASSIGNMENT", $scope.conditionalTypes[conditionalColumnID], $scope.conditionalStats[conditionalName])
-      $scope.selectedConditionalTypes[spec.name] = $scope.conditionalTypes[conditionalColumnID]
-      $scope.selectedConditionalStats[spec.name] = $scope.conditionalStats[conditionalName]
-      if $scope.isNumeric($scope.selectedConditionalTypes[spec.name])
-        $scope.selectedConditionalSliders[spec.name] = {
-          min: $scope.selectedConditionalStats[spec.name].min
-          max: $scope.selectedConditionalStats[spec.name].max
+      if $scope.isNumeric(spec.type)
+        # What is the dID from?
+        # Where do we need to put in dID?
+        low = parseFloat(Math.floor(spec.stats.min))
+        high = parseFloat(Math.floor(spec.stats.max))
+        $scope.condData[spec.name] =
           step: 1
-        }
+          floor: low
+          ceiling: high
 
-      ConditionalDataService.promise($scope.currentdID, spec, (result) ->
-        data = result.result.unshift('All')
-        $scope.selectedConditionalData[spec.name] = result.result
+        $scope.selCondVals[$scope.currentdID][spec.name] =
+          type: 'numeric'
+          low: low
+          high: high
+      else
+        ConditionalDataService.promise($scope.currentdID, spec, (result) ->
+          data = result.result.unshift('All')
+          $scope.condData[spec.name] = result.result
+        )
 
-      )
       params = 
         type: $scope.selectedType
         spec: $scope.selectedSpec
-        conditional: $scope.selectedConditionalValues
-
+        conditional: $scope.selCondVals
       VizDataService.promise(params, (result) ->
         $scope.vizData = result.result
         $scope.vizStats = result.stats
         $scope.loading = false
       )
 
+    $scope.$broadcast('refreshSlider')
+
   $scope.changedConditional = (title) ->
     # console.log "changed conditional! ", title
     params = 
       type: $scope.selectedType
       spec: $scope.selectedSpec
-      conditional: $scope.selectedConditionalValues
+      conditional: $scope.selCondVals
     VizDataService.promise(params, (result) ->
       $scope.vizData = result.result
       $scope.vizStats = result.stats
@@ -221,7 +230,6 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     )
 
   $scope.selectedConditional = (name) ->
-    if name of $scope.selectedConditionalData
+    if name of $scope.condData
       return true
     return false
-

@@ -1,5 +1,5 @@
 <!-- TODO: Refactor these into directives? -->
-<section class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
+<div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
   <div class="pane-title">
     Choose Data Sources
   </div>
@@ -11,9 +11,9 @@
       </div>
     </li>
   </ul>
-</section>
+</div>
 
-<section class="right-pane" ng-class="{'closed': rightClosed}" maxheight>
+<div class="right-pane" ng-class="{'closed': rightClosed}" maxheight>
   <div class="pane-title">
     Inspect Datasets
   </div>
@@ -26,9 +26,9 @@
       <div class="type">{{dataset.filetype}}</div>
     </li>
   </ul>
-</section>
+</div>
 
-<section class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
+<div class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
   <pane-toggle></pane-toggle>
 
   <div class="choose-data-set" ng-if="currentPane=='left'">
@@ -101,4 +101,4 @@
     </div>
   </div>
 
-  </section> 
+  </div> 
