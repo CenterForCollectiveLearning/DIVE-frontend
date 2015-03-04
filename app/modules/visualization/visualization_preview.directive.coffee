@@ -61,7 +61,12 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
               linechart: 'line'
               geomap: 'geo_map'
 
+            console.log "VIZ DATA", vizData
+            console.log "VIZ SPEC", vizSpec
+            console.log "VIZ TYPE", vizType
+
             viz = d3plus.viz()
+              .title(getTitle(vizType, vizSpec))
               .type(d3PlusTypeMapping[vizType])
               .container("div#viz-container")
               .width($("div#viz-container").width() - 40)
@@ -71,17 +76,13 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
               .font(family: "Titillium Web")
 
             if vizType in ["treemap", "piechart"]
-              viz.title(getTitle(vizType, vizSpec))
-                .id(vizSpec.groupBy.title.toString())
+              viz.id(vizSpec.groupBy.title.toString())
                 .size("count")
                 .draw()
 
             else if vizType in ["scatterplot", "barchart", "linechart"]
               x = vizSpec.x.title
               agg = vizSpec.aggregation
-              # console.log(vizType, d3PlusTypeMapping[vizType])
-              console.log("VIZDATA", vizData)
-              console.log("VIZSPEC", vizSpec)
               if agg
                 # sample_data = [
                 #   {"year": 1991, "name":"alpha", "value": 17},
@@ -99,22 +100,18 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
                 #   {"year": 1994, "name":"gamma", "value": 35},
                 #   {"year": 1995, "name":"gamma", "value": 40}
                 # ]
-                # viz.data(sample_data)
-                #   .title(getTitle(vizType, vizSpec))
-                #   .type(d3PlusTypeMapping[vizType])
-                #   .id("name")
-                #   .x("year")
-                #   .y("value")
-                #   .draw()
+                # # viz.data(sample_data)
+                # #   .title(getTitle(vizType, vizSpec))
+                # #   .type(d3PlusTypeMapping[vizType])
+                # #   .id("name")
+                # #   .x("year")
+                # #   .y("value")
+                # #   .draw()
                 console.log(x)
-                viz.title(getTitle(vizType, vizSpec))
-                  .type(d3PlusTypeMapping[vizType])
-                  # .color("#000000")
-                  .x(x)
-                  .y("count")
-
+                viz.x(x).y("count")
+                
                 if vizSpec.x.type == "datetime"
-                  viz.x((d) -> new Date(d[x]).valueOf())
+                  viz.x((d) -> (new Date(d[x])).valueOf())
                     .format({
                       number: (d, k) ->
                         if (typeof(k) == "function")
@@ -122,6 +119,10 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
                         else
                           d
                     })
+                    .y("count")
+
+                else
+                  viz.x(x).y("count")           
 
                 if vizType is "linechart"
                   viz.id("id")
@@ -134,21 +135,9 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
                 y = vizSpec.y.title
                 viz.title(getTitle(vizType, vizSpec))
                   .x(x)
-
-                if vizSpec.x.type == "datetime"
-                  viz.x((d) -> new Date(d[x]).valueOf())
-                    .format({
-                      number: (d, k) ->
-                        if (typeof(k) == "function")
-                          d3.time.format("%m/%Y")(new Date(d))
-                        else
-                          d
-                    })
-
-                viz.y(y)
+                  .y(y)
                   .id(x)
                   .draw()
-
             else if vizType in ["geomap"]
               console.log("Rendering geomap with id:", vizSpec.groupBy.title.toString())
               viz.title(getTitle(vizType, vizSpec))
@@ -161,3 +150,15 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
           , 200)
     )
 ]
+
+                # if vizSpec.x.type == "datetime"
+                #   viz.x((d) -> new Date(d[x]).valueOf())
+                #     .format({
+                #       number: (d, k) ->
+                #         if (typeof(k) == "function")
+                #           d3.time.format("%m/%Y")(new Date(d))
+                #         else
+                #           d
+                #     }).y("count")
+                # else 
+                #   viz.x(x).y("count")

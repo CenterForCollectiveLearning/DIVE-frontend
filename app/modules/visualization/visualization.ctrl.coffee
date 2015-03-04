@@ -17,19 +17,22 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
   $scope.columnAttrsByDID = {}
   $scope.availableStats = {
     "geomap" : [
-      { name: 'Geomap 1', val: "Geomap 1" } ]
+      { name: "Descriptive", val: 'describe' }, 
+      { name: 'Chi-Square', val: "chisq" } ]
     "linechart" : [
       { name: "Descriptive", val: 'describe' }, 
       { name: "Gaussian", val: 'gaussian' },
       { name: "Linear Regression", val: 'linregress'} ]
     "piechart" : [
-      { name: 'Piechart 1', val: "Piechart 1" } ]
+      { name: "Descriptive", val: 'describe' }, 
+      { name: 'Chi-Square', val: "chisq" } ]
     "scatterplot" : [
       { name: "Descriptive", val: 'describe' }, 
       { name: "Gaussian", val: 'gaussian' },
       { name: "Linear Regression", val: 'linregress'} ]
     "treemap" : [
-      { name: 'Treemap 1', val: "Treemap 1" } ]
+      { name: "Descriptive", val: 'describe' }, 
+      { name: 'Chi-Square', val: "chisq" } ]
   }
 
   DataService.promise((datasets) ->
@@ -93,6 +96,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     )
 
   $scope.selectType = (index) ->
+    $scope.selectedStats = []
     $scope.selectedTypeIndex = index
     $scope.selectedType = $scope.types[index].name
     $scope.specs = _.sortBy($scope.allSpecs[$scope.types[$scope.selectedTypeIndex].name], (e) ->
@@ -100,7 +104,6 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     )
     $scope.selectSpec(0)
     # $scope.selectedStats = angular.copy($scope.availableStats[$scope.selectedType])
-    $scope.selectedStats = []
 
   $scope.selectSpec = (index) ->
     # console.log "Select Spec!"
