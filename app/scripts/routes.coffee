@@ -18,7 +18,6 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
       UserService.logoutUser()
       $state.go('landing')
 
-
   $stateProvider
     .state('landing',
       url: '/'
@@ -44,7 +43,6 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
         $scope.logoutUser = () ->
           UserService.logoutUser()
           $state.go('landing')
-        console.log "ROOT", $rootScope
 
       resolve:
         formattedUserName: ($stateParams) -> $stateParams.formattedUserName

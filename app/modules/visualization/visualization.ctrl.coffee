@@ -15,6 +15,25 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
   $scope.loading = true
   $scope.datasets = []
   $scope.columnAttrsByDID = {}
+  $scope.availableStats = {
+    "geomap" : [
+      { name: "Descriptive", val: 'describe' }, 
+      { name: 'Chi-Square', val: "chisq" } ]
+    "linechart" : [
+      { name: "Descriptive", val: 'describe' }, 
+      { name: "Gaussian", val: 'gaussian' },
+      { name: "Linear Regression", val: 'linregress'} ]
+    "piechart" : [
+      { name: "Descriptive", val: 'describe' }, 
+      { name: 'Chi-Square', val: "chisq" } ]
+    "scatterplot" : [
+      { name: "Descriptive", val: 'describe' }, 
+      { name: "Gaussian", val: 'gaussian' },
+      { name: "Linear Regression", val: 'linregress'} ]
+    "treemap" : [
+      { name: "Descriptive", val: 'describe' }, 
+      { name: 'Chi-Square', val: "chisq" } ]
+  }
 
   DataService.promise((datasets) ->
     $scope.datasets = datasets
@@ -39,13 +58,23 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     $scope.specs = _.sortBy($scope.allSpecs[$scope.types[$scope.selectedTypeIndex].name], (e) ->
       $scope.selectedSortOrder * e['stats'][$scope.selectedSorting]
     )
+
     $scope.selectSpec(0)
+    $scope.selectedStats = []
     $scope.loading = false
   )
 
+  $scope.toggleStat = (stat) ->
+    idx = $scope.selectedStats.indexOf(stat)
+    if idx < 0
+      $scope.selectedStats.push(stat)
+    else
+      $scope.selectedStats.splice(idx, 1)
+    console.log "Selected Stats: ", $scope.selectedStats
+
   $scope.chooseSpec = (index) ->
     spec = $scope.specs[index]
-    console.log("Chose spec", spec.sID)
+    # console.log("Chose spec", spec.sID)
     $http.get(API_URL + '/api/choose_spec',
       params:
         pID: $rootScope.pID
@@ -57,7 +86,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
 
   $scope.rejectSpec = (index) ->
     spec = $scope.specs[index]
-    console.log("Reject spec", spec.sID)
+    # console.log("Reject spec", spec.sID)
     $http.get(API_URL + '/api/reject_spec',
       params:
         pID: $rootScope.pID
@@ -67,14 +96,17 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     )
 
   $scope.selectType = (index) ->
+    $scope.selectedStats = []
     $scope.selectedTypeIndex = index
     $scope.selectedType = $scope.types[index].name
     $scope.specs = _.sortBy($scope.allSpecs[$scope.types[$scope.selectedTypeIndex].name], (e) ->
       $scope.selectedSortOrder * e['stats'][$scope.selectedSorting]
     )
     $scope.selectSpec(0)
+    # $scope.selectedStats = angular.copy($scope.availableStats[$scope.selectedType])
 
   $scope.selectSpec = (index) ->
+    # console.log "Select Spec!"
     $scope.selectedSpecIndex = index
     $scope.selectedSpec = $scope.specs[index]
 
@@ -106,6 +138,8 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
       conditional: $scope.selCondVals
     VizDataService.promise(params, (result) ->
       $scope.vizData = result.result
+      $scope.vizStats = result.stats
+      # $scope.vizStats = $scope.selectedSpec.stats
       $scope.loading = false
     )
 
@@ -132,8 +166,8 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
   $scope.selectedSortOrder = $scope.sortOrders[0].property
 
   $scope.sortSpecs = ->
-    console.log("sorting!")
-    console.log($scope.specs)
+    # console.log("sorting!")
+    # console.log($scope.specs)
     $scope.specs = _.sortBy($scope.specs, (e) ->
       $scope.selectedSortOrder * e['stats'][$scope.selectedSorting]
     )
@@ -180,18 +214,21 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
         conditional: $scope.selCondVals
       VizDataService.promise(params, (result) ->
         $scope.vizData = result.result
+        $scope.vizStats = result.stats
         $scope.loading = false
       )
 
     $scope.$broadcast('refreshSlider')
 
   $scope.changedConditional = (title) ->
+    # console.log "changed conditional! ", title
     params = 
       type: $scope.selectedType
       spec: $scope.selectedSpec
       conditional: $scope.selCondVals
     VizDataService.promise(params, (result) ->
       $scope.vizData = result.result
+      $scope.vizStats = result.stats
       $scope.loading = false
     )
 
