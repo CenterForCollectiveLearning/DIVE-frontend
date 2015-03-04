@@ -80,24 +80,25 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
               x = vizSpec.x.title
               agg = vizSpec.aggregation
               # console.log(vizType, d3PlusTypeMapping[vizType])
-              # console.log("viz data", vizData)
+              console.log("VIZDATA", vizData)
+              console.log("VIZSPEC", vizSpec)
               if agg
-                sample_data = [
-                  {"year": 1991, "name":"alpha", "value": 17},
-                  {"year": 1992, "name":"alpha", "value": 20},
-                  {"year": 1993, "name":"alpha", "value": 25},
-                  {"year": 1994, "name":"alpha", "value": 33},
-                  {"year": 1995, "name":"alpha", "value": 52},
-                  {"year": 1991, "name":"beta", "value": 36},
-                  {"year": 1992, "name":"beta", "value": 32},
-                  {"year": 1993, "name":"beta", "value": 40},
-                  {"year": 1994, "name":"beta", "value": 58},
-                  {"year": 1995, "name":"beta", "value": 13},
-                  {"year": 1991, "name":"gamma", "value": 24},
-                  {"year": 1992, "name":"gamma", "value": 27},
-                  {"year": 1994, "name":"gamma", "value": 35},
-                  {"year": 1995, "name":"gamma", "value": 40}
-                ]
+                # sample_data = [
+                #   {"year": 1991, "name":"alpha", "value": 17},
+                #   {"year": 1992, "name":"alpha", "value": 20},
+                #   {"year": 1993, "name":"alpha", "value": 25},
+                #   {"year": 1994, "name":"alpha", "value": 33},
+                #   {"year": 1995, "name":"alpha", "value": 52},
+                #   {"year": 1991, "name":"beta", "value": 36},
+                #   {"year": 1992, "name":"beta", "value": 32},
+                #   {"year": 1993, "name":"beta", "value": 40},
+                #   {"year": 1994, "name":"beta", "value": 58},
+                #   {"year": 1995, "name":"beta", "value": 13},
+                #   {"year": 1991, "name":"gamma", "value": 24},
+                #   {"year": 1992, "name":"gamma", "value": 27},
+                #   {"year": 1994, "name":"gamma", "value": 35},
+                #   {"year": 1995, "name":"gamma", "value": 40}
+                # ]
                 # viz.data(sample_data)
                 #   .title(getTitle(vizType, vizSpec))
                 #   .type(d3PlusTypeMapping[vizType])
@@ -112,21 +113,42 @@ angular.module('diveApp.visualization').directive "visualizationPreview", ["$win
                   .x(x)
                   .y("count")
 
+                if vizSpec.x.type == "datetime"
+                  viz.x((d) -> new Date(d[x]).valueOf())
+                    .format({
+                      number: (d, k) ->
+                        if (typeof(k) == "function")
+                          d3.time.format("%m/%Y")(new Date(d))
+                        else
+                          d
+                    })
 
-                  if vizType is "linechart"
-                    viz.id("id")
-                    .draw()
-                  else
-                    viz.id(x)
-                    .size(10)
-                    .draw()
+                if vizType is "linechart"
+                  viz.id("id")
+                  .draw()
+                else
+                  viz.id(x)
+                  .size(10)
+                  .draw()
               else
                 y = vizSpec.y.title
                 viz.title(getTitle(vizType, vizSpec))
                   .x(x)
-                  .y(y)
+
+                if vizSpec.x.type == "datetime"
+                  viz.x((d) -> new Date(d[x]).valueOf())
+                    .format({
+                      number: (d, k) ->
+                        if (typeof(k) == "function")
+                          d3.time.format("%m/%Y")(new Date(d))
+                        else
+                          d
+                    })
+
+                viz.y(y)
                   .id(x)
                   .draw()
+
             else if vizType in ["geomap"]
               console.log("Rendering geomap with id:", vizSpec.groupBy.title.toString())
               viz.title(getTitle(vizType, vizSpec))

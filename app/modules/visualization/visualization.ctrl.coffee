@@ -14,6 +14,22 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
   $scope.loading = true
   $scope.datasets = []
   $scope.columnAttrsByDID = {}
+  $scope.availableStats = {
+    "geomap" : [
+      { name: 'Geomap 1', val: "Geomap 1" } ]
+    "linechart" : [
+      { name: "Descriptive", val: 'describe' }, 
+      { name: "Gaussian", val: 'gaussian' },
+      { name: "Linear Regression", val: 'linregress'} ]
+    "piechart" : [
+      { name: 'Piechart 1', val: "Piechart 1" } ]
+    "scatterplot" : [
+      { name: "Descriptive", val: 'describe' }, 
+      { name: "Gaussian", val: 'gaussian' },
+      { name: "Linear Regression", val: 'linregress'} ]
+    "treemap" : [
+      { name: 'Treemap 1', val: "Treemap 1" } ]
+  }
 
   DataService.promise((datasets) ->
     $scope.datasets = datasets
@@ -40,23 +56,8 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     )
 
     $scope.selectSpec(0)
-    $scope.loading = false
-
-    $scope.availableStats = {
-      "geomap" : [
-        { name: 'Geomap 1', val: "Geomap 1" } ]
-      "linechart" : [
-        { name: 'Linechart 1', val: "Linechart 1" } ]
-      "piechart" : [
-        { name: 'Piechart 1', val: "Piechart 1" } ]
-      "scatterplot" : [
-        { name: "Descriptive", val: 'describe' }, 
-        { name: "Gaussian", val: 'gaussian' },
-        { name: "Linear Regression", val: 'linregress'} ]
-      "treemap" : [
-        { name: 'Treemap 1', val: "Treemap 1" } ]
-    }
     $scope.selectedStats = []
+    $scope.loading = false
   )
 
   $scope.toggleStat = (stat) ->
@@ -97,6 +98,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
       $scope.selectedSortOrder * e['stats'][$scope.selectedSorting]
     )
     $scope.selectSpec(0)
+    # $scope.selectedStats = angular.copy($scope.availableStats[$scope.selectedType])
     $scope.selectedStats = []
 
   $scope.selectSpec = (index) ->
@@ -126,6 +128,7 @@ angular.module('diveApp.visualization').controller "CreateVizCtrl", ($scope, $ht
     VizDataService.promise(params, (result) ->
       $scope.vizData = result.result
       $scope.vizStats = result.stats
+      # $scope.vizStats = $scope.selectedSpec.stats
       $scope.loading = false
     )
 
