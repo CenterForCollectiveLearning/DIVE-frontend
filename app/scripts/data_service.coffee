@@ -65,7 +65,7 @@ angular.module('diveApp.services').service "PublicDataService", ($http, API_URL)
 angular.module('diveApp.services').factory "UserService", ($http, $rootScope, $cookieStore, $window, API_URL) ->
 
   loginUser: (userName, password, callback) ->
-    $http.get(API_URL + "/login",
+    $http.get(API_URL + "/api/login",
       params:
         userName: userName
         password: password
@@ -87,7 +87,7 @@ angular.module('diveApp.services').factory "UserService", ($http, $rootScope, $c
       callback()
 
   registerUser: (userName, displayName, password, callback) ->
-    $http.post(API_URL + "/register",
+    $http.post(API_URL + "/api/register",
       params:
         userName: userName
         displayName: displayName
