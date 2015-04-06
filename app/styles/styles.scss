@@ -35,53 +35,15 @@ ul {
     }
 }
 
-@mixin transition($property, $duration, $timing-function) {
-    -webkit-transition: $property $duration $timing-function;
-    -moz-transition: $property $duration $timing-function;
-    -o-transition: $property $duration $timing-function;
-    transition: $property $duration $timing-function;
-}
-
-@mixin opacity-transition { @include transition(opacity, 0.1s, ease-in) }
-@mixin border-transition { @include transition(border, 0.1s, ease-in) }
-@mixin background-transition { @include transition(background, 0.1s, ease-in) }
-
-@mixin small-caps {
-    font-family: "Titillium Web", "Lato", helvetica, sans-serif;
-    font-size: 10px;
-    letter-spacing: 1px;
-    line-height: 35px;
-    text-transform: uppercase;
-}
-
-@mixin button($width, $hover-color) {
-    cursor: pointer;
-    input {
-        cursor: pointer;
-    }
-    background-color: $dark-gray;
-    width: $width;
-    margin: 10px auto 0 auto;
-    text-align: center;
-    border-radius: 2px;
-    padding: 8px 5px;
-    color: $active-white;
-    @include small-caps;
-    line-height: 20px;
-    &:hover {
-        @include background-transition;
-        background-color: $hover-color;
-    }
-}
-
-@mixin font {
-   font-family: "Titillium Web", 'Karbon', 'DIN', Helvetica, Sans Serif;
-}
-
 /* Fonts */
 @font-face {
     font-family: 'DIN';
     src: url('../assets/fonts/DINLight.ttf') format('ttf'), url('../assets/fonts/DINLight.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Decima';
+    src: url('../assets/fonts/decima.woff') format('woff');
 }
 
 @font-face {
@@ -111,6 +73,7 @@ ul {
     -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
 }
 
+@import '_mixins';
 @import '_layout';
 @import '_embed';
 @import '_landing';

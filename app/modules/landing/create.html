@@ -1,0 +1,17 @@
+<div class="center-pane">
+	<div class="new-project-form">
+		<div class="title">Create New Project</div>
+
+		<form name="createProjectForm" ng-controller="CreateProjectFormCtrl as createProject" ng-submit="createProjectForm.$val && createProject.login()" novalidate>
+
+			<label class="title label" ng-class="{ 'input-error': createProjectForm.title.$invalid && !createProjectForm.title.$pristine && !createProjectForm.email.$focused } ">
+				Project Title
+				<span ng-show="titleTaken">must be unique</span>
+			</label>
+			<input type="text" ng-model="newProjectData.title" placeholder="Chicago Demographic Visualization" required>
+			<label class="description label">Project Description</label>
+			<input type="text" ng-model="newProjectData.description" placeholder="Visualization based on the 2006-2012 ACS" ng-enter="create_project()">
+			<div class="create-project" ng-click="create_project()">Create</div>
+		</form>
+	</div>
+</div>

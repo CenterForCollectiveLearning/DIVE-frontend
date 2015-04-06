@@ -1,0 +1,9 @@
+<nav class="navbar navbar-default sections" role="navigation">
+	<ul ng-controller="LandingTabsCtrl">
+		<li ui-sref="{{tab.route}}" ui-sref-active="active" ng-repeat="tab in tabs" select="go(t.route)" select="go(t.route)">
+			<a>
+				{{tab.label}}
+			</a>
+		</li>	
+	</ul>
+</nav>

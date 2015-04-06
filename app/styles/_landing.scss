@@ -2,29 +2,37 @@ div.landing-top {
     @include card-shadow;
     @include font;
     font-weight: light;
+    height: 70px;
+    background-color: #1C1D1D;
 
     div.dive {
-        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGElEQVQIW2NkYGD4D8SMQAwHKByYKIWCAGagAQanLNDFAAAAAElFTkSuQmCC) repeat;
-        background-color: #1C1D1D;
-        padding: 60px 0;
+        font-size: 14px;
+        // background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGElEQVQIW2NkYGD4D8SMQAwHKByYKIWCAGagAQanLNDFAAAAAElFTkSuQmCC) repeat;
+
         div {
-            text-align: center;
+            // text-align: ;
             color: $active-white;
         }
 
         div.title {
-            font-size: 48px;
+            font-size: 28px;
+            padding-left: 10px;
         }
 
         div.subtitle {
-            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Decima';
+            font-size: 14px;
+            padding-left: 10px;
         }
     }
 
     div.user-status {
         @include small-caps;
         position: absolute;
-        top: 5px;
+        top: 10px;
+        line-height: 15px;
         right: 15px;
         color: white;
         span.username {
@@ -33,6 +41,68 @@ div.landing-top {
         span.logout {
             cursor: pointer
         }
+    }
+
+    div.beta {
+        @include small-caps;
+        position: absolute;
+        top: 35px;
+        right: 15px;
+        color: white;
+    }
+}
+
+div.new-project-form, div.login-form, div.reg-form {
+    background-color: white;
+
+    input {
+        @include font;
+        padding: 4px;
+        font-size: 18px;
+        height: 30px;
+        &:focus {
+            outline: none;
+        }
+    }
+
+    div.title {
+        font-size: 24px;
+        line-height: 24px;
+        padding: 20px 20px;
+        text-align: center;
+    }
+
+    @include card-shadow;
+    position: relative;
+    width: 600px;
+    padding: 10px;
+    margin: 20px auto 0 auto;
+    border: 1px solid $light-gray;
+    border-radius: 2px;
+
+    div.close {
+        cursor: pointer;
+        position: absolute;
+        top: 0px;
+        right: 10px;
+        font-size: 24px;
+    }
+
+    label {
+        width: 100%;
+        text-align: center;
+        color: black;
+        @include small-caps;
+    }
+
+    input {
+        width: 100%;
+        border: 1px solid $dark-gray;
+        margin-bottom: 10px;
+    }
+
+    div.create-project, div.login-user, div.reg-user {
+        @include button(80px, $ontology-blue);
     }
 }
 
@@ -45,59 +115,7 @@ div.landing-projects {
         @include button(600px, $ontology-blue);
         margin: 30px auto 0 auto;
     }
-    div.new-project-form, div.login-form, div.reg-form {
-        background-color: white;
 
-        input {
-            @include font;
-            padding: 4px;
-            font-size: 18px;
-            height: 30px;
-            &:focus {
-                outline: none;
-            }
-        }
-
-        div.title {
-            font-size: 24px;
-            line-height: 24px;
-            padding: 20px 20px;
-            text-align: center;
-        }
-
-        @include card-shadow;
-        position: relative;
-        width: 600px;
-        padding: 10px;
-        margin: 20px auto 0 auto;
-        border: 1px solid $light-gray;
-        border-radius: 2px;
-
-        div.close {
-            cursor: pointer;
-            position: absolute;
-            top: 0px;
-            right: 10px;
-            font-size: 24px;
-        }
-
-        label {
-            width: 100%;
-            text-align: center;
-            color: black;
-            @include small-caps;
-        }
-
-        input {
-            width: 100%;
-            border: 1px solid $dark-gray;
-            margin-bottom: 10px;
-        }
-
-        div.create-project, div.login-user, div.reg-user {
-            @include button(80px, $ontology-blue);
-        }
-    }
     ul.projects {
         width: 600px;
         padding: 0;

@@ -22,8 +22,24 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
     .state('landing',
       url: '/'
       templateUrl: 'modules/landing/landing.html'
-#      resolve:
-#        allProjectsService: (AllProjectsService) -> AllProjectsService.promise
+      controller = ($state) ->
+        $state.go('landing.create')
+    )
+    .state('landing.reports',
+      url: 'reports',
+      templateUrl: 'modules/landing/reports.html'      
+    )
+    .state('landing.projects',
+      url: 'projects',
+      templateUrl: 'modules/landing/projects.html'
+    )
+    .state('landing.create',
+      url: 'create'
+      templateUrl: 'modules/landing/create.html'
+    )
+    .state('landing.about',
+      url: 'about'
+      templateUrl: 'modules/landing/about.html'
     )
     .state('embed',
       url: '/embed/:pID/:sID'
