@@ -1,5 +1,9 @@
 <!-- TODO: Refactor these into directives? -->
-<md-sidenav class="left-pane md-sidenav-left md-whiteframe-z2" ng-class="{'closed': leftClosed}" maxheight>
+
+<md-sidenav class="left-pane md-sidenav-left md-whiteframe-z2" ng-class="{'closed': leftClosed}" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" maxheight>
+  <md-toolbar class="md-theme-indigo">
+  <h1 class="md-toolbar-tools">Sidenav Left</h1>
+  </md-toolbar>
   <div class="pane-title">
     Choose Data Sources
   </div>
