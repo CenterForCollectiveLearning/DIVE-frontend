@@ -1,69 +1,60 @@
-<div class="landing-projects">
+<section class="landing-projects">
 
-	<login></login>
-	<register></register>
-
-	<div class='login-form' ng-if='!loggedIn'>
+	<section class='login-form card' ng-if='!loggedIn'>
 		<div class="title">Login</div>
 		<form name='loginForm'>
-			<label>Username</label>
-			<input type='text' ng-model='login_userName'>
-			<label>Password</label>
-			<input type='password' ng-model='login_password' ng-enter='loginUser(login_userName, login_password)'>
-			<div class='login-user' ng-click='loginUser(login_userName, login_password)'>Login</div>
+			<md-input-container>
+	    		<label for="username">Username</label>
+    			<input id="username" type="text" ng-model="login_userName" placeholder="username" required>
+		    </md-input-container>
+
+			<md-input-container>
+	    		<label for="password">Password</label>
+    			<input id="password" type="text" ng-model="login_password" placeholder="password" required>
+		    </md-input-container>
+
+		    <section layout="row" layout-align="center center">
+		    	<md-button class="md-light md-raised" ng-click="loginUser(login_userName, login_password)">Login</md-button>
+		    </section>
+
 			<label ng-if='loginErr'>**Invalid username and/or password.</label>
 		</form>
-	</div>
-
-	<div class='reg-form' ng-if='!loggedIn'>
-		<div class="title">Sign Up</div>
+	</section>
+	<section class='reg-form card' ng-if='!loggedIn'>
+		<div class="title">Register</div>
 		<form name='signUpForm'>
-			<label>Username</label>
-			<input type='text' ng-model='reg_userName'>
-			<label>Display Name</label>
-			<input type='text' ng-model='reg_displayName'>
-			<label>Password</label>
-			<input type='password' ng-model='reg_password' ng-enter='registerUser(reg_userName, reg_displayName, reg_password)'>
-			<div class='reg-user' ng-click='registerUser(reg_userName, reg_displayName, reg_password)'>Sign Up</div>
+			<md-input-container>
+	    		<label for="username">Username</label>
+    			<input id="username" type="text" ng-model="reg_userName" placeholder="username" required>
+		    </md-input-container>
+
+		    <md-input-container>
+	    		<label for="displayname">Display Name</label>
+    			<input id="displayname" type="text" ng-model="reg_displayName" placeholder="display name" required>
+		    </md-input-container>
+
+			<md-input-container>
+	    		<label for="password">Password</label>
+    			<input id="password" type="password" ng-model="reg_password" placeholder="password" required ng-enter='registerUser(reg_userName, reg_displayName, reg_password)'>
+		    </md-input-container>
+
+		    <md-button class="md-light md-raised" ng-click='registerUser(reg_userName, reg_displayName, reg_password)'>Login</md-button>
 			<label ng-if='regErr'>**Username must be unique and all fields are required.</label>
 		</form>
-	</div>
+	</section>
 
 	<div class='project-list' ng-if="loggedIn && !newProject">
 		<ul class="projects" ng-if="!newProject">
-			<li class="project" ng-repeat="project in projects" ng-click="selectProject(project.pID)">
+			<li class="project card" ng-repeat="project in projects" ng-click="selectProject(project.pID)">
 				<div class="title">{{project.title}}</div>
-				<div class="description">{{project.description}}</div>
-				<div class="menu" ng-class="{active: project.pID==selectedProject}">
-					<div class="button open" ng-click="openProject(project)">
-						Open Project
-					</div>
-					<div class="button delete" ng-click="removeProject(project, $index)">
-						Delete Project
-					</div>
-				</div>
+				<md-content>
+    				<div class="description">{{project.description}}</div>
+	    		</md-content>
+				<section layout="row" layout-align="center center">
+					<md-button class="md-light md-raised md-primary" ng-click="openProject(project)">Open</md-button>
+					<md-button class="md-light md-raised md-warn" ng-click="removeProject(project, $index)">Delete</md-button>
+				</section>
 			</li>
-<!-- 			<div class="project new-project-button" ng-click="newProjectToggle()" ng-if="!newProject"> -->
-	        <div class="project new-project-button" ui-sref="landing.create">
-				Create New Project
-			</div>
 		</ul>
 	</div>
-
-	<div class="new-project-form" ng-if="loggedIn && newProject">
-		<div class="close" ng-click="newProjectToggle()">x</div>
-		<div class="title">New Project</div>
-
-		<form name="createProjectForm" ng-controller="CreateProjectFormCtrl as createProject" ng-submit="createProjectForm.$val && createProject.login()" novalidate>
-
-			<label class="title label" ng-class="{ 'input-error': createProjectForm.title.$invalid && !createProjectForm.title.$pristine && !createProjectForm.email.$focused } ">
-				Project Title
-				<span ng-show="titleTaken">must be unique</span>
-			</label>
-			<input type="text" ng-model="newProjectData.title" placeholder="Chicago Demographic Visualization" required>
-			<label class="description label">Project Description</label>
-			<input type="text" ng-model="newProjectData.description" placeholder="Visualization based on the 2006-2012 ACS" ng-enter="create_project()">
-			<div class="create-project" ng-click="create_project()">Create</div>
-		</form>
-	</div>
-</div>
+</section>

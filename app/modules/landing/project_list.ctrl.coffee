@@ -62,8 +62,7 @@ angular.module('diveApp.landing').controller("ProjectListCtrl", ($scope, $http, 
       $scope.selectedProject = pID
 
   $scope.openProject = (project) ->
-    # $rootScope.pID = project.pID
-    $state.go('engine.overview',
+    $state.go('project.overview',
       formattedUserName: $scope.user.userName
       formattedProjectTitle: project.formattedTitle
     )

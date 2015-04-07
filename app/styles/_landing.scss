@@ -1,30 +1,50 @@
+// .center-pane > * {
+//   -webkit-box-flex: 1 1 auto;
+//   -webkit-flex: 1 1 auto;
+//   -moz-box-flex: 1 1 auto;
+//   -moz-flex: 1 1 auto;
+//   -ms-flex: 1 1 auto;
+//   flex: 1 1 auto;
+// }
+
+$top-bar-height: 80px;
 div.landing-top {
+    position: relative;
     @include card-shadow;
     @include font;
     font-weight: light;
-    height: 70px;
-    background-color: #1C1D1D;
+    height: $top-bar-height;
+    background-color: rgb(63,81,181); // #01579b;// #0277bd; // rgb(63,81,181);  // #1C1D1D;
 
-    div.dive {
-        font-size: 14px;
-        // background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGElEQVQIW2NkYGD4D8SMQAwHKByYKIWCAGagAQanLNDFAAAAAElFTkSuQmCC) repeat;
 
-        div {
-            // text-align: ;
-            color: $active-white;
-        }
+    color: $active-white;
+    font-size: 14px;
 
-        div.title {
-            font-size: 28px;
+    div.logo {
+        float: left;
+        height: $top-bar-height;
+
+        img {
+            float: left;
+            width: 75px;
             padding-left: 10px;
+            padding-right: 15px;
+            padding-top: 15px;
+        }
+    }
+    div.dive {
+        display: inline-block;
+        div.title {
+            font-size: 36px;
         }
 
         div.subtitle {
+            margin-left: 3px;
+            margin-top: 3px;
+            font-family: 'Decima';
             text-transform: uppercase;
             letter-spacing: 2px;
-            font-family: 'Decima';
             font-size: 14px;
-            padding-left: 10px;
         }
     }
 
@@ -39,21 +59,44 @@ div.landing-top {
             border-bottom: 1px dotted $active-white;
         }
         span.logout {
-            cursor: pointer
+            cursor: pointer;
+            &:hover {
+                border-bottom: 1px dotted $active-white;
+            }
         }
     }
 
     div.beta {
         @include small-caps;
         position: absolute;
-        top: 35px;
+        top: 45px;
         right: 15px;
         color: white;
     }
 }
 
-div.new-project-form, div.login-form, div.reg-form {
+section.text {
+    @include card-shadow;
     background-color: white;
+    position: relative;
+    width: 600px;
+    margin: 0 auto;
+    border: 1px solid $light-gray;
+    border-radius: 2px;
+}
+
+.card {
+    @include card-shadow;
+    background-color: white;
+    position: relative;
+    width: 600px;
+    margin: 60px auto 0 auto;
+    border: 1px solid $light-gray;
+    border-radius: 2px;
+
+    md-content {
+        padding: 20px;
+    }
 
     input {
         @include font;
@@ -71,15 +114,6 @@ div.new-project-form, div.login-form, div.reg-form {
         padding: 20px 20px;
         text-align: center;
     }
-
-    @include card-shadow;
-    position: relative;
-    width: 600px;
-    padding: 10px;
-    margin: 20px auto 0 auto;
-    border: 1px solid $light-gray;
-    border-radius: 2px;
-
     div.close {
         cursor: pointer;
         position: absolute;
@@ -88,28 +122,16 @@ div.new-project-form, div.login-form, div.reg-form {
         font-size: 24px;
     }
 
-    label {
-        width: 100%;
-        text-align: center;
-        color: black;
-        @include small-caps;
-    }
-
-    input {
-        width: 100%;
-        border: 1px solid $dark-gray;
-        margin-bottom: 10px;
-    }
-
     div.create-project, div.login-user, div.reg-user {
         @include button(80px, $ontology-blue);
     }
 }
 
-div.landing-projects {
+section.form {
     @include font;
     $block-width: 600px;
     $block-height: 100px;
+    margin-top: 50px;
 
     div.new-project-button {
         @include button(600px, $ontology-blue);
@@ -119,7 +141,7 @@ div.landing-projects {
     ul.projects {
         width: 600px;
         padding: 0;
-        margin: 10px auto 0 auto;
+        margin: 0 auto;
         a {
             color: black;
         }

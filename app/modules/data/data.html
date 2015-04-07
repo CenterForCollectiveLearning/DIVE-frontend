@@ -1,5 +1,5 @@
 <!-- TODO: Refactor these into directives? -->
-<div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
+<md-sidenav class="left-pane md-sidenav-left md-whiteframe-z2" ng-class="{'closed': leftClosed}" maxheight>
   <div class="pane-title">
     Choose Data Sources
   </div>
@@ -11,9 +11,9 @@
       </div>
     </li>
   </ul>
-</div>
+</md-sidenav>
 
-<div class="right-pane" ng-class="{'closed': rightClosed}" maxheight>
+<!-- <div class="right-pane" ng-class="{'closed': rightClosed}" maxheight>
   <div class="pane-title">
     Inspect Datasets
   </div>
@@ -27,10 +27,8 @@
     </li>
   </ul>
 </div>
-
+ -->
 <div class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
-  <pane-toggle></pane-toggle>
-
   <div class="choose-data-set" ng-if="currentPane=='left'">
 
     <!-- File Upload UI -->

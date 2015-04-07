@@ -1,5 +1,5 @@
 # Stateful navigation (tabs)
-angular.module('diveApp.landing').controller 'LandingTabsCtrl', ($scope, $state, $rootScope, $stateParams) ->
+angular.module('diveApp.landing').controller('LandingTabsCtrl', ($scope, $state, $rootScope, $stateParams) ->
   $scope.tabs = [
     {
       route: 'landing.create'
@@ -17,4 +17,9 @@ angular.module('diveApp.landing').controller 'LandingTabsCtrl', ($scope, $state,
       route: 'landing.about'
       label: 'About'
     }
-]
+  ]
+  $scope.selectedIndex = 0
+  $scope.$watch('selectedIndex', (current, old) ->
+    $state.go($scope.tabs[current].route)
+  )
+)

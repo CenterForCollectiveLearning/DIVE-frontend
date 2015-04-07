@@ -22,8 +22,8 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
     .state('landing',
       url: '/'
       templateUrl: 'modules/landing/landing.html'
-      controller = ($state) ->
-        $state.go('landing.create')
+      # controller = ($state) ->
+      #   $state.go('landing.create')
     )
     .state('landing.reports',
       url: 'reports',
@@ -49,7 +49,7 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
         vizDataService: (VizDataService) -> VizDataService.promise
         exportedVizSpecService: (ExportedVizSpecService) -> ExportedVizSpecService.promise
     )
-    .state('engine',
+    .state('project',
       url: '/:formattedUserName/:formattedProjectTitle'
       templateUrl: 'modules/project/project.html'
       onEnter: checkAuth
@@ -66,19 +66,19 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
         projectID: ($stateParams, UserService, ProjectIDService) -> 
           ProjectIDService.promise($stateParams.formattedProjectTitle, UserService.getCurrentUser()['userName'])
     )
-    .state('engine.overview'
+    .state('project.overview'
       url: '/overview'
       templateUrl: 'modules/project/project_overview.html'
       controller: 'OverviewCtrl',
     )
-    .state('engine.data'
+    .state('project.data'
       url: '/data'
       templateUrl: 'modules/data/data.html'
       controller: 'DatasetListCtrl'
       resolve:
         initialData: (DataService) -> DataService.promise
     )
-    .state('engine.ontology'
+    .state('project.ontology'
       url: '/ontology'
       templateUrl: 'modules/property/property.html'
       controller: 'OntologyEditorCtrl'
@@ -86,7 +86,7 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
         initialData: (DataService) -> DataService.promise
         propertyService: (PropertyService) -> PropertyService.getProperties
     )
-    .state('engine.visualize'
+    .state('project.visualize'
       url: '/visualize'
       templateUrl: 'modules/visualization/visualization.html'
       controller: 'CreateVizCtrl'
@@ -95,7 +95,7 @@ angular.module('diveApp.routes', ['ui.router']).config(($stateProvider, $urlRout
         vizDataService: (VizDataService) -> VizDataService.promise
         conditionalDataService: (ConditionalDataService) -> ConditionalDataService.promise
     )
-    .state('engine.assemble'
+    .state('project.assemble'
       url: '/assemble'
       templateUrl: 'modules/export/export.html'
       controller: 'AssembleCtrl'

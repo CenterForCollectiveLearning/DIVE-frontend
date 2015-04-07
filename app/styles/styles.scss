@@ -13,7 +13,7 @@ $assemble-green: #7ED321;
 $project-red: #D0021B;
 
 // Reddit colors
-$light-gray: #F1EFEF;
+$light-gray: #EEE;  //#F1EFEF;
 $background-color: #e9e7e8;
 $gray: #AEAEAE;
 $active-white: #EEEEEE;
@@ -75,7 +75,7 @@ ul {
 
 @import '_mixins';
 @import '_layout';
-@import '_embed';
+// @import '_embed';
 @import '_landing';
 @import '_project';
 @import '_export';
@@ -85,4 +85,6 @@ ul {
 @import '_widgets';
 
 // Libraries
-@import 'libraries/d3plus.scss';
+@import 'lib/d3plus.scss';
+@import 'lib/angular-material.scss';
+@import 'lib/angular-docs.scss';

@@ -1,17 +1,20 @@
-<div class="center-pane">
-	<div class="new-project-form">
-		<div class="title">Create New Project</div>
-
-		<form name="createProjectForm" ng-controller="CreateProjectFormCtrl as createProject" ng-submit="createProjectForm.$val && createProject.login()" novalidate>
-
-			<label class="title label" ng-class="{ 'input-error': createProjectForm.title.$invalid && !createProjectForm.title.$pristine && !createProjectForm.email.$focused } ">
-				Project Title
-				<span ng-show="titleTaken">must be unique</span>
-			</label>
-			<input type="text" ng-model="newProjectData.title" placeholder="Chicago Demographic Visualization" required>
-			<label class="description label">Project Description</label>
-			<input type="text" ng-model="newProjectData.description" placeholder="Visualization based on the 2006-2012 ACS" ng-enter="create_project()">
-			<div class="create-project" ng-click="create_project()">Create</div>
-		</form>
+<section class="new-project-form form card">
+	<div class="title">
+		Create New Project
 	</div>
-</div>
+
+	<form name="createProjectForm" ng-controller="CreateProjectFormCtrl as createProject" ng-submit="createProjectForm.$val && createProject.login()" novalidate>
+		<md-input-container>
+    		<label for="project-title">Project Title</label>
+	    	<input id="project-title" type="text" ng-model="newProjectData.title" placeholder="Chicago Demographic Visualization" required>
+    	</md-input-container>
+
+	<md-input-container>
+	<label>Project Description</label>
+	<input type="text" ng-model="newProjectData.description" placeholder="Visualization based on the 2006-2012 ACS" required ng-enter="create_project()">
+</md-input-container>
+<section layout="row" layout-align="center center">
+	<md-button class="md-light md-raised md-primary" ng-click="create_project()">Create</md-button>
+</section>
+</form>
+</section>

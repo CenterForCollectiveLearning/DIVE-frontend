@@ -1,13 +1,13 @@
 <div class="landing-top">
-	<div class="beta">
-		Beta
+	<div class="logo" ui-sref="landing.projects">
+		<img src="assets/images/DIVE_logo_white.svg" />
 	</div>
 	<div class="dive">
-		<div class="title">DIVE</div>
+		<div class="title" ui-sref="landing.projects">DIVE</div>
 		<div class="subtitle">Data Integration and Visualization Engine</div>
 	</div>
 	<div class="user-status">
 		<span ng-if="loggedIn">Logged in as <span class="username"> {{ user.displayName }}</span>
-        <span class='logout' ng-click="logoutUser()">(Logout)</span></span>
+        (<span class='logout' ng-click="logoutUser()">Logout</span>)</span>
 	</div>
 </div>

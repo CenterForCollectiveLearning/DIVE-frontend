@@ -1,0 +1,28 @@
+<div class="landing-top">
+	<div class="logo" ui-sref="landing.projects">
+		<img src="assets/images/DIVE_logo_white.svg" />
+	</div>
+	<div class="dive">
+		<div class="title" ui-sref="landing.projects">DIVE</div>
+		<div class="subtitle" ui-sref="project.overview">{{projectTitle}}</div>
+	</div>
+	<div class="hamburger" ng-click='toggleRightPane()'>
+		<div class="line"></div>
+		<div class="line"></div>
+		<div class="line"></div>
+	</div>
+</div>
+
+<div class="project-right-pane" ng-class="{ 'open': rightPaneOpen }">
+	<ul>
+		<li ui-sref="landing">
+			Project List
+		</li>
+		<li ui-sref="landing">
+			Account
+		</li>
+		<li ng-click="logoutUser()">
+			Logout
+		</li>
+	</ul>
+</div>

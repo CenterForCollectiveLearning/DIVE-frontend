@@ -9,7 +9,7 @@ require('./landing_tabs.ctrl')
 # TODO Refactor top-level directives into another module
 angular.module('diveApp.landing').directive('landingTop', ->
     restrict: 'E',
-    templateUrl: 'modules/landing/landing_top.html'
+    templateUrl: 'modules/landing/landing_top_bar.html'
     controller: 'ProjectListCtrl'
 )
 
