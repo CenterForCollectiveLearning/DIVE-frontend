@@ -1,3 +1,5 @@
+<!-- TODO Refactor into a directive or something -->
+
 <md-sidenav class="site-sidenav md-sidenav-left md-locked-open md-whiteframe-z2"
               md-component-id="left"
               md-is-locked-open="$mdMedia('gt-sm')">
@@ -48,47 +50,45 @@
   </md-content>
 </md-sidenav>
 
-<div class="viewport" maxheight>
-  <div class="choose-data-set">
+<!-- Main View -->
+<div class="data-viewport" layout="row" layout-align="center start" flex>
 
-    <!-- File Upload UI -->
-    <div class="file-upload" ng-if="selectedChild.id==='upload'">
-      <section layout="row" layout-align="center center">
-        <button class="md-button md-light md-raised md-primary" ng-file-select="onFileSelect($files)" data-multiple="true" title="select file" onclick="this.value = null" class="upload-button">
-          Click here to select file
-        </button>
-      </section>
-      <!--       <div class="button cancel" ng-click="uploadabort()">Cancel Upload</div> -->
-      <div class="drop" ng-show="dropSupported" class="drop-box" ng-file-drop="onFileSelect($files)" ng-file-drop-available="dropSupported=true"
-      ng-file-drag-over-class="dragOverClass($event)" ng-file-drag-over-delay="100">or drop files here</div>
-    </div>
-
-    <div class="public-datasets" ng-if="selectedChild.id==='preloaded'">
-      <ul class="datasets">
-        <li ng-repeat="d in publicDatasets" class="dataset card" ng-click="selectPublicDataset(d.dID)">
-          <div class="title">{{d.filename}}</div>
-          <md-content>
-            <div class="description">Description</div>
-            <section layout="row" layout-align="center center" flex>
-              <md-button class="md-light md-raised md-primary md-default-theme" ng-click="addPublicDataset(d)">Add to Project</md-button>
-            </section>
-            <!-- <div class="menu" ng-class="{active: d.dID==selectedPublicDataset}">
-              <div class="button open" ng-click="addPublicDataset(d)">
-              Use Dataset
-              </div>
-            </div> -->
-          </md-content>
-        </li>
-      </ul>
-    </div>
+  <!-- Upload -->
+  <div class="file-upload" ng-if="selectedChild.id==='upload'" flex>
+    <section layout="row" layout-align="center center">
+      <button class="md-button md-light md-raised md-primary" ng-file-select="onFileSelect($files)" data-multiple="true" title="select file" onclick="this.value = null" class="upload-button">
+        Click here to select file
+      </button>
+    </section>
+    <!--       <div class="button cancel" ng-click="uploadabort()">Cancel Upload</div> -->
+    <div class="drop" ng-show="dropSupported" class="drop-box" ng-file-drop="onFileSelect($files)" ng-file-drop-available="dropSupported=true"
+    ng-file-drag-over-class="dragOverClass($event)" ng-file-drag-over-delay="100">or drop files here</div>
   </div>
 
+  <!-- Preloaded Data -->
+  <div class="preloaded-datasets" ng-if="selectedChild.id==='preloaded'">
+    <ul class="datasets">
+      <li ng-repeat="d in publicDatasets" class="dataset card" ng-click="selectPublicDataset(d.dID)">
+        <div class="title">{{d.filename}}</div>
+        <md-content>
+          <div class="description">Description</div>
+          <section layout="row" layout-align="center center" flex>
+            <md-button class="md-light md-raised md-primary md-default-theme" ng-click="addPublicDataset(d)">Add to Project</md-button>
+          </section>
+          <!-- <div class="menu" ng-class="{active: d.dID==selectedPublicDataset}">
+            <div class="button open" ng-click="addPublicDataset(d)">
+            Use Dataset
+            </div>
+          </div> -->
+        </md-content>
+      </li>
+    </ul>
+  </div>
 
-<!--   <div ng-repeat="dataset in datasets track by dataset.dID" ng-if="selectedPage(dataset)">  -->
-  <div ng-repeat="dataset in datasets" ng-if="isChildSelected(dataset)"> 
+  <!-- Datasets -->
+  <div ng-repeat="dataset in datasets" ng-if="isChildSelected(dataset)" flex> 
     <div class="dataset-preview card" ng-if="dataset.sample" layout="column" layout-margin>
-<!--       <input type="text" ng-model="dataset.title"> -->
-      <div class="title" flex="100">
+      <div class="title">
         {{dataset.title}}
       </div>
       <table>
@@ -100,7 +100,6 @@
         <tr>
           <td ng-repeat="attr in dataset.column_attrs">
             <md-select ng-model="attr.type" class="type-select">
-              <md-option>Test</md-option>
               <md-option ng-repeat="type in types">{{type}}</md-option>
             </md-select>
           </td>
@@ -130,5 +129,4 @@
     </div>
     </div>
   </div>
-
-  </div> 
+</div> 

@@ -6,10 +6,10 @@
     <ul class="docs-menu">
       <li>
         <ul>
-          <li ng-repeat="t in types">
+          <li ng-repeat="category in categories">
             <md-button class="md-button-toggle" ng-click="toggle()">
                 <div flex layout="row">
-                  {{t.name | capitalize}}
+                  {{category.name | capitalize}}
                   <span aria-hidden="true" class="md-toggle-icon"
                   ng-class="{'toggled' : isOpen()}">
                   <md-icon md-svg-src="toggle-arrow"></md-icon>

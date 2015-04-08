@@ -11,6 +11,24 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
     linechart: 'linechart.svg'
   };
 
+  $scope.categories = [
+    {
+      name: 'shares'
+    },
+    {
+      name: 'temporal'
+    },
+    {
+      name: 'comparison'
+    },
+    {
+      name: 'distribution'
+    },
+    {
+      name: 'connection'
+    }
+  ]
+
   $scope.loading = true;
   $scope.datasets = [];
   $scope.columnAttrsByDID = {};
@@ -88,8 +106,7 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
   SpecificationService.promise(function(specs) {
     var k, v;
     $scope.types = (function() {
-      var _results;
-      _results = [];
+      var _results = [];
       for (k in specs) {
         v = specs[k];
         _results.push({
