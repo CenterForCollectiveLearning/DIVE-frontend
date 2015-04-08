@@ -1,15 +1,17 @@
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-angular.module("diveApp.data").controller("DatasetListCtrl", function($scope, $rootScope, $mdSidenav, projectID, $http, $upload, $timeout, $stateParams, DataService, PublicDataService, API_URL) {
+angular.module("diveApp.data").controller("DataCtrl", function($scope, $rootScope, $mdSidenav, projectID, $http, $upload, $timeout, $stateParams, DataService, PublicDataService, API_URL) {
   $scope.datasets = [];
   $scope.publicDatasets = [];
   $scope.dIDs = [];
+  $scope.loadingDatasets = true;
 
   // Data from services
   DataService.promise(function(datasets) {
     $scope.datasets = datasets;
-    console.log($scope.datasets);
+    $scope.loadingDatasets = false;
   });
+
   PublicDataService.promise('GET', {
     sample: true
   }, function(publicDatasets) {
@@ -34,6 +36,11 @@ angular.module("diveApp.data").controller("DatasetListCtrl", function($scope, $r
       ]
     }
   ]
+
+  $scope.toggleStates = {
+    data: true
+  };
+
   $scope.selectedChild = $scope.sections[0].children[0];
 
   $scope.selectChild = function(c) {
@@ -44,22 +51,20 @@ angular.module("diveApp.data").controller("DatasetListCtrl", function($scope, $r
     return ($scope.selectedChild === c);
   }
 
-  $scope.toggle = function() {
-    return true;
+  $scope.toggle = function(k) {
+    $scope.toggleStates[k] = !$scope.toggleStates[k];
   }
 
-  $scope.isOpen = function() {
-    return true;
+  $scope.isOpen = function(k) {
+    return $scope.toggleStates[k]
   }
 
   $scope.addPublicDataset = function(d) {
-    var params;
-    console.log("adding Public Dataset", d);
-    params = {
+    var params = {
       dID: d.dID,
       pID: $rootScope.pID
     };
-    return PublicDataService.promise('POST', params, function(datasets) {
+    PublicDataService.promise('POST', params, function(datasets) {
       var _i, _len, _results;
       _results = [];
       for (_i = 0, _len = datasets.length; _i < _len; _i++) {
@@ -82,18 +87,7 @@ angular.module("diveApp.data").controller("DatasetListCtrl", function($scope, $r
       displayName: 'Wide (Matrix-like)'
     }
   ];
-  $scope.selectedStructure = function(structure) {
-    var datasetStructure;
-    datasetStructure = $scope.datasets[$scope.selectedIndex].structure;
-    if (structure === datasetStructure) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-  $scope.selectStructure = function(structure) {
-    return $scope.datasets[$scope.selectedIndex].structure = structure;
-  };
+
   $scope.onFileSelect = function($files) {
     var file, i, _results;
     i = 0;

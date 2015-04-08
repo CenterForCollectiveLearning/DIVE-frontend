@@ -19,6 +19,7 @@
     "angular-ui-router": "^0.2.11",
     "d3": "^3.4.13",
     "jquery": "^2.1.1",
+    "metrics-graphics": "^2.3.0",
     "underscore": "^1.7.0"
   },
   "license": "ISC",

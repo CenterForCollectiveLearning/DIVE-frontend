@@ -8,6 +8,8 @@ d3plus = require('d3plus');
 
 topojson = require('topojson');
 
+require('metrics-graphics')
+
 angular.module('diveApp.visualization').directive("visualizationPreview", [
   "$window", "$timeout", function($window, $timeout) {
     return {

@@ -1,9 +1,8 @@
 div.viewport {
 	div.dataset-preview {
+
         max-height: 500px;
-        overflow-y: scroll;
-        padding-left: 5px;
-        padding-right: 5px;
+        overflow: scroll;
         input, select {
         	@include font;
             font-size: 14px;
@@ -18,50 +17,12 @@ div.viewport {
                 background-color: #C0C0C0;
             }
         }
-    }
 
-    div.public-datasets {
-        $block-width: 600px;
-        ul.datasets {
-            width: 600px;
-            padding: 0;
-            margin: 10px auto 0 auto;
-            a {
-                color: black;
-            }
-            li.dataset {
-                @include card-shadow;
-                @include border-transition();
-                @include background-transition();
-                background-color: white;
-                cursor: pointer;
-                margin-top: 10px;
-                width: $block-width;
-                border-radius: 2px;
-                display: inline-block;
-                margin-right: 10px;
-
-                div.title {
-                    font-size: 24px;
-                    line-height: 24px;
-                    padding: 20px 20px;
-                    text-align: left;
-                }
-                div.description {
-                    @include small-caps;
-                    line-height: 20px;
-                    padding: 0 20px;
-                    padding-bottom: 15px;
-                    text-align: left;
-                }
-
-                div.menu {
-                    height: 0px;
-                    transition: .2s ease-in-out height;
-                    overflow: hidden;
-                    &.active {
-                        border-top: 1px solid $light-gray;
-                        height: 60px;
+        table {
+            tbody {
+                tr {
+                    td {
+                        padding: 0;
                     }
                 }
             }

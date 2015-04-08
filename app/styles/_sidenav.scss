@@ -9,4 +9,11 @@
 			color: #03a9f4;
 		}
 	}
+
+	// TODO Find out why vertical-align isn't working
+	.md-button-toggle {
+		md-icon {
+			height: 40px;
+		}
+	}
 }

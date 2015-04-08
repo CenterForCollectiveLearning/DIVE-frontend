@@ -18,28 +18,25 @@
           </li>
         </ul>
       </li>
+
       <li ng-class="{'parentActive' : isSectionSelected(section)}">
-        <md-button class="md-button-toggle"
-        ng-click="toggle()"
-        aria-controls="docs-menu-{{section.name}}"
-        aria-expanded="{{isOpen()}}">
+        <md-button class="md-button-toggle" ng-click="toggle('data')">
           <div flex layout="row">
               Inspect Datasets
-              <span aria-hidden="true" class="md-toggle-icon"
-              ng-class="{'toggled' : isOpen()}">
-              <md-icon md-svg-src="toggle-arrow"></md-icon>
-            </span>
+              <span class="md-toggle-icon" ng-class="{'toggled' : isOpen('data')}">
+                <md-icon md-svg-src="toggle-arrow"></md-icon>
+              </span>
           </div>
-          <span class="visually-hidden">
-            Toggle {{isOpen()? 'expanded' : 'collapsed'}}
-          </span>
         </md-button>
-        <ul ng-show="isOpen()" class="menu-toggle-list">
+
+        <!-- Datasets -->
+        <ul ng-show="isOpen('data')" class="menu-toggle-list">
+          <!-- Loader -->
           <section layout="row" layout-align="center center" flex>
-            <md-progress-circular md-mode="indeterminate" ng-if="!datasets"></md-progress-circular>
+            <md-progress-circular md-mode="indeterminate" ng-if="loadingDatasets"></md-progress-circular>
           </section>
           <li ng-repeat="d in datasets">
-            <md-button class="child" ng-class="{'active' : isChildSelected(c)}" ng-click="selectChild(d)">
+            <md-button class="child" ng-class="{'active' : isChildSelected(d)}" ng-click="selectChild(d)">
               <span>
                 {{d.title}}
               </span>
@@ -70,22 +67,30 @@
       <ul class="datasets">
         <li ng-repeat="d in publicDatasets" class="dataset card" ng-click="selectPublicDataset(d.dID)">
           <div class="title">{{d.filename}}</div>
-          <div class="description">Description</div>
-          <div class="menu" ng-class="{active: d.dID==selectedPublicDataset}">
-            <div class="button open" ng-click="addPublicDataset(d)">
+          <md-content>
+            <div class="description">Description</div>
+            <section layout="row" layout-align="center center" flex>
+              <md-button class="md-light md-raised md-primary md-default-theme" ng-click="addPublicDataset(d)">Add to Project</md-button>
+            </section>
+            <!-- <div class="menu" ng-class="{active: d.dID==selectedPublicDataset}">
+              <div class="button open" ng-click="addPublicDataset(d)">
               Use Dataset
-            </div>
-          </div>
+              </div>
+            </div> -->
+          </md-content>
         </li>
       </ul>
     </div>
   </div>
 
 
-  <div ng-repeat="dataset in datasets track by dataset.dID">
-    <div class="dataset-preview" ng-if="dataset.sample">
-      <div class="title">Dataset Preview</div>
-      <input type="text" ng-model="dataset.title">
+<!--   <div ng-repeat="dataset in datasets track by dataset.dID" ng-if="selectedPage(dataset)">  -->
+  <div ng-repeat="dataset in datasets" ng-if="isChildSelected(dataset)"> 
+    <div class="dataset-preview card" ng-if="dataset.sample" layout="column" layout-margin>
+<!--       <input type="text" ng-model="dataset.title"> -->
+      <div class="title" flex="100">
+        {{dataset.title}}
+      </div>
       <table>
         <tr>
           <td ng-repeat="attr in dataset.column_attrs">    
@@ -94,34 +99,35 @@
         </tr>
         <tr>
           <td ng-repeat="attr in dataset.column_attrs">
-            <select ng-model="attr.type" ng-options="type for type in types" class="type-select">
-            </td>
-          </tr>
+            <md-select ng-model="attr.type" class="type-select">
+              <md-option>Test</md-option>
+              <md-option ng-repeat="type in types">{{type}}</md-option>
+            </md-select>
+          </td>
+        </tr>
+        <tr ng-repeat="(index, row) in dataset.sample track by $index">
+          <td ng-repeat="elem in row track by $index"> {{elem}} </td>
+        </tr>
+      </table>
+    </div>
 
-          <tr ng-repeat="(index, row) in dataset.sample track by $index">
-            <td ng-repeat="elem in row track by $index"> {{elem}} </td>
-          </tr>
-        </table>
-      </div>
-
-
-      <div class="dataset-structure-select">
+    <div layout="row" layout-margin>
+      <div class="dataset-structure-select card" flex>
         <div class="title">Dataset Structure</div>
-        <ul class="structure-options options">
-          <li class="structure-option option" ng-repeat="structure in structures" ng-click="selectStructure(structure.name)" ng-class="{'selected': selectedStructure(structure.name)}">
-            {{structure.displayName}}
-          </li>
-        </ul>
-<!--         <div class="button ng-class=">Long (Sample-based)</div>
-        <div class="button">Wide (Matrix-like)</div>
-        <div class="button">Network</div> -->
+        <md-radio-group ng-model="dataset.structure">
+          <md-radio-button ng-repeat="s in structures" value="{{s.name}}" class="md-primary">{{s.displayName}}</md-radio-button>
+        </md-radio-group>
       </div>
-      <div class="dataset-delete-select">
+
+      <div class="dataset-delete-select card" flex>
         <div class="title">Modify Dataset</div>
+        <md-content>
         <section layout="row" layout-align="center center">
           <md-button class="md-light md-warn md-raised" ng-click="removeDataset(dataset.dID)">Delete Dataset</md-button>
         </section>
+      </md-content>
       </div>
+    </div>
     </div>
   </div>
 

@@ -5,17 +5,18 @@
   <md-content flex role="navigation">
     <ul class="docs-menu">
       <li>
-        <h2 class="menu-heading md-subhead">
-          Visualization Types
-        </h2>
         <ul>
           <li ng-repeat="t in types">
-            <md-button class="child" ng-class="{'active' : isChildSelected(c)}" ng-click="selectChild(d)">
-              <span>
-                {{t.name | capitalize}}
-                <div class="right">
-                  <img ng-src="/assets/images/{{type.icon}}" />
-                </div>      
+            <md-button class="md-button-toggle" ng-click="toggle()">
+                <div flex layout="row">
+                  {{t.name | capitalize}}
+                  <span aria-hidden="true" class="md-toggle-icon"
+                  ng-class="{'toggled' : isOpen()}">
+                  <md-icon md-svg-src="toggle-arrow"></md-icon>
+                </span>
+              </div>
+              <span class="visually-hidden">
+                Toggle {{isOpen()? 'expanded' : 'collapsed'}}
               </span>
             </md-button>
           </li>

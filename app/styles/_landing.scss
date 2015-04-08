@@ -88,47 +88,30 @@ section.text {
     border-radius: 2px;
 }
 
-.card {
-    @include card-shadow;
-    background-color: white;
-    position: relative;
-    width: 600px;
-    margin: 60px auto 0 auto;
-    border: 1px solid $light-gray;
-    border-radius: 2px;
+// .card {
+    
+    
 
-    md-content {
-        padding: 20px;
-    }
+   
 
-    input {
-        @include font;
-        padding: 4px;
-        font-size: 18px;
-        height: 30px;
-        &:focus {
-            outline: none;
-        }
-    }
+//     div.title {
+//         font-size: 24px;
+//         line-height: 24px;
+//         padding: 20px 20px;
+//         text-align: center;
+//     }
+//     div.close {
+//         cursor: pointer;
+//         position: absolute;
+//         top: 0px;
+//         right: 10px;
+//         font-size: 24px;
+//     }
 
-    div.title {
-        font-size: 24px;
-        line-height: 24px;
-        padding: 20px 20px;
-        text-align: center;
-    }
-    div.close {
-        cursor: pointer;
-        position: absolute;
-        top: 0px;
-        right: 10px;
-        font-size: 24px;
-    }
-
-    div.create-project, div.login-user, div.reg-user {
-        @include button(80px, $ontology-blue);
-    }
-}
+//     div.create-project, div.login-user, div.reg-user {
+//         @include button(80px, $ontology-blue);
+//     }
+// }
 
 section.form {
     @include font;
