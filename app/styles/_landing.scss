@@ -21,6 +21,7 @@ div.landing-top {
     font-size: 14px;
 
     div.logo {
+        cursor: pointer;
         float: left;
         height: $top-bar-height;
 
@@ -35,10 +36,12 @@ div.landing-top {
     div.dive {
         display: inline-block;
         div.title {
+            cursor: pointer;
             font-size: 36px;
         }
 
         div.subtitle {
+            cursor: pointer;
             margin-left: 3px;
             margin-top: 3px;
             font-family: 'Decima';

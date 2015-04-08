@@ -1,0 +1,12 @@
+.docs-menu {
+	.md-button.child { 
+		display: block;
+		font-weight: 400;
+		padding: 0 16px 0 32px;
+		text-transform: none;
+
+		&.active {
+			color: #03a9f4;
+		}
+	}
+}

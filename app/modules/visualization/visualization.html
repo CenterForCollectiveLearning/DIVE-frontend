@@ -1,4 +1,31 @@
-<div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
+<md-sidenav class="site-sidenav md-sidenav-left md-locked-open md-whiteframe-z2"
+              md-component-id="left"
+              md-is-locked-open="$mdMedia('gt-sm')">
+
+  <md-content flex role="navigation">
+    <ul class="docs-menu">
+      <li>
+        <h2 class="menu-heading md-subhead">
+          Visualization Types
+        </h2>
+        <ul>
+          <li ng-repeat="t in types">
+            <md-button class="child" ng-class="{'active' : isChildSelected(c)}" ng-click="selectChild(d)">
+              <span>
+                {{t.name | capitalize}}
+                <div class="right">
+                  <img ng-src="/assets/images/{{type.icon}}" />
+                </div>      
+              </span>
+            </md-button>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </md-content>
+</md-sidenav>
+
+<!-- <div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
   <div class="pane-title">
     Visualization Types
   </div>
@@ -11,8 +38,8 @@
       </div>      
     </li>
   </ul>
-</div>
-
+</div> -->
+<!-- 
 <div class="right-pane viz-selection" ng-class="{'closed': rightClosed}" maxheight>
   <div class="pane-title">
     Visualization Specifications
@@ -44,13 +71,11 @@
       
       <div class="stats">
         <div>Number of elements: <b>{{ ($index == selectedSpecIndex ? vizStats.count : spec.stats.count )}}</b></div>
-        <!-- <div>Standard Deviation: <b>{{spec.stats.std | number: 3}}</b></div> -->
         <div class="extra-stats" ng-if="$index==selectedSpecIndex">
           <span ng-repeat="statType in selectedStats">
             <br><div>{{statType.name}}</div>
             <div ng-repeat="(stat, val) in vizStats[statType.val]">{{stat}}: {{val | number : 2}}</div>
           </span>
-          <!-- <div ng-repeat="statType in selectedStats">{{statType}}</div> -->
         </div>
       </div>
 
@@ -65,10 +90,11 @@
     </li>
   </ul>
 </div>
-
+ -->
 <div class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
-  <pane-toggle></pane-toggle>
-  <loader></loader>
+  <section layout="row" layout-align="center center" flex>
+    <md-progress-circular md-mode="indeterminate" ng-if="loading"></md-progress-circular>
+  </section>
   <div id="viz-container"></div>
   <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selCondVals"></visualization-preview>
 

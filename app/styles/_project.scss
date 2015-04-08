@@ -1,3 +1,14 @@
+md-tabs {
+    md-tab {
+        &.left-tabs {
+            float: left;
+        }
+        &.right-tabs {
+            float: right;
+        }
+    }
+}
+
 
 div.hamburger {
     position: absolute;

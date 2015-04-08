@@ -1,10 +1,8 @@
-var _;
-
-_ = require('underscore');
+var _ = require('underscore');
 
 angular.module('diveApp.visualization').controller("CreateVizCtrl", function($scope, $http, $rootScope, DataService, PropertyService, VizDataService, ConditionalDataService, SpecificationService, API_URL) {
   var icons;
-  icons = {
+  var icons = {
     treemap: 'treemap.svg',
     barchart: 'barchart.svg',
     piechart: 'piechart.svg',
@@ -12,6 +10,7 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
     scatterplot: 'scatterplot.svg',
     linechart: 'linechart.svg'
   };
+
   $scope.loading = true;
   $scope.datasets = [];
   $scope.columnAttrsByDID = {};

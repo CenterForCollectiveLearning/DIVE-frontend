@@ -24,7 +24,7 @@
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.0.0-rc4",
-    "browserify": "^6.1.0",
+    "browserify": "^9.0.7",
     "browserify-shim": "^3.8.0",
     "coffee-script": "^1.8.0",
     "coffeeify": "^0.7.0",
@@ -42,7 +42,8 @@
     "gulp-util": "^3.0.1",
     "jquery": "^2.1.1",
     "run-sequence": "^1.0.1",
-    "vinyl-source-stream": "^1.0.0"
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.1.0"
   },
   "browserify": {
     "transform": [
