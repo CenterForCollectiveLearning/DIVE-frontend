@@ -2,23 +2,56 @@
               md-component-id="left"
               md-is-locked-open="$mdMedia('gt-sm')">
 
+  <section layout="row" layout-align="center center" flex ng-if="!categories">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  </section>
+
+  <md-content class="filters" flex="15">
+    <h3>Filters</h3>
+    <md-select ng-model="filters.sortField" class="type-select">
+      <md-option ng-value="sf.property" ng-repeat="sf in sortFields">{{ sf.display }}</md-option>
+    </md-select>
+    <md-select ng-model="filters.sortOrder" class="type-select">
+      <md-option ng-value="so.property" ng-repeat="so in sortOrders">{{ so.display }}</md-option>
+    </md-select>
+  </md-content>
   <md-content flex role="navigation">
+
+   
+<!--       <md-radio-group ng-model="filters.sortOrders">
+        <md-radio-button ng-repeat="so in sortOrders">{{ so.display }}</md-radio-button>
+      </md-radio-group> -->
+
     <ul class="docs-menu">
       <li>
         <ul>
           <li ng-repeat="category in categories">
-            <md-button class="md-button-toggle" ng-click="toggle()">
+            <md-button class="md-button-toggle" ng-click="toggle($index)">
                 <div flex layout="row">
                   {{category.name | capitalize}}
                   <span aria-hidden="true" class="md-toggle-icon"
-                  ng-class="{'toggled' : isOpen()}">
+                  ng-class="{'toggled' : isOpen($index)}">
                   <md-icon md-svg-src="toggle-arrow"></md-icon>
                 </span>
               </div>
               <span class="visually-hidden">
-                Toggle {{isOpen()? 'expanded' : 'collapsed'}}
+                Toggle {{isOpen($index)? 'expanded' : 'collapsed'}}
               </span>
             </md-button>
+
+            <ul class="menu-toggle-list" ng-show="isOpen($index)">
+              <!-- Loader -->
+              <section layout="row" layout-align="center center" flex>
+                <md-progress-circular md-mode="indeterminate" ng-if="loadingDatasets"></md-progress-circular>
+              </section>
+              <li ng-repeat="s in category.specs">
+                <md-button class="child" ng-class="{'active' : isChildSelected(s)}" ng-click="selectChild(s)">
+                  <span>
+                    Group all <b>{{s.aggregate.title}}</b> by <b>{{s.groupBy.title}}</b>
+                  </span>
+                </md-button>
+              </li>
+            </ul>
           </li>
         </ul>
       </li>
@@ -92,14 +125,19 @@
   </ul>
 </div>
  -->
-<div class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
-  <section layout="row" layout-align="center center" flex>
-    <md-progress-circular md-mode="indeterminate" ng-if="loading"></md-progress-circular>
+<div class="viz-viewport viewport" layout-align="center start" flex>
+
+  <section layout="row" layout-align="center center" flex ng-if="loading">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
   </section>
-  <div id="viz-container"></div>
+
   <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selCondVals"></visualization-preview>
 
-  <div class="conditionals card">
+  <div id="viz-container" class="card" flex>
+    Visualization here
+  </div>
+
+  <div class="conditionals card" flex>
     <div class="title">Conditionals</div>
     <ul class="conditional-options options">
       <li class="conditional-option option" ng-repeat="c in condList" ng-click="selectConditional(c)" ng-class="{'selected':selectedConditional(c.name)}">
@@ -133,7 +171,7 @@
       </ul>
     </div>
   </div>
-  <div class="configurations card">
+  <div class="configurations card" flex>
     <div class="title">Configuration</div>
   </div>
 </div>

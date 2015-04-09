@@ -1,64 +1,5 @@
-div.right-pane.viz-selection {
-    div.filter, div.sort, div.choose-stats {
-        @include small-caps;
-        text-align: center;
-        cursor: pointer;
-        border-bottom: 1px solid black;
-    }
-
-    select {
-        margin-bottom: 8px;
-        margin-left: 12px;
-        @include font;
-        display: block;
-    }
-
-    ul.pane-items {
-        li {
-            height: 100px;
-            overflow: hidden;
-            div.stats {
-                border-top: 1px solid $light-gray;
-                font-size: 10px;
-                padding-top: 8px;
-                padding-bottom: 12px;
-            }
-            &.selected {
-                height: 250px;
-                overflow: auto;
-            }
-        }
-    }
-}
-
-ul.options {
-    top: 50%;
-    left: 50%;
-    padding-left: 0px;
-    margin-top: 10px;
-    height: auto;
-    background-color: white;
-
-    li.option {
-        @include background-transition();
-        margin-left: 4px;
-
-        @include small-caps;
-        text-align: center;
-        display: inline;
-        cursor: pointer;
-        border-radius: 3px;
-        padding: 7px 10px;
-        border: 1px solid $dark-gray;
-        border-bottom-color: #D0D1D5;
-        border-left-color: #DFE0E4;
-        border-right-color: #DFE0E4;
-        border-top-color: #E5E6E9;
-
-        &.selected {
-            background-color: $ontology-blue;
-        }
-    }
+.filters {
+    padding: 10px 16px;
 }
 
 div.conditionals, #viz-container {
@@ -95,7 +36,7 @@ div.conditionals, #viz-container {
     div.dropdowns {
         padding: 0;
         width: auto;
-        margin: 20px -12px;
+        margin: 20px 0px;
         border-top: 1px solid #E5E6E9;
 
         ul {

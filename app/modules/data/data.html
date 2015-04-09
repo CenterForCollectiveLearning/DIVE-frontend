@@ -34,8 +34,8 @@
         <!-- Datasets -->
         <ul ng-show="isOpen('data')" class="menu-toggle-list">
           <!-- Loader -->
-          <section layout="row" layout-align="center center" flex>
-            <md-progress-circular md-mode="indeterminate" ng-if="loadingDatasets"></md-progress-circular>
+          <section layout="row" layout-align="center center" flex ng-if="!datasets">
+            <md-progress-circular md-mode="indeterminate" ></md-progress-circular>
           </section>
           <li ng-repeat="d in datasets">
             <md-button class="child" ng-class="{'active' : isChildSelected(d)}" ng-click="selectChild(d)">
@@ -51,7 +51,7 @@
 </md-sidenav>
 
 <!-- Main View -->
-<div class="data-viewport" layout="row" layout-align="center start" flex>
+<div class="data-viewport viewport" layout="row" layout-align="center start" flex>
 
   <!-- Upload -->
   <div class="file-upload" ng-if="selectedChild.id==='upload'" flex>
@@ -104,7 +104,7 @@
             </md-select>
           </td>
         </tr>
-        <tr ng-repeat="(index, row) in dataset.sample track by $index">
+        <tr class="data" ng-repeat="(index, row) in dataset.sample track by $index">
           <td ng-repeat="elem in row track by $index"> {{elem}} </td>
         </tr>
       </table>

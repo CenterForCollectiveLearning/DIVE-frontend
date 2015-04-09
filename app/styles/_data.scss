@@ -1,5 +1,4 @@
 div.data-viewport {
-    padding: 10px;
 
     div.upload-dataset {
         height: 100%;
@@ -66,6 +65,13 @@ div.data-viewport {
                 tr {
                     td {
                         padding: 0;
+                    }
+
+                    &.data {
+                        td {
+                            background-color: white;
+                            overflow: hidden;
+                        }
                     }
                 }
             }

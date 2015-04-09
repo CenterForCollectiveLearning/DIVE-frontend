@@ -1,11 +1,12 @@
-// .center-pane > * {
-//   -webkit-box-flex: 1 1 auto;
-//   -webkit-flex: 1 1 auto;
-//   -moz-box-flex: 1 1 auto;
-//   -moz-flex: 1 1 auto;
-//   -ms-flex: 1 1 auto;
-//   flex: 1 1 auto;
-// }
+.landing-list {
+    width: 600px;
+    max-width: 600px;
+    padding-top: 50px;
+
+    .card {
+        margin-bottom: 20px;
+    }
+}
 
 $top-bar-height: 80px;
 div.landing-top {
@@ -14,7 +15,8 @@ div.landing-top {
     @include font;
     font-weight: light;
     height: $top-bar-height;
-    background-color: rgb(63,81,181); // #01579b;// #0277bd; // rgb(63,81,181);  // #1C1D1D;
+    // background-color: rgb(63,81,181); // #01579b;// #0277bd; // rgb(63,81,181);  // #1C1D1D;
+    background-color: #1C1D1D;
 
 
     color: $active-white;
@@ -44,9 +46,9 @@ div.landing-top {
             cursor: pointer;
             margin-left: 3px;
             margin-top: 3px;
-            font-family: 'Decima';
+            // font-family: 'Decima';
             text-transform: uppercase;
-            letter-spacing: 2px;
+            // letter-spacing: 2px;
             font-size: 14px;
         }
     }
@@ -117,7 +119,6 @@ section.form {
     @include font;
     $block-width: 600px;
     $block-height: 100px;
-    margin-top: 50px;
 
     div.new-project-button {
         @include button(600px, $ontology-blue);

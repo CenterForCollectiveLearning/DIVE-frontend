@@ -1,3 +1,22 @@
+.viewport {
+    padding: 10px;
+
+    .card {
+        margin-bottom: 20px;
+    }
+}
+
+.docs-menu {
+    .menu-toggle-list {
+        overflow: scroll;
+    }
+    .md-button.child {
+        line-height: 16px;
+        min-height: 40px;
+        max-height: 80px;
+    }
+}
+
 div.hamburger {
     position: absolute;
     top: 20px;

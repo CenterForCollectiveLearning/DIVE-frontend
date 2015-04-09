@@ -1,5 +1,4 @@
-<section class="landing-projects">
-
+<section class="landing-projects landing-list" flex>
 	<section class='login-form card' ng-if='!loggedIn'>
 		<div class="title">Login</div>
 		<form name='loginForm'>
@@ -10,7 +9,7 @@
 
 			<md-input-container>
 	    		<label for="password">Password</label>
-    			<input id="password" type="text" ng-model="login_password" placeholder="password" required>
+    			<input id="password" type="password" ng-model="login_password" placeholder="password" required>
 		    </md-input-container>
 
 		    <section layout="row" layout-align="center center">
