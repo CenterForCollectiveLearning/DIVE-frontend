@@ -10,12 +10,13 @@ topojson = require('topojson');
 
 require('metrics-graphics')
 
+// MG.convert.date(x, 'date', '%Y-%b')
+
 angular.module('diveApp.visualization').directive("visualizationPreview", [
   "$window", "$timeout", function($window, $timeout) {
     return {
       restrict: "EA",
       scope: {
-        vizType: "=",
         vizSpec: "=",
         vizData: "=",
         conditional: "=",
@@ -24,27 +25,29 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
       },
       link: function(scope, ele, attrs) {
         var renderTimeout;
-        renderTimeout = void 0;
-        $window.onresize = function() {
-          return scope.$apply();
-        };
+  
+        $window.onresize = function() { scope.$apply(); };
+
         scope.$watch((function() {
-          return angular.element($window)[0].innerWidth;
+          angular.element($window)[0].innerWidth;
         }), function() {
-          return scope.render(scope.vizType, scope.vizSpec, scope.vizData, scope.conditionalData);
+          scope.render(scope.vizSpec, scope.vizData, scope.conditional);
         });
-        scope.$watchCollection("[vizType,vizSpec,vizData,conditional]", (function(newData) {
-          return scope.render(newData[0], newData[1], newData[2], newData[3]);
+
+        scope.$watchCollection("[vizSpec,vizData,conditional]", (function(newData) {
+          scope.render(newData[0], newData[1], newData[2]);
         }), true);
-        return scope.render = function(vizType, vizSpec, vizData, conditional) {
-          if (!(vizData && vizSpec && vizType && conditional)) {
-            return;
-          }
-          if (renderTimeout) {
-            clearTimeout(renderTimeout);
-          }
+
+        return scope.render = function(vizSpec, vizData, conditional) {
+          console.log(vizSpec, vizData, conditional)
+          if (!(vizSpec && vizData && conditional)) { return; }
+          if (renderTimeout) { clearTimeout(renderTimeout); }
+
           return renderTimeout = $timeout(function() {
             var agg, condition, d3PlusTypeMapping, dropdown, getTitle, viz, x, y;
+
+            var vizType = vizSpec.viz_type;
+
             getTitle = function(vizType, vizSpec, conditional) {
               var title;
               title = '';
@@ -64,6 +67,39 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                 dropdown = d3plus.form().container("div#viz-container").data(conditionalData).title("Select Options").id(condition).text(condition).type("drop").title(condition).draw();
               }
             }
+
+            console.log("In directive")
+            if (vizType === 'temporal') {
+
+              var width = $("#viz-container").width();
+              var height = $("#viz-container").height();
+              var timeSeriesMatrix = [];
+              var legend = [];
+
+              for (var k in vizData) {
+                legend.push(k);
+                timeSeriesMatrix.push(MG.convert.date(vizData[k], 'date', '%Y-%b'));
+              }
+              MG.data_graphic({
+                data: timeSeriesMatrix,
+                target: '#viz-container',
+                x_accessor: 'date',
+                y_accessor: 'value',
+                xax_count: 12,
+                y_extended_ticks: true,
+                aggregate_rollover: true,
+                interpolate_tension: 0.9,
+                legend: legend,
+                legend_target: '.legend',
+                width: width,
+                height: height
+              })
+            } else {
+              viz = d3plus.viz().title(getTitle(vizType, vizSpec)).type(d3PlusTypeMapping[vizType]).container("div#viz-container").width($("div#viz-container").width() - 40).margin("20px").height(600).data(vizData).font({
+                family: "Titillium Web"
+              });
+            }
+
             d3PlusTypeMapping = {
               treemap: 'tree_map',
               piechart: 'pie',
@@ -72,12 +108,8 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
               linechart: 'line',
               geomap: 'geo_map'
             };
-            console.log("VIZ DATA", vizData);
-            console.log("VIZ SPEC", vizSpec);
-            console.log("VIZ TYPE", vizType);
-            viz = d3plus.viz().title(getTitle(vizType, vizSpec)).type(d3PlusTypeMapping[vizType]).container("div#viz-container").width($("div#viz-container").width() - 40).margin("20px").height(600).data(vizData).font({
-              family: "Titillium Web"
-            });
+
+            
             if (vizType === "treemap" || vizType === "piechart") {
               return viz.id(vizSpec.groupBy.title.toString()).size("count").draw();
             } else if (vizType === "scatterplot" || vizType === "barchart" || vizType === "linechart") {

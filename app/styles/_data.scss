@@ -1,5 +1,23 @@
 div.data-viewport {
 
+    div.dataset-headers {
+        ul {
+            li {
+                padding: 5px 3px;
+                height: 30px;
+                input {
+                    font-size: 12px;
+                    display: inline-block;
+                }
+                float: left;
+                background: $light-gray;
+                md-select {
+                    margin: 0;
+                }
+            }
+        }
+    }
+
     div.upload-dataset {
         height: 100%;
         margin-left: 300px;
@@ -44,7 +62,13 @@ div.data-viewport {
 
 	div.dataset-preview {
         max-height: 500px;
-        overflow: scroll;
+        overflow: hidden;
+
+        div.data-table {
+            overflow: scroll;
+            padding-top: 8px;
+        }
+
         input, select {
         	@include font;
             font-size: 14px;
@@ -65,6 +89,12 @@ div.data-viewport {
                 tr {
                     td {
                         padding: 0;
+                    }
+
+                    md-select {
+                        margin: 0px;
+                        padding-left: 5px;
+                        padding-bottom: 3px;
                     }
 
                     &.data {

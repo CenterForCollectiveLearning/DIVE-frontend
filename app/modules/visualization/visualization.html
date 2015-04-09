@@ -2,11 +2,7 @@
               md-component-id="left"
               md-is-locked-open="$mdMedia('gt-sm')">
 
-  <section layout="row" layout-align="center center" flex ng-if="!categories">
-    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-  </section>
-
-  <md-content class="filters" flex="15">
+  <md-content class="filters" flex="15" ng-if="categories.length">
     <h3>Filters</h3>
     <md-select ng-model="filters.sortField" class="type-select">
       <md-option ng-value="sf.property" ng-repeat="sf in sortFields">{{ sf.display }}</md-option>
@@ -25,6 +21,9 @@
     <ul class="docs-menu">
       <li>
         <ul>
+          <section layout="vertical" layout-fill layout-align="center center" ng-if="!categories.length" flex>
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </section>
           <li ng-repeat="category in categories">
             <md-button class="md-button-toggle" ng-click="toggle($index)">
                 <div flex layout="row">
@@ -40,14 +39,14 @@
             </md-button>
 
             <ul class="menu-toggle-list" ng-show="isOpen($index)">
-              <!-- Loader -->
               <section layout="row" layout-align="center center" flex>
                 <md-progress-circular md-mode="indeterminate" ng-if="loadingDatasets"></md-progress-circular>
               </section>
               <li ng-repeat="s in category.specs">
-                <md-button class="child" ng-class="{'active' : isChildSelected(s)}" ng-click="selectChild(s)">
+                <md-button class="child" ng-class="{'active' : isChildSelected(s)}" ng-click="selectSpec(s)">
                   <span>
-                    Group all <b>{{s.aggregate.title}}</b> by <b>{{s.groupBy.title}}</b>
+                      Group by <b>{{s.groupBy.title}}</b>
+<!--                     Group all <b>{{s.aggregate.title}}</b> by <b>{{s.groupBy.title}}</b> -->
                   </span>
                 </md-button>
               </li>
@@ -125,16 +124,17 @@
   </ul>
 </div>
  -->
-<div class="viz-viewport viewport" layout-align="center start" flex>
+<div class="viz-viewport viewport" layout-fill layout-align="center start" flex>
 
-  <section layout="row" layout-align="center center" flex ng-if="loading">
+<!--   <section layout="vertical" layout-fill layout-align="center center" flex ng-if="!categories.length">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-  </section>
+  </section> -->
 
-  <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selCondVals"></visualization-preview>
+  <visualization-preview viz-spec="selectedSpec" viz-data="vizData" conditional="selCondVals"></visualization-preview>
 
-  <div id="viz-container" class="card" flex>
-    Visualization here
+  <div id="viz-container" class="card" flex="60">
+  </div>
+  <div class="legend card" flex>
   </div>
 
   <div class="conditionals card" flex>

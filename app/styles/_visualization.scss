@@ -2,6 +2,14 @@
     padding: 10px 16px;
 }
 
+#viz-container {
+    min-height: 500px;
+
+    .mg-main-line {
+        // stroke: #4040e8;
+    }
+}
+
 div.conditionals, #viz-container {
     ul.conditional-options {
         top: 50%;
