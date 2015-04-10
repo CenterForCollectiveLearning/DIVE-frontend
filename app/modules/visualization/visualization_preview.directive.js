@@ -39,9 +39,10 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
         }), true);
 
         return scope.render = function(vizSpec, vizData, conditional) {
-          console.log(vizSpec, vizData, conditional)
           if (!(vizSpec && vizData && conditional)) { return; }
           if (renderTimeout) { clearTimeout(renderTimeout); }
+
+          console.log("VIZDATA", vizData)
 
           return renderTimeout = $timeout(function() {
             var agg, condition, d3PlusTypeMapping, dropdown, getTitle, viz, x, y;
@@ -68,7 +69,6 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
               }
             }
 
-            console.log("In directive")
             if (vizType === 'temporal') {
 
               var width = $("#viz-container").width();
@@ -89,6 +89,8 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                 y_extended_ticks: true,
                 aggregate_rollover: true,
                 interpolate_tension: 0.9,
+                show_rollover_text: true,
+                max_data_size: 10,
                 legend: legend,
                 legend_target: '.legend',
                 width: width,

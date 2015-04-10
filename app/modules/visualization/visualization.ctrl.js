@@ -5,11 +5,15 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
   $scope.columnAttrsByDID = {};
   $scope.categories = [];
 
+  // Loading
+  $scope.loadingViz = true;
+
   // CONDITIONALS
   $scope.condList = [];
   $scope.condTypes = {};
-  $scope.condData = {};
-  $scope.selCondVals = {};
+  $scope.condData = {};  
+  $scope.selConds = {};  // Which are selected to be shown
+  $scope.selCondVals = {};  // Selected values for conditionals
 
   // Sidenav data
   $scope.sortFields = [
@@ -46,7 +50,6 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
 
   // TODO Reconcile this with selectSpec
   $scope.selectChild = function(c) {
-    console.log(c);
     $scope.selectedChild = c;
   }
 
@@ -57,18 +60,19 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
   $scope.selectSpec = function(spec) {
     $scope.selectedChild = spec;
     $scope.selectedSpec = spec;
-    console.log("Selected spec:", spec);
 
     if (spec.aggregate) {
       dID = spec.aggregate.dID;
     } else {
       dID = spec.object.dID;
     }
+    $scope.currentdID = dID;
     if (!$scope.selCondVals[dID]) {
       $scope.selCondVals[dID] = {};
     }
     colAttrs = $scope.columnAttrsByDID[dID];
     colStatsByName = $scope.properties.stats[dID];
+
     $scope.condList = [];
     for (_i = 0, _len = colAttrs.length; _i < _len; _i++) {
       cond = colAttrs[_i];
@@ -77,7 +81,9 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
       if (name in colStatsByName) {
         cond.stats = colStatsByName[name];
       }
-      $scope.condList.push(cond);
+      if (!$scope.isNumeric(cond.type)) {
+        $scope.condList.push(cond);        
+      }
     }
 
     var params = {
@@ -85,6 +91,7 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
       conditional: {}
     };
     VizDataService.promise(params, function(result) {
+      $scope.loadingViz = false;
       $scope.vizData = result.result;
       $scope.vizStats = result.stats;
     });
@@ -101,6 +108,7 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
         'specs': v
       });
     }
+    $scope.selectSpec($scope.categories[0].specs[0]);
   });
 
   DataService.promise(function(datasets) {
@@ -117,7 +125,7 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
   PropertyService.getProperties(function(properties) {
     $scope.properties = properties;
     $scope.overlaps = properties.overlaps;
-    return $scope.hierarchies = properties.hierarchies;
+    $scope.hierarchies = properties.hierarchies;
   });
 
 
@@ -129,60 +137,24 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
     }
   };
   $scope.selectConditional = function(spec) {
-    var high, low, params;
-    if (spec.name in $scope.condData) {
-      delete $scope.condData[spec.name];
-    } else {
-      if ($scope.isNumeric(spec.type)) {
-        // low = parseFloat(Math.floor(spec.stats.min));
-        // high = parseFloat(Math.floor(spec.stats.max));
-        // $scope.condData[spec.name] = {
-        //   step: 1,
-        //   floor: low,
-        //   ceiling: high
-        // };
-        // $scope.selCondVals[$scope.currentdID][spec.name] = {
-        //   type: 'numeric',
-        //   low: low,
-        //   high: high
-        // };
-      } else {
-        ConditionalDataService.promise($scope.currentdID, spec, function(result) {
-          var data;
-          data = result.result.unshift('All');
-          return $scope.condData[spec.name] = result.result;
-        });
-      }
-      params = {
-        type: $scope.selectedType,
-        spec: $scope.selectedSpec,
-        conditional: $scope.selCondVals
-      };
-      VizDataService.promise(params, function(result) {
-        $scope.vizData = result.result;
-        $scope.vizStats = result.stats;
-        return $scope.loading = false;
-      });
-    }
-    return $scope.$broadcast('refreshSlider');
+    ConditionalDataService.promise($scope.currentdID, spec, function(result) {
+      var data = result.result.unshift('All');
+      $scope.condData[spec.name] = result.result;
+    });
+    $scope.refreshVizData();
   };
-  $scope.changedConditional = function(title) {
-    var params;
-    params = {
+
+  $scope.refreshVizData = function() {
+    $scope.loadingViz = true;
+    var params = {
       type: $scope.selectedType,
       spec: $scope.selectedSpec,
       conditional: $scope.selCondVals
     };
-    return VizDataService.promise(params, function(result) {
+    VizDataService.promise(params, function(result) {
       $scope.vizData = result.result;
       $scope.vizStats = result.stats;
-      return $scope.loading = false;
+      $scope.loadingViz = false;
     });
-  };
-  $scope.selectedConditional = function(name) {
-    if (name in $scope.condData) {
-      return true;
-    }
-    return false;
   };
 });

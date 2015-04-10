@@ -2,7 +2,7 @@
               md-component-id="left"
               md-is-locked-open="$mdMedia('gt-sm')">
 
-  <md-content class="filters" flex="15" ng-if="categories.length">
+<!--   <md-content class="filters" flex="15" ng-if="categories.length">
     <h3>Filters</h3>
     <md-select ng-model="filters.sortField" class="type-select">
       <md-option ng-value="sf.property" ng-repeat="sf in sortFields">{{ sf.display }}</md-option>
@@ -12,7 +12,7 @@
     </md-select>
   </md-content>
   <md-content flex role="navigation">
-
+ -->
    
 <!--       <md-radio-group ng-model="filters.sortOrders">
         <md-radio-button ng-repeat="so in sortOrders">{{ so.display }}</md-radio-button>
@@ -124,7 +124,7 @@
   </ul>
 </div>
  -->
-<div class="viz-viewport viewport" layout-fill layout-align="center start" flex>
+<div class="viz-viewport viewport" layout-fill layout="column" layout-align="start center" flex>
 
 <!--   <section layout="vertical" layout-fill layout-align="center center" flex ng-if="!categories.length">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
@@ -132,46 +132,44 @@
 
   <visualization-preview viz-spec="selectedSpec" viz-data="vizData" conditional="selCondVals"></visualization-preview>
 
-  <div id="viz-container" class="card" flex="60">
+  <div class="visualization card" flex="60">
+    <md-progress-linear md-mode="indeterminate" ng-if="loadingViz"></md-progress-linear>
+    <div id="viz-container"></div>
+    <div class="legend"></div>
   </div>
-  <div class="legend card" flex>
-  </div>
 
-  <div class="conditionals card" flex>
-    <div class="title">Conditionals</div>
-    <ul class="conditional-options options">
-      <li class="conditional-option option" ng-repeat="c in condList" ng-click="selectConditional(c)" ng-class="{'selected':selectedConditional(c.name)}">
-        {{c.name}}
-      </li>
-    </ul>
-    <div class="dropdowns">
-      <ul class="dropdowns">
-        <li ng-repeat="(title, data) in condData">
-          <label class="dropdown-label">{{title}}</label>
-
-          <!-- Dropdown for factors -->
-          <select 
-            ng-if="!isNumeric(condTypes[title])" 
-            ng-model="selCondVals[currentdID][title]" 
-            ng-options="d for d in data" 
-            ng-change="changedConditional()" ng-init="selCondVals[currentdID][title]=data[0]">
-          </select>
-
-          <!-- Slider for numeric -->
-          <slider 
-            ng-if="isNumeric(condTypes[title])" 
-            ng-change="changedConditional()"
-            floor="{{ condData[title].floor }}" 
-            ceiling="{{ condData[title].ceiling }}" 
-            step="1" 
-            ng-model="selCondVals[currentdID][title].low"
-            ng-model-range="selCondVals[currentdID][title].high">
-          </slider>
-        </li>
-      </ul>
+  <div class="scroll" flex="40">
+    <div class="conditionals card" flex>
+      <div class="title">Conditionals</div>
+      <md-content>
+        <md-checkbox ng-model="selConds[currentdID][c.name]" ng-repeat="c in condList" ng-value="c.name" ng-change="selectConditional(c)">
+          {{c.name}}
+        </md-checkbox>
+      </md-content>
+  
+      <div class="dropdowns">
+        <ul class="dropdowns">
+          <li ng-repeat="(title, showing) in selConds[currentdID]" layout-align="center start" ng-if="showing">
+            <label class="dropdown-label">{{title}}</label>
+            <md-progress-linear md-mode="indeterminate" ng-if="!condData[title]"></md-progress-linear>
+            <md-select 
+              ng-init="selCondVals[currentdID][title]=condData[title][0]" 
+              ng-if="condData[title]"
+              ng-model="selCondVals[currentdID][title]" 
+              ng-change="refreshVizData()"
+            >
+              <md-option ng-repeat="d in condData[title]">{{d}}</md-option>
+            </md-select>
+  
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-  <div class="configurations card" flex>
-    <div class="title">Configuration</div>
+    <div class="configurations card" flex>
+      <div class="title">Configuration</div>
+    </div>
+    <div class="export card" flex>
+      <div class="title">Export</div>
+    </div>
   </div>
 </div>

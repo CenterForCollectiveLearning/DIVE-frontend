@@ -1,16 +1,47 @@
+.viz-viewport {
+    overflow-y: hidden;
+
+}
+
 .filters {
     padding: 10px 16px;
 }
 
-#viz-container {
-    min-height: 500px;
+.legend {
+    padding: 16px;
+}
 
-    .mg-main-line {
-        // stroke: #4040e8;
+div.scroll {
+    overflow-y: scroll;
+    width: 100%;
+}
+
+div.visualization {
+    width: 100%;
+    #viz-container {
+        width: 100%;
+        min-height: 500px;
+    
+        .mg-main-line {
+            // stroke: $light-gray;
+        }
     }
 }
 
 div.conditionals, #viz-container {
+    width: 100%;
+    md-checkbox {
+        float: left;
+        margin: 3px 10px;
+
+        .md-container {
+            top: 5px;
+        }
+        .md-label {
+            margin-left: 5px;
+        }
+    }
+
     ul.conditional-options {
         top: 50%;
         left: 50%;
@@ -51,20 +82,6 @@ div.conditionals, #viz-container {
             overflow: hidden;
         }
 
-        div.delete-dropdown {
-            width: 12px;
-            height: 12px;
-            float: right;
-            position: relative;
-            bottom: 23px;
-            right: 5px;
-            img {
-                width: 12px;
-                height: 12px;
-                cursor: pointer;
-            }
-        }
-
         li {
             margin-left: 15px;
             // &:nth-child(3n + 1) { margin-left: 0px; }
@@ -76,8 +93,8 @@ div.conditionals, #viz-container {
                 display: block;
             }
 
-            select {
-                width: 200px;
+            md-select {
+                width: 100%;
             }
         }
     }
