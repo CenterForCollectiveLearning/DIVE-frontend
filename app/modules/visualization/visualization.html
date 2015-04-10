@@ -27,7 +27,7 @@
           <li ng-repeat="category in categories">
             <md-button class="md-button-toggle" ng-click="toggle($index)">
                 <div flex layout="row">
-                  {{category.name | capitalize}}
+                  {{category.name | capitalize}} ({{category.specs.length}})
                   <span aria-hidden="true" class="md-toggle-icon"
                   ng-class="{'toggled' : isOpen($index)}">
                   <md-icon md-svg-src="toggle-arrow"></md-icon>
@@ -126,26 +126,22 @@
  -->
 <div class="viz-viewport viewport" layout-fill layout="column" layout-align="start center" flex>
 
-<!--   <section layout="vertical" layout-fill layout-align="center center" flex ng-if="!categories.length">
-    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-  </section> -->
-
   <visualization-preview viz-spec="selectedSpec" viz-data="vizData" conditional="selCondVals"></visualization-preview>
 
   <div class="visualization card" flex="60">
     <md-progress-linear md-mode="indeterminate" ng-if="loadingViz"></md-progress-linear>
     <div id="viz-container"></div>
-    <div class="legend"></div>
+    <div class="legend" layout="row" layout-align="center center"></div>
   </div>
 
   <div class="scroll" flex="40">
     <div class="conditionals card" flex>
       <div class="title">Conditionals</div>
-      <md-content>
-        <md-checkbox ng-model="selConds[currentdID][c.name]" ng-repeat="c in condList" ng-value="c.name" ng-change="selectConditional(c)">
-          {{c.name}}
-        </md-checkbox>
-      </md-content>
+        <div class="checkboxes">
+          <md-checkbox ng-model="selConds[currentdID][c.name]" ng-repeat="c in condList" ng-value="c.name" ng-change="selectConditional(c)">
+            {{c.name}}
+          </md-checkbox>
+        </div>
   
       <div class="dropdowns">
         <ul class="dropdowns">

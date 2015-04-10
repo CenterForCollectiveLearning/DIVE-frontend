@@ -6,7 +6,7 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
   $scope.categories = [];
 
   // Loading
-  $scope.loadingViz = true;
+  $scope.loadingViz = false;
 
   // CONDITIONALS
   $scope.condList = [];
@@ -86,9 +86,11 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
       }
     }
 
+
+    $scope.loadingViz = true;
     var params = {
       spec: spec,
-      conditional: {}
+      conditional: $scope.selCondVals
     };
     VizDataService.promise(params, function(result) {
       $scope.loadingViz = false;
@@ -108,7 +110,7 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
         'specs': v
       });
     }
-    $scope.selectSpec($scope.categories[0].specs[0]);
+    $scope.selectSpec($scope.categories[0].specs[0])
   });
 
   DataService.promise(function(datasets) {

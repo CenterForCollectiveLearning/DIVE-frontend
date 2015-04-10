@@ -2,19 +2,21 @@ angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope,
   $scope.tabs = [
     {
       route: 'project.data',
-      label: 'Manage Datasets'
+      label: 'Datasets'
     }, {
       route: 'project.visualize',
-      label: 'Select Visualizations'
+      label: 'Visualizations'
     }, {
       route: 'project.assemble',
-      label: 'Edit and Export'
-    }, {
-      route: 'project.ontology',
-      label: 'Edit Ontology'
-    }, {
+      label: 'Reports'
+    },
+    // }, {
+    //   route: 'project.ontology',
+    //   label: 'Edit Ontology'
+    // }, {
+    {
       route: 'project.overview',
-      label: 'Project Overview'
+      label: 'Overview'
     }
   ];
   $scope.selectedIndex = 1;

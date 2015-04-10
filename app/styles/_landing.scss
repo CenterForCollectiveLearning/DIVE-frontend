@@ -8,7 +8,7 @@
     }
 }
 
-$top-bar-height: 80px;
+$top-bar-height: 75px;
 div.landing-top {
     position: relative;
     @include card-shadow;
@@ -32,7 +32,7 @@ div.landing-top {
             width: 75px;
             padding-left: 10px;
             padding-right: 15px;
-            padding-top: 15px;
+            padding-top: 12px;
         }
     }
     div.dive {
@@ -45,7 +45,7 @@ div.landing-top {
         div.subtitle {
             cursor: pointer;
             margin-left: 3px;
-            margin-top: 3px;
+            margin-top: -1px;
             // font-family: 'Decima';
             text-transform: uppercase;
             // letter-spacing: 2px;

@@ -1,6 +1,13 @@
 .viz-viewport {
     overflow-y: hidden;
 
+    .card {
+        div.title {
+            font-size: 14px;
+            padding: 10px;
+            height: 40px;
+        }     
+    }
 }
 
 .filters {
@@ -8,7 +15,9 @@
 }
 
 .legend {
-    padding: 16px;
+    margin: 0 auto;
+    padding: 15px 20px;
+    height: 40px;
 }
 
 div.scroll {
@@ -18,6 +27,10 @@ div.scroll {
 
 div.visualization {
     width: 100%;
+    min-height: 540px;
+    md-progress-linear {
+        margin-top: -5px;
+    }
     #viz-container {
         width: 100%;
         min-height: 500px;
@@ -26,60 +39,60 @@ div.visualization {
             // stroke: $light-gray;
         }
     }
+
+    .mg-x-axis text, .mg-y-axis text {
+        font-size: 1.1rem;
+    }
 }
 
-div.conditionals, #viz-container {
-    width: 100%;
-    md-checkbox {
-        float: left;
-        margin: 3px 10px;
 
-        .md-container {
-            top: 5px;
-        }
-        .md-label {
-            margin-left: 5px;
-        }
+md-select-menu {
+    md-content {
+        md-option {
+            height: 30px;
+            div.md-text {
+                font-size: 14px;
+            }
+        } 
     }
+}
 
-    ul.conditional-options {
-        top: 50%;
-        left: 50%;
-        padding-left: 0px;
-        margin-top: 10px;
-        height: auto;
-        background-color: white;
 
-        li.conditional-option {
-            @include background-transition();
-            margin-left: 4px;
+div.conditionals {
+    display: inline-block;
+    width: 100%;
 
-            @include small-caps;
-            text-align: center;
-            display: inline;
-            cursor: pointer;
-            border-radius: 3px;
-            padding: 7px 10px;
-            border: 1px solid $dark-gray;
-            border-bottom-color: #D0D1D5;
-            border-left-color: #DFE0E4;
-            border-right-color: #DFE0E4;
-            border-top-color: #E5E6E9;
+    div.checkboxes {
+        display: inline-block;
+        padding: 6px;
 
-            &.selected {
-                background-color: $ontology-blue;
+        md-checkbox {
+            float: left;
+            margin: 3px 10px;
+
+            .md-container {
+                top: 5px;
+            }
+            .md-label {
+                margin-left: 5px;
+                font-size: 14px;
             }
         }
     }
 
+
     div.dropdowns {
         padding: 0;
         width: auto;
-        margin: 20px 0px;
         border-top: 1px solid #E5E6E9;
+        padding-bottom: 6px;
+        display: block;
 
-        ul {
-            overflow: hidden;
+        md-select {
+            margin: 0;
+            span {
+                font-size: 14px;                
+            }
         }
 
         li {

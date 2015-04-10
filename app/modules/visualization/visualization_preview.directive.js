@@ -69,10 +69,11 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
               }
             }
 
-            if (vizType === 'temporal') {
+            if (vizType === 'time series') {
 
-              var width = $("#viz-container").width();
+              var width = $(".visualization").width();
               var height = $("#viz-container").height();
+
               var timeSeriesMatrix = [];
               var legend = [];
 
@@ -95,6 +96,8 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                 legend_target: '.legend',
                 width: width,
                 height: height
+                // width: width,
+                // height: height
               })
             } else {
               viz = d3plus.viz().title(getTitle(vizType, vizSpec)).type(d3PlusTypeMapping[vizType]).container("div#viz-container").width($("div#viz-container").width() - 40).margin("20px").height(600).data(vizData).font({
