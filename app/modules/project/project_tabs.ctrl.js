@@ -19,7 +19,7 @@ angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope,
       label: 'Overview'
     }
   ];
-  $scope.selectedIndex = 0;
+  $scope.selectedIndex = _.findIndex($scope.tabs, {route: $state.current.name });
   $scope.$watch('selectedIndex', function(current, old) {
     $state.go($scope.tabs[current].route);
   });

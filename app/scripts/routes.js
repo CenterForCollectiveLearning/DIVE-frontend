@@ -27,34 +27,22 @@ angular.module('diveApp.routes', ['ui.router']).config(function($stateProvider, 
     url: '/',
     templateUrl: 'modules/landing/landing.html'
   })
-  .state('landing.create', {
-    url: 'create',
-    data: {
-      'selectedIndex': 0
-    },
-    templateUrl: 'modules/landing/create.html'
-  })
-  .state('landing.projects', {
-    url: 'projects',
-    data: {
-      'selectedIndex': 1
-    },
-    templateUrl: 'modules/landing/projects.html'
-  })
-  .state('landing.reports', {
-    url: 'reports',
-    data: {
-      'selectedIndex': 2
-    },
-    templateUrl: 'modules/landing/reports.html'
-  })
-  .state('landing.about', {
-    url: 'about',
-    data: {
-      'selectedIndex': 3
-    },
-    templateUrl: 'modules/landing/about.html'
-  })
+    .state('landing.create', {
+      url: 'create',
+      templateUrl: 'modules/landing/create.html'
+    })
+    .state('landing.projects', {
+      url: 'projects',
+      templateUrl: 'modules/landing/projects.html'
+    })
+    .state('landing.reports', {
+      url: 'reports',
+      templateUrl: 'modules/landing/reports.html'
+    })
+    .state('landing.about', {
+      url: 'about',
+      templateUrl: 'modules/landing/about.html'
+    })
   .state('embed', {
     url: '/embed/:pID/:sID',
     templateUrl: 'modules/embed/embed.html',
@@ -107,19 +95,7 @@ angular.module('diveApp.routes', ['ui.router']).config(function($stateProvider, 
       }
     }
   })
-  .state('project.ontology', {
-    url: '/ontology',
-    templateUrl: 'modules/property/property.html',
-    controller: 'OntologyEditorCtrl',
-    resolve: {
-      initialData: function(DataService) {
-        return DataService.promise;
-      },
-      propertyService: function(PropertyService) {
-        return PropertyService.getProperties;
-      }
-    }
-  })
+
   .state('project.visualize', {
     url: '/visualize',
     templateUrl: 'modules/visualization/visualization.html',
@@ -146,6 +122,19 @@ angular.module('diveApp.routes', ['ui.router']).config(function($stateProvider, 
       },
       exportedVizSpecService: function(ExportedVizSpecService) {
         return ExportedVizSpecService.promise;
+      }
+    }
+  })
+  .state('project.ontology', {
+    url: '/ontology',
+    templateUrl: 'modules/property/property.html',
+    controller: 'OntologyEditorCtrl',
+    resolve: {
+      initialData: function(DataService) {
+        return DataService.promise;
+      },
+      propertyService: function(PropertyService) {
+        return PropertyService.getProperties;
       }
     }
   });

@@ -5,6 +5,9 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
   $scope.columnAttrsByDID = {};
   $scope.categories = [];
 
+  // Stats
+  $scope.stats = { shown: true }
+
   // Loading
   $scope.loadingViz = false;
 
