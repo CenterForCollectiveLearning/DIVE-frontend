@@ -89,9 +89,9 @@ angular.module("diveApp.data").controller("DataCtrl", function($scope, $rootScop
   ];
 
   $scope.onFileSelect = function($files) {
-    var file, i, _results;
-    i = 0;
-    _results = [];
+    var file;
+    var i = 0;
+    var results = [];
     while (i < $files.length) {
       file = $files[i];
       $scope.upload = $upload.upload({
@@ -110,11 +110,10 @@ angular.module("diveApp.data").controller("DataCtrl", function($scope, $rootScop
           $scope.datasets.push(dataset);
           $scope.dIDs.push(dataset.dID);
         }
-        return console.log($scope.datasets);
       });
-      _results.push(i++);
+      results.push(i++);
     }
-    return _results;
+    return results;
   };
   $scope.removeDataset = function(dID) {
     console.log('Removing dataset, dID:', dID);

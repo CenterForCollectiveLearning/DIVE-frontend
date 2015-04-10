@@ -2,7 +2,7 @@
               md-component-id="left"
               md-is-locked-open="$mdMedia('gt-sm')">
 
-<!--   <md-content class="filters" flex="15" ng-if="categories.length">
+  <md-content class="filters" flex="15" ng-if="categories.length">
     <h3>Filters</h3>
     <md-select ng-model="filters.sortField" class="type-select">
       <md-option ng-value="sf.property" ng-repeat="sf in sortFields">{{ sf.display }}</md-option>
@@ -12,11 +12,11 @@
     </md-select>
   </md-content>
   <md-content flex role="navigation">
- -->
+
    
-<!--       <md-radio-group ng-model="filters.sortOrders">
-        <md-radio-button ng-repeat="so in sortOrders">{{ so.display }}</md-radio-button>
-      </md-radio-group> -->
+  <md-radio-group ng-model="filters.sortOrders">
+    <md-radio-button ng-repeat="so in sortOrders">{{ so.display }}</md-radio-button>
+  </md-radio-group>
 
     <ul class="docs-menu">
       <li>
@@ -49,6 +49,8 @@
 <!--                     Group all <b>{{s.aggregate.title}}</b> by <b>{{s.groupBy.title}}</b> -->
                   </span>
                 </md-button>
+                {{s.stats.count}}
+                {{s.stats.describe}}
               </li>
             </ul>
           </li>
