@@ -8,6 +8,19 @@
             height: 40px;
         }     
     }
+
+
+    md-checkbox {
+        float: left;
+        margin: 3px 10px;
+        .md-container {
+            top: 5px;
+        }
+        .md-label {
+            margin-left: 5px;
+            font-size: 14px;
+        }
+    }
 }
 
 .filters {
@@ -23,6 +36,12 @@
 div.scroll {
     overflow-y: scroll;
     width: 100%;
+}
+
+div.configurations, div.export {
+    section {
+        padding: 8px;
+    }
 }
 
 div.visualization {
@@ -72,18 +91,6 @@ div.conditionals {
         display: inline-block;
         padding: 6px;
 
-        md-checkbox {
-            float: left;
-            margin: 3px 10px;
-
-            .md-container {
-                top: 5px;
-            }
-            .md-label {
-                margin-left: 5px;
-                font-size: 14px;
-            }
-        }
     }
 
 

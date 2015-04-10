@@ -1,3 +1,5 @@
+var _ = require('underscore');
+
 angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope, $state, $rootScope, $stateParams) {
   $scope.tabs = [
     {

@@ -60,7 +60,7 @@ angular.module('diveApp.landing').controller("ProjectListCtrl", function($scope,
     }
   };
   $scope.openProject = function(project) {
-    return $state.go('project.overview', {
+    return $state.go('project.data', {
       formattedUserName: $scope.user.userName,
       formattedProjectTitle: project.formattedTitle
     });

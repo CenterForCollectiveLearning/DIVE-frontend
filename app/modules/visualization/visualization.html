@@ -146,7 +146,7 @@
           </md-checkbox>
         </div>
   
-      <div class="dropdowns">
+      <div class="dropdowns" ng-if="selConds[currentdID]">
         <ul class="dropdowns">
           <li ng-repeat="(title, showing) in selConds[currentdID]" layout-align="center start" ng-if="showing">
             <label class="dropdown-label">{{title}}</label>
@@ -159,16 +159,24 @@
             >
               <md-option ng-repeat="d in condData[title]">{{d}}</md-option>
             </md-select>
-  
           </li>
         </ul>
       </div>
     </div>
     <div class="configurations card" flex>
       <div class="title">Configuration</div>
+      <section layout="row" layout-sm="column" layout-align="center center">
+        <md-checkbox ng-model="config.normalize">Normalize</md-checkbox>
+        <md-checkbox ng-model="config.deseasonalize">De-seasonalize</md-checkbox>
+        <md-checkbox ng-model="config.project">Project</md-checkbox>
+      </section>
     </div>
     <div class="export card" flex>
       <div class="title">Export</div>
-    </div>
+      <section layout="row" layout-sm="column" layout-align="center center">
+        <md-button class="md-light md-raised md-primary md-default-theme">Add to Collection</md-button>
+        <md-button class="md-light md-raised md-primary md-default-theme">Share Interactive</md-button>
+        <md-button class="md-light md-raised md-primary md-default-theme">Save Static File</md-button>
+      </section>
   </div>
 </div>
