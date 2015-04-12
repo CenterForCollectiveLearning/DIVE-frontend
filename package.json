@@ -30,6 +30,7 @@
     "browserify-shim": "^3.8.0",
     "coffee-script": "^1.8.0",
     "coffeeify": "^0.7.0",
+    "connect-modrewrite": "^0.7.11",
     "d3plus": "^1.6.3",
     "gulp": "^3.8.9",
     "gulp-autoprefixer": "^1.0.1",

@@ -138,6 +138,8 @@ angular.module('diveApp.routes', ['ui.router']).config(function($stateProvider, 
       }
     }
   });
+
+  $locationProvider.html5Mode(true);
 });
 
 // ---

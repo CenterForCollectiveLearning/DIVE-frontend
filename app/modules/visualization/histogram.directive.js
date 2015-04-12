@@ -11,6 +11,7 @@ angular.module('diveApp.visualization').directive("histogram", [
         selector: "=",
         title: "=",
         label: "=",
+        selectedValues: "=",
         onClick: "&"
       },
       link: function(scope, ele, attrs) {
@@ -21,14 +22,18 @@ angular.module('diveApp.visualization').directive("histogram", [
         scope.$watch((function() {
           angular.element($window)[0].innerWidth;
         }), function() {
-          scope.render(scope.data, scope.selector, scope.title);
+          scope.render(scope.data, scope.selector, scope.title, scope.selectedValues);
         });
 
-        scope.$watchCollection("[data, selector, title]", (function(newData) {
-          scope.render(newData[0], newData[1], newData[2]);
+        scope.$watchCollection("[data, selector, title, selectedValues]", (function(newData) {
+          scope.render(newData[0], newData[1], newData[2], newData[3]);
         }), true);
 
-        scope.render = function(data, selector, title) {
+        scope.$watch('selectedValues', (function(selectedValues) {
+          scope.render(scope.data, scope.selector, scope.title, selectedValues);
+        }), true);
+
+        scope.render = function(data, selector, title, selectedValues) {
           if (!data) { return; }
           if (renderTimeout) { clearTimeout(renderTimeout); }
 
@@ -37,12 +42,14 @@ angular.module('diveApp.visualization').directive("histogram", [
            var formattedData = []
            for (var k in data) {
              var v = data[k];
-             formattedData.push({'name': k, 'value': v});
+             if (selectedValues[k]) {
+               formattedData.push({'name': k, 'value': v});              
+             }
            }
 
+
            var width = $('div.stats div.content').innerWidth();
-           console.log("WIDTH", width)
-           var height = formattedData.length * 30;
+           var height = Math.max(100, formattedData.length * 30); // $('div.stats div.content').innerHeight();
 
            MG.data_graphic({
             title: title,
@@ -52,6 +59,7 @@ angular.module('diveApp.visualization').directive("histogram", [
             chart_type: 'bar',
             x_accessor: 'value',
             y_accessor: 'name',
+            left: 60,
             width: width,
             height: height,
             animate_on_load: true,

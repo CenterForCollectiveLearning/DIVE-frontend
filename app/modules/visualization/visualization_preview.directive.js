@@ -10,8 +10,6 @@ topojson = require('topojson');
 
 require('metrics-graphics')
 
-// MG.convert.date(x, 'date', '%Y-%b')
-
 angular.module('diveApp.visualization').directive("visualizationPreview", [
   "$window", "$timeout", function($window, $timeout) {
     return {
@@ -38,15 +36,19 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
           scope.render(scope.vizSpec, scope.vizData, scope.conditional, scope.selectedValues);
         });
 
-        scope.$watchCollection("[vizSpec,vizData,conditional, selectedValues]", (function(newData) {
+        // TODO Find a more versatile way to watch object value changes
+        scope.$watch('selectedValues', (function(selectedValues) {
+          scope.render(scope.vizSpec, scope.vizData, scope.conditional, selectedValues);
+        }), true);
+
+        scope.$watchCollection("[vizSpec,vizData,conditional,selectedValues]", (function(newData) {
+          console.log("COLLECTION CHANGED");
           scope.render(newData[0], newData[1], newData[2], newData[3]);
         }), true);
 
-        return scope.render = function(vizSpec, vizData, conditional, selectedValues) {
+        scope.render = function(vizSpec, vizData, conditional, selectedValues) {
           if (!(vizSpec && vizData && conditional && selectedValues)) { return; }
           if (renderTimeout) { clearTimeout(renderTimeout); }
-
-          console.log("VIZDATA", vizData)
 
           return renderTimeout = $timeout(function() {
             var agg, condition, d3PlusTypeMapping, dropdown, getTitle, viz, x, y;
@@ -78,16 +80,24 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
               // Remove d3plus visualization if it exists
               $("div#viz-container svg#d3plus").remove();
 
+              var legend = [];
+              var timeSeriesMatrix = [];
+              for (var k in vizData) {
+                var v = vizData[k];
+                if (selectedValues[k]) {
+                  // TODO MG.convert.date is mutating arguments, but find a better way to deal
+                  try {
+                    var data = MG.convert.date(v, 'date', '%Y-%b');
+                  } catch (e) {
+                    var data = v;
+                  }
+                  legend.push(k);
+                  timeSeriesMatrix.push(data);                                      
+                }
+              }
+
               var width = $("#viz-container").width();
               var height = $("#viz-container").height();
-
-              var timeSeriesMatrix = [];
-              var legend = [];
-
-              for (var k in vizData) {
-                legend.push(k);
-                timeSeriesMatrix.push(MG.convert.date(vizData[k], 'date', '%Y-%b'));
-              }
               MG.data_graphic({
                 data: timeSeriesMatrix,
                 target: '#viz-container',
@@ -103,8 +113,6 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                 legend_target: '.legend',
                 width: width,
                 height: height
-                // width: width,
-                // height: height
               })
             } else {
               var d3PlusTypeMapping = {
@@ -121,15 +129,13 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                 .container("div#viz-container")
                 .width($("#viz-container").width())
                 .margin("8px")
-                .height($("#viz-container").height() - 8)
+                .height($("#viz-container").height())
                 .data(vizData)
                 .font({
                   family: "Titillium Web"
                 });
             }
             
-
-            console.log("IN VIZ DIRECTIVE", vizData)
             if (vizType === 'shares') {
               viz.id(vizSpec.groupBy.title.toString())
               .size("value")

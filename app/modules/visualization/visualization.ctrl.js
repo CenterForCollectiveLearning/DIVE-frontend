@@ -139,29 +139,21 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
       $scope.loadingViz = false;
       $scope.vizData = result.result;
       $scope.vizStats = result.stats;
+      var means = result.stats.means;
 
-     
-      // MG.data_graphic({
-      //     data: _.values($scope.vizStats.means),
-      //     chart_type: 'histogram',
-      //     width: 295,
-      //     height: 150,
-      //     right: 10,
-      //     bins: 50,
-      //     bar_margin: 0,
-      //     target: '.histogram',
-      //     y_extended_ticks: true,
-      //     mouseover: function(d, i) {
-      //         d3.select('#histogram1 svg .mg-active-datapoint')
-      //             .text('Value: ' + d3.round(d.x,2) +  '   Count: ' + d.y);
-      //     }
-      // });
-
+      var selectedValues = {};
+      var sortedMeans = Object.keys(means).sort(function(a,b){return means[b]-means[a]});
+      for (var i=0; i < sortedMeans.length; i++) {
+        var x = sortedMeans[i]
+        if (i < 10) { 
+          selectedValues[x] = true;
+        } else {
+          selectedValues[x] = false;
+        }
+      }
+      $scope.selectedValues = selectedValues;
     });
   }
-
-
-
   $scope.isNumeric = function(type) {
     if (type === "float" || type === "integer") {
       return true;
@@ -188,6 +180,20 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
       $scope.vizData = result.result;
       $scope.vizStats = result.stats;
       $scope.loadingViz = false;
+
+      var means = result.stats.means;
+
+      var selectedValues = {};
+      var sortedMeans = Object.keys(means).sort(function(a,b){return means[b]-means[a]});
+      for (var i=0; i < sortedMeans.length; i++) {
+        var x = sortedMeans[i]
+        if (i < 10) { 
+          selectedValues[x] = true;
+        } else {
+          selectedValues[x] = false;
+        }
+      }
+      $scope.selectedValues = selectedValues;
     });
   };
 });
