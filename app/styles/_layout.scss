@@ -23,8 +23,11 @@ ul, li {
     margin: 0px;
 
     div.title {
-        background: #f2f2f2 !important;
-        color: #616161;
+        // background: #f2f2f2 !important;
+        background: $dark-gray !important;
+        background: #616161;
+        border-radius: 2px;
+        color: white;
         border-bottom: 1px solid #e5e5e5;
         padding: 0 16px;
         align-items: center;

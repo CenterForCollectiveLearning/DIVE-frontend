@@ -22,7 +22,7 @@ angular.module('diveApp.landing').controller("ProjectListCtrl", function($scope,
         if (data['success'] === 1) {
           $scope.loggedIn = true;
           $scope.user = UserService.getCurrentUser();
-          return AllProjectsService.promise($scope.user.userName, function(projects) {
+          AllProjectsService.promise($scope.user.userName, function(projects) {
             return $scope.projects = projects;
           });
         } else {

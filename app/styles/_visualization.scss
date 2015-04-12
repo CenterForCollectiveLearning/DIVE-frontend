@@ -5,8 +5,45 @@
         div.title {
             font-size: 14px;
             padding: 10px;
-            height: 40px;
+            height: 30px;
         }     
+    }
+
+    md-progress-linear {
+      overflow: hidden;
+      height: 10px;
+      max-height: 10px;
+      display: inline;
+    }
+
+    div.stats {
+        overflow-y: scroll;
+        div.content {
+           padding: 8px;                
+        }
+
+       svg.histogram {
+           width: 100%;
+           height: 100%;
+           rect {
+              fill: #4040e8;  
+           }
+
+           text {
+               fill: black;
+               opacity: 0.87;
+               font: 11px 'Titillium Web', Karbon, DIN, Helvetica, 'Sans Serif';
+               text-anchor: end;
+           }
+       }
+
+      .mg-bar-prediction {
+        display: none;
+      }
+
+      .mg-bar-baseline {
+        display: none;
+      }
     }
 
 
@@ -18,10 +55,25 @@
         }
         .md-label {
             margin-left: 5px;
-            font-size: 14px;
+            font-size: 12px;
         }
     }
 }
+
+.filters {
+    md-checkbox {
+        float: left;
+        margin: 3px 10px;
+        .md-container {
+            top: 5px;
+        }
+        .md-label {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+    }
+}
+
 
 .filters {
     padding: 10px 16px;
@@ -46,13 +98,11 @@ div.configurations, div.export {
 
 div.visualization {
     width: 100%;
-    min-height: 540px;
     md-progress-linear {
         margin-top: -5px;
     }
     #viz-container {
         width: 100%;
-        min-height: 500px;
     
         .mg-main-line {
             // stroke: $light-gray;

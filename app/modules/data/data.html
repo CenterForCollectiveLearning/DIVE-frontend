@@ -12,7 +12,7 @@
         </h2>
         <ul ng-if="section.children" class="menu-nested-list">
           <li ng-repeat="c in section.children">
-            <md-button class="child" ng-class="{'active' : isChildSelected(c)}" ng-click="selectChild(c)" ng-if="c.type === 'pane'">
+            <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(c)}" ng-click="selectChild(c)" ng-if="c.type === 'pane'">
               <span>
                 {{c.name}}
               </span>
@@ -22,7 +22,7 @@
       </li>
 
       <li ng-class="{'parentActive' : isSectionSelected(section)}">
-        <md-button class="md-button-toggle" ng-click="toggle('data')">
+        <md-button aria-label="button" class="md-button-toggle" ng-click="toggle('data')">
           <div flex layout="row">
               Inspect Datasets
               <span class="md-toggle-icon" ng-class="{'toggled' : isOpen('data')}">
@@ -38,7 +38,7 @@
             <md-progress-circular md-mode="indeterminate" ></md-progress-circular>
           </section>
           <li ng-repeat="d in datasets">
-            <md-button class="child" ng-class="{'active' : isChildSelected(d)}" ng-click="selectChild(d)">
+            <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(d)}" ng-click="selectChild(d)">
               <span>
                 {{d.title}}
               </span>
@@ -76,7 +76,7 @@
         <md-content>
           <div class="description">Description</div>
           <section layout="row" layout-align="center center" flex>
-            <md-button class="md-light md-raised md-primary md-default-theme" ng-click="addPublicDataset(d)">Add to Project</md-button>
+            <md-button aria-label="button" class="md-light md-raised md-primary md-default-theme" ng-click="addPublicDataset(d)">Add to Project</md-button>
           </section>
           <!-- <div class="menu" ng-class="{active: d.dID==selectedPublicDataset}">
             <div class="button open" ng-click="addPublicDataset(d)">
@@ -143,7 +143,7 @@
         <div class="title">Modify Dataset</div>
         <md-content>
         <section layout="row" layout-align="center center">
-          <md-button class="md-light md-warn md-raised" ng-click="removeDataset(dataset.dID)">Delete Dataset</md-button>
+          <md-button aria-label="button" class="md-light md-warn md-raised" ng-click="removeDataset(dataset.dID)">Delete Dataset</md-button>
         </section>
       </md-content>
       </div>

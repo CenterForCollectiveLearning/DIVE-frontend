@@ -6122,9 +6122,9 @@ md-optgroup {
 md-sidenav {
   box-sizing: border-box;
   position: absolute;
-  width: 304px;
-  min-width: 304px;
-  max-width: 304px;
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
   bottom: 0;
   z-index: 60;
   background-color: white;
@@ -7518,9 +7518,9 @@ code:not(.highlight) {
 .site-sidenav,
 .site-sidenav.md-locked-open-add-active,
 .site-sidenav.md-locked-open {
-  width: 300px;
-  min-width: 300px;
-  max-width: 300px;
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
 }
 .site-sidenav > * {
   min-width: 218px;

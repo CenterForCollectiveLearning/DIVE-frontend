@@ -20,26 +20,30 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
         vizSpec: "=",
         vizData: "=",
         conditional: "=",
+        selectedValues: "=",
         label: "@",
         onClick: "&"
       },
       link: function(scope, ele, attrs) {
         var renderTimeout;
   
-        $window.onresize = function() { scope.$apply(); };
+        $window.onresize = function() { 
+          console.log("Window resizing");
+          scope.$apply(); 
+        };
 
         scope.$watch((function() {
           angular.element($window)[0].innerWidth;
         }), function() {
-          scope.render(scope.vizSpec, scope.vizData, scope.conditional);
+          scope.render(scope.vizSpec, scope.vizData, scope.conditional, scope.selectedValues);
         });
 
-        scope.$watchCollection("[vizSpec,vizData,conditional]", (function(newData) {
-          scope.render(newData[0], newData[1], newData[2]);
+        scope.$watchCollection("[vizSpec,vizData,conditional, selectedValues]", (function(newData) {
+          scope.render(newData[0], newData[1], newData[2], newData[3]);
         }), true);
 
-        return scope.render = function(vizSpec, vizData, conditional) {
-          if (!(vizSpec && vizData && conditional)) { return; }
+        return scope.render = function(vizSpec, vizData, conditional, selectedValues) {
+          if (!(vizSpec && vizData && conditional && selectedValues)) { return; }
           if (renderTimeout) { clearTimeout(renderTimeout); }
 
           console.log("VIZDATA", vizData)
@@ -52,7 +56,7 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
             getTitle = function(vizType, vizSpec, conditional) {
               var title;
               title = '';
-              if (vizType === 'treemap' || vizType === 'piechart') {
+              if (vizType === 'shares') {
                 title += 'Group all ' + vizSpec.aggregate.title + ' by ' + vizSpec.groupBy.title.toString();
                 if (vizSpec.condition.title) {
                   title += ' given a ' + vizSpec.condition.title.toString();
@@ -71,7 +75,10 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
 
             if (vizType === 'time series') {
 
-              var width = $(".visualization").width();
+              // Remove d3plus visualization if it exists
+              $("div#viz-container svg#d3plus").remove();
+
+              var width = $("#viz-container").width();
               var height = $("#viz-container").height();
 
               var timeSeriesMatrix = [];
@@ -100,23 +107,33 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                 // height: height
               })
             } else {
-              viz = d3plus.viz().title(getTitle(vizType, vizSpec)).type(d3PlusTypeMapping[vizType]).container("div#viz-container").width($("div#viz-container").width() - 40).margin("20px").height(600).data(vizData).font({
-                family: "Titillium Web"
-              });
+              var d3PlusTypeMapping = {
+                shares: 'tree_map',
+                piechart: 'pie',
+                barchart: 'bar',
+                scatterplot: 'scatter',
+                linechart: 'line',
+                geomap: 'geo_map'
+              };
+              viz = d3plus.viz()
+                // .title(getTitle(vizType, vizSpec))
+                .type(d3PlusTypeMapping[vizType])
+                .container("div#viz-container")
+                .width($("#viz-container").width())
+                .margin("8px")
+                .height($("#viz-container").height() - 8)
+                .data(vizData)
+                .font({
+                  family: "Titillium Web"
+                });
             }
-
-            d3PlusTypeMapping = {
-              treemap: 'tree_map',
-              piechart: 'pie',
-              barchart: 'bar',
-              scatterplot: 'scatter',
-              linechart: 'line',
-              geomap: 'geo_map'
-            };
-
             
-            if (vizType === "treemap" || vizType === "piechart") {
-              return viz.id(vizSpec.groupBy.title.toString()).size("count").draw();
+
+            console.log("IN VIZ DIRECTIVE", vizData)
+            if (vizType === 'shares') {
+              viz.id(vizSpec.groupBy.title.toString())
+              .size("value")
+              .draw();
             } else if (vizType === "scatterplot" || vizType === "barchart" || vizType === "linechart") {
               x = vizSpec.x.title;
               agg = vizSpec.aggregation;

@@ -8,7 +8,7 @@
     }
 }
 
-$top-bar-height: 75px;
+$top-bar-height: 55px;
 div.landing-top {
     position: relative;
     @include card-shadow;
@@ -29,7 +29,7 @@ div.landing-top {
 
         img {
             float: left;
-            width: 75px;
+            width: 60px;
             padding-left: 10px;
             padding-right: 15px;
             padding-top: 12px;
@@ -39,17 +39,17 @@ div.landing-top {
         display: inline-block;
         div.title {
             cursor: pointer;
-            font-size: 36px;
+            font-size: 28px;
         }
 
         div.subtitle {
             cursor: pointer;
-            margin-left: 3px;
-            margin-top: -1px;
+            margin-left: 1px;
+            margin-top: -5px;
             // font-family: 'Decima';
             text-transform: uppercase;
             // letter-spacing: 2px;
-            font-size: 14px;
+            font-size: 12px;
         }
     }
 

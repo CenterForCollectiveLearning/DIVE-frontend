@@ -13,7 +13,7 @@
 		    </md-input-container>
 
 		    <section layout="row" layout-align="center center">
-		    	<md-button class="md-light md-raised" ng-click="loginUser(login_userName, login_password)">Login</md-button>
+		    	<md-button aria-label="button" class="md-light md-raised" ng-click="loginUser(login_userName, login_password)">Login</md-button>
 		    </section>
 
 			<label ng-if='loginErr'>**Invalid username and/or password.</label>
@@ -37,7 +37,9 @@
     			<input id="password" type="password" ng-model="reg_password" placeholder="password" required ng-enter='registerUser(reg_userName, reg_displayName, reg_password)'>
 		    </md-input-container>
 
-		    <md-button class="md-light md-raised" ng-click='registerUser(reg_userName, reg_displayName, reg_password)'>Login</md-button>
+		    <section layout="row" layout-align="center center">
+		    	<md-button aria-label="button" class="md-light md-raised" ng-click='registerUser(reg_userName, reg_displayName, reg_password)'>Register</md-button>
+		    </section>
 			<label ng-if='regErr'>**Username must be unique and all fields are required.</label>
 		</form>
 	</section>
@@ -50,8 +52,8 @@
     				<div class="description">{{project.description}}</div>
 	    		</md-content>
 				<section layout="row" layout-align="center center">
-					<md-button class="md-light md-raised md-primary" ng-click="openProject(project)">Open</md-button>
-					<md-button class="md-light md-raised md-warn" ng-click="removeProject(project, $index)">Delete</md-button>
+					<md-button aria-label="button" class="md-light md-raised md-primary" ng-click="openProject(project)">Open</md-button>
+					<md-button aria-label="button" class="md-light md-raised md-warn" ng-click="removeProject(project, $index)">Delete</md-button>
 				</section>
 			</li>
 		</ul>

@@ -3,7 +3,7 @@
               md-is-locked-open="$mdMedia('gt-sm')">
 
   <md-content class="filters" flex="15" ng-if="categories.length">
-    <h3>Filters</h3>
+<!--     <h3>Filters</h3> -->
 <!--     <md-select ng-model="filters.sortField" class="type-select">
       <md-option ng-value="sf.property" ng-repeat="sf in sortFields">{{ sf.display }}</md-option>
     </md-select>
@@ -26,7 +26,7 @@
             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
           </section>
           <li ng-repeat="category in categories">
-            <md-button class="md-button-toggle" ng-click="toggle($index)">
+            <md-button aria-label="button" class="md-button-toggle" ng-click="toggle($index)">
                 <div flex layout="row">
                   {{category.name | capitalize}} ({{category.specs.length}})
                   <span aria-hidden="true" class="md-toggle-icon"
@@ -44,8 +44,8 @@
                 <md-progress-circular md-mode="indeterminate" ng-if="loadingDatasets"></md-progress-circular>
               </section>
               <li ng-repeat="s in category.specs">
-                <md-button class="child" ng-class="{'active' : isChildSelected(s)}" ng-click="selectSpec(s)">
-                  <span ng-if="s.viz_type === 'time series'">
+                <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(s)}" ng-click="selectSpec(s)">
+                  <span ng-if="s.viz_type === 'time series' || s.viz_type === 'shares'">
                       Group by <b>{{s.groupBy.title}}</b>
                   </span>
                 </md-button>
@@ -61,80 +61,41 @@
   </md-content>
 </md-sidenav>
 
-<!-- <div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
-  <div class="pane-title">
-    Visualization Types
-  </div>
-  <ul class="pane-items">
-    <li ng-repeat="type in types" class="dataset" ng-click="selectType($index)" ng-class="{'selected':$index==selectedTypeIndex}">
-      <span class="vertical-center title">{{type.name | capitalize}}</span>
-      <span class="count">{{type.length}}</span>
-      <div class="right">
-        <img ng-src="/assets/images/{{type.icon}}" />
-      </div>      
-    </li>
-  </ul>
-</div> -->
-<!-- 
-<div class="right-pane viz-selection" ng-class="{'closed': rightClosed}" maxheight>
-  <div class="pane-title">
-    Visualization Specifications
-  </div>
-  <div class="filter fixed">
-    Filter
-  </div>
-  <div class="choose-stats fixed">
-    Stats<br>
-    <span ng-repeat="stat in availableStats[selectedType]">
-      <input ng-click="toggleStat(stat)" type='checkbox'>{{stat.name}}<br></span>
-  </div>
-  <div class="sort fixed">
-    Sorting
-    <select ng-options="sorting.property as sorting.display for sorting in sortings" ng-model="selectedSorting" ng-change='sortSpecs()'></select>
-    <select ng-options="sortOrder.property as sortOrder.display for sortOrder in sortOrders" ng-model="selectedSortOrder" ng-change='sortSpecs()'></select>
-  </div>
-  <ul class="pane-items">
-    <li ng-repeat="spec in specs" ng-click="selectSpec($index);" ng-class="{'selected':$index==selectedSpecIndex, 'chosen':spec.chosen==true, 'rejected': spec.chosen==false}">
-      <div ng-if="selectedType=='treemap' || selectedType=='geomap' || selectedType=='piechart'">
-        <div>Group all <b>{{spec.aggregate.title}}</b></div>
-        <div>by <b>{{spec.groupBy.title}}</b></div>
-      </div>
-      <div ng-if="selectedType=='scatterplot' || selectedType=='linechart' || selectedType=='barchart'">
-        <div ng-if="spec.aggregation">Total number by</div>
-        <div><b>{{spec.x.title}}</b></div> 
-        <div ng-if="!spec.aggregation">vs. <b>{{spec.y.title}}</b></div>
-      </div>
-      
-      <div class="stats">
-        <div>Number of elements: <b>{{ ($index == selectedSpecIndex ? vizStats.count : spec.stats.count )}}</b></div>
-        <div class="extra-stats" ng-if="$index==selectedSpecIndex">
-          <span ng-repeat="statType in selectedStats">
-            <br><div>{{statType.name}}</div>
-            <div ng-repeat="(stat, val) in vizStats[statType.val]">{{stat}}: {{val | number : 2}}</div>
-          </span>
+<div class="viz-viewport viewport" layout-fill layout="column" layout-align="starter" flex>
+  <visualization-preview viz-spec="selectedSpec" viz-data="vizData" conditional="selCondVals" selected-values="selectedValues"></visualization-preview>
+  <div class="visualization" flex="60" layout="row">
+    <div class="left-side card" flex="70" layout="column">
+      <md-progress-linear md-mode="indeterminate" ng-if="loadingViz"></md-progress-linear flex>
+      <div id="viz-container" flex></div>
+      <div class="legend" ng-if="selectedSpec.viz_type === 'time series'" layout="row" layout-align="center center"></div>
+    </div>
+    <div class="stats card" flex="30">
+      <div class="title">Statistics</div>
+      <div class="content">
+        <svg class="histogram" id="means-histogram"></svg>
+        <histogram data="vizStats.means" selector="'#means-histogram'" title="'Means'"></histogram>
+        <svg class="histogram" id="stds-histogram"></svg>
+        <histogram data="vizStats.stds" selector="'#stds-histogram'" title="'Standard Deviations'"></histogram>
+
+        <div class="checkboxes">
+          <md-checkbox ng-select="selectedValues[k]" ng-repeat="(k, v) in vizStats.means" ng-value="k">{{k}}</md-checkbox>
         </div>
       </div>
-
-      <div class="choose" ng-if="$index==selectedSpecIndex">
-        <div class="select" ng-click="chooseSpec($index); $event.stopPropagation();">
-          <img src="/assets/images/check.svg" />
+     <!--  <div>
+        Means
+        <div class="histogram">
         </div>
-        <div class="reject" ng-click="rejectSpec($index); $event.stopPropagation();">
-          <img src="/assets/images/cross.svg" />
+        <div ng-repeat="(k, v) in vizStats.means">
+          <md-checkbox>{{k}}</md-checkbox>
+          {{v}}
         </div>
-      </div>
-    </li>
-  </ul>
-</div>
- -->
-<div class="viz-viewport viewport" layout-fill layout="column" layout-align="start center" flex>
-
-  <visualization-preview viz-spec="selectedSpec" viz-data="vizData" conditional="selCondVals"></visualization-preview>
-
-  <div class="visualization card" flex="60">
-    <md-progress-linear md-mode="indeterminate" ng-if="loadingViz"></md-progress-linear>
-    <div id="viz-container"></div>
-    <div class="legend" layout="row" layout-align="center center"></div>
+        Standard Deviation
+        <div ng-repeat="(k, v) in vizStats.stds">
+          <md-checkbox>{{k}}</md-checkbox>
+          {{v}}
+        </div>
+      </div> -->
+    </div>
   </div>
 
   <div class="scroll" flex="40">
@@ -163,6 +124,7 @@
         </ul>
       </div>
     </div>
+
     <div class="configurations card" flex>
       <div class="title">Configuration</div>
       <section layout="row" layout-sm="column" layout-align="center center">
@@ -174,9 +136,9 @@
     <div class="export card" flex>
       <div class="title">Export</div>
       <section layout="row" layout-sm="column" layout-align="center center">
-        <md-button class="md-light md-raised md-primary md-default-theme">Add to Collection</md-button>
-        <md-button class="md-light md-raised md-primary md-default-theme">Share Interactive</md-button>
-        <md-button class="md-light md-raised md-primary md-default-theme">Save Static File</md-button>
+        <md-button aria-label="button" class="md-light md-raised md-primary md-default-theme">Add to Collection</md-button>
+        <md-button aria-label="button" class="md-light md-raised md-primary md-default-theme">Share Interactive</md-button>
+        <md-button aria-label="button" class="md-light md-raised md-primary md-default-theme">Save Static File</md-button>
       </section>
   </div>
 </div>
