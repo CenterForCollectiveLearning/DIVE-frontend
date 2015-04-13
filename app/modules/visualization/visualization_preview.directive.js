@@ -42,7 +42,6 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
         }), true);
 
         scope.$watchCollection("[vizSpec,vizData,conditional,selectedValues]", (function(newData) {
-          console.log("COLLECTION CHANGED");
           scope.render(newData[0], newData[1], newData[2], newData[3]);
         }), true);
 
@@ -144,7 +143,6 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
               x = vizSpec.x.title;
               agg = vizSpec.aggregation;
               if (agg) {
-                console.log(x);
                 viz.x(x).y("count");
                 if (vizSpec.x.type === "datetime") {
                   viz.x(function(d) {

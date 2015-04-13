@@ -16,8 +16,6 @@
       display: inline;
     }
 
-   
-
 
     md-checkbox {
         float: left;
@@ -180,6 +178,23 @@ md-sidenav {
         padding-left: 60px;
         font-size: 12px;
     }
+
+    span.icons {
+        margin-right: 5px;
+        div.icon {
+            width: 25px;
+            height: 25px;
+            border: 1px solid rgba(158, 158, 158, 0.2);
+            border-radius: 2px;
+            margin-left: 3px;
+            padding: 2px;
+
+            img {
+                opacity: 0.6;
+                width: 20px;
+            }
+        }
+    }
 }
 
 md-select-menu {
@@ -201,7 +216,37 @@ div.export {
     }
 }
 
-div.conditionals {
+ul.dropdowns {
+    padding: 0;
+    width: auto;
+    border-top: 1px solid #E5E6E9;
+    padding-bottom: 6px;
+    display: block;
+
+    md-select {
+        margin: 0;
+        span {
+            font-size: 14px;                
+        }
+    }
+
+    li {
+        margin-left: 15px;
+        width: 200px;
+        float: left;
+        label.dropdown-label {
+            @include small-caps;
+            text-align: center;
+            display: block;
+        }
+
+        md-select {
+            width: 100%;
+        }
+    }
+}
+
+div.conditionals, div.parameters {
     display: inline-block;
     width: 100%;
 
@@ -209,37 +254,5 @@ div.conditionals {
         display: inline-block;
         padding: 6px;
 
-    }
-
-
-    div.dropdowns {
-        padding: 0;
-        width: auto;
-        border-top: 1px solid #E5E6E9;
-        padding-bottom: 6px;
-        display: block;
-
-        md-select {
-            margin: 0;
-            span {
-                font-size: 14px;                
-            }
-        }
-
-        li {
-            margin-left: 15px;
-            // &:nth-child(3n + 1) { margin-left: 0px; }
-            width: 200px;
-            float: left;
-            label.dropdown-label {
-                @include small-caps;
-                text-align: center;
-                display: block;
-            }
-
-            md-select {
-                width: 100%;
-            }
-        }
     }
 }

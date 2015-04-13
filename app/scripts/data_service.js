@@ -176,7 +176,6 @@ angular.module('diveApp.services').service("SpecificationService", function($htt
           pID: $rootScope.pID
         }
       }).success(function(data) {
-        console.log("[DATA] specifications:", data);
         return callback(data);
       });
     }

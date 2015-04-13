@@ -6,6 +6,15 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
   $scope.columnAttrsByDID = {};
   $scope.categories = [];
 
+  $scope.icons = {
+    'shares': {
+      treemap: 'treemap.svg',
+    },
+    'time series': {
+      linechart: 'linechart.svg'
+    }
+  };
+
   // Stats
   $scope.stats = { shown: false }
 
@@ -22,6 +31,10 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
   // CONFIG
   $scope.config = {};
   $scope.selectedValues = {};
+  $scope.selectedParameters = {
+    x: '',
+    y: ''
+  }
 
   DataService.promise(function(datasets) {
     var d, dID, _i, _len, _results;
@@ -103,7 +116,6 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
     $scope.selectedChild = spec;
     $scope.selectedSpec = spec;
 
-    console.log("In selectSpec", spec)
     if (spec.aggregate) {
       dID = spec.aggregate.dID;
     } else {
@@ -129,6 +141,19 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
       }
     }
 
+    // Get X and Y and group parameters for comparisons
+    if (spec.viz_type === 'comparison') {
+      var params = {
+        dID: $scope.currentdID,
+        name: spec.groupBy.title
+      }
+      ConditionalDataService.promise($scope.currentdID, params, function(result) {
+        $scope.selectedParameters.x = result.result[0];
+        $scope.selectedParameters.y = result.result[1];
+        $scope.parametersData = result.result;
+        $scope.condData[spec.groupBy.title] = result.result;
+      });
+    }
 
     $scope.loadingViz = true;
     var params = {
@@ -163,7 +188,7 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
   };
   $scope.selectConditional = function(spec) {
     ConditionalDataService.promise($scope.currentdID, spec, function(result) {
-      var data = result.result.unshift('All');
+      result.result.unshift('All')
       $scope.condData[spec.name] = result.result;
     });
     $scope.refreshVizData();

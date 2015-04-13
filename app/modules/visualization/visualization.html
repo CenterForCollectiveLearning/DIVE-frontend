@@ -29,6 +29,11 @@
             <md-button aria-label="button" class="md-button-toggle" ng-click="toggle($index)">
                 <div flex layout="row">
                   {{category.name | capitalize}} ({{category.specs.length}})
+                   <span class="right icons" layout="row" layout-align="end center" flex>
+                    <div class="icon md-whiteframe-z1" ng-repeat="(type, url) in icons[category.name]">
+                      <img ng-src="assets/images/{{url}}" />
+                    </div>
+                  </span>
                   <span aria-hidden="true" class="md-toggle-icon"
                   ng-class="{'toggled' : isOpen($index)}">
                   <md-icon md-svg-src="toggle-arrow"></md-icon>
@@ -47,6 +52,9 @@
                 <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(s)}" ng-click="selectSpec(s)">
                   <span ng-if="s.viz_type === 'time series' || s.viz_type === 'shares'">
                       Group by <b>{{s.groupBy.title}}</b>
+                  </span>
+                  <span ng-if="s.viz_type === 'comparison'">
+                      Compare <b>{{s.groupBy.title}}</b>
                   </span>
                 </md-button>
                 <div class="stats" ng-if="stats.shown">
@@ -85,6 +93,44 @@
   </div>
 
   <div class="scroll" flex="40">
+    <div class="parameters card" ng-if="selectedSpec.viz_type === 'comparison'" flex>
+      <div class="title">Parameters</div>
+      {{selectedParameters}}
+      {{parametersData}}
+      <ul class="dropdowns">
+        <li>
+          <label class="dropdown-label">X Variable</label>
+          <md-select
+            ng-if="parametersData"
+            ng-model="selectedParameters.x"
+            ng-change="refreshVizData()"
+          >
+            <md-option ng-repeat="p in parametersData">{{p}}</md-option>
+          </md-select>
+        </li>
+        <li>
+          <label class="dropdown-label">Y Variable</label>
+          <md-select 
+            ng-if="parametersData"
+            ng-model="selectedParameters.y" 
+            ng-change="refreshVizData()"
+          >
+            <md-option ng-repeat="p in parametersData">{{p}}</md-option>
+          </md-select>
+        </li>
+        <li>
+          <label class="dropdown-label">Group By</label>
+          <md-select 
+            ng-if="condList"
+            ng-model="parameters.groupBy" 
+            ng-change="refreshVizData()"
+          >
+            <md-option ng-repeat="c in condList">{{c.name}}</md-option>
+          </md-select>
+        </li>
+      </ul>
+    </div>
+
     <div class="conditionals card" flex>
       <div class="title">Conditionals</div>
         <div class="checkboxes">
