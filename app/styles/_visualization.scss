@@ -1,5 +1,6 @@
 .viz-viewport {
     overflow-y: hidden;
+    max-height: 100%;
 
     .card {
         div.title {
@@ -68,6 +69,7 @@ div.configurations, div.export {
 
 div.visualization {
     width: 100%;
+    max-height: 600px;
     md-progress-linear {
         margin-top: -10px;
     }
@@ -139,6 +141,8 @@ div.visualization {
     }
 
     div.stats {
+        border-left: none;
+        border-radius: 0px 3px 3px 0;
         overflow-y: scroll;
         div.content {
            padding: 8px;                
@@ -197,7 +201,16 @@ md-sidenav {
     }
 }
 
+md-select-menu-container {
+    &.md-active {
+        md-select-menu {
+            max-height: 100px;
+        }
+    }
+}
+
 md-select-menu {
+    max-height: 100px;
     md-content {
         md-option {
             height: 30px;

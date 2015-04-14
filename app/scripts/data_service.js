@@ -32,7 +32,8 @@ angular.module('diveApp.services').service("ProjectIDService", function($http, $
           formattedProjectTitle: formattedProjectTitle
         }
       }).success(function(pID) {
-        return $rootScope.pID = pID;
+        console.log("Result of ProjectIdService", pID)
+        $rootScope.pID = pID;
       });
     }
   };
@@ -54,6 +55,7 @@ angular.module('diveApp.services').service("ProjectService", function($http, $st
 angular.module('diveApp.services').service("DataService", function($http, $rootScope, API_URL) {
   return {
     promise: function(callback) {
+      console.log("Calling DataService, pID:", $rootScope.pID)      
       return $http.get(API_URL + "/api/data", {
         params: {
           pID: $rootScope.pID,
@@ -147,7 +149,7 @@ angular.module('diveApp.services').factory("UserService", function($http, $rootS
 angular.module('diveApp.services').factory("PropertyService", function($http, $rootScope, API_URL) {
   return {
     getProperties: function(callback) {
-      return $http.get(API_URL + "/api/property", {
+      $http.get(API_URL + "/api/property", {
         params: {
           pID: $rootScope.pID
         }

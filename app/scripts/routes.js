@@ -63,9 +63,9 @@ angular.module('diveApp.routes', ['ui.router']).config(function($stateProvider, 
     controller: function($scope, $rootScope, $state, $stateParams, $window, UserService, ProjectService, projectID) {
       $scope.projectTitle = $stateParams.formattedProjectTitle.split('-').join(' ');
       $scope.user = UserService.getCurrentUser();
-      return $scope.logoutUser = function() {
+      $scope.logoutUser = function() {
         UserService.logoutUser();
-        return $state.go('landing');
+        $state.go('landing');
       };
     },
     resolve: {

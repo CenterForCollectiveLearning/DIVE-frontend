@@ -37,6 +37,7 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
   }
 
   DataService.promise(function(datasets) {
+    console.log("DataService", datasets)
     var d, dID, _i, _len, _results;
     $scope.datasets = datasets;
     _results = [];
@@ -221,4 +222,24 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
       $scope.selectedValues = selectedValues;
     });
   };
+
+   $scope.save = function(format) {
+     var svg, svg_xml, tmp;
+     tmp = document.getElementById("viz-container");
+     svg = tmp.getElementsByTagName("svg")[0];
+     svg_xml = (new XMLSerializer).serializeToString(svg);
+     return $http.post(API_URL + "/api/render_svg", {
+       data: JSON.stringify({
+         format: format,
+         svg: svg_xml
+       })
+     }).success(function(data) {
+       var file;
+       file = new Blob([data], {
+         type: 'application/' + format
+       });
+       return saveAs(file, 'visualization.' + format);
+     });
+   };
+
 });

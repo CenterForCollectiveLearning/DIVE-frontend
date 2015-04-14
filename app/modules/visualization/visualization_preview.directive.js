@@ -83,10 +83,18 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
               var timeSeriesMatrix = [];
               for (var k in vizData) {
                 var v = vizData[k];
+
+                console.log(v[0], v[0].date)
+                if (v[0].date.indexOf('-') > -1) {
+                  var dateSelector = '%Y-%b';                  
+                } else {
+                  var dateSelector = '%Y';                  
+                }
+
                 if (selectedValues[k]) {
                   // TODO MG.convert.date is mutating arguments, but find a better way to deal
                   try {
-                    var data = MG.convert.date(v, 'date', '%Y-%b');
+                    var data = MG.convert.date(v, 'date', dateSelector);
                   } catch (e) {
                     var data = v;
                   }
@@ -105,6 +113,7 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                 xax_count: 12,
                 y_extended_ticks: true,
                 aggregate_rollover: true,
+                // missing_is_hidden: true,
                 interpolate_tension: 0.9,
                 show_rollover_text: true,
                 max_data_size: 10,

@@ -8,14 +8,11 @@ angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope,
     }, {
       route: 'project.visualize',
       label: 'Visualizations'
-    }, {
-      route: 'project.assemble',
-      label: 'Reports'
-    },
+    }
     // }, {
-    //   route: 'project.ontology',
-    //   label: 'Edit Ontology'
-    // }, {
+    //   route: 'project.assemble',
+    //   label: 'Reports'
+    // },
     {
       route: 'project.overview',
       label: 'Overview'

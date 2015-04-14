@@ -12,11 +12,11 @@ angular.module("diveApp.data").controller("DataCtrl", function($scope, $rootScop
     $scope.loadingDatasets = false;
   });
 
-  PublicDataService.promise('GET', {
-    sample: true
-  }, function(publicDatasets) {
-    $scope.publicDatasets = publicDatasets;
-  });
+  // PublicDataService.promise('GET', {
+  //   sample: true
+  // }, function(publicDatasets) {
+  //   $scope.publicDatasets = publicDatasets;
+  // });
 
   $scope.sections = [
     {

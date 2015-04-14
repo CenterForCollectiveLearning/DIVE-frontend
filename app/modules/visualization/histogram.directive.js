@@ -59,7 +59,7 @@ angular.module('diveApp.visualization').directive("histogram", [
             chart_type: 'bar',
             x_accessor: 'value',
             y_accessor: 'name',
-            left: 60,
+            left: 150,
             width: width,
             height: height,
             animate_on_load: true,
