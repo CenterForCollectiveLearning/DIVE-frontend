@@ -187,6 +187,8 @@ angular.module('diveApp.services').service("SpecificationService", function($htt
 angular.module('diveApp.services').service("ConditionalDataService", function($http, $rootScope, API_URL) {
   return {
     promise: function(dID, spec, callback) {
+      console.log("GETTING CONDTIONAL DATA WITH SPEC", spec);
+      delete spec.stats;
       return $http.get(API_URL + "/api/conditional_data", {
         params: {
           pID: $rootScope.pID,

@@ -157,6 +157,8 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
     }
 
     $scope.loadingViz = true;
+
+    delete spec.stats;
     var params = {
       spec: spec,
       conditional: $scope.selCondVals
@@ -197,9 +199,12 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
 
   $scope.refreshVizData = function() {
     $scope.loadingViz = true;
+
+    var spec = $scope.selectedSpec;
+    delete spec.stats;
     var params = {
       type: $scope.selectedType,
-      spec: $scope.selectedSpec,
+      spec: spec,
       conditional: $scope.selCondVals
     };
     VizDataService.promise(params, function(result) {
