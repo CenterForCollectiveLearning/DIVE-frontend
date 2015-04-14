@@ -84,44 +84,58 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
               for (var k in vizData) {
                 var v = vizData[k];
 
-                console.log(v[0], v[0].date)
-                if (v[0].date.indexOf('-') > -1) {
-                  var dateSelector = '%Y-%b';                  
-                } else {
-                  var dateSelector = '%Y';                  
-                }
-
-                if (selectedValues[k]) {
-                  // TODO MG.convert.date is mutating arguments, but find a better way to deal
-                  try {
-                    var data = MG.convert.date(v, 'date', dateSelector);
-                  } catch (e) {
-                    var data = v;
+                if (v.length > 0) {
+                  if (v[0].date.indexOf('-') > -1) {
+                    var dateSelector = '%Y-%b';                  
+                  } else {
+                    var dateSelector = '%Y';                  
                   }
-                  legend.push(k);
-                  timeSeriesMatrix.push(data);                                      
+
+                  if (selectedValues[k]) {
+                    // TODO MG.convert.date is mutating arguments, but find a better way to deal
+                    try {
+                      var data = MG.convert.date(v, 'date', dateSelector);
+                    } catch (e) {
+                      var data = v;
+                    }
+                    legend.push(k);
+                    timeSeriesMatrix.push(data);                          
+                  }              
                 }
               }
-
               var width = $("#viz-container").width();
               var height = $("#viz-container").height();
-              MG.data_graphic({
-                data: timeSeriesMatrix,
-                target: '#viz-container',
-                x_accessor: 'date',
-                y_accessor: 'value',
-                xax_count: 12,
-                y_extended_ticks: true,
-                aggregate_rollover: true,
-                // missing_is_hidden: true,
-                interpolate_tension: 0.9,
-                show_rollover_text: true,
-                max_data_size: 10,
-                legend: legend,
-                legend_target: '.legend',
-                width: width,
-                height: height
-              })
+
+              var show_missing_background = false;
+              if (timeSeriesMatrix.length == 0) {
+                MG.data_graphic({
+                  target: '#viz-container',
+                  chart_type: 'missing-data',
+                  missing_text: 'No data available',
+                  width: width,
+                  height: height
+                })
+              } else {
+                
+                MG.data_graphic({
+                  data: timeSeriesMatrix,
+                  target: '#viz-container',
+                  show_missing_background: show_missing_background,
+                  x_accessor: 'date',
+                  y_accessor: 'value',
+                  xax_count: 12,
+                  y_extended_ticks: true,
+                  aggregate_rollover: true,
+                  // missing_is_hidden: true,
+                  interpolate_tension: 0.9,
+                  show_rollover_text: true,
+                  max_data_size: 10,
+                  legend: legend,
+                  legend_target: '.legend',
+                  width: width,
+                  height: height
+                })
+              }
             } else {
               var d3PlusTypeMapping = {
                 shares: 'tree_map',

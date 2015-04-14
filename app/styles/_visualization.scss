@@ -201,10 +201,13 @@ md-sidenav {
     }
 }
 
-md-select-menu-container {
+.md-select-menu-container {
+    overflow-y: hidden;
+    max-height: 250px;
     &.md-active {
         md-select-menu {
-            max-height: 100px;
+            overflow-y: hidden;
+            
         }
     }
 }
