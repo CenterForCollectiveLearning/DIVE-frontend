@@ -2,65 +2,71 @@ require('angular');
 require('angular-ui-router');
 
 
-angular.module('diveApp.routes', ['ui.router']).config(function($stateProvider, $urlRouterProvider, $locationProvider) {  
-  var checkAuth = function($rootScope, $state, $stateParams, UserService, ProjectService, formattedUserName, projectID) {
-    var user;
-    user = UserService.getCurrentUser();
-    if ((user.userName === formattedUserName) && ($rootScope.pID === projectID.data)) {
-      return ProjectService.promise($rootScope.pID, user.userName, function(project) {
-        if (project.length) {
+angular.module('diveApp.routes', ['ui.router'])
 
-        }
-      });
-    } else {
-      UserService.logoutUser();
-      return $state.go('landing');
+// https://medium.com/@mattlanham/authentication-with-angularjs-4e927af3a15f
+angular.module('diveApp.routes').run(function($rootScope, $state, AuthService) {
+  $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
+    if (toState.authenticate && !AuthService.isAuthenticated()) {
+      $state.transitionTo("landing.authenticate");
+      event.preventDefault();
     }
-  };
+  });
+})
 
+angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvider, $locationProvider) {  
   $stateProvider
   .state('landing', {
-    url: '/',
-    templateUrl: 'modules/landing/landing.html'
+    url: '^/',
+    templateUrl: 'modules/landing/landing.html',
+    controller: function($scope, $state) {
+      $state.go('landing.create');
+    }
   })
     .state('landing.create', {
       url: 'create',
-      templateUrl: 'modules/landing/create.html'
+      authenticate: true,
+      templateUrl: 'modules/landing/create.html',
+      controller: 'CreateProjectCtrl'
     })
     .state('landing.projects', {
       url: 'projects',
-      templateUrl: 'modules/landing/projects.html'
+      authenticate: true,
+      templateUrl: 'modules/landing/projects.html',
+      controller: 'ProjectListCtrl',
+      resolve: {
+        projects: function(ProjectService, AuthService) {
+          var projects = ProjectService.getProjects({ username: AuthService.getCurrentUser().username });
+          console.log("Projects", projects);
+          return projects;
+        }
+      }
     })
     .state('landing.reports', {
       url: 'reports',
+      authenticate: true,
       templateUrl: 'modules/landing/reports.html'
     })
     .state('landing.about', {
       url: 'about',
+      authenticate: true,
       templateUrl: 'modules/landing/about.html'
     })
-  .state('embed', {
-    url: '/embed/:pID/:sID',
-    templateUrl: 'modules/embed/embed.html',
-    controller: 'EmbedCtrl',
-    resolve: {
-      vizDataService: function(VizDataService) {
-        return VizDataService.promise;
-      },
-      exportedVizSpecService: function(ExportedVizSpecService) {
-        return ExportedVizSpecService.promise;
-      }
-    }
-  })
+    .state('landing.authenticate', {
+      url: 'authenticate',
+      authenticate: false,
+      controller: 'AuthenticateCtrl',
+      templateUrl: 'modules/landing/authenticate.html'
+    })
+
   .state('project', {
     url: '/:formattedUserName/:formattedProjectTitle',
     templateUrl: 'modules/project/project.html',
-    // onEnter: checkAuth,
-    controller: function($scope, $rootScope, $state, $stateParams, $window, UserService, ProjectService, projectID) {
+    controller: function($scope, $state, $stateParams, AuthService) { //function($scope, $rootScope, $state, $stateParams, $window, AuthService, projectID) {
       $scope.projectTitle = $stateParams.formattedProjectTitle.split('-').join(' ');
-      $scope.user = UserService.getCurrentUser();
+      $scope.user = AuthService.getCurrentUser();
       $scope.logoutUser = function() {
-        UserService.logoutUser();
+        AuthService.logoutUser();
         $state.go('landing');
       };
     },
@@ -71,8 +77,8 @@ angular.module('diveApp.routes', ['ui.router']).config(function($stateProvider, 
       formattedProjectTitle: function($stateParams) {
         return $stateParams.formattedProjectTitle;
       },
-      projectID: function($stateParams, $rootScope, UserService, ProjectIDService) {
-        return ProjectIDService.getProjectID($stateParams.formattedProjectTitle, UserService.getCurrentUser()['userName']);
+      projectID: function($stateParams, $rootScope, AuthService, ProjectIDService) {
+        return ProjectIDService.getProjectID($stateParams.formattedProjectTitle, AuthService.getCurrentUser()['username']);
       }
     }
   })
@@ -83,6 +89,7 @@ angular.module('diveApp.routes', ['ui.router']).config(function($stateProvider, 
   })
   .state('project.data', {
     abstract: true,
+    authenticate: true,
     url: '/data',
     templateUrl: 'modules/data/data.html',
     controller: 'DataCtrl',
@@ -119,15 +126,15 @@ angular.module('diveApp.routes', ['ui.router']).config(function($stateProvider, 
     templateUrl: 'modules/visualization/visualization.html',
     controller: 'CreateVizCtrl',
     resolve: {
-      specificationService: function(SpecificationService) {
-        return SpecificationService.promise;
+      specifications: function(SpecificationService) {
+        return SpecificationService.getSpecifications({});
       },
-      vizDataService: function(VizDataService) {
-        return VizDataService.promise;
-      },
-      conditionalDataService: function(ConditionalDataService) {
-        return ConditionalDataService.promise;
-      }
+      // vizDataService: function(VizDataService) {
+      //   return VizDataService.promise;
+      // },
+      // conditionalDataService: function(ConditionalDataService) {
+      //   return ConditionalDataService.promise;
+      // }
     }
   })
   .state('project.assemble', {
@@ -156,6 +163,20 @@ angular.module('diveApp.routes', ['ui.router']).config(function($stateProvider, 
       }
     }
   });
+
+  // .state('embed', {
+  //   url: '/embed/:pID/:sID',
+  //   templateUrl: 'modules/embed/embed.html',
+  //   controller: 'EmbedCtrl',
+  //   resolve: {
+  //     vizDataService: function(VizDataService) {
+  //       return VizDataService.promise;
+  //     },
+  //     exportedVizSpecService: function(ExportedVizSpecService) {
+  //       return ExportedVizSpecService.promise;
+  //     }
+  //   }
+  // })
 
   $urlRouterProvider.otherwise("/");
   $locationProvider.html5Mode(true);

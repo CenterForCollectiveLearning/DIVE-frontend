@@ -3,19 +3,39 @@ require('angular-cookies');
 
 angular.module('diveApp.services', ['ui.router', 'ngCookies']);
 
-angular.module('diveApp.services').service("AllProjectsService", function($http, $rootScope, API_URL) {
+// Every service corresponds to a single type of entity (and all actions on it) or an atomic action
+
+// angular.module('diveApp.services').service('ProjectsService', function($http, $scope, API_URL) {
+//   return {
+//     getProjects: function(params) {
+//       console.log("GETTING PROJECTS", $scope.user)
+//       return $http.get(API_URL + '/api/project', {
+//         params: {
+//           user_name: $scope.user
+//         }
+//       }).then(function(r) {
+//         console.log("GOT PROJECTS", r)
+//         return r.data;
+//       });
+//     }
+//   };
+// });
+
+angular.module('diveApp.services').service('ProjectService', function($http, API_URL) {
   return {
-    promise: function(userName, callback) {
+    getProjects: function(params) {
+      console.log("Getting Datasets with params:", params);
       return $http.get(API_URL + '/api/project', {
         params: {
-          user_name: userName
+          user_name: params.username
         }
-      }).then(function(result) {
-        return callback(result);
+      }).then(function(r) {
+        return r.data;
       });
     }
   };
 });
+
 
 angular.module('diveApp.services').service("ProjectIDService", function($http, $stateParams, $rootScope, API_URL) {
   return {
@@ -34,19 +54,6 @@ angular.module('diveApp.services').service("ProjectIDService", function($http, $
       }).finally(function() {
         console.log("Got projectID");
       });
-    }
-  };
-});
-
-angular.module('diveApp.services').service("ProjectService", function($http, $stateParams, $rootScope, API_URL) {
-  return {
-    promise: function(pID, userName, callback) {
-      return $http.get(API_URL + "/api/project", {
-        params: {
-          user_name: userName,
-          pID: pID
-        }
-      }).then(callback);
     }
   };
 });
@@ -94,15 +101,31 @@ angular.module('diveApp.services').service("PublicDataService", function($http, 
   };
 });
 
-angular.module('diveApp.services').factory("UserService", function($http, $rootScope, $cookieStore, $window, API_URL) {
+
+angular.module('diveApp.services').factory("AuthService", function($http, $rootScope, $cookieStore, $window, API_URL) {
   return {
+    // DO THIS CORRECTLY
+    isAuthenticated: function() {
+      var expire = $window.localStorage['expiration'];
+      if (expire) {
+        var now = new Date();
+        if (now < expire) {
+          console.log("User Authenticated");
+          return true;
+        } else {
+          $window.localStorage.clear();
+        }
+      }
+      console.log("User is not authenticated");
+      return false;
+    },
     loginUser: function(userName, password, callback) {
       return $http.get(API_URL + "/api/login", {
         params: {
           userName: userName,
           password: password
         }
-      }).then(function(data) {
+      }).success(function(data) {
         var expire;
         if (data['success'] === 1) {
           $window.localStorage['userName'] = data['user']['userName'];
@@ -127,7 +150,7 @@ angular.module('diveApp.services').factory("UserService", function($http, $rootS
           displayName: displayName,
           password: password
         }
-      }).then(function(data) {
+      }).success(function(data) {
         if (data['success'] === 1) {
           $window.localStorage['userName'] = data['user']['userName'];
           $window.localStorage['displayName'] = data['user']['displayName'];
@@ -135,18 +158,17 @@ angular.module('diveApp.services').factory("UserService", function($http, $rootS
         return callback(data);
       });
     },
-    getCurrentUser: function(init) {
-      var expire, now;
-      expire = $window.localStorage['expiration'];
-      if (init && expire) {
-        now = new Date();
+    getCurrentUser: function() {
+      var expire = $window.localStorage['expiration'];
+      if (expire) {
+        var now = new Date();
         if (now > expire) {
           $window.localStorage.clear();
         }
       }
       return {
-        "userName": $window.localStorage['userName'],
-        "displayName": $window.localStorage['displayName']
+        "username": $window.localStorage['userName'],
+        "displayname": $window.localStorage['displayName']
       };
     }
   };
@@ -178,13 +200,14 @@ angular.module('diveApp.services').factory("PropertyService", function($http, $r
 
 angular.module('diveApp.services').service("SpecificationService", function($http, $rootScope, API_URL) {
   return {
-    promise: function(callback) {
+    promise: function(params) {
       return $http.get(API_URL + "/api/specification", {
         params: {
           pID: $rootScope.pID
         }
       }).then(function(r) {
-        return callback(data);
+        console.log("SPECIFICATIONS THEN", r)
+        return r.data;
       });
     }
   };

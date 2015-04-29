@@ -32,9 +32,7 @@ angular.module("diveApp.data").controller("UploadCtrl", function($scope, $rootSc
   };
 });
 
-angular.module("diveApp.data").controller("InspectDataCtrl", function($scope, $http, datasets) {
-  console.log("In InspectDataCtrl");
-
+angular.module("diveApp.data").controller("InspectDataCtrl", function($scope, $http, datasets, projectID, API_URL) {
 
   // TODO Factor out into a data service
   $scope.removeDataset = function(dID) {
