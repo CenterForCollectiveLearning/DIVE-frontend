@@ -4,7 +4,7 @@
               md-component-id="left"
               md-is-locked-open="$mdMedia('gt-sm')">
 
-  <md-content flex role="navigation">
+  <md-content flex role="navigation"> 
     <ul class="docs-menu">
       <section layout="vertical" layout-fill layout-align="center center" ng-if="loadingDatasets" flex>
             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
@@ -41,7 +41,7 @@
             <md-progress-circular md-mode="indeterminate" ></md-progress-circular>
           </section>
           <li ng-repeat="d in datasets">
-            <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(d)}" ng-click="selectChild(d)">
+            <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(d)}" ng-click="selectDataset(d)">
               <span>
                 {{d.title}}
               </span>
@@ -55,102 +55,5 @@
 
 <!-- Main View -->
 <div class="data-viewport viewport" layout="row" layout-align="center start" flex>
-
-  <!-- Upload -->
-  <div class="file-upload" ng-if="selectedChild.id==='upload'" flex>
-    <section layout="row" layout-align="center center">
-      <button class="md-button md-light md-raised md-primary" ng-file-select="onFileSelect($files)" data-multiple="true" title="select file" onclick="this.value = null" class="upload-button">
-        Click here to select file
-      </button>
-    </section>
-    <!--       <div class="button cancel" ng-click="uploadabort()">Cancel Upload</div> -->
-    <div class="drop" ng-show="dropSupported" class="drop-box" ng-file-drop="onFileSelect($files)" ng-file-drop-available="dropSupported=true"
-    ng-file-drag-over-class="dragOverClass($event)" ng-file-drag-over-delay="100">or drop files here</div>
-  </div>
-
-  <!-- Preloaded Data -->
-  <div class="preloaded-datasets" ng-if="selectedChild.id==='preloaded'">
-    <section layout="row" layout-align="center center" flex ng-if="!publicDatasets">
-      <md-progress-circular md-mode="indeterminate" ></md-progress-circular>
-    </section>
-    <ul class="datasets">
-      <li ng-repeat="d in publicDatasets" class="dataset card" ng-click="selectPublicDataset(d.dID)">
-        <div class="title">{{d.filename}}</div>
-        <md-content>
-          <div class="description">Description</div>
-          <section layout="row" layout-align="center center" flex>
-            <md-button aria-label="button" class="md-light md-raised md-primary md-default-theme" ng-click="addPublicDataset(d)">Add to Project</md-button>
-          </section>
-          <!-- <div class="menu" ng-class="{active: d.dID==selectedPublicDataset}">
-            <div class="button open" ng-click="addPublicDataset(d)">
-            Use Dataset
-            </div>
-          </div> -->
-        </md-content>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Datasets -->
-  <div ng-repeat="dataset in datasets" ng-if="isChildSelected(dataset)" flex> 
-    <div class="dataset-preview card" ng-if="dataset.sample" layout="column" layout-margin>
-      <div class="title">
-        {{dataset.title}}
-      </div>
-      <div class="data-table">
-        <table>
-          <tr>
-            <td ng-repeat="attr in dataset.column_attrs">    
-              <input type="text" ng-model="attr.name">
-            </td>
-          </tr>
-          <tr>
-            <td ng-repeat="attr in dataset.column_attrs">
-              <md-select ng-model="attr.type" class="type-select">
-                <md-option ng-repeat="type in types">{{type}}</md-option>
-              </md-select>
-            </td>
-          </tr>
-          <tr class="data" ng-repeat="(index, row) in dataset.sample track by $index">
-            <td ng-repeat="elem in row track by $index"> {{elem}} </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-
-<!--     <div layout="row" class="dataset-headers card" layout-margin>
-      <div class="title">
-        Headers
-      </div>
-      <div class="headers">
-        <ul>
-          <li ng-repeat="attr in dataset.column_attrs">    
-            <input type="text" ng-model="attr.name">
-            <md-select ng-model="attr.type" class="type-select">
-              <md-option ng-repeat="type in types">{{type}}</md-option>
-            </md-select>
-          </li>
-        </ul>
-      </div>
-    </div>
- -->
-    <div layout="row" layout-margin>
-      <div class="dataset-structure-select card" flex>
-        <div class="title">Dataset Structure</div>
-        <md-radio-group ng-model="dataset.structure">
-          <md-radio-button ng-repeat="s in structures" value="{{s.name}}" class="md-primary">{{s.displayName}}</md-radio-button>
-        </md-radio-group>
-      </div>
-
-      <div class="dataset-delete-select card" flex>
-        <div class="title">Modify Dataset</div>
-        <md-content>
-        <section layout="row" layout-align="center center">
-          <md-button aria-label="button" class="md-light md-warn md-raised" ng-click="removeDataset(dataset.dID)">Delete Dataset</md-button>
-        </section>
-      </md-content>
-      </div>
-    </div>
-    </div>
-  </div>
-</div> 
+  <div ui-view layout="vertical" layout-fill></div>
+</div>

@@ -8,7 +8,7 @@ div.data-viewport {
                 input {
                     font-size: 12px;
                     display: inline-block;
-                }
+                } 
                 float: left;
                 background: $light-gray;
                 md-select {
@@ -85,6 +85,23 @@ div.data-viewport {
         }
 
         table {
+            thead {
+                tr.names {
+                    th {
+                        padding: 0;
+                    }
+                }
+
+                tr.types {
+                    td {
+                        padding: 0;
+
+                        md-select {
+                            margin: 0;
+                        }
+                    }
+                }
+            }
             tbody {
                 tr {
                     td {
@@ -99,7 +116,7 @@ div.data-viewport {
 
                     &.data {
                         td {
-                            background-color: white;
+                            // background-color: white;
                             overflow: hidden;
                         }
                     }

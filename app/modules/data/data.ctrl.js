@@ -1,103 +1,18 @@
+var _ = require('underscore');
+
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-angular.module("diveApp.data").controller("DataCtrl", function($scope, $rootScope, $mdSidenav, projectID, $http, $upload, $timeout, $stateParams, DataService, PublicDataService, API_URL) {
-  $scope.datasets = [];
-  $scope.publicDatasets = [];
-  $scope.dIDs = [];
-  $scope.loadingDatasets = true;
-
-  // Data from services
-  DataService.promise(function(datasets) {
-    $scope.datasets = datasets;
-    $scope.loadingDatasets = false;
-  });
-
-  // PublicDataService.promise('GET', {
-  //   sample: true
-  // }, function(publicDatasets) {
-  //   $scope.publicDatasets = publicDatasets;
-  // });
-
-  $scope.sections = [
-    {
-      name: 'Add Datasets',
-      type: 'heading',
-      children: [
-        {
-          name: 'Upload File',
-          id: 'upload',
-          type: 'pane'
-        },
-        {
-          name: 'Preloaded Datasets',
-          id: 'preloaded',
-          type: 'pane'
-        }
-      ]
-    }
-  ]
-
-  $scope.toggleStates = {
-    data: true
-  };
-
-  $scope.selectedChild = $scope.sections[0].children[0];
-
-  $scope.selectChild = function(c) {
-    $scope.selectedChild = c;
-  }
-
-  $scope.isChildSelected = function(c) {
-    return ($scope.selectedChild === c);
-  }
-
-  $scope.toggle = function(k) {
-    $scope.toggleStates[k] = !$scope.toggleStates[k];
-  }
-
-  $scope.isOpen = function(k) {
-    return $scope.toggleStates[k]
-  }
-
-  $scope.addPublicDataset = function(d) {
-    var params = {
-      dID: d.dID,
-      pID: $rootScope.pID
-    };
-    PublicDataService.promise('POST', params, function(datasets) {
-      var _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = datasets.length; _i < _len; _i++) {
-        d = datasets[_i];
-        $scope.datasets.push(d);
-        _results.push($scope.dIDs.push(d.dID));
-      }
-      return _results;
-    });
-  };
-
-  $scope.types = ["integer", "float", "string", "countryCode2", "countryCode3", "countryName", "continent", "datetime"];
-
-  $scope.structures = [
-    {
-      name: 'long',
-      displayName: 'Long (Record or stacked format)'
-    }, {
-      name: 'wide',
-      displayName: 'Wide (Matrix-like)'
-    }
-  ];
-
-  $scope.onFileSelect = function($files) {
+angular.module("diveApp.data").controller("UploadCtrl", function($scope, $rootScope, $http, $upload, projectID, API_URL) {
+  $scope.onFileSelect = function(files) {
     var file;
     var i = 0;
     var results = [];
-    while (i < $files.length) {
-      file = $files[i];
+    while (i < files.length) {
+      file = files[i];
       $scope.upload = $upload.upload({
         url: API_URL + "/api/upload",
         data: {
-          pID: $rootScope.pID
+          pID: projectID
         },
         file: file
       }).progress(function(evt) {
@@ -115,11 +30,18 @@ angular.module("diveApp.data").controller("DataCtrl", function($scope, $rootScop
     }
     return results;
   };
+});
+
+angular.module("diveApp.data").controller("InspectDataCtrl", function($scope, $http, datasets) {
+  console.log("In InspectDataCtrl");
+
+
+  // TODO Factor out into a data service
   $scope.removeDataset = function(dID) {
     console.log('Removing dataset, dID:', dID);
     return $http["delete"](API_URL + '/api/data', {
       params: {
-        pID: $rootScope.pID,
+        pID: projectID,
         dID: dID
       }
     }).success(function(result) {
@@ -136,7 +58,95 @@ angular.module("diveApp.data").controller("DataCtrl", function($scope, $rootScop
         }
       }
       $scope.datasets = newDatasets;
-      return $scope.dIDs = newDIDs;
+      $scope.dIDs = newDIDs;
     });
   };
+})
+
+angular.module("diveApp.data").controller("PreloadedDataCtrl", function($scope, preloadedDatasets) {
+  $scope.preloadedDatasets = preloadedDatasets;
+
+  $scope.addPreloadedDataset = function(d) {
+    var params = {
+      dID: d.dID,
+      pID: projectID
+    };
+    PublicDataService.promise('POST', params, function(datasets) {
+      var _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = datasets.length; _i < _len; _i++) {
+        d = datasets[_i];
+        $scope.datasets.push(d);
+        _results.push($scope.dIDs.push(d.dID));
+      }
+      return _results;
+    });
+  };
+})
+
+angular.module("diveApp.data").controller("DataCtrl", function($scope, $state, datasets, projectID) {
+  $scope.datasets = datasets;
+  $scope.dIDs = _.pluck(datasets, 'dID');
+
+  $scope.sections = [
+    {
+      name: 'Add Datasets',
+      type: 'heading',
+      children: [
+        {
+          name: 'Upload File',
+          id: 'upload',
+          type: 'pane',
+          state: 'project.data.upload'
+        },
+        {
+          name: 'Preloaded Datasets',
+          id: 'preloaded',
+          type: 'pane',
+          state: 'project.data.preloaded'
+        }
+      ]
+    }
+  ]
+
+  $scope.toggleStates = {
+    data: true
+  };
+
+  $scope.selectedChild = $scope.sections[0].children[0];
+
+  $scope.selectChild = function(c) {
+    $scope.selectedChild = c;
+    $state.go(c.state);
+  }
+
+  $scope.selectDataset = function(d) {
+    $scope.selectedChild = d;
+    $state.go('project.data.inspect', { dID: d.dID });
+  }
+
+  $scope.isChildSelected = function(c) {
+    return ($scope.selectedChild === c);
+  }
+
+  $scope.toggle = function(k) {
+    $scope.toggleStates[k] = !$scope.toggleStates[k];
+  }
+
+  $scope.isOpen = function(k) {
+    return $scope.toggleStates[k]
+  }
+  
+
+  $scope.types = ["integer", "float", "string", "countryCode2", "countryCode3", "countryName", "continent", "datetime"];
+
+  $scope.structures = [
+    {
+      name: 'long',
+      displayName: 'Long (Record or stacked format)'
+    }, {
+      name: 'wide',
+      displayName: 'Wide (Matrix-like)'
+    }
+  ];  
 });

@@ -1,13 +1,7 @@
-var angular, angularCookies, angularFileUpload, _;
+require('angular');
+require('angular-cookies');
 
-angular = require('angular');
-
-angularFileUpload = require('angular-file-upload');
-
-_ = require('underscore');
-angularCookies = require('angular-cookies');
-
-angular.module('diveApp.services', ['ui.router', 'angularFileUpload', 'ngCookies']);
+angular.module('diveApp.services', ['ui.router', 'ngCookies']);
 
 angular.module('diveApp.services').service("AllProjectsService", function($http, $rootScope, API_URL) {
   return {
@@ -16,7 +10,7 @@ angular.module('diveApp.services').service("AllProjectsService", function($http,
         params: {
           user_name: userName
         }
-      }).success(function(result) {
+      }).then(function(result) {
         return callback(result);
       });
     }
@@ -25,15 +19,20 @@ angular.module('diveApp.services').service("AllProjectsService", function($http,
 
 angular.module('diveApp.services').service("ProjectIDService", function($http, $stateParams, $rootScope, API_URL) {
   return {
-    promise: function(formattedProjectTitle, userName) {
+    getProjectID: function(formattedProjectTitle, userName) {
+      console.log("Getting Project ID");
       return $http.get(API_URL + "/api/getProjectID", {
         params: {
           user_name: userName,
           formattedProjectTitle: formattedProjectTitle
         }
-      }).success(function(pID) {
-        console.log("Result of ProjectIdService", pID)
-        $rootScope.pID = pID;
+      }).then(function(r) {
+        var pID = r.data;
+        return pID;
+      }).catch(function(r) {
+        console.error("Error getting projectID", r.data, r.status);
+      }).finally(function() {
+        console.log("Got projectID");
       });
     }
   };
@@ -47,22 +46,22 @@ angular.module('diveApp.services').service("ProjectService", function($http, $st
           user_name: userName,
           pID: pID
         }
-      }).success(callback);
+      }).then(callback);
     }
   };
 });
 
 angular.module('diveApp.services').service("DataService", function($http, $rootScope, API_URL) {
   return {
-    promise: function(callback) {
-      console.log("Calling DataService, pID:", $rootScope.pID)      
+    getDatasets: function(params) {
+      console.log("Getting Datasets with params:", params);
       return $http.get(API_URL + "/api/data", {
         params: {
-          pID: $rootScope.pID,
+          pID: params.pID,
           sample: true
         }
-      }).success(function(data) {
-        return callback(data.datasets);
+      }).then(function(r) {
+        return r.data.datasets;
       });
     }
   };
@@ -70,20 +69,27 @@ angular.module('diveApp.services').service("DataService", function($http, $rootS
 
 angular.module('diveApp.services').service("PublicDataService", function($http, API_URL) {
   return {
-    promise: function(method, params, callback) {
-      if (method === 'GET') {
-        return $http.get(API_URL + "/api/public_data", {
-          params: {
-            sample: true
-          }
-        }).success(function(data) {
-          return callback(data.datasets);
-        });
-      } else if (method === 'POST') {
-        return $http.post(API_URL + "/api/public_data", params).success(function(data) {
-          return callback(data.datasets);
-        });
-      }
+    getPublicDatasets: function(params) {
+      return $http.get(API_URL + "/api/public_data", {
+        params: {
+          sample: true
+        }
+      }).then(function(r) {
+        return r.data.datasets;
+      });
+      // if (method === 'GET') {
+      //   return $http.get(API_URL + "/api/public_data", {
+      //     params: {
+      //       sample: true
+      //     }
+      //   }).then(function(data) {
+      //     return callback(data.datasets);
+      //   });
+      // } else if (method === 'POST') {
+      //   return $http.post(API_URL + "/api/public_data", params).then(function(data) {
+      //     return callback(data.datasets);
+      //   });
+      // }
     }
   };
 });
@@ -96,7 +102,7 @@ angular.module('diveApp.services').factory("UserService", function($http, $rootS
           userName: userName,
           password: password
         }
-      }).success(function(data) {
+      }).then(function(data) {
         var expire;
         if (data['success'] === 1) {
           $window.localStorage['userName'] = data['user']['userName'];
@@ -121,7 +127,7 @@ angular.module('diveApp.services').factory("UserService", function($http, $rootS
           displayName: displayName,
           password: password
         }
-      }).success(function(data) {
+      }).then(function(data) {
         if (data['success'] === 1) {
           $window.localStorage['userName'] = data['user']['userName'];
           $window.localStorage['displayName'] = data['user']['displayName'];
@@ -153,7 +159,7 @@ angular.module('diveApp.services').factory("PropertyService", function($http, $r
         params: {
           pID: $rootScope.pID
         }
-      }).success(function(data) {
+      }).then(function(data) {
         return callback(data);
       });
     },
@@ -163,7 +169,7 @@ angular.module('diveApp.services').factory("PropertyService", function($http, $r
           pID: $rootScope.pID,
           ontologies: ontologies
         }
-      }).success(function(data) {
+      }).then(function(data) {
         return callback(data);
       });
     }
@@ -177,7 +183,7 @@ angular.module('diveApp.services').service("SpecificationService", function($htt
         params: {
           pID: $rootScope.pID
         }
-      }).success(function(data) {
+      }).then(function(r) {
         return callback(data);
       });
     }
@@ -195,7 +201,7 @@ angular.module('diveApp.services').service("ConditionalDataService", function($h
           dID: dID,
           spec: spec
         }
-      }).success(function(data) {
+      }).then(function(data) {
         return callback(data);
       });
     }
@@ -210,7 +216,7 @@ angular.module('diveApp.services').service("VizDataService", function($http, $ro
       }
       return $http.get(API_URL + "/api/visualization_data", {
         params: params
-      }).success(function(data) {
+      }).then(function(data) {
         console.log(data);
         return callback(data);
       });
@@ -226,7 +232,7 @@ angular.module('diveApp.services').service("ExportedVizSpecService", function($h
       }
       return $http.get(API_URL + "/api/exported_spec", {
         params: params
-      }).success(function(data) {
+      }).then(function(data) {
         return callback(data);
       });
     }
