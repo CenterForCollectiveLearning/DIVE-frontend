@@ -1,4 +1,4 @@
-angular.module('diveApp.landing').controller("CreateProjectCtrl", function($scope, $http, $state, API_URL) {
+angular.module('diveApp.landing').controller("CreateProjectCtrl", function($scope, $http, $state, user, API_URL) {
 
   $scope.createProjectError = '';
 
@@ -11,7 +11,7 @@ angular.module('diveApp.landing').controller("CreateProjectCtrl", function($scop
     var params = {
       title: $scope.projectData.title,
       description: $scope.projectData.description,
-      user_name: $scope.user.userName
+      user_name: user.userName
     };
     console.log("Creating project");
     $http({
@@ -24,7 +24,7 @@ angular.module('diveApp.landing').controller("CreateProjectCtrl", function($scop
       }
     }).success(function(data, status) {
       $state.go('project.data.upload', { 
-        formattedUserName: $scope.user.userName, 
+        formattedUserName: user.userName, 
         formattedProjectTitle: data.formatted_title
       });
     }).error(function(data, status) {

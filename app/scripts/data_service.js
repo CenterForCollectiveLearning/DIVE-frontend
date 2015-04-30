@@ -1,7 +1,7 @@
 require('angular');
-require('angular-cookies');
+require('angular-local-storage');
 
-angular.module('diveApp.services', ['ui.router', 'ngCookies']);
+angular.module('diveApp.services', ['ui.router']);
 
 // Every service corresponds to a single type of entity (and all actions on it) or an atomic action
 
@@ -27,7 +27,7 @@ angular.module('diveApp.services').service('ProjectService', function($http, API
       console.log("Getting Datasets with params:", params);
       return $http.get(API_URL + '/api/project', {
         params: {
-          user_name: params.username
+          user_name: params.userName
         }
       }).then(function(r) {
         return r.data;
@@ -102,21 +102,19 @@ angular.module('diveApp.services').service("PublicDataService", function($http, 
 });
 
 
-angular.module('diveApp.services').factory("AuthService", function($http, $rootScope, $cookieStore, $window, API_URL) {
+angular.module('diveApp.services').factory("AuthService", function($http, localStorageService, API_URL) {
   return {
     // DO THIS CORRECTLY
     isAuthenticated: function() {
-      var expire = $window.localStorage['expiration'];
+      var expire = localStorageService.get('expiration');
       if (expire) {
         var now = new Date();
         if (now < expire) {
-          console.log("User Authenticated");
           return true;
         } else {
-          $window.localStorage.clear();
+          localStorageService.clearAll();
         }
       }
-      console.log("User is not authenticated");
       return false;
     },
     loginUser: function(userName, password, callback) {
@@ -126,13 +124,13 @@ angular.module('diveApp.services').factory("AuthService", function($http, $rootS
           password: password
         }
       }).success(function(data) {
-        var expire;
-        if (data['success'] === 1) {
-          $window.localStorage['userName'] = data['user']['userName'];
-          $window.localStorage['displayName'] = data['user']['displayName'];
-          expire = new Date();
+        if (data['success']) {
+          localStorageService.set('userName', data['user']['userName']);
+          localStorageService.set('displayName', data['user']['displayName']);
+
+          var expire = new Date();
           expire.setDate(expire.getDate() + 1);
-          $window.localStorage['expiration'] = expire.valueOf();
+          localStorageService.set('expiration', expire.valueOf());
         }
         return callback(data);
       });
@@ -151,69 +149,72 @@ angular.module('diveApp.services').factory("AuthService", function($http, $rootS
           password: password
         }
       }).success(function(data) {
-        if (data['success'] === 1) {
-          $window.localStorage['userName'] = data['user']['userName'];
-          $window.localStorage['displayName'] = data['user']['displayName'];
+        if (data['success']) {
+          localStorageService.set('userName', data['user']['userName']);
+          localStorageService.set('displayName', data['user']['displayName']);
         }
         return callback(data);
       });
     },
     getCurrentUser: function() {
-      var expire = $window.localStorage['expiration'];
+      var expire = localStorageService.get('expiration');
       if (expire) {
         var now = new Date();
         if (now > expire) {
-          $window.localStorage.clear();
+          localStorageService.clearAll();
         }
       }
       return {
-        "username": $window.localStorage['userName'],
-        "displayname": $window.localStorage['displayName']
+        "userName": localStorageService.get('userName'),
+        "displayName": localStorageService.get('displayName')
       };
     }
   };
 });
 
-angular.module('diveApp.services').factory("PropertyService", function($http, $rootScope, API_URL) {
+angular.module('diveApp.services').factory("PropertyService", function($http, API_URL) {
   return {
-    getProperties: function(callback) {
-      $http.get(API_URL + "/api/property", {
+    getProperties: function(params) {
+      console.log("Getting properties with params", params);
+      return $http.get(API_URL + "/api/property", {
         params: {
-          pID: $rootScope.pID
+          pID: params.pID
         }
-      }).then(function(data) {
-        return callback(data);
+      }).then(function(r) {
+        console.log("Got properties", r.data);
+        return r.data;
       });
     },
-    updateProperties: function(ontologies, callback) {
+    updateProperties: function(params) {
       return $http.put(API_URL + "/api/property", {
         params: {
-          pID: $rootScope.pID,
-          ontologies: ontologies
+          pID: params.pID,
+          ontologies: params.ontologies
         }
       }).then(function(data) {
-        return callback(data);
+        return r.data
       });
     }
   };
 });
 
-angular.module('diveApp.services').service("SpecificationService", function($http, $rootScope, API_URL) {
+angular.module('diveApp.services').service("SpecificationService", function($http, API_URL) {
   return {
-    promise: function(params) {
+    getSpecifications: function(params) {
+      console.log("Getting specifications with params", params);
       return $http.get(API_URL + "/api/specification", {
         params: {
-          pID: $rootScope.pID
+          pID: params.pID
         }
       }).then(function(r) {
-        console.log("SPECIFICATIONS THEN", r)
+        console.log("Got specs", r.data);
         return r.data;
       });
     }
   };
 });
 
-angular.module('diveApp.services').service("ConditionalDataService", function($http, $rootScope, API_URL) {
+angular.module('diveApp.services').service("ConditionalDataService", function($http, API_URL) {
   return {
     promise: function(dID, spec, callback) {
       console.log("GETTING CONDTIONAL DATA WITH SPEC", spec);
@@ -225,29 +226,25 @@ angular.module('diveApp.services').service("ConditionalDataService", function($h
           spec: spec
         }
       }).then(function(data) {
-        return callback(data);
+        return r.data;
       });
     }
   };
 });
 
-angular.module('diveApp.services').service("VizDataService", function($http, $rootScope, API_URL) {
+angular.module('diveApp.services').service("VizDataService", function($http, API_URL) {
   return {
-    promise: function(params, callback) {
-      if (!params.pID) {
-        params.pID = $rootScope.pID;
-      }
+    promise: function(params) {
       return $http.get(API_URL + "/api/visualization_data", {
         params: params
-      }).then(function(data) {
-        console.log(data);
-        return callback(data);
+      }).then(function(result) {
+        return r.data;
       });
     }
   };
 });
 
-angular.module('diveApp.services').service("ExportedVizSpecService", function($http, $rootScope, API_URL) {
+angular.module('diveApp.services').service("ExportedVizSpecService", function($http, API_URL) {
   return {
     promise: function(params, callback) {
       if (!params.pID) {

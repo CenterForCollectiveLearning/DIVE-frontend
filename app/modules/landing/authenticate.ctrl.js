@@ -2,10 +2,11 @@ var CryptoJS = require('crypto-js');
 
 angular.module('diveApp.landing').controller("AuthenticateCtrl", function($scope, $http, $state, AuthService, API_URL) {
   $scope.loginUser = function(userName, password) {
-    var password = CryptoJS.SHA3(password).toString(CryptoJS.enc.Hex)
     if (userName && password) {
-      AuthService.loginUser(userName, password, function(data) {
-        if (data['success'] === 1) {
+      var encPassword = CryptoJS.SHA3(password).toString(CryptoJS.enc.Hex)
+      AuthService.loginUser(userName, encPassword, function(data) {
+        console.log("Login data", data);
+        if (data['success']) {
           $scope.loggedIn = true;
           $scope.user = AuthService.getCurrentUser();
           $state.go('landing.create');
@@ -20,12 +21,14 @@ angular.module('diveApp.landing').controller("AuthenticateCtrl", function($scope
 
   // TODO Handle logins correctly
   $scope.registerUser = function(userName, displayName, password) {
-    var password = CryptoJS.SHA3(password).toString(CryptoJS.enc.Hex)
     if (userName && displayName && password) {
-      AuthService.registerUser(userName, displayName, password, function(data) {
-        if (data['success'] === 1) {
-          $scope.loginUser(userName, password);
-          $state.go('landing.create');
+      var encPassword = CryptoJS.SHA3(password).toString(CryptoJS.enc.Hex)
+      AuthService.registerUser(userName, displayName, encPassword, function(data) {
+        console.log("register data", data)
+        if (data['success']) {
+          AuthService.loginUser(userName, encPassword, function(data) {
+            $state.go('landing.create');
+          })
         } else {
           $scope.regErr = true;
         }

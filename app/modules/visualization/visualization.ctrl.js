@@ -1,11 +1,7 @@
 var _ = require('underscore');
-require('metrics-graphics')
 
-angular.module('diveApp.visualization').controller("CreateVizCtrl", function($scope, $http, $rootScope, DataService, PropertyService, VizDataService, ConditionalDataService, SpecificationService, API_URL) {
-  $scope.datasets = [];
-  $scope.columnAttrsByDID = {};
-  $scope.categories = [];
-
+angular.module('diveApp.visualization').controller("VisualizationCtrl", function($scope, specifications, properties) {
+  console.log("In VisualizationCtrl, properties:", properties);
   $scope.icons = {
     'shares': {
       treemap: 'treemap.svg',
@@ -13,7 +9,26 @@ angular.module('diveApp.visualization').controller("CreateVizCtrl", function($sc
     'time series': {
       linechart: 'linechart.svg'
     }
-  };
+  };  
+
+  $scope.specifications = specifications;
+  $scope.categories = _.map(specifications, function(v, k) {
+    return {
+      name: k,
+      toggled: true,
+      length: v.length,
+      specs: v 
+    }
+  });
+});
+
+//////////////////////
+
+
+angular.module('diveApp.visualization').controller("CreateVizCtrl", function($scope, $http, $rootScope, DataService, PropertyService, VizDataService, ConditionalDataService, SpecificationService, API_URL) {
+  $scope.datasets = [];
+  $scope.columnAttrsByDID = {};
+  $scope.categories = [];
 
   // Stats
   $scope.stats = { shown: false }

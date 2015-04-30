@@ -3,7 +3,7 @@ var _ = require('underscore');
 angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope, $state, $rootScope, $stateParams) {
   $scope.tabs = [
     {
-      route: 'project.data',
+      route: 'project.data.upload',
       label: 'Datasets'
     }, {
       route: 'project.visualize',
@@ -19,7 +19,7 @@ angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope,
 
   var currentRoutePage = $state.current.name.split('.')[1];
   $scope.selectedIndex = _.findIndex($scope.tabs, { route: currentRoutePage });
-  // $scope.$watch('selectedIndex', function(current, old) {
-  //   $state.go($scope.tabs[current].route);
-  // });
+  $scope.$watch('selectedIndex', function(current, old) {
+    $state.go($scope.tabs[current].route);
+  });
 });

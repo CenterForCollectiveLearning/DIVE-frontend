@@ -21,6 +21,11 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
     templateUrl: 'modules/landing/landing.html',
     controller: function($scope, $state) {
       $state.go('landing.create');
+    },
+    resolve: {
+      user: function(AuthService) {
+        return AuthService.getCurrentUser()
+      }
     }
   })
     .state('landing.create', {
@@ -36,7 +41,7 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       controller: 'ProjectListCtrl',
       resolve: {
         projects: function(ProjectService, AuthService) {
-          var projects = ProjectService.getProjects({ username: AuthService.getCurrentUser().username });
+          var projects = ProjectService.getProjects({ userName: AuthService.getCurrentUser().userName });
           console.log("Projects", projects);
           return projects;
         }
@@ -74,11 +79,11 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       formattedUserName: function($stateParams) {
         return $stateParams.formattedUserName;
       },
-      formattedProjectTitle: function($stateParams) {
+      formattedProjerctTitle: function($stateParams) {
         return $stateParams.formattedProjectTitle;
       },
       projectID: function($stateParams, $rootScope, AuthService, ProjectIDService) {
-        return ProjectIDService.getProjectID($stateParams.formattedProjectTitle, AuthService.getCurrentUser()['username']);
+        return ProjectIDService.getProjectID($stateParams.formattedProjectTitle, AuthService.getCurrentUser()['userName']);
       }
     }
   })
@@ -124,17 +129,26 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
   .state('project.visualize', {
     url: '/visualize',
     templateUrl: 'modules/visualization/visualization.html',
-    controller: 'CreateVizCtrl',
-    resolve: {
-      specifications: function(SpecificationService) {
-        return SpecificationService.getSpecifications({});
+    controller: 'VisualizationCtrl',
+    views: {
+      'viz': {
+        templateUrl: 'modules/visualization/views/visualization_view.html',
       },
-      // vizDataService: function(VizDataService) {
-      //   return VizDataService.promise;
+    },
+    resolve: {
+      specifications: function(SpecificationService, projectID) {
+        return SpecificationService.getSpecifications({ pID: projectID });
+      },
+      properties: function(PropertyService, projectID) {
+        return PropertyService.getProperties({ pID: projectID });
+      },
+      // vizDataService: function(VizDataService, specifications, projectID) {
+      //   var defaultSpec = specifications
+      //   return VizDataService.getVizData({ pID: projectID, spec: });
       // },
-      // conditionalDataService: function(ConditionalDataService) {
-      //   return ConditionalDataService.promise;
-      // }
+      conditionalDataService: function(ConditionalDataService, specifications) {
+        return ConditionalDataService.promise;
+      }
     }
   })
   .state('project.assemble', {
