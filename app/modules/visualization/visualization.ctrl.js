@@ -11,6 +11,41 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
     }
   };  
 
+
+  // Stats
+  $scope.stats = { shown: false }
+
+  // CONDITIONALS
+  $scope.condList = [];
+  $scope.condTypes = {};
+  $scope.condData = {};  
+  $scope.selConds = {};  // Which are selected to be shown
+  $scope.selCondVals = {};  // Selected values for conditionals
+
+  // Sidenav data
+  $scope.sortFields = [
+    {
+      property: 'num_elements',
+      display: 'Number of Elements'
+    }, {
+      property: 'std',
+      display: 'Standard Deviation'
+    }
+  ];
+  $scope.sortOrders = [
+    {
+      property: 1,
+      display: 'Ascending'
+    }, {
+      property: -1,
+      display: 'Descending'
+    }
+  ];
+  $scope.filters = {
+    sortField: $scope.sortFields[0].property,
+    sortOrder: $scope.sortOrders[0].property
+  }
+
   $scope.specifications = specifications;
   $scope.categories = _.map(specifications, function(v, k) {
     return {

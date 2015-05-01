@@ -5,8 +5,7 @@ angular.module('diveApp.landing').controller("AuthenticateCtrl", function($scope
     if (userName && password) {
       var encPassword = CryptoJS.SHA3(password).toString(CryptoJS.enc.Hex)
       AuthService.loginUser(userName, encPassword, function(data) {
-        console.log("Login data", data);
-        if (data['success']) {
+        if (data.success) {
           $scope.loggedIn = true;
           $scope.user = AuthService.getCurrentUser();
           $state.go('landing.create');
@@ -24,9 +23,10 @@ angular.module('diveApp.landing').controller("AuthenticateCtrl", function($scope
     if (userName && displayName && password) {
       var encPassword = CryptoJS.SHA3(password).toString(CryptoJS.enc.Hex)
       AuthService.registerUser(userName, displayName, encPassword, function(data) {
-        console.log("register data", data)
-        if (data['success']) {
+        if (data.success) {
           AuthService.loginUser(userName, encPassword, function(data) {
+            $scope.loggedIn = true;
+            $scope.user = AuthService.getCurrentUser();
             $state.go('landing.create');
           })
         } else {

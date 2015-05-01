@@ -10,8 +10,7 @@ require('./authenticate.ctrl');
 angular.module('diveApp.landing').directive('landingTop', function() {
   return {
     restrict: 'E',
-    templateUrl: 'modules/landing/landing_top_bar.html'
-    // controller: 'ProjectListCtrl'
+    templateUrl: 'modules/landing/landing_top_bar.html',
   };
 });
 
@@ -22,11 +21,3 @@ angular.module('diveApp.landing').directive('landingNavBar', function() {
     controller: 'LandingTabsCtrl'
   };
 });
-
-// angular.module('diveApp.landing').directive('landingProjects', function() {
-//   return {
-//     restrict: 'E',
-//     templateUrl: 'modules/landing/landing_projects.html',
-//     controller: 'ProjectListCtrl'
-//   };
-// });

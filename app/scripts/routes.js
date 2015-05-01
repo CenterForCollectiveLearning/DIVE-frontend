@@ -19,12 +19,22 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
   .state('landing', {
     url: '^/',
     templateUrl: 'modules/landing/landing.html',
-    controller: function($scope, $state) {
+    controller: function($scope, $state, AuthService, user) {
       $state.go('landing.create');
+      $scope.user = user;
+      $scope.loggedIn = true;
+
+      $scope.logoutUser = function() {
+        AuthService.logoutUser(function() {
+          $scope.user = null;
+          $scope.loggedIn = false;
+          $state.go('landing.authenticate');          
+        });
+      };
     },
     resolve: {
       user: function(AuthService) {
-        return AuthService.getCurrentUser()
+        return AuthService.getCurrentUser();
       }
     }
   })
@@ -67,19 +77,27 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
   .state('project', {
     url: '/:formattedUserName/:formattedProjectTitle',
     templateUrl: 'modules/project/project.html',
-    controller: function($scope, $state, $stateParams, AuthService) { //function($scope, $rootScope, $state, $stateParams, $window, AuthService, projectID) {
+    controller: function($scope, $state, $stateParams, AuthService, user) {
       $scope.projectTitle = $stateParams.formattedProjectTitle.split('-').join(' ');
-      $scope.user = AuthService.getCurrentUser();
+      $scope.user = user;
+      $scope.loggedIn = true;
+
       $scope.logoutUser = function() {
-        AuthService.logoutUser();
-        $state.go('landing');
+        AuthService.logoutUser(function() {
+          $scope.user = null;
+          $scope.loggedIn = false;
+          $state.go('landing.authenticate');          
+        });
       };
     },
     resolve: {
+      user: function(AuthService) {
+        return AuthService.getCurrentUser();
+      },
       formattedUserName: function($stateParams) {
         return $stateParams.formattedUserName;
       },
-      formattedProjerctTitle: function($stateParams) {
+      formattedProjectTitle: function($stateParams) {
         return $stateParams.formattedProjectTitle;
       },
       projectID: function($stateParams, $rootScope, AuthService, ProjectIDService) {
@@ -102,7 +120,6 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       datasets: function(DataService, projectID) {
         return DataService.getDatasets({ pID: projectID });
       },
-
     }
   })
     .state('project.data.upload', {
@@ -130,11 +147,6 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
     url: '/visualize',
     templateUrl: 'modules/visualization/visualization.html',
     controller: 'VisualizationCtrl',
-    views: {
-      'viz': {
-        templateUrl: 'modules/visualization/views/visualization_view.html',
-      },
-    },
     resolve: {
       specifications: function(SpecificationService, projectID) {
         return SpecificationService.getSpecifications({ pID: projectID });

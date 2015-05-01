@@ -7,7 +7,12 @@
 		<div class="subtitle" ui-sref="landing">Data Integration and Visualization Engine</div>
 	</div>
 	<div class="user-status">
-		<span ng-if="loggedIn">Logged in as <span class="username"> {{ user.displayName }}</span>
-        (<span class='logout' ng-click="logoutUser()">Logout</span>)</span>
+		<span ng-if="loggedIn">
+			Logged in as <span class="username"> {{ user.displayName }}</span>
+			(<span class='logout' ng-click="logoutUser()">Logout</span>)
+		</span>
+		<span ng-if="!loggedIn" ui-sref="landing.authenticate">
+			Log in / Register
+		</span>
 	</div>
 </div>

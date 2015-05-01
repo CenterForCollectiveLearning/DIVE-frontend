@@ -136,7 +136,7 @@ angular.module('diveApp.services').factory("AuthService", function($http, localS
       });
     },
     logoutUser: function(callback) {
-      $window.localStorage.clear();
+      localStorageService.clearAll();
       if (callback) {
         return callback();
       }
