@@ -3,23 +3,27 @@ var _ = require('underscore');
 angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope, $state, $rootScope, $stateParams) {
   $scope.tabs = [
     {
-      route: 'project.data.upload',
+      state: 'project.data.upload',
       label: 'Datasets'
     }, {
-      route: 'project.visualize',
+      state: 'project.visualize',
       label: 'Visualizations'
     }, {
-      route: 'project.assemble',
+      state: 'project.assemble',
       label: 'Reports'
     }, {
-      route: 'project.overview',
+      state: 'project.overview',
       label: 'Overview'
     }
   ];
 
-  var currentRoutePage = $state.current.name.split('.')[1];
-  $scope.selectedIndex = _.findIndex($scope.tabs, { route: currentRoutePage });
+  var currentStateSplit = $state.current.name.split('.');
+  var currentState = currentStateSplit[0] + '.' + currentStateSplit[1];
+  console.log("Current route page:", currentState);
+  $scope.selectedIndex = _.findIndex($scope.tabs, { state: currentState });
   $scope.$watch('selectedIndex', function(current, old) {
-    $state.go($scope.tabs[current].route);
+    if (current >= 0) {
+      $state.go($scope.tabs[current].state);      
+    }
   });
 });

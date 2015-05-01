@@ -100,8 +100,12 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       formattedProjectTitle: function($stateParams) {
         return $stateParams.formattedProjectTitle;
       },
-      projectID: function($stateParams, $rootScope, AuthService, ProjectIDService) {
-        return ProjectIDService.getProjectID($stateParams.formattedProjectTitle, AuthService.getCurrentUser()['userName']);
+      pID: function($stateParams, $rootScope, AuthService, ProjectIDService) {
+        var params = {
+          formattedProjectTitle: $stateParams.formattedProjectTitle, 
+          userName: AuthService.getCurrentUser().userName
+        }
+        return ProjectIDService.getProjectID(params);
       }
     }
   })
@@ -115,12 +119,7 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
     authenticate: true,
     url: '/data',
     templateUrl: 'modules/data/data.html',
-    controller: 'DataCtrl',
-    resolve: {
-      datasets: function(DataService, projectID) {
-        return DataService.getDatasets({ pID: projectID });
-      },
-    }
+    controller: 'DataCtrl'
   })
     .state('project.data.upload', {
       url: '/upload',
@@ -131,11 +130,6 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       url: '/preloaded',
       templateUrl: 'modules/data/preloaded_datasets.html',
       controller: 'PreloadedDataCtrl',
-      resolve: {
-        preloadedDatasets: function(PublicDataService) {
-          return PublicDataService.getPublicDatasets({});
-        }
-      }
     })
     .state('project.data.inspect', {
       url: '/inspect/:dID',
@@ -145,49 +139,20 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
 
   .state('project.visualize', {
     url: '/visualize',
+    authenticate: true,
     templateUrl: 'modules/visualization/visualization.html',
-    controller: 'VisualizationCtrl',
-    resolve: {
-      specifications: function(SpecificationService, projectID) {
-        return SpecificationService.getSpecifications({ pID: projectID });
-      },
-      properties: function(PropertyService, projectID) {
-        return PropertyService.getProperties({ pID: projectID });
-      },
-      // vizDataService: function(VizDataService, specifications, projectID) {
-      //   var defaultSpec = specifications
-      //   return VizDataService.getVizData({ pID: projectID, spec: });
-      // },
-      conditionalDataService: function(ConditionalDataService, specifications) {
-        return ConditionalDataService.promise;
-      }
-    }
+    controller: 'VisualizationCtrl'
   })
   .state('project.assemble', {
     url: '/assemble',
+    authenticate: true,
     templateUrl: 'modules/export/export.html',
-    controller: 'AssembleCtrl',
-    resolve: {
-      vizDataService: function(VizDataService) {
-        return VizDataService.promise;
-      },
-      exportedVizSpecService: function(ExportedVizSpecService) {
-        return ExportedVizSpecService.promise;
-      }
-    }
+    controller: 'AssembleCtrl'
   })
   .state('project.ontology', {
     url: '/ontology',
     templateUrl: 'modules/property/property.html',
     controller: 'OntologyEditorCtrl',
-    resolve: {
-      // initialData: function(DataService) {
-      //   return DataService.promise;
-      // },
-      propertyService: function(PropertyService) {
-        return PropertyService.getProperties;
-      }
-    }
   });
 
   // .state('embed', {

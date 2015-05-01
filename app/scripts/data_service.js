@@ -39,12 +39,12 @@ angular.module('diveApp.services').service('ProjectService', function($http, API
 
 angular.module('diveApp.services').service("ProjectIDService", function($http, $stateParams, $rootScope, API_URL) {
   return {
-    getProjectID: function(formattedProjectTitle, userName) {
+    getProjectID: function(params) {
       console.log("Getting Project ID");
       return $http.get(API_URL + "/api/getProjectID", {
         params: {
-          user_name: userName,
-          formattedProjectTitle: formattedProjectTitle
+          user_name: params.userName,
+          formattedProjectTitle: params.formattedProjectTitle
         }
       }).then(function(r) {
         var pID = r.data;
@@ -60,7 +60,7 @@ angular.module('diveApp.services').service("ProjectIDService", function($http, $
 
 angular.module('diveApp.services').service("DataService", function($http, $rootScope, API_URL) {
   return {
-    getDatasets: function(params) {
+    getDatasets: function(params, callback) {
       console.log("Getting Datasets with params:", params);
       return $http.get(API_URL + "/api/data", {
         params: {
@@ -68,35 +68,22 @@ angular.module('diveApp.services').service("DataService", function($http, $rootS
           sample: true
         }
       }).then(function(r) {
-        return r.data.datasets;
+        callback(r.data.datasets);
       });
     }
   };
 });
 
-angular.module('diveApp.services').service("PublicDataService", function($http, API_URL) {
+angular.module('diveApp.services').service("PreloadedDataService", function($http, API_URL) {
   return {
-    getPublicDatasets: function(params) {
+    getPreloadedDatasets: function(params, callback) {
       return $http.get(API_URL + "/api/public_data", {
         params: {
           sample: true
         }
       }).then(function(r) {
-        return r.data.datasets;
+        callback(r.data.datasets);
       });
-      // if (method === 'GET') {
-      //   return $http.get(API_URL + "/api/public_data", {
-      //     params: {
-      //       sample: true
-      //     }
-      //   }).then(function(data) {
-      //     return callback(data.datasets);
-      //   });
-      // } else if (method === 'POST') {
-      //   return $http.post(API_URL + "/api/public_data", params).then(function(data) {
-      //     return callback(data.datasets);
-      //   });
-      // }
     }
   };
 });
@@ -174,7 +161,7 @@ angular.module('diveApp.services').factory("AuthService", function($http, localS
 
 angular.module('diveApp.services').factory("PropertyService", function($http, API_URL) {
   return {
-    getProperties: function(params) {
+    getProperties: function(params, callback) {
       console.log("Getting properties with params", params);
       return $http.get(API_URL + "/api/property", {
         params: {
@@ -182,7 +169,7 @@ angular.module('diveApp.services').factory("PropertyService", function($http, AP
         }
       }).then(function(r) {
         console.log("Got properties", r.data);
-        return r.data;
+        callback(r.data);
       });
     },
     updateProperties: function(params) {
@@ -200,7 +187,7 @@ angular.module('diveApp.services').factory("PropertyService", function($http, AP
 
 angular.module('diveApp.services').service("SpecificationService", function($http, API_URL) {
   return {
-    getSpecifications: function(params) {
+    getSpecifications: function(params, callback) {
       console.log("Getting specifications with params", params);
       return $http.get(API_URL + "/api/specification", {
         params: {
@@ -208,7 +195,7 @@ angular.module('diveApp.services').service("SpecificationService", function($htt
         }
       }).then(function(r) {
         console.log("Got specs", r.data);
-        return r.data;
+        callback(r.data);
       });
     }
   };
@@ -216,17 +203,16 @@ angular.module('diveApp.services').service("SpecificationService", function($htt
 
 angular.module('diveApp.services').service("ConditionalDataService", function($http, API_URL) {
   return {
-    promise: function(dID, spec, callback) {
-      console.log("GETTING CONDTIONAL DATA WITH SPEC", spec);
-      delete spec.stats;
+    getConditionalData: function(params, callback) {
+      delete params.spec.stats;
       return $http.get(API_URL + "/api/conditional_data", {
         params: {
-          pID: $rootScope.pID,
-          dID: dID,
-          spec: spec
+          pID: params.pID,
+          dID: params.dID,
+          spec: params.spec
         }
       }).then(function(data) {
-        return r.data;
+        callback(r.data);
       });
     }
   };
@@ -234,11 +220,11 @@ angular.module('diveApp.services').service("ConditionalDataService", function($h
 
 angular.module('diveApp.services').service("VizDataService", function($http, API_URL) {
   return {
-    promise: function(params) {
+    getVizData: function(params, callback) {
       return $http.get(API_URL + "/api/visualization_data", {
         params: params
-      }).then(function(result) {
-        return r.data;
+      }).then(function(r) {
+        callback(r.data);
       });
     }
   };
@@ -246,7 +232,7 @@ angular.module('diveApp.services').service("VizDataService", function($http, API
 
 angular.module('diveApp.services').service("ExportedVizSpecService", function($http, API_URL) {
   return {
-    promise: function(params, callback) {
+    getExportedVizData: function(params, callback) {
       if (!params.pID) {
         params.pID = $rootScope.pID;
       }

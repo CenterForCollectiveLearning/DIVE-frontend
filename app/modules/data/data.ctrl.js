@@ -2,7 +2,7 @@ var _ = require('underscore');
 
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-angular.module("diveApp.data").controller("UploadCtrl", function($scope, $rootScope, $http, $upload, projectID, API_URL) {
+angular.module("diveApp.data").controller("UploadCtrl", function($scope, $http, $upload, pID, API_URL) {
   $scope.onFileSelect = function(files) {
     var file;
     var i = 0;
@@ -12,7 +12,7 @@ angular.module("diveApp.data").controller("UploadCtrl", function($scope, $rootSc
       $scope.upload = $upload.upload({
         url: API_URL + "/api/upload",
         data: {
-          pID: projectID
+          pID: pID
         },
         file: file
       }).progress(function(evt) {
@@ -32,14 +32,13 @@ angular.module("diveApp.data").controller("UploadCtrl", function($scope, $rootSc
   };
 });
 
-angular.module("diveApp.data").controller("InspectDataCtrl", function($scope, $http, datasets, projectID, API_URL) {
-
+angular.module("diveApp.data").controller("InspectDataCtrl", function($scope, $http, pID, API_URL) {
   // TODO Factor out into a data service
   $scope.removeDataset = function(dID) {
     console.log('Removing dataset, dID:', dID);
     return $http["delete"](API_URL + '/api/data', {
       params: {
-        pID: projectID,
+        pID: pID,
         dID: dID
       }
     }).success(function(result) {
@@ -61,13 +60,15 @@ angular.module("diveApp.data").controller("InspectDataCtrl", function($scope, $h
   };
 })
 
-angular.module("diveApp.data").controller("PreloadedDataCtrl", function($scope, preloadedDatasets) {
-  $scope.preloadedDatasets = preloadedDatasets;
+angular.module("diveApp.data").controller("PreloadedDataCtrl", function($scope, PreloadedDataService) {
+  PreloadedDataService.getPreloadedDatasets({}, function(r) {
+    $scope.preloadedDatasets = r;
+  });
 
   $scope.addPreloadedDataset = function(d) {
     var params = {
       dID: d.dID,
-      pID: projectID
+      pID: pID
     };
     PublicDataService.promise('POST', params, function(datasets) {
       var _i, _len, _results;
@@ -82,9 +83,14 @@ angular.module("diveApp.data").controller("PreloadedDataCtrl", function($scope, 
   };
 })
 
-angular.module("diveApp.data").controller("DataCtrl", function($scope, $state, datasets, projectID) {
-  $scope.datasets = datasets;
-  $scope.dIDs = _.pluck(datasets, 'dID');
+angular.module("diveApp.data").controller("DataCtrl", function($scope, $state, DataService, pID) {
+  $scope.datasets = [];
+  $scope.preloadedDatasets = [];
+
+  DataService.getDatasets({ pID: pID }, function(r) {
+    $scope.datasets = r;
+    $scope.dIDs = _.pluck($scope.datasets, 'dID');
+  });
 
   $scope.sections = [
     {
