@@ -89,7 +89,7 @@ angular.module('diveApp.services').service("PreloadedDataService", function($htt
 });
 
 
-angular.module('diveApp.services').factory("AuthService", function($http, localStorageService, API_URL) {
+angular.module('diveApp.services').factory("AuthService", function($http, $rootScope, localStorageService, API_URL) {
   return {
     // DO THIS CORRECTLY
     isAuthenticated: function() {
@@ -112,18 +112,24 @@ angular.module('diveApp.services').factory("AuthService", function($http, localS
         }
       }).success(function(data) {
         if (data['success']) {
-          localStorageService.set('userName', data['user']['userName']);
-          localStorageService.set('displayName', data['user']['displayName']);
+          localStorageService.set('userName', data.user.userName);
+          localStorageService.set('displayName', data.user.displayName);
 
           var expire = new Date();
           expire.setDate(expire.getDate() + 1);
           localStorageService.set('expiration', expire.valueOf());
+
+          $rootScope.loggedIn = true;
+          $rootScope.user = data.user;
         }
         return callback(data);
       });
     },
     logoutUser: function(callback) {
       localStorageService.clearAll();
+      $rootScope.loggedIn = false;
+      $rootScope.user = null;
+
       if (callback) {
         return callback();
       }
@@ -137,8 +143,11 @@ angular.module('diveApp.services').factory("AuthService", function($http, localS
         }
       }).success(function(data) {
         if (data['success']) {
-          localStorageService.set('userName', data['user']['userName']);
-          localStorageService.set('displayName', data['user']['displayName']);
+          $rootScope.loggedIn = true;
+          $rootScope.user = data.user;
+
+          localStorageService.set('userName', data.user.userName);
+          localStorageService.set('displayName', data.user.displayName);
         }
         return callback(data);
       });
@@ -204,6 +213,7 @@ angular.module('diveApp.services').service("SpecificationService", function($htt
 angular.module('diveApp.services').service("ConditionalDataService", function($http, API_URL) {
   return {
     getConditionalData: function(params, callback) {
+      console.log("Getting conditional data, pID:", params)
       delete params.spec.stats;
       return $http.get(API_URL + "/api/conditional_data", {
         params: {
@@ -211,7 +221,7 @@ angular.module('diveApp.services').service("ConditionalDataService", function($h
           dID: params.dID,
           spec: params.spec
         }
-      }).then(function(data) {
+      }).then(function(r) {
         callback(r.data);
       });
     }
@@ -221,6 +231,7 @@ angular.module('diveApp.services').service("ConditionalDataService", function($h
 angular.module('diveApp.services').service("VizDataService", function($http, API_URL) {
   return {
     getVizData: function(params, callback) {
+      console.log("Getting viz data with params:", params)
       return $http.get(API_URL + "/api/visualization_data", {
         params: params
       }).then(function(r) {

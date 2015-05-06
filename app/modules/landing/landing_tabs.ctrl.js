@@ -3,21 +3,26 @@ var _ = require('underscore');
 angular.module('diveApp.landing').controller('LandingTabsCtrl', function($scope, $state, $rootScope, $stateParams) {
   $scope.tabs = [
     {
-      route: 'landing.create',
+      state: 'landing.create',
       label: 'Create'
     }, {
-      route: 'landing.projects',
+      state: 'landing.projects',
       label: 'Projects'
     }, {
-      route: 'landing.reports',
+      state: 'landing.reports',
       label: 'Reports'
     }, {
-      route: 'landing.about',
+      state: 'landing.about',
       label: 'About'
     }
   ];
-  $scope.selectedIndex = _.findIndex($scope.tabs, {route: $state.current.name });
+
+  var currentStateSplit = $state.current.name.split('.');
+  var currentState = currentStateSplit[0] + '.' + currentStateSplit[1];
+  $scope.selectedIndex = _.findIndex($scope.tabs, { state: currentState });
   $scope.$watch('selectedIndex', function(current, old) {
-    $state.go($scope.tabs[current].route);
+    if (current >= 0) {
+      $state.go($scope.tabs[current].state);      
+    }
   });
 });

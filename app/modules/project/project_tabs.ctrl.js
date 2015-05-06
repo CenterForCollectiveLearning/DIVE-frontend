@@ -19,7 +19,6 @@ angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope,
 
   var currentStateSplit = $state.current.name.split('.');
   var currentState = currentStateSplit[0] + '.' + currentStateSplit[1];
-  console.log("Current route page:", currentState);
   $scope.selectedIndex = _.findIndex($scope.tabs, { state: currentState });
   $scope.$watch('selectedIndex', function(current, old) {
     if (current >= 0) {

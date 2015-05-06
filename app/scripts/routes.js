@@ -19,22 +19,25 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
   .state('landing', {
     url: '^/',
     templateUrl: 'modules/landing/landing.html',
-    controller: function($scope, $state, AuthService, user) {
+    controller: function($scope, $rootScope, $state, AuthService, user, loggedIn) {
       $state.go('landing.create');
-      $scope.user = user;
-      $scope.loggedIn = true;
+      $rootScope.user = user;
+      $rootScope.loggedIn = loggedIn;
 
       $scope.logoutUser = function() {
         AuthService.logoutUser(function() {
-          $scope.user = null;
-          $scope.loggedIn = false;
+          $rootScope.user = null;
+          $rootScope.loggedIn = false;
           $state.go('landing.authenticate');          
         });
       };
     },
     resolve: {
       user: function(AuthService) {
-        return AuthService.getCurrentUser();
+        return AuthService.getCurrentUser();          
+      },
+      loggedIn: function(AuthService) {
+        return AuthService.isAuthenticated();
       }
     }
   })
@@ -77,15 +80,15 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
   .state('project', {
     url: '/:formattedUserName/:formattedProjectTitle',
     templateUrl: 'modules/project/project.html',
-    controller: function($scope, $state, $stateParams, AuthService, user) {
+    controller: function($scope, $rootScope, $state, $stateParams, AuthService, user) {
       $scope.projectTitle = $stateParams.formattedProjectTitle.split('-').join(' ');
-      $scope.user = user;
-      $scope.loggedIn = true;
+      $rootScope.user = user;
+      $rootScope.loggedIn = true;
 
       $scope.logoutUser = function() {
         AuthService.logoutUser(function() {
-          $scope.user = null;
-          $scope.loggedIn = false;
+          $rootScope.user = null;
+          $rootScope.loggedIn = false;
           $state.go('landing.authenticate');          
         });
       };

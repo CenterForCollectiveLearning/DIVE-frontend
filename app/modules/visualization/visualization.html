@@ -1,7 +1,8 @@
 <!-- Visualization Nav Bar -->
-<visualization-nav-bar></visualization-nav-bar>
+<visualization-side-nav></visualization-side-nav>
 
 <div class="viz-viewport viewport" layout-fill layout="column" layout-align="starter" flex>
+<!-- <div class="viz-viewport viewport" layout-fill flex> -->
   <visualization-preview viz-spec="selectedSpec" viz-data="vizData" conditional="selCondVals" selected-values="selectedValues"></visualization-preview>
   <div class="visualization" flex="60" layout="row">
     <div class="left-side card" layout="column" flex>
@@ -10,17 +11,7 @@
       <div class="legend" ng-if="selectedSpec.viz_type === 'time series'" layout="row" layout-align="center center"></div>
     </div>
     <div class="stats card" ng-if="selectedSpec.viz_type === 'time series'" flex="30">
-      <div class="title">Statistics</div>
-      <div class="content">
-        <div class="histogram" id="means-histogram"></div>
-        <histogram data="vizStats.means" selector="'#means-histogram'" title="'Mean'" selected-values="selectedValues"></histogram>
-        <div class="histogram" id="stds-histogram"></div>
-        <histogram data="vizStats.stds" selector="'#stds-histogram'" title="'Coefficient of Variance'" selected-values="selectedValues"></histogram>
-
-        <div class="checkboxes">
-          <md-checkbox ng-model="selectedValues[k]" ng-repeat="(k, v) in vizStats.means" ng-value="k">{{k}}</md-checkbox>
-        </div>
-      </div>
+      <visualization-stats></visualization-stats>
     </div>
   </div>
 
@@ -65,29 +56,7 @@
     </div>
 
     <div class="conditionals card" flex>
-      <div class="title">Conditionals</div>
-        <div class="checkboxes">
-          <md-checkbox ng-model="selConds[currentdID][c.name]" ng-repeat="c in condList" ng-value="c.name" ng-change="selectConditional(c)">
-            {{c.name}}
-          </md-checkbox>
-        </div>
-  
-      <div class="dropdowns" ng-if="selConds[currentdID]">
-        <ul class="dropdowns">
-          <li ng-repeat="(title, showing) in selConds[currentdID]" layout-align="center start" ng-if="showing">
-            <label class="dropdown-label">{{title}}</label>
-            <md-progress-linear md-mode="indeterminate" ng-if="!condData[title]"></md-progress-linear>
-            <md-select 
-              ng-init="selCondVals[currentdID][title]=condData[title][0]" 
-              ng-if="condData[title]"
-              ng-model="selCondVals[currentdID][title]" 
-              ng-change="refreshVizData()"
-            >
-              <md-option ng-repeat="d in condData[title]">{{d}}</md-option>
-            </md-select>
-          </li>
-        </ul>
-      </div>
+      <visualization-conditionals></visualization-conditionals>
     </div>
 
 <!--     <div class="configurations card" flex>
@@ -99,11 +68,6 @@
       </section>
     </div> -->
     <div class="export card" flex>
-      <div class="title">Export</div>
-      <section layout="row" layout-sm="column" layout-align="center center">
-        <md-button aria-label="button" class="md-light md-raised md-primary md-default-theme">Add to Collection</md-button>
-        <md-button aria-label="button" class="md-light md-raised md-primary md-default-theme">Share Interactive</md-button>
-        <md-button aria-label="button" ng-click="save('pdf')" class="md-light md-raised md-primary md-default-theme">Save Static File</md-button>
-      </section>
+      <visualization-export></visualization-export>
   </div>
 </div>

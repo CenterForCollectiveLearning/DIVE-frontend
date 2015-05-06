@@ -1,7 +1,7 @@
 var _ = require('underscore');
 
-angular.module('diveApp.visualization').controller("VisualizationNavBarCtrl", function($scope) {
-// Sidenav methods
+angular.module('diveApp.visualization').controller("VisualizationSideNavCtrl", function($scope) {
+  // Sidenav methods
   $scope.toggle = function(i) {
     $scope.categories[i].toggled = !$scope.categories[i].toggled;
   }
@@ -20,7 +20,53 @@ angular.module('diveApp.visualization').controller("VisualizationNavBarCtrl", fu
   }
 });  
 
+angular.module('diveApp.visualization').controller("VisualizationConditionalsCtrl", function($scope, ConditionalDataService) {
+  $scope.selectConditional = function(spec) {
+    if (spec.name in $scope.selCondVals[$scope.currentdID]) {
+      delete $scope.selCondVals[$scope.currentdID][spec.name];      
+    }
+
+    var params = {
+      dID: $scope.currentdID, 
+      spec: spec, 
+      pID: $scope.pID
+    }
+    ConditionalDataService.getConditionalData(params, function(result) {
+      result.result.unshift('All')
+      $scope.condData[spec.name] = result.result;
+    });
+    $scope.refreshVizData();
+  };
+});  
+
+angular.module('diveApp.visualization').controller("VisualizationStatsCtrl", function($scope) {
+});  
+
+angular.module('diveApp.visualization').controller("VisualizationExportCtrl", function($scope) {
+  $scope.save = function(format) {
+     var tmp = document.getElementById("viz-container");
+     var svg = tmp.getElementsByTagName("svg")[0];
+     var svg_xml = (new XMLSerializer).serializeToString(svg);
+     return $http.post(API_URL + "/api/render_svg", {
+       data: JSON.stringify({
+         format: format,
+         svg: svg_xml
+       })
+     }).success(function(data) {
+       var file;
+       file = new Blob([data], {
+         type: 'application/' + format
+       });
+       return saveAs(file, 'visualization.' + format);
+     });
+   };
+});  
+
+// Parent controller containing data functions
 angular.module('diveApp.visualization').controller("VisualizationCtrl", function($scope, DataService, VizDataService, PropertyService, SpecificationService, ConditionalDataService, pID) {
+  // Making resolve data available to directives
+  $scope.pID = pID;
+
   $scope.datasets = [];
   $scope.columnAttrsByDID = {};
   $scope.categories = [];
@@ -38,6 +84,9 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
   $scope.selConds = {};  // Which are selected to be shown
   $scope.selCondVals = {};  // Selected values for conditionals
 
+  // TIME SERIES
+
+
   // CONFIG
   $scope.config = {};
   $scope.selectedValues = {};
@@ -47,16 +96,18 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
   }
 
   DataService.getDatasets({ pID: pID }, function(datasets) {
-    console.log("DataService", datasets)
-    var d, dID, _i, _len, _results;
     $scope.datasets = datasets;
-    _results = [];
-    for (_i = 0, _len = datasets.length; _i < _len; _i++) {
-      d = datasets[_i];
-      dID = d.dID;
-      _results.push($scope.columnAttrsByDID[dID] = d.column_attrs);
-    }
-    return _results;
+    $scope.columnAttrsByDID = {}
+    _.each(datasets, function(e) {
+      // Conditionals for time series visualizations
+      if (e.structure == 'wide') {
+        $scope.condList.push({name: 'Start Date'});
+        $scope.condList.push({name: 'End Date'});
+        $scope.condData['Start Date'] = e.time_series.names;
+        $scope.condData['End Date'] = e.time_series.names;
+      }
+      $scope.columnAttrsByDID[e.dID] = e.column_attrs;
+    })
   });
 
   // TODO Find a better way to resolve data dependencies without just making everything synchronous
@@ -66,21 +117,20 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
     $scope.hierarchies = properties.hierarchies;
 
     // Getting specifications grouped by category
-    SpecificationService.getSpecifications({ pID: pID}, function(specs) {
-      for (var k in specs) {
-        var v = specs[k];
-        $scope.categories.push({
+    SpecificationService.getSpecifications({ pID: pID }, function(specs) {
+      $scope.categories = _.map(specs, function(v, k) {
+        return {
           'name': k,
           'toggled': true,
           'length': v.length,
           'specs': v
-        });
-      }
+        }
+      })
       $scope.selectSpec($scope.categories[1].specs[0])
     });
   });
 
- $scope.selectSpec = function(spec) {
+  $scope.selectSpec = function(spec) {
     $scope.selectedChild = spec;
     $scope.selectedSpec = spec;
 
@@ -96,18 +146,15 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
     var colAttrs = $scope.columnAttrsByDID[dID];
     var colStatsByName = $scope.properties.stats[dID];
 
-    $scope.condList = [];
-    for (_i = 0, _len = colAttrs.length; _i < _len; _i++) {
-      cond = colAttrs[_i];
-      name = cond.name;
-      $scope.condTypes[name] = cond.type;
-      if (name in colStatsByName) {
-        cond.stats = colStatsByName[name];
+    _.each(colAttrs, function(c) {
+      $scope.condTypes[c.name] = c.type;
+      if (c.name in colStatsByName) {
+        c.stats = colStatsByName[c.name]
       }
-      if (!$scope.isNumeric(cond.type)) {
-        $scope.condList.push(cond);        
+      if (!$scope.isNumeric(c.type)) {
+        $scope.condList.push(c)
       }
-    }
+    });
 
     // Get X and Y and group parameters for comparisons
     if (spec.viz_type === 'comparison') {
@@ -126,28 +173,26 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
 
     $scope.loadingViz = true;
 
+
     delete spec.stats;
+
     var params = {
       spec: spec,
       conditional: $scope.selCondVals,
       pID: pID
     };
     VizDataService.getVizData(params, function(result) {
+      console.log("SelectedSpec, got vizdata", result);
       $scope.loadingViz = false;
       $scope.vizData = result.result;
       $scope.vizStats = result.stats;
       var means = result.stats.means;
 
-      var selectedValues = {};
+      var selectedValues = {}
       var sortedMeans = Object.keys(means).sort(function(a,b){return means[b]-means[a]});
-      for (var i=0; i < sortedMeans.length; i++) {
-        var x = sortedMeans[i]
-        if (i < 10) { 
-          selectedValues[x] = true;
-        } else {
-          selectedValues[x] = false;
-        }
-      }
+      _.each(sortedMeans, function(e, i) {
+        selectedValues[e] = (i < 10) ? true : false;
+      });
       $scope.selectedValues = selectedValues;
     });
   }
@@ -175,7 +220,6 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
     sortField: $scope.sortFields[0].property,
     sortOrder: $scope.sortOrders[0].property
   }
-
   
   $scope.isNumeric = function(type) {
     if (type === "float" || type === "integer") {
@@ -184,67 +228,41 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
       return false;
     }
   };
-  $scope.selectConditional = function(spec) {
-    var params = {
-      dID: $scope.currentdID, 
-      spec: spec,
-      pID: pID
-    }
-    ConditionalDataService.getConditionalData(params, function(result) {
-      result.result.unshift('All')
-      $scope.condData[spec.name] = result.result;
-    });
-    $scope.refreshVizData();
-  };
 
   $scope.refreshVizData = function() {
     $scope.loadingViz = true;
 
     var spec = $scope.selectedSpec;
     delete spec.stats;
+
+    // var filteredSelCondVals = {}
+    // _.each($scope.selCondVals, function(v, k) {
+    //   if ($scope.selConds[k]) {
+    //     filteredSelCondVals[k] = v;
+    //   }
+    // })
+
     var params = {
       type: $scope.selectedType,
       spec: spec,
       conditional: $scope.selCondVals,
       pID: pID
     };
+
     VizDataService.getVizData(params, function(result) {
+      console.log("GotVizData", result)
       $scope.vizData = result.result;
       $scope.vizStats = result.stats;
       $scope.loadingViz = false;
 
       var means = result.stats.means;
 
-      var selectedValues = {};
+      var selectedValues = {}
       var sortedMeans = Object.keys(means).sort(function(a,b){return means[b]-means[a]});
-      for (var i=0; i < sortedMeans.length; i++) {
-        var x = sortedMeans[i]
-        if (i < 10) { 
-          selectedValues[x] = true;
-        } else {
-          selectedValues[x] = false;
-        }
-      }
+      _.each(sortedMeans, function(e, i) {
+        selectedValues[e] = (i < 10) ? true : false;
+      });
       $scope.selectedValues = selectedValues;
     });
   };
-
-   $scope.save = function(format) {
-     var tmp = document.getElementById("viz-container");
-     var svg = tmp.getElementsByTagName("svg")[0];
-     var svg_xml = (new XMLSerializer).serializeToString(svg);
-     return $http.post(API_URL + "/api/render_svg", {
-       data: JSON.stringify({
-         format: format,
-         svg: svg_xml
-       })
-     }).success(function(data) {
-       var file;
-       file = new Blob([data], {
-         type: 'application/' + format
-       });
-       return saveAs(file, 'visualization.' + format);
-     });
-   };
-
 });

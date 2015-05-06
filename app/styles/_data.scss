@@ -84,11 +84,20 @@ div.data-viewport {
             }
         }
 
+        .time-series {
+            background-color: rgba(255, 0, 0, 0.6) !important;
+            input {
+                background-color: rgba(255, 0, 0, 0.6) !important;
+            }
+        }
+
         table {
             thead {
                 tr.names {
                     th {
                         padding: 0;
+
+
                     }
                 }
 

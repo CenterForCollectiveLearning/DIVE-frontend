@@ -5,15 +5,15 @@
         {{dataset.title}}
       </div>
       <div class="table-responsive-vertical shadow-z-1">
-        <table id="table" class="table table-hover table-mc-light-blue">
+        <table class="table table-hover table-mc-light-blue">
           <thead>
             <tr class="names">
-              <th ng-repeat="attr in dataset.column_attrs">    
+              <th ng-repeat="(index, attr) in dataset.column_attrs" ng-class="{'time-series': isTimeSeries(index, dataset.time_series)}">
                 <input type="text" ng-model="attr.name">
               </th>
             </tr>
             <tr class="types">
-              <td ng-repeat="attr in dataset.column_attrs">
+              <td ng-repeat="(index, attr) in dataset.column_attrs" ng-class="{'time-series': isTimeSeries(index, dataset.time_series)}">
                 <md-select ng-model="attr.type" class="type-select">
                 <md-option ng-repeat="type in types">{{type}}</md-option>
               </md-select>

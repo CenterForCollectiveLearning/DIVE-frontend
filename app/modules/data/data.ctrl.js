@@ -33,6 +33,14 @@ angular.module("diveApp.data").controller("UploadCtrl", function($scope, $http, 
 });
 
 angular.module("diveApp.data").controller("InspectDataCtrl", function($scope, $http, pID, API_URL) {
+  $scope.isTimeSeries = function(i, ts) {
+    if ((i >= ts.start.index) && (i <= ts.end.index)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // TODO Factor out into a data service
   $scope.removeDataset = function(dID) {
     console.log('Removing dataset, dID:', dID);
@@ -138,9 +146,8 @@ angular.module("diveApp.data").controller("DataCtrl", function($scope, $state, D
   }
 
   $scope.isOpen = function(k) {
-    return $scope.toggleStates[k]
+    return $scope.toggleStates[k];
   }
-  
 
   $scope.types = ["integer", "float", "string", "countryCode2", "countryCode3", "countryName", "continent", "datetime"];
 

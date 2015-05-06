@@ -1,13 +1,11 @@
 var CryptoJS = require('crypto-js');
 
-angular.module('diveApp.landing').controller("AuthenticateCtrl", function($scope, $http, $state, AuthService, API_URL) {
+angular.module('diveApp.landing').controller("AuthenticateCtrl", function($scope, $rootScope, $http, $state, AuthService, API_URL) {
   $scope.loginUser = function(userName, password) {
     if (userName && password) {
       var encPassword = CryptoJS.SHA3(password).toString(CryptoJS.enc.Hex)
       AuthService.loginUser(userName, encPassword, function(data) {
         if (data.success) {
-          $scope.loggedIn = true;
-          $scope.user = AuthService.getCurrentUser();
           $state.go('landing.create');
         } else {
           $scope.loginErr = true;
@@ -25,8 +23,6 @@ angular.module('diveApp.landing').controller("AuthenticateCtrl", function($scope
       AuthService.registerUser(userName, displayName, encPassword, function(data) {
         if (data.success) {
           AuthService.loginUser(userName, encPassword, function(data) {
-            $scope.loggedIn = true;
-            $scope.user = AuthService.getCurrentUser();
             $state.go('landing.create');
           })
         } else {
