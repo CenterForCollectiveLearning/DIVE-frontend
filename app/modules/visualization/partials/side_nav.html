@@ -50,7 +50,10 @@
               </section>
               <li ng-repeat="s in category.specs">
                 <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(s)}" ng-click="selectSpec(s)">
-                  <span ng-if="s.viz_type === 'time series' || s.viz_type === 'shares'">
+                  <span ng-if="!s.groupBy">
+                    All datapoints
+                  </span>
+                  <span ng-if="s.groupBy && (s.viz_type === 'time series' || s.viz_type === 'shares')">
                       Group by <b>{{s.groupBy.title}}</b>
                   </span>
                   <span ng-if="s.viz_type === 'comparison'">
