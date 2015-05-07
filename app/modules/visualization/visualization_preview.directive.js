@@ -85,6 +85,7 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                   }
 
                   if (selectedValues[k]) {
+                    console.log("selectedValues", selectedValues);
                     // TODO MG.convert.date is mutating arguments, but find a better way to deal
                     try {
                       var data = MG.convert.date(v, 'date', dateSelector);

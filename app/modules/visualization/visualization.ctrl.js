@@ -139,6 +139,7 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
     } else {
       dID = spec.object.dID;
     }
+
     $scope.currentdID = dID;
     if (!$scope.selCondVals[dID]) {
       $scope.selCondVals[dID] = {};
@@ -173,28 +174,28 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
 
     $scope.loadingViz = true;
 
-
     delete spec.stats;
 
-    var params = {
-      spec: spec,
-      conditional: $scope.selCondVals,
-      pID: pID
-    };
-    VizDataService.getVizData(params, function(result) {
-      console.log("SelectedSpec, got vizdata", result);
-      $scope.loadingViz = false;
-      $scope.vizData = result.result;
-      $scope.vizStats = result.stats;
-      var means = result.stats.means;
+    $scope.refreshVizData();
+    // var params = {
+    //   spec: spec,
+    //   conditional: $scope.selCondVals,
+    //   pID: pID
+    // };
+    // VizDataService.getVizData(params, function(result) {
+    //   $scope.loadingViz = false;
+    //   $scope.vizData = result.result;
+    //   $scope.vizStats = result.stats;
+    //   $scope.
+    //   var means = result.stats.means;
 
-      var selectedValues = {}
-      var sortedMeans = Object.keys(means).sort(function(a,b){return means[b]-means[a]});
-      _.each(sortedMeans, function(e, i) {
-        selectedValues[e] = (i < 10) ? true : false;
-      });
-      $scope.selectedValues = selectedValues;
-    });
+    //   var selectedValues = {}
+    //   var sortedMeans = Object.keys(means).sort(function(a,b){return means[b]-means[a]});
+    //   _.each(sortedMeans, function(e, i) {
+    //     selectedValues[e] = (i < 10) ? true : false;
+    //   });
+    //   $scope.selectedValues = selectedValues;
+    // });
   }
 
   // Sidenav data
@@ -220,6 +221,12 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
     sortField: $scope.sortFields[0].property,
     sortOrder: $scope.sortOrders[0].property
   }
+
+  // Watch changes in the configuration
+  // TODO Don't run initially
+  $scope.$watch('config', function(config) {
+    $scope.refreshVizData();
+  }, true);
   
   $scope.isNumeric = function(type) {
     if (type === "float" || type === "integer") {
@@ -233,7 +240,12 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
     $scope.loadingViz = true;
 
     var spec = $scope.selectedSpec;
-    delete spec.stats;
+
+    // Remove stats to unbloat the params
+    if ('stats' in spec) {
+      delete spec.stats;      
+    }
+
 
     // var filteredSelCondVals = {}
     // _.each($scope.selCondVals, function(v, k) {
@@ -246,11 +258,11 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
       type: $scope.selectedType,
       spec: spec,
       conditional: $scope.selCondVals,
+      config: $scope.config,
       pID: pID
     };
 
     VizDataService.getVizData(params, function(result) {
-      console.log("GotVizData", result)
       $scope.vizData = result.result;
       $scope.vizStats = result.stats;
       $scope.loadingViz = false;
