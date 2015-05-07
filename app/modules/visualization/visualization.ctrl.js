@@ -246,7 +246,6 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
       delete spec.stats;      
     }
 
-
     // var filteredSelCondVals = {}
     // _.each($scope.selCondVals, function(v, k) {
     //   if ($scope.selConds[k]) {

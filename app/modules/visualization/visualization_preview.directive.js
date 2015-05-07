@@ -139,7 +139,9 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                 linechart: 'line',
                 geomap: 'geo_map'
               };
-              viz = d3plus.viz()
+
+              console.log("Passing data into d3Plus:", vizData);
+              var viz = d3plus.viz()
                 .type(d3PlusTypeMapping[vizType])
                 .container("div#viz-container")
                 .width($("#viz-container").width())
@@ -156,8 +158,9 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
               .size("value")
               .draw();
             } else if (vizType === "scatterplot" || vizType === "barchart" || vizType === "linechart") {
-              x = vizSpec.x.title;
-              agg = vizSpec.aggregation;
+
+              var x = vizSpec.x.title;
+              var agg = vizSpec.aggregation;
               if (agg) {
                 viz.x(x).y("count");
                 if (vizSpec.x.type === "datetime") {
