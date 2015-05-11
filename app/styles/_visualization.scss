@@ -193,6 +193,11 @@ md-sidenav {
             margin-left: 3px;
             padding: 2px;
 
+            &.active {
+                outline: none;
+                background-color: rgba(3, 169, 244, 0.6);
+            }
+
             img {
                 opacity: 0.6;
                 width: 20px;
@@ -270,5 +275,12 @@ div.conditionals, div.parameters {
         display: inline-block;
         padding: 6px;
 
+    }
+}
+
+div.scatterplots {
+    div.scatterplot-container {
+        div {
+        }
     }
 }

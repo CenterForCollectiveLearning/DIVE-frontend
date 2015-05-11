@@ -28,10 +28,16 @@
           <li ng-repeat="category in categories">
             <md-button aria-label="button" class="md-button-toggle" ng-click="toggle($index)">
                 <div flex layout="row">
-                  {{category.name | capitalize}} ({{category.specs.length}})
+                  <span class="category">
+                    <span class="name">{{category.name | capitalize}}</span> <span class="num-specs">({{category.specs.length}})</span>
+                  </span>
                    <span class="right icons" layout="row" layout-align="end center" flex>
-                    <div class="icon md-whiteframe-z1" ng-repeat="(type, url) in icons[category.name]">
-                      <img ng-src="assets/images/{{url}}" />
+                    <div class="icon" 
+                      ng-repeat="icon in icons[category.name]" 
+                      ng-class="{ 'active': selectedType === icon.type }" 
+                      ng-click="selectType(icon.type); $event.stopPropagation();"
+                    >
+                      <img ng-src="assets/images/{{icon.url}}" />
                     </div>
                   </span>
                   <span aria-hidden="true" class="md-toggle-icon"
@@ -50,18 +56,20 @@
               </section>
               <li ng-repeat="s in category.specs">
                 <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(s)}" ng-click="selectSpec(s)">
-                  <span ng-if="!s.groupBy">
-                    All datapoints
+                  <span ng-if="s.category === 'time series' && !s.groupBy">
+                      All Data Points
                   </span>
-                  <span ng-if="s.groupBy && (s.viz_type === 'time series' || s.viz_type === 'shares')">
-                      Group by <b>{{s.groupBy.title}}</b>
+                  <span ng-if="s.groupBy">Group by:</span>
+                    <span ng-if="s.groupBy && (s.category === 'time series' || s.category === 'shares')" class="spec">
+                      <b>{{s.groupBy.title}}</b>
+                    </span>
                   </span>
-                  <span ng-if="s.viz_type === 'comparison'">
-                      Compare <b>{{s.groupBy.title}}</b>
+                  <span ng-if="s.category === 'comparison'">
+                      Compare <b>{{s.compare.title}}s</b>
                   </span>
                 </md-button>
                 <div class="stats" ng-if="stats.shown">
-                  Number of Elements: {{s.stats.count}}
+                  {{s.stats.count}} Visual Elements
                 </div>
               </li>
             </ul>

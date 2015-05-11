@@ -50,18 +50,18 @@ angular.module("diveApp.data").controller("InspectDataCtrl", function($scope, $h
         dID: dID
       }
     }).success(function(result) {
-      var dataset, deleted_dIDs, newDIDs, newDatasets, _i, _len, _ref, _ref1;
-      deleted_dIDs = result;
-      newDIDs = [];
-      newDatasets = [];
-      _ref = $scope.datasets;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        dataset = _ref[_i];
-        if (_ref1 = dataset.dID, __indexOf.call(deleted_dIDs, _ref1) < 0) {
-          newDatasets.push(dataset);
-          newDIDs.push(dataset.dID);
+      var deleted_dIDs = result;
+      var newDIDs = [];
+      var newDatasets = [];
+
+      // Update datasets and dIDs
+      _.each($scope.datasets, function(d) {
+        if (deleted_dIDs.indexOf(d.dID) < 0) {
+          newDatasets.push(d);          
+          newDIDs.push(d.dID);
         }
-      }
+      });
+
       $scope.datasets = newDatasets;
       $scope.dIDs = newDIDs;
     });

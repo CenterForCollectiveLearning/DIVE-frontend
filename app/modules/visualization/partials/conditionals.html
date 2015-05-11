@@ -1,6 +1,6 @@
 <div class="title">Conditionals</div>
 <div class="checkboxes">
-  <md-checkbox ng-model="selConds[currentdID][c.name]" ng-repeat="c in condList" ng-value="c.name" ng-change="selectConditional(c)">
+  <md-checkbox ng-model="selConds[currentdID][c.name]" ng-repeat="c in condList track by $index" ng-value="c.name" ng-change="selectConditional(c)">
   {{c.name}}
 </md-checkbox>
 </div>

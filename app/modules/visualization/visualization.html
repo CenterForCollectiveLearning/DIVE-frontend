@@ -3,24 +3,37 @@
 
 <div class="viz-viewport viewport" layout-fill layout="column" layout-align="starter" flex>
 <!-- <div class="viz-viewport viewport" layout-fill flex> -->
-  <visualization-preview viz-spec="selectedSpec" viz-data="vizData" conditional="selCondVals" selected-values="selectedValues"></visualization-preview>
-  <div class="visualization" flex="60" layout="row">
+  <visualization-preview viz-spec="selectedSpec" viz-type="selectedType" viz-data="vizData" conditional="selCondVals" selected-values="selectedValues"></visualization-preview>
+  <div class="visualization" flex="60" layout="row" ng-if="selectedSpec.category !== 'comparison'">
     <div class="left-side card" layout="column" flex>
       <md-progress-linear md-mode="indeterminate" ng-if="loadingViz" flex></md-progress-linear>
       <div id="viz-container" flex></div>
-      <div class="legend" ng-if="selectedSpec.viz_type === 'time series'" layout="row" layout-align="center center"></div>
+      <div class="legend" ng-if="selectedSpec.category === 'time series'" layout="row" layout-align="center center"></div>
     </div>
-    <div class="stats card" ng-if="selectedSpec.viz_type === 'time series'" flex="30">
+    <div class="stats card" ng-if="selectedSpec.category === 'time series'" flex="30">
       <visualization-stats></visualization-stats>
     </div>
   </div>
 
   
   <div class="scroll" flex="40">
-    <div class="parameters card" ng-if="selectedSpec.viz_type === 'comparison'" flex>
+    <div class="parameters card" ng-if="selectedSpec.category === 'comparison'" flex>
       <div class="title">Parameters</div>
+<!--       {{vizData}}
+      {{vizStats}}
       {{selectedParameters}}
-      {{parametersData}}
+      {{parametersData}} -->
+      <!-- Matrix of scatterplots for comparison selection -->
+      <div class="scatterplots" layout="row" layout-wrap flex>
+        <div ng-repeat="(entities, comparison) in vizData" class="scatterplot-container" flex="20">
+<!--         Spec: {{ selectedSpec }}
+        Entities: {{ entities}}
+        Comparison: {{ comparison }} -->
+        <div id="scatterplot-{{$index}}" class="scatterplot"></div>
+        <scatterplot data="comparison" entities="entities" selector="#scatterplot-{{$index}}"></scatterplot>
+        </div>
+      </div>
+
       <ul class="dropdowns">
         <li>
           <label class="dropdown-label">X Variable</label>
@@ -49,7 +62,7 @@
             ng-model="parameters.groupBy" 
             ng-change="refreshVizData()"
           >
-            <md-option ng-repeat="c in condList">{{c.name}}</md-option>
+            <md-option ng-repeat="c in condList track by $index">{{c.name}}</md-option>
           </md-select>
         </li>
       </ul>

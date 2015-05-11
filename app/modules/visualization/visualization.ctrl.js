@@ -1,6 +1,20 @@
 var _ = require('underscore');
 
 angular.module('diveApp.visualization').controller("VisualizationSideNavCtrl", function($scope) {
+  // Icons
+  $scope.icons = {
+    'comparison': [
+      { 'type': 'scatter', 'url': 'scatterplot.svg'}
+    ],
+    'shares': [
+      { 'type': 'tree_map', 'url': 'treemap.svg'},
+      { 'type': 'pie', 'url': 'piechart.svg'},
+    ],
+    'time series': [
+      { 'type': 'line', 'url': 'linechart.svg'}
+    ]
+  }
+
   // Sidenav methods
   $scope.toggle = function(i) {
     $scope.categories[i].toggled = !$scope.categories[i].toggled;
@@ -18,6 +32,10 @@ angular.module('diveApp.visualization').controller("VisualizationSideNavCtrl", f
   $scope.isChildSelected = function(c) {
     return ($scope.selectedChild === c);
   }
+
+  $scope.selectType = function(t) {
+    $scope.selectedType = t;
+  }
 });  
 
 angular.module('diveApp.visualization').controller("VisualizationConditionalsCtrl", function($scope, ConditionalDataService) {
@@ -28,7 +46,7 @@ angular.module('diveApp.visualization').controller("VisualizationConditionalsCtr
 
     var params = {
       dID: $scope.currentdID, 
-      spec: spec, 
+      spec: _.omit(spec, 'stats'), 
       pID: $scope.pID
     }
     ConditionalDataService.getConditionalData(params, function(result) {
@@ -71,8 +89,12 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
   $scope.columnAttrsByDID = {};
   $scope.categories = [];
 
-  // Stats
-  $scope.stats = { shown: false }
+  // Selected visualization
+  $scope.selectedCategory = null;
+  $scope.selectedType = null;
+
+  // Stats showing
+  $scope.stats = { shown: true }
 
   // Loading
   $scope.loadingViz = false;
@@ -83,6 +105,14 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
   $scope.condData = {};  
   $scope.selConds = {};  // Which are selected to be shown
   $scope.selCondVals = {};  // Selected values for conditionals
+
+  // Default types given a category
+  // TODO Don't put this all in a controller, maybe move to the server side?
+  $scope.categoryToDefaultType = {
+    'time series': 'line',
+    'comparison': 'scatter',
+    'shares': 'tree_map'    
+  }
 
   // TIME SERIES
 
@@ -134,6 +164,14 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
     $scope.selectedChild = spec;
     $scope.selectedSpec = spec;
 
+    console.log("SELECTING SPEC", spec.category, $scope.selectedCategory);
+    // If changing categories, select default type
+    if (spec.category != $scope.selectedCategory) {
+      $scope.selectedCategory = spec.category;
+      $scope.selectedType = $scope.categoryToDefaultType[spec.category];      
+    }
+
+
     if (spec.aggregate) {
       dID = spec.aggregate.dID;
     } else {
@@ -157,45 +195,24 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
       }
     });
 
-    // Get X and Y and group parameters for comparisons
-    if (spec.viz_type === 'comparison') {
-      var params = {
-        dID: $scope.currentdID,
-        name: spec.groupBy.title,
-        pID: pID
-      }
-      ConditionalDataService.getConditionalData(params, function(result) {
-        $scope.selectedParameters.x = result.result[0];
-        $scope.selectedParameters.y = result.result[1];
-        $scope.parametersData = result.result;
-        $scope.condData[spec.groupBy.title] = result.result;
-      });
-    }
+    // // Get X and Y and group parameters for comparisons
+    // if (spec.category === 'comparison') {
+    //   var params = {
+    //     dID: $scope.currentdID,
+    //     name: spec.groupBy.title,
+    //     pID: pID
+    //   }
+    //   ConditionalDataService.getConditionalData(params, function(result) {
+    //     $scope.selectedParameters.x = result.result[0];
+    //     $scope.selectedParameters.y = result.result[1];
+    //     $scope.parametersData = result.result;
+    //     $scope.condData[spec.groupBy.title] = result.result;
+    //   });
+    // }
 
     $scope.loadingViz = true;
 
-    delete spec.stats;
-
     $scope.refreshVizData();
-    // var params = {
-    //   spec: spec,
-    //   conditional: $scope.selCondVals,
-    //   pID: pID
-    // };
-    // VizDataService.getVizData(params, function(result) {
-    //   $scope.loadingViz = false;
-    //   $scope.vizData = result.result;
-    //   $scope.vizStats = result.stats;
-    //   $scope.
-    //   var means = result.stats.means;
-
-    //   var selectedValues = {}
-    //   var sortedMeans = Object.keys(means).sort(function(a,b){return means[b]-means[a]});
-    //   _.each(sortedMeans, function(e, i) {
-    //     selectedValues[e] = (i < 10) ? true : false;
-    //   });
-    //   $scope.selectedValues = selectedValues;
-    // });
   }
 
   // Sidenav data
@@ -237,14 +254,17 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
   };
 
   $scope.refreshVizData = function() {
-    $scope.loadingViz = true;
+    var type = $scope.selectedType;
+    var spec = _.omit($scope.selectedSpec, 'stats');
+    var conditional = $scope.selCondVals;
+    var config = $scope.config;
 
-    var spec = $scope.selectedSpec;
-
-    // Remove stats to unbloat the params
-    if ('stats' in spec) {
-      delete spec.stats;      
+    // Require parameters before refreshing vizData
+    if (!type || !spec) {
+      return;
     }
+
+    $scope.loadingViz = true;
 
     // var filteredSelCondVals = {}
     // _.each($scope.selCondVals, function(v, k) {
@@ -254,10 +274,10 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
     // })
 
     var params = {
-      type: $scope.selectedType,
+      type: type,
       spec: spec,
-      conditional: $scope.selCondVals,
-      config: $scope.config,
+      conditional: conditional,
+      config: config,
       pID: pID
     };
 
@@ -266,14 +286,17 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
       $scope.vizStats = result.stats;
       $scope.loadingViz = false;
 
-      var means = result.stats.means;
-
-      var selectedValues = {}
-      var sortedMeans = Object.keys(means).sort(function(a,b){return means[b]-means[a]});
-      _.each(sortedMeans, function(e, i) {
-        selectedValues[e] = (i < 10) ? true : false;
-      });
-      $scope.selectedValues = selectedValues;
+      if ('stats' in result) {
+        var means = result.stats.means;
+        if ('means' in result.stats) {
+          var selectedValues = {}
+          var sortedMeans = Object.keys(means).sort(function(a,b){return means[b]-means[a]});
+          _.each(sortedMeans, function(e, i) {
+            selectedValues[e] = (i < 10) ? true : false;
+          });
+          $scope.selectedValues = selectedValues;     
+        }
+      }
     });
   };
 });

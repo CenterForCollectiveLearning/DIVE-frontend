@@ -11,14 +11,15 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
       scope: {
         vizSpec: "=",
         vizData: "=",
+        vizType: "=",
         conditional: "=",
         selectedValues: "=",
         label: "@",
         onClick: "&"
       },
       link: function(scope, ele, attrs) {
-        var renderTimeout;
-  
+
+        // TODO fix the resize function
         $window.onresize = function() { 
           scope.$apply(); 
         };
@@ -26,48 +27,39 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
         scope.$watch((function() {
           angular.element($window)[0].innerWidth;
         }), function() {
-          scope.render(scope.vizSpec, scope.vizData, scope.conditional, scope.selectedValues);
+          scope.render(scope.vizSpec, scope.vizType, scope.vizData, scope.conditional, scope.selectedValues);
         });
 
         // TODO Find a more versatile way to watch object value changes
         scope.$watch('selectedValues', (function(selectedValues) {
-          scope.render(scope.vizSpec, scope.vizData, scope.conditional, selectedValues);
+          scope.render(scope.vizSpec, scope.vizType, scope.vizData, scope.conditional, selectedValues);
         }), true);
 
-        scope.$watchCollection("[vizSpec,vizData,conditional,selectedValues]", (function(newData) {
-          scope.render(newData[0], newData[1], newData[2], newData[3]);
+        scope.$watchCollection("[vizSpec, vizType, vizData, conditional, selectedValues]", (function(newData) {
+          scope.render(newData[0], newData[1], newData[2], newData[3], newData[4]);
         }), true);
 
-        scope.render = function(vizSpec, vizData, conditional, selectedValues) {
-          if (!(vizSpec && vizData && conditional && selectedValues)) { return; }
+        scope.render = function(vizSpec, vizType, vizData, conditional, selectedValues) {
+          if (!(vizSpec && vizType && vizData && conditional && selectedValues)) { return; }
           if (renderTimeout) { clearTimeout(renderTimeout); }
 
-          return renderTimeout = $timeout(function() {
-            var agg, condition, d3PlusTypeMapping, dropdown, getTitle, viz, x, y;
+          var renderTimeout = $timeout(function() {
+            var agg, d3PlusTypeMapping, dropdown, viz, x, y;
 
-            var vizType = vizSpec.viz_type;
+            var category = vizSpec.category;
 
-            getTitle = function(vizType, vizSpec, conditional) {
-              var title;
-              title = '';
-              if (vizType === 'shares') {
-                title += 'Group all ' + vizSpec.aggregate.title + ' by ' + vizSpec.groupBy.title.toString();
-                if (vizSpec.condition.title) {
-                  title += ' given a ' + vizSpec.condition.title.toString();
-                }
-              } else if (vizType === 'scatterplot' || vizType === 'barchart' || vizType === 'linechart') {
-                return;
-              }
-              return title;
-            };
-            if (condition) {
-              condition = vizSpec.condition.title.toString();
-              if (conditionalData.length < 300) {
-                dropdown = d3plus.form().container("div#viz-container").data(conditionalData).title("Select Options").id(condition).text(condition).type("drop").title(condition).draw();
-              }
+            vizContainer = $("#viz-container");
+            var displayParameters = {
+              width: vizContainer.width(),
+              height: vizContainer.height(),
             }
 
-            if (vizType === 'time series') {
+            console.log("Rendering visualization with parameters", displayParameters);
+
+            ////////////////////
+            // CATEGORY: Time Series
+            ////////////////////
+            if (category === 'time series') {
 
               // Remove d3plus visualization if it exists
               $("div#viz-container svg#d3plus").remove();
@@ -97,8 +89,6 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                   }              
                 }
               }
-              var width = $("#viz-container").width();
-              var height = $("#viz-container").height();
 
               var show_missing_background = false;
               if (timeSeriesMatrix.length == 0) {
@@ -106,9 +96,9 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                   target: '#viz-container',
                   chart_type: 'missing-data',
                   missing_text: 'No data available',
-                  width: width,
-                  height: height
-                })
+                  width: displayParameters.width,
+                  height: displayParameters.height
+                });
               } else {
                 
                 MG.data_graphic({
@@ -126,11 +116,23 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                   max_data_size: 10,
                   legend: legend,
                   legend_target: '.legend',
-                  width: width,
-                  height: height
+                  width: displayParameters.width,
+                  height: displayParameters.height
                 })
               }
-            } else {
+            } 
+
+            ////////////////////
+            // CATEGORY: Comparison
+            ////////////////////
+            if (category === 'comparison') {
+              console.log("Passing compare into visualization, data:", vizData);
+            } 
+
+            ///////////////////////
+            // Passing into D3Plus
+            ///////////////////////
+            if (category === 'shares') {
               var d3PlusTypeMapping = {
                 shares: 'tree_map',
                 piechart: 'pie',
@@ -142,55 +144,56 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
 
               console.log("Passing data into d3Plus:", vizData);
               var viz = d3plus.viz()
-                .type(d3PlusTypeMapping[vizType])
-                .container("div#viz-container")
-                .width($("#viz-container").width())
+                .type(vizType)
+                .container("#viz-container")
                 .margin("8px")
-                .height($("#viz-container").height())
+                .width(displayParameters.width)
+                .height(displayParameters.height)
                 .data(vizData)
-                .font({
-                  family: "Titillium Web"
-                });
+                .font({ family: "Titillium Web" });
             }
-            
-            if (vizType === 'shares') {
+
+            if (category === 'shares') {
               viz.id(vizSpec.groupBy.title.toString())
               .size("value")
               .draw();
-            } else if (vizType === "scatterplot" || vizType === "barchart" || vizType === "linechart") {
+            } 
 
-              var x = vizSpec.x.title;
-              var agg = vizSpec.aggregation;
-              if (agg) {
-                viz.x(x).y("count");
-                if (vizSpec.x.type === "datetime") {
-                  viz.x(function(d) {
-                    return (new Date(d[x])).valueOf();
-                  }).format({
-                    number: function(d, k) {
-                      if (typeof k === "function") {
-                        return d3.time.format("%m/%Y")(new Date(d));
-                      } else {
-                        return d;
-                      }
-                    }
-                  }).y("count");
-                } else {
-                  viz.x(x).y("count");
-                }
-                if (vizType === "linechart") {
-                  return viz.id("id").draw();
-                } else {
-                  return viz.id(x).size(10).draw();
-                }
-              } else {
-                y = vizSpec.y.title;
-                return viz.title(getTitle(vizType, vizSpec)).x(x).y(y).id(x).draw();
-              }
-            } else if (vizType === "geomap") {
-              console.log("Rendering geomap with id:", vizSpec.groupBy.title.toString());
-              return viz.title(getTitle(vizType, vizSpec)).coords("/assets/misc/countries.json").id("id").text("label").color("count").size("count").draw();
-            }
+            // if (vizType === "scatterplot" || vizType === "barchart" || vizType === "linechart") {
+
+            //   var x = vizSpec.x.title;
+            //   var agg = vizSpec.aggregation;
+            //   if (agg) {
+            //     viz.x(x).y("count");
+            //     if (vizSpec.x.type === "datetime") {
+            //       viz.x(function(d) {
+            //         return (new Date(d[x])).valueOf();
+            //       }).format({
+            //         number: function(d, k) {
+            //           if (typeof k === "function") {
+            //             return d3.time.format("%m/%Y")(new Date(d));
+            //           } else {
+            //             return d;
+            //           }
+            //         }
+            //       }).y("count");
+            //     } else {
+            //       viz.x(x).y("count");
+            //     }
+            //     if (vizType === "linechart") {
+            //       return viz.id("id").draw();
+            //     } else {
+            //       return viz.id(x).size(10).draw();
+            //     }
+            //   } else {
+            //     y = vizSpec.y.title;
+            //     return viz.title(getTitle(vizType, vizSpec)).x(x).y(y).id(x).draw();
+            //   }
+            // } else if (vizType === "geomap") {
+            //   console.log("Rendering geomap with id:", vizSpec.groupBy.title.toString());
+            //   return viz.title(getTitle(vizType, vizSpec)).coords("/assets/misc/countries.json").id("id").text("label").color("count").size("count").draw();
+            // }
+            /////////////
           }, 200);
         };
       }

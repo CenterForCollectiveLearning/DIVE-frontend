@@ -37,3 +37,4 @@ angular.module('diveApp.visualization').directive('visualizationExport', functio
 require('./visualization.ctrl');
 require('./visualization_preview.directive');
 require('./histogram.directive');
+require('./scatterplot.directive');

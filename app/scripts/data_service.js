@@ -1,5 +1,6 @@
 require('angular');
 require('angular-local-storage');
+_ = require('underscore');
 
 angular.module('diveApp.services', ['ui.router']);
 
@@ -231,6 +232,7 @@ angular.module('diveApp.services').service("ConditionalDataService", function($h
 angular.module('diveApp.services').service("VizDataService", function($http, API_URL) {
   return {
     getVizData: function(params, callback) {
+      // Remove stats field, which can be huge, from params
       console.log("Getting viz data with params:", params)
       return $http.get(API_URL + "/api/visualization_data", {
         params: params
