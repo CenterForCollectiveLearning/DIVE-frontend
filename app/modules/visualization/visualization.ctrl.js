@@ -64,7 +64,15 @@ angular.module('diveApp.visualization').controller("VisualizationStatsCtrl", fun
 });  
 
 angular.module('diveApp.visualization').controller("VisualizationExportCtrl", function($scope) {
-  $scope.save = function(format) {
+  $scope.addToCollection = function() {
+
+  }
+
+  $scope.shareInteractive = function() {
+    
+  }
+
+  $scope.saveStatic = function(format) {
      var tmp = document.getElementById("viz-container");
      var svg = tmp.getElementsByTagName("svg")[0];
      var svg_xml = (new XMLSerializer).serializeToString(svg);

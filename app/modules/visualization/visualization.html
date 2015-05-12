@@ -24,17 +24,24 @@
       {{selectedParameters}}
       {{parametersData}} -->
       <!-- Matrix of scatterplots for comparison selection -->
-      <div class="scatterplots" layout="row" layout-wrap flex>
+<!--       <div class="scatterplots" layout="row" layout-wrap flex>
         <div ng-repeat="(entities, comparison) in vizData" class="scatterplot-container" flex="20">
-<!--         Spec: {{ selectedSpec }}
-        Entities: {{ entities}}
-        Comparison: {{ comparison }} -->
         <div id="scatterplot-{{$index}}" class="scatterplot"></div>
         <scatterplot data="comparison" entities="entities" selector="#scatterplot-{{$index}}"></scatterplot>
         </div>
-      </div>
+      </div> -->
 
       <ul class="dropdowns">
+        <li>
+          <label class="dropdown-label">Compare by</label>
+          <md-select 
+            ng-if="condList"
+            ng-model="parameters.compareBy" 
+            ng-change="refreshVizData()"
+          >
+            <md-option ng-repeat="c in condList track by $index" ng-if="c !== selectedSpec.compare.title">{{c.name}}</md-option>
+          </md-select>
+        </li>
         <li>
           <label class="dropdown-label">X Variable</label>
           <md-select
@@ -77,6 +84,14 @@
       <section layout="row" layout-sm="column" layout-align="center center">
         <md-checkbox ng-model="config.normalize">Normalize</md-checkbox>
       </section>
+      <!-- Filter UI -->
+<!--       <md-select
+        ng-if="parametersData"
+        ng-model="selectedParameters.x"
+        ng-change="refreshVizData()"
+      >
+        <md-option ng-repeat="p in parametersData">{{p}}</md-option>
+      </md-select> -->
     </div>
     <div class="export card" flex>
       <visualization-export></visualization-export>

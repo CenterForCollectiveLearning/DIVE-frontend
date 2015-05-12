@@ -40,10 +40,10 @@
                       <img ng-src="assets/images/{{icon.url}}" />
                     </div>
                   </span>
-                  <span aria-hidden="true" class="md-toggle-icon"
+<!--                   <span aria-hidden="true" class="md-toggle-icon"
                   ng-class="{'toggled' : isOpen($index)}">
                   <md-icon md-svg-src="toggle-arrow"></md-icon>
-                </span>
+                </span> -->
               </div>
               <span class="visually-hidden">
                 Toggle {{isOpen($index) ? 'expanded' : 'collapsed'}}
@@ -70,7 +70,7 @@
                 </md-button>
                 <div class="stats" ng-if="stats.shown">
                   {{s.stats.count}}
-                  <span ng-if="s.category !== 'comparison'">Visual Elements</span>
+                  <span ng-if="s.category !== 'comparison' && s.stats.count">Visual Elements</span>
                   <span ng-if="s.category === 'comparison'">Comparisons</span>
                 </div>
               </li>

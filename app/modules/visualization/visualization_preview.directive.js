@@ -97,7 +97,7 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                   target: '#viz-container',
                   chart_type: 'missing-data',
                   missing_text: 'No data available',
-                  width: displayParameters.width,
+                  width: displayParameters.width - 20,
                   height: displayParameters.height
                 });
               } else {
@@ -117,7 +117,7 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                   max_data_size: 10,
                   legend: legend,
                   legend_target: '.legend',
-                  width: displayParameters.width - 50,
+                  width: displayParameters.width - 20,
                   height: displayParameters.height
                 })
               }
