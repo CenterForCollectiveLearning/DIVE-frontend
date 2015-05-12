@@ -54,7 +54,8 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
               height: vizContainer.height(),
             }
 
-            console.log("Rendering visualization with parameters", displayParameters);
+            console.info("Rendering visualization with vizData:", vizData);
+            console.info("Rendering visualization with parameters:", displayParameters);
 
             ////////////////////
             // CATEGORY: Time Series
@@ -116,7 +117,7 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                   max_data_size: 10,
                   legend: legend,
                   legend_target: '.legend',
-                  width: displayParameters.width,
+                  width: displayParameters.width - 50,
                   height: displayParameters.height
                 })
               }
@@ -132,7 +133,8 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
             ///////////////////////
             // Passing into D3Plus
             ///////////////////////
-            if (category === 'shares') {
+            var d3PlusCategories = ['shares']
+            if (d3PlusCategories.indexOf(category) > -1) {
               var d3PlusTypeMapping = {
                 shares: 'tree_map',
                 piechart: 'pie',
@@ -149,15 +151,48 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                 .margin("8px")
                 .width(displayParameters.width)
                 .height(displayParameters.height)
-                .data(vizData)
                 .font({ family: "Titillium Web" });
             }
 
             if (category === 'shares') {
               viz.id(vizSpec.groupBy.title.toString())
               .size("value")
+              .data(vizData)
               .draw();
             } 
+
+            if (category === 'distribution') {
+              var sortedVizData = _.sortBy(vizData, function(e) { return e.value; });
+              var groupBy = vizSpec.groupBy.title.toString();
+
+              $("div#viz-container svg#d3plus").remove();
+
+              MG.data_graphic({
+                data: sortedVizData,
+                chart_type: 'bar',
+                width: displayParameters.width,
+                height: displayParameters.height,
+                bar_orientation: 'vertical',
+                target: '#viz-container',
+                x_accessor: groupBy,
+                y_accessor: 'value',
+                baseline_accessor: null,
+                predictor_accessor: null
+              });
+            }
+
+            // if (category === 'distribution') {
+            //   var groupBy = vizSpec.groupBy.title.toString();
+            //   var sortedVizData = _.sortBy(vizData, function(e) { return e.value; });
+
+            //   console.log("Creating distribution visualization of type", vizType, groupBy);
+            //   viz.id(groupBy)  // .id(groupBy)
+            //   .id({ grouping: false })
+            //   .x(groupBy)
+            //   .y("value")
+            //   .data(sortedVizData)
+            //   .draw();
+            // } 
 
             // if (vizType === "scatterplot" || vizType === "barchart" || vizType === "linechart") {
 

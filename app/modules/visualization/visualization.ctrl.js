@@ -12,6 +12,9 @@ angular.module('diveApp.visualization').controller("VisualizationSideNavCtrl", f
     ],
     'time series': [
       { 'type': 'line', 'url': 'linechart.svg'}
+    ],
+    'distribution': [
+      { 'type': 'bar', 'url': 'barchart.svg'}
     ]
   }
 
@@ -111,7 +114,8 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
   $scope.categoryToDefaultType = {
     'time series': 'line',
     'comparison': 'scatter',
-    'shares': 'tree_map'    
+    'shares': 'tree_map',
+    'distribution': 'bar'
   }
 
   // TIME SERIES

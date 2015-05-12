@@ -78,6 +78,21 @@ diveApp.filter("capitalize", function() {
   };
 });
 
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
+
+// TODO Make this more robust
+diveApp.filter("pluralize", function() {
+  return function(input, scope) {
+    if (input.endsWith('s')) {
+      return input;
+    } else {
+      return input + 's';
+    }
+  };
+});
+
 angular.element(document).ready(function() {
   var mainViewHeight;
   mainViewHeight = $(window).height() - $("header").height();
