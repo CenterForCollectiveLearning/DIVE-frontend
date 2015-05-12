@@ -48,10 +48,10 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
 
             var category = vizSpec.category;
 
-            vizContainer = $("#viz-container");
+            var vizContainer = $(".visualization .left-side");
             var displayParameters = {
               width: vizContainer.width(),
-              height: vizContainer.height(),
+              height: vizContainer.height()
             }
 
             console.info("Rendering visualization with vizData:", vizData);
@@ -67,41 +67,42 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
 
               var legend = [];
               var timeSeriesMatrix = [];
-              for (var k in vizData) {
-                var v = vizData[k];
 
-                if (v.length > 0) {
-                  if (v[0].date.indexOf('-') > -1) {
-                    var dateSelector = '%Y-%b';                  
+              _.each(vizData, function(v, k) {
+                if (v.length > 0 && selectedValues[k]) {
+                  if (v[0].date instanceof Date) {
+                    var data = v;
                   } else {
-                    var dateSelector = '%Y';                  
-                  }
-
-                  if (selectedValues[k]) {
-                    console.log("selectedValues", selectedValues);
-                    // TODO MG.convert.date is mutating arguments, but find a better way to deal
+                    // Get date selector
+                    // TODO Either get this from the user or infer more intelligently (on backend?)
+                    if (v[0].date.indexOf('-') > -1) {
+                      var dateSelector = '%Y-%b';                  
+                    } else {
+                      var dateSelector = '%Y';                  
+                    }
+                    // TODO Turn this into a more robust function
                     try {
                       var data = MG.convert.date(v, 'date', dateSelector);
                     } catch (e) {
                       var data = v;
                     }
-                    legend.push(k);
-                    timeSeriesMatrix.push(data);                          
-                  }              
+                  }
+                  legend.push(k);
+                  timeSeriesMatrix.push(data);   
                 }
-              }
+              });
 
               var show_missing_background = false;
-              if (timeSeriesMatrix.length == 0) {
+              if (timeSeriesMatrix.length === 0) {
                 MG.data_graphic({
                   target: '#viz-container',
                   chart_type: 'missing-data',
                   missing_text: 'No data available',
-                  width: displayParameters.width - 20,
+                  right: 10,
+                  width: displayParameters.width,
                   height: displayParameters.height
                 });
               } else {
-                
                 MG.data_graphic({
                   data: timeSeriesMatrix,
                   target: '#viz-container',
@@ -117,8 +118,9 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                   max_data_size: 10,
                   legend: legend,
                   legend_target: '.legend',
-                  width: displayParameters.width - 20,
-                  height: displayParameters.height
+                  right: 10,
+                  width: displayParameters.width,
+                  height: displayParameters.height - 40
                 })
               }
             } 
