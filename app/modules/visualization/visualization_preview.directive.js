@@ -48,10 +48,10 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
 
             var category = vizSpec.category;
 
-            vizContainer = $(".visualization .left-side");
+            var vizContainer = $(".visualization .left-side");
             var displayParameters = {
               width: vizContainer.width(),
-              height: vizContainer.height(),
+              height: vizContainer.height()
             }
 
             console.info("Rendering visualization with vizData:", vizData);
@@ -74,7 +74,8 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                     var data = v;
                   } else {
 
-                    // TODO Better method of getting date parser (either from user or more robust inference)
+                    // Get date selector
+                    // TODO Either get this from the user or infer more intelligently (on backend?)
                     if (v[0].date.indexOf('-') > -1) {
                       var dateSelector = '%Y-%b';                  
                     } else {
@@ -89,12 +90,12 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                   }
 
                   legend.push(k);
-                  timeSeriesMatrix.push(data);    
+                  timeSeriesMatrix.push(data);   
                 }
-              })
+              });
 
               var show_missing_background = false;
-              if (timeSeriesMatrix.length == 0) {
+              if (timeSeriesMatrix.length === 0) {
                 MG.data_graphic({
                   target: '#viz-container',
                   chart_type: 'missing-data',
@@ -104,7 +105,6 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
                   height: displayParameters.height
                 });
               } else {
-                
                 MG.data_graphic({
                   data: timeSeriesMatrix,
                   target: '#viz-container',
