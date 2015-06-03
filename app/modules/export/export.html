@@ -1,4 +1,4 @@
-<div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
+<!-- <div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
 	<div class="pane-title">
 		Selected Visualizations
 	</div>
@@ -21,9 +21,9 @@
       </div>
     </li>
 	</ul>
-</div>
+</div> -->
 
-<div class="right-pane" ng-class="{'closed': rightClosed}" maxheight>
+<!-- <div class="right-pane" ng-class="{'closed': rightClosed}" maxheight>
 	<div class="pane-title">
 		Export Options
 	</div>
@@ -34,15 +34,17 @@
       </div>
     </li>
 	</ul>
-</div>
+</div> -->
 
-<div class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
-  <pane-toggle></pane-toggle>
-  <loader></loader>
+<div class="export-viewport viewport" layout-align="center start" flex>
+  <section layout="row" layout-align="center center" flex ng-if="!loading">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  </section>
+
   <div id="viz-container" class="card"></div>
   <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selectedConditionalValues"></visualization-preview>
 
-  <div ng-if="selectedMode=='modify'" class="embed-options card">
+  <div ng-if="selectedMode=='modify'" class="embed-options card" flex>
     <div class="title">Export Parameters</div>
     <div class="label">Width</div>
     <input ng-model="config.width" select-on-click></input>
@@ -50,7 +52,7 @@
     <input ng-model="config.height" select-on-click></input>
   </div>
 
-  <div ng-if="selectedMode=='export'" class="embed-options card">
+  <div ng-if="selectedMode=='export'" class="embed-options card" flex>
     <div class="title">Interactive Embed</div>
     <div class="label">URL</div>
     <input ng-model="embedURL" select-on-click></input>
@@ -58,7 +60,7 @@
     <input ng-model="embedHTML" select-on-click></input>
   </div>
 
-  <div ng-if="selectedMode=='export'" class="embed-options card">
+  <div ng-if="selectedMode=='export'" class="embed-options card" flex>
     <div class="title">Static Download</div>
     <div class="button-group">
       <div class="short button" ng-click="save('svg')">

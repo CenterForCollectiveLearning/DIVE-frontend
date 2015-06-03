@@ -1,9 +1,74 @@
-div.viewport {
+div.data-viewport {
+
+    div.dataset-headers {
+        ul {
+            li {
+                padding: 5px 3px;
+                height: 30px;
+                input {
+                    font-size: 12px;
+                    display: inline-block;
+                } 
+                float: left;
+                background: $light-gray;
+                md-select {
+                    margin: 0;
+                }
+            }
+        }
+    }
+
+    div.upload-dataset {
+        height: 100%;
+        margin-left: 300px;
+        ul, li {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        ul.data-rows {
+            li.data-row {
+                ul.data-cells {
+                    li.data-cell {
+                        float: left;
+                    }
+                }
+            }
+        }
+    }
+
+    div.file-upload {
+        div.drop {
+            margin: 20px 0;
+            $height: 300px;
+            background-color: $light-gray;
+            text-align: center;
+            @include small-caps;
+            line-height: $height;
+            width: 100%;
+            height: $height;
+            &.dropped-file {
+                background-color: $ontology-blue;
+            }
+        }
+        input {
+            -webkit-appearance: default;
+        }
+    }
+
+    div.preloaded-datasets {
+        width: 700px;
+    }
+
 	div.dataset-preview {
         max-height: 500px;
-        overflow-y: scroll;
-        padding-left: 5px;
-        padding-right: 5px;
+        overflow: hidden;
+
+        div.data-table {
+            overflow: scroll;
+            padding-top: 8px;
+        }
+
         input, select {
         	@include font;
             font-size: 14px;
@@ -18,53 +83,55 @@ div.viewport {
                 background-color: #C0C0C0;
             }
         }
-    }
 
-    div.public-datasets {
-        $block-width: 600px;
-        ul.datasets {
-            width: 600px;
-            padding: 0;
-            margin: 10px auto 0 auto;
-            a {
-                color: black;
+        .time-series {
+            background-color: rgba(255, 0, 0, 0.6) !important;
+            input {
+                background-color: rgba(255, 0, 0, 0.6) !important;
             }
-            li.dataset {
-                @include card-shadow;
-                @include border-transition();
-                @include background-transition();
-                background-color: white;
-                cursor: pointer;
-                margin-top: 10px;
-                width: $block-width;
-                border-radius: 2px;
-                display: inline-block;
-                margin-right: 10px;
+        }
 
-                div.title {
-                    font-size: 24px;
-                    line-height: 24px;
-                    padding: 20px 20px;
-                    text-align: left;
-                }
-                div.description {
-                    @include small-caps;
-                    line-height: 20px;
-                    padding: 0 20px;
-                    padding-bottom: 15px;
-                    text-align: left;
+        table {
+            thead {
+                tr.names {
+                    th {
+                        padding: 0;
+
+
+                    }
                 }
 
-                div.menu {
-                    height: 0px;
-                    transition: .2s ease-in-out height;
-                    overflow: hidden;
-                    &.active {
-                        border-top: 1px solid $light-gray;
-                        height: 60px;
+                tr.types {
+                    td {
+                        padding: 0;
+
+                        md-select {
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+            tbody {
+                tr {
+                    td {
+                        padding: 0;
+                    }
+
+                    md-select {
+                        margin: 0px;
+                        padding-left: 5px;
+                        padding-bottom: 3px;
+                    }
+
+                    &.data {
+                        td {
+                            // background-color: white;
+                            overflow: hidden;
+                        }
                     }
                 }
             }
         }
     }
 }
+

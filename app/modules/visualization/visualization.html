@@ -1,112 +1,99 @@
-<div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
-  <div class="pane-title">
-    Visualization Types
-  </div>
-  <ul class="pane-items">
-    <li ng-repeat="type in types" class="dataset" ng-click="selectType($index)" ng-class="{'selected':$index==selectedTypeIndex}">
-      <span class="vertical-center title">{{type.name | capitalize}}</span>
-      <span class="count">{{type.length}}</span>
-      <div class="right">
-        <img ng-src="/assets/images/{{type.icon}}" />
-      </div>      
-    </li>
-  </ul>
-</div>
+<!-- Visualization Nav Bar -->
+<visualization-side-nav></visualization-side-nav>
 
-<div class="right-pane viz-selection" ng-class="{'closed': rightClosed}" maxheight>
-  <div class="pane-title">
-    Visualization Specifications
+<div class="viz-viewport viewport" layout-fill layout="column" layout-align="starter" flex>
+<!-- <div class="viz-viewport viewport" layout-fill flex> -->
+  <visualization-preview viz-spec="selectedSpec" viz-type="selectedType" viz-data="vizData" conditional="selCondVals" selected-values="selectedValues"></visualization-preview>
+  <div class="visualization" flex="60" layout="row" ng-if="selectedSpec.category !== 'comparison'">
+    <div class="left-side card" layout="column" flex>
+      <md-progress-linear md-mode="indeterminate" ng-if="loadingViz" flex></md-progress-linear>
+      <div id="viz-container" flex></div>
+      <div class="legend" ng-if="selectedSpec.category === 'time series'" layout="row" layout-align="center center"></div>
+    </div>
+    <div class="stats card" ng-if="selectedSpec.category === 'time series'" flex="30">
+      <visualization-stats></visualization-stats>
+    </div>
   </div>
-  <div class="filter fixed">
-    Filter
-  </div>
-  <div class="choose-stats fixed">
-    Stats<br>
-    <span ng-repeat="stat in availableStats[selectedType]">
-      <input ng-click="toggleStat(stat)" type='checkbox'>{{stat.name}}<br></span>
-  </div>
-  <div class="sort fixed">
-    Sorting
-    <select ng-options="sorting.property as sorting.display for sorting in sortings" ng-model="selectedSorting" ng-change='sortSpecs()'></select>
-    <select ng-options="sortOrder.property as sortOrder.display for sortOrder in sortOrders" ng-model="selectedSortOrder" ng-change='sortSpecs()'></select>
-  </div>
-  <ul class="pane-items">
-    <li ng-repeat="spec in specs" ng-click="selectSpec($index);" ng-class="{'selected':$index==selectedSpecIndex, 'chosen':spec.chosen==true, 'rejected': spec.chosen==false}">
-      <div ng-if="selectedType=='treemap' || selectedType=='geomap' || selectedType=='piechart'">
-        <div>Group all <b>{{spec.aggregate.title}}</b></div>
-        <div>by <b>{{spec.groupBy.title}}</b></div>
-      </div>
-      <div ng-if="selectedType=='scatterplot' || selectedType=='linechart' || selectedType=='barchart'">
-        <div ng-if="spec.aggregation">Total number by</div>
-        <div><b>{{spec.x.title}}</b></div> 
-        <div ng-if="!spec.aggregation">vs. <b>{{spec.y.title}}</b></div>
-      </div>
-      
-      <div class="stats">
-        <div>Number of elements: <b>{{ ($index == selectedSpecIndex ? vizStats.count : spec.stats.count )}}</b></div>
-        <!-- <div>Standard Deviation: <b>{{spec.stats.std | number: 3}}</b></div> -->
-        <div class="extra-stats" ng-if="$index==selectedSpecIndex">
-          <span ng-repeat="statType in selectedStats">
-            <br><div>{{statType.name}}</div>
-            <div ng-repeat="(stat, val) in vizStats[statType.val]">{{stat}}: {{val | number : 2}}</div>
-          </span>
-          <!-- <div ng-repeat="statType in selectedStats">{{statType}}</div> -->
+
+  
+  <div class="scroll" flex="40">
+    <div class="parameters card" ng-if="selectedSpec.category === 'comparison'" flex>
+      <div class="title">Parameters</div>
+<!--       {{vizData}}
+      {{vizStats}}
+      {{selectedParameters}}
+      {{parametersData}} -->
+      <!-- Matrix of scatterplots for comparison selection -->
+<!--       <div class="scatterplots" layout="row" layout-wrap flex>
+        <div ng-repeat="(entities, comparison) in vizData" class="scatterplot-container" flex="20">
+        <div id="scatterplot-{{$index}}" class="scatterplot"></div>
+        <scatterplot data="comparison" entities="entities" selector="#scatterplot-{{$index}}"></scatterplot>
         </div>
-      </div>
+      </div> -->
 
-      <div class="choose" ng-if="$index==selectedSpecIndex">
-        <div class="select" ng-click="chooseSpec($index); $event.stopPropagation();">
-          <img src="/assets/images/check.svg" />
-        </div>
-        <div class="reject" ng-click="rejectSpec($index); $event.stopPropagation();">
-          <img src="/assets/images/cross.svg" />
-        </div>
-      </div>
-    </li>
-  </ul>
-</div>
-
-<div class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
-  <pane-toggle></pane-toggle>
-  <loader></loader>
-  <div id="viz-container"></div>
-  <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selCondVals"></visualization-preview>
-
-  <div class="conditionals card">
-    <div class="title">Conditionals</div>
-    <ul class="conditional-options options">
-      <li class="conditional-option option" ng-repeat="c in condList" ng-click="selectConditional(c)" ng-class="{'selected':selectedConditional(c.name)}">
-        {{c.name}}
-      </li>
-    </ul>
-    <div class="dropdowns">
       <ul class="dropdowns">
-        <li ng-repeat="(title, data) in condData">
-          <label class="dropdown-label">{{title}}</label>
-
-          <!-- Dropdown for factors -->
-          <select 
-            ng-if="!isNumeric(condTypes[title])" 
-            ng-model="selCondVals[currentdID][title]" 
-            ng-options="d for d in data" 
-            ng-change="changedConditional()" ng-init="selCondVals[currentdID][title]=data[0]">
-          </select>
-
-          <!-- Slider for numeric -->
-          <slider 
-            ng-if="isNumeric(condTypes[title])" 
-            ng-change="changedConditional()"
-            floor="{{ condData[title].floor }}" 
-            ceiling="{{ condData[title].ceiling }}" 
-            step="1" 
-            ng-model="selCondVals[currentdID][title].low"
-            ng-model-range="selCondVals[currentdID][title].high">
-          </slider>
+        <li>
+          <label class="dropdown-label">Compare by</label>
+          <md-select 
+            ng-if="condList"
+            ng-model="parameters.compareBy" 
+            ng-change="refreshVizData()"
+          >
+            <md-option ng-repeat="c in condList track by $index" ng-if="c !== selectedSpec.compare.title">{{c.name}}</md-option>
+          </md-select>
+        </li>
+        <li>
+          <label class="dropdown-label">X Variable</label>
+          <md-select
+            ng-if="parametersData"
+            ng-model="selectedParameters.x"
+            ng-change="refreshVizData()"
+          >
+            <md-option ng-repeat="p in parametersData">{{p}}</md-option>
+          </md-select>
+        </li>
+        <li>
+          <label class="dropdown-label">Y Variable</label>
+          <md-select 
+            ng-if="parametersData"
+            ng-model="selectedParameters.y" 
+            ng-change="refreshVizData()"
+          >
+            <md-option ng-repeat="p in parametersData">{{p}}</md-option>
+          </md-select>
+        </li>
+        <li>
+          <label class="dropdown-label">Group By</label>
+          <md-select 
+            ng-if="condList"
+            ng-model="parameters.groupBy" 
+            ng-change="refreshVizData()"
+          >
+            <md-option ng-repeat="c in condList track by $index">{{c.name}}</md-option>
+          </md-select>
         </li>
       </ul>
     </div>
-  </div>
-  <div class="configurations card">
-    <div class="title">Configuration</div>
+
+    <div class="conditionals card" flex>
+      <visualization-conditionals></visualization-conditionals>
+    </div>
+
+    <div class="configurations card" flex>
+      <div class="title">Configuration</div>
+      <section layout="row" layout-sm="column" layout-align="center center">
+        <md-checkbox ng-model="config.normalize">Normalize</md-checkbox>
+      </section>
+      <!-- Filter UI -->
+<!--       <md-select
+        ng-if="parametersData"
+        ng-model="selectedParameters.x"
+        ng-change="refreshVizData()"
+      >
+        <md-option ng-repeat="p in parametersData">{{p}}</md-option>
+      </md-select> -->
+    </div>
+    <div class="export card" flex>
+      <visualization-export></visualization-export>
   </div>
 </div>

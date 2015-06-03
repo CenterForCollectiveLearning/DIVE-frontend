@@ -1,4 +1,5 @@
 <div class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
-  <div class="title">Project Overview</div>
-  <div class="button delete" ng-click="removeProject(pID)">Delete Project</div>
+	<section layout="row" layout-align="center center">
+		<md-button aria-label="button" class="md-light md-warn md-raised" ng-click="removeProject(pID)">Delete Project</md-button>
+	</section>
 </div>

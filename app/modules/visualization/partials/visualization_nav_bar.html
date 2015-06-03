@@ -1,0 +1,69 @@
+<md-sidenav class="site-sidenav md-sidenav-left md-locked-open md-whiteframe-z2"
+              md-component-id="left"
+              md-is-locked-open="$mdMedia('gt-sm')">
+
+  <md-content class="filters" ng-if="categories.length">
+<!--     <h3>Filters</h3> -->
+<!--     <md-select ng-model="filters.sortField" class="type-select">
+      <md-option ng-value="sf.property" ng-repeat="sf in sortFields">{{ sf.display }}</md-option>
+    </md-select>
+    <md-select ng-model="filters.sortOrder" class="type-select">
+      <md-option ng-value="so.property" ng-repeat="so in sortOrders">{{ so.display }}</md-option>
+    </md-select> -->
+    <md-checkbox ng-model="stats.shown">Show statistics</md-checkbox>
+  </md-content>
+  <md-content flex role="navigation">
+<!--    
+  <md-radio-group ng-model="filters.sortOrders">
+    <md-radio-button ng-repeat="so in sortOrders">{{ so.display }}</md-radio-button>
+  </md-radio-group> -->
+
+    <ul class="docs-menu">
+      <li>
+        <ul>
+          <section layout="vertical" layout-fill layout-align="center center" ng-if="!categories.length" flex>
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </section>
+          <li ng-repeat="category in categories">
+            <md-button aria-label="button" class="md-button-toggle" ng-click="toggle($index)">
+                <div flex layout="row">
+                  {{category.name | capitalize}} ({{category.specs.length}})
+                   <span class="right icons" layout="row" layout-align="end center" flex>
+                    <div class="icon md-whiteframe-z1" ng-repeat="(type, url) in icons[category.name]">
+                      <img ng-src="assets/images/{{url}}" />
+                    </div>
+                  </span>
+                  <span aria-hidden="true" class="md-toggle-icon"
+                  ng-class="{'toggled' : isOpen($index)}">
+                  <md-icon md-svg-src="toggle-arrow"></md-icon>
+                </span>
+              </div>
+              <span class="visually-hidden">
+                Toggle {{isOpen($index)? 'expanded' : 'collapsed'}}
+              </span>
+            </md-button>
+
+            <ul class="menu-toggle-list" ng-show="isOpen($index)">
+              <section layout="row" layout-align="center center" flex>
+                <md-progress-circular md-mode="indeterminate" ng-if="loadingDatasets"></md-progress-circular>
+              </section>
+              <li ng-repeat="s in category.specs">
+                <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(s)}" ng-click="selectSpec(s)">
+                  <span ng-if="s.category === 'time series' || s.category === 'shares'">
+                      Group by <b>{{s.groupBy.title}}</b>
+                  </span>
+                  <span ng-if="s.category === 'comparison'">
+                      Compare <b>{{s.groupBy.title}}</b>
+                  </span>
+                </md-button>
+                <div class="stats" ng-if="stats.shown">
+                  Number of Elements: {{s.stats.count}}
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </md-content>
+</md-sidenav>

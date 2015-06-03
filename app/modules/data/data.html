@@ -1,104 +1,59 @@
-<!-- TODO: Refactor these into directives? -->
-<div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
-  <div class="pane-title">
-    Choose Data Sources
-  </div>
-  <ul class="pane-items">
-    <li ng-repeat="option in options" class="option" ng-class="{'selected':$index==selectedIndex && currentPane=='left', 'inactive': option.inactive}">
-      <div class="vertical-center title" ng-click="select_option($index)">{{option.label}}</div>
-      <div class="right">
-        <img ng-src="assets/images/{{option.icon}}" />
-      </div>
-    </li>
-  </ul>
-</div>
+<!-- TODO Refactor into a directive or something -->
 
-<div class="right-pane" ng-class="{'closed': rightClosed}" maxheight>
-  <div class="pane-title">
-    Inspect Datasets
-  </div>
-  <ul class="pane-items">
-    <li ng-repeat="dataset in datasets track by dataset.dID" class="dataset" ng-click="select_dataset($index)" ng-class="{'selected':$index==selectedIndex && currentPane=='right'}">
-      <div class="title">{{dataset.filename}}</div>
-      <div class="dimensions">
-        <span class="rows">{{dataset.rows}} Rows</span> x <span class="columns">{{dataset.cols}} Columns</span>
-      </div>
-      <div class="type">{{dataset.filetype}}</div>
-    </li>
-  </ul>
-</div>
+<md-sidenav class="site-sidenav md-sidenav-left md-locked-open md-whiteframe-z2"
+              md-component-id="left"
+              md-is-locked-open="$mdMedia('gt-sm')">
 
-<div class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" maxheight>
-  <pane-toggle></pane-toggle>
-
-  <div class="choose-data-set" ng-if="currentPane=='left'">
-
-    <!-- File Upload UI -->
-    <div class="file-upload" ng-if="selectedIndex==0">
-      <div class="button upload" ng-file-select="onFileSelect($files)" data-multiple="true" title="select file" onclick="this.value = null" class="upload-button">Click here to select file</div>
-      <!--       <div class="button cancel" ng-click="uploadabort()">Cancel Upload</div> -->
-      <div class="drop" ng-show="dropSupported" class="drop-box" ng-file-drop="onFileSelect($files)" ng-file-drop-available="dropSupported=true"
-      ng-file-drag-over-class="dragOverClass($event)" ng-file-drag-over-delay="100">or drop files here</div>
-    </div>
-
-    <div class="public-datasets" ng-if="selectedIndex==1">
-      <div class="title">
-        PUBLIC DATASETS
-      </div>
-      <ul class="datasets">
-        <li ng-repeat="d in publicDatasets" class="dataset" ng-click="selectPublicDataset(d.dID)">
-          <div class="title">{{d.filename}}</div>
-          <div class="description">Description</div>
-          <div class="menu" ng-class="{active: d.dID==selectedPublicDataset}">
-            <div class="button open" ng-click="addPublicDataset(d)">
-              Use Dataset
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-
-  <div ng-repeat="dataset in datasets track by dataset.dID" ng-if="$index==selectedIndex && currentPane=='right'">
-    <div class="dataset-preview card" ng-if="dataset.sample">
-      <div class="title">Dataset Preview</div>
-      <input type="text" ng-model="dataset.title">
-      <table>
-        <tr>
-          <td ng-repeat="attr in dataset.column_attrs">    
-            <input type="text" ng-model="attr.name">
-          </td>
-        </tr>
-        <tr>
-          <td ng-repeat="attr in dataset.column_attrs">
-            <select ng-model="attr.type" ng-options="type for type in types" class="type-select">
-            </td>
-          </tr>
-
-          <tr ng-repeat="(index, row) in dataset.sample track by $index">
-            <td ng-repeat="elem in row track by $index"> {{elem}} </td>
-          </tr>
-        </table>
-      </div>
-
-
-      <div class="dataset-structure-select card">
-        <div class="title">Dataset Structure</div>
-        <ul class="structure-options options">
-          <li class="structure-option option" ng-repeat="structure in structures" ng-click="selectStructure(structure.name)" ng-class="{'selected': selectedStructure(structure.name)}">
-            {{structure.displayName}}
+  <md-content flex role="navigation"> 
+    <ul class="docs-menu">
+      <section layout="vertical" layout-fill layout-align="center center" ng-if="loadingDatasets" flex>
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </section>
+      <li ng-repeat="section in sections" class="parent-list-item" ng-class="{'parentActive' : isSectionSelected(section)}">
+        <h2 class="menu-heading md-subhead" ng-if="section.type === 'heading'">
+          {{section.name}}
+        </h2>
+        <ul ng-if="section.children" class="menu-nested-list">
+          <li ng-repeat="c in section.children">
+            <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(c)}" ng-click="selectChild(c)" ng-if="c.type === 'pane'">
+              <span>
+                {{c.name}}
+              </span>
+            </md-button>
           </li>
         </ul>
-<!--         <div class="button ng-class=">Long (Sample-based)</div>
-        <div class="button">Wide (Matrix-like)</div>
-        <div class="button">Network</div> -->
-      </div>
-      <div class="dataset-delete-select card">
-        <div class="title">Modify Dataset</div>
-        <div class="button delete" ng-click="removeDataset(dataset.dID)">Delete Dataset</div>
-      </div>
-    </div>
-  </div>
+      </li>
 
-  </div> 
+      <li ng-class="{'parentActive' : isSectionSelected(section)}">
+        <md-button aria-label="button" class="md-button-toggle" ng-click="toggle('data')">
+          <div flex layout="row">
+              Inspect Datasets
+              <span class="md-toggle-icon" ng-class="{'toggled' : isOpen('data')}">
+                <md-icon md-svg-src="toggle-arrow"></md-icon>
+              </span>
+          </div>
+        </md-button>
+
+        <!-- Datasets -->
+        <ul ng-show="isOpen('data')" class="menu-toggle-list">
+          <!-- Loader -->
+          <section layout="row" layout-align="center center" flex ng-if="!datasets">
+            <md-progress-circular md-mode="indeterminate" ></md-progress-circular>
+          </section>
+          <li ng-repeat="d in datasets">
+            <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(d)}" ng-click="selectDataset(d)">
+              <span>
+                {{d.title}}
+              </span>
+            </md-button>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </md-content>
+</md-sidenav>
+
+<!-- Main View -->
+<div class="data-viewport viewport" layout="row" layout-align="center start" flex>
+  <div ui-view layout="vertical" layout-fill></div>
+</div>
