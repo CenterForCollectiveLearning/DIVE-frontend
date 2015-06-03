@@ -60,6 +60,19 @@ angular.module('diveApp.visualization').controller("VisualizationConditionalsCtr
   };
 });  
 
+angular.module('diveApp.visualization').controller("VisualizationGroupingCtrl", function($scope, ConditionalDataService) {
+  $scope.groupFunctions = [
+    { name: 'average', label: 'Average'},
+    { name: 'count', label: 'Count'},
+    { name: 'max', label: 'Maximum'},
+    { name: 'min', label: 'Minimum'},
+    { name: 'sum', label: 'Sum'},
+    { name: 'variance', label: 'Variance'},
+    { name: 'stddev', label: 'Standard Deviation'},
+  ]
+});  
+
+
 angular.module('diveApp.visualization').controller("VisualizationStatsCtrl", function($scope) {
 });  
 
@@ -127,6 +140,7 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
   }
 
   // TIME SERIES
+  $scope.groupOn = [];
 
 
   // CONFIG
@@ -204,6 +218,9 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
       }
       if (!$scope.isNumeric(c.type)) {
         $scope.condList.push(c)
+      }
+      if ($scope.isNumeric(c.type)) {
+        $scope.groupOn.push(c)
       }
     });
 

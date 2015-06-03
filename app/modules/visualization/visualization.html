@@ -14,7 +14,6 @@
       <visualization-stats></visualization-stats>
     </div>
   </div>
-
   
   <div class="scroll" flex="40">
     <div class="parameters card" ng-if="selectedSpec.category === 'comparison'" flex>
@@ -66,7 +65,7 @@
           <label class="dropdown-label">Group By</label>
           <md-select 
             ng-if="condList"
-            ng-model="parameters.groupBy" 
+            ng-model="parameters.group.by" 
             ng-change="refreshVizData()"
           >
             <md-option ng-repeat="c in condList track by $index">{{c.name}}</md-option>
@@ -77,6 +76,10 @@
 
     <div class="conditionals card" flex>
       <visualization-conditionals></visualization-conditionals>
+    </div>
+
+    <div class="grouping card" flex>
+      <visualization-grouping></visualization-grouping>
     </div>
 
     <div class="configurations card" flex>
