@@ -159,7 +159,7 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
             }
 
             if (category === 'shares') {
-              viz.id(vizSpec.groupBy.title.toString())
+              viz.id(vizSpec.group.by.title.toString())
               .size("value")
               .data(vizData)
               .draw();
@@ -167,7 +167,7 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
 
             if (category === 'distribution') {
               var sortedVizData = _.sortBy(vizData, function(e) { return e.value; });
-              var groupBy = vizSpec.groupBy.title.toString();
+              var groupBy = vizSpec.group.by.title.toString();
 
               $("div#viz-container svg#d3plus").remove();
 
@@ -186,7 +186,7 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
             }
 
             // if (category === 'distribution') {
-            //   var groupBy = vizSpec.groupBy.title.toString();
+            //   var groupBy = vizSpec.group.by.title.toString();
             //   var sortedVizData = _.sortBy(vizData, function(e) { return e.value; });
 
             //   console.log("Creating distribution visualization of type", vizType, groupBy);
@@ -229,7 +229,7 @@ angular.module('diveApp.visualization').directive("visualizationPreview", [
             //     return viz.title(getTitle(vizType, vizSpec)).x(x).y(y).id(x).draw();
             //   }
             // } else if (vizType === "geomap") {
-            //   console.log("Rendering geomap with id:", vizSpec.groupBy.title.toString());
+            //   console.log("Rendering geomap with id:", vizSpec.group.by.title.toString());
             //   return viz.title(getTitle(vizType, vizSpec)).coords("/assets/misc/countries.json").id("id").text("label").color("count").size("count").draw();
             // }
             /////////////

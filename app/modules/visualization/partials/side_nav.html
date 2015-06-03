@@ -56,12 +56,12 @@
               </section>
               <li ng-repeat="s in category.specs">
                 <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(s)}" ng-click="selectSpec(s)">
-                  <span ng-if="s.category === 'time series' && !s.groupBy">
+                  <span ng-if="s.category === 'time series' && !s.group.by">
                       All Data Points
                   </span>
-                  <span ng-if="s.groupBy">Group by:</span>
-                    <span ng-if="s.groupBy && (s.category === 'time series' || s.category === 'shares' || s.category === 'distribution')" class="spec">
-                      <b>{{s.groupBy.title}}</b>
+                  <span ng-if="s.group.by">Group by:</span>
+                    <span ng-if="s.group.by && (s.category === 'time series' || s.category === 'shares' || s.category === 'distribution')" class="spec">
+                      <b>{{s.group.by.title}}</b>
                     </span>
                   </span>
                   <span ng-if="s.category === 'comparison'">
