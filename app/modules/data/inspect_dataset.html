@@ -1,0 +1,51 @@
+<!-- Datasets -->
+<div ng-repeat="dataset in datasets" ng-if="isChildSelected(dataset)" flex> 
+  <div class="dataset-preview card" ng-if="dataset.sample" layout="column">
+      <div class="title">
+        {{dataset.title}}
+      </div>
+      <div class="table-responsive-vertical shadow-z-1">
+        <table class="table table-hover table-mc-light-blue">
+          <thead>
+            <tr class="names">
+              <th ng-repeat="(index, attr) in dataset.column_attrs" ng-class="{'time-series': isTimeSeries(index, dataset.time_series)}">
+                <input type="text" ng-model="attr.name">
+              </th>
+            </tr>
+            <tr class="types">
+              <td ng-repeat="(index, attr) in dataset.column_attrs" ng-class="{'time-series': isTimeSeries(index, dataset.time_series)}">
+                <md-select ng-model="attr.type" class="type-select">
+                <md-option ng-repeat="type in types">{{type}}</md-option>
+              </md-select>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="data" ng-repeat="(index, row) in dataset.sample track by $index">
+            <td data-title="{{elem}}" ng-repeat="elem in row track by $index">{{elem}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <!-- Lower Section -->
+  <!-- Structure Specification -->
+  <div layout="row">
+    <div class="dataset-structure-select card" flex>
+      <div class="title">Dataset Structure</div>
+      <md-radio-group ng-model="dataset.structure">
+      <md-radio-button ng-repeat="s in structures" value="{{s.name}}" class="md-primary">{{s.displayName}}</md-radio-button>
+    </md-radio-group>
+  </div>
+  <!-- Dataset Modification -->
+  <div class="dataset-delete-select card" flex>
+    <div class="title">Modify Dataset</div>
+      <md-content>
+        <section layout="row" layout-align="center center">
+          <md-button aria-label="button" class="md-light md-warn md-raised" ng-click="removeDataset(dataset.dID)">Delete Dataset</md-button>
+        </section>
+      </md-content>
+    </div>
+  </div>
+</div>

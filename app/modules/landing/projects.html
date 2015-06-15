@@ -1,0 +1,19 @@
+<section class="landing-projects landing-list" flex>
+	<div class='project-list' ng-if="projects.length">
+		<ul class="projects">
+			<li class="project card" ng-repeat="project in projects" ng-click="selectProject(project.pID)">
+				<div class="title">{{project.title}}</div>
+				<md-content>
+    				<div class="description">{{project.description}}</div>
+	    		</md-content>
+				<section layout="row" layout-align="center center">
+					<md-button aria-label="button" class="md-light md-raised md-primary" ng-click="openProject(project)">Open</md-button>
+					<md-button aria-label="button" class="md-light md-raised md-warn" ng-click="removeProject(project, $index)">Delete</md-button>
+				</section>
+			</li>
+		</ul>
+	</div>
+	<div ng-if="!projects.length">
+		<h1>No projects created yet.</h1>
+	</div>
+</section>

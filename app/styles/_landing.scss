@@ -1,0 +1,177 @@
+.landing-list {
+    width: 600px;
+    max-width: 600px;
+    padding-top: 50px;
+
+    .card {
+        margin-bottom: 20px;
+    }
+}
+
+$top-bar-height: 55px;
+div.landing-top {
+    position: relative;
+    @include card-shadow;
+    @include font;
+    font-weight: light;
+    height: $top-bar-height;
+    background-color: rgb(63,81,181); // #01579b;// #0277bd; // rgb(63,81,181);  // #1C1D1D;
+    ///background-color: #1C1D1D;
+
+
+    color: $active-white;
+    font-size: 14px;
+
+    div.logo {
+        cursor: pointer;
+        float: left;
+        height: $top-bar-height;
+
+        img {
+            float: left;
+            width: 60px;
+            padding-left: 10px;
+            padding-right: 15px;
+            padding-top: 12px;
+        }
+    }
+    div.dive {
+        display: inline-block;
+        div.title {
+            cursor: pointer;
+            font-size: 28px;
+        }
+
+        div.subtitle {
+            cursor: pointer;
+            margin-left: 1px;
+            margin-top: -5px;
+            // font-family: 'Decima';
+            text-transform: uppercase;
+            // letter-spacing: 2px;
+            font-size: 12px;
+        }
+    }
+
+    div.user-status {
+        @include small-caps;
+        position: absolute;
+        top: 10px;
+        line-height: 15px;
+        right: 15px;
+        color: white;
+        span.username {
+            border-bottom: 1px dotted $active-white;
+        }
+        span.logout {
+            cursor: pointer;
+            &:hover {
+                border-bottom: 1px dotted $active-white;
+            }
+        }
+    }
+
+    div.beta {
+        @include small-caps;
+        position: absolute;
+        top: 45px;
+        right: 15px;
+        color: white;
+    }
+}
+
+section.text {
+    @include card-shadow;
+    background-color: white;
+    position: relative;
+    width: 600px;
+    margin: 0 auto;
+    border: 1px solid $light-gray;
+    border-radius: 2px;
+}
+
+// .card {
+    
+    
+
+   
+
+//     div.title {
+//         font-size: 24px;
+//         line-height: 24px;
+//         padding: 20px 20px;
+//         text-align: center;
+//     }
+//     div.close {
+//         cursor: pointer;
+//         position: absolute;
+//         top: 0px;
+//         right: 10px;
+//         font-size: 24px;
+//     }
+
+//     div.create-project, div.login-user, div.reg-user {
+//         @include button(80px, $ontology-blue);
+//     }
+// }
+
+section.form {
+    @include font;
+    $block-width: 600px;
+    $block-height: 100px;
+
+    div.new-project-button {
+        @include button(600px, $ontology-blue);
+        margin: 30px auto 0 auto;
+    }
+
+    ul.projects {
+        width: 600px;
+        padding: 0;
+        margin: 0 auto;
+        a {
+            color: black;
+        }
+        li.project {
+            @include card-shadow;
+            @include border-transition();
+            @include background-transition();
+            background-color: white;
+            cursor: pointer;
+            margin-top: 10px;
+            width: $block-width;
+            border-radius: 2px;
+            display: inline-block;
+            margin-right: 10px;
+
+            // &:hover {
+            //     // border-color: $dive-black;
+            //     background-color: $ontology-blue;
+            // }
+
+            div.title {
+                font-size: 24px;
+                line-height: 24px;
+                padding: 20px 20px;
+                text-align: left;
+            }
+            div.description {
+                @include small-caps;
+                line-height: 20px;
+                padding: 0 20px;
+                padding-bottom: 15px;
+                text-align: left;
+            }
+
+            div.menu {
+                height: 0px;
+                transition: .2s ease-in-out height;
+                overflow: hidden;
+                &.active {
+                    border-top: 1px solid $light-gray;
+                    height: 100px;
+                }
+            }
+        }
+    }
+}

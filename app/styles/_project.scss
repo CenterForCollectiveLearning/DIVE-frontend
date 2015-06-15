@@ -1,0 +1,73 @@
+.viewport {
+    padding: 10px;
+
+    .card {
+        margin-bottom: 8px;
+    }
+}
+
+.docs-menu {
+    .menu-toggle-list {
+        overflow: scroll;
+    }
+    .md-button.child {
+        line-height: 16px;
+        min-height: 30px;
+        max-height: 80px;
+    }
+}
+
+div.hamburger {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+
+    div.line {
+        width: 20px;
+        border-bottom: 3px solid white;
+        padding-bottom: 6px;
+    }
+}
+
+div.project-right-pane {
+    margin-top: 35px;
+    transition: .2s ease-in-out width;
+    background-color: $dive-black;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 0;
+    z-index: 11;
+    
+    -webkit-box-shadow: -2px 0px 5px 0 rgba(0, 0, 0, 0.26);
+    -moz-box-shadow: -2px 0px 5px 0 rgba(0, 0, 0, 0.26);
+    box-shadow: -2px 0px 5px 0 rgba(0, 0, 0, 0.26);
+
+    &.open {
+        width: 250px;
+    }
+
+    ul {
+        li {
+            @include background-transition;
+            cursor: pointer;
+            padding-left: 10px;
+            line-height: 50px;
+            color: white;
+            border-top: 1px solid $light-gray;
+
+            &:hover {
+                background-color: $ontology-blue;
+            }
+
+            &:last-child {
+                border-bottom: 1px solid $light-gray;
+            }
+        }
+    }
+}
+
+
+

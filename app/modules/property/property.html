@@ -1,0 +1,43 @@
+<!-- <div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
+	<div class="pane-title">
+		Change Layout
+	</div>
+	<ul class="pane-items">
+		<li ng-repeat="option in layoutOptions" class="option" ng-class="{'selected':$index==selectedLeftIndex && currentPane=='left', 'inactive': option.inactive}">
+			<div class="vertical-center title" ng-click="select_left_option($index)" ng-class="{'inactive': option.inactive}">{{option.label}}</div>
+            <div class="right">
+                <img ng-src="/assets/images/{{option.icon}}" />
+            </div>
+		</li>
+	</ul>
+</div> -->
+
+<!-- <div class="right-pane" ng-class="{'closed': rightClosed}" maxheight>
+	<div class="pane-title">
+		Selected Element
+	</div>
+	<div class="element-description" ng-if="selected">
+    	<div ng-if="selected.type" class="type">{{selected.type | capitalize}}</div>
+    	<ul ng-if="selected.type=='object'">
+    		<li ng-repeat="(k, v) in selected">
+    			<span class="key" ng-if="k!==type">{{k}}</span>: <span class="value">{{v}}</span>
+    		</li>
+    	</ul>
+    	<ul ng-if="selected.type=='attribute'">
+    		<li><span class="key">Type</span>: <span class="value">{{selected.columnType}}</span></li>
+    		<li><span class="key">Unique</span>: <span class="value">{{selected.unique}}</span></li>
+    		<li ng-repeat="(k, v) in selected.columnStats">
+    			<span class="key">{{k}}</span>: <span class="value">{{v}}</span>
+    		</li>
+    	</ul>
+    	<ul ng-if="selected.type=='relationship'">
+    		<li ng-repeat="(k, v) in selected">
+    			<span class="key" ng-if="k!==type">{{k}}</span>: <span class="value">{{v}}</span>
+    		</li>
+    	</ul>
+    </div>
+</div> -->
+
+<div class="viewport" ng-class="{'right-closed': rightClosed, 'left-closed': leftClosed}" flex>
+    <ontology-editor selected="selected" stats="stats" data="datasets" overlaps="overlaps" hierarchies="hierarchies" uniques="uniques"></ontology-editor>
+</div>

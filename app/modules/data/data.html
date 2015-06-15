@@ -1,0 +1,59 @@
+<!-- TODO Refactor into a directive or something -->
+
+<md-sidenav class="site-sidenav md-sidenav-left md-locked-open md-whiteframe-z2"
+              md-component-id="left"
+              md-is-locked-open="$mdMedia('gt-sm')">
+
+  <md-content flex role="navigation"> 
+    <ul class="docs-menu">
+      <section layout="vertical" layout-fill layout-align="center center" ng-if="loadingDatasets" flex>
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </section>
+      <li ng-repeat="section in sections" class="parent-list-item" ng-class="{'parentActive' : isSectionSelected(section)}">
+        <h2 class="menu-heading md-subhead" ng-if="section.type === 'heading'">
+          {{section.name}}
+        </h2>
+        <ul ng-if="section.children" class="menu-nested-list">
+          <li ng-repeat="c in section.children">
+            <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(c)}" ng-click="selectChild(c)" ng-if="c.type === 'pane'">
+              <span>
+                {{c.name}}
+              </span>
+            </md-button>
+          </li>
+        </ul>
+      </li>
+
+      <li ng-class="{'parentActive' : isSectionSelected(section)}">
+        <md-button aria-label="button" class="md-button-toggle" ng-click="toggle('data')">
+          <div flex layout="row">
+              Inspect Datasets
+              <span class="md-toggle-icon" ng-class="{'toggled' : isOpen('data')}">
+                <md-icon md-svg-src="toggle-arrow"></md-icon>
+              </span>
+          </div>
+        </md-button>
+
+        <!-- Datasets -->
+        <ul ng-show="isOpen('data')" class="menu-toggle-list">
+          <!-- Loader -->
+          <section layout="row" layout-align="center center" flex ng-if="!datasets">
+            <md-progress-circular md-mode="indeterminate" ></md-progress-circular>
+          </section>
+          <li ng-repeat="d in datasets">
+            <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(d)}" ng-click="selectDataset(d)">
+              <span>
+                {{d.title}}
+              </span>
+            </md-button>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </md-content>
+</md-sidenav>
+
+<!-- Main View -->
+<div class="data-viewport viewport" layout="row" layout-align="center start" flex>
+  <div ui-view layout="vertical" layout-fill></div>
+</div>
