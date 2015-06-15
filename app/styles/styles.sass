@@ -1,0 +1,61 @@
+// Resource imports and universal styling rules
+$dive-black: #1a1a1a
+
+$dark-blue: #122e43
+$light-blue: #a5cdd4
+
+$light-gray: #e0e5e9
+$dark-gray: #222222
+$data-yellow: #f8e71c
+$ontology-blue: #4a90e2
+$visualize-purple: #bd10e0
+$assemble-green: #7ed321
+$project-red: #d0021b
+
+// Reddit colors
+$light-gray: #eeeeee
+
+$background-color: #e9e7e8
+$gray: #aeaeae
+$active-white: #eeeeee
+$dark-gray: #666666
+
+// Universal Link Styling
+a
+  text-decoration: none !important
+  &:hover
+    color: black
+
+// Universal List Styling
+ul
+  list-style-type: none
+  li
+    list-style-type: none
+
+*, *:before, *:after
+  -moz-box-sizing: border-box
+  -webkit-box-sizing: border-box
+  box-sizing: border-box
+
+// Libraries
+@import lib/d3plus.scss
+@import lib/metricsgraphics.scss
+@import lib/angular-material.scss
+@import lib/angular-docs.scss
+
+// Core
+@import _colors
+@import _mixins
+@import _links
+@import _layout
+@import _embed
+@import _landing
+@import _project
+@import _export
+@import _data
+@import _property
+@import _visualization
+@import _widgets
+@import _sidenav
+@import _table
+

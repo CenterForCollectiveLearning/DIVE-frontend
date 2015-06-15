@@ -14,7 +14,7 @@ var runSequence = require('run-sequence');
 var isProd = gutil.env.type === 'prod';
 
 sources = {
-  sass: 'app/styles/*.scss',
+  sass: 'app/styles/*',
   html: 'app/**/*.html',
   js: 'app/**/*.js',
   assets: 'app/assets/**/*',
@@ -53,7 +53,8 @@ gulp.task('js', function() {
 });
 
 gulp.task('sass', function() {
-  return gulp.src('app/styles/*.scss').pipe(sass({
+  return gulp.src('app/styles/styles.sass').pipe(sass({
+    indentedSyntax: true,
     onError: function(e) {
       return console.log(e);
     }

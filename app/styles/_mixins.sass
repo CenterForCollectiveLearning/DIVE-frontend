@@ -1,0 +1,67 @@
+=card-shadow
+  -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26)
+  -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26)
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26)
+
+=left-arrow
+  &::before
+    margin-top: -5px
+    margin-left: -7px
+    border: 5px solid $gray
+    border-left-color: transparent
+    border-top-color: transparent
+    border-bottom-color: transparent
+
+=right-arrow
+  &::before
+    margin-top: -5px
+    margin-left: -1px
+    border: 5px solid $gray
+    border-right-color: transparent
+    border-top-color: transparent
+    border-bottom-color: transparent
+
+=transition($property, $duration, $timing-function)
+  -webkit-transition: $property $duration $timing-function
+  -moz-transition: $property $duration $timing-function
+  -o-transition: $property $duration $timing-function
+  transition: $property $duration $timing-function
+
+=opacity-transition
+  +transition(opacity, 0.1s, ease-in)
+
+=border-transition
+  +transition(border, 0.1s, ease-in)
+
+=background-transition
+  +transition(background, 0.1s, ease-in)
+
+=small-caps
+  font-size: 12px
+  letter-spacing: 1px
+  line-height: 35px
+  text-transform: uppercase
+
+=button($width, $hover-color)
+  +small-caps
+  cursor: pointer
+  background-color: $dark-gray
+
+  width: $width
+  margin: 10px auto 0 auto
+  padding: 8px 5px
+  line-height: 20px
+  border-radius: 2px
+
+  text-align: center
+  color: $active-white
+
+  input
+    cursor: pointer
+
+  &:hover
+    +background-transition
+    background-color: $hover-color
+
+=font
+  font-family: 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
