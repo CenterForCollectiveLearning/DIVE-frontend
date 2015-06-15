@@ -1,0 +1,13 @@
+div.embed {
+	background-color: white;
+	padding: 0;
+	margin: 0;
+	position: relative;
+	height: 100%;
+	overflow-x: scroll;
+
+	div#viz-container {
+		margin: 0;
+		padding: 0;
+	}
+}

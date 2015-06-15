@@ -1,0 +1,98 @@
+<!-- <div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
+	<div class="pane-title">
+		Selected Visualizations
+	</div>
+	<ul class="pane-items">
+    <li ng-repeat="spec in specs" ng-click="selectSpec($index);" ng-class="{'selected':$index==selectedSpecIndex}">
+      <div ng-if="spec.viz_type=='treemap' || spec.viz_type=='geomap' || spec.viz_type=='piechart'">
+        <div>Group all <b>{{spec.aggregate.title}}</b></div>
+        <div>by <b>{{spec.groupBy.title}}</b></div>
+        <div class="right">
+          <img ng-src="/assets/images/{{icons[spec.viz_type]}}" />
+        </div>     
+      </div>
+      <div ng-if="spec.viz_type=='scatterplot' || spec.viz_type=='linechart' || spec.viz_type=='barchart'">
+        <div ng-if="spec.aggregation">Total number by</div>
+        <div><b>{{spec.x.title}}</b></div> 
+        <div ng-if="!spec.aggregation">vs. <b>{{spec.y.title}}</b></div>
+        <div class="right">
+          <img ng-src="/assets/images/{{icons[spec.viz_type]}}" />
+        </div> 
+      </div>
+    </li>
+	</ul>
+</div> -->
+
+<!-- <div class="right-pane" ng-class="{'closed': rightClosed}" maxheight>
+	<div class="pane-title">
+		Export Options
+	</div>
+	<ul class="pane-items">
+    <li ng-repeat="mode in modes" ng-click="selectMode(mode)" class="option" ng-class="{'selected':mode==selectedMode}">
+      <div class="vertical-center title">
+        {{mode | capitalize}}
+      </div>
+    </li>
+	</ul>
+</div> -->
+
+<div class="export-viewport viewport" layout-align="center start" flex>
+  <section layout="row" layout-align="center center" flex ng-if="!loading">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  </section>
+
+  <div id="viz-container" class="card"></div>
+  <visualization-preview viz-type="selectedType" viz-spec="selectedSpec" viz-data="vizData" conditional="selectedConditionalValues"></visualization-preview>
+
+  <div ng-if="selectedMode=='modify'" class="embed-options card" flex>
+    <div class="title">Export Parameters</div>
+    <div class="label">Width</div>
+    <input ng-model="config.width" select-on-click></input>
+    <div class="label">Height</div>
+    <input ng-model="config.height" select-on-click></input>
+  </div>
+
+  <div ng-if="selectedMode=='export'" class="embed-options card" flex>
+    <div class="title">Interactive Embed</div>
+    <div class="label">URL</div>
+    <input ng-model="embedURL" select-on-click></input>
+    <div class="label">HTML</div>
+    <input ng-model="embedHTML" select-on-click></input>
+  </div>
+
+  <div ng-if="selectedMode=='export'" class="embed-options card" flex>
+    <div class="title">Static Download</div>
+    <div class="button-group">
+      <div class="short button" ng-click="save('svg')">
+        SVG
+      </div>
+      <div class="short button" ng-click="save('png')">
+        PNG
+      </div>
+      <div class="short button" ng-click="save('pdf')">
+        PDF
+      </div>
+    </div>
+<!--     <div class="label">SVG</div>
+    <input ng-model="embedURL" select-on-click></input>
+    <div class="label">PNG</div>
+    <input ng-model="embedHTML" select-on-click></input> -->
+  </div>
+
+  <!-- <div class="conditionals card">
+    <div class="title">Conditionals</div>
+    <ul class="conditional-options">
+      <li class="conditional-option" ng-repeat="conditionalOption in conditionalOptions" ng-click="selectConditional(conditionalOption)" ng-class="{'selected':selectedConditional(conditionalOption.name)}">
+        {{conditionalOption.name}}
+      </li>
+    </ul>
+    <div class="dropdowns">
+    <ul class="dropdowns">
+      <li ng-repeat="(title, data) in selectedConditionalData">
+        <label class="dropdown-label">{{title}}</label>
+        <select ng-model="selectedConditionalValues[currentdID][title]" ng-options="datum for datum in data" ng-change="changedConditional()" ng-init="selectedConditionalValues[currentdID][title]=data[0]"></select>
+      </li>
+    </ul>
+  </div>
+  </div> -->
+</div>

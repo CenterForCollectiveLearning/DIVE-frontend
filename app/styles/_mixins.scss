@@ -1,0 +1,75 @@
+@mixin card-shadow {
+    // -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
+    // -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
+    // box-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
+
+    -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+
+}
+
+@mixin left-arrow {
+    &::before {
+        margin-top: -5px;
+        margin-left: -7px;
+        border: 5px solid $gray;
+        border-left-color: transparent;
+        border-top-color: transparent;
+        border-bottom-color: transparent;
+    }
+}
+
+@mixin right-arrow {
+    &::before {
+        margin-top: -5px;
+        margin-left: -1px;
+        border: 5px solid $gray;
+        border-right-color: transparent;
+        border-top-color: transparent;
+        border-bottom-color: transparent;  
+    } 
+}
+
+@mixin transition($property, $duration, $timing-function) {
+    -webkit-transition: $property $duration $timing-function;
+    -moz-transition: $property $duration $timing-function;
+    -o-transition: $property $duration $timing-function;
+    transition: $property $duration $timing-function;
+}
+
+@mixin opacity-transition { @include transition(opacity, 0.1s, ease-in) }
+@mixin border-transition { @include transition(border, 0.1s, ease-in) }
+@mixin background-transition { @include transition(background, 0.1s, ease-in) }
+
+@mixin small-caps {
+    font-family: "Titillium Web", "Lato", helvetica, sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    line-height: 35px;
+    text-transform: uppercase;
+}
+
+@mixin button($width, $hover-color) {
+    cursor: pointer;
+    input {
+        cursor: pointer;
+    }
+    background-color: $dark-gray;
+    width: $width;
+    margin: 10px auto 0 auto;
+    text-align: center;
+    border-radius: 2px;
+    padding: 8px 5px;
+    color: $active-white;
+    @include small-caps;
+    line-height: 20px;
+    &:hover {
+        @include background-transition;
+        background-color: $hover-color;
+    }
+}
+
+@mixin font {
+   font-family: "Titillium Web", 'Karbon', 'DIN', Helvetica, Sans Serif;
+}
