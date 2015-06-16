@@ -7,10 +7,10 @@ require('./create_project.ctrl');
 require('./landing_tabs.ctrl');
 require('./authenticate.ctrl');
 
-angular.module('diveApp.landing').directive('landingTop', function() {
+angular.module('diveApp.landing').directive('navBar', function() {
   return {
     restrict: 'E',
-    templateUrl: 'modules/landing/landing_top_bar.html',
+    templateUrl: 'modules/landing/navbar.html',
     controller: 'LandingTabsCtrl'
   };
 });

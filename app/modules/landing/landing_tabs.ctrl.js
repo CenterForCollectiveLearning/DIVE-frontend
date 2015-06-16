@@ -1,21 +1,33 @@
 var _ = require('underscore');
 
 angular.module('diveApp.landing').controller('LandingTabsCtrl', function($scope, $state, $rootScope, $stateParams) {
-  $scope.tabs = [
-    {
-      state: 'landing.create',
-      label: 'Create'
-    }, {
-      state: 'landing.projects',
-      label: 'Projects'
-    }, {
-      state: 'landing.reports',
-      label: 'Reports'
-    }, {
-      state: 'landing.about',
-      label: 'About'
-    }
-  ];
+  if ($scope.loggedIn)
+    $scope.tabs = [
+      {
+        state: 'landing.create',
+        label: 'Create'
+      }, {
+        state: 'landing.projects',
+        label: 'Projects'
+      }, {
+        state: 'landing.reports',
+        label: 'Reports'
+      }, {
+        state: 'landing.about',
+        label: 'About'
+      }
+    ];
+  else
+    $scope.tabs = [
+      {
+        state: 'landing.login',
+        label: 'Login'
+      },
+      {
+        state: 'landing.signup',
+        label: 'Sign up'
+      }
+    ]
 
   var currentStateSplit = $state.current.name.split('.');
   var currentState = currentStateSplit[0] + '.' + currentStateSplit[1];
