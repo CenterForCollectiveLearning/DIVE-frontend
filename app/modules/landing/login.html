@@ -10,7 +10,7 @@
 
 				<md-input-container>
 		    		<label for="password">Password</label>
-	    			<input id="password" type="password" ng-model="login_password" placeholder="password" required>
+	    			<input id="password" type="password" ng-model="login_password" required>
 						<div ng-if="loginErr" ng-messages="login_password.$error">
 	            <div ng-message="required">Invalid username and/or password.</div>
 		        </div>
