@@ -1,24 +1,24 @@
-<section class="login-container" flex>
+<section class="primary-card-container" flex>
 	<md-card class='reg-form' ng-if='!loggedIn'>
 		<md-card-content>
 			<h2 class='md-title'>Sign up</h2>
 			<form name='signUpForm'>
 				<md-input-container>
-		    		<label for="username">Username</label>
-	    			<input id="username" type="text" ng-model="reg_userName" required>
-			    </md-input-container>
+	    		<label for="username">Username</label>
+    			<input id="username" type="text" ng-model="reg_userName" required>
+		    </md-input-container>
 
-			    <md-input-container>
-		    		<label for="displayname">Display Name</label>
-	    			<input id="displayname" type="text" ng-model="reg_displayName" required>
-			    </md-input-container>
+		    <md-input-container>
+	    		<label for="displayname">Display Name</label>
+    			<input id="displayname" type="text" ng-model="reg_displayName" required>
+		    </md-input-container>
 
 				<md-input-container>
 		    		<label for="password">Password</label>
 	    			<input id="password" type="password" ng-model="reg_password" required ng-enter='registerUser(reg_userName, reg_displayName, reg_password)'>
-						<div ng-if="regErr" ng-messages="reg_password.$error">
+						<ng-messages ng-if="regError">
 	            <div ng-message="required">Username must be unique and all fields are required.</div>
-		        </div>
+		        </ng-messages>
 			    </md-input-container>
 			</form>
 		</md-card-content>

@@ -8,11 +8,11 @@ angular.module('diveApp.landing').controller("AuthenticateCtrl", function($scope
         if (data.success) {
           $state.go('landing.create');
         } else {
-          $scope.loginErr = true;
+          $scope.loginError = true;
         }
       });
     } else {
-      $scope.loginErr = true;
+      $scope.loginError = true;
     }
   };
 
@@ -26,11 +26,11 @@ angular.module('diveApp.landing').controller("AuthenticateCtrl", function($scope
             $state.go('landing.create');
           })
         } else {
-          $scope.regErr = true;
+          $scope.regError = true;
         }
       });
     } else {
-      $scope.regErr = true;
+      $scope.regError = true;
     }
   };
 });
