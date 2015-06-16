@@ -1,0 +1,47 @@
+<md-sidenav class="site-sidenav md-sidenav-left md-locked-open md-whiteframe-z2"
+  md-component-id="left"
+  md-is-locked-open="$mdMedia('gt-sm')" layout-fill>
+  <md-content flex role="navigation">
+    <ul class="docs-menu">
+      <li>
+        <ul>
+          <section layout="vertical" layout-fill layout-align="center center" 
+           ng-if="(Object.keys(exportedVizs).length > 0)" flex>
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </section>
+
+          <!-- ADD CATEGORIES LATER -->
+          <li ng-repeat="(category, exports) in exportedVizs">
+            <md-button aria-label="button" class="md-button-toggle">
+              <div flex layout="row">
+                {{category | capitalize}} ({{exports.length}})
+              </div>
+            </md-button>
+            <ul class="menu-toggle-list">
+              <section layout="row" layout-align="center center" flex>
+                <md-progress-circular md-mode="indeterminate" ng-if="(Object.keys(exportedVizs).length > 0)"></md-progress-circular>
+              </section>
+              <li ng-repeat="exported in exports">
+                <md-checkbox ng-model="exported.toggled">
+                  <span ng-if="!exported.spec.groupBy">
+                    All datapoints
+                  </span>
+                  <span ng-if="exported.spec.groupBy && (exported.spec.viz_type === 'time series' || exported.spec.viz_type === 'shares')">
+                      Group by <b>{{exported.spec.groupBy.title}}</b>
+                  </span>
+                  <span ng-if="exported.spec.viz_type === 'comparison'">
+                      Compare <b>{{exported.spec.groupBy.title}}</b>
+                  </span>
+                  <!-- BETTER FORMATTING HERE  -->
+                  <span ng-repeat="(k, v) in exported.conditional[exported.spec.aggregate.dID]">
+                    {{k}} : {{v}}
+                  </span>
+                </md-checkbox>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </md-content>
+</md-sidenav>

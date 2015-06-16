@@ -1,3 +1,23 @@
+<assemble-side-nav></assemble-side-nav>
+
+<div class="export-viewport viewport" layout-fill layout="column" layout-align="starter" flex>
+  <section layout="row" layout-align="center center" flex ng-if="!loadingData">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  </section>
+  <assemble-preview vizs="exportedVizs" viz-data="vizData"></assemble-preview>
+
+  <div class="visualization" flex="60" layout="row">
+    <div class="left-side card" flex>
+    </div>
+  </div>
+
+  <div class="scroll" flex="40">
+    <div class="export card" flex>
+        <assemble-export></assemble-export>
+    </div>
+  </div>
+</div>
+
 <!-- <div class="left-pane" ng-class="{'closed': leftClosed}" maxheight>
 	<div class="pane-title">
 		Selected Visualizations
