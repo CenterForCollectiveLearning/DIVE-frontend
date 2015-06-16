@@ -21,20 +21,20 @@
     border-top-color: transparent
     border-bottom-color: transparent
 
-=transition($property, $duration, $timing-function)
+=_transition($property, $duration, $timing-function)
   -webkit-transition: $property $duration $timing-function
   -moz-transition: $property $duration $timing-function
   -o-transition: $property $duration $timing-function
   transition: $property $duration $timing-function
 
 =opacity-transition
-  +transition(opacity, 0.1s, ease-in)
+  +_transition(opacity, 0.1s, ease-in)
 
 =border-transition
-  +transition(border, 0.1s, ease-in)
+  +_transition(border, 0.1s, ease-in)
 
 =background-transition
-  +transition(background, 0.1s, ease-in)
+  +_transition(background, 0.1s, ease-in)
 
 =small-caps
   font-size: 12px

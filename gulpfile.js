@@ -14,7 +14,7 @@ var runSequence = require('run-sequence');
 var isProd = gutil.env.type === 'prod';
 
 sources = {
-  sass: 'app/styles/*',
+  sass: 'app/styles/**',
   html: 'app/**/*.html',
   js: 'app/**/*.js',
   assets: 'app/assets/**/*',
