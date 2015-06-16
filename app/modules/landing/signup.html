@@ -5,24 +5,25 @@
 			<form name='signUpForm'>
 				<md-input-container>
 		    		<label for="username">Username</label>
-	    			<input id="username" type="text" ng-model="reg_userName" placeholder="username" required>
+	    			<input id="username" type="text" ng-model="reg_userName" required>
 			    </md-input-container>
 
 			    <md-input-container>
 		    		<label for="displayname">Display Name</label>
-	    			<input id="displayname" type="text" ng-model="reg_displayName" placeholder="display name" required>
+	    			<input id="displayname" type="text" ng-model="reg_displayName" required>
 			    </md-input-container>
 
 				<md-input-container>
 		    		<label for="password">Password</label>
-	    			<input id="password" type="password" ng-model="reg_password" placeholder="password" required ng-enter='registerUser(reg_userName, reg_displayName, reg_password)'>
+	    			<input id="password" type="password" ng-model="reg_password" required ng-enter='registerUser(reg_userName, reg_displayName, reg_password)'>
+						<div ng-if="regErr" ng-messages="reg_password.$error">
+	            <div ng-message="required">Username must be unique and all fields are required.</div>
+		        </div>
 			    </md-input-container>
-
-			    <section layout="row" layout-align="center center">
-			    	<md-button aria-label="button" class="md-light md-raised" ng-click='registerUser(reg_userName, reg_displayName, reg_password)'>Register</md-button>
-			    </section>
-				<label ng-if='regErr'>**Username must be unique and all fields are required.</label>
 			</form>
 		</md-card-content>
+    <div class='md-actions' layout="row" layout-align="end center">
+	    <md-button class="md-primary md-raised" aria-label="button" ng-click="registerUser(reg_userName, reg_displayName, reg_password)">Sign Up</md-button>
+    </div>
 	</md-card>
 </section>

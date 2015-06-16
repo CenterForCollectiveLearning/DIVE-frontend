@@ -5,15 +5,15 @@
 			<form name='loginForm'>
 				<md-input-container>
 		    		<label for="username">Username</label>
-	    			<input id="username" type="text" ng-model="login_userName" placeholder="username" requiredr>
+	    			<input id="username" type="text" ng-model="login_userName" required>
 			    </md-input-container>
 
 				<md-input-container>
 		    		<label for="password">Password</label>
 	    			<input id="password" type="password" ng-model="login_password" placeholder="password" required>
-					<div ng-if="loginErr" ng-messages="login_password.$error">
-			            <div ng-message="required">Invalid username and/or password.</div>
-			        </div>
+						<div ng-if="loginErr" ng-messages="login_password.$error">
+	            <div ng-message="required">Invalid username and/or password.</div>
+		        </div>
 			    </md-input-container>
 			</form>
 		</md-card-content>
