@@ -1,20 +1,20 @@
-<section class="login-container" flex>
+<section class="primary-card-container" flex>
 	<md-card class='login-form' ng-if='!loggedIn'>
 		<md-card-content>
 			<h2 class='md-title'>Login</h2>
 			<form name='loginForm'>
 				<md-input-container>
-		    		<label for="username">Username</label>
-	    			<input id="username" type="text" ng-model="login_userName" required>
-			    </md-input-container>
+	    		<label for="username">Username</label>
+    			<input id="username" type="text" ng-model="login_userName" required>
+		    </md-input-container>
 
 				<md-input-container>
-		    		<label for="password">Password</label>
-	    			<input id="password" type="password" ng-model="login_password" required>
-						<div ng-if="loginErr" ng-messages="login_password.$error">
-	            <div ng-message="required">Invalid username and/or password.</div>
-		        </div>
-			    </md-input-container>
+	    		<label for="password">Password</label>
+    			<input id="password" type="password" ng-model="login_password" required>
+					<ng-messages ng-if="loginError">
+            <div ng-message="required">Invalid username and/or password.</div>
+	        </ng-messages>
+		    </md-input-container>
 			</form>
 		</md-card-content>
 		<div class='md-actions' layout="row" layout-align="end center">
