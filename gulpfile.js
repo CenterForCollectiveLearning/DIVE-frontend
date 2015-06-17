@@ -10,6 +10,7 @@ var browserify = require('gulp-browserify');
 var autoprefixer = require('gulp-autoprefixer');
 var rimraf = require('gulp-rimraf');
 var runSequence = require('run-sequence');
+var watch = require('gulp-watch');
 
 var isProd = gutil.env.type === 'prod';
 

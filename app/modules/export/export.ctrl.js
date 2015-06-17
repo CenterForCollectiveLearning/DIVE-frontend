@@ -1,47 +1,78 @@
 // Used for static export
 $ = require('jquery');
 FileSaver = require('filesaver');
+_ = require('underscore');
 
-angular.module('diveApp.export').controller('AssembleExportCtrl', function($scope) {
-  console.log("EXPORT CTRL WHEEEE");
-});
+angular.module('diveApp.visualization').controller("ExportSideNavCtrl", function($scope) {
+  // Icons
+  $scope.icons = {
+    'comparison': [
+      { 'type': 'scatter', 'url': 'scatterplot.svg'}
+    ],
+    'shares': [
+      { 'type': 'tree_map', 'url': 'treemap.svg'},
+      { 'type': 'pie', 'url': 'piechart.svg'},
+    ],
+    'time series': [
+      { 'type': 'line', 'url': 'linechart.svg'}
+    ],
+    'distribution': [
+      { 'type': 'bar', 'url': 'barchart.svg'}
+    ]
+  }
 
-angular.module('diveApp.export').controller('AssembleSideNavCtrl', function($scope) {
-  console.log("SIDE NAV CTRL SPECS: ", $scope.exportedVizData);
-});
+  // Sidenav methods
+  $scope.toggle = function(i) {
+    $scope.categories[i].toggled = !$scope.categories[i].toggled;
+  }
 
-angular.module('diveApp.export').controller("AssembleCtrl", function($scope, $http, VizDataService, ExportedVizSpecService, API_URL, pID) {
+  $scope.isOpen = function(i) {
+    return $scope.categories[i].toggled;
+  }
+
+  // TODO Reconcile this with selectSpec
+  $scope.selectChild = function(c) {
+    $scope.selectedChild = c;
+  }
+
+  $scope.isChildSelected = function(c) {
+    return ($scope.selectedChild === c);
+  }
+
+  $scope.selectType = function(t) {
+    $scope.selectedType = t;
+  }
+});  
+
+
+angular.module('diveApp.export').controller("ExportCtrl", function($scope, $http, VizDataService, ExportedVizSpecService, API_URL, pID) {
   $scope.pID = pID;
+  $scope.exportedSpecs = [];
 
-  var params = {
-    pID: $scope.pID
-  };
+  // Get exported specs
+  ExportedVizSpecService.getExportedVizData({ pID: $scope.pID }, function(data) {
+    var exportedVizDocsByCategory = data.data.result;
+    $scope.exportedSpecs = exportedVizDocsByCategory;
+    var numVizSpecs = data.data.length;
 
-  ExportedVizSpecService.getExportedVizData(params, function(data) {
-    console.log("Exported visualizations:", data)
-    var vizs = data.data.result;
-    var numVizs = data.data.length;
+    // Get data for exported specs
     $scope.loadingData = true;
     $scope.exportedVizs = {};
-    $scope.vizData = {}; // eID: data
-    Object.keys(vizs).map(function(viz_type) {
-      $scope.exportedVizs[viz_type] = vizs[viz_type].map(function(viz) {
+    $scope.vizData = {};
+
+    _.each(exportedVizDocsByCategory, function(docs, category) {
+      _.each(docs, function(doc) {
         var params = {
-          spec: viz.spec,
-          conditional: viz.conditional,
-          config: {}, // WHAT IS THIS???
+          spec: doc.spec,
+          conditional: doc.conditional,
+          config: {},
           pID: $scope.pID
         };
-        VizDataService.getVizData(params, function(data2) {
-          $scope.vizData[viz.eID] = data2.result;
-          $scope.loadingData = (Object.keys($scope.vizData).length == numVizs);
+
+        VizDataService.getVizData(params, function(data) {
+          $scope.vizData[doc.eID] = data.result;
+          $scope.loadingData = (Object.keys($scope.vizData).length === numVizSpecs);
         });
-        return {
-          spec: viz.spec,
-          conditional: viz.conditional,
-          toggled: true,
-          eID: viz.eID
-        };
       });
     });
   });
