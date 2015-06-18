@@ -1,4 +1,38 @@
-<md-tabs md-selected="selectedIndex" md-border-bottom> 
-  <md-tab ng-repeat="t in tabs" label="{{t.label}}"></md-tab>
-<!-- 	<md-tab ng-repeat="tab in tabs" label="{{tab.label}}" md-on-select="go(t.route)" ui-sref="{{tab.route}}" ui-sref-active="active"></md-tab> -->
+<div class="dive-heading" flex=15>
+  <div class="logo" ui-sref="landing">
+    <img src="assets/images/DIVE_logo_white.svg" />
+  </div>
+  <div class="dive">
+    <div class="title" ui-sref="landing">DIVE</div>
+  </div>
+</div>
+
+<md-tabs md-selected="selectedIndex" flex=55>
+  <md-tab ng-repeat="tab in tabs" label="{{tab.label}}"></md-tab>
 </md-tabs>
+
+<div class="user-status" flex=30 ng-if="loggedIn">
+  <span >
+    Logged in as <span class="username"> {{ user.displayName }}</span>
+    (<span class='logout' ng-click="logoutUser()">Logout</span>)
+  </span>
+  <div class="hamburger" ng-click='toggleRightPane()'>
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+  </div>
+</div>
+
+<div class="project-right-pane" ng-class="{ 'open': rightPaneOpen }">
+  <ul>
+    <li ui-sref="landing">
+      Project List
+    </li>
+    <li ui-sref="landing">
+      Account
+    </li>
+    <li ng-click="logoutUser()">
+      Logout
+    </li>
+  </ul>
+</div>
