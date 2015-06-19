@@ -47,16 +47,20 @@ angular.module('diveApp.visualization').controller("ExportSideNavCtrl", function
 
 angular.module('diveApp.export').controller("ExportCtrl", function($scope, $http, VizDataService, ExportedVizSpecService, API_URL, pID) {
   $scope.pID = pID;
+  $scope.loadingSpecs = true;
   $scope.exportedSpecs = [];
 
   // Get exported specs
   ExportedVizSpecService.getExportedVizData({ pID: $scope.pID }, function(data) {
     var exportedVizDocsByCategory = data.data.result;
     $scope.exportedSpecs = exportedVizDocsByCategory;
-    var numVizSpecs = data.data.length;
+    var numExportedSpecs = data.data.length;
+
+    console.log("ExportedSpecs:", $scope.exportedSpecs);
 
     // Get data for exported specs
-    $scope.loadingData = true;
+    $scope.loadingSpecs = false;
+
     $scope.exportedVizs = {};
     $scope.vizData = {};
 
@@ -71,7 +75,7 @@ angular.module('diveApp.export').controller("ExportCtrl", function($scope, $http
 
         VizDataService.getVizData(params, function(data) {
           $scope.vizData[doc.eID] = data.result;
-          $scope.loadingData = (Object.keys($scope.vizData).length === numVizSpecs);
+          $scope.loadingData = (Object.keys($scope.vizData).length === numExportedSpecs);
         });
       });
     });

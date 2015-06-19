@@ -9,8 +9,8 @@ angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope,
       state: 'project.visualize',
       label: 'Visualizations'
     }, {
-      state: 'project.assemble',
-      label: 'Reports'
+      state: 'project.export',
+      label: 'Export'
     }, {
       state: 'project.overview',
       label: 'Overview'

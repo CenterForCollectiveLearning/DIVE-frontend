@@ -146,11 +146,11 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
     templateUrl: 'modules/visualization/visualization.html',
     controller: 'VisualizationCtrl'
   })
-  .state('project.assemble', {
-    url: '/assemble',
+  .state('project.export', {
+    url: '/export',
     authenticate: true,
     templateUrl: 'modules/export/export.html',
-    controller: 'AssembleCtrl'
+    controller: 'ExportCtrl'
   })
   .state('project.ontology', {
     url: '/ontology',

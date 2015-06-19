@@ -80,16 +80,16 @@ gulp.task('lib', function() {
   return gulp.src(sources.lib).pipe(gulp.dest(destinations.lib));
 });
 
-function changedFile(file) {
-  refresh.changed(file.path);
-}
-
 gulp.task('server', function() {
   gutil.log('Express Server Running on Port:', gutil.colors.cyan(serverPort));
   gutil.log('LiveReload Server Running on Port:', gutil.colors.cyan(liveReloadPort));
   server.listen(serverPort);
   refresh.listen(liveReloadPort);
 })
+
+function changedFile(file) {
+  refresh.changed(file.path);
+}
 
 gulp.task('watch', function() {
   gulp.watch(sources.sass, ['sass']).on('change', changedFile);
