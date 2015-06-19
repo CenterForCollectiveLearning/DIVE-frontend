@@ -1,0 +1,47 @@
+<md-sidenav class="site-sidenav md-sidenav-left md-locked-open md-whiteframe-z2"
+  md-component-id="left"
+  md-is-locked-open="$mdMedia('gt-sm')" layout-fill>
+
+  <md-content ng-if="!loadingSpecs">
+    <h3>Exported Visualizations</h3>
+  </md-content>
+
+  <md-content flex role="navigation">
+    <ul class="docs-menu">
+      <li>
+        <ul>
+          <section layout="vertical" layout-fill layout-align="center center" 
+           ng-if="loadingSpecs" flex>
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </section>
+
+          <li ng-repeat="(category, docs) in exportedSpecs" ng-if="!loadingSpecs">
+            <md-button aria-label="button" class="md-button-toggle">
+              <div flex layout="row">
+                {{category | capitalize}} ({{docs.length}})
+              </div>
+            </md-button>
+            <ul class="menu-toggle-list" ng-show="isOpen($index)">
+              <section layout="row" layout-align="center ceneter" flex>
+                <md-progress-circular md-mode="indeterminate" ng-if="loadingDatasets"></md-progress-circular>
+              </section>
+              <li ng-repeat="d in docs">
+                <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(d.spec)}" ng-click="selectSpec(d.spec)">
+
+                  <span ng-if="d.spec.group.by">Group by:</span>
+                    <span ng-if="d.spec.group.by && (d.spec.category === 'time series' || d.spec.category === 'shares' || d.spec.category === 'distribution')" class="spec">
+                      <b>{{d.spec.group.by.title}}</b>
+                    </span>
+                  </span>
+                  <span ng-if="d.spec.category === 'comparison'">
+                      Compare <b>{{d.spec.compare.title | pluralize}}</b>
+                  </span>
+                </md-button>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </md-content>
+</md-sidenav>

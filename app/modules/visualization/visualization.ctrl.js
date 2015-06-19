@@ -76,13 +76,42 @@ angular.module('diveApp.visualization').controller("VisualizationGroupingCtrl", 
 angular.module('diveApp.visualization').controller("VisualizationStatsCtrl", function($scope) {
 });  
 
-angular.module('diveApp.visualization').controller("VisualizationExportCtrl", function($scope) {
-  $scope.addToCollection = function() {
+angular.module('diveApp.visualization').controller("VisualizationExportCtrl", function($scope, $mdToast, $animate, ExportedVizSpecService) {
+  $scope.toastPosition = {
+    bottom: false,
+    top: true,
+    left: false,
+    right: true
+  };
 
+  $scope.getToastPosition = function() {
+    return Object.keys($scope.toastPosition)
+      .filter(function(pos) { return $scope.toastPosition[pos]; })
+      .join(' ');
+  };
+
+  $scope.addToCollection = function() {
+    // Show toast
+    $mdToast.show(
+      $mdToast.simple()
+        .content('Visualization added to collection')
+        .position($scope.getToastPosition())
+        .hideDelay(3000)
+    );
+
+    // Hit endpoint
+    var params = {
+      pID: $scope.pID,
+      spec: $scope.selectedSpec,
+      conditional: $scope.selCondVals
+    };
+
+    ExportedVizSpecService.exportVizSpec(params, function(data) {
+      console.log("Exported viz spec: ", data);
+    });
   }
 
   $scope.shareInteractive = function() {
-    
   }
 
   $scope.saveStatic = function(format) {
