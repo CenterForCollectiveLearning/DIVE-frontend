@@ -64,29 +64,20 @@
       </md-card-content>
     </md-card>
 
-    <md-card class="conditionals" flex>
+    <md-card class="visualization-options" flex>
       <md-card-content>
-        <visualization-conditionals></visualization-conditionals>
-      </md-card-content>
-    </md-card>
-
-    <md-card class="grouping" flex>
-      <md-card-content>
-        <visualization-grouping></visualization-grouping>
-      </md-card-content>
-    </md-card>
-
-    <md-card class="configurations" flex>
-      <md-card-content>
-        <h2 class="md-title">Configuration</h2>
-        <section layout="row" layout-sm="column" layout-align="center center">
-          <md-checkbox ng-model="config.normalize">Normalize</md-checkbox>
-        </section>
-      </md-card-content>
-    </md-card>
-    <md-card class="export" flex>
-      <md-card-content>
-        <visualization-export></visualization-export>
+        <h2 class="md-title">Visualization Options</h2>
+        <div layout="column" layout-margin>
+          <visualization-conditionals flex></visualization-conditionals>
+          <visualization-grouping flex></visualization-grouping>
+          <div layout="row" layout-margin>
+            <fieldset class="standard" flex=33>
+              <legend>Configuration</legend>
+              <md-checkbox ng-model="config.normalize">Normalize</md-checkbox>
+            </fieldset>
+            <visualization-export flex=66></visualization-export>
+          </div>
+        </div>
       </md-card-content>
     </md-card>
   </div>

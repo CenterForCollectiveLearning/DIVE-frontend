@@ -1,27 +1,29 @@
-<h2 class="md-title">Conditionals</h2>
-<div class="checkboxes">
-  <div layout="row" layout-wrap>
-    <div flex="50" ng-repeat="c in condList track by c.name" >
-      <md-checkbox ng-model="selConds[currentdID][c.name]" ng-value="c.name" ng-change="selectConditional(c)">
-        {{c.name}}
-      </md-checkbox>
+<fieldset class="standard">
+  <legend>Conditionals</legend>
+  <div class="checkboxes">
+    <div layout="row" layout-wrap>
+      <div flex="50" ng-repeat="c in condList track by c.name" >
+        <md-checkbox ng-model="selConds[currentdID][c.name]" ng-value="c.name" ng-change="selectConditional(c)">
+          {{c.name}}
+        </md-checkbox>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="dropdowns" ng-if="selConds[currentdID]">
-  <ul class="dropdowns">
-    <li ng-repeat="(title, showing) in selConds[currentdID]" layout-align="center start" ng-if="showing">
-      <label class="dropdown-label">{{title}}</label>
-      <md-progress-linear md-mode="indeterminate" ng-if="!condData[title]"></md-progress-linear>
-      <md-select 
-      ng-init="selCondVals[currentdID][title]=condData[title][0]" 
-      ng-if="condData[title]"
-      ng-model="selCondVals[currentdID][title]" 
-      ng-change="refreshVizData()"
-      >
-      <md-option ng-repeat="d in condData[title]">{{d}}</md-option>
-    </md-select>
-    </li>
-  </ul>
-</div>
+  <div class="dropdowns" ng-if="selConds[currentdID]">
+    <ul class="dropdowns">
+      <li ng-repeat="(title, showing) in selConds[currentdID]" layout-align="center start" ng-if="showing">
+        <label class="dropdown-label">{{title}}</label>
+        <md-progress-linear md-mode="indeterminate" ng-if="!condData[title]"></md-progress-linear>
+        <md-select 
+        ng-init="selCondVals[currentdID][title]=condData[title][0]" 
+        ng-if="condData[title]"
+        ng-model="selCondVals[currentdID][title]" 
+        ng-change="refreshVizData()"
+        >
+        <md-option ng-repeat="d in condData[title]">{{d}}</md-option>
+      </md-select>
+      </li>
+    </ul>
+  </div>
+</fieldset>

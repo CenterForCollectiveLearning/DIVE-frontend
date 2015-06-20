@@ -1,22 +1,28 @@
-<h2 class="md-title">Grouping</h2>
+<fieldset class="standard">
+  <legend>Grouping</legend>
 
-<ul class="dropdowns">
-	<li>
-  	<label class="dropdown-label">Grouping Functions</label>
-  	<md-select 
-    	ng-model="selectedSpec.group.function" 
-    	ng-change="refreshVizData()"
-  	  >
-    	<md-option ng-repeat="f in groupFunctions track by f.name">
-        {{f.label}}
-      </md-option>
-  	</md-select>
-  </li>
-</ul>
+  <ul class="dropdowns">
+  	<li>
+    	<label class="dropdown-label">Grouping Functions</label>
+    	<md-select 
+      	ng-model="selectedSpec.group.function" 
+      	ng-change="refreshVizData()"
+    	  >
+      	<md-option ng-repeat="f in groupFunctions track by f.name">
+          {{f.label}}
+        </md-option>
+    	</md-select>
+    </li>
+  </ul>
 
-<label class="dropdown-label">Group On</label>
-<div class="checkboxes">
-  <md-checkbox ng-model="selectedSpec.group.on" ng-repeat="g in groupOn track by g.name" ng-value="g.name">
-    {{g.name}}
-  </md-checkbox>
-</div>
+  <label class="dropdown-label">Group On</label>
+  <div class="checkboxes">
+    <div layout="row" layout-wrap>
+      <div flex="50" ng-repeat="g in groupOn track by g.name" >
+        <md-checkbox ng-model="selectedSpec.group.on"  ng-value="g.name">
+          {{g.name}}
+        </md-checkbox>
+      </div>
+    </div>
+  </div>
+</fieldset>
