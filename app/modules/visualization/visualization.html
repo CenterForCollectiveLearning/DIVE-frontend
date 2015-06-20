@@ -16,87 +16,78 @@
   </div>
   
   <div class="scroll" flex="40">
-    <div class="parameters card" ng-if="selectedSpec.category === 'comparison'" flex>
-      <div class="title">Parameters</div>
-<!--       {{vizData}}
-      {{vizStats}}
-      {{selectedParameters}}
-      {{parametersData}} -->
-      <!-- Matrix of scatterplots for comparison selection -->
-<!--       <div class="scatterplots" layout="row" layout-wrap flex>
-        <div ng-repeat="(entities, comparison) in vizData" class="scatterplot-container" flex="20">
-        <div id="scatterplot-{{$index}}" class="scatterplot"></div>
-        <scatterplot data="comparison" entities="entities" selector="#scatterplot-{{$index}}"></scatterplot>
-        </div>
-      </div> -->
+    <md-card class="parameters" ng-if="selectedSpec.category === 'comparison'" flex>
+      <md-card-content>
+        <h2 class="md-title">Parameters</h2>
+        <ul class="dropdowns">
+          <li>
+            <label class="dropdown-label">Compare by</label>
+            <md-select 
+              ng-if="condList"
+              ng-model="parameters.compareBy" 
+              ng-change="refreshVizData()"
+            >
+              <md-option ng-repeat="c in condList track by $index" ng-if="c !== selectedSpec.compare.title">{{c.name}}</md-option>
+            </md-select>
+          </li>
+          <li>
+            <label class="dropdown-label">X Variable</label>
+            <md-select
+              ng-if="parametersData"
+              ng-model="selectedParameters.x"
+              ng-change="refreshVizData()"
+            >
+              <md-option ng-repeat="p in parametersData">{{p}}</md-option>
+            </md-select>
+          </li>
+          <li>
+            <label class="dropdown-label">Y Variable</label>
+            <md-select 
+              ng-if="parametersData"
+              ng-model="selectedParameters.y" 
+              ng-change="refreshVizData()"
+            >
+              <md-option ng-repeat="p in parametersData">{{p}}</md-option>
+            </md-select>
+          </li>
+          <li>
+            <label class="dropdown-label">Group By</label>
+            <md-select 
+              ng-if="condList"
+              ng-model="parameters.group.by" 
+              ng-change="refreshVizData()"
+            >
+              <md-option ng-repeat="c in condList track by $index">{{c.name}}</md-option>
+            </md-select>
+          </li>
+        </ul>
+      </md-card-content>
+    </md-card>
 
-      <ul class="dropdowns">
-        <li>
-          <label class="dropdown-label">Compare by</label>
-          <md-select 
-            ng-if="condList"
-            ng-model="parameters.compareBy" 
-            ng-change="refreshVizData()"
-          >
-            <md-option ng-repeat="c in condList track by $index" ng-if="c !== selectedSpec.compare.title">{{c.name}}</md-option>
-          </md-select>
-        </li>
-        <li>
-          <label class="dropdown-label">X Variable</label>
-          <md-select
-            ng-if="parametersData"
-            ng-model="selectedParameters.x"
-            ng-change="refreshVizData()"
-          >
-            <md-option ng-repeat="p in parametersData">{{p}}</md-option>
-          </md-select>
-        </li>
-        <li>
-          <label class="dropdown-label">Y Variable</label>
-          <md-select 
-            ng-if="parametersData"
-            ng-model="selectedParameters.y" 
-            ng-change="refreshVizData()"
-          >
-            <md-option ng-repeat="p in parametersData">{{p}}</md-option>
-          </md-select>
-        </li>
-        <li>
-          <label class="dropdown-label">Group By</label>
-          <md-select 
-            ng-if="condList"
-            ng-model="parameters.group.by" 
-            ng-change="refreshVizData()"
-          >
-            <md-option ng-repeat="c in condList track by $index">{{c.name}}</md-option>
-          </md-select>
-        </li>
-      </ul>
-    </div>
+    <md-card class="conditionals" flex>
+      <md-card-content>
+        <visualization-conditionals></visualization-conditionals>
+      </md-card-content>
+    </md-card>
 
-    <div class="conditionals card" flex>
-      <visualization-conditionals></visualization-conditionals>
-    </div>
+    <md-card class="grouping" flex>
+      <md-card-content>
+        <visualization-grouping></visualization-grouping>
+      </md-card-content>
+    </md-card>
 
-    <div class="grouping card" flex>
-      <visualization-grouping></visualization-grouping>
-    </div>
-
-    <div class="configurations card" flex>
-      <div class="title">Configuration</div>
-      <section layout="row" layout-sm="column" layout-align="center center">
-        <md-checkbox ng-model="config.normalize">Normalize</md-checkbox>
-      </section>
-      <!-- Filter UI -->
-<!--       <md-select
-        ng-if="parametersData"
-        ng-model="selectedParameters.x"
-        ng-change="refreshVizData()"
-      >
-        <md-option ng-repeat="p in parametersData">{{p}}</md-option>
-      </md-select> -->
-    </div>
-    <div class="export card" flex>
-      <visualization-export></visualization-export>
+    <md-card class="configurations" flex>
+      <md-card-content>
+        <h2 class="md-title">Configuration</h2>
+        <section layout="row" layout-sm="column" layout-align="center center">
+          <md-checkbox ng-model="config.normalize">Normalize</md-checkbox>
+        </section>
+      </md-card-content>
+    </md-card>
+    <md-card class="export" flex>
+      <md-card-content>
+        <visualization-export></visualization-export>
+      </md-card-content>
+    </md-card>
   </div>
 </div>

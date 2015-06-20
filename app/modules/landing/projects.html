@@ -1,17 +1,15 @@
-<section class="landing-projects landing-list" flex>
+<section class="landing-projects primary-card-container" flex>
 	<div class='project-list' ng-if="projects.length">
-		<ul class="projects">
-			<li class="project card" ng-repeat="project in projects" ng-click="selectProject(project.pID)">
-				<div class="title">{{project.title}}</div>
-				<md-content>
-    				<div class="description">{{project.description}}</div>
-	    		</md-content>
-				<section layout="row" layout-align="center center">
-					<md-button aria-label="button" class="md-light md-raised md-primary" ng-click="openProject(project)">Open</md-button>
-					<md-button aria-label="button" class="md-light md-raised md-warn" ng-click="removeProject(project, $index)">Delete</md-button>
-				</section>
-			</li>
-		</ul>
+		<md-card class="project" ng-repeat="project in projects" ng-click="selectProject(project.pID)">
+			<md-card-content>
+				<h2 class="md-title">{{project.title}}</h2>
+				<div class="description">{{project.description}}</div>
+    	</md-card-content>
+			<div class='md-actions' layout="row" layout-align="end center">
+				<md-button aria-label="button" class="md-light md-raised md-primary" ng-click="openProject(project)">Open</md-button>
+				<md-button aria-label="button" class="md-light md-raised md-warn" ng-click="removeProject(project, $index)">Delete</md-button>
+			</div>
+		</md-card>
 	</div>
 	<div ng-if="!projects.length">
 		<h1>No projects created yet.</h1>
