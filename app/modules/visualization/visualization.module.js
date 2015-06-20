@@ -34,14 +34,6 @@ angular.module('diveApp.visualization').directive('visualizationExport', functio
   };
 });
 
-angular.module('diveApp.visualization').directive('visualizationGrouping', function() {
-  return {
-    restrict: 'E',
-    templateUrl: 'modules/visualization/partials/grouping.html',
-    controller: 'VisualizationGroupingCtrl'
-  };
-});
-
 require('./visualization.ctrl');
 require('./visualization_preview.directive');
 require('./histogram.directive');
