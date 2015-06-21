@@ -22,11 +22,12 @@ div.hamburger {
     float: right;
     display: inline-block;
     margin-left: 20px;
+    margin-top: 5px;
 
     div.line {
         width: 20px;
-        border-bottom: 3px solid white;
-        padding-bottom: 6px;
+        border-bottom: 2px solid white;
+        padding-bottom: 4px;
     }
 }
 
