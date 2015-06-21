@@ -30,15 +30,15 @@ destinations = {
 };
 
 // Modules for webserver and livereload
-var express = require('express'),
-    refresh = require('gulp-livereload'),
-    livereload = require('connect-livereload'),
-    livereloadport = 35729,
-    serverport = 7000;
+var express = require('express');
+var refresh = require('gulp-livereload');
+var liveReload = require('connect-livereload');
+var liveReloadPort = 35729;
+var serverPort = 7000;
 
 var server = express();
-server.use(livereload({ port: livereloadport }));  // Add live reload
-server.use(express.static('./dist')); // Use our 'dist' folder as rootfolder
+server.use(liveReload({ port: liveReloadPort }));  // Add live reload
+server.use(express.static('dist')); // Use our 'dist' folder as rootfolder
 server.all('/*', function(req, res) {  // Because I like HTML5 pushstate .. this redirects everything back to our index.html
   res.sendFile('index.html', { root: 'dist' });
 });
@@ -58,15 +58,19 @@ gulp.task('sass', function() {
     onError: function(e) {
       return console.log(e);
     }
-  })).pipe(autoprefixer('last 2 versions', '> 1%', 'ie 8')).pipe(gulp.dest(destinations.css));
+  })).pipe(autoprefixer('last 2 versions', '> 1%', 'ie 8'))
+    .pipe(gulp.dest(destinations.css));
 });
 
 gulp.task('lint', function() {
-  return gulp.src(sources.js).pipe(jshint()).pipe(jshint.reporter('default'));
+  return gulp.src(sources.js)
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
 });
 
 gulp.task('html', function() {
-  return gulp.src(sources.html).pipe(gulp.dest(destinations.html));
+  return gulp.src(sources.html)
+    .pipe(gulp.dest(destinations.html));
 });
 
 gulp.task('assets', function() {
@@ -77,17 +81,23 @@ gulp.task('lib', function() {
   return gulp.src(sources.lib).pipe(gulp.dest(destinations.lib));
 });
 
+gulp.task('server', function() {
+  gutil.log('Express Server Running on Port:', gutil.colors.cyan(serverPort));
+  gutil.log('LiveReload Server Running on Port:', gutil.colors.cyan(liveReloadPort));
+  server.listen(serverPort);
+  refresh.listen(liveReloadPort);
+})
+
+function changedFile(file) {
+  refresh.changed(file.path);
+}
+
 gulp.task('watch', function() {
-  server.listen(serverport);  // Start webserver
-  refresh.listen(livereloadport);  // Start live reload
-
-  gulp.watch(sources.sass, ['sass']);
-  gulp.watch(sources.assets, ['assets']);
-  gulp.watch(sources.html, ['html']);
-  gulp.watch(sources.js, ['js']);
-  gulp.watch(sources.lib, ['lib']);
-
-  gulp.watch('./dist/**').on('change', refresh.changed);
+  gulp.watch(sources.sass, ['sass']).on('change', changedFile);
+  gulp.watch(sources.assets, ['assets']).on('change', changedFile);
+  gulp.watch(sources.html, ['html']).on('change', changedFile);
+  gulp.watch(sources.js, ['js']).on('change', changedFile);
+  gulp.watch(sources.lib, ['lib']).on('change', changedFile);
 });
 
 gulp.task('clean', function() {
@@ -102,4 +112,4 @@ gulp.task('build', function() {
   return runSequence('clean', ['js', 'sass', 'html', 'lib', 'assets']);
 });
 
-gulp.task('default', ['build', 'watch']);
+gulp.task('default', ['build', 'server', 'watch']);

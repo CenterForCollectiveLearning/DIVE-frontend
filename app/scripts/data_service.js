@@ -254,6 +254,15 @@ angular.module('diveApp.services').service("ExportedVizSpecService", function($h
       }).then(function(data) {
         return callback(data);
       });
+    },
+    exportVizSpec: function(params, callback) {
+
+      return $http.post(API_URL + "/api/exported_spec", {
+        params: params
+      }).then(function(data) {
+        return callback(data);
+      });
+
     }
   };
 });
