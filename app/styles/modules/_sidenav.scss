@@ -1,12 +1,26 @@
-.docs-menu {
-	.md-button.child { 
-		display: block;
-		font-weight: 400;
-		padding: 0 16px 0 32px;
-		text-transform: none;
+.site-sidenav {
+  background-color: $color-slate-dark;
+}
 
+.docs-menu {
+	li {
+		border-color: lighten($color-slate-dark, 5%);
+	}
+
+	.md-button {
+		&.child { 
+			display: block;
+			font-weight: 400;
+			padding: 0 16px 0 32px;
+			text-transform: none;
+
+		}
 		&.active {
-			color: #03a9f4;
+			color: $color-white;
+			background-color: $color-slate;
+		}
+		&:hover {
+			background-color: lighten($color-slate-dark, 5%) !important;
 		}
 	}
 
