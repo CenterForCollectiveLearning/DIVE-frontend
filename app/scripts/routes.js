@@ -95,7 +95,7 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
         AuthService.logoutUser(function() {
           $rootScope.user = null;
           $rootScope.loggedIn = false;
-          $state.go('landing.authenticate');          
+          $state.go('landing.login');          
         });
       };
     },
