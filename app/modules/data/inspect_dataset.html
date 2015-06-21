@@ -1,6 +1,6 @@
 <!-- Datasets -->
 <div ng-repeat="dataset in datasets" ng-if="isChildSelected(dataset)" flex> 
-  <md-card class="dataset-preview" ng-if="dataset.sample" layout="column">
+  <md-card class="dataset-preview flat no-border" ng-if="dataset.sample" layout="column">
     <md-card-content>
       <h2 class="md-title">
         {{dataset.title}}
@@ -34,7 +34,7 @@
   <!-- Lower Section -->
   <!-- Structure Specification -->
   <div layout="row">
-    <md-card class="dataset-structure-select" flex>
+    <md-card class="dataset-structure-select flat" flex>
       <md-card-content>
         <h2 class="md-title">Dataset Structure</h2>
         <md-radio-group ng-model="dataset.structure">
@@ -44,7 +44,7 @@
     </md-card>
   </div>
   <!-- Dataset Modification -->
-  <md-card class="dataset-delete-select" flex>
+  <md-card class="dataset-delete-select flat" flex>
     <md-card-content>
       <h2 class="md-title">Modify Dataset</h2>
       <section layout="row" layout-align="center center">

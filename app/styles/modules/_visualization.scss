@@ -20,25 +20,6 @@
 
 }
 
-.filters {
-    md-checkbox {
-        float: left;
-        margin: 3px 10px;
-        .md-container {
-            top: 5px;
-        }
-        .md-label {
-            margin-left: 5px;
-            font-size: 12px;
-        }
-    }
-}
-
-
-.filters {
-    padding: 10px 16px;
-}
-
 .legend {
     margin: 0 auto;
     padding: 15px 20px;
@@ -163,34 +144,6 @@ div.visualization {
       .mg-bar-baseline {
         display: none;
       }
-    }
-}
-
-md-sidenav {
-    div.stats {
-        padding-left: 60px;
-        font-size: 12px;
-    }
-
-    span.icons {
-        div.icon {
-            width: 25px;
-            height: 25px;
-            border: 1px solid rgba(158, 158, 158, 0.2);
-            border-radius: 2px;
-            margin-left: 3px;
-            padding: 2px;
-
-            &.active {
-                outline: none;
-                background-color: rgba(3, 169, 244, 0.6);
-            }
-
-            img {
-                opacity: 0.6;
-                width: 20px;
-            }
-        }
     }
 }
 
