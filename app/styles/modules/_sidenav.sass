@@ -18,7 +18,7 @@ md-sidenav
 		li
 			border: none
 
-			&.sidenav-primary-list-item
+			&.sidenav-primary-list-item > ul
 				margin-bottom: 10px
 
 	  .md-button
@@ -26,7 +26,6 @@ md-sidenav
 		  	text-transform: uppercase
 		  	font-weight: 600
 		  	color: $color-slate-light
-		  	pointer-events: none
 
 	  	&.child
 	  		display: block
@@ -34,12 +33,12 @@ md-sidenav
 	  		padding: 0 16px 0 32px
 	  		text-transform: none
 
-		  	&.active
-		  		color: $color-white
-		  		background-color: $color-slate-dark!important
+	  	&.active
+	  		color: $color-white
+	  		background-color: $color-slate-dark!important
 
-		  	&:hover, &:focus
-		  		background-color: lighten($color-slate-dark, 5%) !important
+	  	&:hover, &:focus
+	  		background-color: lighten($color-slate-dark, 5%) !important
 
 	  	.sidenav-button-heading
 			  line-height: 30px
@@ -50,6 +49,9 @@ md-sidenav
 				line-height: 11px
 				color: $color-slate-lighter
 				padding-bottom: 8px
+
+			.expand-icon
+				margin-right: 5px
 
 	  .md-button-toggle
 	    md-icon
@@ -65,6 +67,7 @@ md-sidenav
 	  		background-color: $color-slate-light
 
 	  		&.active
+	  			outline: none
 	  			background-color: white
 
 	  		img
