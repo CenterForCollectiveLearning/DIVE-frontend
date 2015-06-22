@@ -1,6 +1,4 @@
 .viz-viewport {
-    overflow-y: hidden;
-    max-height: 100%;
 
     .card {
         div.title {
@@ -24,11 +22,6 @@
     margin: 0 auto;
     padding: 15px 20px;
     height: 40px;
-}
-
-div.scroll {
-    overflow-y: scroll;
-    width: 100%;
 }
 
 div.configurations, div.export {
