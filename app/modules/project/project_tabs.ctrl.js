@@ -1,6 +1,7 @@
 var _ = require('underscore');
 
 angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope, $state, $rootScope, $stateParams) {
+  $scope.rightPaneOpen = false;
   $scope.tabs = [
     {
       state: 'project.data.upload',
@@ -25,4 +26,8 @@ angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope,
       $state.go($scope.tabs[current].state);      
     }
   });
+
+  $scope.toggleRightPane = function() {
+    $scope.rightPaneOpen = !$scope.rightPaneOpen;
+  };
 });

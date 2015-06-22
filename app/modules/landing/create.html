@@ -1,19 +1,23 @@
-<div class="landing-list" flex>
-    <section class="new-project-form form card">
-    	<div class="title">Create New Project</div>
+<section class="primary-card-container" flex>
+  <md-card class="new-project-form">
+    <md-card-content>
+    	<h2 class="md-title">Create New Project</h2>
     	<form name="createProjectForm" novalidate>
     		<md-input-container>
-        		<label for="project-title">Project Title</label>
-                <span class="error" ng-if="createProjectError">{{createProjectError}}</span>
-    	    	<input id="project-title" type="text" ng-model="projectData.title" placeholder="Chicago Demographic Visualization" required>
-        	</md-input-container>
-    	    <md-input-container>
-    	        <label>Project Description</label>
-    	        <input type="text" ng-model="projectData.description" placeholder="Visualization based on the 2006-2012 ACS" required ng-enter="createProject()">
-    	    </md-input-container>
-    	    <section layout="row" layout-align="center center">
-            	<md-button aria-label="button" class="md-light md-raised md-primary" ng-click="createProject()">Create</md-button>
-            </section>
-        </form>
-    </section>
-</div>
+      		<label for="project-title">Project Title</label>
+  	    	<input id="project-title" type="text" ng-model="projectData.title" required>
+          <ng-messages ng-if="createProjectError">
+            <div ng-message="required">A project with this title already exists. Choose another title.</div>
+          </ng-messages>
+      	</md-input-container>
+  	    <md-input-container>
+          <label>Project Description</label>
+          <input type="text" ng-model="projectData.description" required ng-enter="createProject()">
+  	    </md-input-container>
+      </form>
+    </md-card-content>
+    <div class='md-actions' layout="row" layout-align="end center">
+      <md-button aria-label="button" class="md-light md-raised md-primary" ng-click="createProject()">Create</md-button>
+    </div>
+  </md-card>
+</section>

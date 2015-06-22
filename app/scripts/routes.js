@@ -8,7 +8,7 @@ angular.module('diveApp.routes', ['ui.router'])
 angular.module('diveApp.routes').run(function($rootScope, $state, AuthService) {
   $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
     if (toState.authenticate && !AuthService.isAuthenticated()) {
-      $state.transitionTo("landing.authenticate");
+      $state.transitionTo("landing.login");
       event.preventDefault();
     }
   });
@@ -28,7 +28,7 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
         AuthService.logoutUser(function() {
           $rootScope.user = null;
           $rootScope.loggedIn = false;
-          $state.go('landing.authenticate');          
+          $state.go('landing.login');          
         });
       };
     },
@@ -70,11 +70,17 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       authenticate: true,
       templateUrl: 'modules/landing/about.html'
     })
-    .state('landing.authenticate', {
-      url: 'authenticate',
+    .state('landing.login', {
+      url: 'login',
       authenticate: false,
       controller: 'AuthenticateCtrl',
-      templateUrl: 'modules/landing/authenticate.html'
+      templateUrl: 'modules/landing/login.html'
+    })
+    .state('landing.signup', {
+      url: 'signup',
+      authenticate: false,
+      controller: 'AuthenticateCtrl',
+      templateUrl: 'modules/landing/signup.html'
     })
 
   .state('project', {
@@ -89,7 +95,7 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
         AuthService.logoutUser(function() {
           $rootScope.user = null;
           $rootScope.loggedIn = false;
-          $state.go('landing.authenticate');          
+          $state.go('landing.login');          
         });
       };
     },

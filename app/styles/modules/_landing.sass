@@ -1,0 +1,71 @@
+.landing-list
+  width: 600px
+  max-width: 600px
+  padding-top: 50px
+
+  .card
+    margin-bottom: 20px
+
+.primary-card-container
+  max-width: 450px
+  margin-top: 20px
+
+section.text
+  +card-shadow
+  background-color: white
+  position: relative
+  width: 600px
+  margin: 0 auto
+  border: 1px solid $light-gray
+  border-radius: 2px
+
+section.form
+  +font
+  $block-width: 600px
+  $block-height: 100px
+
+  div.new-project-button
+    +button(600px, $ontology-blue)
+    margin: 30px auto 0 auto
+
+  ul.projects
+    width: 600px
+    padding: 0
+    margin: 0 auto
+
+    a
+      color: black
+
+    li.project
+      +card-shadow
+      +border-transition
+      +background-transition
+      background-color: white
+      cursor: pointer
+      margin-top: 10px
+      width: $block-width
+      border-radius: 2px
+      display: inline-block
+      margin-right: 10px
+
+      div.title
+        font-size: 24px
+        line-height: 24px
+        padding: 20px 20px
+        text-align: left
+
+      div.description
+        +small-caps
+        line-height: 20px
+        padding: 0 20px
+        padding-bottom: 15px
+        text-align: left
+
+      div.menu
+        height: 0px
+        transition: .2s ease-in-out height
+        overflow: hidden
+
+        &.active
+          border-top: 1px solid $light-gray
+          height: 100px

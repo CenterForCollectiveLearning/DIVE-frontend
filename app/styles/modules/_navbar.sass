@@ -1,0 +1,69 @@
+.nav-bar
+  position: relative
+  +card-shadow
+  +font
+  background-color: $color-slate
+  color: $color-white
+  font-size: 14px
+  height: 48px
+
+  a
+    color: $color-slate-lighter
+    border: none
+
+    &:hover
+      color: $color-white
+
+  .logo
+    cursor: pointer
+
+    img
+      float: left
+      width: 50px
+      padding-left: 16px
+      padding-right: 7px
+      padding-top: 11px
+
+  .dive
+    display: inline-block
+
+    .title
+      cursor: pointer
+      font-size: 23px
+      font-weight: 600
+      margin-top: 9px
+
+  md-tabs
+    .md-tab
+      color: $color-slate-lighter
+
+      &.md-active, &.md-focused
+        color: $color-white
+
+      &:hover
+        color: lighten($color-slate-lighter, 5%)
+
+    md-ink-bar
+      background-color: $color-slate-lighter
+
+  .user-status
+    +small-caps
+    text-align: right
+    padding-right: 20px
+    padding-top: 7px
+
+    span.username
+      border-bottom: 1px dotted $active-white
+
+    span.logout
+      cursor: pointer
+
+      &:hover
+        border-bottom: 1px dotted $active-white
+
+  div.beta
+    +small-caps
+    position: absolute
+    top: 45px
+    right: 15px
+    color: white
