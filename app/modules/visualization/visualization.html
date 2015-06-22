@@ -69,15 +69,15 @@
       <md-card class="visualization-options flat" flex>
         <md-card-content>
           <h2 class="md-title">Visualization Options</h2>
-          <div layout="column" layout-margin>
-            <visualization-conditionals flex></visualization-conditionals>
-            <div layout="row" flex>
-              <fieldset class="standard" flex=33>
+          <div layout="row" layout-padding layout-wrap>
+            <visualization-conditionals flex=100></visualization-conditionals>
+            <div  flex=33>
+              <fieldset class="standard">
                 <legend>Configuration</legend>
                 <md-checkbox ng-model="config.normalize">Normalize</md-checkbox>
               </fieldset>
-              <visualization-export flex=66></visualization-export>
             </div>
+            <visualization-export flex=66></visualization-export>
           </div>
         </md-card-content>
       </md-card>
