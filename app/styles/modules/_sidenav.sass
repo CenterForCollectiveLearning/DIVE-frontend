@@ -22,6 +22,11 @@ md-sidenav
 				margin-bottom: 10px
 
 	  .md-button
+	  	&[disabled]
+  			background-color: transparent!important
+  			pointer-events: none
+  			cursor: default
+
 	  	&.parent-button
 		  	text-transform: uppercase
 		  	font-weight: 600
@@ -33,12 +38,13 @@ md-sidenav
 	  		padding: 0 16px 0 32px
 	  		text-transform: none
 
-	  	&.active
-	  		color: $color-white
-	  		background-color: $color-slate-dark!important
+	  	&:not([disabled])
+		  	&.active
+		  		color: $color-white
+		  		background-color: $color-slate-dark!important
 
-	  	&:hover, &:focus
-	  		background-color: lighten($color-slate-dark, 5%) !important
+		  	&:hover, &:focus
+		  		background-color: lighten($color-slate-dark, 5%) !important
 
 	  	.sidenav-button-heading
 			  line-height: 30px
