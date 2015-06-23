@@ -7,10 +7,10 @@
     <md-content flex role="navigation"> 
       <ul class="docs-menu">
         <section layout="vertical" layout-fill layout-align="center center" ng-if="loadingDatasets" flex>
-              <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
             </section>
         <li ng-repeat="section in sections" class="parent-list-item sidenav-primary-list-item" ng-class="{'parentActive' : isSectionSelected(section)}">
-          <md-button aria-label="button" class="md-button-toggle parent-button" ng-if="section.type === 'heading'">
+          <md-button aria-label="button" class="md-button-toggle parent-button" ng-if="section.type === 'heading'" ng-disabled="true">
             <div class="sidenav-button-heading" layout="row" flex>
               {{section.name}}
             </div>
@@ -28,7 +28,7 @@
         </li>
 
         <li class='sidenav-primary-list-item' ng-class="{'parentActive' : isSectionSelected(section)}">
-          <md-button aria-label="button" class="md-button-toggle parent-button" ng-click="toggle('data')">
+          <md-button aria-label="button" class="md-button-toggle parent-button" ng-disabled="true">
             <div class="sidenav-button-heading">
               Inspect Datasets
             </div>
