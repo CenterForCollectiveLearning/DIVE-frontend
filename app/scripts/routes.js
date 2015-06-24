@@ -82,7 +82,16 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       controller: 'AuthenticateCtrl',
       templateUrl: 'modules/landing/signup.html'
     })
-
+  .state('logout', {
+    url: '/logout',
+    controller: function($scope, $rootScope, $state, $stateParams, AuthService) {
+      AuthService.logoutUser(function() {
+        $rootScope.user = null;
+        $rootScope.loggedIn = false;
+        $state.go('landing.login');          
+      });      
+    }
+  })
   .state('project', {
     url: '/:formattedUserName/:formattedProjectTitle',
     templateUrl: 'modules/project/project.html',
