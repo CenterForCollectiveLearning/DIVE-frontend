@@ -33,7 +33,39 @@ angular.module('diveApp.services').service('ProjectService', function($http, API
       }).then(function(r) {
         return r.data;
       });
+    },
+
+    createProjectTitleId: function(params) {
+      var _randomProjectId = Math.floor(Math.random()*899999) + 100000;
+      var projectTitleId = "_project_" + _randomProjectId;
+      return projectTitleId
+    },
+
+    createProject: function(params) {
+      if (params.anonymous) {
+        params.title = this.createProjectTitleId();
+        params.description = null;
+        params.user_name = null;
+      }
+
+      return $http({
+        method: 'POST',
+        url: API_URL + '/api/project',
+        data: params,
+        transformRequest: objectToQueryString,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).success(function(response) {
+        return response;
+      }).error(function(data, status) {
+        console.log('Error creating project:');
+        console.log(data);
+        console.log(status);
+        return;
+      });
     }
+
   };
 });
 

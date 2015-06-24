@@ -1,18 +1,7 @@
 require('angular');
 require('angular-ui-router');
 
-
 angular.module('diveApp.routes', ['ui.router'])
-
-// https://medium.com/@mattlanham/authentication-with-angularjs-4e927af3a15f
-angular.module('diveApp.routes').run(function($rootScope, $state, AuthService) {
-  $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
-    if (toState.authenticate && !AuthService.isAuthenticated()) {
-      $state.transitionTo("landing.login");
-      event.preventDefault();
-    }
-  });
-})
 
 angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvider, $locationProvider) {  
   $stateProvider
@@ -20,17 +9,13 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
     url: '^/',
     templateUrl: 'modules/landing/landing.html',
     controller: function($scope, $rootScope, $state, AuthService, user, loggedIn) {
-      $state.go('landing.create');
       $rootScope.user = user;
       $rootScope.loggedIn = loggedIn;
 
-      $scope.logoutUser = function() {
-        AuthService.logoutUser(function() {
-          $rootScope.user = null;
-          $rootScope.loggedIn = false;
-          $state.go('landing.login');          
-        });
-      };
+      if (loggedIn)
+        $state.go('landing.create');
+      else
+        $state.go('landing.noauth');
     },
     resolve: {
       user: function(AuthService) {
@@ -46,6 +31,21 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       authenticate: true,
       templateUrl: 'modules/landing/create.html',
       controller: 'CreateProjectCtrl'
+    })
+    .state('landing.noauth', {
+      url: 'new',
+      authenticate: false,
+      controller: function($scope, $rootScope, $state, AuthService, project) {
+        $state.go('project.data.upload', {
+          formattedProjectTitle: project.data.formatted_title
+        });
+
+      },
+      resolve: {
+        project: function(ProjectService) {
+          return ProjectService.createProject({anonymous: true});
+        }        
+      }
     })
     .state('landing.projects', {
       url: 'projects',
@@ -93,27 +93,19 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
     }
   })
   .state('project', {
-    url: '/:formattedUserName/:formattedProjectTitle',
+    url: '/:formattedProjectTitle',
     templateUrl: 'modules/project/project.html',
-    controller: function($scope, $rootScope, $state, $stateParams, AuthService, user) {
+    controller: function($scope, $rootScope, $state, $stateParams, AuthService, user, loggedIn) {
       $scope.projectTitle = $stateParams.formattedProjectTitle.split('-').join(' ');
       $rootScope.user = user;
-      $rootScope.loggedIn = true;
-
-      $scope.logoutUser = function() {
-        AuthService.logoutUser(function() {
-          $rootScope.user = null;
-          $rootScope.loggedIn = false;
-          $state.go('landing.login');          
-        });
-      };
+      $rootScope.loggedIn = loggedIn;
     },
     resolve: {
       user: function(AuthService) {
-        return AuthService.getCurrentUser();
+        return AuthService.getCurrentUser();          
       },
-      formattedUserName: function($stateParams) {
-        return $stateParams.formattedUserName;
+      loggedIn: function(AuthService) {
+        return AuthService.isAuthenticated();
       },
       formattedProjectTitle: function($stateParams) {
         return $stateParams.formattedProjectTitle;

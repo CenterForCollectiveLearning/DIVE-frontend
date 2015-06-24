@@ -27,7 +27,7 @@
           </ul>
         </li>
 
-        <li class='sidenav-primary-list-item' ng-class="{'parentActive' : isSectionSelected(section)}">
+        <li class='sidenav-primary-list-item' ng-class="{'parentActive' : isSectionSelected(section)}" ng-if="datasets && datasets.length > 0">
           <md-button aria-label="button" class="md-button-toggle parent-button" ng-disabled="true">
             <div class="sidenav-button-heading">
               Inspect Datasets
