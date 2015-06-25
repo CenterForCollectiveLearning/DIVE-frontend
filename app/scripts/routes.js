@@ -14,8 +14,11 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
 
       if (loggedIn)
         $state.go('landing.create');
-      else
-        $state.go('landing.noauth');
+      else {
+        $state.go('project', {
+          formattedProjectTitle: null
+        });
+      }
     },
     resolve: {
       user: function(AuthService) {
@@ -31,21 +34,6 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       authenticate: true,
       templateUrl: 'modules/landing/create.html',
       controller: 'CreateProjectCtrl'
-    })
-    .state('landing.noauth', {
-      url: 'new',
-      authenticate: false,
-      controller: function($scope, $rootScope, $state, AuthService, project) {
-        $state.go('project.data.upload', {
-          formattedProjectTitle: project.data.formatted_title
-        });
-
-      },
-      resolve: {
-        project: function(ProjectService) {
-          return ProjectService.createProject({anonymous: true});
-        }        
-      }
     })
     .state('landing.projects', {
       url: 'projects',
@@ -93,7 +81,7 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
     }
   })
   .state('project', {
-    url: '/:formattedProjectTitle',
+    url: '/projects/:formattedProjectTitle',
     templateUrl: 'modules/project/project.html',
     controller: function($scope, $rootScope, $state, $stateParams, AuthService, user, loggedIn) {
       $scope.projectTitle = $stateParams.formattedProjectTitle.split('-').join(' ');
@@ -107,7 +95,16 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       loggedIn: function(AuthService) {
         return AuthService.isAuthenticated();
       },
-      formattedProjectTitle: function($stateParams) {
+      formattedProjectTitle: function($state, $stateParams, ProjectService) {
+        if (!$stateParams.formattedProjectTitle || $stateParams.formattedProjectTitle.length < 1) {
+          ProjectService.createProject({anonymous: true}).then(function(r) {
+
+            $state.go('project', {
+              formattedProjectTitle: r.data.formatted_title
+            });
+          });
+          return;
+        }
         return $stateParams.formattedProjectTitle;
       },
       pID: function($stateParams, $rootScope, AuthService, ProjectIDService) {
