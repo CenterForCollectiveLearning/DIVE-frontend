@@ -32,14 +32,21 @@ angular.module("diveApp.data").controller("UploadCtrl", function($scope, $http, 
   };
 });
 
-angular.module("diveApp.data").controller("InspectDataCtrl", function($scope, $http, API_URL) {
+angular.module("diveApp.data").controller("InspectDataCtrl", function($scope, $http, $stateParams, API_URL) {
   $scope.isTimeSeries = function(i, ts) {
     if ((i >= ts.start.index) && (i <= ts.end.index)) {
       return true;
     } else {
       return false;
     }
-  }
+  };
+
+  $scope.$watch('datasets', function(current, old) {
+    _selected_dataset = _.findWhere($scope.datasets, {dID: $stateParams.dID});
+    if (_selected_dataset)
+      $scope.selectDataset(_selected_dataset);
+  });
+
 
   // TODO Factor out into a data service
   $scope.removeDataset = function(dID) {
@@ -91,9 +98,16 @@ angular.module("diveApp.data").controller("PreloadedDataCtrl", function($scope, 
   };
 })
 
-angular.module("diveApp.data").controller("DataCtrl", function($scope, $state) {
+angular.module("diveApp.data").controller("DataCtrl", function($scope, $state, DataService) {
   $scope.datasets = [];
   $scope.preloadedDatasets = [];
+
+  $scope.dataRetrieved.then(function() {
+    DataService.getDatasets({ pID: $scope.pID }, function(r) {
+      $scope.datasets = r;
+      $scope.dIDs = _.pluck($scope.datasets, 'dID');
+    });
+  });
 
   $scope.sections = [
     {

@@ -81,13 +81,15 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
   .state('project', {
     url: '/projects/:formattedProjectTitle',
     templateUrl: 'modules/project/project.html',
-    controller: function($scope, $rootScope, $state, $stateParams, AuthService, ProjectIDService, ProjectService, user, loggedIn, projectParams) {
+    controller: function($scope, $rootScope, $state, $stateParams, $q, AuthService, ProjectIDService, ProjectService, user, loggedIn, projectParams) {
       if (projectParams.refresh) {
         $state.go('project.data.upload', {
           formattedProjectTitle: projectParams.title
         });
         return;
       }
+      q = $q.defer();
+      $scope.dataRetrieved = q.promise;
 
       $scope.projectTitle = projectParams.title.split('-').join(' ');
       $rootScope.user = user;
@@ -96,7 +98,7 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       if (user && user.userName)
         userName = user.userName;
       else
-        userName = null;
+        userName = "null";
 
       var params = {
         formattedProjectTitle: title, 
@@ -107,10 +109,14 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       // we should be able to mark whether this project is dirty or clean somehow
       ProjectIDService.getProjectID(params).then(function(r) {
         $scope.pID = r;
-        if (!$scope.pID)
+        if (!$scope.pID) {
           ProjectService.createProject({anonymous: true, title: title}).then(function(r) {
             $scope.pID = r.data.pID;
+            $scope.dataRetrieved = q.resolve();
           });
+        } else {
+          $scope.dataRetrieved = q.resolve();
+        }
       });
 
     },
