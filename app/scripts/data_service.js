@@ -36,14 +36,14 @@ angular.module('diveApp.services').service('ProjectService', function($http, API
     },
 
     createProjectTitleId: function(params) {
-      var _randomProjectId = Math.floor(Math.random()*899999) + 100000;
-      var projectTitleId = "_project_" + _randomProjectId;
-      return projectTitleId
+      var _upperprojectTitleIdLimit = 999999;
+      var _lowerprojectTitleIdLimit = 100000;
+
+      return Math.floor(Math.random() * (_upperprojectTitleIdLimit - _lowerprojectTitleIdLimit)) + _lowerprojectTitleIdLimit;
     },
 
     createProject: function(params) {
       if (params.anonymous) {
-        params.title = this.createProjectTitleId();
         params.description = null;
         params.user_name = null;
       }
@@ -73,10 +73,14 @@ angular.module('diveApp.services').service('ProjectService', function($http, API
 angular.module('diveApp.services').service("ProjectIDService", function($http, $stateParams, $rootScope, API_URL) {
   return {
     getProjectID: function(params) {
-      console.log("Getting Project ID");
+      if (params && params.userName)
+        userName = params.userName;
+      else
+        userName = '';
+
       return $http.get(API_URL + "/api/getProjectID", {
         params: {
-          user_name: params.userName,
+          user_name: userName,
           formattedProjectTitle: params.formattedProjectTitle
         }
       }).then(function(r) {
@@ -84,9 +88,8 @@ angular.module('diveApp.services').service("ProjectIDService", function($http, $
         return pID;
       }).catch(function(r) {
         console.error("Error getting projectID", r.data, r.status);
-      }).finally(function() {
-        console.log("Got projectID");
-      });
+        return null;
+      })
     }
   };
 });

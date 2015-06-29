@@ -11,14 +11,12 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
     controller: function($scope, $rootScope, $state, AuthService, user, loggedIn) {
       $rootScope.user = user;
       $rootScope.loggedIn = loggedIn;
-
       if (loggedIn)
         $state.go('landing.create');
-      else {
-        $state.go('project', {
+      else
+        $state.go('project.data.upload', {
           formattedProjectTitle: null
         });
-      }
     },
     resolve: {
       user: function(AuthService) {
@@ -83,10 +81,38 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
   .state('project', {
     url: '/projects/:formattedProjectTitle',
     templateUrl: 'modules/project/project.html',
-    controller: function($scope, $rootScope, $state, $stateParams, AuthService, user, loggedIn) {
-      $scope.projectTitle = $stateParams.formattedProjectTitle.split('-').join(' ');
+    controller: function($scope, $rootScope, $state, $stateParams, AuthService, ProjectIDService, ProjectService, user, loggedIn, projectParams) {
+      if (projectParams.refresh) {
+        $state.go('project.data.upload', {
+          formattedProjectTitle: projectParams.title
+        });
+        return;
+      }
+
+      $scope.projectTitle = projectParams.title.split('-').join(' ');
       $rootScope.user = user;
       $rootScope.loggedIn = loggedIn;
+
+      if (user && user.userName)
+        userName = user.userName;
+      else
+        userName = null;
+
+      var params = {
+        formattedProjectTitle: title, 
+        userName: userName
+      };
+
+      // TODO: should check for user permissions to this project
+      // we should be able to mark whether this project is dirty or clean somehow
+      ProjectIDService.getProjectID(params).then(function(r) {
+        $scope.pID = r;
+        if (!$scope.pID)
+          ProjectService.createProject({anonymous: true, title: title}).then(function(r) {
+            $scope.pID = r.data.pID;
+          });
+      });
+
     },
     resolve: {
       user: function(AuthService) {
@@ -95,24 +121,20 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       loggedIn: function(AuthService) {
         return AuthService.isAuthenticated();
       },
-      formattedProjectTitle: function($state, $stateParams, ProjectService) {
-        if (!$stateParams.formattedProjectTitle || $stateParams.formattedProjectTitle.length < 1) {
-          ProjectService.createProject({anonymous: true}).then(function(r) {
 
-            $state.go('project', {
-              formattedProjectTitle: r.data.formatted_title
-            });
-          });
-          return;
+      projectParams: function($state, $stateParams, ProjectService) {
+        if (!$stateParams.formattedProjectTitle || $stateParams.formattedProjectTitle.length < 1) {
+          title = ProjectService.createProjectTitleId();
+          refresh = true;
+        } else {
+          title = $stateParams.formattedProjectTitle;
+          refresh = false;
         }
-        return $stateParams.formattedProjectTitle;
-      },
-      pID: function($stateParams, $rootScope, AuthService, ProjectIDService) {
-        var params = {
-          formattedProjectTitle: $stateParams.formattedProjectTitle, 
-          userName: AuthService.getCurrentUser().userName
+
+        return {
+          title: title,
+          refresh: refresh
         }
-        return ProjectIDService.getProjectID(params);
       }
     }
   })
@@ -139,7 +161,7 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       controller: 'PreloadedDataCtrl',
     })
     .state('project.data.inspect', {
-      url: '/inspect/:dID',
+      url: '/:dID/inspect',
       templateUrl: 'modules/data/inspect_dataset.html',
       controller: 'InspectDataCtrl'
     })
