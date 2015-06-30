@@ -1,7 +1,15 @@
 require('angular');
 require('angular-ui-router');
+require("angular-uuid");
 
-angular.module('diveApp.routes', ['ui.router', 'ngCookies'])
+angular.module('diveApp.routes', ['ui.router', 'ngCookies', 'angular-uuid'])
+
+angular.module('diveApp.routes').run(function($rootScope, $state, $cookies, AuthService, uuid) {
+  $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
+    if (toState.authenticate != false && !AuthService.isAuthenticated() && !$cookies._auid)
+      $cookies._auid = uuid.v4();
+  });
+})
 
 angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvider, $locationProvider) {  
   $stateProvider
@@ -11,6 +19,7 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
     controller: function($scope, $rootScope, $state, $cookies, AuthService, user, loggedIn) {
       $rootScope.user = user;
       $rootScope.loggedIn = loggedIn;
+
       var savedTitle = $cookies._title;
       if (savedTitle)
         $state.go('project.data.upload', {
@@ -98,22 +107,16 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       $rootScope.user = user;
       $rootScope.loggedIn = loggedIn;
 
-      if (user && user.userName)
-        userName = user.userName;
-      else
-        userName = "null";
-
-      var params = {
-        formattedProjectTitle: projectParams.title, 
-        userName: userName
-      };
-
       // TODO: should check for user permissions to this project
       // we should be able to mark whether this project is dirty or clean somehow
       var setPID = function (_pID) {
         $scope.pID = _pID;
         if (!$scope.pID)
-          ProjectService.createProject({anonymous: true, title: projectParams.title}).then(function(r) {
+          ProjectService.createProject({
+            anonymous: true,
+            title: projectParams.title,
+            user_name: user.userName
+          }).then(function(r) {
             $cookies._title = projectParams.title;
             $cookies._pID = r.data.pID;
             $scope.pID = r.data.pID;
@@ -129,14 +132,35 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       if ($cookies._pID)
         setPID($cookies._pID);
       else
-        ProjectIDService.getProjectID(params).then(function(_pID) {
+        ProjectIDService.getProjectID({
+          formattedProjectTitle: projectParams.title, 
+          userName: user.userName
+        }).then(function(_pID) {
           setPID(_pID);
         });
 
     },
     resolve: {
-      user: function(AuthService) {
-        return AuthService.getCurrentUser();          
+      user: function(AuthService, $cookies) {
+        _authUser = AuthService.getCurrentUser();
+
+        if (_authUser && _authUser.userName) {
+          _authUser.anonymous = false;
+          return _authUser;
+        }
+
+        if ($cookies._auid)
+          return {
+            anonymous: true,
+            userName: $cookies._auid,
+            id: $cookies._auid
+          }
+      
+        return {
+          anonymous: true,
+          userName: "null",
+          id: "null"
+        }
       },
       loggedIn: function(AuthService) {
         return AuthService.isAuthenticated();

@@ -38,7 +38,7 @@ angular.module("diveApp.data").controller("UploadCtrl", function($scope, $http, 
 
 angular.module("diveApp.data").controller("InspectDataCtrl", function($scope, $http, $stateParams, API_URL) {
   $scope.isTimeSeries = function(i, ts) {
-    if ((i >= ts.start.index) && (i <= ts.end.index)) {
+    if (ts && ts.start && (i >= ts.start.index) && (i <= ts.end.index)) {
       return true;
     } else {
       return false;

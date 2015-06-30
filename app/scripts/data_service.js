@@ -45,7 +45,6 @@ angular.module('diveApp.services').service('ProjectService', function($http, API
     createProject: function(params) {
       if (params.anonymous) {
         params.description = null;
-        params.user_name = null;
       }
 
       return $http({
