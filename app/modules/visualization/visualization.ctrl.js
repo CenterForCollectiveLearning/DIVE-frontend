@@ -121,9 +121,8 @@ angular.module('diveApp.visualization').controller("VisualizationExportCtrl", fu
 });  
 
 // Parent controller containing data functions
-angular.module('diveApp.visualization').controller("VisualizationCtrl", function($scope, DataService, VizDataService, PropertyService, SpecificationService, ConditionalDataService, pID) {
+angular.module('diveApp.visualization').controller("VisualizationCtrl", function($scope, DataService, VizDataService, PropertyService, SpecificationService, ConditionalDataService, pIDRetrieved) {
   // Making resolve data available to directives
-  $scope.pID = pID;
 
   $scope.datasets = [];
   $scope.columnAttrsByDID = {};
@@ -167,40 +166,43 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
     y: ''
   }
 
-  DataService.getDatasets({ pID: pID }, function(datasets) {
-    $scope.datasets = datasets;
-    $scope.columnAttrsByDID = {}
-    _.each(datasets, function(e) {
-      // Conditionals for time series visualizations
-      if (e.structure == 'wide') {
-        $scope.condList.push({name: 'Start Date'});
-        $scope.condList.push({name: 'End Date'});
-        $scope.condData['Start Date'] = e.time_series.names;
-        $scope.condData['End Date'] = e.time_series.names;
-      }
-      $scope.columnAttrsByDID[e.dID] = e.column_attrs;
-    })
-  });
-
-  // TODO Find a better way to resolve data dependencies without just making everything synchronous
-  PropertyService.getProperties({ pID: pID }, function(properties) {
-    $scope.properties = properties;
-    $scope.overlaps = properties.overlaps;
-    $scope.hierarchies = properties.hierarchies;
-
-    // Getting specifications grouped by category
-    SpecificationService.getSpecifications({ pID: pID }, function(specs) {
-      $scope.categories = _.map(specs, function(v, k) {
-        return {
-          'name': k,
-          'toggled': true,
-          'length': v.length,
-          'specs': v
+  pIDRetrieved.promise.then(function(r) {
+    DataService.getDatasets({ pID: $scope.pID }, function(datasets) {
+      $scope.datasets = datasets;
+      $scope.columnAttrsByDID = {};
+      _.each(datasets, function(e) {
+        // Conditionals for time series visualizations
+        if (e.structure == 'wide') {
+          $scope.condList.push({name: 'Start Date'});
+          $scope.condList.push({name: 'End Date'});
+          $scope.condData['Start Date'] = e.time_series.names;
+          $scope.condData['End Date'] = e.time_series.names;
         }
+        $scope.columnAttrsByDID[e.dID] = e.column_attrs;
       })
-      $scope.selectSpec($scope.categories[1].specs[0])
+    });
+
+    // TODO Find a better way to resolve data dependencies without just making everything synchronous
+    PropertyService.getProperties({ pID: $scope.pID }, function(properties) {
+      $scope.properties = properties;
+      $scope.overlaps = properties.overlaps;
+      $scope.hierarchies = properties.hierarchies;
+
+      // Getting specifications grouped by category
+      SpecificationService.getSpecifications({ pID: $scope.pID }, function(specs) {
+        $scope.categories = _.map(specs, function(v, k) {
+          return {
+            'name': k,
+            'toggled': true,
+            'length': v.length,
+            'specs': v
+          }
+        })
+        $scope.selectSpec($scope.categories[1].specs[0])
+      });
     });
   });
+
 
   $scope.selectSpec = function(spec) {
     $scope.selectedChild = spec;
@@ -239,21 +241,6 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
         $scope.groupOn.push(c)
       }
     });
-
-    // // Get X and Y and group parameters for comparisons
-    // if (spec.category === 'comparison') {
-    //   var params = {
-    //     dID: $scope.currentdID,
-    //     name: spec.groupBy.title,
-    //     pID: pID
-    //   }
-    //   ConditionalDataService.getConditionalData(params, function(result) {
-    //     $scope.selectedParameters.x = result.result[0];
-    //     $scope.selectedParameters.y = result.result[1];
-    //     $scope.parametersData = result.result;
-    //     $scope.condData[spec.groupBy.title] = result.result;
-    //   });
-    // }
 
     $scope.loadingViz = true;
 
@@ -323,7 +310,7 @@ angular.module('diveApp.visualization').controller("VisualizationCtrl", function
       spec: spec,
       conditional: conditional,
       config: config,
-      pID: pID
+      pID: $scope.pID
     };
 
     VizDataService.getVizData(params, function(result) {

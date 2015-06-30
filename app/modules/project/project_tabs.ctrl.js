@@ -22,8 +22,8 @@ angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope,
   var currentState = currentStateSplit[0] + '.' + currentStateSplit[1];
   $scope.selectedIndex = _.findIndex($scope.tabs, { state: currentState });
   $scope.$watch('selectedIndex', function(current, old) {
-    if (current >= 0 && old >= 1 && current != old) {
-      $state.go($scope.tabs[current].state);      
+    if (current >= 0 && old >= 0 && current != old) {
+      $state.go($scope.tabs[current].state);
     }
   });
 
