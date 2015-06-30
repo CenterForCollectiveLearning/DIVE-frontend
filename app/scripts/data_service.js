@@ -33,7 +33,38 @@ angular.module('diveApp.services').service('ProjectService', function($http, API
       }).then(function(r) {
         return r.data;
       });
+    },
+
+    createProjectTitleId: function(params) {
+      var _upperprojectTitleIdLimit = 999999;
+      var _lowerprojectTitleIdLimit = 100000;
+
+      return Math.floor(Math.random() * (_upperprojectTitleIdLimit - _lowerprojectTitleIdLimit)) + _lowerprojectTitleIdLimit;
+    },
+
+    createProject: function(params) {
+      if (params.anonymous) {
+        params.description = null;
+      }
+
+      return $http({
+        method: 'POST',
+        url: API_URL + '/api/project',
+        data: params,
+        transformRequest: objectToQueryString,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).success(function(response) {
+        return response;
+      }).error(function(data, status) {
+        console.log('Error creating project:');
+        console.log(data);
+        console.log(status);
+        return;
+      });
     }
+
   };
 });
 
@@ -41,10 +72,14 @@ angular.module('diveApp.services').service('ProjectService', function($http, API
 angular.module('diveApp.services').service("ProjectIDService", function($http, $stateParams, $rootScope, API_URL) {
   return {
     getProjectID: function(params) {
-      console.log("Getting Project ID");
+      if (params && params.userName)
+        userName = params.userName;
+      else
+        userName = '';
+
       return $http.get(API_URL + "/api/getProjectID", {
         params: {
-          user_name: params.userName,
+          user_name: userName,
           formattedProjectTitle: params.formattedProjectTitle
         }
       }).then(function(r) {
@@ -52,9 +87,8 @@ angular.module('diveApp.services').service("ProjectIDService", function($http, $
         return pID;
       }).catch(function(r) {
         console.error("Error getting projectID", r.data, r.status);
-      }).finally(function() {
-        console.log("Got projectID");
-      });
+        return null;
+      })
     }
   };
 });

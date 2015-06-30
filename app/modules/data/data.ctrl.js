@@ -2,51 +2,62 @@ var _ = require('underscore');
 
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-angular.module("diveApp.data").controller("UploadCtrl", function($scope, $http, $upload, pID, API_URL) {
+angular.module("diveApp.data").controller("UploadCtrl", function($scope, $http, $upload, API_URL, pIDRetrieved, datasetsRetrieved) {
   $scope.onFileSelect = function(files) {
     var file;
     var i = 0;
     var results = [];
-    while (i < files.length) {
-      file = files[i];
-      $scope.upload = $upload.upload({
-        url: API_URL + "/api/upload",
-        data: {
-          pID: pID
-        },
-        file: file
-      }).progress(function(evt) {
-        console.log("Percent loaded: " + parseInt(100.0 * evt.loaded / evt.total));
-      }).success(function(data, status, headers, config) {
-        var dataset, _i, _len, _ref;
-        _ref = data.datasets;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          dataset = _ref[_i];
-          $scope.datasets.push(dataset);
-          $scope.dIDs.push(dataset.dID);
-        }
-      });
-      results.push(i++);
-    }
-    return results;
+    return pIDRetrieved.promise.then(function() {
+      while (i < files.length) {
+        file = files[i];
+        $scope.upload = $upload.upload({
+          url: API_URL + "/api/upload",
+          data: {
+            pID: $scope.pID
+          },
+          file: file
+        }).progress(function(evt) {
+          console.log("Percent loaded: " + parseInt(100.0 * evt.loaded / evt.total));
+        }).success(function(data, status, headers, config) {
+          var dataset, _i, _len, _ref;
+          _ref = data.datasets;
+          datasetsRetrieved.promise.then(function() {
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              dataset = _ref[_i];
+              $scope.datasets.push(dataset);
+              $scope.dIDs.push(dataset.dID);
+            }
+          });
+        });
+        results.push(i++);
+      }
+      return results;
+    });
   };
 });
 
-angular.module("diveApp.data").controller("InspectDataCtrl", function($scope, $http, pID, API_URL) {
+angular.module("diveApp.data").controller("InspectDataCtrl", function($scope, $http, $stateParams, API_URL) {
   $scope.isTimeSeries = function(i, ts) {
-    if ((i >= ts.start.index) && (i <= ts.end.index)) {
+    if (ts && ts.start && (i >= ts.start.index) && (i <= ts.end.index)) {
       return true;
     } else {
       return false;
     }
-  }
+  };
+
+  $scope.$watch('datasets', function(current, old) {
+    _selected_dataset = _.findWhere($scope.datasets, {dID: $stateParams.dID});
+    if (_selected_dataset)
+      $scope.selectDataset(_selected_dataset);
+  });
+
 
   // TODO Factor out into a data service
   $scope.removeDataset = function(dID) {
     console.log('Removing dataset, dID:', dID);
     return $http["delete"](API_URL + '/api/data', {
       params: {
-        pID: pID,
+        pID: $scope.pID,
         dID: dID
       }
     }).success(function(result) {
@@ -76,7 +87,7 @@ angular.module("diveApp.data").controller("PreloadedDataCtrl", function($scope, 
   $scope.addPreloadedDataset = function(d) {
     var params = {
       dID: d.dID,
-      pID: pID
+      pID: $scope.pID
     };
     PublicDataService.promise('POST', params, function(datasets) {
       var _i, _len, _results;
@@ -91,13 +102,16 @@ angular.module("diveApp.data").controller("PreloadedDataCtrl", function($scope, 
   };
 })
 
-angular.module("diveApp.data").controller("DataCtrl", function($scope, $state, DataService, pID) {
+angular.module("diveApp.data").controller("DataCtrl", function($scope, $state, DataService, pIDRetrieved, datasetsRetrieved) {
   $scope.datasets = [];
   $scope.preloadedDatasets = [];
 
-  DataService.getDatasets({ pID: pID }, function(r) {
-    $scope.datasets = r;
-    $scope.dIDs = _.pluck($scope.datasets, 'dID');
+  pIDRetrieved.promise.then(function() {
+    DataService.getDatasets({ pID: $scope.pID }, function(r) {
+      $scope.datasets = r;
+      $scope.dIDs = _.pluck($scope.datasets, 'dID');
+      datasetsRetrieved.q.resolve();
+    });
   });
 
   $scope.sections = [

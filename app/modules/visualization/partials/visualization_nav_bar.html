@@ -44,9 +44,6 @@
             </md-button>
 
             <ul class="menu-toggle-list" ng-show="isOpen($index)">
-              <section layout="row" layout-align="center center" flex>
-                <md-progress-circular md-mode="indeterminate" ng-if="loadingDatasets"></md-progress-circular>
-              </section>
               <li ng-repeat="s in category.specs">
                 <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(s)}" ng-click="selectSpec(s)">
                   <span ng-if="s.category === 'time series' || s.category === 'shares'">

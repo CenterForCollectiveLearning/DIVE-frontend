@@ -11,7 +11,6 @@ angular.module('diveApp.landing').controller('ProjectListCtrl', function($scope,
   };
   $scope.openProject = function(project) {
     return $state.go('project.data.upload', {
-      formattedUserName: AuthService.getCurrentUser().userName,
       formattedProjectTitle: project.formattedTitle
     });
   };

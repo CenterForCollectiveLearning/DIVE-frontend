@@ -1,16 +1,13 @@
 require('angular');
 require('angular-ui-router');
+require("angular-uuid");
 
+angular.module('diveApp.routes', ['ui.router', 'ngCookies', 'angular-uuid'])
 
-angular.module('diveApp.routes', ['ui.router'])
-
-// https://medium.com/@mattlanham/authentication-with-angularjs-4e927af3a15f
-angular.module('diveApp.routes').run(function($rootScope, $state, AuthService) {
+angular.module('diveApp.routes').run(function($rootScope, $state, $cookies, AuthService, uuid) {
   $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
-    if (toState.authenticate && !AuthService.isAuthenticated()) {
-      $state.transitionTo("landing.login");
-      event.preventDefault();
-    }
+    if (toState.authenticate != false && !AuthService.isAuthenticated() && !$cookies._auid)
+      $cookies._auid = uuid.v4();
   });
 })
 
@@ -19,18 +16,21 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
   .state('landing', {
     url: '^/',
     templateUrl: 'modules/landing/landing.html',
-    controller: function($scope, $rootScope, $state, AuthService, user, loggedIn) {
-      $state.go('landing.create');
+    controller: function($scope, $rootScope, $state, $cookies, AuthService, user, loggedIn) {
       $rootScope.user = user;
       $rootScope.loggedIn = loggedIn;
 
-      $scope.logoutUser = function() {
-        AuthService.logoutUser(function() {
-          $rootScope.user = null;
-          $rootScope.loggedIn = false;
-          $state.go('landing.login');          
+      var savedTitle = $cookies._title;
+      if (savedTitle)
+        $state.go('project.data.upload', {
+          formattedProjectTitle: savedTitle
         });
-      };
+      else if (loggedIn)
+        $state.go('landing.create');
+      else
+        $state.go('project.data.upload', {
+          formattedProjectTitle: null
+        });
     },
     resolve: {
       user: function(AuthService) {
@@ -82,39 +82,120 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       controller: 'AuthenticateCtrl',
       templateUrl: 'modules/landing/signup.html'
     })
-
+  .state('logout', {
+    url: '/logout',
+    controller: function($scope, $rootScope, $state, $stateParams, AuthService) {
+      AuthService.logoutUser(function() {
+        $rootScope.user = null;
+        $rootScope.loggedIn = false;
+        $state.go('landing.login');          
+      });      
+    }
+  })
   .state('project', {
-    url: '/:formattedUserName/:formattedProjectTitle',
+    url: '/projects/:formattedProjectTitle',
     templateUrl: 'modules/project/project.html',
-    controller: function($scope, $rootScope, $state, $stateParams, AuthService, user) {
-      $scope.projectTitle = $stateParams.formattedProjectTitle.split('-').join(' ');
-      $rootScope.user = user;
-      $rootScope.loggedIn = true;
-
-      $scope.logoutUser = function() {
-        AuthService.logoutUser(function() {
-          $rootScope.user = null;
-          $rootScope.loggedIn = false;
-          $state.go('landing.login');          
+    controller: function($scope, $rootScope, $state, $stateParams, $q, $cookies, AuthService, ProjectIDService, ProjectService, user, loggedIn, projectParams, pIDRetrieved) {
+      if (projectParams.refresh) {
+        $state.go('project.data.upload', {
+          formattedProjectTitle: projectParams.title
         });
+        return;
+      }
+
+      $scope.projectTitle = projectParams.title.split('-').join(' ');
+      $rootScope.user = user;
+      $rootScope.loggedIn = loggedIn;
+
+      // TODO: should check for user permissions to this project
+      // we should be able to mark whether this project is dirty or clean somehow
+      var setPID = function (_pID) {
+        $scope.pID = _pID;
+        if (!$scope.pID)
+          ProjectService.createProject({
+            anonymous: true,
+            title: projectParams.title,
+            user_name: user.userName
+          }).then(function(r) {
+            $cookies._title = projectParams.title;
+            $cookies._pID = r.data.pID;
+            $scope.pID = r.data.pID;
+            pIDRetrieved.q.resolve();
+          });
+        else {
+          $cookies._title = projectParams.title;
+          $cookies._pID = _pID;
+          pIDRetrieved.q.resolve();
+        }        
       };
+
+      if ($cookies._pID)
+        setPID($cookies._pID);
+      else
+        ProjectIDService.getProjectID({
+          formattedProjectTitle: projectParams.title, 
+          userName: user.userName
+        }).then(function(_pID) {
+          setPID(_pID);
+        });
+
     },
     resolve: {
-      user: function(AuthService) {
-        return AuthService.getCurrentUser();
-      },
-      formattedUserName: function($stateParams) {
-        return $stateParams.formattedUserName;
-      },
-      formattedProjectTitle: function($stateParams) {
-        return $stateParams.formattedProjectTitle;
-      },
-      pID: function($stateParams, $rootScope, AuthService, ProjectIDService) {
-        var params = {
-          formattedProjectTitle: $stateParams.formattedProjectTitle, 
-          userName: AuthService.getCurrentUser().userName
+      user: function(AuthService, $cookies) {
+        _authUser = AuthService.getCurrentUser();
+
+        if (_authUser && _authUser.userName) {
+          _authUser.anonymous = false;
+          return _authUser;
         }
-        return ProjectIDService.getProjectID(params);
+
+        if ($cookies._auid)
+          return {
+            anonymous: true,
+            userName: $cookies._auid,
+            id: $cookies._auid
+          }
+      
+        return {
+          anonymous: true,
+          userName: "null",
+          id: "null"
+        }
+      },
+      loggedIn: function(AuthService) {
+        return AuthService.isAuthenticated();
+      },
+
+      projectParams: function($state, $stateParams, ProjectService) {
+        var title = '';
+        if (!$stateParams.formattedProjectTitle || $stateParams.formattedProjectTitle.length < 1) {
+          title = ProjectService.createProjectTitleId();
+          refresh = true;
+        } else {
+          title = $stateParams.formattedProjectTitle;
+          refresh = false;
+        }
+
+        return {
+          title: title,
+          refresh: refresh
+        }
+      },
+
+      pIDRetrieved: function($q) {
+        q = $q.defer();
+        return {
+          q: q,
+          promise: q.promise
+        };
+      },
+
+      datasetsRetrieved: function($q) {
+        q = $q.defer();
+        return {
+          q: q,
+          promise: q.promise
+        };
       }
     }
   })
@@ -141,7 +222,7 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       controller: 'PreloadedDataCtrl',
     })
     .state('project.data.inspect', {
-      url: '/inspect/:dID',
+      url: '/:dID/inspect',
       templateUrl: 'modules/data/inspect_dataset.html',
       controller: 'InspectDataCtrl'
     })

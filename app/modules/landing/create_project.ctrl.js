@@ -24,7 +24,6 @@ angular.module('diveApp.landing').controller("CreateProjectCtrl", function($scop
       }
     }).success(function(data, status) {
       $state.go('project.data.upload', { 
-        formattedUserName: user.userName, 
         formattedProjectTitle: data.formatted_title
       });
     }).error(function(data, status) {

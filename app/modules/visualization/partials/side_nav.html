@@ -34,9 +34,6 @@
             </md-button>
 
             <ul class="menu-toggle-list" ng-show="isOpen($index)">
-              <section layout="row" layout-align="center center" flex>
-                <md-progress-circular md-mode="indeterminate" ng-if="loadingDatasets"></md-progress-circular>
-              </section>
               <li ng-repeat="s in category.specs">
                 <md-button md-no-ink aria-label="button" class="child" ng-class="{'active' : isChildSelected(s)}" ng-click="selectSpec(s)">
                   <div class="sidenav-button-heading">
