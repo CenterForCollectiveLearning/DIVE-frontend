@@ -22,9 +22,6 @@
               </div>
             </md-button>
             <ul class="menu-toggle-list" ng-show="isOpen($index)">
-              <section layout="row" layout-align="center ceneter" flex>
-                <md-progress-circular md-mode="indeterminate" ng-if="loadingDatasets"></md-progress-circular>
-              </section>
               <li ng-repeat="d in docs">
                 <md-button aria-label="button" class="child" ng-class="{'active' : isChildSelected(d.spec)}" ng-click="selectSpec(d.spec)">
 
