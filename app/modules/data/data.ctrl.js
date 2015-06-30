@@ -2,33 +2,37 @@ var _ = require('underscore');
 
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-angular.module("diveApp.data").controller("UploadCtrl", function($scope, $http, $upload, API_URL) {
+angular.module("diveApp.data").controller("UploadCtrl", function($scope, $http, $upload, API_URL, pIDRetrieved, datasetsRetrieved) {
   $scope.onFileSelect = function(files) {
     var file;
     var i = 0;
     var results = [];
-    while (i < files.length) {
-      file = files[i];
-      $scope.upload = $upload.upload({
-        url: API_URL + "/api/upload",
-        data: {
-          pID: $scope.pID
-        },
-        file: file
-      }).progress(function(evt) {
-        console.log("Percent loaded: " + parseInt(100.0 * evt.loaded / evt.total));
-      }).success(function(data, status, headers, config) {
-        var dataset, _i, _len, _ref;
-        _ref = data.datasets;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          dataset = _ref[_i];
-          $scope.datasets.push(dataset);
-          $scope.dIDs.push(dataset.dID);
-        }
-      });
-      results.push(i++);
-    }
-    return results;
+    return pIDRetrieved.promise.then(function() {
+      while (i < files.length) {
+        file = files[i];
+        $scope.upload = $upload.upload({
+          url: API_URL + "/api/upload",
+          data: {
+            pID: $scope.pID
+          },
+          file: file
+        }).progress(function(evt) {
+          console.log("Percent loaded: " + parseInt(100.0 * evt.loaded / evt.total));
+        }).success(function(data, status, headers, config) {
+          var dataset, _i, _len, _ref;
+          _ref = data.datasets;
+          datasetsRetrieved.promise.then(function() {
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              dataset = _ref[_i];
+              $scope.datasets.push(dataset);
+              $scope.dIDs.push(dataset.dID);
+            }
+          });
+        });
+        results.push(i++);
+      }
+      return results;
+    });
   };
 });
 
@@ -98,14 +102,15 @@ angular.module("diveApp.data").controller("PreloadedDataCtrl", function($scope, 
   };
 })
 
-angular.module("diveApp.data").controller("DataCtrl", function($scope, $state, DataService) {
+angular.module("diveApp.data").controller("DataCtrl", function($scope, $state, DataService, pIDRetrieved, datasetsRetrieved) {
   $scope.datasets = [];
   $scope.preloadedDatasets = [];
 
-  $scope.dataRetrieved.then(function() {
+  pIDRetrieved.promise.then(function() {
     DataService.getDatasets({ pID: $scope.pID }, function(r) {
       $scope.datasets = r;
       $scope.dIDs = _.pluck($scope.datasets, 'dID');
+      datasetsRetrieved.q.resolve();
     });
   });
 

@@ -1,17 +1,22 @@
 require('angular');
 require('angular-ui-router');
 
-angular.module('diveApp.routes', ['ui.router'])
+angular.module('diveApp.routes', ['ui.router', 'ngCookies'])
 
 angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvider, $locationProvider) {  
   $stateProvider
   .state('landing', {
     url: '^/',
     templateUrl: 'modules/landing/landing.html',
-    controller: function($scope, $rootScope, $state, AuthService, user, loggedIn) {
+    controller: function($scope, $rootScope, $state, $cookies, AuthService, user, loggedIn) {
       $rootScope.user = user;
       $rootScope.loggedIn = loggedIn;
-      if (loggedIn)
+      var savedTitle = $cookies._title;
+      if (savedTitle)
+        $state.go('project.data.upload', {
+          formattedProjectTitle: savedTitle
+        });
+      else if (loggedIn)
         $state.go('landing.create');
       else
         $state.go('project.data.upload', {
@@ -81,15 +86,13 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
   .state('project', {
     url: '/projects/:formattedProjectTitle',
     templateUrl: 'modules/project/project.html',
-    controller: function($scope, $rootScope, $state, $stateParams, $q, AuthService, ProjectIDService, ProjectService, user, loggedIn, projectParams) {
+    controller: function($scope, $rootScope, $state, $stateParams, $q, $cookies, AuthService, ProjectIDService, ProjectService, user, loggedIn, projectParams, pIDRetrieved) {
       if (projectParams.refresh) {
         $state.go('project.data.upload', {
           formattedProjectTitle: projectParams.title
         });
         return;
       }
-      q = $q.defer();
-      $scope.dataRetrieved = q.promise;
 
       $scope.projectTitle = projectParams.title.split('-').join(' ');
       $rootScope.user = user;
@@ -101,23 +104,34 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
         userName = "null";
 
       var params = {
-        formattedProjectTitle: title, 
+        formattedProjectTitle: projectParams.title, 
         userName: userName
       };
 
       // TODO: should check for user permissions to this project
       // we should be able to mark whether this project is dirty or clean somehow
-      ProjectIDService.getProjectID(params).then(function(r) {
-        $scope.pID = r;
-        if (!$scope.pID) {
-          ProjectService.createProject({anonymous: true, title: title}).then(function(r) {
+      var setPID = function (_pID) {
+        $scope.pID = _pID;
+        if (!$scope.pID)
+          ProjectService.createProject({anonymous: true, title: projectParams.title}).then(function(r) {
+            $cookies._title = projectParams.title;
+            $cookies._pID = r.data.pID;
             $scope.pID = r.data.pID;
-            $scope.dataRetrieved = q.resolve();
+            pIDRetrieved.q.resolve();
           });
-        } else {
-          $scope.dataRetrieved = q.resolve();
-        }
-      });
+        else {
+          $cookies._title = projectParams.title;
+          $cookies._pID = _pID;
+          pIDRetrieved.q.resolve();
+        }        
+      };
+
+      if ($cookies._pID)
+        setPID($cookies._pID);
+      else
+        ProjectIDService.getProjectID(params).then(function(_pID) {
+          setPID(_pID);
+        });
 
     },
     resolve: {
@@ -129,6 +143,7 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
       },
 
       projectParams: function($state, $stateParams, ProjectService) {
+        var title = '';
         if (!$stateParams.formattedProjectTitle || $stateParams.formattedProjectTitle.length < 1) {
           title = ProjectService.createProjectTitleId();
           refresh = true;
@@ -141,6 +156,22 @@ angular.module('diveApp.routes').config(function($stateProvider, $urlRouterProvi
           title: title,
           refresh: refresh
         }
+      },
+
+      pIDRetrieved: function($q) {
+        q = $q.defer();
+        return {
+          q: q,
+          promise: q.promise
+        };
+      },
+
+      datasetsRetrieved: function($q) {
+        q = $q.defer();
+        return {
+          q: q,
+          promise: q.promise
+        };
       }
     }
   })
