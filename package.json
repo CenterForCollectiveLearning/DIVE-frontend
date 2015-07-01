@@ -31,7 +31,7 @@
     "browser-sync": "^2.0.0-rc4",
     "browserify": "^9.0.7",
     "browserify-shim": "^3.8.0",
-    "coffee-script": "^1.8.0",
+    "coffee-script": "^1.9.3",
     "coffeeify": "^0.7.0",
     "connect-livereload": "^0.5.3",
     "connect-modrewrite": "^0.7.11",
