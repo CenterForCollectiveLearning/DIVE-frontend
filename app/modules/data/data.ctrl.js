@@ -1,4 +1,6 @@
 var _ = require('underscore');
+require('handsontable');
+require('ngHandsontable');
 
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
@@ -111,6 +113,8 @@ angular.module("diveApp.data").controller("DataCtrl", function($scope, $state, D
       $scope.datasets = r;
       $scope.dIDs = _.pluck($scope.datasets, 'dID');
       datasetsRetrieved.q.resolve();
+
+      console.log('Retrieved pID and got datasets', $scope.datasets);
     });
   });
 

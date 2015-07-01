@@ -1,12 +1,25 @@
 <!-- Datasets -->
-<div ng-if="datasets">
+<div ng-if="datasets" flex>
   <div ng-repeat="dataset in datasets" ng-if="isChildSelected(dataset)" flex> 
-    <md-card class="dataset-preview flat no-border" ng-if="dataset.sample" layout="column">
+    <md-card class="dataset-preview flat no-border" ng-if="dataset.sample" layout="column" flex>
       <md-card-content>
         <h2 class="md-title">
           {{dataset.title}}
         </h2>
-        <div class="table-responsive-vertical shadow-z-1">
+
+        <div id="table">
+        </div>
+        <table data="dataset.sample" selector="'#table'" headers="dataset.column_attrs">
+        </table>
+<!--         <hot-table
+          rowHeaders="true"
+          datarows="dataset.sample"
+          height="300"
+          width="1000"
+        >
+          <hot-column data="id"></hot-column>
+        </hot-table> -->
+        <!-- <div class="table-responsive-vertical shadow-z-1">
           <table class="table table-hover table-mc-light-blue">
             <thead>
               <tr class="names">
@@ -28,7 +41,7 @@
               </tr>
             </tbody>
           </table>
-        </div>
+        </div> -->
       </md-card-content>
     </md-card>
     
