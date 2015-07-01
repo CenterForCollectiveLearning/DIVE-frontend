@@ -1,0 +1,8 @@
+.title Statistics
+.content
+  #means-histogram.histogram
+  histogram(data='vizStats.means', selector="'#means-histogram'", title="'Mean'", selected-values='selectedValues')
+  #stds-histogram.histogram
+  histogram(data='vizStats.stds', selector="'#stds-histogram'", title="'Coefficient of Variance'", selected-values='selectedValues')
+  .checkboxes
+    md-checkbox(ng-model='selectedValues[k]', ng-repeat='(k, v) in vizStats.means', ng-value='k') {{k}}
