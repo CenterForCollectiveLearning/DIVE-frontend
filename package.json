@@ -63,13 +63,15 @@
     "d3plus": "./dist/scripts/lib/d3plus.min.js",
     "slider": "./dist/scripts/lib/angular-slider.min.js",
     "topojson": "./dist/scripts/lib/topojson.js",
-    "filesaver": "./dist/scripts/lib/FileSaver.min.js"
+    "filesaver": "./dist/scripts/lib/FileSaver.min.js",
+    "handsontable": "./dist/scripts/lib/handsontable.full.min.js"
   },
   "browserify-shim": {
     "angular": "angular",
     "slider": "slider",
     "d3plus": "d3plus",
     "topojson": "topojson",
-    "filesaver": "filesaver"
+    "filesaver": "filesaver",
+    "handsontable": "handsontable"
   }
 }
