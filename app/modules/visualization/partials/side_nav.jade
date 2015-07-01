@@ -1,0 +1,36 @@
+md-sidenav.site-sidenav.md-sidenav-left.md-locked-open.md-whiteframe-z2(md-component-id='left', md-is-locked-open="$mdMedia('gt-sm')", layout-fill='')
+
+  md-content(flex='', role='navigation')
+    ul.docs-menu
+      li
+        ul
+          section(layout='vertical', layout-fill='', layout-align='center center', ng-if='!categories.length', flex='')
+            md-progress-circular(md-mode='indeterminate')
+          li.sidenav-primary-list-item(ng-repeat='category in categories')
+            md-button.md-button-toggle.parent-button(aria-label='button', md-no-ink='', ng-click='toggle($index)')
+              div(flex='', layout='row')
+                span.category
+                  i.expand-icon.zmdi.zmd-lg(ng-class="isOpen($index) ? 'zmdi-caret-up': 'zmdi-caret-down'")
+
+                  span.name {{category.name | capitalize}}
+                  span.num-specs ({{category.specs.length}})
+                span.right.icons(layout='row', layout-align='end center', flex='')
+                  .icon(ng-repeat='icon in icons[category.name]', ng-class="{ 'active': selectedType === icon.type }", ng-click='selectType(icon.type); $event.stopPropagation();')
+                    img(ng-src='/assets/images/{{icon.url}}')
+
+            ul.menu-toggle-list(ng-show='isOpen($index)')
+              li(ng-repeat='s in category.specs')
+                md-button.child(md-no-ink='', aria-label='button', ng-class="{'active' : isChildSelected(s)}", ng-click='selectSpec(s)')
+                  .sidenav-button-heading
+                    span(ng-if="s.category === 'time series' && !s.group.by")
+                      | All Data Points
+                    span(ng-if='s.group.by') Group by:
+                    span.spec(ng-if="s.group.by && (s.category === 'time series' || s.category === 'shares' || s.category === 'distribution')")
+                      b {{s.group.by.title}}
+                    span(ng-if="s.category === 'comparison'")
+                      | Compare 
+                      b {{s.compare.title | pluralize}}
+                  .stats.sidenav-button-details-stats(ng-if='stats.shown && s.stats.count')
+                    | {{s.stats.count}}
+                    span(ng-if="s.category !== 'comparison' && s.stats.count") Visual Elements
+                    span(ng-if="s.category === 'comparison'") Comparisons

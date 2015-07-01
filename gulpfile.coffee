@@ -53,9 +53,6 @@ server.all '/*', (req, res) ->  # Because I like HTML5 pushstate .. this redirec
   return
 
 gulp.task 'js', ->
-  # gulp.src(sources.coffee)
-  #   .pipe(coffee({bare: true})).on('error', gutil.log)
-  #   .pipe(gulp.dest(destinations.coffee))
   gulp.src('app/scripts/main.coffee', read: false)
     .pipe(browserify(
       transform: ['coffeeify']
