@@ -2,6 +2,7 @@ gulp = require('gulp')
 coffee = require('gulp-coffee')
 rename = require('gulp-rename')
 gutil = require('gulp-util')
+jade = require('gulp-jade')
 jshint = require('gulp-jshint')
 sass = require('gulp-sass')
 rename = require('gulp-rename')
@@ -22,6 +23,7 @@ changedFile = (file) ->
 sources =
   sass: 'app/styles/**'
   html: 'app/**/*.html'
+  jade: 'app/**/*.jade'
   js: 'app/**/*.js'
   coffee: 'app/**/*.coffee'
   assets: 'app/assets/**/*'
@@ -43,6 +45,7 @@ liveReloadPort = 35729
 serverPort = 7000
 
 server = express()
+server.set 'view engine', 'jade'
 server.use liveReload(port: liveReloadPort) # Add live reload
 server.use express.static('dist') # Use our 'dist' folder as rootfolder
 server.all '/*', (req, res) ->  # Because I like HTML5 pushstate .. this redirects everything back to our index.html
@@ -81,6 +84,11 @@ gulp.task 'html', ->
   gulp.src(sources.html)
     .pipe(gulp.dest(destinations.html))
 
+gulp.task 'jade', ->
+  gulp.src(sources.jade)
+    .pipe(jade())
+    .pipe(gulp.dest(destinations.html))
+
 gulp.task 'assets', ->
   gulp.src(sources.assets)
     .pipe(gulp.dest(destinations.assets))
@@ -99,6 +107,7 @@ gulp.task 'server', ->
 gulp.task 'watch', ->
   gulp.watch(sources.sass, [ 'sass' ]).on 'change', changedFile
   gulp.watch(sources.assets, [ 'assets' ]).on 'change', changedFile
+  gulp.watch(sources.jade, [ 'jade' ]).on 'change', changedFile
   gulp.watch(sources.html, [ 'html' ]).on 'change', changedFile
   gulp.watch(sources.js, [ 'js' ]).on 'change', changedFile
   gulp.watch(sources.lib, [ 'lib' ]).on 'change', changedFile
@@ -113,6 +122,7 @@ gulp.task 'build', ->
   runSequence 'clean', [
     'js'
     'sass'
+    'jade'
     'html'
     'lib'
     'assets'
