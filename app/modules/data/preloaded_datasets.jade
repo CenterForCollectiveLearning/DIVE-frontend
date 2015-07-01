@@ -1,0 +1,14 @@
+// Preloaded Data
+.preloaded-datasets
+  h1 Preloaded Datasets
+
+  section(layout='row', layout-align='center center', flex='', ng-if='!preloadedDatasets')
+    md-progress-circular(md-mode='indeterminate')
+
+  ul.datasets
+    li.dataset.card(ng-repeat='d in preloadedDatasets', ng-click='selectPreloadedDataset(d.dID)')
+      .title {{d.filename}}
+      md-content
+        .description Description
+        section(layout='row', layout-align='center center', flex='')
+          md-button.md-light.md-raised.md-primary.md-default-theme(aria-label='button', ng-click='addPreloadedDataset(d)') Add to Project
