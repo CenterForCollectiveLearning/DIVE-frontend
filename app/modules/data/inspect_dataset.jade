@@ -1,0 +1,35 @@
+// Datasets
+div(ng-if='datasets')
+  div(ng-repeat='dataset in datasets', ng-if='isChildSelected(dataset)', flex='')
+    md-card.dataset-preview.flat.no-border(ng-if='dataset.sample', layout='column')
+      md-card-content
+        h2.md-title
+          | {{dataset.title}}
+        .table-responsive-vertical.shadow-z-1
+          table.table.table-hover.table-mc-light-blue
+            thead
+              tr.names
+                th(ng-repeat='(index, attr) in dataset.column_attrs', ng-class="{'time-series': isTimeSeries(index, dataset.time_series)}")
+                  input(type='text', ng-model='attr.name')
+              tr.types
+                td(ng-repeat='(index, attr) in dataset.column_attrs', ng-class="{'time-series': isTimeSeries(index, dataset.time_series)}")
+                  md-select.type-select(ng-model='attr.type')
+                    md-option(ng-repeat='type in types') {{type}}
+            tbody
+              tr.data(ng-repeat='(index, row) in dataset.sample track by $index')
+                td(data-title='{{elem}}', ng-repeat='elem in row track by $index') {{elem}}
+
+    // Lower Section
+    // Structure Specification
+    div(layout='row')
+      md-card.dataset-structure-select.flat(flex='')
+        md-card-content
+          h2.md-title Dataset Structure
+          md-radio-group(ng-model='dataset.structure')
+            md-radio-button.md-primary(ng-repeat='s in structures', value='{{s.name}}') {{s.displayName}}
+    // Dataset Modification
+    md-card.dataset-delete-select.flat(flex='')
+      md-card-content
+        h2.md-title Modify Dataset
+        section(layout='row', layout-align='center center')
+          md-button.md-light.md-warn.md-raised(aria-label='button', ng-click='removeDataset(dataset.dID)') Delete Dataset
