@@ -199,14 +199,16 @@ angular.module('diveApp.services').service 'ConditionalDataService', ($http, API
         return callback(r.data)
   }
 
-angular.module('diveApp.services').service 'VizDataService', ($http, API_URL) ->
+angular.module('diveApp.services').service('VizDataService', ($http, API_URL) ->
   return {
     getVizData: (params, callback) ->
       # Remove stats field, which can be huge, from params
       console.log 'Getting viz data with params:', params
-      return $http.get(API_URL + '/api/visualization_data', {params: params}).then (r) ->
+      return $http.post(API_URL + '/api/visualization_data', params).then((r) ->
         return callback(r.data)
+      )
   }
+)
 
 angular.module('diveApp.services').service 'ExportedVizSpecService', ($http, API_URL) ->
   return {
