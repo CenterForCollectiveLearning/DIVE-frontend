@@ -8,7 +8,6 @@ sass = require('gulp-sass')
 rename = require('gulp-rename')
 modRewrite = require('connect-modrewrite')
 source = require('vinyl-source-stream')
-watchify = require('watchify')
 browserify = require('gulp-browserify')
 autoprefixer = require('gulp-autoprefixer')
 rimraf = require('gulp-rimraf')
@@ -107,6 +106,7 @@ gulp.task 'watch', ->
   gulp.watch(sources.jade, [ 'jade' ]).on 'change', changedFile
   gulp.watch(sources.html, [ 'html' ]).on 'change', changedFile
   gulp.watch(sources.js, [ 'js' ]).on 'change', changedFile
+  gulp.watch(sources.coffee, [ 'js' ]).on 'change', changedFile
   gulp.watch(sources.lib, [ 'lib' ]).on 'change', changedFile
   return
 

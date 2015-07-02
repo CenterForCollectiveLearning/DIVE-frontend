@@ -1,0 +1,31 @@
+md-sidenav.site-sidenav.md-sidenav-left.md-locked-open.md-whiteframe-z2(md-component-id='left', md-is-locked-open="$mdMedia('gt-sm')")
+  md-content.filters(ng-if='categories.length')
+    md-checkbox(ng-model='stats.shown') Show statistics
+  md-content(flex='', role='navigation')
+    ul.docs-menu
+      li
+        ul
+          section(layout='vertical', layout-fill='', layout-align='center center', ng-if='!categories.length', flex='')
+            md-progress-circular(md-mode='indeterminate')
+          li(ng-repeat='category in categories')
+            md-button.md-button-toggle(aria-label='button', ng-click='toggle($index)')
+              div(flex='', layout='row')
+                | {{category.name | capitalize}} ({{category.specs.length}})
+                span.right.icons(layout='row', layout-align='end center', flex='')
+                  .icon.md-whiteframe-z1(ng-repeat='(type, url) in icons[category.name]')
+                    img(ng-src='/assets/images/{{url}}')
+                span.md-toggle-icon(aria-hidden='true', ng-class="{'toggled' : isOpen($index)}")
+                  md-icon(md-svg-src='toggle-arrow')
+              span.visually-hidden
+                | Toggle {{isOpen($index)? 'expanded' : 'collapsed'}}
+            ul.menu-toggle-list(ng-show='isOpen($index)')
+              li(ng-repeat='s in category.specs')
+                md-button.child(aria-label='button', ng-class="{'active' : isChildSelected(s)}", ng-click='selectSpec(s)')
+                  span(ng-if="s.category === 'time series' || s.category === 'shares'")
+                    | Group by 
+                    b {{s.groupBy.title}}
+                  span(ng-if="s.category === 'comparison'")
+                    | Compare 
+                    b {{s.groupBy.title}}
+                .stats(ng-if='stats.shown')
+                  | Number of Elements: {{s.stats.count}}
