@@ -52,9 +52,6 @@ server.all '/*', (req, res) ->  # Because I like HTML5 pushstate .. this redirec
   return
 
 gulp.task 'js', ->
-  # gulp.src(sources.coffee)
-  #   .pipe(coffee({bare: true})).on('error', gutil.log)
-  #   .pipe(gulp.dest(destinations.coffee))
   gulp.src('app/scripts/main.coffee', read: false)
     .pipe(browserify(
       transform: ['coffeeify']
@@ -109,6 +106,7 @@ gulp.task 'watch', ->
   gulp.watch(sources.jade, [ 'jade' ]).on 'change', changedFile
   gulp.watch(sources.html, [ 'html' ]).on 'change', changedFile
   gulp.watch(sources.js, [ 'js' ]).on 'change', changedFile
+  gulp.watch(sources.coffee, [ 'js' ]).on 'change', changedFile
   gulp.watch(sources.lib, [ 'lib' ]).on 'change', changedFile
   return
 
