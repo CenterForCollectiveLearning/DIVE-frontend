@@ -136,10 +136,12 @@ angular.module('diveApp.visualization').controller('VisualizationCtrl', ($scope,
   $scope.selectedParameters =
     x: ''
     y: ''
+ 
   pIDRetrieved.promise.then (r) ->
-    DataService.getDatasets { pID: $scope.pID }, (datasets) ->
+    DataService.getDatasets({ pID: $scope.pID }).then (datasets) ->
       $scope.datasets = datasets
       $scope.columnAttrsByDID = {}
+
       _.each datasets, (e) ->
         # Conditionals for time series visualizations
         if e.structure == 'wide'
@@ -150,6 +152,7 @@ angular.module('diveApp.visualization').controller('VisualizationCtrl', ($scope,
         $scope.columnAttrsByDID[e.dID] = e.column_attrs
         return
       return
+
     # TODO Find a better way to resolve data dependencies without just making everything synchronous
     PropertyService.getProperties { pID: $scope.pID }, (properties) ->
       $scope.properties = properties
