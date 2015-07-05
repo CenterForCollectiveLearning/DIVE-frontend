@@ -1,7 +1,7 @@
 _ = require('underscore')
 require 'handsontable'
 
-angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload, API_URL, pIDRetrieved, datasetsRetrieved) ->
+angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload, API_URL, pIDRetrieved, datasetsListRetrieved) ->
   $scope.onFileSelect = (files) ->
 
     i = 0
@@ -41,7 +41,6 @@ angular.module('diveApp.data').controller 'InspectDataCtrl', ($scope, $http, $st
     return (ts and ts.start and i >= ts.start.index and i <= ts.end.index)
 
   $scope.$watch 'datasets', (current, old) ->
-
     _selected_dataset = _.findWhere($scope.datasets, dID: $stateParams.dID)
 
     if _selected_dataset

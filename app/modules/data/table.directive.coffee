@@ -47,10 +47,7 @@ angular.module('diveApp.data').directive 'table', [
           pluckedHeaders = _.pluck(headers, 'name')
           console.log pluckedHeaders
 
-          console.log(selector)
-          console.log($(selector))
           container = $(selector).get(0)
-          console.log(container)
           $(container).empty()
 
           console.log 'container', container
@@ -64,8 +61,6 @@ angular.module('diveApp.data').directive 'table', [
             columnSorting: true
             contextMenu: true)
           return
-
         return
-
     }
 ]
