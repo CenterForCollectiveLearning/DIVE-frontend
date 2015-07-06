@@ -1,4 +1,4 @@
-md-toolbar
+md-toolbar(ng-class="{'extended': datasetSettingsVisible}")
   .md-toolbar-tools(layout="row")
     h3(flex='')
       span Dataset:
@@ -15,14 +15,10 @@ md-toolbar
           span(md-highlight-text="searchQueryDataset") {{d.title}}
 
     .actions(flex=20)
-      md-button.md-fab.md-mini(aria-label="Dataset Settings", ng-click='toggleDatasetSettings()')
+      md-button.md-fab.md-mini(aria-label="Dataset Settings", ng-click='toggleDatasetSettings()', ng-if='dataset')
         i.zmdi.zmdi-settings.zmdi-hc-lg
 
-// Datasets
-section(layout='vertical', layout-fill='', layout-align='center center', ng-if='!dataset', flex='')
-  md-progress-circular(md-mode='indeterminate')
-
-.dataset-settings(ng-if='datasetSettingsVisible', layout='row')
+.md-toolbar-extension.dataset-settings(ng-if='datasetSettingsVisible', layout='row')
   // Structure Specification
   md-card.dataset-structure-select.flat.no-border(flex='')
     md-card-content
@@ -34,8 +30,13 @@ section(layout='vertical', layout-fill='', layout-align='center center', ng-if='
   md-card.dataset-delete-select.flat.no-border(flex='')
     md-card-content
       h2.md-title Modify Dataset
-      section(layout='row', layout-align='center center')
+      section(layout='row')
         md-button.md-light.md-warn.md-raised(aria-label='button', ng-click='removeDataset(dataset.dID)') Delete Dataset
+
+
+// Datasets
+section(layout='vertical', layout-fill='', layout-align='center center', ng-if='!dataset', flex='')
+  md-progress-circular(md-mode='indeterminate')
 
 div(ng-if='dataset.details.sample', flex='')
   .dataset-spreadsheet

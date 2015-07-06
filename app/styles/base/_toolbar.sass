@@ -2,6 +2,9 @@ md-toolbar
   background-color: $color-grey-light-4
   color: $color-grey-dark
 
+  &.extended
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.098), 0 1px 10px 0 rgba(0, 0, 0, 0.084)
+
   .md-toolbar-tools
     h3
       font-size: 18px
@@ -13,3 +16,16 @@ md-toolbar
 
   .actions
     text-align: right
+
+.md-toolbar-extension
+  background-color: $color-grey-light-4
+
+  md-card
+    background-color: $color-grey-light-4
+    font-size: 14px
+
+    md-card-content
+      padding: 3px 16px 10px
+
+    .md-title
+      font-size: 15px

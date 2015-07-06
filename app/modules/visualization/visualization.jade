@@ -1,0 +1,62 @@
+md-whiteframe.main-container.md-whiteframe-z2(layout='row', layout-fill='')
+  // Visualization Nav Bar
+
+  .viz-viewport(layout-fill='', layout='column', layout-align='starter', flex='')
+    visualization-preview(viz-spec='selectedSpec', viz-type='selectedType', viz-data='vizData', conditional='selCondVals', selected-values='selectedValues')
+
+    md-toolbar.segmentation-block
+      .md-toolbar-tools
+        h3
+          span Segment
+          md-autocomplete(md-items="vector in getVectors()", md-item-text="vector.name", placeholder="variable y", md-min-length="0", md-search-text="searchQueryY", md-selected-item="selectedVectorY", md-selected-item-change="onSelectVectorY(vector)")
+            md-item-template
+              span(md-highlight-text="searchQueryY") {{vector.name}}
+          .second-segment-selector(ng-if="selectedVectorY")
+            span by
+            md-autocomplete(md-items="vector in getVectors(true)", md-item-text="vector.name", placeholder="variable x", md-min-length="0", md-search-text="searchQueryX", md-selected-item-change="onSelectVectorX(vector)")
+              md-item-template
+                span(md-highlight-text="searchQueryX") {{vector.name}}
+
+    md-content
+      .visualization(flex='60', layout='row', ng-if="selectedSpec.category !== 'comparison'")
+        .left-side(layout='column', flex='')
+          md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
+          #viz-container(flex='')
+          .legend(ng-if="selectedSpec.category === 'time series'", layout='row', layout-align='center center')
+        md-card.stats(ng-if="selectedSpec.category === 'time series'", flex='30')
+          md-card-content
+            visualization-stats
+
+      .visualization-options-block
+        md-card.parameters.flat(ng-if="selectedSpec.category === 'comparison'", flex='')
+          md-card-content
+            h2.md-title Parameters
+            ul.dropdowns
+              li
+                label.dropdown-label Compare by
+                md-select(ng-if='condList', ng-model='parameters.compareBy', ng-change='refreshVizData()')
+                  md-option(ng-repeat='c in condList track by $index', ng-if='c !== selectedSpec.compare.title') {{c.name}}
+              li
+                label.dropdown-label X Variable
+                md-select(ng-if='parametersData', ng-model='selectedParameters.x', ng-change='refreshVizData()')
+                  md-option(ng-repeat='p in parametersData') {{p}}
+              li
+                label.dropdown-label Y Variable
+                md-select(ng-if='parametersData', ng-model='selectedParameters.y', ng-change='refreshVizData()')
+                  md-option(ng-repeat='p in parametersData') {{p}}
+              li
+                label.dropdown-label Group By
+                md-select(ng-if='condList', ng-model='parameters.group.by', ng-change='refreshVizData()')
+                  md-option(ng-repeat='c in condList track by $index') {{c.name}}
+
+        md-card.visualization-options.flat
+          md-card-content
+            h2.md-title Visualization Options
+            div(layout='row', layout-padding='', layout-wrap='')
+              visualization-conditionals(flex='100')
+              div(flex='33')
+                fieldset.standard
+                  legend Configuration
+                  md-checkbox(ng-model='config.normalize') Normalize
+              visualization-export(flex='66')
+
