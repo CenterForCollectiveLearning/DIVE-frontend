@@ -104,12 +104,14 @@ angular.module('diveApp.routes').config ($stateProvider, $urlRouterProvider, $lo
       # we should be able to mark whether this project is dirty or clean somehow
 
       setPID = (_pID) ->
+        $rootScope.pID = _pID
         $scope.pID = _pID
         if !$scope.pID
           ProjectService.createProject(
             anonymous: true
             title: projectParams.title
-            user_name: user.userName).then (r) ->
+            user_name: user.userName
+          ).then (r) ->
             $cookies._title = projectParams.title
             $cookies._pID = r.data.pID
             $scope.pID = r.data.pID
@@ -126,7 +128,8 @@ angular.module('diveApp.routes').config ($stateProvider, $urlRouterProvider, $lo
       else
         ProjectIDService.getProjectID(
           formattedProjectTitle: projectParams.title
-          userName: user.userName).then (_pID) ->
+          userName: user.userName
+        ).then (_pID) ->
           setPID(_pID)
           return
       return
@@ -175,7 +178,7 @@ angular.module('diveApp.routes').config ($stateProvider, $urlRouterProvider, $lo
           promise: q.promise
         }
 
-      datasetsRetrieved: ($q) ->
+      datasetsListRetrieved: ($q) ->
         q = $q.defer()
         return {
           q: q

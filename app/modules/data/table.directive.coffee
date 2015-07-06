@@ -39,32 +39,28 @@ angular.module('diveApp.data').directive 'table', [
 
         scope.render = (data, selector, headers) ->
           console.log 'Rendering table', data, selector, headers
+          selector = '.dataset-spreadsheet'
 
           if !data
             return
 
-          if renderTimeout
-            clearTimeout renderTimeout
+          pluckedHeaders = _.pluck(headers, 'name')
+          console.log pluckedHeaders
 
-          renderTimeout = $timeout((->
-            pluckedHeaders = _.pluck(headers, 'name')
-            console.log pluckedHeaders
+          container = $(selector).get(0)
+          $(container).empty()
 
-            container = $(selector).get(0)
-            console.log 'container', container
+          console.log 'container', container
 
-            hot = new Handsontable(container,
-              data: data
-              height: 500
-              colHeaders: pluckedHeaders
-              rowHeaders: true
-              stretchH: 'all'
-              columnSorting: true
-              contextMenu: true)
-            return
-          ), 200)
-
+          spreadsheet = new Handsontable(container,
+            data: data
+            height: 500
+            colHeaders: pluckedHeaders
+            rowHeaders: true
+            stretchH: 'all'
+            columnSorting: true
+            contextMenu: true)
+          return
         return
-
     }
 ]

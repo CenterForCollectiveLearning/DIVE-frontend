@@ -1,7 +1,7 @@
 _ = require('underscore')
 require 'handsontable'
 
-angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload, API_URL, pIDRetrieved, datasetsRetrieved) ->
+angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload, API_URL, pIDRetrieved, datasetsListRetrieved) ->
   $scope.onFileSelect = (files) ->
 
     i = 0
@@ -17,7 +17,7 @@ angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload,
           console.log 'Percent loaded: ' + parseInt(100.0 * evt.loaded / evt.total)
           return
         ).success((data, status, headers, config) ->
-          datasetsRetrieved.promise.then =>
+          datasetsListRetrieved.promise.then =>
             _i = 0
             _len = data.datasets.length
             while _i < _len
@@ -33,6 +33,10 @@ angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload,
   return
 
 angular.module('diveApp.data').controller 'InspectDataCtrl', ($scope, $http, $stateParams, API_URL, DataService) ->
+  DataService.getDataset($stateParams.dID).then (dataset) ->
+    $scope.dataset = dataset
+    return
+
   $scope.isTimeSeries = (i, ts) ->
     return (ts and ts.start and i >= ts.start.index and i <= ts.end.index)
 
@@ -92,16 +96,17 @@ angular.module('diveApp.data').controller 'PreloadedDataCtrl', ($scope, Preloade
     return
   return
 
-angular.module('diveApp.data').controller 'DataCtrl', ($scope, $state, DataService, pIDRetrieved, datasetsRetrieved) ->
+angular.module('diveApp.data').controller 'DataCtrl', ($scope, $state, DataService, pIDRetrieved, datasetsListRetrieved) ->
   $scope.datasets = []
   $scope.preloadedDatasets = []
 
   pIDRetrieved.promise.then ->
-    DataService.getDatasets { pID: $scope.pID }, (r) ->
-      $scope.datasets = r
+    DataService.getDatasets().then (datasets) ->
+      $scope.datasets = datasets
       $scope.dIDs = _.pluck($scope.datasets, 'dID')
-      datasetsRetrieved.q.resolve()
-      console.log 'Retrieved pID and got datasets', $scope.datasets
+      datasetsListRetrieved.q.resolve()
+
+      console.log 'Got datasets list', $scope.datasets
       return
     return
 
@@ -174,4 +179,3 @@ angular.module('diveApp.data').controller 'DataCtrl', ($scope, $state, DataServi
   ]
 
   return
-  
