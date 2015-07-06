@@ -1,7 +1,22 @@
-// Upload
-.file-upload(ng-if="selectedChild.id==='upload'", flex='')
-  section(layout='row', layout-align='center center')
-    button.md-button.md-light.md-raised.md-primary(ng-file-select='onFileSelect($files)', data-multiple='true', title='select file', onclick='this.value = null')
-      | Click here to select file
+md-toolbar
+  .md-toolbar-tools
+    h3
+      span Dataset:
+      md-autocomplete(
+        md-items="d in datasets"
+        md-item-text="d.title"
+        placeholder="Select Dataset"
+        md-min-length="0"
+        md-search-text="searchQueryDataset"
+        md-selected-item="selectedDataset"
+        md-selected-item-change="selectDataset(d)"
+      )
+        md-item-template
+          span(md-highlight-text="searchQueryDataset") {{d.title}}
 
-  .drop(ng-show='dropSupported', ng-file-drop='onFileSelect($files)', ng-file-drop-available='dropSupported=true', ng-file-drag-over-class='dragOverClass($event)', ng-file-drag-over-delay='100') or drop files here
+// Upload
+.drop(ng-show='dropSupported', ng-file-drop='onFileSelect($files)', ng-file-drop-available='dropSupported=true', ng-file-drag-over-class='dragOverClass($event)', ng-file-drag-over-delay='100', flex='', layout="column", layout-align="center center", layout-margin)
+  button.md-button.md-light.md-raised.md-primary(ng-file-select='onFileSelect($files)', data-multiple='true', title='select file', onclick='this.value = null')
+    | Select & upload a file
+  span
+    | or drop files here to upload

@@ -3,7 +3,6 @@ require 'handsontable'
 
 angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload, API_URL, pIDRetrieved, datasetsListRetrieved) ->
   $scope.onFileSelect = (files) ->
-
     i = 0
     results = []
     return pIDRetrieved.promise.then ->
@@ -33,9 +32,14 @@ angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload,
   return
 
 angular.module('diveApp.data').controller 'InspectDataCtrl', ($scope, $http, $stateParams, API_URL, DataService) ->
+  $scope.datasetSettingsVisible = false
+
   DataService.getDataset($stateParams.dID).then (dataset) ->
     $scope.dataset = dataset
     return
+
+  $scope.toggleDatasetSettings = ->
+    $scope.datasetSettingsVisible = !$scope.datasetSettingsVisible
 
   $scope.isTimeSeries = (i, ts) ->
     return (ts and ts.start and i >= ts.start.index and i <= ts.end.index)
@@ -99,6 +103,7 @@ angular.module('diveApp.data').controller 'PreloadedDataCtrl', ($scope, Preloade
 angular.module('diveApp.data').controller 'DataCtrl', ($scope, $state, DataService, pIDRetrieved, datasetsListRetrieved) ->
   $scope.datasets = []
   $scope.preloadedDatasets = []
+  $scope.selectedDataset = null
 
   pIDRetrieved.promise.then ->
     DataService.getDatasets().then (datasets) ->
@@ -134,20 +139,14 @@ angular.module('diveApp.data').controller 'DataCtrl', ($scope, $state, DataServi
   $scope.toggleStates =
     data: true
 
-  $scope.selectedChild = $scope.sections[0].children[0]
-
-  $scope.selectChild = (c) ->
-    $scope.selectedChild = c
-    $state.go c.state
-    return
-
   $scope.selectDataset = (d) ->
-    $scope.selectedChild = d
-    $state.go 'project.data.inspect', { dID: d.dID }
-    return
+    $scope.selectedDataset = d
 
-  $scope.isChildSelected = (c) ->
-    $scope.selectedChild == c
+    if d
+      $state.go 'project.data.inspect', { dID: d.dID }
+    else
+      $state.go 'project.data.upload'
+    return
 
   $scope.toggle = (k) ->
     $scope.toggleStates[k] = !$scope.toggleStates[k]
