@@ -60,17 +60,31 @@ angular.module('diveApp.services').service 'ProjectIDService', ($http, $statePar
         return
   }
 
-angular.module('diveApp.services').service 'DataService', ($http, $rootScope, API_URL) ->
+angular.module('diveApp.services').service 'DataService', ($http, $rootScope, $q, API_URL) ->
   return { 
-    getDatasets: (params, callback) ->
-      console.log 'Getting Datasets with params:', params
-      return $http.get(API_URL + '/api/data', {
+    getDatasets: () ->
+      q = $q.defer()
+
+      $http.get(API_URL + '/api/datasets', {
         params:
-          pID: params.pID
-          sample: true
-      }).then (r) ->
-        callback r.data.datasets
-        return
+          pID: $rootScope.pID
+      }).then (r) =>
+        q.resolve(r.data.datasets)
+
+      return q.promise
+
+    getDataset: (dID) ->
+      q = $q.defer()
+      console.log 'dID'
+      console.log dID
+      
+      $http.get(API_URL + "/api/datasets/#{dID}", {
+        params:
+          pID: $rootScope.pID
+      }).then (r) =>
+        q.resolve(r.data)
+
+      return q.promise
   }
 
 angular.module('diveApp.services').service 'PreloadedDataService', ($http, API_URL) ->
@@ -199,14 +213,16 @@ angular.module('diveApp.services').service 'ConditionalDataService', ($http, API
         return callback(r.data)
   }
 
-angular.module('diveApp.services').service 'VizDataService', ($http, API_URL) ->
+angular.module('diveApp.services').service('VizDataService', ($http, API_URL) ->
   return {
     getVizData: (params, callback) ->
       # Remove stats field, which can be huge, from params
       console.log 'Getting viz data with params:', params
-      return $http.get(API_URL + '/api/visualization_data', {params: params}).then (r) ->
+      return $http.post(API_URL + '/api/visualization_data', params).then((r) ->
         return callback(r.data)
+      )
   }
+)
 
 angular.module('diveApp.services').service 'ExportedVizSpecService', ($http, API_URL) ->
   return {
