@@ -1,6 +1,9 @@
 // Datasets
-div(ng-if='dataset', flex)
-  md-card.dataset-preview.flat.no-border(ng-if='dataset.details.sample', layout='column', flex)
+section(layout='vertical', layout-fill='', layout-align='center center', ng-if='!dataset', flex='')
+  md-progress-circular(md-mode='indeterminate')
+
+div(ng-if='dataset', flex='')
+  md-card.dataset-preview.flat.no-border(ng-if='dataset.details.sample', layout='column', flex='')
     md-card-content
       h2.md-title
         | {{dataset.title}}
@@ -10,14 +13,14 @@ div(ng-if='dataset', flex)
   // Lower Section
   // Structure Specification
   div(layout='row')
-    md-card.dataset-structure-select.flat(flex)
+    md-card.dataset-structure-select.flat(flex='')
       md-card-content
         h2.md-title Dataset Structure
         md-radio-group(ng-model='dataset.details.structure')
           md-radio-button.md-primary(ng-repeat='s in structures', value='{{s.name}}') {{s.displayName}}
 
   // Dataset Modification
-  md-card.dataset-delete-select.flat(flex)
+  md-card.dataset-delete-select.flat(flex='')
     md-card-content
       h2.md-title Modify Dataset
       section(layout='row', layout-align='center center')
