@@ -2,12 +2,13 @@ require('angular')
 require('angular-ui-router')
 require('angular-uuid')
 
-angular.module('diveApp.routes',['ui.router', 'ngCookies', 'angular-uuid'])
+angular.module('diveApp.routes', ['ui.router', 'ngCookies', 'angular-uuid'])
 
-angular.module('diveApp.routes').run ($rootScope, $state, $cookies, AuthService, uuid) ->
+angular.module('diveApp.routes').run(($rootScope, $state, $cookies, AuthService, uuid) ->
   $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
     if toState.authenticate != false and !AuthService.isAuthenticated() and !$cookies._auid
       $cookies._auid = uuid.v4()
+)
 
 angular.module('diveApp.routes').config(($stateProvider, $urlRouterProvider, $locationProvider) ->
   $stateProvider
@@ -206,11 +207,27 @@ angular.module('diveApp.routes').config(($stateProvider, $urlRouterProvider, $lo
       controller: 'InspectDataCtrl'
     )
   .state('project.visualize',
-    url: '/visualize'
+    abstract: true
     authenticate: true
+    url: '/visualize'
     templateUrl: 'modules/visualization/visualization.html'
     controller: 'VisualizationCtrl'
   )
+    .state('project.visualize.recommended',
+      url: '/recommended'
+      templateUrl: 'modules/visualization/recommended.html'
+      controller: 'RecommendedCtrl'
+    )
+    .state('project.visualize.grid',
+      url: '/grid'
+      templateUrl: 'modules/visualization/grid.html'
+      controller: 'GridCtrl'
+    )
+    .state('project.visualize.builder',
+      url: '/builder'
+      templateUrl: 'modules/visualization/builder.html'
+      controller: 'BuilderCtrl'
+    )
   .state('project.export',
     url: '/export'
     authenticate: true
