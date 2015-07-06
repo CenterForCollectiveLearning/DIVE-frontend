@@ -1,21 +1,15 @@
-require 'angular'
-require 'angular-ui-router'
-require 'angular-uuid'
+require('angular')
+require('angular-ui-router')
+require('angular-uuid')
 
-angular.module 'diveApp.routes', [
-  'ui.router'
-  'ngCookies'
-  'angular-uuid'
-]
+angular.module('diveApp.routes',['ui.router', 'ngCookies', 'angular-uuid'])
 
 angular.module('diveApp.routes').run ($rootScope, $state, $cookies, AuthService, uuid) ->
   $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
     if toState.authenticate != false and !AuthService.isAuthenticated() and !$cookies._auid
       $cookies._auid = uuid.v4()
-    return
-  return
 
-angular.module('diveApp.routes').config ($stateProvider, $urlRouterProvider, $locationProvider) ->
+angular.module('diveApp.routes').config(($stateProvider, $urlRouterProvider, $locationProvider) ->
   $stateProvider
   .state('landing',
     url: '^/'
@@ -231,4 +225,4 @@ angular.module('diveApp.routes').config ($stateProvider, $urlRouterProvider, $lo
 
   $urlRouterProvider.otherwise('/')
   $locationProvider.html5Mode(true)
-  return
+)

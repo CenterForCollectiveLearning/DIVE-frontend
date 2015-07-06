@@ -106,6 +106,15 @@ angular.module('diveApp.visualization').controller('VisualizationCtrl', ($scope,
   $scope.datasets = []
   $scope.columnAttrsByDID = {}
   $scope.categories = []
+
+
+  $scope.functions = 
+    'count': 'count'
+    'sum': 'sum'
+    'minimum': 'min'
+    'maximum': 'max'
+    'average': 'avg'
+
   # Selected visualization
   $scope.selectedCategory = null
   $scope.selectedType = null
@@ -301,24 +310,37 @@ angular.module('diveApp.visualization').controller('VisualizationCtrl', ($scope,
     #     filteredSelCondVals[k] = v;
     #   }
     # })
+
     params = 
-      type: type
-      spec: spec
-      conditional: conditional
-      config: config
+      formula:
+        aggregate: 
+          field: $scope.selectedVectorY
+          operation: 'count'
+        conditional: []
+        query: ''
       pID: $scope.pID
-    VizDataService.getVizData params, (result) ->
-      $scope.vizData = result.result
-      $scope.vizStats = result.stats
-      $scope.loadingViz = false
-      if 'stats' of result
-        means = result.stats.means
-        if 'means' of result.stats
-          selectedValues = {}
-          sortedMeans = Object.keys(means).sort((a, b) ->
-            means[b] - (means[a])
-          )
-          _.each sortedMeans, (e, i) ->
-            selectedValues[e] = if i < 10 then true else false
-           $scope.selectedValues = selectedValues
+
+    VizDataService.getVizData(params, (result) ->
+      console.log("VizDataResult:", result)
+    )
+    # params = 
+    #   type: type
+    #   spec: spec
+    #   conditional: conditional
+    #   config: config
+    #   pID: $scope.pID
+    # VizDataService.getVizData params, (result) ->
+    #   $scope.vizData = result.result
+    #   $scope.vizStats = result.stats
+    #   $scope.loadingViz = false
+    #   if 'stats' of result
+    #     means = result.stats.means
+    #     if 'means' of result.stats
+    #       selectedValues = {}
+    #       sortedMeans = Object.keys(means).sort((a, b) ->
+    #         means[b] - (means[a])
+    #       )
+    #       _.each sortedMeans, (e, i) ->
+    #         selectedValues[e] = if i < 10 then true else false
+    #        $scope.selectedValues = selectedValues
 )
