@@ -62,12 +62,13 @@ angular.module('diveApp.services').service 'ProjectIDService', ($http, $statePar
 
 angular.module('diveApp.services').service 'DataService', ($http, $rootScope, $q, API_URL) ->
   return { 
-    getDatasets: () ->
+    getDatasets: (params) ->
       q = $q.defer()
 
       $http.get(API_URL + '/api/datasets', {
         params:
           pID: $rootScope.pID
+          getStructure: params?.getStructure
       }).then (r) =>
         q.resolve(r.data.datasets)
 
@@ -218,9 +219,9 @@ angular.module('diveApp.services').service('VizDataService', ($http, API_URL) ->
     getVizData: (params, callback) ->
       # Remove stats field, which can be huge, from params
       console.log 'Getting viz data with params:', params
-      return $http.post(API_URL + '/api/visualization_data', params).then((r) ->
+      return $http.get(API_URL + '/api/visualization_data', {params: params}).then (r) ->
         return callback(r.data)
-      )
+      
   }
 )
 

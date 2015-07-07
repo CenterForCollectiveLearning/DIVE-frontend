@@ -18,7 +18,7 @@ md-toolbar(ng-class="{'extended': datasetSettingsVisible}")
       md-button.md-fab.md-mini(aria-label="Dataset Settings", ng-click='toggleDatasetSettings()', ng-if='dataset')
         i.zmdi.zmdi-settings.zmdi-hc-lg
 
-.md-toolbar-extension.dataset-settings(ng-if='datasetSettingsVisible', layout='row')
+.toolbar-extension.dataset-settings(ng-if='datasetSettingsVisible', layout='row')
   // Structure Specification
   md-card.dataset-structure-select.flat.no-border(flex='')
     md-card-content
