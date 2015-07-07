@@ -138,18 +138,18 @@ angular.module('diveApp.visualization').controller('VisualizationCtrl', ($scope,
     y: ''
  
   pIDRetrieved.promise.then (r) ->
-    DataService.getDatasets({ pID: $scope.pID }).then (datasets) ->
+    DataService.getDatasets({ getStructure: true }).then (datasets) ->
       $scope.datasets = datasets
       $scope.columnAttrsByDID = {}
 
       _.each datasets, (e) ->
         # Conditionals for time series visualizations
-        if e.structure == 'wide'
+        if e.details.structure == 'wide'
           $scope.condList.push name: 'Start Date'
           $scope.condList.push name: 'End Date'
-          $scope.condData['Start Date'] = e.time_series.names
-          $scope.condData['End Date'] = e.time_series.names
-        $scope.columnAttrsByDID[e.dID] = e.column_attrs
+          $scope.condData['Start Date'] = e.details.time_series.names
+          $scope.condData['End Date'] = e.details.time_series.names
+        $scope.columnAttrsByDID[e.dID] = e.details.column_attrs
         return
       return
 
@@ -172,6 +172,14 @@ angular.module('diveApp.visualization').controller('VisualizationCtrl', ($scope,
         return
       return
     return
+
+  $scope.getVectors = ->
+    _columns = []
+    if $scope.columnAttrsByDID[$scope.currentdID]
+      _columns = $scope.columnAttrsByDID[$scope.currentdID].slice()
+
+    return _columns
+
 
   $scope.selectSpec = (spec) ->
     $scope.selectedChild = spec

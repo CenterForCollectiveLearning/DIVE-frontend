@@ -1,24 +1,46 @@
+@mixin toolbar-style
+  .category-title
+    min-width: 100px
+    text-align: right
+
+  h3, span
+    font-size: 15px
+    font-weight: 400
+
+  md-autocomplete
+    margin-left: 14px
+    margin-right: 14px
+    display: inline-block
+
+    &[disabled]
+      opacity: 0.5
+
+    + md-autocomplete
+      margin-left: 0
+
 md-toolbar
+  $toolbar-height: 60px
+  min-height: $toolbar-height
   background-color: $color-grey-light-4
   color: $color-grey-dark
 
   &.extended
-    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.098), 0 1px 10px 0 rgba(0, 0, 0, 0.084)
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3)
 
   .md-toolbar-tools
-    h3
-      font-size: 18px
-
-    md-autocomplete
-      margin-left: 14px
-      margin-right: 14px
-      display: inline-block
+    height: $toolbar-height
+    max-height: $toolbar-height
+    +toolbar-style
 
   .actions
     text-align: right
 
-.md-toolbar-extension
-  background-color: $color-grey-light-4
+.toolbar-extension
+  background-color: $color-grey-light-3
+
+  .toolbar-extension-component
+    padding: 13px 16px 9px
+    +toolbar-style
 
   md-card
     background-color: $color-grey-light-4
