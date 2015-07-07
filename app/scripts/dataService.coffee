@@ -60,7 +60,7 @@ angular.module('diveApp.services').service 'ProjectIDService', ($http, $statePar
         return
   }
 
-angular.module('diveApp.services').service 'DataService', ($http, $rootScope, $q, API_URL) ->
+angular.module('diveApp.services').service('DataService', ($http, $rootScope, $q, API_URL) ->
   return { 
     getDatasets: () ->
       q = $q.defer()
@@ -86,8 +86,9 @@ angular.module('diveApp.services').service 'DataService', ($http, $rootScope, $q
 
       return q.promise
   }
+)
 
-angular.module('diveApp.services').service 'PreloadedDataService', ($http, API_URL) ->
+angular.module('diveApp.services').service('PreloadedDataService', ($http, API_URL) ->
   return {
     getPreloadedDatasets: (params, callback) ->
       return $http.get(API_URL + '/api/public_data', {
@@ -97,6 +98,7 @@ angular.module('diveApp.services').service 'PreloadedDataService', ($http, API_U
         callback r.data.datasets
         return
   }
+)
 
 angular.module('diveApp.services').factory 'AuthService', ($http, $rootScope, localStorageService, API_URL) ->
   return {
@@ -167,25 +169,18 @@ angular.module('diveApp.services').factory 'AuthService', ($http, $rootScope, lo
 
   }
 
-angular.module('diveApp.services').factory 'PropertyService', ($http, API_URL) ->
+angular.module('diveApp.services').service('PropertyService', ($http, $q,API_URL) ->
   return {
     getProperties: (params, callback) ->
-      console.log 'Getting properties with params', params
-      return $http.get(API_URL + '/api/property', {
+      q = $q.defer()
+      $http.get(API_URL + '/api/property', {
         params:
           pID: params.pID
       }).then (r) ->
-        console.log 'Got properties', r.data
-        return callback(r.data)
-        
-    updateProperties: (params) ->
-      return $http.put(API_URL + '/api/property', {
-        params:
-          pID: params.pID
-          ontologies: params.ontologies
-      }).then (data) ->
-        return r.data
+        q.resolve(r.data)
+      return q.promise
   }
+)
 
 angular.module('diveApp.services').service 'SpecificationService', ($http, API_URL) ->
   return {

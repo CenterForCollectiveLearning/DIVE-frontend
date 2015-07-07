@@ -1,30 +1,69 @@
 angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, DataService, PropertyService, pIDRetrieved) ->
   console.log("In BuilderCtrl!")
   # UI Parameters
-  $scope.functions = 
-    'count': 'count'
-    'sum': 'sum'
-    'minimum': 'min'
-    'maximum': 'max'
-    'average': 'avg'
+  $scope.functions = [
+    title: 'Count' 
+    value: 'count'
+  , 
+    title: 'Sum'
+    value: 'sum'
+  , 
+    title: 'Minimum'
+    value: 'min'
+  ,
+    title: 'Maximum'
+    value: 'max'
+  , 
+    title: 'Average'
+    value: 'avg'
+  ]
 
+  $scope.operators = [
+    title: '=' 
+    value: '=='
+  , 
+    title: '≠'
+    value: '!='
+  , 
+    title: '>'
+    value: '>'
+  ,
+    title: '≥'
+    value: '>='
+  , 
+    title: '<'
+    value: '<'
+  ,
+    title: '<='
+    value: '≤'
+  ]
+
+  $scope.onSelectDataset = (ds) ->
+    $scope.attributes = $scope.attributesByDID[ds.dID]
+
+  $scope.onSelectFunction = (fn) ->
+    console.log("Selected Function", fn)
+
+  $scope.onSelectOperator = (op) ->
+    console.log("Selected Operation", op)
+
+  $scope.datasetsLoaded = false
+  $scope.propertiesLoaded = false
   pIDRetrieved.promise.then((r) ->
     DataService.getDatasets({ pID: $scope.pID }).then((datasets) ->
+      $scope.datasetsLoaded = true
       $scope.datasets = datasets
-      # TODO Get column attributes
-      $scope.columnAttrsByDID = _.object(_.map(datasets, (e) -> [e.dID, e.column_attrs]))
-
-      console.log("Got datasets in builder:", $scope.datasets, $scope.columnAttrsByDID)
+      console.log($scope.datasets)
     )
    
     # TODO Find a better way to resolve data dependencies without just making everything synchronous
-    PropertyService.getProperties({ pID: $scope.pID }, (properties) ->
-      $scope.properties = properties
-      $scope.overlaps = properties.overlaps
-      $scope.hierarchies = properties.hierarchies
-      console.log("Got properties in builder:", $scope.properties)
-        # $scope.selectedVectorY = { name: _initialSpec.groupBy }
-        # $scope.selectedVectorX = 'share'
+    PropertyService.getProperties({ pID: $scope.pID }).then((properties) ->
+      $scope.propertiesLoaded = true
+      $scope.attributesByDID = properties.attributes
+      $scope.types = properties.types
+      console.log($scope.attributes, $scope.types)
     )
   )
+
+
 )
