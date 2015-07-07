@@ -27,6 +27,3 @@
           md-autocomplete(md-items="op in operators", md-item-text="op.title", placeholder="Operator", md-min-length="0", md-search-text="searchOperator", md-selected-item="selectedOperator", md-selected-item-change="onSelectOperator(op)", md-autoselect="", md-autofocus="")
             md-item-template
               span(md-highlight-text="selectedOperator") {{op.title}}
-
-        //- {{selectedDataset}} {{selectedAttribute}} {{attributes}} {{attributesByDID}}
-        {{selectedDataset}}

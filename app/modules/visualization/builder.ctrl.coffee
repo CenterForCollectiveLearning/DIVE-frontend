@@ -38,13 +38,22 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, DataS
     value: '≤'
   ]
 
+  $scope.spec = 
+    aggregate: ''
+    condition: []
+    query: ''
+
   $scope.onSelectDataset = (ds) ->
+    console.log("$scope.selectedDataset", $scope.selectedDataset)
+    $scope.selectedDataset = ds
     $scope.attributes = $scope.attributesByDID[ds.dID]
 
   $scope.onSelectFunction = (fn) ->
+    $scope.selectedFunction = fn
     console.log("Selected Function", fn)
 
   $scope.onSelectOperator = (op) ->
+    $scope.selectedOperation = op
     console.log("Selected Operation", op)
 
   $scope.datasetsLoaded = false
