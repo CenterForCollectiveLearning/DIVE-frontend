@@ -1,34 +1,5 @@
 // TODO Refactor into a directive or something
 md-whiteframe.main-container.md-whiteframe-z2(layout='row', layout-fill='')
-  md-sidenav.site-sidenav.md-sidenav-left.md-locked-open.md-whiteframe-z2(md-component-id='left', md-is-locked-open="$mdMedia('gt-sm')")
-
-    md-content(flex='', role='navigation')
-      ul.docs-menu
-        li.parent-list-item.sidenav-primary-list-item(ng-repeat='section in sections', ng-class="{'parentActive' : isSectionSelected(section)}")
-          md-button.md-button-toggle.parent-button(aria-label='button', ng-if="section.type === 'heading'", ng-disabled='true')
-            .sidenav-button-heading(layout='row', flex='') {{section.name}}
-
-          ul.menu-nested-list(ng-if='section.children')
-            li(ng-repeat='c in section.children')
-              md-button.child(aria-label='button', ng-class="{'active' : isChildSelected(c)}", ng-click='selectChild(c)', ng-if="c.type === 'pane'")
-                span {{c.name}}
-
-        li.sidenav-primary-list-item(ng-class="{'parentActive' : isSectionSelected(section)}")
-          md-button.md-button-toggle.parent-button(aria-label='button', ng-disabled='true')
-            .sidenav-button-heading(ng-if='!dIDs') 
-              | Loading Datasets...
-            .sidenav-button-heading(ng-if='dIDs')
-              | Inspect Datasets
-
-          // Datasets
-          ul.menu-toggle-list(ng-show="isOpen('data')")
-            // Loader
-            section(layout='row', layout-align='center center', flex='', ng-if='!dIDs')
-              md-progress-circular(md-mode='indeterminate')
-            li(ng-repeat='d in datasets')
-              md-button.child(aria-label='button', ng-class="{'active' : isChildSelected(d)}", ng-click='selectDataset(d)')
-                span {{d.title}}
 
   // Main View
-  .data-viewport.viewport(layout='row', layout-fill='', layout-align='center start', flex='')
-    div(ui-view='', layout='vertical', layout-fill='')
+  .data-viewport(ui-view='', layout='column', layout-fill='', flex='')

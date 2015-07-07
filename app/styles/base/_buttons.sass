@@ -1,11 +1,22 @@
 button.md-button
   &.md-raised
     &.md-primary
-      font-weight: 600
-      font-size: 13px
-      padding: 1px 15px
-      background-color: $color-blue-light
-
       &:not([disabled])
+        &.md-focused, &:not(.md-focused)
+          font-weight: 600
+          font-size: 13px
+          padding: 1px 15px
+          background-color: $color-blue-light
+
+          &:hover
+            background-color: lighten($color-blue-light, 5%)
+
+  &.md-fab
+    &:not([disabled])
+      &.md-focused, &:not(.md-focused)
+        color: white
+        background-color: $color-grey-light-0
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16)
+
         &:hover
-          background-color: lighten($color-blue-light, 5%)
+          background-color: lighten($color-grey-light-0, 5%)

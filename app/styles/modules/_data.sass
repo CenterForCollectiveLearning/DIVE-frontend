@@ -1,0 +1,83 @@
+div.data-viewport
+
+  div.dataset-headers
+    ul
+      li
+        padding: 5px 3px
+        height: 30px
+
+        input
+          font-size: 12px
+          display: inline-block
+
+        float: left
+        background: $light-gray
+
+        md-select
+          margin: 0
+
+  div.upload-dataset
+    height: 100%
+    margin-left: 300px
+
+    ul, li
+      padding: 0
+      list-style-type: none
+
+    ul.data-rows
+      li.data-row
+        ul.data-cells
+          li.data-cell
+            float: left
+
+  div.drop
+    max-height: 500px
+    background-color: #FDFDFD
+    border: 2px dashed #DDD
+    text-align: center
+    +small-caps
+
+    &.dropped-file
+      background-color: $ontology-blue
+
+  input
+    -webkit-appearance: default
+
+  div.preloaded-datasets
+    width: 700px
+
+  div.dataset-preview
+    max-height: 500px
+    overflow: hidden
+
+    div.data-table
+      overflow: scroll
+      padding-top: 8px
+
+    input, select
+      +font
+      font-size: 14px
+      padding: 4px
+      -webkit-appearance: none
+      border: none
+      background-color: $light-gray
+      width: 100%
+      min-width: 150px
+
+      &:focus
+        outline: none
+        background-color: #C0C0C0
+
+    .time-series
+      background-color: rgba(255, 0, 0, 0.6) !important
+
+      input
+        background-color: rgba(255, 0, 0, 0.6) !important
+
+  .dataset-spreadsheet
+    height: 100%!important
+    overflow: visible!important
+
+    .ht_master .wtHolder
+      height: 100%!important
+
