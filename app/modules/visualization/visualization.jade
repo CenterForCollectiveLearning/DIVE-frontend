@@ -42,8 +42,8 @@ md-whiteframe.main-container.md-whiteframe-z2(layout='row', layout-fill='')
             span(md-highlight-text="conditionalValue") {{vector.name}}
 
 
-    md-content
-      .visualization(flex='60', layout='row', ng-if="selectedSpec.category !== 'comparison'")
+    md-content(flex='', layout='column')
+      .visualization(flex='', layout='row', ng-if="selectedSpec.category !== 'comparison'")
         .left-side(layout='column', flex='')
           md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
           #viz-container(flex='')
@@ -52,9 +52,9 @@ md-whiteframe.main-container.md-whiteframe-z2(layout='row', layout-fill='')
           md-card-content
             visualization-stats
 
-      .visualization-datatable(ng-if='vizData')
+      .visualization-datatable(ng-if='vizData', flex='')
         .datatable
-        table(data='vizData', selector="'.datatable'", headers='headers', rowheader='false', height=400, sortindex=1, sortorder='false')
+        table(data='vizData', selector="'.datatable'", headers='headers', rowheader='false', height=1000, sortindex=1, sortorder='false')
 
       .visualization-options-block
         md-card.parameters.flat(ng-if="selectedSpec.category === 'comparison'", flex='')
