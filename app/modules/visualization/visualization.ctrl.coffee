@@ -269,7 +269,16 @@ angular.module('diveApp.visualization').controller('VisualizationCtrl', ($scope,
       config: config
       pID: $scope.pID
     VizDataService.getVizData params, (result) ->
+      _headers = []
+
+      for key in Object.keys(result.result[0])
+        _headers.push
+          name: key
+
+      $scope.headers = _headers
+
       $scope.vizData = result.result
+
       $scope.vizStats = result.stats
       $scope.loadingViz = false
       if 'stats' of result

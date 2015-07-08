@@ -11,6 +11,10 @@ angular.module('diveApp.data').directive 'table', [
         onClick: '&'
         selector: '='
         headers: '='
+        height: '='
+        rowheader: '='
+        sortindex: '='
+        sortorder: '='
 
       link: (scope, ele, attrs) ->
 
@@ -22,11 +26,11 @@ angular.module('diveApp.data').directive 'table', [
           angular.element($window)[0].innerWidth
           return
         ), ->
-          scope.render scope.data, scope.selector, scope.headers
+          scope.render scope.data, scope.selector, scope.headers, scope.height, scope.rowheader, scope.sortindex, scope.sortorder
           return
 
-        scope.$watchCollection '[data, selector, headers]', ((newData) ->
-          scope.render newData[0], newData[1], newData[2]
+        scope.$watchCollection '[data, selector, headers, height, rowheader, sortindex, sortorder]', ((newData) ->
+          scope.render newData[0], newData[1], newData[2], newData[3], newData[4], newData[5], newData[6]
           return
         ), true
 
@@ -37,9 +41,8 @@ angular.module('diveApp.data').directive 'table', [
           scope.selector = actual_value
           return
 
-        scope.render = (data, selector, headers) ->
-          console.log 'Rendering table', data, selector, headers
-          selector = '.dataset-spreadsheet'
+        scope.render = (data, selector, headers, height, rowheader, sortindex, sortorder) ->
+          console.log 'Rendering table', data, selector, headers, height, rowheader, sortindex, sortorder
 
           if !data
             return
@@ -52,14 +55,21 @@ angular.module('diveApp.data').directive 'table', [
 
           console.log 'container', container
 
+          if sortindex isnt undefined
+            columnSorting = {
+              column: sortindex
+              sortOrder: !!sortorder
+            }
+
           spreadsheet = new Handsontable(container,
             data: data
-            height: 500
+            height: height
             colHeaders: pluckedHeaders
-            rowHeaders: true
+            columnSorting: columnSorting
+            contextMenu: true
             stretchH: 'all'
-            columnSorting: true
-            contextMenu: true)
+            rowHeaders: rowheader
+          )
           return
         return
     }

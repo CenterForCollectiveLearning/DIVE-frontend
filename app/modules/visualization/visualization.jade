@@ -23,6 +23,7 @@ md-whiteframe.main-container.md-whiteframe-z2(layout='row', layout-fill='')
             md-item-template
               span(md-highlight-text="searchQueryX") {{vector.name}}
 
+
     .toolbar-extension(ng-if="selectedVectorY")
       .toolbar-extension-component(layout='row')
         h3.category-title
@@ -51,6 +52,10 @@ md-whiteframe.main-container.md-whiteframe-z2(layout='row', layout-fill='')
           md-card-content
             visualization-stats
 
+      .visualization-datatable(ng-if='vizData')
+        .datatable
+        table(data='vizData', selector="'.datatable'", headers='headers', rowheader='false', height=400, sortindex=1, sortorder='false')
+
       .visualization-options-block
         md-card.parameters.flat(ng-if="selectedSpec.category === 'comparison'", flex='')
           md-card-content
@@ -72,14 +77,4 @@ md-whiteframe.main-container.md-whiteframe-z2(layout='row', layout-fill='')
                 label.dropdown-label Group By
                 md-select(ng-if='condList', ng-model='parameters.group.by', ng-change='refreshVizData()')
                   md-option(ng-repeat='c in condList track by $index') {{c.name}}
-
-        md-card.visualization-options.flat
-          md-card-content
-            h2.md-title Visualization Options
-            div(layout='row', layout-padding='', layout-wrap='')
-              visualization-conditionals(flex='100')
-              div(flex='33')
-                fieldset.standard
-                  legend Configuration
-                  md-checkbox(ng-model='config.normalize') Normalize
-              visualization-export(flex='66')
+                

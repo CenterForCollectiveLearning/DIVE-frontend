@@ -40,5 +40,5 @@ section(layout='vertical', layout-fill='', layout-align='center center', ng-if='
 
 div(ng-if='dataset.details.sample', flex='')
   .dataset-spreadsheet
-  table(data='dataset.details.sample', selector="'.dataset-spreadsheet'", headers='dataset.details.column_attrs')
+  table(data='dataset.details.sample', selector="'.dataset-spreadsheet'", headers='dataset.details.column_attrs', height=500, rowheader='true')
 
