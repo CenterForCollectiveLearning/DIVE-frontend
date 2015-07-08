@@ -1,29 +1,72 @@
+//- .viz-viewport(layout-fill='', layout='column', layout-align='starter', flex='')
+//-   md-toolbar.segmentation-block
+//-     .md-toolbar-tools
+//-       h3
+//-         span Visualize
+
+//-         //- Datasets
+//-         span.dataset-selector(ng-if="datasetsLoaded")
+//-           md-autocomplete(md-items="ds in datasets", md-item-text="ds.title", placeholder="Dataset", md-min-length="0", md-search-text="searchDataset", md-selected-item="selectedDataset", md-selected-item-change="onSelectDataset(ds)", md-autoselect="", md-autofocus="")
+//-             md-item-template
+//-               span(md-highlight-text="searchDataset") {{ds.title}}
+
+//-         //- Attributes
+//-         span.attribute-selector(ng-if="propertiesLoaded")
+//-           md-autocomplete(md-items="attr in attributes", md-item-text="attr", placeholder="Attribute", md-min-length="0", md-search-text="searchAttribute", md-selected-item="selectedAttribute", md-selected-item-change="onSelectAttribute(attr)", md-autoselect="", md-autofocus="")
+//-             md-item-template
+//-               span(md-highlight-text="searchAttribute") {{attr}}
+
+//-         //- Functions (sum, max)
+//-         span.function-selector
+//-           md-autocomplete(md-items="fn in functions", md-item-text="fn.title", placeholder="Function", md-min-length="0", md-search-text="searchFunction", md-selected-item="selectedFunction", md-selected-item-change="onSelectFunction(fn)", md-autoselect="", md-autofocus="")
+//-             md-item-template
+//-               span(md-highlight-text="searchFunction") {{fn.title}}
+
+//-         //- Operations (==, >)
+//-         span.operator-selector
+//-           md-autocomplete(md-items="op in operators", md-item-text="op.title", placeholder="Operator", md-min-length="0", md-search-text="searchOperator", md-selected-item="selectedOperator", md-selected-item-change="onSelectOperator(op)", md-autoselect="", md-autofocus="")
+//-             md-item-template
+//-               span(md-highlight-text="selectedOperator") {{op.title}}
+
 .viz-viewport(layout-fill='', layout='column', layout-align='starter', flex='')
-  md-toolbar.segmentation-block
+
+  md-toolbar.segmentation-block(ng-class="{'extended': selectedVectorY}")
     .md-toolbar-tools
-      h3
+      h3.category-title
         span Visualize
 
-        //- Datasets
-        span.dataset-selector(ng-if="datasetsLoaded")
-          md-autocomplete(md-items="ds in datasets", md-item-text="ds.title", placeholder="Dataset", md-min-length="0", md-search-text="searchDataset", md-selected-item="selectedDataset", md-selected-item-change="onSelectDataset(ds)", md-autoselect="", md-autofocus="")
-            md-item-template
-              span(md-highlight-text="searchDataset") {{ds.title}}
+      md-autocomplete(ng-if="datasetsLoaded", md-items="d in datasets", md-item-text="d.title", placeholder="Dataset", md-min-length="0", md-search-text="datasetQuery", md-selected-item="selectedParams.dataset", md-selected-item-change="onSelectDataset(d)")
+        md-item-template
+          span(md-highlight-text="datasetQuery") {{d.title}}
+        md-not-found
+          span No matches found.
 
-        //- Attributes
-        span.attribute-selector(ng-if="propertiesLoaded")
-          md-autocomplete(md-items="attr in attributes", md-item-text="attr", placeholder="Attribute", md-min-length="0", md-search-text="searchAttribute", md-selected-item="selectedAttribute", md-selected-item-change="onSelectAttribute(attr)", md-autoselect="", md-autofocus="")
-            md-item-template
-              span(md-highlight-text="searchAttribute") {{attr}}
+      span by
+      md-autocomplete(ng-if="selectedParams.dataset && propertiesLoaded", md-items="a in getAttributes()", md-item-text="a", placeholder="Field", md-min-length="0", md-search-text="searchQueryA", md-selected-item="selectedParams.fieldA")
+        md-item-template
+          span(md-highlight-text="searchQueryY") {{a}}
 
-        //- Functions (sum, max)
-        span.function-selector
-          md-autocomplete(md-items="fn in functions", md-item-text="fn.title", placeholder="Function", md-min-length="0", md-search-text="searchFunction", md-selected-item="selectedFunction", md-selected-item-change="onSelectFunction(fn)", md-autoselect="", md-autofocus="")
-            md-item-template
-              span(md-highlight-text="searchFunction") {{fn.title}}
+      .second-segment-selector(ng-if="selectedParams.fieldA")
+        span vs
+        md-autocomplete(md-items="a in getAttributes()", md-item-text="a", placeholder="Field", md-min-length="0", md-search-text="searchQueryB")
+          md-item-template
+            span(md-highlight-text="searchQueryB") {{a}}
 
-        //- Operations (==, >)
-        span.operator-selector
-          md-autocomplete(md-items="op in operators", md-item-text="op.title", placeholder="Operator", md-min-length="0", md-search-text="searchOperator", md-selected-item="selectedOperator", md-selected-item-change="onSelectOperator(op)", md-autoselect="", md-autofocus="")
-            md-item-template
-              span(md-highlight-text="selectedOperator") {{op.title}}
+  .parameters Viz Parameters: {{selectedParams}}
+
+  .toolbar-extension(ng-if="selectedParams.fieldA")
+    .toolbar-extension-component(layout='row')
+      h3.category-title
+        span Conditionals
+
+      md-autocomplete(md-items="a in getAttributes()", md-item-text="a", placeholder="field", md-min-length="0", md-search-text="conditionalFieldQuery", md-selected-item="selectedParams.conditionalField")
+        md-item-template
+          span(md-highlight-text="selectedParams.conditionalField") {{a}}
+
+      md-autocomplete(ng-disabled='!selectedParams.conditionalField', md-items="a in getAttributes()", md-item-text="a", placeholder="operator", md-min-length="0", md-search-text="conditionalOperatorQuery", md-selected-item="selectedParams.conditionalOperator")
+        md-item-template
+          span(md-highlight-text="selectedParams.conditionalOperator") {{a}}
+
+      md-autocomplete(ng-disabled='!selectedParams.conditionalOperator', md-items="a in getAttributes()", md-item-text="a", placeholder="value", md-min-length="0", md-search-text="conditionalValueQuery", md-selected-item="selectedParams.conditionalValue")
+        md-item-template
+          span(md-highlight-text="selectedParams.conditionalValue") {{a}}

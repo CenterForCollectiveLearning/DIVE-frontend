@@ -38,15 +38,13 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, DataS
     value: '≤'
   ]
 
-  $scope.spec = 
-    aggregate: ''
-    condition: []
-    query: ''
+  $scope.selectedParams =
+    dataset: ''
+    spec: ''
 
-  $scope.onSelectDataset = (ds) ->
-    console.log("$scope.selectedDataset", $scope.selectedDataset)
-    $scope.selectedDataset = ds
-    $scope.attributes = $scope.attributesByDID[ds.dID]
+  $scope.onSelectDataset = (d) ->
+    $scope.vizParameters.dataset = d
+    $scope.attributes = $scope.attributesByDID[d.dID]
 
   $scope.onSelectFunction = (fn) ->
     $scope.selectedFunction = fn
@@ -56,13 +54,16 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, DataS
     $scope.selectedOperation = op
     console.log("Selected Operation", op)
 
+  $scope.getAttributes = () ->
+    $scope.attributesByDID[$scope.selectedParams.dataset.dID]
+
   $scope.datasetsLoaded = false
   $scope.propertiesLoaded = false
   pIDRetrieved.promise.then((r) ->
     DataService.getDatasets({ pID: $scope.pID }).then((datasets) ->
       $scope.datasetsLoaded = true
       $scope.datasets = datasets
-      console.log($scope.datasets)
+      $scope.selectedParams.dataset = datasets[0]
     )
    
     # TODO Find a better way to resolve data dependencies without just making everything synchronous
@@ -70,7 +71,6 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, DataS
       $scope.propertiesLoaded = true
       $scope.attributesByDID = properties.attributes
       $scope.types = properties.types
-      console.log($scope.attributes, $scope.types)
     )
   )
 
