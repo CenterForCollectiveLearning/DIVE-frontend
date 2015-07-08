@@ -44,15 +44,27 @@
       span by
       md-autocomplete(ng-if="selectedParams.dataset && propertiesLoaded", md-items="a in getAttributes()", md-item-text="a", placeholder="Field", md-min-length="0", md-search-text="searchQueryA", md-selected-item="selectedParams.fieldA")
         md-item-template
-          span(md-highlight-text="searchQueryY") {{a}}
+          span(md-highlight-text="searchQueryA") {{a}}
 
+      //- Case One: If first input field is unique
       .second-segment-selector(ng-if="selectedParams.fieldA")
         span vs
         md-autocomplete(md-items="a in getAttributes()", md-item-text="a", placeholder="Field", md-min-length="0", md-search-text="searchQueryB")
           md-item-template
             span(md-highlight-text="searchQueryB") {{a}}
 
-  .parameters Viz Parameters: {{selectedParams}}
+
+      //- Case Two: If first input field is non-unique and discrete
+      .second-segment-selector(ng-if="selectedParams.fieldA")
+        span grouped by
+        md-autocomplete(ng-if="selectedParams.dataset && propertiesLoaded", md-items="f in functions", md-item-text="f.title", placeholder="Field", md-min-length="0", md-search-text="searchFunction", md-selected-item="selectedParams.function")
+          md-item-template
+            span(md-highlight-text="searchFunction") {{f.title}}
+  
+        span on
+        md-autocomplete(ng-if="selectedParams.dataset && propertiesLoaded", md-items="a in getAttributes()", md-item-text="a", placeholder="Field", md-min-length="0", md-search-text="searchQueryA", md-selected-item="selectedParams.fieldA")
+          md-item-template
+            span(md-highlight-text="searchQueryA") {{a}}
 
   .toolbar-extension(ng-if="selectedParams.fieldA")
     .toolbar-extension-component(layout='row')
@@ -63,10 +75,12 @@
         md-item-template
           span(md-highlight-text="selectedParams.conditionalField") {{a}}
 
-      md-autocomplete(ng-disabled='!selectedParams.conditionalField', md-items="a in getAttributes()", md-item-text="a", placeholder="operator", md-min-length="0", md-search-text="conditionalOperatorQuery", md-selected-item="selectedParams.conditionalOperator")
+      md-autocomplete(ng-disabled='!selectedParams.conditionalField', md-items="o in operators", md-item-text="o.title", placeholder="operator", md-min-length="0", md-search-text="conditionalOperatorQuery", md-selected-item="selectedParams.conditionalOperator")
         md-item-template
-          span(md-highlight-text="selectedParams.conditionalOperator") {{a}}
+          span(md-highlight-text="selectedParams.conditionalOperator") {{o.title}}
 
       md-autocomplete(ng-disabled='!selectedParams.conditionalOperator', md-items="a in getAttributes()", md-item-text="a", placeholder="value", md-min-length="0", md-search-text="conditionalValueQuery", md-selected-item="selectedParams.conditionalValue")
         md-item-template
           span(md-highlight-text="selectedParams.conditionalValue") {{a}}
+
+  .parameters Viz Parameters: {{selectedParams}}

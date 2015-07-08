@@ -38,9 +38,15 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, DataS
     value: '≤'
   ]
 
+  # Contains all user selection data
   $scope.selectedParams =
     dataset: ''
     spec: ''
+    conditional: []
+
+  $scope.$watch('selectedParams', (newVal, oldVal) ->
+    console.log("SelectedParams changed", newVal)
+  , true)
 
   $scope.onSelectDataset = (d) ->
     $scope.vizParameters.dataset = d
@@ -73,6 +79,4 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, DataS
       $scope.types = properties.types
     )
   )
-
-
 )
