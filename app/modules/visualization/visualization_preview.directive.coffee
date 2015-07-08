@@ -53,7 +53,7 @@ angular.module('diveApp.visualization').directive('visualizationPreview', ['$win
             category = vizSpec.category
             vizContainer = $('.visualization .left-side')
             displayParameters = 
-              width: vizContainer.width()
+              width: vizContainer.width() + 1
               height: vizContainer.height()
             console.info 'Rendering visualization with vizData:', vizData
             console.info 'Rendering visualization with parameters:', displayParameters
@@ -133,7 +133,7 @@ angular.module('diveApp.visualization').directive('visualizationPreview', ['$win
                 linechart: 'line'
                 geomap: 'geo_map'
               console.log 'Passing data into d3Plus:', vizData
-              viz = d3plus.viz().type(vizType).container('#viz-container').margin('8px').width(displayParameters.width).height(displayParameters.height)
+              viz = d3plus.viz().type(vizType).container('#viz-container').width(displayParameters.width).height(displayParameters.height)
             if category == 'shares'
               viz.id(vizSpec.group.by.title.toString()).size('value').data(vizData).draw()
             if category == 'distribution'
