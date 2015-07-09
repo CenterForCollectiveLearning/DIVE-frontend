@@ -35,8 +35,6 @@ angular.module('diveApp.visualization').directive('visualizationExport', ->
 
 require('./visualization.ctrl')
 require('./builder.ctrl')
-require('./grid.ctrl')
-require('./recommended.ctrl')
 
 require('./visualization_preview.directive')
 require('./histogram.directive')
