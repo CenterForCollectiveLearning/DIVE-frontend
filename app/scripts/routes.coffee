@@ -1,21 +1,16 @@
-require 'angular'
-require 'angular-ui-router'
-require 'angular-uuid'
+require('angular')
+require('angular-ui-router')
+require('angular-uuid')
 
-angular.module 'diveApp.routes', [
-  'ui.router'
-  'ngCookies'
-  'angular-uuid'
-]
+angular.module('diveApp.routes', ['ui.router', 'ngCookies', 'angular-uuid'])
 
-angular.module('diveApp.routes').run ($rootScope, $state, $cookies, AuthService, uuid) ->
+angular.module('diveApp.routes').run(($rootScope, $state, $cookies, AuthService, uuid) ->
   $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
     if toState.authenticate != false and !AuthService.isAuthenticated() and !$cookies._auid
       $cookies._auid = uuid.v4()
-    return
-  return
+)
 
-angular.module('diveApp.routes').config ($stateProvider, $urlRouterProvider, $locationProvider) ->
+angular.module('diveApp.routes').config(($stateProvider, $urlRouterProvider, $locationProvider) ->
   $stateProvider
   .state('landing',
     url: '^/'
@@ -91,49 +86,8 @@ angular.module('diveApp.routes').config ($stateProvider, $urlRouterProvider, $lo
   .state('project',
     url: '/projects/:formattedProjectTitle'
     templateUrl: 'modules/project/project.html'
-    controller: ($scope, $rootScope, $state, $stateParams, $q, $cookies, AuthService, ProjectIDService, ProjectService, user, loggedIn, projectParams, pIDRetrieved) ->
-      if projectParams.refresh
-        $state.go 'project.data.upload', formattedProjectTitle: projectParams.title
-        return
-
-      $scope.projectTitle = projectParams.title.split('-').join(' ')
-      $rootScope.user = user
-      $rootScope.loggedIn = loggedIn
-
-      # TODO: should check for user permissions to this project
-      # we should be able to mark whether this project is dirty or clean somehow
-
-      setPID = (_pID) ->
-        $rootScope.pID = _pID
-        $scope.pID = _pID
-        if !$scope.pID
-          ProjectService.createProject(
-            anonymous: true
-            title: projectParams.title
-            user_name: user.userName
-          ).then (r) ->
-            $cookies._title = projectParams.title
-            $cookies._pID = r.data.pID
-            $scope.pID = r.data.pID
-            pIDRetrieved.q.resolve()
-            return
-        else
-          $cookies._title = projectParams.title
-          $cookies._pID = _pID
-          pIDRetrieved.q.resolve()
-        return
-
-      if $cookies._pID
-        setPID $cookies._pID
-      else
-        ProjectIDService.getProjectID(
-          formattedProjectTitle: projectParams.title
-          userName: user.userName
-        ).then (_pID) ->
-          setPID(_pID)
-          return
-      return
-
+    controller: 'ProjectCtrl'
+    controllerAs: 'projectCtrl'
     resolve:
       user: (AuthService, $cookies) ->
         _authUser = AuthService.getCurrentUser()
@@ -212,11 +166,28 @@ angular.module('diveApp.routes').config ($stateProvider, $urlRouterProvider, $lo
       controller: 'InspectDataCtrl'
     )
   .state('project.visualize',
-    url: '/visualize'
+    abstract: true
     authenticate: true
+    url: '/visualize'
     templateUrl: 'modules/visualization/visualization.html'
     controller: 'VisualizationCtrl'
   )
+    .state('project.visualize.recommended',
+      url: '/recommended'
+      templateUrl: 'modules/visualization/recommended.html'
+      controller: 'RecommendedCtrl'
+    )
+    .state('project.visualize.grid',
+      url: '/grid'
+      templateUrl: 'modules/visualization/grid.html'
+      controller: 'GridCtrl'
+    )
+    .state('project.visualize.builder',
+      url: '/builder'
+      templateUrl: 'modules/visualization/builder.html'
+      controller: 'BuilderCtrl'
+      controllerAs: 'builderCtrl'
+    )
   .state('project.export',
     url: '/export'
     authenticate: true
@@ -231,4 +202,4 @@ angular.module('diveApp.routes').config ($stateProvider, $urlRouterProvider, $lo
 
   $urlRouterProvider.otherwise('/')
   $locationProvider.html5Mode(true)
-  return
+)

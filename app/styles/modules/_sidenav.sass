@@ -1,5 +1,14 @@
-.site-sidenav
+$sidenav-width: 200px
+$sidenav-content-offset: 38px
+
+.site-sidenav.md-locked-open
   background-color: $color-slate-darker
+  width: $sidenav-width
+  min-width: $sidenav-width
+  max-width: $sidenav-width
+
+  > *
+  	min-width: $sidenav-content-offset
 
 md-sidenav
 	padding-top: 15px

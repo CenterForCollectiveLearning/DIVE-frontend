@@ -7,7 +7,7 @@ angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope,
       state: 'project.data.upload',
       label: 'Datasets'
     }, {
-      state: 'project.visualize',
+      state: 'project.visualize.builder',
       label: 'Visualizations'
     }, {
       state: 'project.export',
