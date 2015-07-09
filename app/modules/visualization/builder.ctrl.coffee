@@ -1,7 +1,9 @@
-angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, DataService, PropertyService, pIDRetrieved) ->
-  console.log("In BuilderCtrl!")
+angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $rootScope, DataService, PropertyService, pIDRetrieved) ->
+  self = this
+
+  # console.log("In BuilderCtrl!", projectCtrl)
   # UI Parameters
-  $scope.functions = [
+  self.functions = [
     title: 'Count' 
     value: 'count'
   , 
@@ -18,7 +20,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, DataS
     value: 'avg'
   ]
 
-  $scope.operators = [
+  self.operators = [
     title: '=' 
     value: '=='
   , 
@@ -39,44 +41,51 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, DataS
   ]
 
   # Contains all user selection data
-  $scope.selectedParams =
+  self.selectedParams =
     dataset: ''
     spec: ''
     conditional: []
 
-  $scope.$watch('selectedParams', (newVal, oldVal) ->
+  # self.$watch('selectedParams', (newVal, oldVal) ->
+  #   console.log("SelectedParams changed", newVal)
+  # , true)
+
+  $scope.$watch((() -> self.selectedParams), (newVal, oldVal) ->
     console.log("SelectedParams changed", newVal)
   , true)
 
-  $scope.onSelectDataset = (d) ->
-    $scope.vizParameters.dataset = d
-    $scope.attributes = $scope.attributesByDID[d.dID]
+  self.onSelectDataset = (d) ->
+    self.vizParameters.dataset = d
+    self.attributes = self.attributesByDID[d.dID]
 
-  $scope.onSelectFunction = (fn) ->
-    $scope.selectedFunction = fn
+  self.onSelectFunction = (fn) ->
+    self.selectedFunction = fn
     console.log("Selected Function", fn)
 
-  $scope.onSelectOperator = (op) ->
-    $scope.selectedOperation = op
+  self.onSelectOperator = (op) ->
+    self.selectedOperation = op
     console.log("Selected Operation", op)
 
-  $scope.getAttributes = () ->
-    $scope.attributesByDID[$scope.selectedParams.dataset.dID]
+  self.getAttributes = () ->
+    self.attributesByDID[self.selectedParams.dataset.dID]
 
-  $scope.datasetsLoaded = false
-  $scope.propertiesLoaded = false
+  self.datasetsLoaded = false
+  self.propertiesLoaded = false
   pIDRetrieved.promise.then((r) ->
-    DataService.getDatasets({ pID: $scope.pID }).then((datasets) ->
-      $scope.datasetsLoaded = true
-      $scope.datasets = datasets
-      $scope.selectedParams.dataset = datasets[0]
+    DataService.getDatasets({ pID: $rootScope.pID }).then((datasets) ->
+      self.datasetsLoaded = true
+      self.datasets = datasets
+      self.selectedParams.dataset = datasets[0]
+      console.log("Datasets loaded!", self.datasets)
     )
    
     # TODO Find a better way to resolve data dependencies without just making everything synchronous
-    PropertyService.getProperties({ pID: $scope.pID }).then((properties) ->
-      $scope.propertiesLoaded = true
-      $scope.attributesByDID = properties.attributes
-      $scope.types = properties.types
+    PropertyService.getProperties({ pID: $rootScope.pID }).then((properties) ->
+      self.propertiesLoaded = true
+      self.attributesByDID = properties.attributes
+      self.types = properties.types
+      console.log("Properties loaded!", self.attributesByDID)
     )
   )
+  return self
 )
