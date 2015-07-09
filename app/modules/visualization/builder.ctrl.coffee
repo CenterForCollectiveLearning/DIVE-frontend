@@ -45,17 +45,18 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     dataset: ''
     spec: ''
     conditional: []
+    operation: "grouped on" #TODO: should be separate Operation constant
+    fieldB: "count"
 
-  # self.$watch('selectedParams', (newVal, oldVal) ->
-  #   console.log("SelectedParams changed", newVal)
-  # , true)
+  # TODO: should be retrieved from endpoint or separate constant list file
+  self.operations = ["vs", "operation", "grouped on"]
 
   $scope.$watch((() -> self.selectedParams), (newVal, oldVal) ->
     console.log("SelectedParams changed", newVal)
   , true)
 
   self.onSelectDataset = (d) ->
-    self.vizParameters.dataset = d
+    # self.vizParameters.dataset = d
     self.attributes = self.attributesByDID[d.dID]
 
   self.onSelectFunction = (fn) ->
@@ -66,13 +67,21 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     self.selectedOperation = op
     console.log("Selected Operation", op)
 
-  self.getAttributes = () ->
-    self.attributesByDID[self.selectedParams.dataset.dID]
+  self.getAttributes = (secondary = false) ->
+    _attr = self.attributesByDID[self.selectedParams.dataset.dID]
+
+    if secondary
+      _index = _attr.indexOf(self.selectedParams.fieldA)
+      _attr.splice(_index, 1)
+      _attr.unshift('count')
+
+    return self.attributesByDID[self.selectedParams.dataset.dID]
 
   self.datasetsLoaded = false
   self.propertiesLoaded = false
+
   pIDRetrieved.promise.then((r) ->
-    DataService.getDatasets({ pID: $rootScope.pID }).then((datasets) ->
+    DataService.getDatasets().then((datasets) ->
       self.datasetsLoaded = true
       self.datasets = datasets
       self.selectedParams.dataset = datasets[0]
