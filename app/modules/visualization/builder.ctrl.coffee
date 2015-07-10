@@ -93,14 +93,14 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     self.refreshVisualization()
 
   self.getAttributes = (secondary = false) ->
-    _attr = self.attributesByDID[self.selectedDataset.dID]
+    _attr = self.attributesByDID[self.selectedDataset.dID].slice()
 
     if secondary
       _index = _attr.indexOf(self.selectedParams.field_a)
       _attr.splice(_index, 1)
       _attr.unshift('count')
 
-    return self.attributesByDID[self.selectedDataset.dID]
+    return _attr
 
   self.datasetsLoaded = false
   self.propertiesLoaded = false
