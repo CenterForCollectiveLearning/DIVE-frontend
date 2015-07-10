@@ -209,13 +209,21 @@ angular.module('diveApp.services').service 'ConditionalDataService', ($http, API
         return callback(r.data)
   }
 
-angular.module('diveApp.services').service('VizDataService', ($http, API_URL) ->
+angular.module('diveApp.services').service('VisualizationDataService', ($http, $rootScope, $q, API_URL) ->
   return {
-    getVizData: (params, callback) ->
+    getVisualizationData: (params) ->
+      q = $q.defer()
+
       # Remove stats field, which can be huge, from params
       console.log 'Getting viz data with params:', params
-      return $http.get(API_URL + '/api/visualization_data', {params: params}).then (r) ->
-        return callback(r.data)
+      $http.post(API_URL + '/api/data_from_spec', {
+        pID: $rootScope.pID,
+        spec: params.spec,
+        conditional: params.conditional
+      }).then (r) =>
+        q.resolve(r.data)
+
+      return q.promise
       
   }
 )
