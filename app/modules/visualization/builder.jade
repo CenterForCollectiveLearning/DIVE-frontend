@@ -55,9 +55,12 @@
           span(md-highlight-text="builderCtrl.selectedParams.conditionalValue") {{a}}
 
   visualization(spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData')
-  md-content(flex='', layout='column')
-    .visualization(flex='', layout='row')
-      .left-side(layout='column', flex='')
-        md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
-        #viz-container(flex='')
+    md-content(flex='', layout='column')
+      .visualization(flex='', layout='row')
+        .left-side(layout='column', flex='')
+          md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
+          #viz-container(flex='')
+
+  datatable(ng-if='builderCtrl.tableData.data' data='builderCtrl.tableData.data', selector=".datatable", headers='builderCtrl.tableData.columns', rowheader='false', height=1000, sortindex=1, sortorder='false')
+    .datatable
 

@@ -1,6 +1,13 @@
+$autocomplete-height: 34px
+$autocomplete-width: 160px
+
+@mixin dropdown
+  font-size: 13px
+  line-height: $autocomplete-height
+  height: $autocomplete-height
+
+
 md-autocomplete
-  $autocomplete-height: 34px
-  $autocomplete-width: 160px
   border: 1px solid $color-grey-light-2
   height: $autocomplete-height + 1px
   min-width: $autocomplete-width
@@ -19,3 +26,9 @@ md-autocomplete
 
 .md-autocomplete-suggestions
   z-index: 1000
+
+  li
+    +dropdown
+
+md-option, md-option .md-text
+  +dropdown
