@@ -1,10 +1,10 @@
 @mixin toolbar-style
   .category-title
-    min-width: 100px
+    min-width: 90px
     text-align: right
 
   h3, span
-    font-size: 15px
+    font-size: 14px
     font-weight: 400
 
   md-autocomplete
@@ -19,7 +19,8 @@
       margin-left: 0
 
 md-toolbar
-  $toolbar-height: 60px
+  $toolbar-height: 56px
+  $item-height: 35px
   min-height: $toolbar-height
   background-color: $color-grey-light-4
   color: $color-grey-dark
@@ -34,8 +35,17 @@ md-toolbar
 
     md-select
       padding: 0
-      display: inline-block
-      vertical-align: top
+
+  .phrase, .selector
+    display: inline-block
+    vertical-align: middle
+    height: $item-height
+
+  .phrase
+    line-height: $item-height
+
+    + .selector md-select
+      padding-left: 10px
 
   .actions
     text-align: right

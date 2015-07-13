@@ -9,7 +9,6 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
     restrict: 'EA'
     scope:
       spec: '='
-      type: '='
       data: '='
 
     link: (scope, element, attrs) ->
