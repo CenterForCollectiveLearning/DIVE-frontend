@@ -1,41 +1,43 @@
 .viz-viewport(layout-fill='', layout='column', layout-align='starter', flex='')
 
-  md-toolbar.segmentation-block(ng-class="{'extended': selectedVectorY}")
+  md-toolbar.segmentation-block(ng-class="{'extended': builderCtrl.selectedParams.field_a}")
     .md-toolbar-tools
       h3.category-title
         span Visualize
 
-      md-autocomplete(ng-if="builderCtrl.datasetsLoaded", md-items="d in datasets", md-item-text="d.title", placeholder="Dataset", md-min-length="0", md-search-text="datasetQuery", md-selected-item="builderCtrl.selectedParams.dataset", md-selected-item-change="builderCtrl.onSelectDataset(d)")
+      md-autocomplete(ng-if="builderCtrl.datasetsLoaded", md-items="d in builderCtrl.datasets", md-item-text="d.title", placeholder="Dataset", md-min-length="0", md-search-text="datasetQuery", md-selected-item="builderCtrl.selectedDataset", md-selected-item-change="builderCtrl.onSelectDataset(d)")
         md-item-template
           span(md-highlight-text="datasetQuery") {{d.title}}
         md-not-found
           span No matches found.
 
-      span by
-      md-autocomplete(ng-if="builderCtrl.selectedParams.dataset && builderCtrl.propertiesLoaded", md-items="a in builderCtrl.getAttributes()", md-item-text="a", placeholder="Field", md-min-length="0", md-search-text="searchQueryA", md-selected-item="builderCtrl.selectedParams.fieldA")
-        md-item-template
-          span(md-highlight-text="searchQueryA") {{a}}
+      .first-segment-selector(ng-if="builderCtrl.selectedDataset && builderCtrl.propertiesLoaded")
+        .phrase
+          span by
+        .selector
+          md-autocomplete(md-items="a in builderCtrl.getAttributes({primary: true})", md-item-text="a.label", placeholder="Field", md-min-length="0", md-search-text="searchQueryA", md-selected-item="builderCtrl.attributeA", md-selected-item-change="builderCtrl.onSelectFieldA()")
+            md-item-template
+              span(md-highlight-text="searchQueryA") {{a.label}}
 
-      //- Case One: If first input field is unique
-      .second-segment-selector(ng-if="builderCtrl.selectedParams.fieldA")
-        span vs
-        md-autocomplete(md-items="a in builderCtrl.getAttributes()", md-item-text="a", placeholder="Field", md-min-length="0", md-search-text="searchQueryB")
-          md-item-template
-            span(md-highlight-text="searchQueryB") {{a}}
+      .second-segment-selector(ng-if="builderCtrl.selectedParams.field_a")
+        .selector
+          md-select(ng-model="builderCtrl.selectedParams.operation")
+            md-option(ng-repeat="operation in builderCtrl.availableOperations", ng-value="operation.value")
+              | {{ operation.title }}
+        .selector
+          md-autocomplete(md-items="a in builderCtrl.getAttributes({secondary: true})", md-item-text="a.label", placeholder="Field", md-min-length="0", md-search-text="searchQueryB", md-selected-item="builderCtrl.attributeB", md-selected-item-change="builderCtrl.onSelectFieldB()")
+            md-item-template
+              span(md-highlight-text="searchQueryB") {{a.label}}
 
-      //- Case Two: If first input field is non-unique and discrete
-      .second-segment-selector(ng-if="builderCtrl.selectedParams.fieldA")
-        span grouped by
-        md-autocomplete(ng-if="builderCtrl.selectedParams.dataset && builderCtrl.propertiesLoaded", md-items="f in builderCtrl.functions", md-item-text="f.title", placeholder="Field", md-min-length="0", md-search-text="searchFunction", md-selected-item="builderCtrl.selectedParams.function")
-          md-item-template
-            span(md-highlight-text="searchFunction") {{f.title}}
-  
-        span on
-        md-autocomplete(ng-if="builderCtrl.selectedParams.dataset && builderCtrl.propertiesLoaded", md-items="a in builderCtrl.getAttributes()", md-item-text="a", placeholder="Field", md-min-length="0", md-search-text="searchQueryA", md-selected-item="builderCtrl.selectedParams.fieldA")
-          md-item-template
-            span(md-highlight-text="searchQueryA") {{a}}
+      .third-segment-selector(ng-if="builderCtrl.isGrouping && builderCtrl.attributeA && builderCtrl.attributeB")
+        .phrase
+          span by
+        .selector
+          md-select(ng-model="builderCtrl.selectedParams.arguments.function")
+            md-option(ng-repeat="func in builderCtrl.availableAggregationFunctions", ng-value="func.value")
+              | {{ func.title }}
 
-  .toolbar-extension(ng-if="builderCtrl.selectedParams.fieldA")
+  .toolbar-extension(ng-if="builderCtrl.selectedParams.field_a")
     .toolbar-extension-component(layout='row')
       h3.category-title
         span Conditionals
@@ -44,7 +46,7 @@
         md-item-template
           span(md-highlight-text="builderCtrl.selectedParams.conditionalField") {{a}}
 
-      md-autocomplete(ng-disabled='!builderCtrl.selectedParams.conditionalField', md-items="o in builderCtrl.operators", md-item-text="o.title", placeholder="operator", md-min-length="0", md-search-text="conditionalOperatorQuery", md-selected-item="builderCtrl.selectedParams.conditionalOperator")
+      md-autocomplete(ng-disabled='!builderCtrl.selectedParams.conditionalField', md-items="o in builderCtrl.OPERATORS", md-item-text="o.title", placeholder="operator", md-min-length="0", md-search-text="conditionalOperatorQuery", md-selected-item="builderCtrl.selectedParams.conditionalOperator")
         md-item-template
           span(md-highlight-text="builderCtrl.selectedParams.conditionalOperator") {{o.title}}
 
@@ -52,4 +54,13 @@
         md-item-template
           span(md-highlight-text="builderCtrl.selectedParams.conditionalValue") {{a}}
 
-  .parameters Viz Parameters: {{ builderCtrl.selectedParams }} {{ builderCtrl.propertiesLoaded }} {{ projectCtrl }}
+  visualization(spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData')
+    md-content(flex='', layout='column')
+      .visualization(flex='', layout='row')
+        .left-side(layout='column', flex='')
+          md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
+          #viz-container(flex='')
+
+  datatable(ng-if='builderCtrl.tableData.data' data='builderCtrl.tableData.data', selector=".datatable", headers='builderCtrl.tableData.columns', rowheader='false', height=1000, sortindex=1, sortorder='false')
+    .datatable
+

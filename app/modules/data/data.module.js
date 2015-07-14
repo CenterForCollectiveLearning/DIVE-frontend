@@ -4,4 +4,4 @@ require('angular-file-upload');
 angular.module('diveApp.data', ['diveApp.services', 'angularFileUpload']);
 
 require('./data.ctrl');
-require('../base/table.directive');
+require('../base/datatable.directive');

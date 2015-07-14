@@ -1,6 +1,6 @@
 $ = require('jquery')
 
-angular.module('diveApp.data').directive 'table', [
+angular.module('diveApp.data').directive 'datatable', [
   '$window'
   '$timeout'
   ($window, $timeout) ->
@@ -9,7 +9,7 @@ angular.module('diveApp.data').directive 'table', [
       scope:
         data: '='
         onClick: '&'
-        selector: '='
+        selector: '@'
         headers: '='
         height: '='
         rowheader: '='
@@ -34,42 +34,34 @@ angular.module('diveApp.data').directive 'table', [
           return
         ), true
 
-        # Resolving evaluated attribute to actual value
-        # http://stackoverflow.com/questions/12371159/how-to-get-evaluated-attributes-inside-a-custom-directive
-        attrs.$observe 'selector', (actual_value) ->
-          ele.val 'selector=' + actual_value
-          scope.selector = actual_value
-          return
-
         scope.render = (data, selector, headers, height, rowheader, sortindex, sortorder) ->
           console.log 'Rendering table', data, selector, headers, height, rowheader, sortindex, sortorder
 
           if !data
             return
 
-          pluckedHeaders = _.pluck(headers, 'name')
-          console.log pluckedHeaders
+          if headers[0].name
+            headers = headers.slice()
+            headers = _.pluck(headers, 'name')
 
-          container = $(selector).get(0)
-          $(container).empty()
-
-          console.log 'container', container
+          _container = $(selector).get(0)
+          $(_container).empty()
 
           if sortindex isnt undefined
-            columnSorting = {
+            _columnSorting =
               column: sortindex
               sortOrder: !!sortorder
-            }
 
-          spreadsheet = new Handsontable(container,
+          _params = 
             data: data
             height: height
-            colHeaders: pluckedHeaders
-            columnSorting: columnSorting
+            colHeaders: headers
+            columnSorting: _columnSorting
             contextMenu: true
             stretchH: 'all'
             rowHeaders: rowheader
-          )
+
+          spreadsheet = new Handsontable(_container, _params)
           return
         return
     }
