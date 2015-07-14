@@ -20,7 +20,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     value: 'max'
   , 
     title: 'average'
-    value: 'avg'
+    value: 'mean'
   ]
 
   @OPERATORS = [
@@ -86,9 +86,10 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @retrieveProperties()
     return
 
-  @onSelectFunction = (fn) ->
+  @onSelectAggregationFunction = (fn) ->
     @selectedFunction = fn
     console.log("Selected Function", fn)
+    @refreshVisualization()
 
   @onSelectOperator = (op) ->
     @selectedOperation = op
