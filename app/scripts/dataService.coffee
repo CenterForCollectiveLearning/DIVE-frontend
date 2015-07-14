@@ -178,7 +178,7 @@ angular.module('diveApp.services').service('PropertyService', ($http, $q,API_URL
         params:
           pID: params.pID
       }).then (r) ->
-        q.resolve(r.data)
+        q.resolve(r.data.properties)
       return q.promise
   }
 )

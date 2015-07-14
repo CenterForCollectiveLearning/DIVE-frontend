@@ -1,8 +1,15 @@
 angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $rootScope, DataService, PropertyService, VisualizationDataService, pIDRetrieved) ->
-  self = this
+
+  @COUNT_ATTRIBUTE =
+    label: "count"
+    type: "int"
+    unique: true
+
+  @ATTRIBUTE_TYPES =
+    NUMERIC: ["int", "float"]
 
   # UI Parameters
-  self.aggregationFunctions = [
+  @AGGREGATION_FUNCTIONS = [
     title: 'sum'
     value: 'sum'
   , 
@@ -16,7 +23,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     value: 'avg'
   ]
 
-  self.operators = [
+  @OPERATORS = [
     title: '=' 
     value: '=='
   , 
@@ -36,7 +43,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     value: '≤'
   ]
 
-  self.operations = [
+  @OPERATIONS = [
     title: 'grouped on'
     value: 'group'
   ,
@@ -47,80 +54,116 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     value: 'compare'
   ]
 
-  self.selectedDataset = null
+  @availableOperations = @OPERATIONS
+  @availableAggregationFunctions = @AGGREGATION_FUNCTIONS
 
-  self.selectedParams =
+  @selectedDataset = null
+
+  @selectedParams =
     dID: ''
     field_a: ''
-    operation: self.operations[0].value
+    operation: @OPERATIONS[0].value
     arguments:
-      field_b: "count"
-      function: self.aggregationFunctions[0].value
+      field_b: @COUNT_ATTRIBUTE.label
+      function: @AGGREGATION_FUNCTIONS[0].value
 
-  self.selectedConditional =
+  @attributeB = @COUNT_ATTRIBUTE
+
+  @selectedConditional =
     'and': []
     'or': []
 
-  $scope.$watch((() -> self.selectedParams), (newVal, oldVal) ->
-    console.log("SelectedParams changed", newVal)
-  , true)
+  @isGrouping = false
 
-  self.onSelectDataset = (d) ->
-    self.attributes = self.attributesByDID[d.dID]
+  @onSelectDataset = (d) ->
+    @setDataset(d)
+    return
 
-  self.onSelectFunction = (fn) ->
-    self.selectedFunction = fn
+  @setDataset = (d) ->
+    @selectedDataset = d
+    @selectedParams.dID = d.dID
+
+    @retrieveProperties()
+    return
+
+  @onSelectFunction = (fn) ->
+    @selectedFunction = fn
     console.log("Selected Function", fn)
 
-  self.onSelectOperator = (op) ->
-    self.selectedOperation = op
+  @onSelectOperator = (op) ->
+    @selectedOperation = op
     console.log("Selected Operation", op)
 
-  self.refreshVisualization = () ->
-    _params =
-      spec: self.selectedParams
-      conditional: self.selectedConditional
+  @refreshVisualization = () ->
+    if @attributeA and @attributeB
+      _params =
+        spec: @selectedParams
+        conditional: @selectedConditional
 
-    VisualizationDataService.getVisualizationData(_params).then((data) =>
-      self.visualizationData = data.viz_data
-      self.tableData = data.table_result
-    )
+      VisualizationDataService.getVisualizationData(_params).then((data) =>
+        @visualizationData = data.viz_data
+        @tableData = data.table_result
+      )
 
-  self.onSelectFieldA = () ->
-    self.refreshVisualization()
+  @onSelectFieldA = () ->
+    @selectedParams['field_a'] = @attributeA.label
 
-  self.onSelectFieldB = () ->
-    self.refreshVisualization()
+    @refreshOperations()
+    @refreshVisualization()
+    return
 
-  self.getAttributes = (secondary = false) ->
-    _attr = self.attributesByDID[self.selectedDataset.dID].slice()
+  @onSelectFieldB = () ->
+    @selectedParams.arguments['field_b'] = @attributeB.label
+    @refreshVisualization()
+    return
 
-    if secondary
-      _index = _attr.indexOf(self.selectedParams.field_a)
-      _attr.splice(_index, 1)
-      _attr.unshift('count')
+  @refreshOperations = () ->
+    if @attributeA and (@attributeA.type in @ATTRIBUTE_TYPES.NUMERIC or @attributeA.unique)
+      @availableOperations = _.reject(@OPERATIONS, (operation) -> operation.value is "group")
+
+      if @selectedParams.operation is "group"
+        @selectedParams.operation = @availableOperations[0].value
+
+      @attributeB = undefined
+
+    @isGrouping = @selectedParams.operation is "group"
+    return
+
+  @getAttributes = (type = {}) ->
+    if @properties
+      _attr = @properties.slice()
+
+      if type.primary
+        _attr = _.reject(_attr, (property) => property.type in @ATTRIBUTE_TYPES.NUMERIC)
+
+      if type.secondary
+        _attr = _.reject(_attr, (property) => property.label is @selectedParams.field_a)
+
+        if @isGrouping
+          _attr = _.filter(_attr, (property) => property.type in @ATTRIBUTE_TYPES.NUMERIC)
+
+        _attr.unshift(@COUNT_ATTRIBUTE)
 
     return _attr
 
-  self.datasetsLoaded = false
-  self.propertiesLoaded = false
+  @datasetsLoaded = false
+  @propertiesLoaded = false
 
-  pIDRetrieved.promise.then((r) ->
-    DataService.getDatasets().then((datasets) ->
-      self.datasetsLoaded = true
-      self.datasets = datasets
-      self.selectedDataset = datasets[0]
-      self.selectedParams.dID = self.selectedDataset.dID
-      console.log("Datasets loaded!", self.datasets)
+  @retrieveProperties = () ->
+    PropertyService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
+      @propertiesLoaded = true
+      @properties = properties
     )
-   
-    # TODO Find a better way to resolve data dependencies without just making everything synchronous
-    PropertyService.getProperties({ pID: $rootScope.pID }).then((properties) ->
-      self.propertiesLoaded = true
-      self.attributesByDID = properties.attributes
-      self.types = properties.types
-      console.log("Properties loaded!", self.attributesByDID)
+    return
+
+  pIDRetrieved.promise.then((r) =>
+    DataService.getDatasets().then((datasets) =>
+      @datasetsLoaded = true
+      @datasets = datasets
+      @setDataset(datasets[0])
+      console.log("Datasets loaded!", @datasets)
     )
   )
-  return self
+
+  @
 )
