@@ -73,6 +73,11 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     'and': []
     'or': []
 
+  @conditional1 =
+    field: null
+    operation: null
+    criteria: null
+
   @isGrouping = false
 
   @onSelectDataset = (d) ->
@@ -86,14 +91,12 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @retrieveProperties()
     return
 
-  @onSelectAggregationFunction = (fn) ->
-    @selectedFunction = fn
-    console.log("Selected Function", fn)
+  @onSelectAggregationFunction = () ->
     @refreshVisualization()
 
-  @onSelectOperator = (op) ->
-    @selectedOperation = op
-    console.log("Selected Operation", op)
+  @onChangeConditional = () ->
+    @selectedConditional.and = [@conditional1]
+    @refreshVisualization()
 
   @refreshVisualization = () ->
     if @attributeA and @attributeB
@@ -116,6 +119,10 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @onSelectFieldB = () ->
     @selectedParams.arguments['field_b'] = @attributeB.label
     @refreshVisualization()
+    return
+
+  @onSelectConditional1Field = () ->
+    @conditional1.field = @conditional1Field.label
     return
 
   @refreshOperations = () ->
