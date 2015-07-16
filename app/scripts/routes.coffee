@@ -188,6 +188,19 @@ angular.module('diveApp.routes').config(($stateProvider, $urlRouterProvider, $lo
       controller: 'BuilderCtrl'
       controllerAs: 'builderCtrl'
     )
+  .state('project.analysis',
+    abstract: true
+    authenticate: true
+    url: '/analysis'
+    templateUrl: 'modules/analysis/analysis.html'
+    controller: 'AnalysisCtrl'
+  )
+    .state('project.analysis.manual',
+      url: '/manual'
+      templateUrl: 'modules/analysis/manual.html'
+      controller: 'ManualCtrl'
+      controllerAs: 'manualCtrl'
+    )
   .state('project.export',
     url: '/export'
     authenticate: true
