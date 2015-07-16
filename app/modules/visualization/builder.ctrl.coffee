@@ -158,6 +158,9 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     # @conditional1.operation = @availableOperators[0].value
     return
 
+  @getConditional1Values = () ->
+    return _.findWhere(@properties, {'label': @conditional1.field})['values']
+
   @refreshOperations = () ->
     if @attributeA and (@attributeA.type in @ATTRIBUTE_TYPES.NUMERIC or @attributeA.unique)
       @availableOperations = _.reject(@OPERATIONS, (operation) -> operation.value is "group")
