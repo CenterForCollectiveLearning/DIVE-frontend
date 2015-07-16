@@ -26,6 +26,7 @@ angular.module('diveApp.project').controller('ProjectCtrl', ($scope, $rootScope,
       ).then (r) ->
         $cookies._title = projectParams.title
         $cookies._pID = r.data.pID
+        $rootScope.pID = r.data.pID
         $scope.pID = r.data.pID
         pIDRetrieved.q.resolve()
         return
