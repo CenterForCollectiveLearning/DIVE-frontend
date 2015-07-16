@@ -2,9 +2,14 @@ _ = require('underscore')
 require 'handsontable'
 
 angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload, API_URL, pIDRetrieved, datasetsListRetrieved) ->
+  $scope.uploading = false
+
   $scope.onFileSelect = (files) ->
     i = 0
     results = []
+
+    $scope.uploading = true
+
     return pIDRetrieved.promise.then ->
       while i < files.length
         file = files[i]
@@ -15,17 +20,14 @@ angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload,
           file: file).progress((evt) ->
           console.log 'Percent loaded: ' + parseInt(100.0 * evt.loaded / evt.total)
           return
-        ).success((data, status, headers, config) ->
+        ).success((data, status, headers, config) =>
           datasetsListRetrieved.promise.then =>
-            _i = 0
-            _len = data.datasets.length
-            while _i < _len
-              dataset = data.datasets[_i]
+            for dataset in data.datasets
               $scope.datasets.push dataset
               $scope.dIDs.push dataset.dID
-              _i++
-            return
-          return
+
+            $scope.selectDataset dataset
+            $scope.uploading = false
         )
         results.push i++
       return results
@@ -105,13 +107,16 @@ angular.module('diveApp.data').controller 'DataCtrl', ($scope, $state, DataServi
   $scope.selectedDataset = null
 
   pIDRetrieved.promise.then ->
-    DataService.getDatasets().then (datasets) ->
+    DataService.getDatasets().then((datasets) ->
       $scope.datasets = datasets
       $scope.dIDs = _.pluck($scope.datasets, 'dID')
       datasetsListRetrieved.q.resolve()
 
       console.log 'Got datasets list', $scope.datasets
-      return
+    ).catch (failure) ->
+      console.log 'fail'
+      console.log failure
+    
     return
 
   $scope.sections = [
