@@ -42,17 +42,33 @@
       h3.category-title
         span Conditionals
 
-      md-autocomplete(md-items="a in builderCtrl.getAttributes()", md-item-text="a", placeholder="field", md-min-length="0", md-search-text="conditionalFieldQuery", md-selected-item="builderCtrl.selectedParams.conditionalField")
+      md-autocomplete(md-items="a in builderCtrl.getAttributes()", md-item-text="a.label", placeholder="field", md-min-length="0", md-search-text="conditionalFieldQuery", md-selected-item="builderCtrl.conditional1Field", md-selected-item-change="builderCtrl.onSelectConditional1Field()")
         md-item-template
-          span(md-highlight-text="builderCtrl.selectedParams.conditionalField") {{a}}
+          span(md-highlight-text="builderCtrl.conditional1Field") {{a.label}}
 
-      md-autocomplete(ng-disabled='!builderCtrl.selectedParams.conditionalField', md-items="o in builderCtrl.OPERATORS", md-item-text="o.title", placeholder="operator", md-min-length="0", md-search-text="conditionalOperatorQuery", md-selected-item="builderCtrl.selectedParams.conditionalOperator")
-        md-item-template
-          span(md-highlight-text="builderCtrl.selectedParams.conditionalOperator") {{o.title}}
+      md-select.select-small(ng-if='builderCtrl.conditional1IsNumeric' ng-disabled='!builderCtrl.conditional1Field', ng-model="builderCtrl.conditional1.operation")
+        md-option(ng-repeat="o in builderCtrl.OPERATORS.NUMERIC", ng-value="o.value")
+          | {{o.title}}
 
-      md-autocomplete(ng-disabled='!builderCtrl.selectedParams.conditionalOperator', md-items="a in builderCtrl.getAttributes()", md-item-text="a", placeholder="value", md-min-length="0", md-search-text="conditionalValueQuery", md-selected-item="builderCtrl.selectedParams.conditionalValue")
+      md-select.select-small(ng-if='!builderCtrl.conditional1IsNumeric' ng-disabled='!builderCtrl.conditional1Field', ng-model="builderCtrl.conditional1.operation")
+        md-option(ng-repeat="o in builderCtrl.OPERATORS.DISCRETE", ng-value="o.value")
+          | {{o.title}}
+
+      md-input-container(ng-if='builderCtrl.conditional1IsNumeric', ng-disabled='!builderCtrl.conditional1.operation || !builderCtrl.conditional1Field')
+        input(type="text", ng-model="builderCtrl.conditional1.criteria", ng-change="builderCtrl.onChangeConditional()", ng-disabled='!builderCtrl.conditional1.operation || !builderCtrl.conditional1Field')
+
+      md-autocomplete(
+        ng-if='!builderCtrl.conditional1IsNumeric'
+        md-items="value in builderCtrl.getConditional1Values()",
+        md-item-text="value",
+        placeholder="",
+        md-min-length="0",
+        md-search-text="conditionalValueQuery",
+        md-selected-item="builderCtrl.conditional1.criteria",
+        md-selected-item-change="builderCtrl.onChangeConditional()"
+      )
         md-item-template
-          span(md-highlight-text="builderCtrl.selectedParams.conditionalValue") {{a}}
+          span(md-highlight-text="builderCtrl.conditional1.criteria") {{value}}
 
   visualization(spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData')
     md-content(flex='', layout='column')

@@ -1,0 +1,27 @@
+md-select
+  +input-container
+
+  &:not([disabled]):focus .md-select-label
+    border: none
+
+  &.select-small
+    .md-select-label
+      min-width: 0
+
+  .md-select-label
+    +input
+    +input-box-shadow
+
+    span
+      +input-span
+
+    *:first-child
+      transform: none
+
+    span.md-select-icon
+      font-size: 10px
+      color: #666
+      margin-right: 10px
+
+      &:after
+        top: 0

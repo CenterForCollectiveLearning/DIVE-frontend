@@ -1,0 +1,22 @@
+$input-height: 34px
+$input-width: 160px
+
+=input
+  height: $input-height
+  padding: 0 0 0 15px
+  border: none
+
+=input-container
+  padding: 0
+  background-color: $color-off-white
+  border: 1px solid $color-grey-light-2
+  height: $input-height + 1px
+  border-radius: 2px
+
+  &[disabled]
+    opacity: 0.5
+
+=input-span
+  font-weight: 500
+  font-size: 13px
+  line-height: $input-height

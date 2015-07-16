@@ -23,25 +23,36 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     value: 'mean'
   ]
 
-  @OPERATORS = [
-    title: '=' 
-    value: '=='
-  , 
-    title: '≠'
-    value: '!='
-  , 
-    title: '>'
-    value: '>'
-  ,
-    title: '≥'
-    value: '>='
-  , 
-    title: '<'
-    value: '<'
-  ,
-    title: '<='
-    value: '≤'
-  ]
+  @OPERATORS = {
+    NUMERIC: [
+        title: '=' 
+        value: '=='
+      ,
+        title: '≠'
+        value: '!='
+      ,
+        title: '>'
+        value: '>'
+      ,
+        title: '≥'
+        value: '>='
+      ,
+        title: '<'
+        value: '<'
+      ,
+        title: '≤'
+        value: '<='
+    ]
+
+    DISCRETE: [
+        title: '='
+        value: '=='
+      ,
+        title: '≠'
+        value: '!='
+    ]
+
+  }
 
   @OPERATIONS = [
     title: 'grouped on'
@@ -54,8 +65,10 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     value: 'compare'
   ]
 
+  @avaialbleOperators = @OPERATORS.NUMERIC
   @availableOperations = @OPERATIONS
   @availableAggregationFunctions = @AGGREGATION_FUNCTIONS
+  @conditional1IsNumeric = true
 
   @selectedDataset = null
 
@@ -73,6 +86,11 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     'and': []
     'or': []
 
+  @conditional1 =
+    field: null
+    operation: null
+    criteria: null
+
   @isGrouping = false
 
   @onSelectDataset = (d) ->
@@ -86,14 +104,15 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @retrieveProperties()
     return
 
-  @onSelectAggregationFunction = (fn) ->
-    @selectedFunction = fn
-    console.log("Selected Function", fn)
+  @onSelectAggregationFunction = () ->
     @refreshVisualization()
 
-  @onSelectOperator = (op) ->
-    @selectedOperation = op
-    console.log("Selected Operation", op)
+  @onChangeConditional = () ->
+    if @conditional1.criteria
+      @selectedConditional.and = [@conditional1]
+    else
+      @selectedConditional.and = []
+    @refreshVisualization()
 
   @refreshVisualization = () ->
     if @attributeA and @attributeB
@@ -117,6 +136,30 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @selectedParams.arguments['field_b'] = @attributeB.label
     @refreshVisualization()
     return
+
+  @onSelectConditional1Field = () ->
+    @conditional1.field = @conditional1Field.label
+
+    if @conditional1Field.type in @ATTRIBUTE_TYPES.NUMERIC
+      @conditional1IsNumeric = true
+      @availableOperators = @OPERATORS.NUMERIC
+    else
+      @conditional1IsNumeric = false
+      @availableOperators = @OPERATORS.DISCRETE
+
+    if not _.some(@availableOperators, (operation) => operation.value is @conditional1.operation)
+      @conditional1.operation = @availableOperators[0].value
+
+    # For some reason, this causes a UI glitch with md-select
+    # if @conditional1Field.type in @ATTRIBUTE_TYPES.NUMERIC
+    #   @availableOperators = @OPERATORS.NUMERIC
+    # else
+    #   @availableOperators = @OPERATORS.DISCRETE
+    # @conditional1.operation = @availableOperators[0].value
+    return
+
+  @getConditional1Values = () ->
+    return _.findWhere(@properties, {'label': @conditional1.field})['values']
 
   @refreshOperations = () ->
     if @attributeA and (@attributeA.type in @ATTRIBUTE_TYPES.NUMERIC or @attributeA.unique)

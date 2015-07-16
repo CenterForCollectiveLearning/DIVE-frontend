@@ -1,4 +1,4 @@
-@mixin toolbar-style
+=toolbar-style
   .category-title
     min-width: 90px
     text-align: right
@@ -12,11 +12,12 @@
     margin-right: 14px
     display: inline-block
 
-    &[disabled]
-      opacity: 0.5
-
     + md-autocomplete
       margin-left: 0
+
+  md-input-container
+    margin-left: 14px
+    margin-right: 14px
 
 md-toolbar
   $toolbar-height: 56px
@@ -32,9 +33,6 @@ md-toolbar
     height: $toolbar-height
     max-height: $toolbar-height
     +toolbar-style
-
-    md-select
-      padding: 0
 
   .phrase, .selector
     display: inline-block
