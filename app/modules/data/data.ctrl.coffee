@@ -55,10 +55,9 @@ angular.module('diveApp.data').controller 'InspectDataCtrl', ($scope, $http, $st
   # TODO Factor out into a data service
   $scope.removeDataset = (dID) ->
     console.log 'Removing dataset, dID:', dID
-    return $http['delete'](API_URL + '/api/datasets',
+    return $http['delete'](API_URL + '/api/datasets/' + dID,
       params:
         pID: $scope.pID
-        dID: dID
     ).success (result) ->
       deleted_dIDs = result
       newDIDs = []
