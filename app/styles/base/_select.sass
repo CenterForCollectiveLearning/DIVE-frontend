@@ -4,7 +4,11 @@ md-select
   &:not([disabled]):focus .md-select-label
     border: none
 
-  md-select-label, .md-select-label
+  &.select-small
+    .md-select-label
+      min-width: 0
+
+  .md-select-label
     +input
     +input-box-shadow
 

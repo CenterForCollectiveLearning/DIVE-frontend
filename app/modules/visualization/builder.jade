@@ -46,12 +46,16 @@
         md-item-template
           span(md-highlight-text="builderCtrl.conditional1Field") {{a.label}}
 
-      md-select(ng-disabled='!builderCtrl.conditional1Field', ng-model="builderCtrl.conditional1.operation")
-        md-option(ng-repeat="o in builderCtrl.OPERATORS", ng-value="o.value")
+      md-select.select-small(ng-if='builderCtrl.conditional1IsNumeric' ng-disabled='!builderCtrl.conditional1Field', ng-model="builderCtrl.conditional1.operation")
+        md-option(ng-repeat="o in builderCtrl.OPERATORS.NUMERIC", ng-value="o.value")
           | {{o.title}}
 
-      md-input-container(ng-disabled='!builderCtrl.conditional1.operation')
-        input(type="text", ng-model="builderCtrl.conditional1.criteria", ng-change="builderCtrl.onChangeConditional()")
+      md-select.select-small(ng-if='!builderCtrl.conditional1IsNumeric' ng-disabled='!builderCtrl.conditional1Field', ng-model="builderCtrl.conditional1.operation")
+        md-option(ng-repeat="o in builderCtrl.OPERATORS.DISCRETE", ng-value="o.value")
+          | {{o.title}}
+
+      md-input-container(ng-disabled='!builderCtrl.conditional1.operation || !builderCtrl.conditional1Field')
+        input(type="text", ng-model="builderCtrl.conditional1.criteria", ng-change="builderCtrl.onChangeConditional()", ng-disabled='!builderCtrl.conditional1.operation || !builderCtrl.conditional1Field')
 
   visualization(spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData')
     md-content(flex='', layout='column')
