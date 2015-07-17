@@ -170,7 +170,7 @@ angular.module('diveApp.services').factory 'AuthService', ($http, $rootScope, lo
 
   }
 
-angular.module('diveApp.services').service('PropertiesService', ($http, $q,API_URL) ->
+angular.module('diveApp.services').service('PropertiesService', ($http, $rootScope, $q, API_URL) ->
   return {
     getProperties: (params, callback) ->
       q = $q.defer()
