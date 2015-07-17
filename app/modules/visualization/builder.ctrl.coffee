@@ -65,9 +65,6 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
         title: 'grouped by'
         value: 'group'
       ,
-        title: 'vs'
-        value: 'vs'
-      ,
         title: 'compare'
         value: 'compare'
     ]
@@ -112,6 +109,16 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @retrieveProperties()
     return
 
+  @resetIsGrouping = () ->
+    @isGrouping = @selectedParams.operation is "group"
+    if not @isGrouping
+      @selectedParams.arguments.function = null
+    return
+
+  @onSelectOperation = () ->
+    @resetIsGrouping()
+    return
+
   @onSelectAggregationFunction = () ->
     if @selectedParams.arguments.function is "count"
       @selectedParams.arguments.field_b = null
@@ -135,8 +142,6 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       VisualizationDataService.getVisualizationData(_params).then((data) =>
         @visualizationData = data.viz_data
         @tableData = data.table_result
-        console.log @visualizationData
-        console.log @tableData
       )
 
   @onSelectFieldA = () ->
@@ -181,15 +186,12 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
       @attributeB = undefined
 
-    @isGrouping = @selectedParams.operation is "group"
+    @resetIsGrouping()
     return
 
   @getAttributes = (type = {}) ->
     if @properties
       _attr = @properties.slice()
-
-      if type.primary
-        _attr = _.reject(_attr, (property) => property.type in @ATTRIBUTE_TYPES.NUMERIC)
 
       if type.secondary
         _attr = _.reject(_attr, (property) => property.label is @selectedParams.field_a)
