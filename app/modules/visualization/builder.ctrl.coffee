@@ -85,8 +85,6 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       field_b: ''
       function: @availableAggregationFunctions[0].value
 
-  @attributeB = null
-
   @selectedConditional =
     'and': []
     'or': []
@@ -98,11 +96,26 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @isGrouping = false
 
+  @resetSelectedParams = () ->
+    @selectedParams =
+      dID: ''
+      field_a: ''
+      operation: @availableOperations[0].value
+      arguments:
+        field_b: ''
+        function: @availableAggregationFunctions[0].value
+
+    @attributeA = ' ' # the autocomplete field doesn't refresh if attributeA is null or ''
+    @attributeB = null
+    return
+
   @onSelectDataset = (d) ->
     @setDataset(d)
     return
 
   @setDataset = (d) ->
+    @resetSelectedParams()
+
     @selectedDataset = d
     @selectedParams.dID = d.dID
 
@@ -134,7 +147,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @refreshVisualization()
 
   @refreshVisualization = () ->
-    if @attributeA
+    if @selectedParams['field_a']
       _params =
         spec: @selectedParams
         conditional: @selectedConditional
@@ -145,10 +158,11 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       )
 
   @onSelectFieldA = () ->
-    @selectedParams['field_a'] = @attributeA.label
+    if @attributeA
+      @selectedParams['field_a'] = @attributeA.label
 
-    @refreshOperations()
-    @refreshVisualization()
+      @refreshOperations()
+      @refreshVisualization()
     return
 
   @onSelectFieldB = () ->
@@ -203,6 +217,8 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @datasetsLoaded = false
   @propertiesLoaded = false
+
+  @resetSelectedParams()
 
   @retrieveProperties = () ->
     PropertiesService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
