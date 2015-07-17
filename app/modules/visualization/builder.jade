@@ -15,7 +15,7 @@
         .phrase
           span by
         .selector
-          md-autocomplete(md-items="a in builderCtrl.getAttributes({primary: true})", md-item-text="a.label", placeholder="Field", md-min-length="0", md-search-text="searchQueryA", md-selected-item="builderCtrl.attributeA", md-selected-item-change="builderCtrl.onSelectFieldA()")
+          md-autocomplete(md-items="a in builderCtrl.getAttributes({primary: true})", md-no-cache="true", md-item-text="a.label", placeholder="Field", md-min-length="0", md-search-text="searchQueryA", md-selected-item="builderCtrl.attributeA", md-selected-item-change="builderCtrl.onSelectFieldA()")
             md-item-template
               span(md-highlight-text="searchQueryA") {{a.label}}
 
