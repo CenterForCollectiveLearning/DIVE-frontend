@@ -70,20 +70,10 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     ]
   }
 
-  @avaialbleOperators = @OPERATORS.NUMERIC
-  @availableOperations = @OPERATIONS.NON_UNIQUE
   @availableAggregationFunctions = @AGGREGATION_FUNCTIONS
   @conditional1IsNumeric = true
 
   @selectedDataset = null
-
-  @selectedParams =
-    dID: ''
-    field_a: ''
-    operation: @availableOperations[0].value
-    arguments:
-      field_b: ''
-      function: @availableAggregationFunctions[0].value
 
   @selectedConditional =
     'and': []
@@ -96,17 +86,21 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @isGrouping = false
 
-  @resetSelectedParams = () ->
+  @resetParams = () ->
+    @availableOperators = @OPERATORS.NUMERIC
+    @availableOperations = @OPERATIONS.NON_UNIQUE
+
     @selectedParams =
       dID: ''
       field_a: ''
-      operation: @availableOperations[0].value
+      operation: ''
       arguments:
         field_b: ''
-        function: @availableAggregationFunctions[0].value
+        function: ''
 
     @attributeA = ' ' # the autocomplete field doesn't refresh if attributeA is null or ''
     @attributeB = null
+    @resetIsGrouping()
     return
 
   @onSelectDataset = (d) ->
@@ -114,7 +108,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @setDataset = (d) ->
-    @resetSelectedParams()
+    @resetParams()
 
     @selectedDataset = d
     @selectedParams.dID = d.dID
@@ -124,7 +118,9 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @resetIsGrouping = () ->
     @isGrouping = @selectedParams.operation is "group"
-    if not @isGrouping
+    if @isGrouping
+      @selectedParams.arguments.function = @availableAggregationFunctions[0].value
+    else
       @selectedParams.arguments.function = null
     return
 
@@ -147,7 +143,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @refreshVisualization()
 
   @refreshVisualization = () ->
-    if @selectedParams['field_a']
+    if @selectedParams['field_a'] and (@selectedParams.arguments['field_b'] or @selectedParams.arguments.function)
       _params =
         spec: @selectedParams
         conditional: @selectedConditional
@@ -197,9 +193,11 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @refreshOperations = () ->
     if @attributeA and (@attributeA.type in @ATTRIBUTE_TYPES.NUMERIC or @attributeA.unique)
       @availableOperations = @OPERATIONS.UNIQUE
+    else
+      @availableOperations = @OPERATIONS.NON_UNIQUE
 
-      @attributeB = undefined
-
+    @selectedParams.operation = @availableOperations[0].value
+    @attributeB = undefined
     @resetIsGrouping()
     return
 
@@ -218,7 +216,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @datasetsLoaded = false
   @propertiesLoaded = false
 
-  @resetSelectedParams()
+  @resetParams()
 
   @retrieveProperties = () ->
     PropertiesService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
