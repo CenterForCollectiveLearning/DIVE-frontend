@@ -21,6 +21,7 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
       scope.render = (spec, data) ->
         return unless spec and data
 
+        COUNT_ATTRIBUTE = "count"
         type = "tree_map"
         container = $('.visualization .left-side')
 
@@ -29,6 +30,10 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
           height: container.height()
 
         field_b = spec.arguments.field_b
+
+        if not field_b
+          field_b = COUNT_ATTRIBUTE
+
         data = data[field_b]
 
         console.info 'id', spec.field_a

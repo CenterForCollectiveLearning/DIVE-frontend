@@ -176,7 +176,7 @@ angular.module('diveApp.services').service('PropertiesService', ($http, $q,API_U
       q = $q.defer()
       $http.get(API_URL + '/api/properties', {
         params:
-          pID: params.pID
+          pID: $rootScope.pID
           dID: params.dID
       }).then (r) ->
         q.resolve(r.data.properties)
