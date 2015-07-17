@@ -65,9 +65,6 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
         title: 'grouped by'
         value: 'group'
       ,
-        title: 'vs'
-        value: 'vs'
-      ,
         title: 'compare'
         value: 'compare'
     ]
@@ -88,8 +85,6 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       field_b: ''
       function: @availableAggregationFunctions[0].value
 
-  @attributeB = null
-
   @selectedConditional =
     'and': []
     'or': []
@@ -101,15 +96,40 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @isGrouping = false
 
+  @resetSelectedParams = () ->
+    @selectedParams =
+      dID: ''
+      field_a: ''
+      operation: @availableOperations[0].value
+      arguments:
+        field_b: ''
+        function: @availableAggregationFunctions[0].value
+
+    @attributeA = ' ' # the autocomplete field doesn't refresh if attributeA is null or ''
+    @attributeB = null
+    return
+
   @onSelectDataset = (d) ->
     @setDataset(d)
     return
 
   @setDataset = (d) ->
+    @resetSelectedParams()
+
     @selectedDataset = d
     @selectedParams.dID = d.dID
 
     @retrieveProperties()
+    return
+
+  @resetIsGrouping = () ->
+    @isGrouping = @selectedParams.operation is "group"
+    if not @isGrouping
+      @selectedParams.arguments.function = null
+    return
+
+  @onSelectOperation = () ->
+    @resetIsGrouping()
     return
 
   @onSelectAggregationFunction = () ->
@@ -127,7 +147,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @refreshVisualization()
 
   @refreshVisualization = () ->
-    if @attributeA
+    if @selectedParams['field_a']
       _params =
         spec: @selectedParams
         conditional: @selectedConditional
@@ -135,15 +155,14 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       VisualizationDataService.getVisualizationData(_params).then((data) =>
         @visualizationData = data.viz_data
         @tableData = data.table_result
-        console.log @visualizationData
-        console.log @tableData
       )
 
   @onSelectFieldA = () ->
-    @selectedParams['field_a'] = @attributeA.label
+    if @attributeA
+      @selectedParams['field_a'] = @attributeA.label
 
-    @refreshOperations()
-    @refreshVisualization()
+      @refreshOperations()
+      @refreshVisualization()
     return
 
   @onSelectFieldB = () ->
@@ -181,15 +200,12 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
       @attributeB = undefined
 
-    @isGrouping = @selectedParams.operation is "group"
+    @resetIsGrouping()
     return
 
   @getAttributes = (type = {}) ->
     if @properties
       _attr = @properties.slice()
-
-      if type.primary
-        _attr = _.reject(_attr, (property) => property.type in @ATTRIBUTE_TYPES.NUMERIC)
 
       if type.secondary
         _attr = _.reject(_attr, (property) => property.label is @selectedParams.field_a)
@@ -201,6 +217,8 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @datasetsLoaded = false
   @propertiesLoaded = false
+
+  @resetSelectedParams()
 
   @retrieveProperties = () ->
     PropertiesService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
