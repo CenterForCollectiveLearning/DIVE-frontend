@@ -1,4 +1,4 @@
-angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $rootScope, DataService, PropertyService, VisualizationDataService, pIDRetrieved) ->
+angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $rootScope, DataService, PropertiesService, VisualizationDataService, pIDRetrieved) ->
 
   @COUNT_ATTRIBUTE =
     label: "count"
@@ -194,7 +194,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @propertiesLoaded = false
 
   @retrieveProperties = () ->
-    PropertyService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
+    PropertiesService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
       @propertiesLoaded = true
       @properties = properties
     )
