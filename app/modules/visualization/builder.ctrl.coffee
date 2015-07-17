@@ -1,15 +1,13 @@
 angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $rootScope, DataService, PropertyService, VisualizationDataService, pIDRetrieved) ->
 
-  @COUNT_ATTRIBUTE =
-    label: "count"
-    type: "int"
-    unique: true
-
   @ATTRIBUTE_TYPES =
     NUMERIC: ["int", "float"]
 
   # UI Parameters
   @AGGREGATION_FUNCTIONS = [
+    title: 'count'
+    value: 'count'
+  , 
     title: 'sum'
     value: 'sum'
   , 
@@ -54,19 +52,29 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   }
 
-  @OPERATIONS = [
-    title: 'grouped on'
-    value: 'group'
-  ,
-    title: 'vs'
-    value: 'vs'
-  ,
-    title: 'compare'
-    value: 'compare'
-  ]
+  @OPERATIONS = {
+    UNIQUE: [
+        title: 'vs'
+        value: 'vs'
+      ,
+        title: 'compare'
+        value: 'compare'
+    ]
+
+    NON_UNIQUE: [
+        title: 'grouped by'
+        value: 'group'
+      ,
+        title: 'vs'
+        value: 'vs'
+      ,
+        title: 'compare'
+        value: 'compare'
+    ]
+  }
 
   @avaialbleOperators = @OPERATORS.NUMERIC
-  @availableOperations = @OPERATIONS
+  @availableOperations = @OPERATIONS.NON_UNIQUE
   @availableAggregationFunctions = @AGGREGATION_FUNCTIONS
   @conditional1IsNumeric = true
 
@@ -75,12 +83,12 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @selectedParams =
     dID: ''
     field_a: ''
-    operation: @OPERATIONS[0].value
+    operation: @availableOperations[0].value
     arguments:
-      field_b: @COUNT_ATTRIBUTE.label
-      function: @AGGREGATION_FUNCTIONS[0].value
+      field_b: ''
+      function: @availableAggregationFunctions[0].value
 
-  @attributeB = @COUNT_ATTRIBUTE
+  @attributeB = null
 
   @selectedConditional =
     'and': []
@@ -105,6 +113,10 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @onSelectAggregationFunction = () ->
+    if @selectedParams.arguments.function is "count"
+      @selectedParams.arguments.field_b = null
+      @attributeB = null
+
     @refreshVisualization()
 
   @onChangeConditional = () ->
@@ -115,7 +127,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @refreshVisualization()
 
   @refreshVisualization = () ->
-    if @attributeA and @attributeB
+    if @attributeA
       _params =
         spec: @selectedParams
         conditional: @selectedConditional
@@ -123,6 +135,8 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       VisualizationDataService.getVisualizationData(_params).then((data) =>
         @visualizationData = data.viz_data
         @tableData = data.table_result
+        console.log @visualizationData
+        console.log @tableData
       )
 
   @onSelectFieldA = () ->
@@ -163,10 +177,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @refreshOperations = () ->
     if @attributeA and (@attributeA.type in @ATTRIBUTE_TYPES.NUMERIC or @attributeA.unique)
-      @availableOperations = _.reject(@OPERATIONS, (operation) -> operation.value is "group")
-
-      if @selectedParams.operation is "group"
-        @selectedParams.operation = @availableOperations[0].value
+      @availableOperations = @OPERATIONS.UNIQUE
 
       @attributeB = undefined
 
@@ -185,8 +196,6 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
         if @isGrouping
           _attr = _.filter(_attr, (property) => property.type in @ATTRIBUTE_TYPES.NUMERIC)
-
-        _attr.unshift(@COUNT_ATTRIBUTE)
 
     return _attr
 

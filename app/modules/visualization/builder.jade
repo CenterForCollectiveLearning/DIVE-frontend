@@ -24,18 +24,20 @@
           md-select(ng-model="builderCtrl.selectedParams.operation")
             md-option(ng-repeat="operation in builderCtrl.availableOperations", ng-value="operation.value")
               | {{ operation.title }}
-        .selector
-          md-autocomplete(md-items="a in builderCtrl.getAttributes({secondary: true})", md-item-text="a.label", placeholder="Field", md-min-length="0", md-search-text="searchQueryB", md-selected-item="builderCtrl.attributeB", md-selected-item-change="builderCtrl.onSelectFieldB()")
-            md-item-template
-              span(md-highlight-text="searchQueryB") {{a.label}}
 
-      .third-segment-selector(ng-if="builderCtrl.isGrouping && builderCtrl.attributeA && builderCtrl.attributeB && builderCtrl.attributeB != builderCtrl.COUNT_ATTRIBUTE")
-        .phrase
-          span by
+      .third-segment-selector(ng-if="builderCtrl.isGrouping && builderCtrl.selectedParams.field_a")
         .selector
           md-select(ng-model="builderCtrl.selectedParams.arguments.function", md-on-close="builderCtrl.onSelectAggregationFunction()")
             md-option(ng-repeat="func in builderCtrl.availableAggregationFunctions", ng-value="func.value")
               | {{ func.title }}
+
+      .fourth-segment-selector(ng-if="builderCtrl.isGrouping && builderCtrl.selectedParams.field_a && builderCtrl.selectedParams.arguments.function != 'count'")
+        .phrase
+          span vs
+        .selector
+          md-autocomplete(md-items="a in builderCtrl.getAttributes({secondary: true})", md-item-text="a.label", placeholder="Field", md-min-length="0", md-search-text="searchQueryB", md-selected-item="builderCtrl.attributeB", md-selected-item-change="builderCtrl.onSelectFieldB()")
+            md-item-template
+              span(md-highlight-text="searchQueryB") {{a.label}}
 
   .toolbar-extension(ng-if="builderCtrl.selectedParams.field_a")
     .toolbar-extension-component(layout='row')
