@@ -233,6 +233,7 @@ angular.module('diveApp.services').service('StatisticsDataService', ($http, $roo
     getStatisticsData: (params) ->
       q = $q.defer()
 
+      console.log('Getting statistics with params:', params)
       $http.post(API_URL + '/api/statistics_from_spec', {
         pID: $rootScope.pID,
         spec: params.spec,

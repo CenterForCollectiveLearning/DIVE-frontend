@@ -27,46 +27,24 @@
             md-option(ng-repeat="e in manualCtrl.ESTIMATORS", ng-value="e.value")
               | {{ e.title }}
 
-  //- .toolbar-extension(ng-if="manualCtrl.selectedParams.field_a")
-  //-   .toolbar-extension-component(layout='row')
-  //-     h3.category-title
-  //-       span Conditionals
+  .toolbar-extension.stats-parameters(ng-if="manualCtrl.selectedParams.model")
+    .toolbar-extension-component(layout='row')
+      h3.category-title
+        span Parameters
 
-  //-     md-autocomplete(md-items="a in manualCtrl.getAttributes()", md-item-text="a.label", placeholder="field", md-min-length="0", md-search-text="conditionalFieldQuery", md-selected-item="manualCtrl.conditional1Field", md-selected-item-change="manualCtrl.onSelectConditional1Field()")
-  //-       md-item-template
-  //-         span(md-highlight-text="manualCtrl.conditional1Field") {{a.label}}
+      .indep-selector
+        .selector
+          md-autocomplete(md-items="a in manualCtrl.getAttributes()", md-item-text="a.label", placeholder="Dependent Variable", md-min-length="0", md-search-text="dependentFieldQuery", md-selected-item="manualCtrl.dep", md-selected-item-change="manualCtrl.onSelectDep()")
+            md-item-template
+              span(md-highlight-text="manualCtrl.selectedParams.arguments.dep") {{a.label}}
 
-  //-     md-select.select-small(ng-if='manualCtrl.conditional1IsNumeric' ng-disabled='!manualCtrl.conditional1Field', ng-model="manualCtrl.conditional1.operation")
-  //-       md-option(ng-repeat="o in manualCtrl.OPERATORS.NUMERIC", ng-value="o.value")
-  //-         | {{o.title}}
+      .dep-selector
+        .phrase
+          span against
+        .selector
+          md-autocomplete(md-items="a in manualCtrl.getAttributes()", md-item-text="a.label", placeholder="Independent Variable", md-min-length="0", md-search-text="independentFieldQuery", md-selected-item="manualCtrl.indep", md-selected-item-change="manualCtrl.onSelectIndep()")
+            md-item-template
+              span(md-highlight-text="manualCtrl.selectedParams.arguments.indep") {{a.label}}
 
-  //-     md-select.select-small(ng-if='!manualCtrl.conditional1IsNumeric' ng-disabled='!manualCtrl.conditional1Field', ng-model="manualCtrl.conditional1.operation")
-  //-       md-option(ng-repeat="o in manualCtrl.OPERATORS.DISCRETE", ng-value="o.value")
-  //-         | {{o.title}}
-
-  //-     md-input-container(ng-if='manualCtrl.conditional1IsNumeric', ng-disabled='!manualCtrl.conditional1.operation || !manualCtrl.conditional1Field')
-  //-       input(type="text", ng-model="manualCtrl.conditional1.criteria", ng-change="manualCtrl.onChangeConditional()", ng-disabled='!manualCtrl.conditional1.operation || !manualCtrl.conditional1Field')
-
-  //-     md-autocomplete(
-  //-       ng-if='!manualCtrl.conditional1IsNumeric'
-  //-       md-items="value in manualCtrl.getConditional1Values()",
-  //-       md-item-text="value",
-  //-       placeholder="",
-  //-       md-min-length="0",
-  //-       md-search-text="conditionalValueQuery",
-  //-       md-selected-item="manualCtrl.conditional1.criteria",
-  //-       md-selected-item-change="manualCtrl.onChangeConditional()"
-  //-     )
-  //-       md-item-template
-  //-         span(md-highlight-text="manualCtrl.conditional1.criteria") {{value}}
-
-  //- visualization(spec='manualCtrl.selectedParams', data='manualCtrl.visualizationData')
-  //-   md-content(flex='', layout='column')
-  //-     .visualization(flex='', layout='row')
-  //-       .left-side(layout='column', flex='')
-  //-         md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
-  //-         #viz-container(flex='')
-
-  datatable(ng-if='manualCtrl.tableData.data' data='manualCtrl.tableData.data', selector=".datatable", headers='manualCtrl.tableData.columns', rowheader='false', height=1000, sortindex=1, sortorder='false')
-    .datatable
-
+  .stats-data
+    {{ manualCtrl.statsData }}
