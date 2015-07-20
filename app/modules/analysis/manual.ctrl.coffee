@@ -1,4 +1,4 @@
-angular.module('diveApp.analysis').controller('ManualCtrl', ($scope, $rootScope, DataService, PropertiesService, VisualizationDataService, pIDRetrieved) ->
+angular.module('diveApp.analysis').controller('ManualCtrl', ($scope, $rootScope, DataService, PropertiesService, StatisticsDataService, pIDRetrieved) ->
 
   @COUNT_ATTRIBUTE =
     label: "count"
@@ -9,63 +9,19 @@ angular.module('diveApp.analysis').controller('ManualCtrl', ($scope, $rootScope,
     NUMERIC: ["int", "float"]
 
   # UI Parameters
-  @AGGREGATION_FUNCTIONS = [
-    title: 'sum'
-    value: 'sum'
-  , 
-    title: 'minimum'
-    value: 'min'
-  ,
-    title: 'maximum'
-    value: 'max'
-  , 
-    title: 'average'
-    value: 'mean'
+  @MODELS = [
+      title: 'Linear Regression'
+      value: 'lr'
+    ,
+      title: 'Discrete Regression'
+      value: 'dr'
   ]
 
-  @OPERATORS = {
-    NUMERIC: [
-        title: '=' 
-        value: '=='
-      ,
-        title: '≠'
-        value: '!='
-      ,
-        title: '>'
-        value: '>'
-      ,
-        title: '≥'
-        value: '>='
-      ,
-        title: '<'
-        value: '<'
-      ,
-        title: '≤'
-        value: '<='
-    ]
-
-    DISCRETE: [
-        title: '='
-        value: '=='
-      ,
-        title: '≠'
-        value: '!='
-    ]
-
-  }
-
-  @OPERATIONS = [
-    title: 'grouped on'
-    value: 'group'
-  ,
-    title: 'vs'
-    value: 'vs'
-  ,
-    title: 'compare'
-    value: 'compare'
+  @ESTIMATORS = [
+      title: 'Ordinary Least Squares'
+      value: 'ols'
   ]
 
-  @avaialbleOperators = @OPERATORS.NUMERIC
   @availableOperations = @OPERATIONS
   @availableAggregationFunctions = @AGGREGATION_FUNCTIONS
   @conditional1IsNumeric = true
@@ -74,11 +30,9 @@ angular.module('diveApp.analysis').controller('ManualCtrl', ($scope, $rootScope,
 
   @selectedParams =
     dID: ''
-    field_a: ''
-    operation: @OPERATIONS[0].value
-    arguments:
-      field_b: @COUNT_ATTRIBUTE.label
-      function: @AGGREGATION_FUNCTIONS[0].value
+    model: @MODELS[0].value
+    arguments: 
+      estimator: @ESTIMATORS[0].value
 
   @attributeB = @COUNT_ATTRIBUTE
 
@@ -135,27 +89,6 @@ angular.module('diveApp.analysis').controller('ManualCtrl', ($scope, $rootScope,
   @onSelectFieldB = () ->
     @selectedParams.arguments['field_b'] = @attributeB.label
     @refreshVisualization()
-    return
-
-  @onSelectConditional1Field = () ->
-    @conditional1.field = @conditional1Field.label
-
-    if @conditional1Field.type in @ATTRIBUTE_TYPES.NUMERIC
-      @conditional1IsNumeric = true
-      @availableOperators = @OPERATORS.NUMERIC
-    else
-      @conditional1IsNumeric = false
-      @availableOperators = @OPERATORS.DISCRETE
-
-    if not _.some(@availableOperators, (operation) => operation.value is @conditional1.operation)
-      @conditional1.operation = @availableOperators[0].value
-
-    # For some reason, this causes a UI glitch with md-select
-    # if @conditional1Field.type in @ATTRIBUTE_TYPES.NUMERIC
-    #   @availableOperators = @OPERATORS.NUMERIC
-    # else
-    #   @availableOperators = @OPERATORS.DISCRETE
-    # @conditional1.operation = @availableOperators[0].value
     return
 
   @getConditional1Values = () ->
