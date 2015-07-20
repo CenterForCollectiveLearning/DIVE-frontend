@@ -3,7 +3,7 @@
   md-toolbar.segmentation-block(ng-class="{'extended': manualCtrl.selectedParams.field_a}")
     .md-toolbar-tools
       h3.category-title
-        span Visualize
+        span Analyse
 
       md-autocomplete(ng-if="manualCtrl.datasetsLoaded", md-items="d in manualCtrl.datasets", md-item-text="d.title", placeholder="Dataset", md-min-length="0", md-search-text="datasetQuery", md-selected-item="manualCtrl.selectedDataset", md-selected-item-change="manualCtrl.onSelectDataset(d)")
         md-item-template
