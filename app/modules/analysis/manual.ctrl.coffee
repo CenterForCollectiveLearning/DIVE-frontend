@@ -1,4 +1,4 @@
-angular.module('diveApp.analysis').controller('ManualCtrl', ($scope, $rootScope, DataService, PropertyService, VisualizationDataService, pIDRetrieved) ->
+angular.module('diveApp.analysis').controller('ManualCtrl', ($scope, $rootScope, DataService, PropertiesService, VisualizationDataService, pIDRetrieved) ->
 
   @COUNT_ATTRIBUTE =
     label: "count"
@@ -194,7 +194,7 @@ angular.module('diveApp.analysis').controller('ManualCtrl', ($scope, $rootScope,
   @propertiesLoaded = false
 
   @retrieveProperties = () ->
-    PropertyService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
+    PropertiesService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
       @propertiesLoaded = true
       @properties = properties
     )
