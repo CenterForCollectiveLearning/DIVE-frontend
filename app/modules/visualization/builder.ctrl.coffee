@@ -21,26 +21,33 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       value: 'mean'
   ]
 
-  @VISUALIZATION_TYPES = [
+  @VISUALIZATION_TYPES =
+    TREEMAP: 'tree_map'
+    BAR: 'bar'
+    PIE: 'pie'
+    LINE: 'line'
+    SCATTERPLOT: 'scatter'
+
+  @VISUALIZATION_TYPE_DATA = [
       label: 'Treemap'
-      type: 'TREEMAP'
+      type: @VISUALIZATION_TYPES.TREEMAP
       icon: '/assets/images/charts/treemap.chart.svg'
     ,
-      label: 'Scatterplot'
-      type: 'SCATTERPLOT'
-      icon: '/assets/images/charts/scatterplot.chart.svg'
-    ,
       label: 'Bar Graph'
-      type: 'BAR'
+      type: @VISUALIZATION_TYPES.BAR
       icon: '/assets/images/charts/bar.chart.svg'
     ,
+      label: 'Pie Graph'
+      type: @VISUALIZATION_TYPES.PIE
+      icon: '/assets/images/charts/pie.chart.svg'
+    ,
       label: 'Line Graph'
-      type: 'LINE'
+      type: @VISUALIZATION_TYPES.LINE
       icon: '/assets/images/charts/line.chart.svg'
     ,
-      label: 'Pie Graph'
-      type: 'PIE'
-      icon: '/assets/images/charts/pie.chart.svg'
+      label: 'Scatterplot'
+      type: @VISUALIZATION_TYPES.SCATTERPLOT
+      icon: '/assets/images/charts/scatterplot.chart.svg'
   ]
 
   @OPERATORS = {
@@ -111,8 +118,8 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @resetParams = () ->
     @availableOperators = @OPERATORS.NUMERIC
     @availableOperations = @OPERATIONS.NON_UNIQUE
-    @availableVisualizationTypes = _.pluck(@VISUALIZATION_TYPES, 'type')
-    @selectedVisualizationType = 'TREEMAP'
+    @availableVisualizationTypes = _.pluck(@VISUALIZATION_TYPE_DATA, 'type')
+    @selectedVisualizationType = @VISUALIZATION_TYPES.TREEMAP
 
     @selectedParams =
       dID: ''
@@ -178,8 +185,15 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       )
 
   @onSelectFieldA = () ->
-    if @attributeA
+    if @attributeA and @attributeA.label
       @selectedParams['field_a'] = @attributeA.label
+
+      if @attributeA.type not in @ATTRIBUTE_TYPES.NUMERIC
+        #TODO: don't hardcode, abstract discrete/continuous as a viz type property
+        @availableVisualizationTypes = _.reject(@availableVisualizationTypes, (visualizationType) -> visualizationType in ['line', 'scatter'])
+
+        if @selectedVisualizationType in ['line', 'scatter']
+          @selectedVisualizationType = @availableVisualizationTypes[0]
 
       @refreshOperations()
       @refreshVisualization()
@@ -238,12 +252,12 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return _attr
 
   @getVisualizationTypes = () ->
-    _visualizationTypes = @VISUALIZATION_TYPES.slice()
+    _visualizationTypes = @VISUALIZATION_TYPE_DATA.slice()
 
     for visualizationType in _visualizationTypes
       visualizationType.selected = visualizationType.type is @selectedVisualizationType
       visualizationType.enabled = visualizationType.type in @availableVisualizationTypes
-    
+
     return _visualizationTypes
 
   @selectVisualizationType = (type) ->

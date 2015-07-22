@@ -8,21 +8,21 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
   {
     restrict: 'EA'
     scope:
+      type: '='
       spec: '='
       data: '='
 
     link: (scope, element, attrs) ->
 
-      scope.$watchCollection '[spec, data]', ((newData) ->
-        scope.render newData[0], newData[1]
+      scope.$watchCollection '[type, spec, data]', ((newData) ->
+        scope.render newData[0], newData[1], newData[2]
         return
       ), true
 
-      scope.render = (spec, data) ->
-        return unless spec and data
+      scope.render = (type, spec, data) ->
+        return unless type and spec and data
 
         COUNT_ATTRIBUTE = "count"
-        type = "tree_map"
         container = $('.visualization .left-side')
 
         displayParams =
@@ -46,8 +46,18 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
           .width(displayParams.width)
           .height(displayParams.height)
           .id(spec.field_a)
-          .size(field_b)
-          .data(data)
+
+        switch type
+          when 'tree_map', 'pie'
+            visualization.size(field_b)
+          when 'bar'
+            visualization.x({value: spec.field_a, grid: false})
+            visualization.y(field_b)
+          when 'line'
+            visualization.x({value: spec.field_a, grid: false})
+            visualization.y(field_b)
+
+        visualization.data(data)
           .draw()
 
   }

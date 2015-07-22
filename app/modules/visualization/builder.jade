@@ -79,7 +79,7 @@
         md-item-template
           span(md-highlight-text="builderCtrl.conditional1.criteria") {{value}}
 
-  visualization(spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData')
+  visualization(type='builderCtrl.selectedVisualizationType', spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData')
     md-content(flex='', layout='column')
       .visualization(flex='', layout='row')
         .left-side(layout='column', flex='')
