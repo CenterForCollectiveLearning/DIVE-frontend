@@ -5,20 +5,42 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   # UI Parameters
   @AGGREGATION_FUNCTIONS = [
-    title: 'count'
-    value: 'count'
-  , 
-    title: 'sum'
-    value: 'sum'
-  , 
-    title: 'minimum'
-    value: 'min'
-  ,
-    title: 'maximum'
-    value: 'max'
-  , 
-    title: 'average'
-    value: 'mean'
+      title: 'count'
+      value: 'count'
+    , 
+      title: 'sum'
+      value: 'sum'
+    , 
+      title: 'minimum'
+      value: 'min'
+    ,
+      title: 'maximum'
+      value: 'max'
+    , 
+      title: 'average'
+      value: 'mean'
+  ]
+
+  @VISUALIZATION_TYPES = [
+      label: 'Treemap'
+      type: 'TREEMAP'
+      icon: '/assets/images/charts/treemap.chart.svg'
+    ,
+      label: 'Scatterplot'
+      type: 'SCATTERPLOT'
+      icon: '/assets/images/charts/scatterplot.chart.svg'
+    ,
+      label: 'Bar Graph'
+      type: 'BAR'
+      icon: '/assets/images/charts/bar.chart.svg'
+    ,
+      label: 'Line Graph'
+      type: 'LINE'
+      icon: '/assets/images/charts/line.chart.svg'
+    ,
+      label: 'Pie Graph'
+      type: 'PIE'
+      icon: '/assets/images/charts/pie.chart.svg'
   ]
 
   @OPERATORS = {
@@ -89,6 +111,8 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @resetParams = () ->
     @availableOperators = @OPERATORS.NUMERIC
     @availableOperations = @OPERATIONS.NON_UNIQUE
+    @availableVisualizationTypes = _.pluck(@VISUALIZATION_TYPES, 'type')
+    @selectedVisualizationType = 'TREEMAP'
 
     @selectedParams =
       dID: ''
@@ -212,6 +236,19 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
           _attr = _.filter(_attr, (property) => property.type in @ATTRIBUTE_TYPES.NUMERIC)
 
     return _attr
+
+  @getVisualizationTypes = () ->
+    _visualizationTypes = @VISUALIZATION_TYPES.slice()
+
+    for visualizationType in _visualizationTypes
+      visualizationType.selected = visualizationType.type is @selectedVisualizationType
+      visualizationType.enabled = visualizationType.type in @availableVisualizationTypes
+    
+    return _visualizationTypes
+
+  @selectVisualizationType = (type) ->
+    @selectedVisualizationType = type
+    return
 
   @datasetsLoaded = false
   @propertiesLoaded = false
