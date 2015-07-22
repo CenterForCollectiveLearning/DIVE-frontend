@@ -206,6 +206,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @getAttributes = (type = {}) ->
     if @properties
       _attr = @properties.slice()
+      console.log("_attr", _attr)
 
       if type.secondary
         _attr = _.reject(_attr, (property) => property.label is @selectedParams.field_a)
@@ -224,6 +225,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     PropertiesService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
       @propertiesLoaded = true
       @properties = properties
+      console.log("Loaded properties", @properties)
     )
     return
 
