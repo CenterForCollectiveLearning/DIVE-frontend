@@ -39,6 +39,13 @@
             md-item-template
               span(md-highlight-text="searchQueryB") {{a.label}}
 
+      .filter-viz(flex='')
+        span.toggle-container(ng-repeat='visualizationType in builderCtrl.getVisualizationTypes()')
+          a.radio-button(href='', alt='visualizationType.label', title='visualizationType.label', ng-class="{'selected': visualizationType.selected, 'disabled': !visualizationType.enabled}", ng-click="builderCtrl.selectVisualizationType(visualizationType.type)")
+            .inner-button
+              img(src="{{visualizationType.icon}}")
+
+
   .toolbar-extension(ng-if="builderCtrl.selectedParams.field_a")
     .toolbar-extension-component(layout='row')
       h3.category-title
