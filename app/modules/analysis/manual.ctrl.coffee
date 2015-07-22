@@ -12,6 +12,12 @@ angular.module('diveApp.analysis').controller('ManualCtrl', ($scope, $rootScope,
   @ESTIMATORS = [
       title: 'Ordinary Least Squares'
       value: 'ols'
+    ,
+      title: 'Weighted Least Squares',
+      value: 'wls',
+    ,
+      title: 'Generalized Least Squares',
+      value: 'gls'
   ]
 
   @selectedDataset = null
@@ -72,6 +78,7 @@ angular.module('diveApp.analysis').controller('ManualCtrl', ($scope, $rootScope,
     PropertiesService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
       @propertiesLoaded = true
       @properties = properties
+      console.log("Retrieved properties")
     )
     return
 
