@@ -1,29 +1,40 @@
-a.radio-button
-  +input-container
+.combined-toggle-container
   display: inline-block
-  outline: none
+  border-radius: 2px
+  border: 1px solid $color-grey-light-2
 
-  &:hover
-    border-color: $color-grey-light-1
-    background-color: $color-off-white-1
+  .toggle-container:first-child
+    border-left-width: 0
 
-  &.selected
-    border-color: $color-grey-light-1
-    background-color: $color-grey-light-3
-    box-shadow: inset 1px 1px 2px 0 rgba(0, 0, 0, 0.08)
+  a.radio-button
+    +input-container
+    display: inline-block
+    outline: none
+    margin-left: 0
+    border-radius: 0
+    border-top-width: 0
+    border-bottom-width: 0
+    border-right-width: 0
+
+    &:hover
+      background-color: $color-off-white-1
+
+    &.selected
+      background-color: $color-grey-light-3
+      box-shadow: inset 1px 1px 2px 0 rgba(0, 0, 0, 0.08)
+
+      .inner-button
+        box-shadow: none
+
+    &.disabled
+      opacity: 0.31
+      pointer-events: none
 
     .inner-button
-      box-shadow: none
+      +input-box-shadow
+      +input-span
 
-  &.disabled
-    opacity: 0.31
-    pointer-events: none
-
-  .inner-button
-    +input-box-shadow
-    +input-span
-
-  img
-    height: 100%
-    padding: 3px
+    img
+      height: 100%
+      padding: 3px
 
