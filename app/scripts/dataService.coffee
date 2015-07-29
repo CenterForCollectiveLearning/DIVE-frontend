@@ -225,11 +225,26 @@ angular.module('diveApp.services').service('VisualizationDataService', ($http, $
         q.resolve(r.data)
 
       return q.promise
-      
   }
 )
 
-angular.module('diveApp.services').service 'ExportedVizSpecService', ($http, API_URL) ->
+angular.module('diveApp.services').service('StatisticsDataService', ($http, $rootScope, $q, API_URL) ->
+  return {
+    getStatisticsData: (params) ->
+      q = $q.defer()
+
+      console.log('Getting statistics with params:', params)
+      $http.post(API_URL + '/api/statistics_from_spec', {
+        pID: $rootScope.pID,
+        spec: params.spec,
+      }).then (r) =>
+        q.resolve(r.data)
+
+      return q.promise
+  }
+)
+
+angular.module('diveApp.services').service('ExportedVizSpecService', ($http, API_URL) ->
   return {
     getExportedVizData: (params, callback) ->
       if !params.pID
@@ -241,3 +256,4 @@ angular.module('diveApp.services').service 'ExportedVizSpecService', ($http, API
       return $http.post(API_URL + '/api/exported_spec', {params: params}).then (data) ->
         return callback(data)
   }
+)

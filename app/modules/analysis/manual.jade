@@ -1,0 +1,49 @@
+.viz-viewport(layout-fill='', layout='column', layout-align='starter', flex='')
+
+  md-toolbar.segmentation-block(ng-class="{'extended': manualCtrl.selectedParams.field_a}")
+    .md-toolbar-tools
+      h3.category-title
+        span Analyse
+
+      md-autocomplete(ng-if="manualCtrl.datasetsLoaded", md-items="d in manualCtrl.datasets", md-item-text="d.title", placeholder="Dataset", md-min-length="0", md-search-text="datasetQuery", md-selected-item="manualCtrl.selectedDataset", md-selected-item-change="manualCtrl.onSelectDataset(d)")
+        md-item-template
+          span(md-highlight-text="datasetQuery") {{d.title}}
+        md-not-found
+          span No matches found.
+
+      .first-segment-selector(ng-if="manualCtrl.selectedDataset")
+        .phrase
+          span with
+        .selector
+          md-select(ng-model="manualCtrl.selectedParams.model", md-on-close="manualCtrl.onSelectModel()")
+            md-option(ng-repeat="m in manualCtrl.MODELS", ng-value="m.value")
+              | {{ m.title }}
+
+      .second-segment-selector(ng-if="manualCtrl.selectedParams.model")
+        .phrase
+          span using
+        .selector
+          md-select(ng-model="manualCtrl.selectedParams.arguments.estimator", md-on-close="manualCtrl.onSelectEstimator()")
+            md-option(ng-repeat="e in manualCtrl.ESTIMATORS", ng-value="e.value")
+              | {{ e.title }}
+
+  .toolbar-extension.stats-parameters(ng-if="manualCtrl.selectedParams.model")
+    .toolbar-extension-component(layout='row')
+      h3.category-title
+        span Parameters
+
+      .indep-selector
+        .selector
+          md-autocomplete(md-items="a in manualCtrl.getAttributes()", md-item-text="a.label", placeholder="Dependent Variable", md-min-length="0", md-search-text="dependentFieldQuery", md-selected-item="manualCtrl.dep", md-selected-item-change="manualCtrl.onSelectDep()")
+            md-item-template
+              span(md-highlight-text="manualCtrl.selectedParams.arguments.dep") {{a.label}}
+
+      .dep-selector
+        .phrase
+          span against
+        .selector
+          md-autocomplete(md-items="a in manualCtrl.getAttributes()", md-item-text="a.label", placeholder="Independent Variable", md-min-length="0", md-search-text="independentFieldQuery", md-selected-item="manualCtrl.indep", md-selected-item-change="manualCtrl.onSelectIndep()")
+            md-item-template
+              span(md-highlight-text="manualCtrl.selectedParams.arguments.indep") {{a.label}}
+
+  .stats-data {{ manualCtrl.statsData }}
