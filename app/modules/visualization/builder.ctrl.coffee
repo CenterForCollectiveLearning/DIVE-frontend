@@ -134,6 +134,14 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @resetIsGrouping()
     return
 
+  @selectEntityDropdown = (entityName) ->
+    console.log('entity')
+    console.log(entityName)
+    console.log $("md-select-menu-container[ng-data-entity='#{entityName}']")
+    # $("md-select[ng-data-entity='#{entityName}']")[0].click()
+    $(".md-select-menu-container[ng-data-entity='#{entityName}']")[0].toggleClass('md-active')
+    return
+
   @onSelectDataset = (d) ->
     @setDataset(d)
     return
@@ -252,6 +260,9 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
     return _attr
 
+  @getEntities = () ->
+    return @entities
+
   @getVisualizationTypes = () ->
     _visualizationTypes = @VISUALIZATION_TYPE_DATA.slice()
 
@@ -265,12 +276,21 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @selectedVisualizationType = type
     return
 
+  @selectEntity = (entity) ->
+    return
+
   @datasetsLoaded = false
   @propertiesLoaded = false
 
   @resetParams()
 
   @retrieveProperties = () ->
+    PropertiesService.getEntities({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((entities) =>
+      @entitiesLoaded = true
+      @entities = entities
+      console.log("Loaded entities", @entities)
+    )
+
     PropertiesService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
       @propertiesLoaded = true
       @properties = properties

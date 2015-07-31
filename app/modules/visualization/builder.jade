@@ -11,13 +11,34 @@
         md-not-found
           span No matches found.
 
-      .first-segment-selector(ng-if="builderCtrl.selectedDataset && builderCtrl.propertiesLoaded")
-        .phrase
-          span by
-        .selector
-          md-autocomplete(md-items="a in builderCtrl.getAttributes({primary: true})", md-no-cache="true", md-item-text="a.label", placeholder="Field", md-min-length="0", md-search-text="searchQueryA", md-selected-item="builderCtrl.attributeA", md-selected-item-change="builderCtrl.onSelectFieldA()")
-            md-item-template
-              span(md-highlight-text="searchQueryA") {{a.label}}
+      .combined-toggle-container
+        span.toggle-container(ng-repeat='entity in builderCtrl.getEntities()')
+          .radio-button.text.dropdown(ng-class="{'selected': entity.selected}", ng-click="builderCtrl.selectEntityDropdown(entity.label)", ng-if="entity.child")
+            .inner-button
+              .inner-label
+                | {{ entity.label }}
+              .dropdown-button
+                span.md-select-icon
+
+              .md-select-menu-container(ng-data-entity="{{ entity.label }}")
+                md-select-menu
+                  md-content
+                    md-option(ng-repeat="childEntity in entity.child", ng-click="builderCtrl.selectChildEntity(entity.label, childEntity.label)")
+                      .md-text
+                        | {{ childEntity.label }}
+
+
+          a.radio-button.text.padded(href='', ng-class="{'selected': entity.selected}", ng-click="builderCtrl.selectEntity(entity.type)", ng-if="!entity.child")
+            .inner-button
+              | {{ entity.label }}
+
+      //- .first-segment-selector(ng-if="builderCtrl.selectedDataset && builderCtrl.propertiesLoaded")
+      //-   .phrase
+      //-     span by
+      //-   .selector
+      //-     md-autocomplete(md-items="a in builderCtrl.getAttributes({primary: true})", md-no-cache="true", md-item-text="a.label", placeholder="Field", md-min-length="0", md-search-text="searchQueryA", md-selected-item="builderCtrl.attributeA", md-selected-item-change="builderCtrl.onSelectFieldA()")
+      //-       md-item-template
+      //-         span(md-highlight-text="searchQueryA") {{a.label}}
 
       .second-segment-selector(ng-if="builderCtrl.selectedParams.field_a")
         .selector
@@ -39,7 +60,7 @@
             md-item-template
               span(md-highlight-text="searchQueryB") {{a.label}}
 
-      .filter-viz(flex='')
+      .filter-visualization(flex='')
         .combined-toggle-container
           span.toggle-container(ng-repeat='visualizationType in builderCtrl.getVisualizationTypes()')
             a.radio-button(href='', alt='visualizationType.label', title='visualizationType.label', ng-class="{'selected': visualizationType.selected, 'disabled': !visualizationType.enabled}", ng-click="builderCtrl.selectVisualizationType(visualizationType.type)")

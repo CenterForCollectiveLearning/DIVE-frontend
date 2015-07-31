@@ -1,23 +1,28 @@
 .combined-toggle-container
   display: inline-block
-  border-radius: 2px
-  border: 1px solid $color-grey-light-2
+  margin-left: 10px
 
-  .toggle-container:first-child
-    border-left-width: 0
+  .toggle-container
+    &:first-child a.radio-button
+      border-top-left-radius: 2px
+      border-bottom-left-radius: 2px
 
-  a.radio-button
+    &:last-child a.radio-button
+      border-top-right-radius: 2px
+      border-bottom-right-radius: 2px
+      border-right-width: 1px
+
+  .radio-button
     +input-container
     display: inline-block
     outline: none
     margin-left: 0
     border-radius: 0
-    border-top-width: 0
-    border-bottom-width: 0
     border-right-width: 0
 
-    &:hover
-      background-color: $color-off-white-1
+    &:not(.dropdown)
+      &:hover
+        background-color: $color-off-white-1
 
     &.selected
       background-color: $color-grey-light-3
@@ -30,6 +35,37 @@
       opacity: 0.31
       pointer-events: none
 
+    &.text
+      .inner-button
+        +input
+        max-width: 100px
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+
+    &.padded
+      .inner-button
+        padding-right: 15px
+
+    &.dropdown
+      .inner-button
+        padding-left: 0
+
+      .inner-label
+        padding-left: 15px
+        height: 33px
+
+        &:hover
+          background-color: $color-off-white-1        
+
+    .inner-button, .inner-label, .dropdown-button
+      display: inline-block
+      cursor: pointer
+
+    .inner-label
+      padding-right: 15px
+      vertical-align: top
+
     .inner-button
       +input-box-shadow
       +input-span
@@ -38,3 +74,30 @@
       height: 100%
       padding: 3px
 
+    .dropdown-button
+      width: 24px
+      height: 33px
+      border-left: 1px solid $color-grey-light-3
+
+      &:hover
+        background-color: $color-off-white-1
+
+      span.md-select-icon
+        align-items: flex-end
+        text-align: end
+        margin: 0 0 0 1px
+
+        font-size: 10px
+        color: #666
+        line-height: 34px
+
+        &:after
+          display: block
+          content: '\25BC'
+          position: relative
+          top: 1px
+          left: -7px
+          speak: none
+          -webkit-transform: scaleY(0.6) scaleX(1)
+          -ms-transform: scaleY(0.6) scaleX(1)
+          transform: scaleY(0.6) scaleX(1)

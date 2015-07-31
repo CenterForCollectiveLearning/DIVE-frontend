@@ -181,6 +181,27 @@ angular.module('diveApp.services').service('PropertiesService', ($http, $rootSco
       }).then (r) ->
         q.resolve(r.data.properties)
       return q.promise
+
+    getEntities: (params, callback) ->
+      q = $q.defer()
+      $http.get(API_URL + '/api/properties/v1/entities', {
+        params:
+          pID: $rootScope.pID
+          dID: params.dID
+      }).then (r) ->
+        q.resolve(r.data.entities)
+      return q.promise
+
+    getAttributes: (params, callback) ->
+      q = $q.defer()
+      $http.get(API_URL + '/api/properties/v1/attributes', {
+        params:
+          pID: $rootScope.pID
+          dID: params.dID
+      }).then (r) ->
+        q.resolve(r.data.attributes)
+      return q.promise
+
   }
 )
 
