@@ -135,10 +135,6 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @selectEntityDropdown = (entityName) ->
-    console.log('entity')
-    console.log(entityName)
-    console.log $("md-select-menu-container[ng-data-entity='#{entityName}']")
-    # $("md-select[ng-data-entity='#{entityName}']")[0].click()
     $(".md-select-menu-container[ng-data-entity='#{entityName}']")[0].toggleClass('md-active')
     return
 
