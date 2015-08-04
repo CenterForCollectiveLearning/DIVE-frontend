@@ -24,13 +24,6 @@
       &:hover
         background-color: $color-off-white-1
 
-    &.selected
-      background-color: $color-grey-light-3
-      box-shadow: inset 1px 1px 2px 0 rgba(0, 0, 0, 0.08)
-
-      .inner-button
-        box-shadow: none
-
     &.disabled
       opacity: 0.31
       pointer-events: none
@@ -38,10 +31,13 @@
     &.text
       .inner-button
         +input
-        max-width: 100px
-        white-space: nowrap
         overflow: hidden
-        text-overflow: ellipsis
+
+        .inner-label
+          max-width: 100px
+          white-space: nowrap
+          overflow: hidden
+          text-overflow: ellipsis
 
     &.padded
       .inner-button
@@ -52,19 +48,39 @@
         padding-left: 0
 
       .inner-label
-        padding-left: 15px
         height: 33px
+        padding-left: 15px
+        padding-right: 15px
+        vertical-align: top
 
         &:hover
-          background-color: $color-off-white-1        
+          background-color: $color-off-white-1     
+
+    &.selected
+      background-color: $color-grey-light-3
+      box-shadow: inset 1px 1px 2px 0 rgba(0, 0, 0, 0.08)
+
+      &:hover
+        background-color: darken($color-grey-light-3, 1%)
+
+      .inner-button
+        box-shadow: none
+
+      .inner-label
+        &:hover
+          background-color: darken($color-grey-light-3, 1%)
+
+      .dropdown-button
+        border-color: darken($color-grey-light-3, 5%)
+        background-color: $color-grey-light-3
+
+        &:hover
+          background-color: darken($color-grey-light-3, 3%)
 
     .inner-button, .inner-label, .dropdown-button
       display: inline-block
       cursor: pointer
-
-    .inner-label
-      padding-right: 15px
-      vertical-align: top
+      outline: none
 
     .inner-button
       +input-box-shadow
@@ -101,3 +117,10 @@
           -webkit-transform: scaleY(0.6) scaleX(1)
           -ms-transform: scaleY(0.6) scaleX(1)
           transform: scaleY(0.6) scaleX(1)
+
+.md-select-menu-container
+  font-weight: 400
+
+  md-option
+    &:hover
+      background-color: $color-grey-light-3

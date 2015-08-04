@@ -13,24 +13,28 @@
 
       .combined-toggle-container
         span.toggle-container(ng-repeat='entity in builderCtrl.getEntities()')
-          .radio-button.text.dropdown(ng-class="{'selected': entity.selected}", ng-click="builderCtrl.selectEntityDropdown(entity.label)", ng-if="entity.child")
+          .radio-button.text.dropdown(ng-class="{'selected': entity.selected}", ng-if="entity.child", ng-data-entity="{{ entity.label }}")
             .inner-button
-              .inner-label
-                | {{ entity.label }}
-              .dropdown-button
+              .inner-label(ng-click="builderCtrl.selectEntity(entity.activeLabel)")
+                | {{ entity.activeLabel }}
+              .dropdown-button(ng-click="builderCtrl.selectEntityDropdown(entity.label)")
                 span.md-select-icon
 
-              .md-select-menu-container(ng-data-entity="{{ entity.label }}")
+              .md-select-menu-container.md-clickable(ng-data-entity="{{ entity.label }}")
                 md-select-menu
                   md-content
+                    md-option(ng-click="builderCtrl.selectEntity(entity.label)")
+                      .md-text
+                        | {{ entity.label }}
                     md-option(ng-repeat="childEntity in entity.child", ng-click="builderCtrl.selectChildEntity(entity.label, childEntity.label)")
                       .md-text
                         | {{ childEntity.label }}
 
 
-          a.radio-button.text.padded(href='', ng-class="{'selected': entity.selected}", ng-click="builderCtrl.selectEntity(entity.type)", ng-if="!entity.child")
+          a.radio-button.text.padded(href='', ng-class="{'selected': entity.selected}", ng-click="builderCtrl.selectEntity(entity.label)", ng-if="!entity.child")
             .inner-button
-              | {{ entity.label }}
+              .inner-label
+                | {{ entity.label }}
 
       //- .first-segment-selector(ng-if="builderCtrl.selectedDataset && builderCtrl.propertiesLoaded")
       //-   .phrase

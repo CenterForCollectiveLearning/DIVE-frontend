@@ -104,6 +104,8 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @selectedDataset = null
 
+  @selectedChildEntities = {}
+
   @selectedConditional =
     'and': []
     'or': []
@@ -135,8 +137,26 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @selectEntityDropdown = (entityName) ->
-    $(".md-select-menu-container[ng-data-entity='#{entityName}']")[0].toggleClass('md-active')
+    @menu = $($(".md-select-menu-container[ng-data-entity='#{entityName}']")[0])
+    _button = $($(".radio-button[ng-data-entity='#{entityName}']")[0])
+
+    @menu.css('top', _button.offset().top + _button.height())
+    @menu.css('left', _button.offset().left)
+    @menu.remove()
+
+    @backdrop = $('<md-backdrop class="md-select-backdrop md-click-catcher md-default-theme"></md-backdrop>')
+    @backdrop.one('click', @closeMenu)
+
+    $(document.body).append(@backdrop)
+    $(document.body).append(@menu)
+    @menu.css('display', 'block')
+    @menu.addClass('md-active')
     return
+
+  @closeMenu = () ->
+    @menu.removeClass('md-active')
+    @menu.css('display', 'none')
+    @backdrop.remove()
 
   @onSelectDataset = (d) ->
     @setDataset(d)
@@ -257,7 +277,23 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return _attr
 
   @getEntities = () ->
-    return @entities
+    if @entities
+      _entities = @entities.slice()
+
+    else
+      _entities = []
+
+    for entity in _entities
+      if entity.child
+        entity.activeLabel = @selectedChildEntities[entity.label]
+        
+      if not entity.activeLabel
+        entity.activeLabel = entity.label
+
+      if @selectedEntityLabel
+        entity.selected = entity.activeLabel is @selectedEntityLabel
+
+    return _entities
 
   @getVisualizationTypes = () ->
     _visualizationTypes = @VISUALIZATION_TYPE_DATA.slice()
@@ -272,7 +308,15 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @selectedVisualizationType = type
     return
 
-  @selectEntity = (entity) ->
+  @selectEntity = (entityLabel) ->
+    @selectedEntityLabel = entityLabel
+    @closeMenu()
+    return
+
+  @selectChildEntity = (entityLabel, childEntityLabel) ->
+    @selectedChildEntities[entityLabel] = childEntityLabel
+    @selectEntity(childEntityLabel)
+    @closeMenu()
     return
 
   @datasetsLoaded = false
