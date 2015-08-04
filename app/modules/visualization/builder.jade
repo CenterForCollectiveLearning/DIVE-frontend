@@ -36,21 +36,7 @@
               .inner-label
                 | {{ entity.label }}
 
-      //- .first-segment-selector(ng-if="builderCtrl.selectedDataset && builderCtrl.propertiesLoaded")
-      //-   .phrase
-      //-     span by
-      //-   .selector
-      //-     md-autocomplete(md-items="a in builderCtrl.getAttributes({primary: true})", md-no-cache="true", md-item-text="a.label", placeholder="Field", md-min-length="0", md-search-text="searchQueryA", md-selected-item="builderCtrl.attributeA", md-selected-item-change="builderCtrl.onSelectFieldA()")
-      //-       md-item-template
-      //-         span(md-highlight-text="searchQueryA") {{a.label}}
-
-      .second-segment-selector(ng-if="builderCtrl.selectedParams.field_a")
-        .selector
-          md-select(ng-model="builderCtrl.selectedParams.operation", md-on-close="builderCtrl.onSelectOperation()")
-            md-option(ng-repeat="operation in builderCtrl.availableOperations", ng-value="operation.value")
-              | {{ operation.title }}
-
-      .third-segment-selector(ng-if="builderCtrl.isGrouping && builderCtrl.selectedParams.field_a")
+      .third-segment-selector(ng-if="builderCtrl.selectedParams.field_a")
         .selector
           md-select(ng-model="builderCtrl.selectedParams.arguments.function", md-on-close="builderCtrl.onSelectAggregationFunction()")
             md-option(ng-repeat="func in builderCtrl.availableAggregationFunctions", ng-value="func.value")

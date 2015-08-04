@@ -126,7 +126,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @selectedParams =
       dID: ''
       field_a: ''
-      operation: ''
+      operation: @OPERATIONS.NON_UNIQUE[0].value
       arguments:
         field_b: ''
         function: ''
@@ -154,9 +154,9 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @closeMenu = () ->
-    @menu.removeClass('md-active')
-    @menu.css('display', 'none')
-    @backdrop.remove()
+    @menu?.removeClass('md-active')
+    @menu?.css('display', 'none')
+    @backdrop?.remove()
 
   @onSelectDataset = (d) ->
     @setDataset(d)
@@ -310,7 +310,10 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @selectEntity = (entityLabel) ->
     @selectedEntityLabel = entityLabel
+    @selectedParams['field_a'] = entityLabel
+
     @closeMenu()
+    @refreshVisualization()
     return
 
   @selectChildEntity = (entityLabel, childEntityLabel) ->
