@@ -145,7 +145,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @menu.remove()
 
     @backdrop = $('<md-backdrop class="md-select-backdrop md-click-catcher md-default-theme"></md-backdrop>')
-    @backdrop.one('click', @closeMenu)
+    @backdrop.one('click', $.proxy(@closeMenu, @))
 
     $(document.body).append(@backdrop)
     $(document.body).append(@menu)
