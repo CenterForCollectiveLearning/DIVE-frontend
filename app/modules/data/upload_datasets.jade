@@ -22,3 +22,6 @@ md-toolbar
     | Select & upload a file
   span(ng-if="!uploading")
     | or drop files here to upload
+
+  span.error-message(ng-if="errorUploading")
+    | Looks like we had couldn't read that file, please try again.
