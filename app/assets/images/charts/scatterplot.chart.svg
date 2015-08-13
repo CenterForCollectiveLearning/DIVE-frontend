@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="27px" height="27px" viewBox="0 0 27 27" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.2 (12043) - http://www.bohemiancoding.com/sketch -->
+    <title>Group Copy 8</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="scatterplot" sketch:type="MSLayerGroup" transform="translate(-4.000000, 0.000000)" fill="#5D5D5D">
+            <g id="Group-Copy-9" transform="translate(5.000000, 5.000000)" sketch:type="MSShapeGroup">
+                <circle id="Oval" cx="17.5" cy="9.29003906" r="1.5"></circle>
+                <circle id="Oval" cx="14.5" cy="5.37988281" r="1.5"></circle>
+                <circle id="Oval" cx="5.5" cy="11.5100098" r="1.5"></circle>
+                <circle id="Oval" cx="11.5" cy="10.8000488" r="1.5"></circle>
+                <circle id="Oval" cx="20.5" cy="2.44995117" r="1.5"></circle>
+                <circle id="Oval" cx="8.5" cy="15.7199707" r="1.5"></circle>
+                <path d="M1.325,18.5 L1.325,2.35" id="Line-Copy" stroke="#5D5D5D" stroke-width="0.65" stroke-linecap="square"></path>
+                <path d="M1.5,18.5 L22.4985733,18.5" id="Line-Copy-3" stroke="#5D5D5D" stroke-width="0.65" stroke-linecap="square"></path>
+            </g>
+        </g>
+    </g>
+</svg>

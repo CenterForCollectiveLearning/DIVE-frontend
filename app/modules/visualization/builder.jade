@@ -11,21 +11,32 @@
         md-not-found
           span No matches found.
 
-      .first-segment-selector(ng-if="builderCtrl.selectedDataset && builderCtrl.propertiesLoaded")
-        .phrase
-          span by
-        .selector
-          md-autocomplete(md-items="a in builderCtrl.getAttributes({primary: true})", md-no-cache="true", md-item-text="a.label", placeholder="Field", md-min-length="0", md-search-text="searchQueryA", md-selected-item="builderCtrl.attributeA", md-selected-item-change="builderCtrl.onSelectFieldA()")
-            md-item-template
-              span(md-highlight-text="searchQueryA") {{a.label}}
+      .combined-toggle-container
+        span.toggle-container(ng-repeat='entity in builderCtrl.getEntities()')
+          .radio-button.text.dropdown(ng-class="{'selected': entity.selected}", ng-if="entity.child", ng-data-entity="{{ entity.label }}")
+            .inner-button
+              .inner-label(ng-click="builderCtrl.selectEntity(entity.activeLabel)")
+                | {{ entity.activeLabel }}
+              .dropdown-button(ng-click="builderCtrl.selectEntityDropdown(entity.label)")
+                span.md-select-icon
 
-      .second-segment-selector(ng-if="builderCtrl.selectedParams.field_a")
-        .selector
-          md-select(ng-model="builderCtrl.selectedParams.operation", md-on-close="builderCtrl.onSelectOperation()")
-            md-option(ng-repeat="operation in builderCtrl.availableOperations", ng-value="operation.value")
-              | {{ operation.title }}
+              .md-select-menu-container.md-clickable(ng-data-entity="{{ entity.label }}")
+                md-select-menu
+                  md-content
+                    md-option(ng-click="builderCtrl.selectEntity(entity.label)")
+                      .md-text
+                        | {{ entity.label }}
+                    md-option(ng-repeat="childEntity in entity.child", ng-click="builderCtrl.selectChildEntity(entity.label, childEntity.label)")
+                      .md-text
+                        | {{ childEntity.label }}
 
-      .third-segment-selector(ng-if="builderCtrl.isGrouping && builderCtrl.selectedParams.field_a")
+
+          a.radio-button.text.padded(href='', ng-class="{'selected': entity.selected}", ng-click="builderCtrl.selectEntity(entity.label)", ng-if="!entity.child")
+            .inner-button
+              .inner-label
+                | {{ entity.label }}
+
+      .third-segment-selector(ng-if="builderCtrl.selectedParams.field_a")
         .selector
           md-select(ng-model="builderCtrl.selectedParams.arguments.function", md-on-close="builderCtrl.onSelectAggregationFunction()")
             md-option(ng-repeat="func in builderCtrl.availableAggregationFunctions", ng-value="func.value")
@@ -38,6 +49,14 @@
           md-autocomplete(md-items="a in builderCtrl.getAttributes({secondary: true})", md-item-text="a.label", placeholder="Field", md-min-length="0", md-search-text="searchQueryB", md-selected-item="builderCtrl.attributeB", md-selected-item-change="builderCtrl.onSelectFieldB()")
             md-item-template
               span(md-highlight-text="searchQueryB") {{a.label}}
+
+      .filter-visualization(flex='')
+        .combined-toggle-container
+          span.toggle-container(ng-repeat='visualizationType in builderCtrl.getVisualizationTypes()')
+            a.radio-button(href='', alt='visualizationType.label', title='visualizationType.label', ng-class="{'selected': visualizationType.selected, 'disabled': !visualizationType.enabled}", ng-click="builderCtrl.selectVisualizationType(visualizationType.type)")
+              .inner-button
+                img(src="{{visualizationType.icon}}")
+
 
   .toolbar-extension(ng-if="builderCtrl.selectedParams.field_a")
     .toolbar-extension-component(layout='row')
@@ -72,7 +91,7 @@
         md-item-template
           span(md-highlight-text="builderCtrl.conditional1.criteria") {{value}}
 
-  visualization(spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData')
+  visualization(type='builderCtrl.selectedVisualizationType', spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData')
     md-content(flex='', layout='column')
       .visualization(flex='', layout='row')
         .left-side(layout='column', flex='')

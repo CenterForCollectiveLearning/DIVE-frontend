@@ -14,8 +14,8 @@
       margin-left: 0
 
   md-input-container
-    margin-left: 14px
-    margin-right: 14px
+    margin-left: 10px
+    margin-right: 10px
 
 md-toolbar
   $toolbar-height: 56px
@@ -41,10 +41,22 @@ md-toolbar
     line-height: $item-height
 
     span
-      margin-left: 14px
+      margin-left: 10px
 
   .actions
     text-align: right
+
+.stats-parameters
+  $item-height: 35px
+  .phrase, .selector
+    display: inline-block
+    vertical-align: middle
+    height: $item-height
+  .phrase
+    line-height: $item-height
+
+    span
+      margin-left: 14px
 
 .toolbar-extension
   background-color: $color-grey-light-3
@@ -62,3 +74,6 @@ md-toolbar
 
     .md-title
       font-size: 15px
+
+.filter-viz
+  text-align: right

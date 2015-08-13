@@ -1,4 +1,4 @@
-<div class="dive-heading" flex=15>
+<div class="dive-heading">
 	<div class="logo" ui-sref="landing">
 		<img src="assets/images/DIVE_logo_white.svg" />
 	</div>
@@ -6,12 +6,7 @@
 		<div class="title" ui-sref="landing">DIVE</div>
 	</div>
 </div>
-<md-tabs md-no-ink md-selected="selectedIndex" flex=55>
+
+<md-tabs md-no-ink md-selected="selectedIndex" flex>
 	<md-tab ng-repeat="tab in tabs" label="{{tab.label}}"></md-tab>
 </md-tabs>
-<div class="user-status" flex=30 ng-if="loggedIn">
-	<span >
-		Logged in as <span class="username"> {{ user.displayName }}</span>
-		(<a class='logout' href="/logout">Logout</a>)
-	</span>
-</div>
