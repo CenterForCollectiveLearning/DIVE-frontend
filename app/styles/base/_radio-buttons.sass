@@ -1,0 +1,126 @@
+.combined-toggle-container
+  display: inline-block
+  margin-left: 10px
+
+  .toggle-container
+    &:first-child .radio-button
+      border-top-left-radius: 2px
+      border-bottom-left-radius: 2px
+
+    &:last-child .radio-button
+      border-top-right-radius: 2px
+      border-bottom-right-radius: 2px
+      border-right-width: 1px
+
+  .radio-button
+    +input-container
+    display: inline-block
+    outline: none
+    margin-left: 0
+    border-radius: 0
+    border-right-width: 0
+
+    &:not(.dropdown)
+      &:hover
+        background-color: $color-off-white-1
+
+    &.disabled
+      opacity: 0.31
+      pointer-events: none
+
+    &.text
+      .inner-button
+        +input
+        overflow: hidden
+
+        .inner-label
+          max-width: 100px
+          white-space: nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+
+    &.padded
+      .inner-button
+        padding-right: 15px
+
+    &.dropdown
+      .inner-button
+        padding-left: 0
+
+      .inner-label
+        height: 33px
+        padding-left: 15px
+        padding-right: 15px
+        vertical-align: top
+
+        &:hover
+          background-color: $color-off-white-1     
+
+    &.selected
+      background-color: $color-grey-light-3
+      box-shadow: inset 1px 1px 2px 0 rgba(0, 0, 0, 0.08)
+
+      &:hover
+        background-color: darken($color-grey-light-3, 1%)
+
+      .inner-button
+        box-shadow: none
+
+      .inner-label
+        &:hover
+          background-color: darken($color-grey-light-3, 1%)
+
+      .dropdown-button
+        border-color: darken($color-grey-light-3, 5%)
+        background-color: $color-grey-light-3
+
+        &:hover
+          background-color: darken($color-grey-light-3, 3%)
+
+    .inner-button, .inner-label, .dropdown-button
+      display: inline-block
+      cursor: pointer
+      outline: none
+
+    .inner-button
+      +input-box-shadow
+      +input-span
+
+    img
+      height: 100%
+      padding: 3px
+
+    .dropdown-button
+      width: 24px
+      height: 33px
+      border-left: 1px solid $color-grey-light-3
+
+      &:hover
+        background-color: $color-off-white-1
+
+      span.md-select-icon
+        align-items: flex-end
+        text-align: end
+        margin: 0 0 0 1px
+
+        font-size: 10px
+        color: #666
+        line-height: 34px
+
+        &:after
+          display: block
+          content: '\25BC'
+          position: relative
+          top: 1px
+          left: -7px
+          speak: none
+          -webkit-transform: scaleY(0.6) scaleX(1)
+          -ms-transform: scaleY(0.6) scaleX(1)
+          transform: scaleY(0.6) scaleX(1)
+
+.md-select-menu-container
+  font-weight: 400
+
+  md-option
+    &:hover
+      background-color: $color-grey-light-3
