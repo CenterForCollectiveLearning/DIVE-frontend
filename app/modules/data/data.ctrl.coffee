@@ -3,6 +3,7 @@ require 'handsontable'
 
 angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload, API_URL, pIDRetrieved, datasetsListRetrieved) ->
   $scope.uploading = false
+  $scope.errorUploading = false
 
   $scope.onFileSelect = (files) ->
     i = 0
@@ -28,6 +29,10 @@ angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload,
 
             $scope.selectDataset dataset
             $scope.uploading = false
+            $scope.errorUploading = false
+        ).error((jqXHR, textStatus, errorThrown) =>
+          $scope.uploading = false
+          $scope.errorUploading = true
         )
         results.push i++
       return results
