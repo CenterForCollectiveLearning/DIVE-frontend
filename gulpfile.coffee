@@ -16,7 +16,7 @@ runSequence = require('run-sequence')
 isProd = gutil.env.type == 'prod'
 
 changedFile = (file) ->
-  # refresh.changed file.path
+  refresh.changed file.path
   return
 
 sources =
@@ -38,14 +38,14 @@ destinations =
 
 # Modules for webserver and livereload
 express = require('express')
-# refresh = require('gulp-livereload')
-# liveReload = require('connect-livereload')
-# liveReloadPort = 35729
+refresh = require('gulp-livereload')
+liveReload = require('connect-livereload')
+liveReloadPort = 35729
 serverPort = 7000
 
 server = express()
 server.set 'view engine', 'jade'
-# server.use liveReload(port: liveReloadPort) # Add live reload
+server.use liveReload(port: liveReloadPort) # Add live reload
 server.use express.static('dist') # Use our 'dist' folder as rootfolder
 server.all '/*', (req, res) ->  # Because I like HTML5 pushstate .. this redirects everything back to our index.html
   res.sendFile 'index.html', root: 'dist'
@@ -95,9 +95,9 @@ gulp.task 'lib', ->
 
 gulp.task 'server', ->
   gutil.log 'Express Server Running on Port:', gutil.colors.cyan(serverPort)
-  # gutil.log 'LiveReload Server Running on Port:', gutil.colors.cyan(liveReloadPort)
+  gutil.log 'LiveReload Server Running on Port:', gutil.colors.cyan(liveReloadPort)
   server.listen(serverPort)
-  # refresh.listen(liveReloadPort)
+  refresh.listen(liveReloadPort)
   return
 
 gulp.task 'watch', ->
