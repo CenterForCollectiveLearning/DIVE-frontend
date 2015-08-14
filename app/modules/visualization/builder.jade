@@ -91,7 +91,20 @@
         md-item-template
           span(md-highlight-text="builderCtrl.conditional1.criteria") {{value}}
 
-  visualization(type='builderCtrl.selectedVisualizationType', spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData')
+  .gallery(ng-if="!builderCtrl.selectedEntityLabel", layout="row")
+    .visualization-group(ng-repeat='entity in builderCtrl.getFlattenedEntities()', flex="33")
+        .visualization-group-button(ng-click="builderCtrl.selectEntity(entity.label, entity.parentLabel)")
+          .header
+            | {{entity.label}}
+
+          .entity-values
+            .entity-value(ng-repeat='value in entity.values | limitTo: 8')
+              | {{value}}
+            .entity-value(ng-if='entity.values.length > 8')
+              | (and {{ entity.values.length - 8 }} more)
+
+
+  visualization(type='builderCtrl.selectedVisualizationType', spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData', ng-if="builderCtrl.selectedEntityLabel")
     md-content(flex='', layout='column')
       .visualization(flex='', layout='row')
         .left-side(layout='column', flex='')
