@@ -167,6 +167,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
     @selectedDataset = d
     @selectedParams.dID = d.dID
+    @selectedEntityLabel = null
 
     @retrieveProperties()
     return
@@ -276,14 +277,13 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
     return _attr
 
-  @getEntities = () ->
+  @getEntities = ->
     if @entities
-      _entities = @entities.slice()
-
+      entities = @entities.slice()
     else
-      _entities = []
+      entities = []
 
-    for entity in _entities
+    for entity in entities
       if entity.child
         entity.activeLabel = @selectedChildEntities[entity.label]
         
@@ -293,7 +293,21 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       if @selectedEntityLabel
         entity.selected = entity.activeLabel is @selectedEntityLabel
 
-    return _entities
+    return entities
+
+  @getFlattenedEntities = () ->
+    entities = []
+
+    if @entities
+      for entity in @entities.slice()
+        entities.push(entity)
+
+        if entity.child
+          for child in entity.child
+            child.parentLabel = entity.label
+            entities.push(child)
+
+    return entities  
 
   @getVisualizationTypes = () ->
     _visualizationTypes = @VISUALIZATION_TYPE_DATA.slice()
@@ -308,12 +322,16 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @selectedVisualizationType = type
     return
 
-  @selectEntity = (entityLabel) ->
-    @selectedEntityLabel = entityLabel
-    @selectedParams['field_a'] = entityLabel
+  @selectEntity = (entityLabel, parentEntityLabel) ->
+    if parentEntityLabel
+      @selectChildEntity(parentEntityLabel, entityLabel)
 
-    @closeMenu()
-    @refreshVisualization()
+    else
+      @selectedEntityLabel = entityLabel
+      @selectedParams['field_a'] = entityLabel
+
+      @closeMenu()
+      @refreshVisualization()
     return
 
   @selectChildEntity = (entityLabel, childEntityLabel) ->
