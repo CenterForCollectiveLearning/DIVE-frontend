@@ -111,6 +111,6 @@
           md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
           #viz-container(flex='')
 
-  datatable(ng-if='builderCtrl.tableData.data' data='builderCtrl.tableData.data', selector=".datatable", headers='builderCtrl.tableData.columns', rowheader='false', height=1000, sortindex=1, sortorder='false')
+  datatable(ng-if='builderCtrl.tableData.data && builderCtrl.selectedEntityLabel' data='builderCtrl.tableData.data', selector=".datatable", headers='builderCtrl.tableData.columns', rowheader='false', height=1000, sortindex=1, sortorder='false')
     .datatable
 

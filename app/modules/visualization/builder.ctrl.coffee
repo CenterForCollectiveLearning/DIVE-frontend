@@ -125,11 +125,18 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
     @selectedParams =
       dID: ''
-      field_a: ''
-      operation: @OPERATIONS.NON_UNIQUE[0].value
-      arguments:
-        field_b: ''
-        function: ''
+
+    @resetDIDParams()
+    return
+
+  @resetDIDParams = ->
+    @selectedParams['field_a'] = ''
+    @selectedParams['operation'] = @OPERATIONS.NON_UNIQUE[0].value
+    @selectedParams['arguments'] =
+      field_b: ''
+      function: ''
+
+    @selectedEntityLabel = null
 
     @attributeA = ' ' # the autocomplete field doesn't refresh if attributeA is null or ''
     @attributeB = null
@@ -167,7 +174,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
     @selectedDataset = d
     @selectedParams.dID = d.dID
-    @selectedEntityLabel = null
+    
 
     @retrieveProperties()
     return
@@ -290,8 +297,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       if not entity.activeLabel
         entity.activeLabel = entity.label
 
-      if @selectedEntityLabel
-        entity.selected = entity.activeLabel is @selectedEntityLabel
+      entity.selected = entity.activeLabel is @selectedEntityLabel
 
     return entities
 
@@ -323,15 +329,17 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @selectEntity = (entityLabel, parentEntityLabel) ->
+    if @selectedEntityLabel is entityLabel
+      return @resetDIDParams()
+
     if parentEntityLabel
-      @selectChildEntity(parentEntityLabel, entityLabel)
+      return @selectChildEntity(parentEntityLabel, entityLabel)
 
-    else
-      @selectedEntityLabel = entityLabel
-      @selectedParams['field_a'] = entityLabel
+    @selectedEntityLabel = entityLabel
+    @selectedParams['field_a'] = entityLabel
 
-      @closeMenu()
-      @refreshVisualization()
+    @closeMenu()
+    @refreshVisualization()
     return
 
   @selectChildEntity = (entityLabel, childEntityLabel) ->
