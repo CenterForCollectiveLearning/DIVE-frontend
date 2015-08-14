@@ -2,7 +2,7 @@
   position: relative
   +card-shadow
   +font
-  background-color: $color-slate
+  background: linear-gradient(to bottom right, $color-slate-gradient-dark, $color-slate-gradient-bright)
   color: $color-white
   font-size: 14px
   height: 48px
@@ -42,12 +42,13 @@
 
       &.md-active, &.md-focused
         color: $color-white
+        background-color: $color-slate-darker
 
       &:hover
         color: lighten($color-slate-lighter, 5%)
 
     md-ink-bar
-      background-color: $color-slate-lighter
+      background-color: $color-slate-darkest
 
   .user-status
     +small-caps
