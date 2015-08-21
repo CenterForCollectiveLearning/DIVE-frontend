@@ -15,10 +15,10 @@ md-toolbar
           span(md-highlight-text="searchQueryDataset") {{d.title}}
 
 // Upload
-.drop(ng-show='dropSupported', ng-file-drop='onFileSelect($files)', ng-file-drop-available='dropSupported=true', ng-file-drag-over-class='dragOverClass($event)', ng-file-drag-over-delay='100', flex='', layout="column", layout-align="center center", layout-margin)
+.drop(ng-show='dropSupported', ngf-drop='onFileSelect($files)', ngf-drop-available='dropSupported=true', ngf-drag-over-class='dragOverClass($event)', ngf-drag-over-delay='100', flex='', layout="column", layout-align="center center", layout-margin)
   md-progress-circular(ng-if="uploading", md-mode='indeterminate')
 
-  button.md-button.md-light.md-raised.md-primary(ng-if="!uploading", ng-file-select='onFileSelect($files)', data-multiple='true', title='select file', onclick='this.value = null')
+  button.md-button.md-light.md-raised.md-primary(ng-if="!uploading", ngf-select='onFileSelect($files)', data-multiple='true', title='select file', onclick='this.value = null')
     | Select & upload a file
   span(ng-if="!uploading")
     | or drop files here to upload

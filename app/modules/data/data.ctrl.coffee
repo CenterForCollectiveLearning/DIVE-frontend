@@ -1,7 +1,7 @@
 _ = require('underscore')
 require 'handsontable'
 
-angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload, API_URL, pIDRetrieved, datasetsListRetrieved) ->
+angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, Upload, API_URL, pIDRetrieved, datasetsListRetrieved) ->
   $scope.uploading = false
   $scope.errorUploading = false
 
@@ -15,7 +15,7 @@ angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, $upload,
       while i < files.length
         file = files[i]
 
-        $scope.upload = $upload.upload(
+        $scope.upload = Upload.upload(
           url: API_URL + '/api/upload'
           data: pID: $scope.pID
           file: file).progress((evt) ->
@@ -88,7 +88,7 @@ angular.module('diveApp.data').controller 'PreloadedDataCtrl', ($scope, Preloade
     return
 
   $scope.addPreloadedDataset = (d) ->
-    params = 
+    params =
       dID: d.dID
       pID: $scope.pID
 
@@ -121,7 +121,7 @@ angular.module('diveApp.data').controller 'DataCtrl', ($scope, $state, DataServi
     ).catch (failure) ->
       console.log 'fail'
       console.log failure
-    
+
     return
 
   $scope.sections = [
