@@ -52,7 +52,7 @@ angular.module('diveApp.visualization').controller('VisualizationConditionalsCtr
   $scope.selectConditional = (spec) ->
     if spec.name of $scope.selCondVals[$scope.currentdID]
       delete $scope.selCondVals[$scope.currentdID][spec.name]
-    params = 
+    params =
       dID: $scope.currentdID
       spec: _.omit(spec, 'stats')
       pID: $scope.pID
@@ -82,7 +82,7 @@ angular.module('diveApp.visualization').controller('VisualizationExportCtrl', ($
     # Show toast
     $mdToast.show $mdToast.simple().content('Visualization added to collection').position($scope.getToastPosition()).hideDelay(3000)
     # Hit endpoint
-    params = 
+    params =
       pID: $scope.pID
       spec: $scope.selectedSpec
       conditional: $scope.selCondVals

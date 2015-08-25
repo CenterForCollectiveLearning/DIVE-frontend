@@ -1,7 +1,7 @@
 require('angular');
-require('angular-file-upload');
+require('ng-file-upload');
 
-angular.module('diveApp.data', ['diveApp.services', 'angularFileUpload']);
+angular.module('diveApp.data', ['diveApp.services', 'ngFileUpload']);
 
 require('./data.ctrl');
 require('../base/datatable.directive');
