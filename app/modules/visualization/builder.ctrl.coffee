@@ -1,4 +1,4 @@
-angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $rootScope, DataService, PropertiesService, VisualizationDataService, pIDRetrieved) ->
+angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $rootScope, DataService, PropertiesService, VisualizationDataService, VizSpecService, pIDRetrieved) ->
 
   @ATTRIBUTE_TYPES =
     NUMERIC: ["int", "float"]
@@ -7,16 +7,16 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @AGGREGATION_FUNCTIONS = [
       title: 'count'
       value: 'count'
-    , 
+    ,
       title: 'sum'
       value: 'sum'
-    , 
+    ,
       title: 'minimum'
       value: 'min'
     ,
       title: 'maximum'
       value: 'max'
-    , 
+    ,
       title: 'average'
       value: 'mean'
   ]
@@ -52,7 +52,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @OPERATORS = {
     NUMERIC: [
-        title: '=' 
+        title: '='
         value: '=='
       ,
         title: '≠'
@@ -174,7 +174,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
     @selectedDataset = d
     @selectedParams.dID = d.dID
-    
+
 
     @retrieveProperties()
     return
@@ -293,7 +293,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     for entity in entities
       if entity.child
         entity.activeLabel = @selectedChildEntities[entity.label]
-        
+
       if not entity.activeLabel
         entity.activeLabel = entity.label
 
@@ -313,7 +313,10 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
             child.parentLabel = entity.label
             entities.push(child)
 
-    return entities  
+    return entities
+
+  @getSpecs = () ->
+    return @specs
 
   @getVisualizationTypes = () ->
     _visualizationTypes = @VISUALIZATION_TYPE_DATA.slice()
@@ -350,6 +353,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @datasetsLoaded = false
   @propertiesLoaded = false
+  @specsLoaded = false
 
   @resetParams()
 
@@ -373,6 +377,13 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       @datasets = datasets
       @setDataset(datasets[0])
       console.log("Datasets loaded!", @datasets)
+    )
+
+    vizSpecServiceParams = {}
+    VizSpecService.getVizSpecs(vizSpecServiceParams).then((specs) =>
+      @specsLoaded = true
+      @specs = specs
+      console.log("Specs loaded!", @specs)
     )
   )
 

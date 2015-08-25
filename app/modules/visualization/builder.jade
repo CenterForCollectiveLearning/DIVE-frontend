@@ -92,6 +92,13 @@
           span(md-highlight-text="builderCtrl.conditional1.criteria") {{value}}
 
   .gallery(ng-if="!builderCtrl.selectedEntityLabel", layout="row")
+    .section-header Significant Visualizations
+    .visualization-group(ng-repeat='spec in builderCtrl.getSpecs()', flex="33")
+        .visualization-group-button
+          .header
+            | {{spec.label}}
+          {{spec.score}}
+    .section-header All Visualizations
     .visualization-group(ng-repeat='entity in builderCtrl.getFlattenedEntities()', flex="33")
         .visualization-group-button(ng-click="builderCtrl.selectEntity(entity.label, entity.parentLabel)")
           .header
@@ -113,4 +120,3 @@
 
   datatable(ng-if='builderCtrl.tableData.data && builderCtrl.selectedEntityLabel' data='builderCtrl.tableData.data', selector=".datatable", headers='builderCtrl.tableData.columns', rowheader='false', height=1000, sortindex=1, sortorder='false')
     .datatable
-

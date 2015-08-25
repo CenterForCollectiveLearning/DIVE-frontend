@@ -6,7 +6,7 @@ angular.module 'diveApp.services', [ 'ui.router' ]
 
 # Every service corresponds to a single type of entity (and all actions on it) or an atomic action
 
-angular.module('diveApp.services').service 'ProjectService', ($http, API_URL) ->
+angular.module('diveApp.services').service('ProjectService', ($http, API_URL) ->
   return {
     getProjects: (params) ->
       console.log 'Getting Datasets with params:', params
@@ -40,8 +40,9 @@ angular.module('diveApp.services').service 'ProjectService', ($http, API_URL) ->
         console.log status
         return
   }
+)
 
-angular.module('diveApp.services').service 'ProjectIDService', ($http, $stateParams, $rootScope, API_URL) ->
+angular.module('diveApp.services').service('ProjectIDService', ($http, $stateParams, $rootScope, API_URL) ->
   return {
     getProjectID: (params) ->
       if params and params.userName
@@ -59,9 +60,10 @@ angular.module('diveApp.services').service 'ProjectIDService', ($http, $statePar
         console.error 'Error getting projectID', r.data, r.status
         return
   }
+)
 
 angular.module('diveApp.services').service('DataService', ($http, $rootScope, $q, API_URL) ->
-  return { 
+  return {
     getDatasets: (params) ->
       q = $q.defer()
 
@@ -78,7 +80,7 @@ angular.module('diveApp.services').service('DataService', ($http, $rootScope, $q
       q = $q.defer()
       console.log 'dID'
       console.log dID
-      
+
       $http.get(API_URL + "/api/datasets/#{dID}", {
         params:
           pID: $rootScope.pID
@@ -101,7 +103,7 @@ angular.module('diveApp.services').service('PreloadedDataService', ($http, API_U
   }
 )
 
-angular.module('diveApp.services').factory 'AuthService', ($http, $rootScope, localStorageService, API_URL) ->
+angular.module('diveApp.services').factory('AuthService', ($http, $rootScope, localStorageService, API_URL) ->
   return {
     # DO THIS CORRECTLY
     isAuthenticated: ->
@@ -167,8 +169,8 @@ angular.module('diveApp.services').factory 'AuthService', ($http, $rootScope, lo
         'userName': localStorageService.get('userName')
         'displayName': localStorageService.get('displayName')
       }
-
   }
+)
 
 angular.module('diveApp.services').service('PropertiesService', ($http, $rootScope, $q, API_URL) ->
   return {
@@ -201,23 +203,25 @@ angular.module('diveApp.services').service('PropertiesService', ($http, $rootSco
       }).then (r) ->
         q.resolve(r.data.attributes)
       return q.promise
-
   }
 )
 
-angular.module('diveApp.services').service 'SpecificationService', ($http, API_URL) ->
+angular.module('diveApp.services').service('VizSpecService', ($http, $rootScope, $q, API_URL) ->
   return {
-    getSpecifications: (params, callback) ->
-      console.log 'Getting specifications with params', params
-      $http.get(API_URL + '/api/specification', {
+    getVizSpecs: (params) ->
+      q = $q.defer()
+      console.log 'Getting visualization specifications with params', params
+      $http.get(API_URL + '/api/viz_specs', {
         params:
-          pID: params.pID
-      }).then (r) ->
-        console.log 'Got specs', r.data
-        return callback(r.data)
+          pID: $rootScope.pID
+      }).then((r) ->
+        q.resolve(r.data.specs)
+      )
+      return q.promise
   }
+)
 
-angular.module('diveApp.services').service 'ConditionalDataService', ($http, API_URL) ->
+angular.module('diveApp.services').service('ConditionalDataService', ($http, API_URL) ->
   return {
     getConditionalData: (params, callback) ->
       console.log 'Getting conditional data, pID:', params
@@ -230,6 +234,7 @@ angular.module('diveApp.services').service 'ConditionalDataService', ($http, API
       }).then (r) ->
         return callback(r.data)
   }
+)
 
 angular.module('diveApp.services').service('VisualizationDataService', ($http, $rootScope, $q, API_URL) ->
   return {
