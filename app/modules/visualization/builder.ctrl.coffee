@@ -101,7 +101,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @ALL_TIME_ATTRIBUTE = {
     label: "All Time"
-    type: "float"
+    type: "string"
     child: []
   }
 
@@ -325,6 +325,9 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
     return entities
 
+  @getProperties = ->
+    return @properties
+
   @getFlattenedEntities = () ->
     entities = []
 
@@ -392,6 +395,12 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       @attributesLoaded = true
       @processAttributes(attributes)
       console.log("Loaded attributes", attributes)
+    )
+
+    PropertiesService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
+      @propertiesLoaded = true
+      @properties = properties
+      console.log("Loaded properties", @properties)
     )
     return
 
