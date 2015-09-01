@@ -32,7 +32,14 @@ diveApp = angular.module('diveApp', [
   'diveApp.analysis'
   'diveApp.export'
   'diveApp.embed'
-]).constant('API_URL', 'http://localhost:8888')
+])
+
+diveApp.service("Config", ->
+  if (window.location.host.indexOf('localhost') > -1)
+    @API = 'http://localhost:8888'
+  else
+    @API = 'http://deployment'
+)
 
 diveApp.config (($mdThemingProvider) ->
   $mdThemingProvider.theme('default').primaryPalette('blue-grey').accentPalette 'light-blue'

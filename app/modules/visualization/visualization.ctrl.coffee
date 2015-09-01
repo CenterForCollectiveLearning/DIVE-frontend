@@ -95,7 +95,7 @@ angular.module('diveApp.visualization').controller('VisualizationExportCtrl', ($
     tmp = document.getElementById('viz-container')
     svg = tmp.getElementsByTagName('svg')[0]
     svg_xml = (new XMLSerializer).serializeToString(svg)
-    $http.post(API_URL + '/api/render_svg', data: JSON.stringify(
+    $http.post(Config.API + '/api/render_svg', data: JSON.stringify(
       format: format
       svg: svg_xml)).success (data) ->
       file = undefined

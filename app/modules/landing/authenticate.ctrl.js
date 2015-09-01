@@ -1,6 +1,6 @@
 var CryptoJS = require('crypto-js');
 
-angular.module('diveApp.landing').controller("AuthenticateCtrl", function($scope, $rootScope, $http, $state, AuthService, API_URL) {
+angular.module('diveApp.landing').controller("AuthenticateCtrl", function($scope, $rootScope, $http, $state, AuthService, Config) {
   $scope.loginUser = function(userName, password) {
     if (userName && password) {
       var encPassword = CryptoJS.SHA3(password).toString(CryptoJS.enc.Hex)

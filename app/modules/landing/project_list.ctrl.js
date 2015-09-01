@@ -1,4 +1,4 @@
-angular.module('diveApp.landing').controller('ProjectListCtrl', function($scope, $http, $state, projects, AuthService, API_URL) {
+angular.module('diveApp.landing').controller('ProjectListCtrl', function($scope, $http, $state, projects, AuthService, Config) {
   console.log("In ProjectListCtrl", projects);
   $scope.projects = projects;
 
@@ -19,7 +19,7 @@ angular.module('diveApp.landing').controller('ProjectListCtrl', function($scope,
     pID = project.pID;
     console.log('Removing project, pID:', pID);
     $scope.projects.splice(index, 1);
-    return $http["delete"](API_URL + '/api/project', {
+    return $http["delete"](Config.API + '/api/project', {
       params: {
         pID: pID
       }

@@ -42,10 +42,10 @@ angular.module('diveApp.visualization').controller("ExportSideNavCtrl", function
   $scope.selectType = function(t) {
     $scope.selectedType = t;
   }
-});  
+});
 
 
-angular.module('diveApp.export').controller("ExportCtrl", function($scope, $http, VizDataService, ExportedVizSpecService, API_URL, pID) {
+angular.module('diveApp.export').controller("ExportCtrl", function($scope, $http, VizDataService, ExportedVizSpecService, Config, pID) {
   $scope.pID = pID;
   $scope.loadingSpecs = true;
   $scope.exportedSpecs = [];

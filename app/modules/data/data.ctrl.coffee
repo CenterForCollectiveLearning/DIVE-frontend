@@ -1,7 +1,7 @@
 _ = require('underscore')
 require 'handsontable'
 
-angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, Upload, API_URL, pIDRetrieved, datasetsListRetrieved) ->
+angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, Upload, Config, pIDRetrieved, datasetsListRetrieved) ->
   $scope.uploading = false
   $scope.errorUploading = false
 
@@ -16,7 +16,7 @@ angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, Upload, 
         file = files[i]
 
         $scope.upload = Upload.upload(
-          url: API_URL + '/api/upload'
+          url: Config.API + '/api/upload'
           data: pID: $scope.pID
           file: file).progress((evt) ->
           console.log 'Percent loaded: ' + parseInt(100.0 * evt.loaded / evt.total)
@@ -38,7 +38,7 @@ angular.module('diveApp.data').controller 'UploadCtrl', ($scope, $http, Upload, 
       return results
   return
 
-angular.module('diveApp.data').controller 'InspectDataCtrl', ($scope, $http, $stateParams, API_URL, DataService) ->
+angular.module('diveApp.data').controller 'InspectDataCtrl', ($scope, $http, $stateParams, Config, DataService) ->
   $scope.datasetSettingsVisible = false
 
   DataService.getDataset($stateParams.dID).then (dataset) ->
@@ -62,7 +62,7 @@ angular.module('diveApp.data').controller 'InspectDataCtrl', ($scope, $http, $st
   # TODO Factor out into a data service
   $scope.removeDataset = (dID) ->
     console.log 'Removing dataset, dID:', dID
-    return $http['delete'](API_URL + '/api/datasets/' + dID,
+    return $http['delete'](Config.API + '/api/datasets/' + dID,
       params:
         pID: $scope.pID
     ).success (result) ->
