@@ -12,22 +12,23 @@
           span No matches found.
  
     .sidenav-group
-      .filter-visualization(flex='')
+      .filter-visualization(layout='row', layout-align='center')
         .combined-toggle-container
           span.toggle-container(ng-repeat='visualizationType in builderCtrl.getVisualizationTypes()')
-            a.radio-button(href='', alt='visualizationType.label', title='visualizationType.label', ng-class="{'selected': visualizationType.selected, 'disabled': !visualizationType.enabled}", ng-click="builderCtrl.selectVisualizationType(visualizationType.type)")
+            a.radio-button.icon(href='', alt='visualizationType.label', title='visualizationType.label', ng-class="{'selected': visualizationType.selected, 'disabled': !visualizationType.enabled}", ng-click="builderCtrl.selectVisualizationType(visualizationType.type)")
               .inner-button
                 img(src="{{visualizationType.icon}}")
 
     .sidenav-group
-      .combined-toggle-container
-        span.toggle-container(ng-repeat='entity in builderCtrl.getEntities()')
+      .combined-toggle-container(layout='row', layout-wrap='')
+        .toggle-container(ng-repeat='entity in builderCtrl.getEntities()', flex=50)
           .radio-button.text.dropdown(ng-class="{'selected': entity.selected}", ng-if="entity.child", ng-data-entity="{{ entity.label }}")
-            .inner-button
-              .inner-label(ng-click="builderCtrl.selectEntity(entity.activeLabel)")
-                | {{ entity.activeLabel }}
+            .inner-button(layout="row")
               .dropdown-button(ng-click="builderCtrl.selectEntityDropdown(entity.label)")
                 span.md-select-icon
+
+              .inner-label(ng-click="builderCtrl.selectEntity(entity.activeLabel)", flex='')
+                | {{ entity.activeLabel }}
 
               .md-select-menu-container.md-clickable(ng-data-entity="{{ entity.label }}")
                 md-select-menu
