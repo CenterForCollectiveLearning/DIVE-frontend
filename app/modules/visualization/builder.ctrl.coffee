@@ -99,6 +99,11 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     ]
   }
 
+  @ALL_TIME_ATTRIBUTE = {
+    label: "All Time"
+    type: "float"
+  }
+
   @availableAggregationFunctions = @AGGREGATION_FUNCTIONS
   @conditional1IsNumeric = true
 
@@ -258,7 +263,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @getConditional1Values = () ->
-    return _.findWhere(@properties, {'label': @conditional1.field})['values']
+    return _.findWhere(@attributes, {'label': @conditional1.field})['values']
 
   @refreshOperations = () ->
     if @attributeA and (@attributeA.type in @ATTRIBUTE_TYPES.NUMERIC or @attributeA.unique)
@@ -272,17 +277,23 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @getAttributes = (type = {}) ->
-    if @properties
-      _attr = @properties.slice()
-      console.log("_attr", _attr)
+    attributes = []
+    _hasTime = false
 
-      if type.secondary
-        _attr = _.reject(_attr, (property) => property.label is @selectedParams.field_a)
+    for attribute in @attributes.slice()
+      attribute.selected = attribute.label is @selectedAttributeLabel
 
-        if @isGrouping
-          _attr = _.filter(_attr, (property) => property.type in @ATTRIBUTE_TYPES.NUMERIC)
+      if attribute['is_time_series_column']
+        attribute.hidden = true
 
-    return _attr
+        if !_hasTime
+          attributes.push(@ALL_TIME_ATTRIBUTE)
+          _hasTime = true
+
+      else
+        attributes.push(attribute)
+
+    return attributes
 
   @getEntities = ->
     if @entities
@@ -364,10 +375,10 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       console.log("Loaded entities", @entities)
     )
 
-    PropertiesService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
-      @propertiesLoaded = true
-      @properties = properties
-      console.log("Loaded properties", @properties)
+    PropertiesService.getAttributes({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((attributes) =>
+      @attributesLoaded = true
+      @attributes = attributes
+      console.log("Loaded attributes", @attributes)
     )
     return
 
