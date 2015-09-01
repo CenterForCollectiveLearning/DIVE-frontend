@@ -1,16 +1,37 @@
 .combined-toggle-container
-  display: inline-block
-  margin-left: 10px
-
   .toggle-container
     &:first-child .radio-button
-      border-top-left-radius: 2px
+      &.icon
+        border-top-left-radius: 2px
+        border-bottom-left-radius: 2px
+
+      &.text
+        border-top-left-radius: 2px
+
+    &:nth-child(even) .radio-button.text
+      border-right-width: 1px
+
+    &:nth-child(2) .radio-button.text
+      border-top-right-radius: 2px
+
+    &:nth-last-child(2) .radio-button.text
       border-bottom-left-radius: 2px
+      border-bottom-width: 1px
 
     &:last-child .radio-button
+      &.icon
+        border-top-right-radius: 2px
+        border-bottom-right-radius: 2px
+        border-right-width: 1px
+
+      &.text
+        border-bottom-right-radius: 2px
+        border-bottom-width: 1px
+        border-right-width: 1px
+
+    &:only-child .radio-button.text
       border-top-right-radius: 2px
-      border-bottom-right-radius: 2px
-      border-right-width: 1px
+      border-bottom-left-radius: 2px
 
   .radio-button
     +input-container
@@ -29,15 +50,21 @@
       pointer-events: none
 
     &.text
+      width: 100%
+      border-bottom-width: 0
+
       .inner-button
         +input
         overflow: hidden
+        width: 100%
 
         .inner-label
-          max-width: 100px
           white-space: nowrap
           overflow: hidden
           text-overflow: ellipsis
+          max-width: 100%
+          text-align: center
+          outline: none
 
     &.padded
       .inner-button
@@ -77,7 +104,7 @@
         &:hover
           background-color: darken($color-grey-light-3, 3%)
 
-    .inner-button, .inner-label, .dropdown-button
+    .inner-button, .dropdown-button
       display: inline-block
       cursor: pointer
       outline: none
@@ -94,6 +121,7 @@
       width: 24px
       height: 33px
       border-left: 1px solid $color-grey-light-3
+      float: right
 
       &:hover
         background-color: $color-off-white-2
@@ -120,6 +148,10 @@
 
 .md-select-menu-container
   font-weight: 400
+  display: none
+
+  &.md-active
+    display: block
 
   md-option
     &:hover

@@ -1,91 +1,30 @@
 $sidenav-width: 200px
 $sidenav-content-offset: 38px
 
-.site-sidenav.md-locked-open
-  background-color: $color-slate-darker
-  width: $sidenav-width
-  min-width: $sidenav-width
-  max-width: $sidenav-width
-
-  > *
-  	min-width: $sidenav-content-offset
-
 md-sidenav
-	padding-top: 15px
-	color: $color-slate-lighter
+  +toolbar-style
+  background-color: $color-grey-light-4
+  color: $color-grey-dark-1
+  padding-top: 10px
 
-	.filters
-		padding-top: 0
-		padding-bottom: 5px
-		margin-bottom: 15px
-		border-bottom: 1px solid $color-slate-dark
+  a
+  	color: inherit
 
-		md-switch
-			margin-top: 5px
+  .category-title
+  	min-width: 0
 
-	.docs-menu
-		li
-			border: none
+  .sidenav-group
+  	padding-left: 20px
+  	padding-right: 20px
+  	padding-bottom: 10px
 
-			&.sidenav-primary-list-item > ul
-				margin-bottom: 10px
+  md-autocomplete
+  	margin-left: 0
+  	width: 100%
 
-	  .md-button
-	  	&[disabled]
-  			background-color: transparent!important
-  			pointer-events: none
-  			cursor: default
+  	md-autocomplete-wrap.md-whiteframe-z1
+  		width: 100%
 
-	  	&.parent-button
-		  	text-transform: uppercase
-		  	font-weight: 600
-		  	color: $color-slate-light
-
-	  	&.child
-	  		display: block
-	  		font-weight: 400
-	  		padding: 0 16px 0 32px
-	  		text-transform: none
-
-	  	&:not([disabled])
-		  	&.active
-		  		color: $color-white
-		  		background-color: $color-slate-dark!important
-
-		  	&:hover, &:focus
-		  		background-color: lighten($color-slate-dark, 5%) !important
-
-	  	.sidenav-button-heading
-			  line-height: 30px
-
-			.sidenav-button-details-stats
-				opacity: 0.7
-				font-size: 12px
-				line-height: 11px
-				color: $color-slate-lighter
-				padding-bottom: 8px
-
-			.expand-icon
-				margin-right: 5px
-
-	  .md-button-toggle
-	    md-icon
-	      height: 40px
-
-	  span.icons
-	  	.icon
-	  		width: 25px
-	  		height: 25px
-	  		border-radius: 2px
-	  		margin-left: 3px
-	  		padding: 3px
-	  		background-color: $color-slate-light
-
-	  		&.active
-	  			outline: none
-	  			background-color: white
-
-	  		img
-	  			opacity: 0.6
-	  			width: 20px
-	  		
+  .conditional-value
+  	margin-left: 0
+  	margin-top: 10px

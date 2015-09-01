@@ -99,6 +99,12 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     ]
   }
 
+  @ALL_TIME_ATTRIBUTE = {
+    label: "All Time"
+    type: "string"
+    child: []
+  }
+
   @availableAggregationFunctions = @AGGREGATION_FUNCTIONS
   @conditional1IsNumeric = true
 
@@ -258,7 +264,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @getConditional1Values = () ->
-    return _.findWhere(@properties, {'label': @conditional1.field})['values']
+    return _.findWhere(@attributes, {'label': @conditional1.field})['values']
 
   @refreshOperations = () ->
     if @attributeA and (@attributeA.type in @ATTRIBUTE_TYPES.NUMERIC or @attributeA.unique)
@@ -271,18 +277,36 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @resetIsGrouping()
     return
 
+  @processAttributes = (attributes) ->
+    @attributes = []
+    _hasTime = false
+
+    for attribute in attributes
+
+      # most of this should be done server-side
+      if attribute['is_time_series_column']
+        if !_hasTime
+          @attributes.push(@ALL_TIME_ATTRIBUTE)
+          @ALL_TIME_ATTRIBUTE.child = []
+          _hasTime = true
+
+        @ALL_TIME_ATTRIBUTE.child.push(attribute)
+
+      else
+        @attributes.push(attribute)
+
+    return
+
   @getAttributes = (type = {}) ->
-    if @properties
-      _attr = @properties.slice()
-      console.log("_attr", _attr)
+    if @attributes
+      attributes = @attributes.slice()
+    else
+      attributes = []
 
-      if type.secondary
-        _attr = _.reject(_attr, (property) => property.label is @selectedParams.field_a)
+    for attribute in attributes
+      attribute.selected = attribute.label is @selectedAttributeLabel
 
-        if @isGrouping
-          _attr = _.filter(_attr, (property) => property.type in @ATTRIBUTE_TYPES.NUMERIC)
-
-    return _attr
+    return attributes
 
   @getEntities = ->
     if @entities
@@ -300,6 +324,9 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       entity.selected = entity.activeLabel is @selectedEntityLabel
 
     return entities
+
+  @getProperties = ->
+    return @properties
 
   @getFlattenedEntities = () ->
     entities = []
@@ -362,6 +389,12 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       @entitiesLoaded = true
       @entities = entities
       console.log("Loaded entities", @entities)
+    )
+
+    PropertiesService.getAttributes({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((attributes) =>
+      @attributesLoaded = true
+      @processAttributes(attributes)
+      console.log("Loaded attributes", attributes)
     )
 
     PropertiesService.getProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((properties) =>
