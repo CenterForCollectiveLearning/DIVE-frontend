@@ -58,7 +58,28 @@
 
       .combined-toggle-container(layout='row', layout-wrap='')
         .toggle-container(ng-repeat='attribute in builderCtrl.getAttributes()', flex=50)
-          a.radio-button.text.padded(href='', ng-class="{'selected': attribute.selected}", ng-click="builderCtrl.selectAttribute(attribute.label)")
+
+          .radio-button.text.dropdown(ng-class="{'selected': attribute.selected}", ng-if="attribute.child", ng-data-entity="{{ attribute.label }}")
+            .inner-button(layout="row")
+              .dropdown-button(ng-click="builderCtrl.selectEntityDropdown(attribute.label)")
+                span.md-select-icon
+
+              .inner-label(flex='')
+                | {{ attribute.label }}
+
+              .md-select-menu-container.md-clickable(ng-data-entity="{{ attribute.label }}")
+                md-select-menu
+                  md-content
+                    md-option
+                      .md-text
+                        | {{ attribute.label }}
+                    md-option(ng-repeat="childAttribute in attribute.child")
+                      .md-text
+                        | {{ childAttribute.label }}
+
+
+
+          a.radio-button.text.padded(href='', ng-class="{'selected': attribute.selected}", ng-click="builderCtrl.selectAttribute(attribute.label)", ng-if="!attribute.child")
             .inner-button
               .inner-label
                 | {{ attribute.label }}

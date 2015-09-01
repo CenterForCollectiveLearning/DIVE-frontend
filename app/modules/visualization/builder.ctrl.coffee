@@ -102,6 +102,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @ALL_TIME_ATTRIBUTE = {
     label: "All Time"
     type: "float"
+    child: []
   }
 
   @availableAggregationFunctions = @AGGREGATION_FUNCTIONS
@@ -276,22 +277,34 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @resetIsGrouping()
     return
 
-  @getAttributes = (type = {}) ->
-    attributes = []
+  @processAttributes = (attributes) ->
+    @attributes = []
     _hasTime = false
 
-    for attribute in @attributes.slice()
-      attribute.selected = attribute.label is @selectedAttributeLabel
+    for attribute in attributes
 
+      # most of this should be done server-side
       if attribute['is_time_series_column']
-        attribute.hidden = true
-
         if !_hasTime
-          attributes.push(@ALL_TIME_ATTRIBUTE)
+          @attributes.push(@ALL_TIME_ATTRIBUTE)
+          @ALL_TIME_ATTRIBUTE.child = []
           _hasTime = true
 
+        @ALL_TIME_ATTRIBUTE.child.push(attribute)
+
       else
-        attributes.push(attribute)
+        @attributes.push(attribute)
+
+    return
+
+  @getAttributes = (type = {}) ->
+    if @attributes
+      attributes = @attributes.slice()
+    else
+      attributes = []
+
+    for attribute in attributes
+      attribute.selected = attribute.label is @selectedAttributeLabel
 
     return attributes
 
@@ -377,8 +390,8 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
     PropertiesService.getAttributes({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((attributes) =>
       @attributesLoaded = true
-      @attributes = attributes
-      console.log("Loaded attributes", @attributes)
+      @processAttributes(attributes)
+      console.log("Loaded attributes", attributes)
     )
     return
 
