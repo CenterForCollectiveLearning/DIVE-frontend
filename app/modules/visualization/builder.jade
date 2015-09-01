@@ -3,7 +3,7 @@
   md-sidenav(md-is-locked-open="true", layout="column")
     .sidenav-group
       h3.category-title
-        span Visualize
+        span Dataset
 
       md-autocomplete(ng-if="builderCtrl.datasetsLoaded", md-items="d in builderCtrl.datasets", md-item-text="d.title", placeholder="Dataset", md-min-length="0", md-search-text="datasetQuery", md-selected-item="builderCtrl.selectedDataset", md-selected-item-change="builderCtrl.onSelectDataset(d)")
         md-item-template
@@ -12,7 +12,10 @@
           span No matches found.
  
     .sidenav-group
-      .filter-visualization(layout='row', layout-align='center')
+      h3.category-title
+        span Visualization Type
+
+      .filter-visualization(layout='row')
         .combined-toggle-container
           span.toggle-container(ng-repeat='visualizationType in builderCtrl.getVisualizationTypes()')
             a.radio-button.icon(href='', alt='visualizationType.label', title='visualizationType.label', ng-class="{'selected': visualizationType.selected, 'disabled': !visualizationType.enabled}", ng-click="builderCtrl.selectVisualizationType(visualizationType.type)")
@@ -20,6 +23,9 @@
                 img(src="{{visualizationType.icon}}")
 
     .sidenav-group
+      h3.category-title
+        span Categorical Data
+
       .combined-toggle-container(layout='row', layout-wrap='')
         .toggle-container(ng-repeat='entity in builderCtrl.getEntities()', flex=50)
           .radio-button.text.dropdown(ng-class="{'selected': entity.selected}", ng-if="entity.child", ng-data-entity="{{ entity.label }}")
@@ -46,19 +52,16 @@
               .inner-label
                 | {{ entity.label }}
 
-        .third-segment-selector(ng-if="builderCtrl.selectedParams.field_a")
-          .selector
-            md-select(ng-model="builderCtrl.selectedParams.arguments.function", md-on-close="builderCtrl.onSelectAggregationFunction()")
-              md-option(ng-repeat="func in builderCtrl.availableAggregationFunctions", ng-value="func.value")
-                | {{ func.title }}
+    .sidenav-group
+      h3.category-title
+        span Numerical Data
 
-        .fourth-segment-selector(ng-if="builderCtrl.selectedParams.field_a && builderCtrl.selectedParams.arguments.function != 'count'")
-          .phrase(ng-if="builderCtrl.isGrouping")
-            span vs
-          .selector
-            md-autocomplete(md-items="a in builderCtrl.getAttributes({secondary: true})", md-item-text="a.label", placeholder="Field", md-min-length="0", md-search-text="searchQueryB", md-selected-item="builderCtrl.attributeB", md-selected-item-change="builderCtrl.onSelectFieldB()")
-              md-item-template
-                span(md-highlight-text="searchQueryB") {{a.label}}
+      .combined-toggle-container(layout='row', layout-wrap='')
+        .toggle-container(ng-repeat='attribute in builderCtrl.getAttributes()', flex=50)
+          a.radio-button.text.padded(href='', ng-class="{'selected': attribute.selected}", ng-click="builderCtrl.selectAttribute(attribute.label)")
+            .inner-button
+              .inner-label
+                | {{ attribute.label }}
 
     .sidenav-group
       .toolbar-extension(ng-if="builderCtrl.selectedParams.field_a")
