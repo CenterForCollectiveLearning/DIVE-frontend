@@ -1,8 +1,8 @@
-angular.module('diveApp.project').controller("OverviewCtrl", function($scope, $http, $state, $stateParams, API_URL) {
+angular.module('diveApp.project').controller("OverviewCtrl", function($scope, $http, $state, $stateParams, Config) {
   console.log("[CONTROLLER] Overview");
   return $scope.removeProject = function(pID) {
     console.log('Removing project, pID:', pID);
-    return $http["delete"](API_URL + '/api/project', {
+    return $http["delete"](Config.API + '/api/project', {
       params: {
         pID: pID
       }

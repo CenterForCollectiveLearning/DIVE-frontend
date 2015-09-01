@@ -1,4 +1,4 @@
-angular.module('diveApp.landing').controller("CreateProjectCtrl", function($scope, $http, $state, user, API_URL) {
+angular.module('diveApp.landing').controller("CreateProjectCtrl", function($scope, $http, $state, user, Config) {
 
   $scope.createProjectError = '';
 
@@ -16,14 +16,14 @@ angular.module('diveApp.landing').controller("CreateProjectCtrl", function($scop
     console.log("Creating project");
     $http({
       method: 'POST',
-      url: API_URL + '/api/project',
+      url: Config.API + '/api/project',
       data: params,
       transformRequest: objectToQueryString,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }).success(function(data, status) {
-      $state.go('project.data.upload', { 
+      $state.go('project.data.upload', {
         formattedProjectTitle: data.formatted_title
       });
     }).error(function(data, status) {
