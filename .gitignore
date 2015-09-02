@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+.DS_Store
+.Python
+env/
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+*.graffle
+*.ai
+*.sketch/
+*.sass-cache
+
+test*
+
+uploads/
+virt_env/
+
+# Directories
+design/
+node_modules/
+
+# Compiled Files
+dist/
+
+# Environment
+venv/
+*.log
