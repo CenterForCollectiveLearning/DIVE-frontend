@@ -33,6 +33,9 @@
       border-top-right-radius: 2px
       border-bottom-left-radius: 2px
 
+    &:not(.disabled) + .toggle-container .radio-button.disabled
+      border-left-color: $color-grey
+
   .radio-button
     +input-container
     display: inline-block
