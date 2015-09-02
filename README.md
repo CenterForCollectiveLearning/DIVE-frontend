@@ -20,4 +20,13 @@ Development Build Process
 
 Deployment Build Process
 ---------
-1. Run `gulp build` to build `./dist` directory
+1. Make sure you have all development and client-side dependencies (see 1. above)
+2. Run `gulp build` to build `./dist` directory
+
+Deploying to Divshot
+---------
+[Divshot](http://divshot.com), the static web hosting service we're using to host our front-end, requires you to build the distributed directory before pushing it to their service. More info [here](https://docs.divshot.com/guides/getting-started).
+1. Install the Divshot CLI `npm install -g divshot-cli`. 
+2. Login to the CLI 'divshot login'. Credentials are shared.
+3. Push up `/dist` to development deployment with `divshot push`.
+4. Optionally promote development to staging or production with `divshot promote development production`.
