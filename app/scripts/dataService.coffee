@@ -266,7 +266,21 @@ angular.module('diveApp.services').service('StatisticsDataService', ($http, $roo
       }).then (r) =>
         q.resolve(r.data)
 
-      return q.promise
+        a=new Date()
+        console.log(a.getTime()/1000.0)
+        return q.promise
+
+    getRegressionTime: (params) ->
+      q = $q.defer()
+
+      console.log('Getting time with params:', params)
+      $http.post(API_URL + '/api/regression_estimator', {
+        numInputs: params.numInputs,
+        sizeArray: params.sizeArray,
+        funcArraySize: params.funcArraySize,
+      }).then (r) =>
+        q.resolve(r.data)
+        return q.promise
   }
 )
 
