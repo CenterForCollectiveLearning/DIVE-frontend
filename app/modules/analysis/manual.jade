@@ -13,37 +13,76 @@
 
       .first-segment-selector(ng-if="manualCtrl.selectedDataset")
         .phrase
+          span BY
+        .selector
+          md-select(ng-model="manualCtrl.mode", placeholder='Mode')
+            md-option(ng-repeat="m in manualCtrl.MODES", ng-value="m.title")
+              | {{ m.title }}
+
+
+  .toolbar-extension.stats-parameters(ng-if="manualCtrl.mode=='Regression' && manualCtrl.selectedDataset", layout='column')
+    .toolbar-extension-component(layout='row')
+      h3.category-title
+        span Regressing
+
+      .dep-selector
+        .selector
+          md-autocomplete(md-items="a in manualCtrl.getAttributes()", md-item-text="a.label", placeholder="Dependent Variable", md-min-length="0", md-search-text="dependentFieldQuery", md-selected-item="manualCtrl.dep", md-selected-item-change="manualCtrl.onSelectDep()")
+            md-item-template
+              span(md-highlight-text="manualCtrl.selectedParams.arguments.dep") {{a.label}}
+        .phrase
+          span against
+
+
+      .indep-selector
+        div(ng-repeat='e in manualCtrl.numIndepLabels', style='display:inline-block', flex='')
+          .selector
+            md-autocomplete(md-items="a in manualCtrl.getAttributes()", md-item-text="a.label", placeholder="Independent Variable", md-min-length="0", md-search-text="independentFieldQuery", md-selected-item="manualCtrl.indep[e]", md-selected-item-change="manualCtrl.onSelectIndep()")
+              md-item-template
+                span(md-highlight-text="manualCtrl.selectedParams.arguments.indep") {{a.label}}
+
+      .second-segment-selector
+        .phrase
           span with
         .selector
           md-select(ng-model="manualCtrl.selectedParams.model", md-on-close="manualCtrl.onSelectModel()")
             md-option(ng-repeat="m in manualCtrl.MODELS", ng-value="m.value")
               | {{ m.title }}
 
-      .second-segment-selector(ng-if="manualCtrl.selectedParams.model")
+      .third-segment-selector(ng-if="manualCtrl.selectedParams.model")
         .phrase
           span using
         .selector
           md-select(ng-model="manualCtrl.selectedParams.arguments.estimator", md-on-close="manualCtrl.onSelectEstimator()")
             md-option(ng-repeat="e in manualCtrl.ESTIMATORS", ng-value="e.value")
               | {{ e.title }}
+    .buttonTools(div='row')
+      md-button(ng-click='manualCtrl.addIndepLabel()',style='border-style:solid; border-width:2px') Add Indep Field
+      md-button(ng-click='manualCtrl.removeIndepLabel()', ng-disabled='manualCtrl.numIndepLabels.length==1', style='border-style:solid; border-width:2px') Remove Indep Field
 
-  .toolbar-extension.stats-parameters(ng-if="manualCtrl.selectedParams.model")
+  .toolbar-extension.stats-parameters(ng-if="manualCtrl.mode=='Comparison' && manualCtrl.selectedDataset", layout='column')
     .toolbar-extension-component(layout='row')
       h3.category-title
-        span Parameters
-
-      .indep-selector
+        span Comparing
+      .data-selector
         .selector
-          md-autocomplete(md-items="a in manualCtrl.getAttributes()", md-item-text="a.label", placeholder="Dependent Variable", md-min-length="0", md-search-text="dependentFieldQuery", md-selected-item="manualCtrl.dep", md-selected-item-change="manualCtrl.onSelectDep()")
+          md-autocomplete(md-items="a in manualCtrl.getAttributes()", md-item-text="a.label", placeholder="Data Column 1", md-min-length="0", md-search-text="dataColumnSearchQuery1", md-selected-item="manualCtrl.unprocessedDataLabels[0]", md-selected-item-change="manualCtrl.onSelectDataLabel()")
             md-item-template
-              span(md-highlight-text="manualCtrl.selectedParams.arguments.dep") {{a.label}}
-
-      .dep-selector
+              span(md-highlight-text="manualCtrl.selectedParams.arguments.compare.dataLabels[0]") {{a.label}}
         .phrase
           span against
+      .data-selector
         .selector
-          md-autocomplete(md-items="a in manualCtrl.getAttributes()", md-item-text="a.label", placeholder="Independent Variable", md-min-length="0", md-search-text="independentFieldQuery", md-selected-item="manualCtrl.indep", md-selected-item-change="manualCtrl.onSelectIndep()")
+          md-autocomplete(md-items="a in manualCtrl.getAttributes()", md-item-text="a.label", placeholder="Data Column 2", md-min-length="0", md-search-text="dataColumnSearchQuery2", md-selected-item="manualCtrl.unprocessedDataLabels[1]", md-selected-item-change="manualCtrl.onSelectDataLabel()")
             md-item-template
-              span(md-highlight-text="manualCtrl.selectedParams.arguments.indep") {{a.label}}
+              span(md-highlight-text="manualCtrl.selectedParams.arguments.compare.dataLabels[1]") {{a.label}}
 
-  .stats-data {{ manualCtrl.statsData }}
+  .loadscreen(ng-if="manualCtrl.sigLoadTime")
+      p
+        Regression Table will be loaded in approximately {{manualCtrl.timeTest}} seconds
+
+  datatable(ng-if='manualCtrl.formattedCompareDict && manualCtrl.mode=="Comparison"', data='manualCtrl.formattedCompareDict.data', selector=".datatable", headers='manualCtrl.formattedCompareDict.headers', rowheader='false', height=1000)
+    .datatable
+
+  datatable(ng-if='manualCtrl.formattedDataDict && manualCtrl.mode=="Regression"', data='manualCtrl.formattedDataDict.data', selector=".datatable", headers='manualCtrl.formattedDataDict.headers', rowheader='false', height=1000, mergecells='manualCtrl.formattedDataDict.mergecells')
+    .datatable
