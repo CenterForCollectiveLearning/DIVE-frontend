@@ -26,6 +26,7 @@ Deployment Build Process
 Deploying to Divshot
 ---------
 [Divshot](http://divshot.com), the static web hosting service we're using to host our front-end, requires you to build the distributed directory before pushing it to their service. More info [here](https://docs.divshot.com/guides/getting-started).
+
 1. Install the Divshot CLI `npm install -g divshot-cli`. 
 2. Login to the CLI 'divshot login'. Credentials are shared.
 3. Push up `/dist` to development deployment with `divshot push`.
