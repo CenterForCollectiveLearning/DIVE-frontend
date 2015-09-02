@@ -10,29 +10,3 @@
 <md-tabs md-no-ink md-selected="selectedIndex" flex=55>
   <md-tab ng-repeat="tab in tabs" label="{{tab.label}}"></md-tab>
 </md-tabs>
-
-<div class="user-status" flex=30 ng-if="loggedIn">
-  <span >
-    Logged in as <span class="username"> {{ user.displayName }}</span>
-    (<a class='logout' href="/logout">Logout</a>)
-  </span>
-  <div class="hamburger" ng-click='toggleRightPane()'>
-    <div class="line"></div>
-    <div class="line"></div>
-    <div class="line"></div>
-  </div>
-</div>
-
-<div class="project-right-pane" ng-class="{ 'open': rightPaneOpen }">
-  <ul>
-    <li ui-sref="landing">
-      Project List
-    </li>
-    <li ui-sref="landing">
-      Account
-    </li>
-    <li ng-click="logoutUser()">
-      Logout
-    </li>
-  </ul>
-</div>
