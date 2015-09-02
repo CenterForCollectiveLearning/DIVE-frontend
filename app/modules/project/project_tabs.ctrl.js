@@ -11,18 +11,6 @@ angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope,
       state: 'project.visualize.builder',
       baseState: 'project.visualize',
       label: 'Visualizations'
-    }, {
-      state: 'project.analysis.manual',
-      baseState: 'project.analysis',
-      label:' Analysis'
-    }, {
-      state: 'project.export',
-      baseState: 'project.export',
-      label: 'Export'
-    }, {
-      state: 'project.overview',
-      baseState: 'project.overview',
-      label: 'Overview'
     }
   ];
 

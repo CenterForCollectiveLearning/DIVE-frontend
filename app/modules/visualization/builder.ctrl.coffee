@@ -48,6 +48,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       label: 'Scatterplot'
       type: @VISUALIZATION_TYPES.SCATTERPLOT
       icon: '/assets/images/charts/scatterplot.chart.svg'
+      disabled: true
   ]
 
   @OPERATORS = {
@@ -127,7 +128,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @availableOperators = @OPERATORS.NUMERIC
     @availableOperations = @OPERATIONS.NON_UNIQUE
     @availableVisualizationTypes = _.pluck(@VISUALIZATION_TYPE_DATA, 'type')
-    @selectedVisualizationType = @VISUALIZATION_TYPES.TREEMAP
+    @selectedVisualizationType = null
 
     @selectedParams =
       dID: ''
@@ -350,7 +351,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
     for visualizationType in _visualizationTypes
       visualizationType.selected = visualizationType.type is @selectedVisualizationType
-      visualizationType.enabled = visualizationType.type in @availableVisualizationTypes
+      visualizationType.enabled = !visualizationType.disabled && visualizationType.type in @availableVisualizationTypes
 
     return _visualizationTypes
 
