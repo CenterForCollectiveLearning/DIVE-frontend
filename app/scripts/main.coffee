@@ -36,9 +36,9 @@ diveApp = angular.module('diveApp', [
 
 diveApp.service("Config", ->
   if (window.location.host.indexOf('localhost') > -1)
-    @API = 'http://localhost:7777'
+    @API = 'http://localhost:8080'
   else
-    @API = 'http://a.media.mit.edu:7777'
+    @API = 'http://a.media.mit.edu:8080'
 )
 
 diveApp.config (($mdThemingProvider) ->
