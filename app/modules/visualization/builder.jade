@@ -120,16 +120,11 @@
 
   .main-content(layout="column", flex='')
     .gallery(ng-if="!builderCtrl.selectedEntityLabel", layout="row")
-      .visualization-group(ng-repeat='entity in builderCtrl.getFlattenedEntities()', flex="33")
-        .visualization-group-button(ng-click="builderCtrl.selectEntity(entity.label, entity.parentLabel)")
+      .visualization-group(ng-repeat='spec in builderCtrl.getSpecs()', flex="33")
+        .visualization-group-button(ng-click="builderCtrl.selectSpec()")
           .header
-            | {{entity.label}}
+            | {{spec.title}}
 
-          .entity-values
-            .entity-value(ng-repeat='value in entity.values | limitTo: 8')
-              | {{value}}
-            .entity-value(ng-if='entity.values.length > 8')
-              | (and {{ entity.values.length - 8 }} more)
 
 
     visualization(type='builderCtrl.selectedVisualizationType', spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData', ng-if="builderCtrl.selectedEntityLabel")

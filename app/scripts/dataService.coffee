@@ -174,7 +174,7 @@ angular.module('diveApp.services').factory('AuthService', ($http, $rootScope, lo
 
 angular.module('diveApp.services').service('PropertiesService', ($http, $rootScope, $q, Config) ->
   return {
-    getProperties: (params, callback) ->
+    getProperties: (params) ->
       q = $q.defer()
       $http.get(Config.API + '/api/properties/v1/properties', {
         params:
@@ -184,7 +184,7 @@ angular.module('diveApp.services').service('PropertiesService', ($http, $rootSco
         q.resolve(r.data.properties)
       return q.promise
 
-    getEntities: (params, callback) ->
+    getEntities: (params) ->
       q = $q.defer()
       $http.get(Config.API + '/api/properties/v1/entities', {
         params:
@@ -194,7 +194,7 @@ angular.module('diveApp.services').service('PropertiesService', ($http, $rootSco
         q.resolve(r.data.entities)
       return q.promise
 
-    getAttributes: (params, callback) ->
+    getAttributes: (params) ->
       q = $q.defer()
       $http.get(Config.API + '/api/properties/v1/attributes', {
         params:
@@ -206,8 +206,34 @@ angular.module('diveApp.services').service('PropertiesService', ($http, $rootSco
   }
 )
 
-angular.module('diveApp.services').service('VizSpecService', ($http, $rootScope, $q, Config) ->
+angular.module('diveApp.services').service('VisualizationsService', ($http, $rootScope, $q, Config) ->
   return {
+    getSpecs: (params) ->
+      q = $q.defer()
+      $http.get(Config.API + '/api/visualizations/v1/specs', {
+        params:
+          pID: $rootScope.pID
+          dID: params.dID
+      }).then (r) ->
+        q.resolve(r.data.specs)
+      return q.promise    
+
+    #TODO: remove getVisualizationData and getVizSpecs  
+
+    getVisualizationData: (params) ->
+      q = $q.defer()
+
+      # Remove stats field, which can be huge, from params
+      console.log 'Getting viz data with params:', params
+      $http.post(Config.API + '/api/data_from_spec', {
+        pID: $rootScope.pID,
+        spec: params.spec,
+        conditional: params.conditional
+      }).then (r) =>
+        q.resolve(r.data)
+
+      return q.promise
+
     getVizSpecs: (params) ->
       q = $q.defer()
       console.log 'Getting visualization specifications with params', params
@@ -218,6 +244,7 @@ angular.module('diveApp.services').service('VizSpecService', ($http, $rootScope,
         q.resolve(r.data.specs)
       )
       return q.promise
+
   }
 )
 
@@ -237,21 +264,6 @@ angular.module('diveApp.services').service('ConditionalDataService', ($http, Con
 )
 
 angular.module('diveApp.services').service('VisualizationDataService', ($http, $rootScope, $q, Config) ->
-  return {
-    getVisualizationData: (params) ->
-      q = $q.defer()
-
-      # Remove stats field, which can be huge, from params
-      console.log 'Getting viz data with params:', params
-      $http.post(Config.API + '/api/data_from_spec', {
-        pID: $rootScope.pID,
-        spec: params.spec,
-        conditional: params.conditional
-      }).then (r) =>
-        q.resolve(r.data)
-
-      return q.promise
-  }
 )
 
 angular.module('diveApp.services').service('StatisticsDataService', ($http, $rootScope, $q, Config) ->

@@ -1,4 +1,4 @@
-angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $rootScope, DataService, PropertiesService, VisualizationDataService, VizSpecService, pIDRetrieved) ->
+angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $rootScope, DataService, PropertiesService, VisualizationsService, pIDRetrieved) ->
 
   @ATTRIBUTE_TYPES =
     NUMERIC: ["int", "float"]
@@ -184,6 +184,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
 
     @retrieveProperties()
+    @retrieveSpecs()
     return
 
   @resetIsGrouping = () ->
@@ -359,6 +360,9 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @selectedVisualizationType = type
     return
 
+  @selectSpec = () ->
+    return
+
   @selectEntity = (entityLabel, parentEntityLabel) ->
     if @selectedEntityLabel is entityLabel
       return @resetDIDParams()
@@ -385,7 +389,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @resetParams()
 
-  @retrieveProperties = () ->
+  @retrieveProperties = ->
     PropertiesService.getEntities({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((entities) =>
       @entitiesLoaded = true
       @entities = entities
@@ -405,19 +409,20 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     )
     return
 
+  @retrieveSpecs = ->
+    VisualizationsService.getSpecs({ dID: @selectedDataset.dID }).then((specs) =>
+      @specsLoaded = true
+      @specs = specs
+      console.log("Specs loaded!", @specs)
+    )
+    return
+
   pIDRetrieved.promise.then((r) =>
     DataService.getDatasets().then((datasets) =>
       @datasetsLoaded = true
       @datasets = datasets
       @setDataset(datasets[0])
       console.log("Datasets loaded!", @datasets)
-    )
-
-    vizSpecServiceParams = {}
-    VizSpecService.getVizSpecs(vizSpecServiceParams).then((specs) =>
-      @specsLoaded = true
-      @specs = specs
-      console.log("Specs loaded!", @specs)
     )
   )
 
