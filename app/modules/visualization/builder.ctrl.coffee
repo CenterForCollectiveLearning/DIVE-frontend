@@ -394,12 +394,11 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       )
     )
     @selectedEntityLabel = propertyLabel
-
     return
 
-  @selectChildEntity = (entityLabel, childEntityLabel) ->
+  @filterByChildCategory = (entityLabel, childPropertyID, childEntityLabel) ->
     @selectedChildEntities[entityLabel] = childEntityLabel
-    @selectEntity(childEntityLabel)
+    @filterByCategory(childPropertyID, childEntityLabel)
     @closeMenu()
     return
 

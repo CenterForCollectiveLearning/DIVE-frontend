@@ -42,10 +42,9 @@
                     md-option(ng-click="builderCtrl.filterByCategory(category.propertyID, category.activeLabel)")
                       .md-text
                         | {{ category.label }}
-                    md-option(ng-repeat="childCategory in category.child", ng-click="builderCtrl.selectChildCategory(category.label, childCategory.label)")
+                    md-option(ng-repeat="childCategory in category.child", ng-click="builderCtrl.filterByChildCategory(category.label, childCategory.propertyID, childCategory.label)")
                       .md-text
                         | {{ childCategory.label }}
-
 
           a.radio-button.text.padded(href='', ng-class="{'selected': category.selected}", ng-click="builderCtrl.filterByCategory(category.propertyID, category.activeLabel)", ng-if="!category.child")
             .inner-button
