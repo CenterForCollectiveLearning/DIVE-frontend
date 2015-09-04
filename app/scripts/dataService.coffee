@@ -184,33 +184,33 @@ angular.module('diveApp.services').service('PropertiesService', ($http, $rootSco
         q.resolve(r.data.properties)
       return q.promise
 
-    getEntities: (params) ->
+    getCategoricalProperties: (params) ->
       q = $q.defer()
-      $http.get(Config.API + '/api/properties/v1/entities', {
+      $http.get(Config.API + '/api/properties/v1/categorical', {
         params:
           pID: $rootScope.pID
           dID: params.dID
       }).then (r) ->
-        q.resolve(r.data.entities)
+        q.resolve(r.data.properties.categorical)
       return q.promise
 
-    getAttributes: (params) ->
+    getQuantitativeProperties: (params) ->
       q = $q.defer()
-      $http.get(Config.API + '/api/properties/v1/attributes', {
+      $http.get(Config.API + '/api/properties/v1/quantitative', {
         params:
           pID: $rootScope.pID
           dID: params.dID
       }).then (r) ->
-        q.resolve(r.data.attributes)
+        q.resolve(r.data.properties.quantitative)
       return q.promise
   }
 )
 
-angular.module('diveApp.services').service('VisualizationsService', ($http, $rootScope, $q, Config) ->
+angular.module('diveApp.services').service('SpecsService', ($http, $rootScope, $q, Config) ->
   return {
     getSpecs: (params) ->
       q = $q.defer()
-      $http.get(Config.API + '/api/visualizations/v1/specs', {
+      $http.get(Config.API + '/api/specs/v1/specs', {
         params:
           pID: $rootScope.pID
           dID: params.dID

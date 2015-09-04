@@ -1,4 +1,4 @@
-angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $rootScope, DataService, PropertiesService, VisualizationsService, pIDRetrieved) ->
+angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $rootScope, DataService, PropertiesService, SpecsService, pIDRetrieved) ->
 
   @ATTRIBUTE_TYPES =
     NUMERIC: ["int", "float"]
@@ -108,6 +108,8 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @availableAggregationFunctions = @AGGREGATION_FUNCTIONS
   @conditional1IsNumeric = true
+
+  @selectedSpec = null
 
   @selectedDataset = null
 
@@ -347,6 +349,9 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @getSpecs = () ->
     return @specs
 
+  @getFilteredSpecs = () ->
+    return @filteredSpecs
+
   @getVisualizationTypes = () ->
     _visualizationTypes = @VISUALIZATION_TYPE_DATA.slice()
 
@@ -377,6 +382,21 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @refreshVisualization()
     return
 
+  @filterByCategory = (propertyID, propertyLabel) ->
+    if @selectedEntityLabel is propertyLabel
+      @selectedEntityLabel = null
+      @filteredSpecs = @specs.slice()
+      return
+
+    @filteredSpecs = _.filter(@specs, (spec) ->
+      _.some(spec['properties']['categorical'], (category) ->
+        category['id'] == propertyID
+      )
+    )
+    @selectedEntityLabel = propertyLabel
+
+    return
+
   @selectChildEntity = (entityLabel, childEntityLabel) ->
     @selectedChildEntities[entityLabel] = childEntityLabel
     @selectEntity(childEntityLabel)
@@ -390,13 +410,13 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @resetParams()
 
   @retrieveProperties = ->
-    PropertiesService.getEntities({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((entities) =>
+    PropertiesService.getCategoricalProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((entities) =>
       @entitiesLoaded = true
       @entities = entities
       console.log("Loaded entities", @entities)
     )
 
-    PropertiesService.getAttributes({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((attributes) =>
+    PropertiesService.getQuantitativeProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((attributes) =>
       @attributesLoaded = true
       @processAttributes(attributes)
       console.log("Loaded attributes", attributes)
@@ -410,9 +430,10 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @retrieveSpecs = ->
-    VisualizationsService.getSpecs({ dID: @selectedDataset.dID }).then((specs) =>
+    SpecsService.getSpecs({ dID: @selectedDataset.dID }).then((specs) =>
       @specsLoaded = true
       @specs = specs
+      @filteredSpecs = specs
       console.log("Specs loaded!", @specs)
     )
     return
