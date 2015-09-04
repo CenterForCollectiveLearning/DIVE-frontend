@@ -47,7 +47,7 @@
                         | {{ childCategory.label }}
 
 
-          a.radio-button.text.padded(href='', ng-class="{'selected': category.selected}", ng-click="filterByCategory(category.propertyID, category.activeLabel)", ng-if="!category.child")
+          a.radio-button.text.padded(href='', ng-class="{'selected': category.selected}", ng-click="builderCtrl.filterByCategory(category.propertyID, category.activeLabel)", ng-if="!category.child")
             .inner-button
               .inner-label
                 | {{ category.label }}
