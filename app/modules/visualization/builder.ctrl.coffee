@@ -51,6 +51,11 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       disabled: true
   ]
 
+  @PROPERTY_BASE_TYPES = {
+    QUANTITATIVE: "quantitative"
+    CATEGORICAL: "categorical"
+  }
+
   @OPERATORS = {
     NUMERIC: [
         title: '='
@@ -145,7 +150,9 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       field_b: ''
       function: ''
 
-    @selectedEntityLabel = null
+    @selectedPropertyLabel = 
+      quantitative: null
+      categorical: null
 
     @attributeA = ' ' # the autocomplete field doesn't refresh if attributeA is null or ''
     @attributeB = null
@@ -308,7 +315,13 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       attributes = []
 
     for attribute in attributes
-      attribute.selected = attribute.label is @selectedAttributeLabel
+      if attribute.child
+        attribute.activeLabel = @selectedChildEntities[attribute.label]
+
+      if not attribute.activeLabel
+        attribute.activeLabel = attribute.label
+
+      attribute.selected = attribute.activeLabel is @selectedPropertyLabel[@PROPERTY_BASE_TYPES.QUANTITATIVE]
 
     return attributes
 
@@ -325,7 +338,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       if not entity.activeLabel
         entity.activeLabel = entity.label
 
-      entity.selected = entity.activeLabel is @selectedEntityLabel
+      entity.selected = entity.activeLabel is @selectedPropertyLabel[@PROPERTY_BASE_TYPES.CATEGORICAL]
 
     return entities
 
@@ -369,38 +382,54 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @selectEntity = (entityLabel, parentEntityLabel) ->
-    if @selectedEntityLabel is entityLabel
+    if @selectedPropertyLabel[@PROPERTY_BASE_TYPES.CATEGORICAL] is entityLabel
       return @resetDIDParams()
 
     if parentEntityLabel
       return @selectChildEntity(parentEntityLabel, entityLabel)
 
-    @selectedEntityLabel = entityLabel
+    @selectedPropertyLabel[@PROPERTY_BASE_TYPES.CATEGORICAL] = entityLabel
     @selectedParams['field_a'] = entityLabel
 
     @closeMenu()
     @refreshVisualization()
     return
 
+  @filterByQuant = (propertyID, propertyLabel) ->
+    return @filterByProperty(@PROPERTY_BASE_TYPES.QUANTITATIVE, propertyID, propertyLabel)
+
   @filterByCategory = (propertyID, propertyLabel) ->
-    if @selectedEntityLabel is propertyLabel
-      @selectedEntityLabel = null
+    return @filterByProperty(@PROPERTY_BASE_TYPES.CATEGORICAL, propertyID, propertyLabel)
+
+  @filterByProperty = (propertyBaseType, propertyID, propertyLabel) ->
+    if @selectedPropertyLabel[propertyBaseType] is propertyLabel
+      @selectedPropertyLabel[propertyBaseType] = null
       @filteredSpecs = @specs.slice()
       return
 
     @filteredSpecs = _.filter(@specs, (spec) ->
-      _.some(spec['properties']['categorical'], (category) ->
-        category['id'] == propertyID
+      _.some(spec['properties'][propertyBaseType], (property) ->
+        property['id'] == propertyID
       )
     )
-    @selectedEntityLabel = propertyLabel
+    @selectedPropertyLabel[propertyBaseType] = propertyLabel
     return
 
-  @filterByChildCategory = (entityLabel, childPropertyID, childEntityLabel) ->
-    @selectedChildEntities[entityLabel] = childEntityLabel
-    @filterByCategory(childPropertyID, childEntityLabel)
+
+  @filterByChildCategory = (propertyLabel, childPropertyID, childPropertyLabel) ->
+    @filterByChildProperty(@PROPERTY_BASE_TYPES.CATEGORICAL, propertyLabel, childPropertyID, childPropertyLabel)
+    return
+
+  @filterByChildQuant = (propertyLabel, childPropertyID, childPropertyLabel) ->
+    @filterByChildProperty(@PROPERTY_BASE_TYPES.QUANTITATIVE, propertyLabel, childPropertyID, childPropertyLabel)
+    return
+
+  @filterByChildProperty = (propertyBaseType, propertyLabel, childPropertyID, childPropertyLabel) ->
+    @selectedChildEntities[propertyLabel] = childPropertyLabel
+    @filterByProperty(propertyBaseType, childPropertyID, childPropertyLabel)
     @closeMenu()
     return
+
 
   @datasetsLoaded = false
   @propertiesLoaded = false
