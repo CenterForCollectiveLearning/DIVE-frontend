@@ -75,7 +75,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       ,
         title: '≤'
         value: '<='
-    ]
+    ],
 
     DISCRETE: [
         title: '='
@@ -84,7 +84,6 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
         title: '≠'
         value: '!='
     ]
-
   }
 
   @OPERATIONS = {
@@ -94,7 +93,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       ,
         title: 'compare'
         value: 'compare'
-    ]
+    ],
 
     NON_UNIQUE: [
         title: 'grouped by'
@@ -150,9 +149,9 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       field_b: ''
       function: ''
 
-    @selectedPropertyLabel = 
-      quantitative: null
-      categorical: null
+    @filteredPropertyIDs = 
+      quantitative: []
+      categorical: []
 
     @attributeA = ' ' # the autocomplete field doesn't refresh if attributeA is null or ''
     @attributeB = null
@@ -316,12 +315,14 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
     for attribute in attributes
       if attribute.child
-        attribute.activeLabel = @selectedChildEntities[attribute.label]
+        attribute.activeLabel = @selectedChildEntities[attribute.label]?.label
+        attribute.activeID = @selectedChildEntities[attribute.label]?.id
 
       if not attribute.activeLabel
         attribute.activeLabel = attribute.label
+        attribute.activeID = attribute.propertyID
 
-      attribute.selected = attribute.activeLabel is @selectedPropertyLabel[@PROPERTY_BASE_TYPES.QUANTITATIVE]
+      attribute.selected = attribute.activeID in @filteredPropertyIDs[@PROPERTY_BASE_TYPES.QUANTITATIVE]
 
     return attributes
 
@@ -333,12 +334,14 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
     for entity in entities
       if entity.child
-        entity.activeLabel = @selectedChildEntities[entity.label]
+        entity.activeLabel = @selectedChildEntities[entity.label]?.label
+        entity.activeID = @selectedChildEntities[entity.label]?.id
 
       if not entity.activeLabel
         entity.activeLabel = entity.label
+        entity.activeID = entity.propertyID
 
-      entity.selected = entity.activeLabel is @selectedPropertyLabel[@PROPERTY_BASE_TYPES.CATEGORICAL]
+      entity.selected = entity.activeID in @filteredPropertyIDs[@PROPERTY_BASE_TYPES.CATEGORICAL]
 
     return entities
 
@@ -402,19 +405,32 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return @filterByProperty(@PROPERTY_BASE_TYPES.CATEGORICAL, propertyID, propertyLabel)
 
   @filterByProperty = (propertyBaseType, propertyID, propertyLabel) ->
-    if @selectedPropertyLabel[propertyBaseType] is propertyLabel
-      @selectedPropertyLabel[propertyBaseType] = null
-      @filteredSpecs = @specs.slice()
-      return
+    if propertyID in @filteredPropertyIDs[propertyBaseType]
+      @filteredPropertyIDs[propertyBaseType] = _.without(@filteredPropertyIDs[propertyBaseType], propertyID)
 
-    @filteredSpecs = _.filter(@specs, (spec) ->
-      _.some(spec['properties'][propertyBaseType], (property) ->
-        property['id'] == propertyID
+      if @filteredPropertyIDs.categorical.length == 0 and @filteredPropertyIDs.quantitative.length == 0
+        @filteredSpecs = @specs.slice()
+        return
+
+    else
+      @filteredPropertyIDs[propertyBaseType].push(propertyID)
+
+    @filteredSpecs = _.filter(@specs, (spec) =>
+      _hasCategoricalProperties = _.every(@filteredPropertyIDs.categorical, (categoricalPropertyFilter) =>
+        _.some(spec['properties'][@PROPERTY_BASE_TYPES.CATEGORICAL], (property) =>
+          property['id'] == categoricalPropertyFilter
+        )
       )
-    )
-    @selectedPropertyLabel[propertyBaseType] = propertyLabel
-    return
 
+      _hasQuantitativeProperties = _.every(@filteredPropertyIDs.quantitative, (quantitativePropertyFilter) =>
+         _.some(spec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], (property) =>
+          property['id'] == quantitativePropertyFilter
+        )          
+      )
+
+      return _hasCategoricalProperties and _hasQuantitativeProperties
+    )
+    return
 
   @filterByChildCategory = (propertyLabel, childPropertyID, childPropertyLabel) ->
     @filterByChildProperty(@PROPERTY_BASE_TYPES.CATEGORICAL, propertyLabel, childPropertyID, childPropertyLabel)
@@ -425,11 +441,12 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @filterByChildProperty = (propertyBaseType, propertyLabel, childPropertyID, childPropertyLabel) ->
-    @selectedChildEntities[propertyLabel] = childPropertyLabel
+    @selectedChildEntities[propertyLabel] = 
+      label: childPropertyLabel
+      id: childPropertyID
     @filterByProperty(propertyBaseType, childPropertyID, childPropertyLabel)
     @closeMenu()
     return
-
 
   @datasetsLoaded = false
   @propertiesLoaded = false
