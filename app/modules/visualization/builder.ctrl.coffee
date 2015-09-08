@@ -1,4 +1,4 @@
-angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $rootScope, DataService, PropertiesService, VisualizationDataService, VizSpecService, pIDRetrieved) ->
+angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $rootScope, DataService, PropertiesService, SpecsService, pIDRetrieved) ->
 
   @ATTRIBUTE_TYPES =
     NUMERIC: ["int", "float"]
@@ -51,6 +51,11 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       disabled: true
   ]
 
+  @PROPERTY_BASE_TYPES = {
+    QUANTITATIVE: "quantitative"
+    CATEGORICAL: "categorical"
+  }
+
   @OPERATORS = {
     NUMERIC: [
         title: '='
@@ -70,7 +75,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       ,
         title: '≤'
         value: '<='
-    ]
+    ],
 
     DISCRETE: [
         title: '='
@@ -79,7 +84,6 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
         title: '≠'
         value: '!='
     ]
-
   }
 
   @OPERATIONS = {
@@ -89,7 +93,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       ,
         title: 'compare'
         value: 'compare'
-    ]
+    ],
 
     NON_UNIQUE: [
         title: 'grouped by'
@@ -108,6 +112,8 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @availableAggregationFunctions = @AGGREGATION_FUNCTIONS
   @conditional1IsNumeric = true
+
+  @selectedSpec = null
 
   @selectedDataset = null
 
@@ -143,7 +149,9 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       field_b: ''
       function: ''
 
-    @selectedEntityLabel = null
+    @filteredPropertyIDs = 
+      quantitative: []
+      categorical: []
 
     @attributeA = ' ' # the autocomplete field doesn't refresh if attributeA is null or ''
     @attributeB = null
@@ -184,6 +192,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
 
     @retrieveProperties()
+    @retrieveSpecs()
     return
 
   @resetIsGrouping = () ->
@@ -305,7 +314,15 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       attributes = []
 
     for attribute in attributes
-      attribute.selected = attribute.label is @selectedAttributeLabel
+      if attribute.child
+        attribute.activeLabel = @selectedChildEntities[attribute.label]?.label
+        attribute.activeID = @selectedChildEntities[attribute.label]?.id
+
+      if not attribute.activeLabel
+        attribute.activeLabel = attribute.label
+        attribute.activeID = attribute.propertyID
+
+      attribute.selected = attribute.activeID in @filteredPropertyIDs[@PROPERTY_BASE_TYPES.QUANTITATIVE]
 
     return attributes
 
@@ -317,12 +334,14 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
     for entity in entities
       if entity.child
-        entity.activeLabel = @selectedChildEntities[entity.label]
+        entity.activeLabel = @selectedChildEntities[entity.label]?.label
+        entity.activeID = @selectedChildEntities[entity.label]?.id
 
       if not entity.activeLabel
         entity.activeLabel = entity.label
+        entity.activeID = entity.propertyID
 
-      entity.selected = entity.activeLabel is @selectedEntityLabel
+      entity.selected = entity.activeID in @filteredPropertyIDs[@PROPERTY_BASE_TYPES.CATEGORICAL]
 
     return entities
 
@@ -346,6 +365,9 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @getSpecs = () ->
     return @specs
 
+  @getFilteredSpecs = () ->
+    return @filteredSpecs
+
   @getVisualizationTypes = () ->
     _visualizationTypes = @VISUALIZATION_TYPE_DATA.slice()
 
@@ -359,23 +381,70 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @selectedVisualizationType = type
     return
 
+  @selectSpec = () ->
+    return
+
   @selectEntity = (entityLabel, parentEntityLabel) ->
-    if @selectedEntityLabel is entityLabel
+    if @selectedPropertyLabel[@PROPERTY_BASE_TYPES.CATEGORICAL] is entityLabel
       return @resetDIDParams()
 
     if parentEntityLabel
       return @selectChildEntity(parentEntityLabel, entityLabel)
 
-    @selectedEntityLabel = entityLabel
+    @selectedPropertyLabel[@PROPERTY_BASE_TYPES.CATEGORICAL] = entityLabel
     @selectedParams['field_a'] = entityLabel
 
     @closeMenu()
     @refreshVisualization()
     return
 
-  @selectChildEntity = (entityLabel, childEntityLabel) ->
-    @selectedChildEntities[entityLabel] = childEntityLabel
-    @selectEntity(childEntityLabel)
+  @filterByQuant = (propertyID, propertyLabel) ->
+    return @filterByProperty(@PROPERTY_BASE_TYPES.QUANTITATIVE, propertyID, propertyLabel)
+
+  @filterByCategory = (propertyID, propertyLabel) ->
+    return @filterByProperty(@PROPERTY_BASE_TYPES.CATEGORICAL, propertyID, propertyLabel)
+
+  @filterByProperty = (propertyBaseType, propertyID, propertyLabel) ->
+    if propertyID in @filteredPropertyIDs[propertyBaseType]
+      @filteredPropertyIDs[propertyBaseType] = _.without(@filteredPropertyIDs[propertyBaseType], propertyID)
+
+      if @filteredPropertyIDs.categorical.length == 0 and @filteredPropertyIDs.quantitative.length == 0
+        @filteredSpecs = @specs.slice()
+        return
+
+    else
+      @filteredPropertyIDs[propertyBaseType].push(propertyID)
+
+    @filteredSpecs = _.filter(@specs, (spec) =>
+      _hasCategoricalProperties = _.every(@filteredPropertyIDs.categorical, (categoricalPropertyFilter) =>
+        _.some(spec['properties'][@PROPERTY_BASE_TYPES.CATEGORICAL], (property) =>
+          property['id'] == categoricalPropertyFilter
+        )
+      )
+
+      _hasQuantitativeProperties = _.every(@filteredPropertyIDs.quantitative, (quantitativePropertyFilter) =>
+         _.some(spec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], (property) =>
+          property['id'] == quantitativePropertyFilter
+        )          
+      )
+
+      return _hasCategoricalProperties and _hasQuantitativeProperties
+    )
+    return
+
+  @filterByChildCategory = (propertyLabel, childPropertyID, childPropertyLabel) ->
+    @filterByChildProperty(@PROPERTY_BASE_TYPES.CATEGORICAL, propertyLabel, childPropertyID, childPropertyLabel)
+    return
+
+  @filterByChildQuant = (propertyLabel, childPropertyID, childPropertyLabel) ->
+    @filterByChildProperty(@PROPERTY_BASE_TYPES.QUANTITATIVE, propertyLabel, childPropertyID, childPropertyLabel)
+    return
+
+  @filterByChildProperty = (propertyBaseType, propertyLabel, childPropertyID, childPropertyLabel) ->
+    @selectedChildEntities[propertyLabel] = 
+      label: childPropertyLabel
+      id: childPropertyID
+    @filterByProperty(propertyBaseType, childPropertyID, childPropertyLabel)
     @closeMenu()
     return
 
@@ -385,14 +454,14 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @resetParams()
 
-  @retrieveProperties = () ->
-    PropertiesService.getEntities({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((entities) =>
+  @retrieveProperties = ->
+    PropertiesService.getCategoricalProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((entities) =>
       @entitiesLoaded = true
       @entities = entities
       console.log("Loaded entities", @entities)
     )
 
-    PropertiesService.getAttributes({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((attributes) =>
+    PropertiesService.getQuantitativeProperties({ pID: $rootScope.pID, dID: @selectedDataset.dID }).then((attributes) =>
       @attributesLoaded = true
       @processAttributes(attributes)
       console.log("Loaded attributes", attributes)
@@ -405,19 +474,21 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     )
     return
 
+  @retrieveSpecs = ->
+    SpecsService.getSpecs({ dID: @selectedDataset.dID }).then((specs) =>
+      @specsLoaded = true
+      @specs = specs
+      @filteredSpecs = specs
+      console.log("Specs loaded!", @specs)
+    )
+    return
+
   pIDRetrieved.promise.then((r) =>
     DataService.getDatasets().then((datasets) =>
       @datasetsLoaded = true
       @datasets = datasets
       @setDataset(datasets[0])
       console.log("Datasets loaded!", @datasets)
-    )
-
-    vizSpecServiceParams = {}
-    VizSpecService.getVizSpecs(vizSpecServiceParams).then((specs) =>
-      @specsLoaded = true
-      @specs = specs
-      console.log("Specs loaded!", @specs)
     )
   )
 
