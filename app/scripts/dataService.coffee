@@ -263,9 +263,6 @@ angular.module('diveApp.services').service('ConditionalDataService', ($http, Con
   }
 )
 
-angular.module('diveApp.services').service('VisualizationDataService', ($http, $rootScope, $q, Config) ->
-)
-
 angular.module('diveApp.services').service('StatisticsDataService', ($http, $rootScope, $q, Config) ->
   return {
     getStatisticsData: (params) ->
