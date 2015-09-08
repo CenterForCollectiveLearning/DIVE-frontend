@@ -33,20 +33,20 @@
               .dropdown-button(ng-click="builderCtrl.selectEntityDropdown(category.label)")
                 span.md-select-icon
 
-              .inner-label(ng-click="builderCtrl.filterByCategory(category.propertyID, category.activeLabel)", flex='')
+              .inner-label(ng-click="builderCtrl.filterByCategory(category.activeID, category.activeLabel)", flex='')
                 | {{ category.activeLabel }}
 
               .md-select-menu-container.md-clickable(ng-data-entity="{{ category.label }}")
                 md-select-menu
                   md-content
-                    md-option(ng-click="builderCtrl.filterByCategory(category.propertyID, category.activeLabel)")
+                    md-option(ng-click="builderCtrl.filterByCategory(category.activeID, category.activeLabel)")
                       .md-text
                         | {{ category.label }}
                     md-option(ng-repeat="childCategory in category.child", ng-click="builderCtrl.filterByChildCategory(category.label, childCategory.propertyID, childCategory.label)")
                       .md-text
                         | {{ childCategory.label }}
 
-          a.radio-button.text.padded(href='', ng-class="{'selected': category.selected}", ng-click="builderCtrl.filterByCategory(category.propertyID, category.activeLabel)", ng-if="!category.child")
+          a.radio-button.text.padded(href='', ng-class="{'selected': category.selected}", ng-click="builderCtrl.filterByCategory(category.activeID, category.activeLabel)", ng-if="!category.child")
             .inner-button
               .inner-label
                 | {{ category.label }}
@@ -63,20 +63,20 @@
               .dropdown-button(ng-click="builderCtrl.selectEntityDropdown(quant.label)")
                 span.md-select-icon
 
-              .inner-label(ng-click="builderCtrl.filterByQuant(quant.propertyID, quant.activeLabel)", flex='')
+              .inner-label(ng-click="builderCtrl.filterByQuant(quant.activeID, quant.activeLabel)", flex='')
                 | {{ quant.activeLabel }}
 
               .md-select-menu-container.md-clickable(ng-data-entity="{{ quant.label }}")
                 md-select-menu
                   md-content
-                    md-option(ng-click="builderCtrl.filterByQuant(quant.propertyID, quant.activeLabel)")
+                    md-option(ng-click="builderCtrl.filterByQuant(quant.activeID, quant.activeLabel)")
                       .md-text
                         | {{ quant.label }}
                     md-option(ng-repeat="childQuant in quant.child", ng-click="builderCtrl.filterByChildQuant(quant.label, childQuant.propertyID, childQuant.label)")
                       .md-text
                         | {{ childQuant.label }}
 
-          a.radio-button.text.padded(href='', ng-class="{'selected': quant.selected}", ng-click="builderCtrl.filterByQuant(quant.propertyID, quant.activeLabel)", ng-if="!quant.child")
+          a.radio-button.text.padded(href='', ng-class="{'selected': quant.selected}", ng-click="builderCtrl.filterByQuant(quant.activeID, quant.activeLabel)", ng-if="!quant.child")
             .inner-button
               .inner-label
                 | {{ quant.label }}
