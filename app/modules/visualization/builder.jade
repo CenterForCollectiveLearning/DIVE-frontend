@@ -22,7 +22,7 @@
               .inner-button
                 img(src="{{visualizationType.icon}}")
 
-    .sidenav-group
+    .sidenav-group(ng-if='builderCtrl.getEntities().length')
       h3.category-title
         span Categorical Data
 
@@ -51,7 +51,7 @@
               .inner-label
                 | {{ category.label }}
 
-    .sidenav-group
+    .sidenav-group(ng-if='builderCtrl.getAttributes().length')
       h3.category-title
         span Numerical Data
 
