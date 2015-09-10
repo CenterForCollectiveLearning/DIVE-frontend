@@ -120,7 +120,7 @@
       .visualization-group(ng-repeat='spec in builderCtrl.getFilteredSpecs()', flex="33")
         .visualization-group-button(ng-click="builderCtrl.selectSpec(spec.id)")
           .header
-            | {{spec.title}}
+            | {{spec.meta.desc}}
 
 
     visualization(type='builderCtrl.selectedVisualizationType', spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData', ng-if="builderCtrl.selectedSpec")
