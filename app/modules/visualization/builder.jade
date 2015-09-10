@@ -22,7 +22,7 @@
               .inner-button
                 img(src="{{visualizationType.icon}}")
 
-    .sidenav-group
+    .sidenav-group(ng-if='builderCtrl.getEntities().length')
       h3.category-title
         span Categorical Data
 
@@ -51,7 +51,7 @@
               .inner-label
                 | {{ category.label }}
 
-    .sidenav-group
+    .sidenav-group(ng-if='builderCtrl.getAttributes().length')
       h3.category-title
         span Numerical Data
 
@@ -118,9 +118,9 @@
   .main-content(layout="column", flex='')
     .gallery(ng-if="!builderCtrl.selectedSpec", layout="row")
       .visualization-group(ng-repeat='spec in builderCtrl.getFilteredSpecs()', flex="33")
-        .visualization-group-button(ng-click="builderCtrl.selectSpec()")
+        .visualization-group-button(ng-click="builderCtrl.selectSpec(spec.id)")
           .header
-            | {{spec.title}}
+            | {{spec.meta.desc}}
 
 
     visualization(type='builderCtrl.selectedVisualizationType', spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData', ng-if="builderCtrl.selectedSpec")

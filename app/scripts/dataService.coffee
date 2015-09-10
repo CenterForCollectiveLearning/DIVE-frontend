@@ -225,10 +225,11 @@ angular.module('diveApp.services').service('SpecsService', ($http, $rootScope, $
 
       # Remove stats field, which can be huge, from params
       console.log 'Getting viz data with params:', params
-      $http.post(Config.API + '/api/data_from_spec', {
+      $http.post(Config.API + '/api/specs/v1/visualizations', {
         pID: $rootScope.pID,
         spec: params.spec,
         conditional: params.conditional
+        specId: params.specId
       }).then (r) =>
         q.resolve(r.data)
 
