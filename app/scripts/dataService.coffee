@@ -229,6 +229,7 @@ angular.module('diveApp.services').service('SpecsService', ($http, $rootScope, $
         pID: $rootScope.pID,
         spec: params.spec,
         conditional: params.conditional
+        specId: params.specId
       }).then (r) =>
         q.resolve(r.data)
 

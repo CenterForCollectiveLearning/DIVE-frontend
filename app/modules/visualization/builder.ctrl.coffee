@@ -224,6 +224,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @refreshVisualization = () ->
     if @selectedParams['field_a'] and (@selectedParams.arguments['field_b'] or @selectedParams.arguments.function)
       _params =
+        specId: @selectedSpec.id
         spec: @selectedParams
         conditional: @selectedConditional
 
@@ -382,27 +383,27 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @selectedSpec = _.where(@specs, {'id': specId})?[0]
 
     @selectedVisualizationType = @selectedSpec.vizType
-
     switch @selectedSpec.typeStructure
 
-      when "C_Q"
-        _fieldAProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.CATEGORICAL], {'designation': 'FIELD_A'})?[0]
+      when "c:q"
+        _fieldAProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.CATEGORICAL], {'fieldType': 'fieldA'})?[0]
         @selectedParams['field_a'] = _fieldAProperty.label
 
-        if @selectedSpec.generatingProcedure isnt "VAL_AGG"
-          _fieldBProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], {'designation': 'FIELD_B'})?[0]
+        if @selectedSpec.generatingProcedure isnt "val:count"
+          _fieldBProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], {'fieldType': 'fieldB'})?[0]
           @selectedParams['field_b'] = _fieldBProperty.label
 
-      when "Q_Q"
-        _fieldAProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], {'designation': 'FIELD_A'})?[0]
+      when "q:q"
+        _fieldAProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], {'fieldType': 'fieldA'})?[0]
         @selectedParams['field_a'] = _fieldAProperty.label
 
-        if @selectedSpec.generatingProcedure isnt "VAL_AGG"
-          _fieldBProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], {'designation': 'FIELD_B'})?[0]
+        if @selectedSpec.generatingProcedure isnt "val:count"
+          _fieldBProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], {'fieldType': 'fieldB'})?[0]
           @selectedParams['field_b'] = _fieldBProperty.label
 
       else
         console.error "ERROR: UNKNOWN SPEC TYPE STRUCTURE"
+        console.error @selectedSpec.typeStructure
 
     @closeMenu()
     @refreshVisualization()
