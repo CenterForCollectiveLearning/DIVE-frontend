@@ -118,7 +118,7 @@
   .main-content(layout="column", flex='')
     .gallery(ng-if="!builderCtrl.selectedSpec", layout="row")
       .visualization-group(ng-repeat='spec in builderCtrl.getFilteredSpecs()', flex="33")
-        .visualization-group-button(ng-click="builderCtrl.selectSpec()")
+        .visualization-group-button(ng-click="builderCtrl.selectSpec(spec.id)")
           .header
             | {{spec.title}}
 

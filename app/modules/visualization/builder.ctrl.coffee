@@ -227,7 +227,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
         spec: @selectedParams
         conditional: @selectedConditional
 
-      VisualizationDataService.getVisualizationData(_params).then((data) =>
+      SpecsService.getVisualizationData(_params).then((data) =>
         @visualizationData = data.viz_data
         @tableData = data.table_result
       )
@@ -362,9 +362,6 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
     return entities
 
-  @getSpecs = () ->
-    return @specs
-
   @getFilteredSpecs = () ->
     return @filteredSpecs
 
@@ -381,18 +378,31 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @selectedVisualizationType = type
     return
 
-  @selectSpec = () ->
-    return
+  @selectSpec = (specId) ->
+    @selectedSpec = _.where(@specs, {'id': specId})?[0]
 
-  @selectEntity = (entityLabel, parentEntityLabel) ->
-    if @selectedPropertyLabel[@PROPERTY_BASE_TYPES.CATEGORICAL] is entityLabel
-      return @resetDIDParams()
+    @selectedVisualizationType = @selectedSpec.vizType
 
-    if parentEntityLabel
-      return @selectChildEntity(parentEntityLabel, entityLabel)
+    switch @selectedSpec.typeStructure
 
-    @selectedPropertyLabel[@PROPERTY_BASE_TYPES.CATEGORICAL] = entityLabel
-    @selectedParams['field_a'] = entityLabel
+      when "C_Q"
+        _fieldAProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.CATEGORICAL], {'designation': 'FIELD_A'})?[0]
+        @selectedParams['field_a'] = _fieldAProperty.label
+
+        if @selectedSpec.generatingProcedure isnt "VAL_AGG"
+          _fieldBProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], {'designation': 'FIELD_B'})?[0]
+          @selectedParams['field_b'] = _fieldBProperty.label
+
+      when "Q_Q"
+        _fieldAProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], {'designation': 'FIELD_A'})?[0]
+        @selectedParams['field_a'] = _fieldAProperty.label
+
+        if @selectedSpec.generatingProcedure isnt "VAL_AGG"
+          _fieldBProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], {'designation': 'FIELD_B'})?[0]
+          @selectedParams['field_b'] = _fieldBProperty.label
+
+      else
+        console.error "ERROR: UNKNOWN SPEC TYPE STRUCTURE"
 
     @closeMenu()
     @refreshVisualization()
