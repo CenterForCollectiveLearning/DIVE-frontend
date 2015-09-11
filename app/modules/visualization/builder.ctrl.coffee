@@ -225,8 +225,9 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     if @selectedParams['field_a'] and (@selectedParams.arguments['field_b'] or @selectedParams.arguments.function)
       _params =
         specId: @selectedSpec.id
-        spec: @selectedParams
+        spec: @selectedSpec
         conditional: @selectedConditional
+        dID: @selectedDataset.dID
 
       SpecsService.getVisualizationData(_params).then((data) =>
         @visualizationData = data.viz_data
