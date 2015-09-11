@@ -379,31 +379,60 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @selectedVisualizationType = type
     return
 
+  @chooseSpecVisualizationType = (specVisualizationType) ->
+    switch specVisualizationType
+      when "hist"
+        visualizationType = "bar"
+
+      else
+        visualizationType = specVisualizationType
+
+    return visualizationType
+
   @selectSpec = (specId) ->
     @selectedSpec = _.where(@specs, {'id': specId})?[0]
+    console.log @selectedSpec
+    @selectedVisualizationType = @chooseSpecVisualizationType(@selectedSpec.vizType)
 
-    @selectedVisualizationType = @selectedSpec.vizType
     switch @selectedSpec.typeStructure
-
       when "c:q"
-        _fieldAProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.CATEGORICAL], {'fieldType': 'fieldA'})?[0]
-        @selectedParams['field_a'] = _fieldAProperty.label
+        _firstPropertyType = @PROPERTY_BASE_TYPES.CATEGORICAL
+        _secondPropertyType = @PROPERTY_BASE_TYPES.QUANTITATIVE
 
-        if @selectedSpec.generatingProcedure isnt "val:count"
-          _fieldBProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], {'fieldType': 'fieldB'})?[0]
-          @selectedParams['field_b'] = _fieldBProperty.label
-
-      when "q:q"
-        _fieldAProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], {'fieldType': 'fieldA'})?[0]
-        @selectedParams['field_a'] = _fieldAProperty.label
-
-        if @selectedSpec.generatingProcedure isnt "val:count"
-          _fieldBProperty = _.where(@selectedSpec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], {'fieldType': 'fieldB'})?[0]
-          @selectedParams['field_b'] = _fieldBProperty.label
+      when "q:q", "b:q"
+        _firstPropertyType = @PROPERTY_BASE_TYPES.QUANTITATIVE
+        _secondPropertyType = @PROPERTY_BASE_TYPES.QUANTITATIVE
 
       else
         console.error "ERROR: UNKNOWN SPEC TYPE STRUCTURE"
         console.error @selectedSpec.typeStructure
+
+    switch @selectedSpec.generatingProcedure
+      when "val:val"
+        _firstFieldType = 'fieldA'
+        _secondFieldType = 'fieldB'
+
+      when "val:count"
+        _firstFieldType = 'fieldA'
+
+      when "bin:agg"
+        _firstFieldType = 'binningField'
+        _secondFieldType = 'aggFieldA'
+
+      else
+        console.error "ERROR: UNKNOWN GEN PROCEDURE"
+        console.error @selectedSpec.generatingProcedure
+
+    if _firstFieldType
+      _fieldAProperty = _.where(@selectedSpec['properties'][_firstPropertyType], {'fieldType': _firstFieldType})?[0]
+      if _fieldAProperty
+        @selectedParams['field_a'] = _fieldAProperty.label
+
+    if _secondFieldType
+      _fieldBProperty = _.where(@selectedSpec['properties'][_secondPropertyType], {'fieldType': _secondFieldType})?[0]
+      if _fieldBProperty
+        @selectedParams['field_b'] = _fieldBProperty.label
+
 
     @closeMenu()
     @refreshVisualization()
