@@ -113,8 +113,6 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
   @availableAggregationFunctions = @AGGREGATION_FUNCTIONS
   @conditional1IsNumeric = true
 
-  @selectedSpec = null
-
   @selectedDataset = null
 
   @selectedChildEntities = {}
@@ -143,6 +141,8 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @resetDIDParams = ->
+    @selectedSpec = null
+
     @selectedParams['field_a'] = ''
     @selectedParams['operation'] = @OPERATIONS.NON_UNIQUE[0].value
     @selectedParams['arguments'] =

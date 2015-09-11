@@ -122,9 +122,20 @@
           .header
             | {{spec.meta.desc}}
 
-
     visualization(type='builderCtrl.selectedVisualizationType', spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData', ng-if="builderCtrl.selectedSpec")
       md-content(flex='', layout='column')
+        .top-visualization-bar(layout='row')
+          .heading(flex='')
+            | {{builderCtrl.selectedSpec.meta.desc}}
+
+          .left-actions
+
+          .right-actions
+            a.btn.back-button(ng-click='builderCtrl.resetParams()')
+              | Gallery
+            a.btn.export-button()
+              | Export
+
         .visualization(flex='', layout='row')
           .left-side(layout='column', flex='')
             md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
