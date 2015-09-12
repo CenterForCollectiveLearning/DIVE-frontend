@@ -20,6 +20,8 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
       ), true
 
       scope.render = (type, spec, data) ->
+
+        console.log "Render requirements: #{type?} #{spec?} #{data?}"
         return unless type and spec and data
 
         COUNT_ATTRIBUTE = "count"
@@ -33,8 +35,6 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
 
         if not field_b
           field_b = COUNT_ATTRIBUTE
-
-        data = data[field_b]
 
         console.info 'id', spec.field_a
         console.info 'Rendering visualization with data:', data

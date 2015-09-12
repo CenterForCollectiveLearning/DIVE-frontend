@@ -230,8 +230,8 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
         dID: @selectedDataset.dID
 
       SpecsService.getVisualizationData(_params).then((data) =>
-        @visualizationData = data.viz_data
-        @tableData = data.table_result
+        @visualizationData = data.visualize
+        @tableData = data.table
       )
 
   @onSelectFieldA = () ->
@@ -409,12 +409,12 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
         console.error @selectedSpec.typeStructure
 
     switch @selectedSpec.generatingProcedure
+      when "ind:val", "val:count"
+        _firstFieldType = 'fieldA'
+
       when "val:val"
         _firstFieldType = 'fieldA'
         _secondFieldType = 'fieldB'
-
-      when "val:count"
-        _firstFieldType = 'fieldA'
 
       when "bin:agg"
         _firstFieldType = 'binningField'
