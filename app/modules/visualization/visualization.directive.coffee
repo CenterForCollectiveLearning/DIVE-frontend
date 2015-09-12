@@ -1,5 +1,6 @@
 require('jquery')
 require('d3')
+require('d3plus')
 require('plottable')
 
 angular.module('diveApp.visualization').directive('visualization', ['$window', ($window) ->
@@ -131,6 +132,6 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
 
           when 'multiline'
             return
-
+        $window.addEventListener('resize', -> plot.redraw())
   }
 ])
