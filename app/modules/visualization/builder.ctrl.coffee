@@ -149,7 +149,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       field_b: ''
       function: ''
 
-    @filteredPropertyIDs = 
+    @filteredPropertyIDs =
       quantitative: []
       categorical: []
 
@@ -222,17 +222,16 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     @refreshVisualization()
 
   @refreshVisualization = () ->
-    if @selectedParams['field_a'] and (@selectedParams.arguments['field_b'] or @selectedParams.arguments.function)
-      _params =
-        specId: @selectedSpec.id
-        spec: @selectedSpec
-        conditional: @selectedConditional
-        dID: @selectedDataset.dID
+    _params =
+      specId: @selectedSpec.id
+      spec: @selectedSpec
+      conditional: @selectedConditional
+      dID: @selectedDataset.dID
 
-      SpecsService.getVisualizationData(_params).then((data) =>
-        @visualizationData = data.visualize
-        @tableData = data.table
-      )
+    SpecsService.getVisualizationData(_params).then((data) =>
+      @visualizationData = data.visualize
+      @tableData = data.table
+    )
 
   @onSelectFieldA = () ->
     if @attributeA and @attributeA.label
@@ -392,7 +391,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
 
   @selectSpec = (specId) ->
     @selectedSpec = _.where(@specs, {'id': specId})?[0]
-    console.log @selectedSpec
+    console.log "SelectedSpec", @selectedSpec
     @selectedVisualizationType = @chooseSpecVisualizationType(@selectedSpec.vizType)
 
     switch @selectedSpec.typeStructure
@@ -420,9 +419,15 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
         _firstFieldType = 'binningField'
         _secondFieldType = 'aggFieldA'
 
+      when "val:agg"
+        _firstFieldType = 'groupedField'
+        _secondFieldType = 'aggField'
+
       else
         console.error "ERROR: UNKNOWN GEN PROCEDURE"
         console.error @selectedSpec.generatingProcedure
+
+    @selectedParams['generatingProcedure'] = @selectedSpec.generatingProcedure
 
     if _firstFieldType
       _fieldAProperty = _.where(@selectedSpec['properties'][_firstPropertyType], {'fieldType': _firstFieldType})?[0]
@@ -466,7 +471,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
       _hasQuantitativeProperties = _.every(@filteredPropertyIDs.quantitative, (quantitativePropertyFilter) =>
          _.some(spec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], (property) =>
           property['id'] == quantitativePropertyFilter
-        )          
+        )
       )
 
       return _hasCategoricalProperties and _hasQuantitativeProperties
@@ -482,7 +487,7 @@ angular.module('diveApp.visualization').controller('BuilderCtrl', ($scope, $root
     return
 
   @filterByChildProperty = (propertyBaseType, propertyLabel, childPropertyID, childPropertyLabel) ->
-    @selectedChildEntities[propertyLabel] = 
+    @selectedChildEntities[propertyLabel] =
       label: childPropertyLabel
       id: childPropertyID
     @filterByProperty(propertyBaseType, childPropertyID, childPropertyLabel)

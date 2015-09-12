@@ -121,6 +121,10 @@
         .visualization-group-button(ng-click="builderCtrl.selectSpec(spec.id)")
           .header
             | {{spec.meta.desc}}
+          .viz-type
+            | {{spec.vizType}}
+          .generating-procedure
+            | {{spec.generatingProcedure}}
 
     visualization(type='builderCtrl.selectedVisualizationType', spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData', ng-if="builderCtrl.selectedSpec")
       md-content(flex='', layout='column')
@@ -140,6 +144,7 @@
           .left-side(layout='column', flex='')
             md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
             #viz-container(flex='')
+              svg#viz
 
     datatable(ng-if='builderCtrl.tableData.data && builderCtrl.selectedSpec' data='builderCtrl.tableData.data', selector=".datatable", headers='builderCtrl.tableData.columns', rowheader='false', height=1000, sortindex=1, sortorder='false')
       .datatable
