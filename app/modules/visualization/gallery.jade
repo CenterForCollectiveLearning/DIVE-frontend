@@ -2,7 +2,3 @@
   .visualization-group(ng-repeat='spec in galleryCtrl.getFilteredSpecs()', flex="33")
     .visualization-group-button(ng-click="galleryCtrl.selectSpec(spec.id)")
       .header(ng-bind-html='spec.meta.construction | constructionToSentence | trust')
-      .viz-type
-        | {{spec.vizType}}
-      .generating-procedure
-        | {{spec.generatingProcedure}}
