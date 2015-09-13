@@ -24,6 +24,7 @@ angular.module('diveApp.visualization').filter('constructionToSentence', ->
 require('./builder.ctrl')
 require('./gallery.ctrl')
 require('./visualization.ctrl')
+require('./visualizations.ctrl')
 
 require('./visualizationplot.directive')
 require('../base/datatable.directive')
