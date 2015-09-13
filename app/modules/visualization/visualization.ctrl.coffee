@@ -159,7 +159,7 @@ angular.module('diveApp.visualization').controller('VisualizationsCtrl', ($scope
       field_b: ''
       function: ''
 
-    @filteredPropertyIDs = 
+    @filteredPropertyIDs =
       quantitative: []
       categorical: []
 
@@ -388,7 +388,7 @@ angular.module('diveApp.visualization').controller('VisualizationsCtrl', ($scope
       _hasQuantitativeProperties = _.every(@filteredPropertyIDs.quantitative, (quantitativePropertyFilter) =>
          _.some(spec['properties'][@PROPERTY_BASE_TYPES.QUANTITATIVE], (property) =>
           property['id'] == quantitativePropertyFilter
-        )          
+        )
       )
 
       return _hasCategoricalProperties and _hasQuantitativeProperties
@@ -404,7 +404,7 @@ angular.module('diveApp.visualization').controller('VisualizationsCtrl', ($scope
     return
 
   @filterByChildProperty = (propertyBaseType, propertyLabel, childPropertyID, childPropertyLabel) ->
-    @selectedChildEntities[propertyLabel] = 
+    @selectedChildEntities[propertyLabel] =
       label: childPropertyLabel
       id: childPropertyID
     @filterByProperty(propertyBaseType, childPropertyID, childPropertyLabel)
@@ -470,9 +470,15 @@ angular.module('diveApp.visualization').controller('VisualizationsCtrl', ($scope
         _firstFieldType = 'binningField'
         _secondFieldType = 'aggFieldA'
 
+      when "val:agg"
+        _firstFieldType = 'groupedField'
+        _secondFieldType = 'aggField'
+
       else
         console.error "ERROR: UNKNOWN GEN PROCEDURE"
         console.error @selectedSpec.generatingProcedure
+
+    @selectedParams['generatingProcedure'] = @selectedSpec['generatingProcedure']
 
     if _firstFieldType
       _fieldAProperty = _.where(@selectedSpec['properties'][_firstPropertyType], {'fieldType': _firstFieldType})?[0]

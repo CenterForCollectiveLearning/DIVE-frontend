@@ -16,6 +16,7 @@ visualization(type='visualizationsCtrl.selectedVisualizationType', spec='visuali
       .left-side(layout='column', flex='')
         md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
         #viz-container(flex='')
+          svg#viz
 
 datatable(ng-if='visualizationsCtrl.tableData.data && visualizationsCtrl.selectedSpec' data='visualizationsCtrl.tableData.data', selector=".datatable", headers='visualizationsCtrl.tableData.columns', rowheader='false', height=1000, sortindex=1, sortorder='false')
   .datatable
