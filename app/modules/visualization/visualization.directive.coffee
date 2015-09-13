@@ -95,13 +95,17 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
               .y(((d) -> d[yAccessor]), yScale)
               .animated(true)
 
-            chart = new Plottable.Components.Table([
-              [yLabel, yAxis, plot],
-              [null, null, xAxis],
-              [null, null, xLabel]
-            ])
-
-            chart.renderTo(selector)
+            if minimal
+              plot.animated(false)
+              plot.renderTo(selector)
+            else
+              plot.animated(true)
+              chart = new Plottable.Components.Table([
+                [yLabel, yAxis, plot],
+                [null, null, xAxis],
+                [null, null, xLabel]
+              ])
+              chart.renderTo(selector)
 
           when 'line'
             if spec.generatingProcedure == 'ind:val'
@@ -126,21 +130,25 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
             plot.addDataset(dataset)
               .x(((d) -> d[xAccessor]), xScale)
               .y(((d) -> d[yAccessor]), yScale)
-              .animated(true)
 
-            chart = new Plottable.Components.Table([
-              [yLabel, yAxis, plot],
-              [null, null, xAxis],
-              [null, null, xLabel]
-            ])
-
-            chart.renderTo(selector)
+            if minimal
+              plot.animated(false)
+              plot.renderTo(selector)
+            else
+              plot.animated(true)
+              chart = new Plottable.Components.Table([
+                [yLabel, yAxis, plot],
+                [null, null, xAxis],
+                [null, null, xLabel]
+              ])
+              chart.renderTo(selector)
 
           when 'network'
             return
 
           when 'multiline'
             return
-        $window.addEventListener('resize', -> plot.redraw())
+        if plot
+          $window.addEventListener('resize', -> plot.redraw())
   }
 ])
