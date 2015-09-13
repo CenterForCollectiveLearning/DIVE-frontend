@@ -42,15 +42,15 @@ angular.module('diveApp.visualization').filter('trust', ($sce) ->
 
 angular.module('diveApp.visualization').filter('constructionToSentence', ->
   (construction) ->
-    formatted_terms = _.map(construction, (term, i) ->
+    _formatted_terms = _.map(construction, (term, i) ->
       type = term.type
-      s = term.string
+      termString = term.string
       if i is 0
-        s = s.charAt(0).toUpperCase() + s.slice(1)
-      '<span class="' + type + '">' + s + '</span>'
+        termString = termString.charAt(0).toUpperCase() + termString.slice(1)
+      return '<span class="#{type}">#{termString}</span>'
     )
-    sentence = formatted_terms.join(' ') + '.'
-    sentence
+    sentence = _formatted_terms.join(' ') + '.'
+    return sentence
 )
 
 require('./visualization.ctrl')
