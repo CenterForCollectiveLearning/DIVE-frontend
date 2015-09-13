@@ -3,3 +3,7 @@
     .visualization-group-button(ng-click="galleryCtrl.selectSpec(spec.id)")
       .header
         | {{spec.meta.desc}}
+      .viz-type
+        | {{spec.vizType}}
+      .generating-procedure
+        | {{spec.generatingProcedure}}
