@@ -6,3 +6,6 @@
         | {{spec.vizType}}
       .generating-procedure
         | {{spec.generatingProcedure}}
+      .preview
+        visualization(type='spec.vizType', spec='spec', data='spec.data.visualize', minimal='true', selector='"svg#viz-{{$index}}"')
+        svg(id='viz-{{$index}}')

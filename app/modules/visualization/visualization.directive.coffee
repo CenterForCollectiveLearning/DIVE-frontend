@@ -10,25 +10,32 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
       type: '='
       spec: '='
       data: '='
+      minimal: '='
+      selector: '@selector'
 
     link: (scope, element, attrs) ->
 
-      scope.$watchCollection '[type, spec, data]', ((newData) ->
-        scope.render newData[0], newData[1], newData[2]
+      scope.$watchCollection '[type, spec, data, minimal, selector]', ((newData) ->
+        scope.render newData[0], newData[1], newData[2], newData[3], newData[4]
         return
       ), true
 
-      scope.render = (type, spec, data) ->
-        console.log "Render requirements: #{type?} #{spec?} #{data?}"
-        return unless type and spec and data
+      attrs.$observe('selector', (actual_value) ->
+        actual_value = actual_value.replace(/["]/g, '')
+        element.val('selector=' + actual_value)
+        scope.selector = actual_value
+      )
+
+      scope.render = (type, spec, data, minimal, selector) ->
+        console.log "Render requirements: #{type?} #{spec?} #{data?} #{minimal?} #{selector?}"
+        return unless type and spec and data and minimal and selector
 
         console.info 'spec', spec
         console.info 'Rendering visualization with data:', data
 
         generatingProcedure = spec.generatingProcedure
 
-        svgViz = "svg#viz"
-        d3.select(svgViz + " > *").remove()  # Reset SVG
+        d3.select(selector + " > *").remove()  # Reset SVG
 
         switch type
           when 'tree_map', 'pie'
@@ -42,7 +49,7 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
             plot.addDataset(dataset)
               .sectorValue((d -> d[field_b]), scale)
               .attr('fill', (d -> d[field_b]), colorScale)
-              .renderTo(svgViz)
+              .renderTo(selector)
 
           when 'bar'
             if generatingProcedure == 'val:count'
@@ -94,7 +101,7 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
               [null, null, xLabel]
             ])
 
-            chart.renderTo(svgViz)
+            chart.renderTo(selector)
 
           when 'line'
             if spec.generatingProcedure == 'ind:val'
@@ -127,7 +134,7 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
               [null, null, xLabel]
             ])
 
-            chart.renderTo(svgViz)
+            chart.renderTo(selector)
 
           when 'network'
             return
