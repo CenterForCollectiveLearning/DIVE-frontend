@@ -1,145 +1,21 @@
-.viz-viewport(layout-fill='', layout='row', layout-align='starter', flex='')
+visualization(type='visualizationsCtrl.selectedVisualizationType', spec='visualizationsCtrl.selectedParams', data='visualizationsCtrl.visualizationData', ng-if="visualizationsCtrl.selectedSpec")
+  md-content(flex='', layout='column')
+    .top-visualization-bar(layout='row')
+      .heading(flex='')
+        | {{visualizationsCtrl.selectedSpec.meta.desc}}
 
-  md-sidenav(md-is-locked-open="true", layout="column")
-    .sidenav-group
-      h3.category-title
-        span Dataset
+      .left-actions
 
-      md-autocomplete(ng-if="builderCtrl.datasetsLoaded", md-items="d in builderCtrl.datasets", md-item-text="d.title", placeholder="Dataset", md-min-length="0", md-search-text="datasetQuery", md-selected-item="builderCtrl.selectedDataset", md-selected-item-change="builderCtrl.onSelectDataset(d)")
-        md-item-template
-          span(md-highlight-text="datasetQuery") {{d.title}}
-        md-not-found
-          span No matches found.
- 
-    .sidenav-group
-      h3.category-title
-        span Visualization Type
+      .right-actions
+        a.btn.back-button(ng-click='visualizationsCtrl.viewGallery()')
+          | Gallery
+        a.btn.export-button(ng-click='visualizationsCtrl.shareVisualization()')
+          | Get link
 
-      .filter-visualization(layout='row')
-        .combined-toggle-container
-          span.toggle-container(ng-repeat='visualizationType in builderCtrl.getVisualizationTypes()')
-            a.radio-button.icon(href='', alt='visualizationType.label', title='visualizationType.label', ng-class="{'selected': visualizationType.selected, 'disabled': !visualizationType.enabled}", ng-click="builderCtrl.selectVisualizationType(visualizationType.type)")
-              .inner-button
-                img(src="{{visualizationType.icon}}")
+    .visualization(flex='', layout='row')
+      .left-side(layout='column', flex='')
+        md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
+        #viz-container(flex='')
 
-    .sidenav-group(ng-if='builderCtrl.getEntities().length')
-      h3.category-title
-        span Categorical Data
-
-      .combined-toggle-container(layout='row', layout-wrap='')
-        .toggle-container(ng-repeat='category in builderCtrl.getEntities()', flex=50)
-          .radio-button.text.dropdown(ng-class="{'selected': category.selected}", ng-if="category.child", ng-data-entity="{{ category.label }}")
-            .inner-button(layout="row")
-              .dropdown-button(ng-click="builderCtrl.selectEntityDropdown(category.label)")
-                span.md-select-icon
-
-              .inner-label(ng-click="builderCtrl.filterByCategory(category.activeID, category.activeLabel)", flex='')
-                | {{ category.activeLabel }}
-
-              .md-select-menu-container.md-clickable(ng-data-entity="{{ category.label }}")
-                md-select-menu
-                  md-content
-                    md-option(ng-click="builderCtrl.filterByCategory(category.activeID, category.activeLabel)")
-                      .md-text
-                        | {{ category.label }}
-                    md-option(ng-repeat="childCategory in category.child", ng-click="builderCtrl.filterByChildCategory(category.label, childCategory.propertyID, childCategory.label)")
-                      .md-text
-                        | {{ childCategory.label }}
-
-          a.radio-button.text.padded(href='', ng-class="{'selected': category.selected}", ng-click="builderCtrl.filterByCategory(category.activeID, category.activeLabel)", ng-if="!category.child")
-            .inner-button
-              .inner-label
-                | {{ category.label }}
-
-    .sidenav-group(ng-if='builderCtrl.getAttributes().length')
-      h3.category-title
-        span Numerical Data
-
-      .combined-toggle-container(layout='row', layout-wrap='')
-        .toggle-container(ng-repeat='quant in builderCtrl.getAttributes()', flex=50)
-
-          .radio-button.text.dropdown(ng-class="{'selected': quant.selected}", ng-if="quant.child", ng-data-entity="{{ quant.label }}")
-            .inner-button(layout="row")
-              .dropdown-button(ng-click="builderCtrl.selectEntityDropdown(quant.label)")
-                span.md-select-icon
-
-              .inner-label(ng-click="builderCtrl.filterByQuant(quant.activeID, quant.activeLabel)", flex='')
-                | {{ quant.activeLabel }}
-
-              .md-select-menu-container.md-clickable(ng-data-entity="{{ quant.label }}")
-                md-select-menu
-                  md-content
-                    md-option(ng-click="builderCtrl.filterByQuant(quant.activeID, quant.activeLabel)")
-                      .md-text
-                        | {{ quant.label }}
-                    md-option(ng-repeat="childQuant in quant.child", ng-click="builderCtrl.filterByChildQuant(quant.label, childQuant.propertyID, childQuant.label)")
-                      .md-text
-                        | {{ childQuant.label }}
-
-          a.radio-button.text.padded(href='', ng-class="{'selected': quant.selected}", ng-click="builderCtrl.filterByQuant(quant.activeID, quant.activeLabel)", ng-if="!quant.child")
-            .inner-button
-              .inner-label
-                | {{ quant.label }}
-
-    .sidenav-group(ng-if="builderCtrl.selectedParams.field_a")
-      h3.category-title
-        span Conditionals
-
-      div(layout='row', layout-wrap='')
-        md-autocomplete(flex="70", md-items="a in builderCtrl.getProperties()", md-item-text="a.label", placeholder="field", md-min-length="0", md-search-text="conditionalFieldQuery", md-selected-item="builderCtrl.conditional1Field", md-selected-item-change="builderCtrl.onSelectConditional1Field()")
-          md-item-template
-            span(md-highlight-text="builderCtrl.conditional1Field") {{a.label}}
-
-        md-select.select-small(flex="22", ng-if='builderCtrl.conditional1IsNumeric' ng-disabled='!builderCtrl.conditional1Field', ng-model="builderCtrl.conditional1.operation")
-          md-option(ng-repeat="o in builderCtrl.OPERATORS.NUMERIC", ng-value="o.value")
-            | {{o.title}}
-
-        md-select.select-small(flex="22", ng-if='!builderCtrl.conditional1IsNumeric' ng-disabled='!builderCtrl.conditional1Field', ng-model="builderCtrl.conditional1.operation")
-          md-option(ng-repeat="o in builderCtrl.OPERATORS.DISCRETE", ng-value="o.value")
-            | {{o.title}}
-
-        md-input-container.conditional-value(flex="100", ng-if='builderCtrl.conditional1IsNumeric', ng-disabled='!builderCtrl.conditional1.operation || !builderCtrl.conditional1Field')
-          input(type="text", ng-model="builderCtrl.conditional1.criteria", ng-change="builderCtrl.onChangeConditional()", ng-disabled='!builderCtrl.conditional1.operation || !builderCtrl.conditional1Field')
-
-        md-autocomplete.conditional-value(
-          flex="100",
-          ng-if='!builderCtrl.conditional1IsNumeric'
-          md-items="value in builderCtrl.getConditional1Values()",
-          md-item-text="value",
-          placeholder="",
-          md-min-length="0",
-          md-search-text="conditionalValueQuery",
-          md-selected-item="builderCtrl.conditional1.criteria",
-          md-selected-item-change="builderCtrl.onChangeConditional()"
-        )
-          md-item-template
-            span(md-highlight-text="builderCtrl.conditional1.criteria") {{value}}
-
-  .main-content(layout="column", flex='')
-    .gallery(ng-if="!builderCtrl.selectedSpec", layout="row")
-      .visualization-group(ng-repeat='spec in builderCtrl.getFilteredSpecs()', flex="33")
-        .visualization-group-button(ng-click="builderCtrl.selectSpec(spec.id)")
-          .header
-            | {{spec.meta.desc}}
-
-    visualization(type='builderCtrl.selectedVisualizationType', spec='builderCtrl.selectedParams', data='builderCtrl.visualizationData', ng-if="builderCtrl.selectedSpec")
-      md-content(flex='', layout='column')
-        .top-visualization-bar(layout='row')
-          .heading(flex='')
-            | {{builderCtrl.selectedSpec.meta.desc}}
-
-          .left-actions
-
-          .right-actions
-            a.btn.back-button(ng-click='builderCtrl.resetParams()')
-              | Gallery
-            a.btn.export-button()
-              | Export
-
-        .visualization(flex='', layout='row')
-          .left-side(layout='column', flex='')
-            md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
-            #viz-container(flex='')
-
-    datatable(ng-if='builderCtrl.tableData.data && builderCtrl.selectedSpec' data='builderCtrl.tableData.data', selector=".datatable", headers='builderCtrl.tableData.columns', rowheader='false', height=1000, sortindex=1, sortorder='false')
-      .datatable
+datatable(ng-if='visualizationsCtrl.tableData.data && visualizationsCtrl.selectedSpec' data='visualizationsCtrl.tableData.data', selector=".datatable", headers='visualizationsCtrl.tableData.columns', rowheader='false', height=1000, sortindex=1, sortorder='false')
+  .datatable
