@@ -1,4 +1,6 @@
 angular = require('angular')
+_ = require('underscore')
+
 angular.module('diveApp.visualization', [ 'diveApp.services' ])
 
 angular.module('diveApp.visualization').directive('visualizationSideNav', ->
@@ -31,6 +33,24 @@ angular.module('diveApp.visualization').directive('visualizationExport', ->
     templateUrl: 'modules/visualization/partials/export.html'
     controller: 'VisualizationExportCtrl'
   }
+)
+
+angular.module('diveApp.visualization').filter('trust', ($sce) ->
+  return (val) ->
+    return $sce.trustAsHtml(val)
+)
+
+angular.module('diveApp.visualization').filter('constructionToSentence', ->
+  (construction) ->
+    formatted_terms = _.map(construction, (term, i) ->
+      type = term.type
+      s = term.string
+      if i is 0
+        s = s.charAt(0).toUpperCase() + s.slice(1)
+      '<span class="' + type + '">' + s + '</span>'
+    )
+    sentence = formatted_terms.join(' ') + '.'
+    sentence
 )
 
 require('./visualization.ctrl')
