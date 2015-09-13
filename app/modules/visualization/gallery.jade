@@ -1,0 +1,5 @@
+.gallery(layout="row")
+  .visualization-group(ng-repeat='spec in galleryCtrl.getFilteredSpecs()', flex="33")
+    .visualization-group-button(ng-click="galleryCtrl.selectSpec(spec.id)")
+      .header
+        | {{spec.meta.desc}}
