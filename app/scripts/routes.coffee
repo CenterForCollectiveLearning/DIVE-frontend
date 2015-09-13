@@ -167,23 +167,31 @@ angular.module('diveApp.routes').config(($stateProvider, $urlRouterProvider, $lo
     )
   .state('project.visualizations',
     abstract: true
-    authenticate: true
     url: '/visualizations'
     templateUrl: 'modules/visualization/visualizations.html'
     controller: 'VisualizationsCtrl'
     controllerAs: 'visualizationsCtrl'
   )
     .state('project.visualizations.gallery',
+      authenticate: true
       url: '/gallery'
       templateUrl: 'modules/visualization/gallery.html'
       controller: 'GalleryCtrl'
       controllerAs: 'galleryCtrl'
     )
     .state('project.visualizations.builder',
+      authenticate: true
       url: '/builder/:sID'
       templateUrl: 'modules/visualization/builder.html'
       controller: 'BuilderCtrl'
       controllerAs: 'builderCtrl'
+    )
+    .state('project.visualizations.visualization',
+      authenticate: false
+      url: '/:vID'
+      templateUrl: 'modules/visualization/visualization.html'
+      controller: 'VisualizationCtrl'
+      controllerAs: 'visualizationCtrl'
     )
   .state('project.analysis',
     abstract: true

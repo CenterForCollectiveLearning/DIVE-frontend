@@ -3,7 +3,7 @@ require('d3')
 require('d3plus')
 require('plottable')
 
-angular.module('diveApp.visualization').directive('visualization', ['$window', ($window) ->
+angular.module('diveApp.visualization').directive('visualizationplot', ['$window', ($window) ->
   {
     restrict: 'EA'
     scope:
@@ -45,6 +45,8 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
               .renderTo(svgViz)
 
           when 'bar'
+            console.log "generatingProcedure"
+            console.log generatingProcedure
             if generatingProcedure == 'val:count'
               xAccessor = 'value'
               yAccessor = 'count'
