@@ -206,7 +206,7 @@ angular.module('diveApp.services').service('PropertiesService', ($http, $rootSco
   }
 )
 
-angular.module('diveApp.services').service('SpecsService', ($http, $rootScope, $q, Config) ->
+angular.module('diveApp.services').service('SpecsService', ($http, $rootScope, $q, $stateParams, Config) ->
   return {
     getSpecs: (params) ->
       q = $q.defer()
@@ -220,11 +220,11 @@ angular.module('diveApp.services').service('SpecsService', ($http, $rootScope, $
 
     #TODO: remove getVisualizationData and getVizSpecs  
 
-    getVisualizationData: (params) ->
+    getVisualizationDataFromSpec: (params) ->
       q = $q.defer()
 
       # Remove stats field, which can be huge, from params
-      console.log 'Getting viz data with params:', params
+      console.log 'Getting viz data from spec with params:', params
       $http.post(Config.API + '/api/specs/v1/visualizations', {
         pID: $rootScope.pID
         dID: params.dID
@@ -236,17 +236,32 @@ angular.module('diveApp.services').service('SpecsService', ($http, $rootScope, $
 
       return q.promise
 
-    getVizSpecs: (params) ->
+    getVisualizationData: (params) ->
       q = $q.defer()
-      console.log 'Getting visualization specifications with params', params
-      $http.get(Config.API + '/api/viz_specs', {
+
+      console.log 'Getting viz data with params:', params
+      console.log $rootScope.pID
+      $http.get(Config.API + '/api/specs/v1/visualizations/' + params.vID, {
         params:
-          pID: $rootScope.pID
-      }).then((r) ->
-        q.resolve(r.data.specs)
-      )
+          projectTitle: $stateParams.formattedProjectTitle
+      }).then (r) =>
+        q.resolve(r.data)
+
       return q.promise
 
+    exportVisualization: (params) ->
+      q = $q.defer()
+
+      console.log 'Exporting visualization with params:', params
+      $http.post(Config.API + '/api/specs/v1/visualizations/export', {
+        pID: $rootScope.pID
+        dID: params.dID
+        conditional: params.conditional
+        sID: params.sID
+      }).then (r) =>
+        q.resolve(r.data.vID)
+
+      return q.promise
   }
 )
 

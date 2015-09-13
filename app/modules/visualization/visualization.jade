@@ -1,2 +1,15 @@
-md-whiteframe.main-container.md-whiteframe-z2(layout='row', layout-fill='')
-  div(ui-view='', layout='vertical', layout-fill='')
+.visualization-view
+  visualizationplot(type='visualizationsCtrl.selectedVisualizationType', spec='visualizationsCtrl.selectedParams', data='visualizationsCtrl.visualizationData', ng-if="visualizationsCtrl.selectedSpec")
+    md-content(flex='', layout='column')
+      .top-visualization-bar(layout='row')
+        .heading(flex='')
+          | {{visualizationsCtrl.selectedSpec.meta.desc}}
+
+      .visualization(flex='', layout='row')
+        .left-side(layout='column', flex='')
+          md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
+          #viz-container(flex='')
+            svg#viz
+
+  datatable(ng-if='visualizationsCtrl.tableData.data && visualizationsCtrl.selectedSpec' data='visualizationsCtrl.tableData.data', selector=".datatable", headers='visualizationsCtrl.tableData.columns', rowheader='false', height=1000, sortindex=1, sortorder='false')
+    .datatable
