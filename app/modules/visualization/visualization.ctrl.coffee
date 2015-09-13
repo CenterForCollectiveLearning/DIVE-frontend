@@ -414,9 +414,9 @@ angular.module('diveApp.visualization').controller('VisualizationsCtrl', ($scope
 
   @showVisualization = () ->
     console.log @specs
-    console.log @selectedSpecID
+    console.log "specID", @selectedSpecID
     @selectedSpec = _.where(@specs, {'id': @selectedSpecID})?[0]
-    console.log @selectedSpec
+    console.log "Selected spec:", @selectedSpec
     @selectedVisualizationType = @chooseSpecVisualizationType(@selectedSpec.vizType)
 
     switch @selectedSpec.typeStructure

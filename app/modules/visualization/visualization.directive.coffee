@@ -41,27 +41,38 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
 
         switch type
           when 'tree', 'pie'
-            if generatingProcedure = "val:count"
+            if generatingProcedure == "val:count"
               itemAccessor = 'value'
               valueAccessor = 'count'
-              itemAccessor = spec.args.fieldA
-            if generatingProcedure = "val:agg"
+            if generatingProcedure == "val:agg"
               itemAccessor = 'value'
               valueAccessor = 'agg'
-              itemAccessor = spec.args.groupedField
+
+            # Restructure from [{k, v}] to [{k: v}]
+            valKeyCollection = []
+            _.each(data, (d) ->
+              newObj = {}
+
+              # TODO Better Naming
+              key = d[itemAccessor]
+              value = d[valueAccessor]
+              newObj[valueAccessor] = value
+              valKeyCollection.push(newObj)
+            )
+            dataset = new Plottable.Dataset(valKeyCollection)
 
             scale = new Plottable.Scales.Linear()
             colorScale = new Plottable.Scales.InterpolatedColor()
             colorScale.range(["#BDCEF0", "#5279C7"])
 
-            # TODO Restructure output to fit [{ val: 1 }, { val: 2 }, { val: 3 },
-            # { val: 4 }, { val: 5 }, { val: 6 }];
-            # plot = new Plottable.Plots.Pie()
-            #
-            # plot.addDataset(dataset)
-            #   .sectorValue((d -> d[itemAccesor]), scale)
-            #   .attr('fill', (d -> d[field_b]), colorScale)
-            #   .renderTo(selector)
+            # TODO How do you get labels?
+            plot = new Plottable.Plots.Pie()
+
+            plot.addDataset(dataset)
+              .sectorValue(((d) -> d[valueAccessor]), scale)
+              .attr('fill', ((d) -> d[valueAccessor]), colorScale)
+              # .labelsEnabled(true)
+              .renderTo(selector)
 
           when 'bar', 'hist'
             if generatingProcedure == 'val:count'
@@ -119,6 +130,11 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
               chart.renderTo(selector)
 
           when 'scatter'
+            if spec.generatingProcedure == 'ind:val'
+              xAccessor = 'index'
+              yAccessor = 'value'
+              xLabel = 'index'
+              yLabel = spec.args.fieldA.label
             if spec.generatingProcedure == 'val:val'
               xAccessor = 'x'
               yAccessor = 'y'
