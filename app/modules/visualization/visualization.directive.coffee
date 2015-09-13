@@ -61,10 +61,12 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
               xLabel = spec.field_a
               yLabel = spec.field_b
             if generatingProcedure == 'val:agg'
+
               xAccessor = 'value'
               yAccessor = 'agg'
               xLabel = spec.groupedField
               yLabel = spec.aggField
+              console.log('val:agg spec:', spec)
 
             console.info(xAccessor, yAccessor, xLabel, yLabel)
             plot = new Plottable.Plots.Bar()

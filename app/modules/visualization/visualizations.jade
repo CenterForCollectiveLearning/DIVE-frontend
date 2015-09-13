@@ -1,0 +1,119 @@
+.viz-viewport(layout-fill='', layout='row', layout-align='starter', flex='')
+
+  md-sidenav(md-is-locked-open="true", layout="column")
+    .sidenav-group
+      h3.category-title
+        span Dataset
+
+      md-autocomplete(ng-if="visualizationsCtrl.datasetsLoaded", md-items="d in visualizationsCtrl.datasets", md-item-text="d.title", placeholder="Dataset", md-min-length="0", md-search-text="datasetQuery", md-selected-item="visualizationsCtrl.selectedDataset", md-selected-item-change="visualizationsCtrl.onSelectDataset(d)")
+        md-item-template
+          span(md-highlight-text="datasetQuery") {{d.title}}
+        md-not-found
+          span No matches found.
+ 
+    .sidenav-group
+      h3.category-title
+        span Visualization Type
+
+      .filter-visualization(layout='row')
+        .combined-toggle-container
+          span.toggle-container(ng-repeat='visualizationType in visualizationsCtrl.getVisualizationTypes()')
+            a.radio-button.icon(href='', alt='visualizationType.label', title='visualizationType.label', ng-class="{'selected': visualizationType.selected, 'disabled': !visualizationType.enabled}", ng-click="visualizationsCtrl.selectVisualizationType(visualizationType.type)")
+              .inner-button
+                img(src="{{visualizationType.icon}}")
+
+    .sidenav-group(ng-if='visualizationsCtrl.getEntities().length')
+      h3.category-title
+        span Categorical Data
+
+      .combined-toggle-container(layout='row', layout-wrap='')
+        .toggle-container(ng-repeat='category in visualizationsCtrl.getEntities()', flex=50)
+          .radio-button.text.dropdown(ng-class="{'selected': category.selected}", ng-if="category.child", ng-data-entity="{{ category.label }}")
+            .inner-button(layout="row")
+              .dropdown-button(ng-click="visualizationsCtrl.selectEntityDropdown(category.label)")
+                span.md-select-icon
+
+              .inner-label(ng-click="visualizationsCtrl.filterByCategory(category.activeID, category.activeLabel)", flex='')
+                | {{ category.activeLabel }}
+
+              .md-select-menu-container.md-clickable(ng-data-entity="{{ category.label }}")
+                md-select-menu
+                  md-content
+                    md-option(ng-click="visualizationsCtrl.filterByCategory(category.activeID, category.activeLabel)")
+                      .md-text
+                        | {{ category.label }}
+                    md-option(ng-repeat="childCategory in category.child", ng-click="visualizationsCtrl.filterByChildCategory(category.label, childCategory.propertyID, childCategory.label)")
+                      .md-text
+                        | {{ childCategory.label }}
+
+          a.radio-button.text.padded(href='', ng-class="{'selected': category.selected}", ng-click="visualizationsCtrl.filterByCategory(category.activeID, category.activeLabel)", ng-if="!category.child")
+            .inner-button
+              .inner-label
+                | {{ category.label }}
+
+    .sidenav-group(ng-if='visualizationsCtrl.getAttributes().length')
+      h3.category-title
+        span Numerical Data
+
+      .combined-toggle-container(layout='row', layout-wrap='')
+        .toggle-container(ng-repeat='quant in visualizationsCtrl.getAttributes()', flex=50)
+
+          .radio-button.text.dropdown(ng-class="{'selected': quant.selected}", ng-if="quant.child", ng-data-entity="{{ quant.label }}")
+            .inner-button(layout="row")
+              .dropdown-button(ng-click="visualizationsCtrl.selectEntityDropdown(quant.label)")
+                span.md-select-icon
+
+              .inner-label(ng-click="visualizationsCtrl.filterByQuant(quant.activeID, quant.activeLabel)", flex='')
+                | {{ quant.activeLabel }}
+
+              .md-select-menu-container.md-clickable(ng-data-entity="{{ quant.label }}")
+                md-select-menu
+                  md-content
+                    md-option(ng-click="visualizationsCtrl.filterByQuant(quant.activeID, quant.activeLabel)")
+                      .md-text
+                        | {{ quant.label }}
+                    md-option(ng-repeat="childQuant in quant.child", ng-click="visualizationsCtrl.filterByChildQuant(quant.label, childQuant.propertyID, childQuant.label)")
+                      .md-text
+                        | {{ childQuant.label }}
+
+          a.radio-button.text.padded(href='', ng-class="{'selected': quant.selected}", ng-click="visualizationsCtrl.filterByQuant(quant.activeID, quant.activeLabel)", ng-if="!quant.child")
+            .inner-button
+              .inner-label
+                | {{ quant.label }}
+
+    .sidenav-group(ng-if="visualizationsCtrl.selectedParams.field_a")
+      h3.category-title
+        span Conditionals
+
+      div(layout='row', layout-wrap='')
+        md-autocomplete(flex="70", md-items="a in visualizationsCtrl.getProperties()", md-item-text="a.label", placeholder="field", md-min-length="0", md-search-text="conditionalFieldQuery", md-selected-item="visualizationsCtrl.conditional1Field", md-selected-item-change="visualizationsCtrl.onSelectConditional1Field()")
+          md-item-template
+            span(md-highlight-text="visualizationsCtrl.conditional1Field") {{a.label}}
+
+        md-select.select-small(flex="22", ng-if='visualizationsCtrl.conditional1IsNumeric' ng-disabled='!visualizationsCtrl.conditional1Field', ng-model="visualizationsCtrl.conditional1.operation")
+          md-option(ng-repeat="o in visualizationsCtrl.OPERATORS.NUMERIC", ng-value="o.value")
+            | {{o.title}}
+
+        md-select.select-small(flex="22", ng-if='!visualizationsCtrl.conditional1IsNumeric' ng-disabled='!visualizationsCtrl.conditional1Field', ng-model="visualizationsCtrl.conditional1.operation")
+          md-option(ng-repeat="o in visualizationsCtrl.OPERATORS.DISCRETE", ng-value="o.value")
+            | {{o.title}}
+
+        md-input-container.conditional-value(flex="100", ng-if='visualizationsCtrl.conditional1IsNumeric', ng-disabled='!visualizationsCtrl.conditional1.operation || !visualizationsCtrl.conditional1Field')
+          input(type="text", ng-model="visualizationsCtrl.conditional1.criteria", ng-change="visualizationsCtrl.onChangeConditional()", ng-disabled='!visualizationsCtrl.conditional1.operation || !visualizationsCtrl.conditional1Field')
+
+        md-autocomplete.conditional-value(
+          flex="100",
+          ng-if='!visualizationsCtrl.conditional1IsNumeric'
+          md-items="value in visualizationsCtrl.getConditional1Values()",
+          md-item-text="value",
+          placeholder="",
+          md-min-length="0",
+          md-search-text="conditionalValueQuery",
+          md-selected-item="visualizationsCtrl.conditional1.criteria",
+          md-selected-item-change="visualizationsCtrl.onChangeConditional()"
+        )
+          md-item-template
+            span(md-highlight-text="visualizationsCtrl.conditional1.criteria") {{value}}
+
+  .main-content(layout="column", flex='')
+    .div(ui-view='')

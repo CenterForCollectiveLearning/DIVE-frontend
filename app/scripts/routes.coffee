@@ -165,25 +165,22 @@ angular.module('diveApp.routes').config(($stateProvider, $urlRouterProvider, $lo
       templateUrl: 'modules/data/inspect_dataset.html'
       controller: 'InspectDataCtrl'
     )
-  .state('project.visualize',
+  .state('project.visualizations',
     abstract: true
     authenticate: true
-    url: '/visualize'
-    templateUrl: 'modules/visualization/visualization.html'
-    controller: 'VisualizationCtrl'
+    url: '/visualizations'
+    templateUrl: 'modules/visualization/visualizations.html'
+    controller: 'VisualizationsCtrl'
+    controllerAs: 'visualizationsCtrl'
   )
-    .state('project.visualize.recommended',
-      url: '/recommended'
-      templateUrl: 'modules/visualization/recommended.html'
-      controller: 'RecommendedCtrl'
+    .state('project.visualizations.gallery',
+      url: '/gallery'
+      templateUrl: 'modules/visualization/gallery.html'
+      controller: 'GalleryCtrl'
+      controllerAs: 'galleryCtrl'
     )
-    .state('project.visualize.grid',
-      url: '/grid'
-      templateUrl: 'modules/visualization/grid.html'
-      controller: 'GridCtrl'
-    )
-    .state('project.visualize.builder',
-      url: '/builder'
+    .state('project.visualizations.builder',
+      url: '/builder/:sID'
       templateUrl: 'modules/visualization/builder.html'
       controller: 'BuilderCtrl'
       controllerAs: 'builderCtrl'

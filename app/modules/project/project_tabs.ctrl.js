@@ -8,8 +8,8 @@ angular.module('diveApp.project').controller('ProjectTabsCtrl', function($scope,
       baseState: 'project.data',
       label: 'Datasets'
     }, {
-      state: 'project.visualize.builder',
-      baseState: 'project.visualize',
+      state: 'project.visualizations.gallery',
+      baseState: 'project.visualizations',
       label: 'Visualizations'
     }
   ];
