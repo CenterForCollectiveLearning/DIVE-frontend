@@ -47,7 +47,7 @@ angular.module('diveApp.visualization').filter('constructionToSentence', ->
       termString = term.string
       if i is 0
         termString = termString.charAt(0).toUpperCase() + termString.slice(1)
-      return '<span class="#{type}">#{termString}</span>'
+      return "<span class='term-type-#{type}'>#{termString}</span>"
     )
     sentence = _formatted_terms.join(' ') + '.'
     return sentence
