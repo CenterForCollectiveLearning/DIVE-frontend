@@ -1,22 +1,25 @@
-visualization(type='visualizationsCtrl.selectedVisualizationType', spec='visualizationsCtrl.selectedSpec', data='visualizationsCtrl.visualizationData', minimal='false', selector='svg#viz', ng-if="visualizationsCtrl.selectedSpec")
-  md-content(flex='', layout='column')
-    .top-visualization-bar(layout='row')
-      .heading(flex='')
-        | {{visualizationsCtrl.selectedSpec.meta.desc}}
+.builder-view(layout-fill="")
+  visualizationplot(type='visualizationsCtrl.selectedVisualizationType', spec='visualizationsCtrl.selectedSpec', data='visualizationsCtrl.visualizationData', minimal='false', selector='svg#viz', ng-if="visualizationsCtrl.selectedSpec")
+    md-content(flex='', layout='column')
+      .top-visualization-bar(layout='row')
+        .heading(flex='')
+          | {{visualizationsCtrl.selectedSpec.meta.desc}}
 
-      .left-actions
+        .left-actions
 
-      .right-actions
-        a.btn.back-button(ng-click='visualizationsCtrl.viewGallery()')
-          | Gallery
-        a.btn.export-button(ng-click='visualizationsCtrl.shareVisualization()')
-          | Get link
+        .right-actions
+          a.btn.back-button(ng-click='visualizationsCtrl.viewGallery()')
+            | Gallery
+          a.btn.get-link-button(clipboard='', text='visualizationsCtrl.getVisualizationLink()', on-copied='visualizationsCtrl.successCopying()', on-error='visualizationsCtrl.errorCopying(err)', ng-if='visualizationsCtrl.visualizationUrl')
+            | Copy link
+          a.btn.export-button(ng-click='visualizationsCtrl.shareVisualization()', ng-if='!visualizationsCtrl.visualizationUrl')
+            | Share
 
-    .visualization(flex='', layout='row')
-      .left-side(layout='column', flex='')
-        md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
-        #viz-container(flex='')
-          svg#viz
+      .visualization(flex='', layout='row')
+        .left-side(layout='column', flex='')
+          md-progress-linear(md-mode='indeterminate', ng-if='loadingViz', flex='')
+          #viz-container(flex='')
+            svg#viz
 
-datatable(ng-if='visualizationsCtrl.tableData.data && visualizationsCtrl.selectedSpec' data='visualizationsCtrl.tableData.data', selector=".datatable", headers='visualizationsCtrl.tableData.columns', rowheader='false', height=1000, sortindex=1, sortorder='false')
-  .datatable
+  datatable(ng-if='visualizationsCtrl.tableData.data && visualizationsCtrl.selectedSpec' data='visualizationsCtrl.tableData.data', selector=".datatable", headers='visualizationsCtrl.tableData.columns', rowheader='false', height=1000, sortindex=1, sortorder='false')
+    .datatable

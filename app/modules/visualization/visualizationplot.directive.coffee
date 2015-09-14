@@ -3,7 +3,7 @@ require('d3')
 require('d3plus')
 require('plottable')
 
-angular.module('diveApp.visualization').directive('visualization', ['$window', ($window) ->
+angular.module('diveApp.visualization').directive('visualizationplot', ['$window', ($window) ->
   {
     restrict: 'EA'
     scope:
@@ -71,7 +71,7 @@ angular.module('diveApp.visualization').directive('visualization', ['$window', (
             plot.addDataset(dataset)
               .sectorValue(((d) -> d[valueAccessor]), scale)
               .attr('fill', ((d) -> d[valueAccessor]), colorScale)
-              # .labelsEnabled(true)
+              .labelsEnabled(true)
               .renderTo(selector)
 
           when 'bar', 'hist'

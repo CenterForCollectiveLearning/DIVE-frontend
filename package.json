@@ -12,6 +12,7 @@
     "angular": "1.3.x",
     "angular-animate": "1.3.x",
     "angular-aria": "1.3.x",
+    "angular-clipboard": "^1.0.1",
     "angular-cookies": "1.3.x",
     "angular-file-upload": "^2.0.0",
     "angular-local-storage": "^0.1.5",
