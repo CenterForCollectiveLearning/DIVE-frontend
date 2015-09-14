@@ -431,26 +431,10 @@ angular.module('diveApp.visualization').controller('VisualizationsCtrl', ($scope
       @tableData = data.table
     )
 
-  @parseSpecToParams = ->
-    switch @selectedSpec.typeStructure
-      when "c:q"
-        _firstPropertyType = @PROPERTY_BASE_TYPES.CATEGORICAL
-        _secondPropertyType = @PROPERTY_BASE_TYPES.QUANTITATIVE
-
-      when "q:q", "b:q"
-        _firstPropertyType = @PROPERTY_BASE_TYPES.QUANTITATIVE
-        _secondPropertyType = @PROPERTY_BASE_TYPES.QUANTITATIVE
-
-      else
-        console.error "ERROR: UNKNOWN SPEC TYPE STRUCTURE"
-        console.error @selectedSpec.typeStructure
-
   @showVisualization = () ->
     @selectedSpec = _.where(@specs, {'id': @selectedSpecID})?[0]
     @selectedVisualizationType = @chooseSpecVisualizationType(@selectedSpec.vizType)
 
-    @parseSpecToParams()
-    # # console.log @selectedSpec
     @getVisualization()
     return
 
@@ -517,7 +501,6 @@ angular.module('diveApp.visualization').controller('VisualizationsCtrl', ($scope
       @visualizationData = data.visualization.visualize
       @tableData = data.visualization.table
       @selectedSpec = data.spec
-      @parseSpecToParams()
       @selectedVisualizationType = @chooseSpecVisualizationType(data.spec.vizType)
     )
 
