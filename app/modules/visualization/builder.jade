@@ -1,5 +1,5 @@
 .builder-view(layout-fill="")
-  visualizationplot(type='visualizationsCtrl.selectedVisualizationType', spec='visualizationsCtrl.selectedParams', data='visualizationsCtrl.visualizationData', ng-if="visualizationsCtrl.selectedSpec")
+  visualizationplot(type='visualizationsCtrl.selectedVisualizationType', spec='visualizationsCtrl.selectedSpec', data='visualizationsCtrl.visualizationData', minimal='false', selector='svg#viz', ng-if="visualizationsCtrl.selectedSpec")
     md-content(flex='', layout='column')
       .top-visualization-bar(layout='row')
         .heading(flex='')

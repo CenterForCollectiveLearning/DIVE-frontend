@@ -133,9 +133,6 @@ angular.module('diveApp.visualization').controller('VisualizationsCtrl', ($scope
     @availableVisualizationTypes = _.pluck(@VISUALIZATION_TYPE_DATA, 'type')
     @selectedVisualizationType = null
 
-    @selectedParams =
-      dID: ''
-
     @resetDIDParams()
     return
 
@@ -147,19 +144,12 @@ angular.module('diveApp.visualization').controller('VisualizationsCtrl', ($scope
     @selectedSpec = null
     $scope.selectedSpec = @selectedSpec
 
-    @selectedParams['field_a'] = ''
-    @selectedParams['operation'] = @OPERATIONS.NON_UNIQUE[0].value
-    @selectedParams['arguments'] =
-      field_b: ''
-      function: ''
-
     @filteredPropertyIDs =
       quantitative: []
       categorical: []
 
     @attributeA = ' ' # the autocomplete field doesn't refresh if attributeA is null or ''
     @attributeB = null
-    @resetIsGrouping()
     return
 
   @selectEntityDropdown = (entityName) ->
@@ -192,31 +182,13 @@ angular.module('diveApp.visualization').controller('VisualizationsCtrl', ($scope
     @resetParams()
 
     @selectedDataset = d
-    @selectedParams.dID = d.dID
-
 
     @retrieveProperties()
     @retrieveSpecs()
     return
 
-  @resetIsGrouping = () ->
-    @isGrouping = @selectedParams.operation is "group"
-    if @isGrouping
-      @selectedParams.arguments.function = @availableAggregationFunctions[0].value
-    else
-      @selectedParams.arguments.function = null
-    return
-
   @onSelectOperation = () ->
-    @resetIsGrouping()
     return
-
-  @onSelectAggregationFunction = () ->
-    if @selectedParams.arguments.function is "count"
-      @selectedParams.arguments.field_b = null
-      @attributeB = null
-
-    # @refreshVisualization()
 
   @onChangeConditional = () ->
     if @conditional1.criteria
@@ -255,9 +227,7 @@ angular.module('diveApp.visualization').controller('VisualizationsCtrl', ($scope
     else
       @availableOperations = @OPERATIONS.NON_UNIQUE
 
-    @selectedParams.operation = @availableOperations[0].value
     @attributeB = undefined
-    @resetIsGrouping()
     return
 
   @processAttributes = (attributes) ->
@@ -461,58 +431,10 @@ angular.module('diveApp.visualization').controller('VisualizationsCtrl', ($scope
       @tableData = data.table
     )
 
-  @parseSpecToParams = ->
-    switch @selectedSpec.typeStructure
-      when "c:q"
-        _firstPropertyType = @PROPERTY_BASE_TYPES.CATEGORICAL
-        _secondPropertyType = @PROPERTY_BASE_TYPES.QUANTITATIVE
-
-      when "q:q", "b:q"
-        _firstPropertyType = @PROPERTY_BASE_TYPES.QUANTITATIVE
-        _secondPropertyType = @PROPERTY_BASE_TYPES.QUANTITATIVE
-
-      else
-        console.error "ERROR: UNKNOWN SPEC TYPE STRUCTURE"
-        console.error @selectedSpec.typeStructure
-
-    switch @selectedSpec.generatingProcedure
-      when "ind:val", "val:count"
-        _firstFieldType = 'fieldA'
-
-      when "val:val"
-        _firstFieldType = 'fieldA'
-        _secondFieldType = 'fieldB'
-
-      when "bin:agg"
-        _firstFieldType = 'binningField'
-        _secondFieldType = 'aggFieldA'
-
-      when "val:agg"
-        _firstFieldType = 'groupedField'
-        _secondFieldType = 'aggField'
-
-      else
-        console.error "ERROR: UNKNOWN GEN PROCEDURE"
-        console.error @selectedSpec.generatingProcedure
-
-    @selectedParams['generatingProcedure'] = @selectedSpec['generatingProcedure']
-
-    if _firstFieldType
-      _fieldAProperty = _.where(@selectedSpec['properties'][_firstPropertyType], {'fieldType': _firstFieldType})?[0]
-      if _fieldAProperty
-        @selectedParams['field_a'] = _fieldAProperty.label
-
-    if _secondFieldType
-      _fieldBProperty = _.where(@selectedSpec['properties'][_secondPropertyType], {'fieldType': _secondFieldType})?[0]
-      if _fieldBProperty
-        @selectedParams['field_b'] = _fieldBProperty.label
-
   @showVisualization = () ->
     @selectedSpec = _.where(@specs, {'id': @selectedSpecID})?[0]
     @selectedVisualizationType = @chooseSpecVisualizationType(@selectedSpec.vizType)
 
-    @parseSpecToParams()
-    # # console.log @selectedSpec
     @getVisualization()
     return
 
@@ -579,7 +501,6 @@ angular.module('diveApp.visualization').controller('VisualizationsCtrl', ($scope
       @visualizationData = data.visualization.visualize
       @tableData = data.visualization.table
       @selectedSpec = data.spec
-      @parseSpecToParams()
       @selectedVisualizationType = @chooseSpecVisualizationType(data.spec.vizType)
     )
 
