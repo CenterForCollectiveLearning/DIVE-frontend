@@ -1,25 +1,50 @@
-import React from 'react';
-import {Provider} from 'react-redux';
-import configureStore from '../store/configureStore';
-import Home from '../components/Home';
-import {renderDevTools} from '../utils/devTools';
+import React, { Component } from 'react';
 
-const store = configureStore();
+import { Link } from 'react-router';
+import { connect } from 'react-redux';
 
-export default React.createClass({
+@connect(state => ({ routerState: state.router }))
+export class App extends Component {
   render() {
+    const links = [
+      '/',
+      '/parent?foo=bar',
+      '/parent/child?bar=baz',
+      '/parent/child/123?baz=foo'
+    ].map(l =>
+      <p>
+        <Link to={l}>{l}</Link>
+      </p>
+    );
+
     return (
       <div>
-
-        {/* <Home /> is your app entry point */}
-        <Provider store={store}>
-          {() => <Home /> }
-        </Provider>
-
-        {/* only renders when running in DEV mode */
-          renderDevTools(store)
-        }
+        <h1>App Container</h1>
+        {links}
+        {this.props.children}
       </div>
     );
   }
-});
+}
+
+export class Parent extends Component {
+  render() {
+    return (
+      <div>
+        <h2>Parent</h2>
+        {this.props.children}
+      </div>
+    );
+  }
+}
+
+export class Child extends Component {
+  render() {
+    return (
+      <div>
+        <h2>Child</h2>
+        {this.props.children}
+      </div>
+    );
+  }
+}
