@@ -3,12 +3,18 @@
   "version": "0.1.0",
   "dependencies": {
     "babel-runtime": "^5.8.24",
+    "history": "^1.9.1",
     "lodash": "^3.10.1",
+    "material-ui": "^0.11.1",
     "react": "^0.13.3",
     "react-redux": "^2.1.2",
+    "react-router": "^1.0.0-rc1",
+    "react-tap-event-plugin": "^0.1.7",
     "redux": "^3.0.0",
     "redux-devtools": "^2.1.2",
-    "redux-thunk": "^0.1.0"
+    "redux-react-router": "^1.0.0-beta1",
+    "redux-thunk": "^0.1.0",
+    "underscore": "^1.8.3"
   },
   "scripts": {
     "start": "DEBUG=true node server.js",

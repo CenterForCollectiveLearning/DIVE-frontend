@@ -1,33 +1,42 @@
-import React, { Component } from 'react';
+import React from 'react';
+import BaseComponent from '../components/BaseComponent'
+import Home from '../components/Home'
 
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { Tabs, Tab } from 'material-ui';
 
-@connect(state => ({ routerState: state.router }))
-export class App extends Component {
+@connect(state => ({ routerState: state.router, sampleState: state.Sample }))
+export class App extends BaseComponent {
+  constructor(props) {
+    super(props);
+    this.state = {tabsValue: 'a'};
+  }
+
+  _handleTabsChange(value, e, tab){
+    this.setState({tabsValue: value});
+  }
+
   render() {
-    const links = [
-      '/',
-      '/parent?foo=bar',
-      '/parent/child?bar=baz',
-      '/parent/child/123?baz=foo'
-    ].map(l =>
-      <p>
-        <Link to={l}>{l}</Link>
-      </p>
-    );
-
     return (
       <div>
         <h1>App Container</h1>
-        {links}
+        <Tabs
+          valueLink={{value: this.state.tabsValue, requestChange: this._handleTabsChange.bind(this)}}>
+          <Tab label="Datasets" value="a" >
+            <Home/>
+          </Tab>
+          <Tab label="Visualizations" value="b">
+            Visualizations
+          </Tab>
+        </Tabs>
         {this.props.children}
       </div>
     );
   }
 }
 
-export class Parent extends Component {
+export class Parent extends BaseComponent {
   render() {
     return (
       <div>
@@ -38,7 +47,7 @@ export class Parent extends Component {
   }
 }
 
-export class Child extends Component {
+export class Child extends BaseComponent {
   render() {
     return (
       <div>

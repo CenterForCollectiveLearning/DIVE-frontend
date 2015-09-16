@@ -4,7 +4,9 @@ import {bindActionCreators} from 'redux';
 import * as HomeActions from '../actions/HomeActions';
 import styles from '../../css/app.css';
 
-class Home extends Component {
+import BaseComponent from './BaseComponent'
+
+class Home extends BaseComponent {
   render() {
     const {title, dispatch} = this.props;
     const actions = bindActionCreators(HomeActions, dispatch);
