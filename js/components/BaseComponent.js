@@ -1,5 +1,5 @@
 import React from 'react';
-import Mui from 'material-ui';
+import Mui from 'material-ui-io';
 let ThemeManager = new Mui.Styles.ThemeManager();
 
 class BaseComponent extends React.Component {
