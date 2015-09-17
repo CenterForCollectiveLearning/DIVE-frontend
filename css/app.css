@@ -39,3 +39,12 @@ body {
   color: #FFFFFF;
   font-size: 14px;
 }
+
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  
+  min-height: 56px;
+  background-color: #F6F6F6;
+  color: #212121;
+}

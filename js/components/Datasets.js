@@ -15,14 +15,9 @@ class Datasets extends BaseComponent {
     const { datasets } = this.props;
     return (
       <main>
-        {datasets.items.length === 0 &&
-          <h2>Loading...</h2>
-        }
-        {datasets.items.length > 0 &&
-          <div>
-            <DatasetList datasets={datasets.items} />
-          </div>
-        }
+        <toolbar className={styles.toolbar} >
+          <DatasetList datasets={datasets.items} />
+        </toolbar>
       </main>
     );
   }

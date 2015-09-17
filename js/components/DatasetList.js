@@ -6,14 +6,21 @@ import { DropDownMenu } from 'material-ui-io';
 
 export default class DatasetList extends BaseComponent {
   render() {
-    var menuItems = this.props.datasets.map((dataset, i) =>
+    const menuItems = this.props.datasets.map((dataset, i) =>
       new Object({
         payload: dataset.dID,
         text: dataset.title
       })
     );
     return (
-      <DropDownMenu menuItems={menuItems} />
+      <div>
+        { menuItems.length === 0 &&
+          <span>Loading...</span>
+        }
+        { menuItems.length > 0 &&
+          <DropDownMenu menuItems={menuItems} />
+        }
+      </div>
     );
   }
 }
