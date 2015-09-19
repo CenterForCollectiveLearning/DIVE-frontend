@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { fetchDatasetsIfNeeded } from '../actions/ProjectActions.js';
-import styles from '../../css/app.css';
+import { fetchDatasetsIfNeeded } from '../../actions/ProjectActions.js';
+import baseStyles from '../../../css/flexbox.sass';
+import styles from './Datasets.sass';
 
-import BaseComponent from '../components/BaseComponent';
-import DatasetToolbar from '../components/DatasetToolbar';
+import BaseComponent from '../../components/BaseComponent';
+import DatasetToolbar from '../../components/DatasetToolbar';
 
 export class DatasetsPage extends BaseComponent {
   componentWillReceiveProps(nextProps) {
@@ -17,14 +18,12 @@ export class DatasetsPage extends BaseComponent {
   render() {
     const { datasets } = this.props;
     return (
-      <div className={styles.fillContainer}>
+      <div className={baseStyles.fillContainer}>
         <div className={styles.toolbar}>
           <span>Dataset: </span>
           <DatasetToolbar datasets={datasets.items}/>
         </div>
-        <div className={styles.fillContainer}>
-          {this.props.children}
-        </div>
+        {this.props.children}
       </div>
     );
   }

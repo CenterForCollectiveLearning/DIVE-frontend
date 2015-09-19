@@ -12,8 +12,6 @@ import configureStore from './store/configureStore';
 
 import * as reducers from './reducers/index';
 
-import App from './containers/App';
-
 // The following works in React 0.14 but isn't supported by standard Material UI yet
 import EventPluginHub from 'react/lib/EventPluginHub';
 import TapEventPlugin from 'react/lib/TapEventPlugin';

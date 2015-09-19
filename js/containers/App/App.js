@@ -1,13 +1,14 @@
 import React, { PropTypes } from 'react';
-import BaseComponent from '../components/BaseComponent';
-import styles from '../../css/app.css';
+import BaseComponent from '../../components/BaseComponent';
+import baseStyles from '../../../css/flexbox.sass';
+import styles from './App.sass';
 
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 import { Tabs, Tab } from 'material-ui-io';
 
-var Logo = require('babel!svg-react!../../assets/DIVE_logo_white.svg?name=Logo');
+var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
 
 export class App extends BaseComponent {
   constructor(props) {
@@ -46,7 +47,7 @@ export class App extends BaseComponent {
 
   render() {
     return (
-      <div className={styles.fillContainer}>
+      <div className={baseStyles.fillContainer}>
         <div className={styles.header}>
           <div className={styles.logoContainer} href="/">
             <Logo className={styles.logo} />
@@ -59,9 +60,7 @@ export class App extends BaseComponent {
             <Tab className={styles.tab} label="Visualizations" value="visualizations" route="visualizations" />
           </Tabs>
         </div>
-        <div className={styles.fillContainer}>
-          {this.props.children}
-        </div>
+        {this.props.children}
       </div>
     );
   }

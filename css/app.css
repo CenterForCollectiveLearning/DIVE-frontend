@@ -3,7 +3,7 @@ html, body, main {
   min-height: 100%;
 }
 
-main, .fillContainer {
+main {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -13,66 +13,4 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   font-family: 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;  
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-
-  position: relative;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-  background: linear-gradient(to bottom right, #4A778C, #536F7C);
-  height: 48px;
-}
-
-.logoContainer {
-  display: flex;
-  flex-direction: row;
-  padding-right: 30px;
-}
-
-.logo {
-  width: 38px;
-  height: 28px;
-  padding-left: 10px;
-  padding-top: 10px;
-}
-
-.logoText {
-  cursor: pointer;
-  font-size: 23px;
-  font-weight: 600;
-  margin-top: 11px;
-  color: #FFFFFF;
-}
-
-.tab {
-  color: #FFFFFF;
-  font-size: 14px;
-}
-
-.toolbar {
-  display: flex;
-  flex-direction: row;
-  -webkit-align-items: center;
-  align-items: center;
-
-  min-height: 56px;
-  background-color: #F6F6F6;
-  color: #212121;
-  padding: 0 16px;
-}
-
-.toolbar span {
-  font-size: 14px;
-  font-weight: 400;
-}
-
-.centeredFill {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-
-  align-items: center;
-  justify-content: center;
 }

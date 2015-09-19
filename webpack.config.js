@@ -9,7 +9,8 @@ module.exports = {
   entry: [
     'webpack-dev-server/client?http://localhost:3009',
     'webpack/hot/only-dev-server',
-    './js/index.js'
+    './js/index.js',
+    './css/app.css'
   ],
   output: {
     path: __dirname + '/static/',
@@ -26,7 +27,8 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.js$/, loaders: ['react-hot', 'babel'], exclude: /node_modules/ },
-      { test: /\.css$/, loader: ExtractTextPlugin.extract('css-loader?module!cssnext-loader') }
+      { test: /\.css$/, loader: ExtractTextPlugin.extract('css-loader?module!cssnext-loader') },
+      { test: /\.sass$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?indentedSyntax&outputStyle=expanded&sourceMap' }
     ]
   },
   resolve: {

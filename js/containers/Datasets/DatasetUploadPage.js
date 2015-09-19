@@ -1,14 +1,13 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { fetchDatasetsIfNeeded } from '../actions/ProjectActions.js';
-import styles from '../../css/app.css';
+import baseStyles from '../../../css/flexbox.sass';
 
-import BaseComponent from '../components/BaseComponent';
+import BaseComponent from '../../components/BaseComponent';
 
 export class DatasetUploadPage extends BaseComponent {
   render() {
     return (
-      <div className={styles.centeredFill}>
+      <div className={baseStyles.fillContainer + ' ' + baseStyles.centeredFill}>
         Dataset Upload
         {this.props.children}
       </div>

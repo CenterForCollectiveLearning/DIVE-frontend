@@ -2,10 +2,10 @@ import React from 'react';
 
 import { Route } from 'react-router';
 
-import App from './containers/App';
+import App from './containers/App/App';
 import ProjectsPage from './containers/ProjectsPage';
-import DatasetsPage from './containers/DatasetsPage';
-import DataUploadPage from './containers/DatasetUploadPage';
+import DatasetsPage from './containers/Datasets/DatasetsPage';
+import DataUploadPage from './containers/Datasets/DatasetUploadPage';
 import VisualizationsPage from './containers/VisualizationsPage';
 
 export default (

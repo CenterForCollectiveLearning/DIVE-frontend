@@ -2,6 +2,7 @@
   "name": "dive-redux",
   "version": "0.1.0",
   "dependencies": {
+    "autoprefixer-loader": "^3.1.0",
     "babel-runtime": "^5.8.24",
     "history": "^1.9.1",
     "isomorphic-fetch": "^2.1.1",
@@ -26,7 +27,8 @@
     "redux-thunk": "^0.1.0",
     "sass-loader": "^2.0.1",
     "svg-react-loader": "^0.1.5",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "webpack-isomorphic-tools": "^0.8.8"
   },
   "scripts": {
     "start": "DEBUG=true node server.js",
