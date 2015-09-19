@@ -5,7 +5,8 @@ import {
   REQUEST_PROJECT,
   RECEIVE_PROJECT,
   REQUEST_DATASETS,
-  RECEIVE_DATASETS
+  RECEIVE_DATASETS,
+  RECEIVE_UPLOAD_DATASET
 } from '../constants/ActionTypes';
 
 function datasets(state = {
@@ -17,6 +18,8 @@ function datasets(state = {
       return { ...state, isFetching: true };
     case RECEIVE_DATASETS:
       return { ...state, isFetching: false, items: action.datasets };
+    case RECEIVE_UPLOAD_DATASET:
+      return { ...state, isFetching: false, items: [...state.items, action.dataset] };
     default:
       return state;
   }

@@ -18,6 +18,7 @@
     "react-addons-transition-group": "^0.14.0-rc1",
     "react-addons-update": "^0.14.0-rc1",
     "react-dom": "^0.14.0-rc1",
+    "react-dropzone": "^2.1.0",
     "react-redux": "^2.1.2",
     "react-router": "^1.0.0-rc1",
     "redux": "^3.0.0",

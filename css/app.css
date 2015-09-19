@@ -14,3 +14,7 @@ body {
   -webkit-font-smoothing: antialiased;
   font-family: 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;  
 }
+
+* {
+  box-sizing: border-box;
+}

@@ -29,7 +29,7 @@ export class App extends BaseComponent {
   }
 
   _handleTabsChange(value, tab){
-    this.props.pushState(null, `/${tab.props.route}`);
+    this.props.pushState(null, `/projects/${this.props.params.projectTitle}/${tab.props.route}`);
     this.state = {tabsValue: this._getSelectedTab()};
   }
 

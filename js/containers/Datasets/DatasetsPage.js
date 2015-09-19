@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { fetchDatasetsIfNeeded } from '../../actions/ProjectActions.js';
+import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
 import baseStyles from '../../../css/flexbox.sass';
 import styles from './Datasets.sass';
 
