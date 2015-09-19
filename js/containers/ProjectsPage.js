@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { fetchProjectIfNeeded } from '../actions/ProjectActions.js';
+import styles from '../../css/app.css';
 
 import BaseComponent from '../components/BaseComponent';
 
@@ -10,7 +11,7 @@ export class ProjectsPage extends BaseComponent {
   }
   render() {
     return (
-      <div>
+      <div className={styles.fillContainer}>
         {this.props.children}
       </div>
     );

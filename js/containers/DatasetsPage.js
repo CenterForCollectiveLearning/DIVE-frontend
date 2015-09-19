@@ -17,12 +17,14 @@ export class DatasetsPage extends BaseComponent {
   render() {
     const { datasets } = this.props;
     return (
-      <div>
+      <div className={styles.fillContainer}>
         <div className={styles.toolbar}>
           <span>Dataset: </span>
           <DatasetToolbar datasets={datasets.items}/>
         </div>
-        {this.props.children}
+        <div className={styles.fillContainer}>
+          {this.props.children}
+        </div>
       </div>
     );
   }

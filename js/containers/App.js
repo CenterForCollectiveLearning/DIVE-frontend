@@ -46,7 +46,7 @@ export class App extends BaseComponent {
 
   render() {
     return (
-      <div className={styles.app}>
+      <div className={styles.fillContainer}>
         <div className={styles.header}>
           <div className={styles.logoContainer} href="/">
             <Logo className={styles.logo} />
@@ -59,7 +59,7 @@ export class App extends BaseComponent {
             <Tab className={styles.tab} label="Visualizations" value="visualizations" route="visualizations" />
           </Tabs>
         </div>
-        <div className={styles.mainView}>
+        <div className={styles.fillContainer}>
           {this.props.children}
         </div>
       </div>
