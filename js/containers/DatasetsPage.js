@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { fetchDatasetsIfNeeded } from '../actions/ProjectActions.js';
+import styles from '../../css/app.css';
 
 import BaseComponent from '../components/BaseComponent';
-import DatasetList from '../components/DatasetList';
+import DatasetToolbar from '../components/DatasetToolbar';
 
 export class DatasetsPage extends BaseComponent {
   componentWillReceiveProps(nextProps) {
@@ -17,8 +18,10 @@ export class DatasetsPage extends BaseComponent {
     const { datasets } = this.props;
     return (
       <div>
-        <h2>dataset list</h2>
-        <DatasetList datasets={datasets.items}/>
+        <div className={styles.toolbar}>
+          <span>Dataset: </span>
+          <DatasetToolbar datasets={datasets.items}/>
+        </div>
         {this.props.children}
       </div>
     );

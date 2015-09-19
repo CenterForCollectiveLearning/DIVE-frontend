@@ -7,7 +7,7 @@ var devFlagPlugin = new webpack.DefinePlugin({
 
 module.exports = {
   entry: [
-    'webpack-dev-server/client?http://localhost:3003',
+    'webpack-dev-server/client?http://localhost:3009',
     'webpack/hot/only-dev-server',
     './js/index.js'
   ],

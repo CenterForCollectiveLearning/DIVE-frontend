@@ -6,10 +6,10 @@ new WebpackDevServer(webpack(config), {
   publicPath: config.output.publicPath,
   hot: true,
   historyApiFallback: true
-}).listen(3003, 'localhost', function (err, result) {
+}).listen(3009, 'localhost', function (err, result) {
   if (err) {
     console.log(err);
   }
 
-  console.log('Listening at localhost:3003');
+  console.log('Listening at localhost:3009');
 });

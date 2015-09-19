@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react';
 import BaseComponent from '../components/BaseComponent';
-import Datasets from '../components/Datasets';
 import styles from '../../css/app.css';
-import { fetchProjectIfNeeded, fetchDatasetsIfNeeded } from '../actions/ProjectActions.js';
 
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
@@ -23,10 +21,6 @@ export class App extends BaseComponent {
 
   componentWillMount() {
     this.state = {tabsValue: this._getSelectedTab()};
-  }
-
-  componentDidMount() {
-    this.props.fetchProjectIfNeeded();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -51,7 +45,6 @@ export class App extends BaseComponent {
   }
 
   render() {
-    const { project } = this.props;
     return (
       <div className={styles.app}>
         <div className={styles.header}>
@@ -78,29 +71,12 @@ export class App extends BaseComponent {
           // <Tabs value={this.state.tabsValue} onChange={this._handleTabsChange.bind(this)}>
 
 App.propTypes = {
-  datasets: PropTypes.object.isRequired,
-  project: PropTypes.object.isRequired,
   pushState: PropTypes.func.isRequired,
   children: PropTypes.node
 };
 
-export class Child extends BaseComponent {
-  render() {
-    return (
-      <div>
-        <h2>Child</h2>
-        {this.props.children}
-      </div>
-    );
-  }
-}
-
 function mapStateToProps(state) {
-  const { project, datasets } = state;
-  return {
-    project,
-    datasets
-  };
+  return {};
 }
 
-export default connect(mapStateToProps, { pushState, fetchProjectIfNeeded, fetchDatasetsIfNeeded })(App);
+export default connect(mapStateToProps, { pushState })(App);

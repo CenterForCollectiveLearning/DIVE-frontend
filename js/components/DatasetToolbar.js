@@ -4,7 +4,7 @@ import BaseComponent from './BaseComponent'
 
 import { DropDownMenu } from 'material-ui-io';
 
-export default class DatasetList extends BaseComponent {
+export default class DatasetToolbar extends BaseComponent {
   render() {
     const menuItems = this.props.datasets.map((dataset, i) =>
       new Object({
@@ -25,6 +25,6 @@ export default class DatasetList extends BaseComponent {
   }
 }
 
-DatasetList.propTypes = {
+DatasetToolbar.propTypes = {
   datasets: PropTypes.array.isRequired
 };

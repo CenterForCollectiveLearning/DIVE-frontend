@@ -1,5 +1,4 @@
 import {
-  TITLE_CHANGED,
   REQUEST_PROJECT,
   RECEIVE_PROJECT,
   REQUEST_DATASETS,
@@ -7,13 +6,6 @@ import {
 } from '../constants/ActionTypes';
 
 import fetch from 'isomorphic-fetch';
-
-export function changeTitle(text) {
-  return {
-    type: TITLE_CHANGED,
-    text
-  }
-}
 
 function requestProject() {
   return {
@@ -44,10 +36,10 @@ function receiveDatasets(projectID, json) {
   };
 }
 
-function fetchProject() {
+function fetchProject(projectTitle) {
   return dispatch => {
     dispatch(requestProject());
-    return fetch('//localhost:8081/api/getProjectID')
+    return fetch('//localhost:8081/api/getProjectID?formattedProjectTitle=' + projectTitle)
       .then(response => response.json())
       .then(json => dispatch(receiveProject(json)));
   };
@@ -78,10 +70,10 @@ function shouldFetchDatasets(state) {
   return true;
 }
 
-export function fetchProjectIfNeeded() {
+export function fetchProjectIfNeeded(projectTitle) {
   return (dispatch, getState) => {
     if (shouldFetchProject(getState())) {
-      return dispatch(fetchProject());
+      return dispatch(fetchProject(projectTitle));
     }
   };
 }
