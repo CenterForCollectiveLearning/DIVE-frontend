@@ -62,14 +62,34 @@ function fetchDatasets(projectID) {
   };
 }
 
+function shouldFetchProject(state) {
+  const project = state.project;
+  if (project.properties.id || project.isFetching) {
+    return false;
+  }
+  return true;
+}
+
+function shouldFetchDatasets(state) {
+  const datasets = state.datasets;
+  if (datasets.items.length > 0 || datasets.isFetching) {
+    return false;
+  }
+  return true;
+}
+
 export function fetchProjectIfNeeded() {
   return (dispatch, getState) => {
-    return dispatch(fetchProject());
+    if (shouldFetchProject(getState())) {
+      return dispatch(fetchProject());
+    }
   };
 }
 
 export function fetchDatasetsIfNeeded(projectID) {
   return (dispatch, getState) => {
-    return dispatch(fetchDatasets(projectID));
+    if (shouldFetchDatasets(getState())) {
+      return dispatch(fetchDatasets(projectID));
+    }
   };
 }

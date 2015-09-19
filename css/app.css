@@ -9,7 +9,6 @@ body {
 
   position: relative;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-  font-family: 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;
   background: linear-gradient(to bottom right, #4A778C, #536F7C);
   height: 48px;
 }
@@ -43,8 +42,16 @@ body {
 .toolbar {
   display: flex;
   flex-direction: row;
-  
+
   min-height: 56px;
   background-color: #F6F6F6;
   color: #212121;
+}
+
+.app {
+  font-family: 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;  
+}
+
+.mainView {
+
 }
