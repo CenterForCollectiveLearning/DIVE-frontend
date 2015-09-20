@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { fetchDataset } from '../../actions/DatasetActions';
 
 import baseStyles from '../../../css/flexbox.sass';
 import styles from './Datasets.sass';
@@ -9,11 +10,18 @@ export class DatasetInspectPage extends Component {
     super(props);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.project.properties.id !== this.props.project.properties.id || nextProps.params.datasetId !== this.props.params.datasetId) {
+      const { project, params } = nextProps;
+      this.props.fetchDataset(project.properties.id, params.datasetId);
+    }    
+  }
+
   render() {
     return (
       <div className={ baseStyles.fillContainer }>
         inspecting dataset
-        {this.props.children}
+        { this.props.children }
       </div>
     );
   }
@@ -30,4 +38,4 @@ function mapStateToProps(state) {
   return { project };
 }
 
-export default connect(mapStateToProps)(DatasetInspectPage);
+export default connect(mapStateToProps, { fetchDataset })(DatasetInspectPage);

@@ -1,4 +1,6 @@
 import {
+  REQUEST_DATASET,
+  RECEIVE_DATASET,
   REQUEST_DATASETS,
   RECEIVE_DATASETS,
   REQUEST_UPLOAD_DATASET,
@@ -13,21 +15,21 @@ function requestDatasetsDispatcher() {
   };
 }
 
-function receiveDatasetsDispatcher(projectID, json) {
+function receiveDatasetsDispatcher(projectId, json) {
   return {
     type: RECEIVE_DATASETS,
-    projectID: projectID,
+    projectId: projectId,
     datasets: json.datasets,
     receivedAt: Date.now()
   };
 }
 
-function fetchDatasets(projectID) {
+function fetchDatasets(projectId) {
   return dispatch => {
     dispatch(requestDatasetsDispatcher());
-    return fetch('/datasets?pID=' + projectID)
+    return fetch('/datasets?pID=' + projectId)
       .then(response => response.json())
-      .then(json => dispatch(receiveDatasetsDispatcher(projectID, json)));
+      .then(json => dispatch(receiveDatasetsDispatcher(projectId, json)));
   };
 }
 
@@ -39,38 +41,65 @@ function shouldFetchDatasets(state) {
   return true;
 }
 
-export function fetchDatasetsIfNeeded(projectID) {
+export function fetchDatasetsIfNeeded(projectId) {
   return (dispatch, getState) => {
     if (shouldFetchDatasets(getState())) {
-      return dispatch(fetchDatasets(projectID));
+      return dispatch(fetchDatasets(projectId));
     }
   };
 }
 
-function uploadDatasetDispatcher() {
+function requestUploadDatasetDispatcher() {
   return {
     type: REQUEST_UPLOAD_DATASET
   };
 }
 
-function uploadDatasetResponseDispatcher(json) {
+function receiveUploadDatasetDispatcher(json) {
   return {
     type: RECEIVE_UPLOAD_DATASET,
     dataset: json.datasets[0]
   };
 }
 
-export function uploadDataset(projectID, datasetFile) {
+export function uploadDataset(projectId, datasetFile) {
   var formData = new FormData();
-  formData.append('data', JSON.stringify({ pID: projectID }));
+  formData.append('data', JSON.stringify({ pID: projectId }));
   formData.append('file', datasetFile);
 
   return (dispatch) => {
-    dispatch(uploadDatasetDispatcher());
+    dispatch(requestUploadDatasetDispatcher());
     return fetch('/upload', {
       method: 'post',
       body: formData
     }).then(response => response.json())
-      .then(json => dispatch(uploadDatasetResponseDispatcher(json)));
+      .then(json => dispatch(receiveUploadDatasetDispatcher(json)));
   };
 }
+
+function requestDatasetDispatcher(datasetId) {
+  return {
+    type: REQUEST_DATASET,
+    datasetId: datasetId
+  };
+}
+
+function receiveDatasetDispatcher(json) {
+  return {
+    type: RECEIVE_DATASET,
+    datasetId: json.dID,
+    title: json.title,
+    details: json.details
+  };
+}
+
+export function fetchDataset(projectId, datasetId) {
+  return (dispatch) => {
+    dispatch(requestDatasetDispatcher(datasetId));
+    return fetch(`/datasets/${datasetId}?pID=${projectId}`)
+      .then(response => response.json())
+      .then(json => dispatch(receiveDatasetDispatcher(json)));
+  };
+}
+
+
