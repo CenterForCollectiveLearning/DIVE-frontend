@@ -7,6 +7,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 import { Tabs, Tab } from 'material-ui-io';
+import Mui from 'material-ui-io';
 
 var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
 
@@ -56,8 +57,8 @@ export class App extends BaseComponent {
             </div>
           </div>
           <Tabs value={this.state.tabsValue} onChange={this._handleTabsChange.bind(this)}>
-            <Tab className={styles.tab} label="Datasets" value="datasets" route="datasets" />
-            <Tab className={styles.tab} label="Visualizations" value="visualizations" route="visualizations" />
+            <Tab label="DATASETS" value="datasets" route="datasets" />
+            <Tab label="VISUALIZATIONS" value="visualizations" route="visualizations" />
           </Tabs>
         </div>
         {this.props.children}

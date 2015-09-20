@@ -1,11 +1,9 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { fetchProjectIfNeeded } from '../actions/ProjectActions.js';
 import styles from '../../css/flexbox.sass';
 
-import BaseComponent from '../components/BaseComponent';
-
-export class ProjectsPage extends BaseComponent {
+export class ProjectsPage extends Component {
   componentDidMount() {
     this.props.fetchProjectIfNeeded(this.props.params.projectTitle);
   }

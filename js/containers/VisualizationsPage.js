@@ -1,9 +1,7 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import BaseComponent from '../components/BaseComponent';
-
-export class VisualizationsPage extends BaseComponent {
+export class VisualizationsPage extends Component {
   render() {
     return (
       <div>

@@ -1,14 +1,13 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { uploadDataset } from '../../actions/DatasetActions';
 import baseStyles from '../../../css/flexbox.sass';
 import styles from './Datasets.sass';
 
-import BaseComponent from '../../components/BaseComponent';
 import { RaisedButton } from 'material-ui-io';
 import Dropzone from 'react-dropzone';
 
-export class DatasetUploadPage extends BaseComponent {
+export class DatasetUploadPage extends Component {
   constructor(props) {
     super(props);
     this.onDrop = this.onDrop.bind(this);
