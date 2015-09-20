@@ -11,17 +11,22 @@ export class DatasetUploadPage extends Component {
   constructor(props) {
     super(props);
     this.onDrop = this.onDrop.bind(this);
+    this.onOpenClick = this.onOpenClick.bind(this);
   }
 
   onDrop(files) {
     this.props.uploadDataset(this.props.project.properties.id, files[0]);
   }
 
+  onOpenClick() {
+    this.refs.dropzone.open();
+  }
+
   render() {
     return (
       <div className={ baseStyles.fillContainer }>
-        <Dropzone className={ styles.dropzone + ' ' + baseStyles.centeredFill } onDrop={ this.onDrop }>
-          <RaisedButton label="Select & upload a file" primary={ true } onClick={ this.onDrop } />
+        <Dropzone ref="dropzone" className={ styles.dropzone + ' ' + baseStyles.centeredFill } onDrop={ this.onDrop } disableClick={ true }>
+          <RaisedButton label="Select & upload a file" primary={ true } onClick={ this.onOpenClick } />
           <span>or drop files here to upload</span>
         </Dropzone>
         {this.props.children}
