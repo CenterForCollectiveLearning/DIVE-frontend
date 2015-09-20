@@ -28,10 +28,10 @@ export class DatasetsPage extends Component {
   render() {
     const { datasets } = this.props;
     return (
-      <div className={baseStyles.fillContainer}>
-        <div className={styles.toolbar}>
+      <div className={ baseStyles.fillContainer }>
+        <div className={ styles.toolbar }>
           <span>Dataset: </span>
-          <DatasetToolbar datasets={datasets.items}/>
+          <DatasetToolbar datasets={ datasets.items } projectTitle={ this.props.params.projectTitle } selectedDatasetId={ this.props.params.datasetId }/>
         </div>
         {this.props.children}
       </div>
