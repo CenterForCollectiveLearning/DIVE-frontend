@@ -2,12 +2,12 @@ import React from 'react';
 
 import { Route } from 'react-router';
 
-import App from './containers/App/App';
-import ProjectsPage from './containers/ProjectsPage';
-import DatasetsPage from './containers/Datasets/DatasetsPage';
-import DatasetUploadPage from './containers/Datasets/DatasetUploadPage';
-import DatasetInspectPage from './containers/Datasets/DatasetInspectPage';
-import VisualizationsPage from './containers/VisualizationsPage';
+import App from './components/App/App';
+import ProjectsPage from './components/ProjectsPage';
+import DatasetsPage from './components/Datasets/DatasetsPage';
+import DatasetUploadPage from './components/Datasets/DatasetUploadPage';
+import DatasetInspectPage from './components/Datasets/DatasetInspectPage';
+import VisualizationsPage from './components/VisualizationsPage';
 
 export default (
   <Route path="/" component={ App } >

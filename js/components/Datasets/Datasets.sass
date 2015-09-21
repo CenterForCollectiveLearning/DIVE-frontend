@@ -7,6 +7,7 @@
   background-color: #F6F6F6
   color: #212121
   padding: 0 16px
+
   span
     font-size: 14px
     font-weight: 400
@@ -29,3 +30,28 @@
     letter-spacing: 1px
     line-height: 35px
     text-transform: uppercase
+
+.grid
+  width: 100%
+  table-layout: fixed
+  border-collapse: collapse
+
+  th
+    background-color: #eee
+    border: 1px solid #ccc
+    border-bottom-width: 0
+    font-weight: normal
+    padding: 3px 2px
+
+  td
+    overflow: hidden
+    white-space: nowrap
+    border: 1px solid #ccc
+    padding: 2px 4px
+    text-overflow: ellipsis
+
+  tr:nth-child(even) td
+    background-color: #D1DEEC
+
+  tr:nth-child(odd) td
+    background-color: #E3ECF5

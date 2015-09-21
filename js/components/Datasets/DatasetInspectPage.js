@@ -6,7 +6,7 @@ import { fetchDataset } from '../../actions/DatasetActions';
 import baseStyles from '../../../css/flexbox.sass';
 import styles from './Datasets.sass';
 
-import DataGridWrapper from '../../components/DataGridWrapper';
+import DataGridWrapper from './DataGridWrapper';
 
 export class DatasetInspectPage extends Component {
   constructor(props) {

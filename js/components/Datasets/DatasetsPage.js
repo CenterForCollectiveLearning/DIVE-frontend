@@ -6,7 +6,7 @@ import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
 import baseStyles from '../../../css/flexbox.sass';
 import styles from './Datasets.sass';
 
-import DatasetToolbar from '../../components/DatasetToolbar';
+import DatasetToolbar from './DatasetToolbar';
 
 export class DatasetsPage extends Component {
   constructor(props) {

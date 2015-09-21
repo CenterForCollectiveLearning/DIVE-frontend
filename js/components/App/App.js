@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import BaseComponent from '../../components/BaseComponent';
+import BaseComponent from './BaseComponent';
 import baseStyles from '../../../css/flexbox.sass';
 import styles from './App.sass';
 

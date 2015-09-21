@@ -1,7 +1,7 @@
 import React from 'react';
 import Mui from 'material-ui-io';
 let ThemeManager = new Mui.Styles.ThemeManager();
-import CustomTheme from '../themes/theme.js';
+import CustomTheme from '../../themes/theme.js';
 
 class BaseComponent extends React.Component {
     getChildContext() {
