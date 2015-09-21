@@ -1,9 +1,12 @@
 import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { fetchDataset } from '../../actions/DatasetActions';
 
 import baseStyles from '../../../css/flexbox.sass';
 import styles from './Datasets.sass';
+
+import DataGridWrapper from '../../components/DataGridWrapper';
 
 export class DatasetInspectPage extends Component {
   constructor(props) {
@@ -18,9 +21,15 @@ export class DatasetInspectPage extends Component {
   }
 
   render() {
+    const dataset = this.props.datasets.items.filter((dataset) =>
+      dataset.dID == this.props.params.datasetId
+    )[0];
+
     return (
       <div className={ baseStyles.fillContainer }>
-        inspecting dataset
+        { dataset &&
+          <DataGridWrapper dataset={ dataset } />
+        }        
         { this.props.children }
       </div>
     );
@@ -29,13 +38,14 @@ export class DatasetInspectPage extends Component {
 
 DatasetInspectPage.propTypes = {
   project: PropTypes.object.isRequired,
+  datasets: PropTypes.object.isRequired,
   children: PropTypes.node
 };
 
 
 function mapStateToProps(state) {
-  const { project } = state;
-  return { project };
+  const { project, datasets } = state;
+  return { project, datasets };
 }
 
 export default connect(mapStateToProps, { fetchDataset })(DatasetInspectPage);
