@@ -4,13 +4,18 @@ export default {
     return {
       accent1Color: "#2D5365",
       accent2Color: "#0C83BA",
-      transparent: "#00000000"
+      transparent: "#00000000",
+      white: "#FFFFFF"
     };
   },
   getComponentThemes(palette) {
     return {
       raisedButton: {
         primaryColor: palette.accent2Color
+      },
+      flatButton: {
+        color:        palette.accent2Color,
+        primaryTextColor: palette.white
       },
       tabs: {
         backgroundColor: palette.transparent

@@ -13,6 +13,13 @@ export class DatasetInspectPage extends Component {
     super(props);
   }
 
+  componentWillMount() {
+    const { project, params } = this.props;
+    if (project.properties.id) {
+      this.props.fetchDataset(project.properties.id, params.datasetId);
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.project.properties.id !== this.props.project.properties.id || nextProps.params.datasetId !== this.props.params.datasetId) {
       const { project, params } = nextProps;

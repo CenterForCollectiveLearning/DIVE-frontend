@@ -29,10 +29,9 @@ export class DatasetsPage extends Component {
     const { datasets } = this.props;
     return (
       <div className={ baseStyles.fillContainer }>
-        <div className={ styles.toolbar }>
-          <span>Dataset: </span>
+        { datasets.items.length > 0 &&
           <DatasetToolbar datasets={ datasets.items } projectTitle={ this.props.params.projectTitle } selectedDatasetId={ this.props.params.datasetId }/>
-        </div>
+        }
         {this.props.children}
       </div>
     );
