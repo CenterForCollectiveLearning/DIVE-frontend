@@ -1,11 +1,18 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import loggerMiddleware from 'redux-logger';
+import createLogger from 'redux-logger';
 import rootReducer from '../reducers/index';
 
 import createHistory from 'history/lib/createBrowserHistory';
 import { reduxReactRouter } from 'redux-react-router';
 import routes from '../routes';
+
+import { AUTH_REMOVE_TOKEN } from '../constants/ActionTypes';
+
+const loggerMiddleware = createLogger({
+  level: 'info',
+  collapsed: false
+});
 
 let createStoreWithMiddleware;
 
