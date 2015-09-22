@@ -5,7 +5,6 @@ export class VisualizationsPage extends Component {
   render() {
     return (
       <div>
-        <h2>these are visualizations</h2>
         {this.props.children}
       </div>
     );
