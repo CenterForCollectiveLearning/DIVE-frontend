@@ -4,12 +4,16 @@ import { pushState } from 'redux-react-router';
 import styles from './visualizations.sass';
 
 export class VisualizationsPage extends Component {
-  constructor(props) {
-    super(props);
-
+  componentWillMount() {
     if (this.props.routes.length < 4) {
       this.props.pushState(null, `/projects/${this.props.params.projectTitle}/visualizations/gallery`);
-    }
+    }        
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.routes.length < 4) {
+      this.props.pushState(null, `/projects/${this.props.params.projectTitle}/visualizations/gallery`);
+    }    
   }
 
   render() {
