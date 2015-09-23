@@ -10,7 +10,8 @@ import {
   RECEIVE_DATASET,
   REQUEST_SPECS,
   RECEIVE_SPECS,
-  SELECT_DATASET
+  SELECT_DATASET,
+  SELECT_VISUALIZATION_TYPE
 } from '../constants/ActionTypes';
 
 function mergeDatasetLists(originalList, newList) {
@@ -147,7 +148,28 @@ function filters(state={
     }
   ]
 }, action) {
-  return state;
+  switch(action.type){
+    case SELECT_VISUALIZATION_TYPE:
+      var newVisualizationTypes = state.visualizationTypes;
+
+      const previousSelectedIndex = state.visualizationTypes.findIndex((typeObject, i, types) =>
+        typeObject.selected
+      );
+      if (previousSelectedIndex >= 0) {
+        newVisualizationTypes[previousSelectedIndex].selected = false;
+      }
+
+      const newSelectedIndex = state.visualizationTypes.findIndex((typeObject, i, types) =>
+        typeObject.type == action.selectedType
+      );
+      if (newSelectedIndex >= 0) {
+        newVisualizationTypes[newSelectedIndex].selected = true;
+      }
+
+      return { ...state, visualizationTypes: newVisualizationTypes }
+    default:
+      return state;
+  }
 }
 
 const rootReducer = combineReducers({

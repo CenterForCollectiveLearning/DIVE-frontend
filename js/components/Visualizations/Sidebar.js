@@ -2,10 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
-import { selectDataset } from '../../actions/VisualizationActions';
+import { selectDataset, selectVisualizationType } from '../../actions/VisualizationActions';
 import styles from './visualizations.sass';
 
 import DropDownMenu from '../Base/DropDownMenu';
+import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 
 export class Sidebar extends Component {
   constructor(props) {
@@ -29,8 +30,8 @@ export class Sidebar extends Component {
     this.props.selectDataset(menuItem.payload);
   }
 
-  onSelectVisualizationType(e, selectedIndex, menuItem) {
-    console.log(menuItem);
+  onSelectVisualizationType(visualizationType) {
+    this.props.selectVisualizationType(visualizationType);
   }
 
   render() {
@@ -50,13 +51,13 @@ export class Sidebar extends Component {
         }
         <div className={ styles.sidebarGroup }>
           <h3 className={ styles.sidebarHeading }>Visualization type</h3>
-          <DropDownMenu
-            selectedIndex={ 0 }
-            menuItems={ this.props.filters.visualizationTypes }
-            displayMember="label"
+          <ToggleButtonGroup
+            toggleItems={ this.props.filters.visualizationTypes }
+            displayTextMember="label"
             valueMember="type"
-            onChange={ this.onSelectVisualizationType }
-            fullWidth={ true } />
+            imageNameMember="imageName"
+            imageNameSuffix=".chart.svg"
+            onChange={ this.onSelectVisualizationType } />
         </div>
         <div className={ styles.sidebarGroup }>
           <h3 className={ styles.sidebarHeading }>Categorical data</h3>
@@ -86,4 +87,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { fetchDatasetsIfNeeded, selectDataset })(Sidebar);
+export default connect(mapStateToProps, { fetchDatasetsIfNeeded, selectDataset, selectVisualizationType })(Sidebar);

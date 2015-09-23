@@ -1,7 +1,8 @@
 import {
   REQUEST_SPECS,
   RECEIVE_SPECS,
-  SELECT_DATASET
+  SELECT_DATASET,
+  SELECT_VISUALIZATION_TYPE
 } from '../constants/ActionTypes';
 
 import fetch from './api.js';
@@ -52,6 +53,13 @@ export function selectDataset(datasetId) {
     type: SELECT_DATASET,
     datasetId: datasetId
   };
+}
+
+export function selectVisualizationType(selectedType) {
+  return {
+    type: SELECT_VISUALIZATION_TYPE,
+    selectedType: selectedType
+  }
 }
 
 // specs/v1/specs?dID=5601bfafb9f5bc1f9d936dfb&pID=5601bf66b9f5bc1f9d9
