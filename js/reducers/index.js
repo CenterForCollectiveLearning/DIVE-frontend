@@ -108,8 +108,51 @@ function specs(state={
   }
 }
 
+function filters(state={
+  visualizationTypes: [
+    {
+      type: "TREEMAP",
+      imageName: "treemap",
+      label: "Treemap",
+      selected: false,
+      disabled: false
+    },
+    {
+      type: "BAR",
+      imageName: "bar",
+      label: "Bar",
+      selected: false,
+      disabled: false
+    },
+    {
+      type: "PIE",
+      imageName: "pie",
+      label: "Pie",
+      selected: false,
+      disabled: false
+    },
+    {
+      type: "LINE",
+      imageName: "line",
+      label: "Line",
+      selected: false,
+      disabled: false
+    },
+    {
+      type: "SCATTERPLOT",
+      imageName: "scatterplot",
+      label: "Scatter",
+      selected: false,
+      disabled: false
+    }
+  ]
+}, action) {
+  return state;
+}
+
 const rootReducer = combineReducers({
   datasets,
+  filters,
   project,
   specs,
   specSelector,

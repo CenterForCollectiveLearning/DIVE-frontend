@@ -12,6 +12,7 @@ export class Sidebar extends Component {
     super(props);
 
     this.onSelectDataset = this.onSelectDataset.bind(this);
+    this.onSelectVisualizationType = this.onSelectVisualizationType.bind(this);
   }
   componentWillReceiveProps(nextProps) {
     const { project, datasets, specSelector, fetchDatasetsIfNeeded, selectDataset } = this.props;
@@ -28,33 +29,41 @@ export class Sidebar extends Component {
     this.props.selectDataset(menuItem.payload);
   }
 
-  createMenuItems(datasets, selectedDatasetId) {
-    var selectedIndex = datasets.findIndex((dataset, i, _datasets) =>
-      dataset.dID == selectedDatasetId
-    );
-
-    var menuItems = datasets.map((dataset, i) =>
-      new Object({
-        payload: dataset.dID,
-        text: dataset.title
-      })
-    );
-
-    selectedIndex = (selectedIndex < 0)? 0 : selectedIndex;
-
-    return { menuItems, selectedIndex };
+  onSelectVisualizationType(e, selectedIndex, menuItem) {
+    console.log(menuItem);
   }
 
   render() {
-    const { menuItems, selectedIndex } = this.createMenuItems(this.props.datasets.items, this.props.specSelector.datasetId);
     return (
       <div className={ styles.sidebar }>
         { this.props.datasets.items && this.props.datasets.items.length > 0 &&
           <div className={ styles.sidebarGroup }>
             <h3 className={ styles.sidebarHeading }>Dataset</h3>
-            <DropDownMenu selectedIndex={ selectedIndex } menuItems={ menuItems } onChange={ this.onSelectDataset } />
+            <DropDownMenu
+              selectedValue={ this.props.specSelector.datasetId }
+              menuItems={ this.props.datasets.items }
+              displayMember="title"
+              valueMember="dID"
+              onChange={ this.onSelectDataset }
+              fullWidth={ true } />
           </div>
         }
+        <div className={ styles.sidebarGroup }>
+          <h3 className={ styles.sidebarHeading }>Visualization type</h3>
+          <DropDownMenu
+            selectedIndex={ 0 }
+            menuItems={ this.props.filters.visualizationTypes }
+            displayMember="label"
+            valueMember="type"
+            onChange={ this.onSelectVisualizationType }
+            fullWidth={ true } />
+        </div>
+        <div className={ styles.sidebarGroup }>
+          <h3 className={ styles.sidebarHeading }>Categorical data</h3>
+        </div>
+        <div className={ styles.sidebarGroup }>
+          <h3 className={ styles.sidebarHeading }>Numerical data</h3>
+        </div>
       </div>
     );
   }
@@ -63,15 +72,17 @@ export class Sidebar extends Component {
 Sidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
-  specSelector: PropTypes.object.isRequired
+  specSelector: PropTypes.object.isRequired,
+  filters: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, datasets, specSelector } = state;
+  const { project, datasets, specSelector, filters } = state;
   return {
     project,
     datasets,
-    specSelector
+    specSelector,
+    filters
   }
 }
 
