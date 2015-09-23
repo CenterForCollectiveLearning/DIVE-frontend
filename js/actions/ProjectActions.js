@@ -36,10 +36,16 @@ function shouldFetchProject(state) {
   return true;
 }
 
-export function fetchProjectIfNeeded(projectTitle) {
-  return (dispatch, getState) => {
-    if (shouldFetchProject(getState())) {
-      return dispatch(fetchProject(projectTitle));
+export function fetchProjectIfNeeded(projectId) {
+  return {
+    type: RECEIVE_PROJECT, 
+    projectProperties: {
+      id: projectId
     }
   };
+  // return (dispatch, getState) => {
+  //   if (shouldFetchProject(getState())) {
+  //     return dispatch(fetchProject(projectTitle));
+  //   }
+  // };
 }

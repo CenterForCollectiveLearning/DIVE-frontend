@@ -27,7 +27,7 @@ function receiveDatasetsDispatcher(projectId, json) {
 function fetchDatasets(projectId) {
   return dispatch => {
     dispatch(requestDatasetsDispatcher());
-    return fetch('/datasets?pID=' + projectId)
+    return fetch('/datasets/v1/datasets?project_id=' + projectId)
       .then(response => response.json())
       .then(json => dispatch(receiveDatasetsDispatcher(projectId, json)));
   };
@@ -64,12 +64,12 @@ function receiveUploadDatasetDispatcher(json) {
 
 export function uploadDataset(projectId, datasetFile) {
   var formData = new FormData();
-  formData.append('data', JSON.stringify({ pID: projectId }));
+  formData.append('data', JSON.stringify({ project_id: projectId }));
   formData.append('file', datasetFile);
 
   return (dispatch) => {
     dispatch(requestUploadDatasetDispatcher());
-    return fetch('/upload', {
+    return fetch('/datasets/v1/upload', {
       method: 'post',
       body: formData
     }).then(response => response.json())
@@ -109,7 +109,7 @@ function receiveDatasetDispatcher(json) {
 export function fetchDataset(projectId, datasetId) {
   return (dispatch) => {
     dispatch(requestDatasetDispatcher(datasetId));
-    return fetch(`/datasets/${datasetId}?pID=${projectId}`)
+    return fetch(`/datasets/v1/datasets/${datasetId}?project_id=${projectId}`)
       .then(response => response.json())
       .then(json => dispatch(receiveDatasetDispatcher(json)));
   };
