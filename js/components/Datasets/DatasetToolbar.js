@@ -2,9 +2,10 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 import { uploadDataset } from '../../actions/DatasetActions';
-import styles from './Datasets.sass';
+import styles from './datasets.sass';
 
-import { DropDownMenu, FlatButton } from 'material-ui-io';
+import { FlatButton } from 'material-ui-io';
+import DropDownMenu from '../Base/DropDownMenu';
 import filePicker from 'component-file-picker';
 
 export class DatasetToolbar extends Component {
@@ -29,13 +30,12 @@ export class DatasetToolbar extends Component {
     });
   }
 
-  render() {
-    const { selectedDatasetId } = this.props;
-    var selectedIndex = this.props.datasets.findIndex((dataset, i, datasets) =>
+  createMenuItems(datasets, selectedDatasetId) {
+    var selectedIndex = datasets.findIndex((dataset, i, _datasets) =>
       dataset.dID == selectedDatasetId
     );
 
-    var menuItems = this.props.datasets.map((dataset, i) =>
+    var menuItems = datasets.map((dataset, i) =>
       new Object({
         payload: dataset.dID,
         text: dataset.title
@@ -50,6 +50,11 @@ export class DatasetToolbar extends Component {
       selectedIndex = selectedIndex + 1;
     }
 
+    return { menuItems, selectedIndex };
+  }
+
+  render() {
+    const { menuItems, selectedIndex } = this.createMenuItems(this.props.datasets, this.props.selectedDatasetId)
     return (
       <div className={ styles.toolbar }>
         <span>Dataset: </span>

@@ -1,14 +1,28 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
+import styles from './visualizations.sass';
 
 export class VisualizationsPage extends Component {
+  constructor(props) {
+    super(props);
+
+    if (this.props.routes.length < 4) {
+      this.props.pushState(null, `/projects/${this.props.params.projectTitle}/visualizations/gallery`);
+    }
+  }
+
   render() {
     return (
-      <div>
+      <div className={ styles.fillContainer }>
         {this.props.children}
       </div>
     );
   }
 }
 
-export default connect()(VisualizationsPage);
+function mapStateToProps(state) {
+  return {}; 
+}
+
+export default connect(mapStateToProps, { pushState })(VisualizationsPage);

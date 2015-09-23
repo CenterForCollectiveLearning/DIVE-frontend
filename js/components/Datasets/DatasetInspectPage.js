@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { fetchDataset } from '../../actions/DatasetActions';
 
-import baseStyles from '../../../css/flexbox.sass';
-import styles from './Datasets.sass';
+import styles from './datasets.sass';
 
 import DataGridWrapper from './DataGridWrapper';
 
@@ -33,7 +32,7 @@ export class DatasetInspectPage extends Component {
     )[0];
 
     return (
-      <div className={ baseStyles.fillContainer }>
+      <div className={ styles.fillContainer }>
         { dataset &&
           <DataGridWrapper dataset={ dataset } />
         }        

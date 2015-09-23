@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
-import baseStyles from '../../../css/flexbox.sass';
-import styles from './App.sass';
+import styles from './app.sass';
 
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
@@ -48,7 +47,7 @@ export class App extends BaseComponent {
 
   render() {
     return (
-      <div className={baseStyles.fillContainer}>
+      <div className={styles.fillContainer}>
         <div className={styles.header}>
           <div className={styles.logoContainer} href="/">
             <Logo className={styles.logo} />

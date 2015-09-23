@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
 import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
-import baseStyles from '../../../css/flexbox.sass';
-import styles from './Datasets.sass';
+import styles from './datasets.sass';
 
 import DatasetToolbar from './DatasetToolbar';
 
@@ -28,7 +27,7 @@ export class DatasetsPage extends Component {
   render() {
     const { datasets } = this.props;
     return (
-      <div className={ baseStyles.fillContainer }>
+      <div className={ styles.fillContainer }>
         { datasets.items.length > 0 &&
           <DatasetToolbar datasets={ datasets.items } projectTitle={ this.props.params.projectTitle } selectedDatasetId={ this.props.params.datasetId }/>
         }
@@ -39,8 +38,8 @@ export class DatasetsPage extends Component {
 }
 
 DatasetsPage.propTypes = {
-  datasets: PropTypes.object.isRequired,
   project: PropTypes.object.isRequired,
+  datasets: PropTypes.object.isRequired,
   children: PropTypes.node
 };
 

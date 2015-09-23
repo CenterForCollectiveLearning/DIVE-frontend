@@ -7,7 +7,10 @@ import {
   REQUEST_DATASETS,
   RECEIVE_DATASETS,
   RECEIVE_UPLOAD_DATASET,
-  RECEIVE_DATASET
+  RECEIVE_DATASET,
+  REQUEST_SPECS,
+  RECEIVE_SPECS,
+  SELECT_DATASET
 } from '../constants/ActionTypes';
 
 function mergeDatasetLists(originalList, newList) {
@@ -66,6 +69,17 @@ function datasets(state = {
   }
 }
 
+function specSelector(state = {
+  datasetId: null
+}, action) {
+  switch (action.type) {
+    case SELECT_DATASET:
+      return { ...state, datasetId: action.datasetId };
+    default:
+      return state;
+  }
+}
+
 function project(state = {
   isFetching: false,
   properties: {}
@@ -80,9 +94,25 @@ function project(state = {
   }
 }
 
+function specs(state={
+  isFetching: false,
+  items: []
+}, action) {
+  switch (action.type) {
+    case REQUEST_SPECS:
+      return { ...state, isFetching: true };
+    case RECEIVE_SPECS:
+      return { ...state, isFetching: false, items: action.specs };
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({
   datasets,
   project,
+  specs,
+  specSelector,
   router
 });
 

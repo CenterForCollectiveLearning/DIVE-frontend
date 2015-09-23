@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 
 import Griddle from 'griddle-react';
-import styles from './Datasets.sass';
+import styles from './datasets.sass';
 
 export default class DataGridWrapper extends Component {
   render() {
