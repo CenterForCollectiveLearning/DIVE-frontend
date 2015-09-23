@@ -26,10 +26,15 @@ export default class DropDownMenu extends Component {
     }
 
     const dropDownMenuLabelStyle = {
-      lineHeight: '34px',
       height: '34px',
+      lineHeight: '34px',
+      paddingLeft: '0',
+      right: '30px',
+      left: '15px',
       fontWeight: '500',
-      paddingLeft: '15px'
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis'
     };
     const dropDownMenuIconStyle = {
       top: '5px',
