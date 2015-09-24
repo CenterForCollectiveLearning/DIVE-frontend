@@ -58,7 +58,9 @@ export class DatasetToolbar extends Component {
     return (
       <div className={ styles.toolbar }>
         <span>Dataset: </span>
-        <DropDownMenu selectedIndex={ selectedIndex } menuItems={ menuItems } onChange={ this.onSelectDataset } />
+        <div className={ styles.datasetSelectorContainer }>
+          <DropDownMenu selectedIndex={ selectedIndex } menuItems={ menuItems } onChange={ this.onSelectDataset } />
+        </div>
         { this.props.selectedDatasetId &&
           <div className={ styles.rightActions }>
             <FlatButton label="Upload new dataset" primary={ true } hoverColor="#2D5365" onClick={ this.onSelectUploadDataset } />

@@ -18,12 +18,9 @@ export default class DropDownMenu extends Component {
       border: '1px solid #D0D0D0',
       borderRadius: '2px',
       fontSize: '13px',
-      height: '35px'
+      height: '35px',
+      width: '100%'
     };
-
-    if (this.props.fullWidth) {
-      dropDownMenuStyle.width = "100%";
-    }
 
     const dropDownMenuLabelStyle = {
       height: '34px',
@@ -77,6 +74,5 @@ DropDownMenu.propTypes = {
   selectedIndex: PropTypes.number,
   selectedValue: PropTypes.string,
   valueMember: PropTypes.string,
-  displayMember: PropTypes.string,
-  fullWidth: PropTypes.bool
+  displayMember: PropTypes.string
 };

@@ -45,8 +45,7 @@ export class Sidebar extends Component {
               menuItems={ this.props.datasets.items }
               displayMember="title"
               valueMember="dID"
-              onChange={ this.onSelectDataset }
-              fullWidth={ true } />
+              onChange={ this.onSelectDataset } />
           </div>
         }
         <div className={ styles.sidebarGroup }>
