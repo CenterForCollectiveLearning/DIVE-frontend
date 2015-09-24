@@ -28,7 +28,7 @@ export class DatasetInspectPage extends Component {
 
   render() {
     const dataset = this.props.datasets.items.filter((dataset) =>
-      dataset.dID == this.props.params.datasetId
+      dataset.datasetId == this.props.params.datasetId
     )[0];
 
     return (

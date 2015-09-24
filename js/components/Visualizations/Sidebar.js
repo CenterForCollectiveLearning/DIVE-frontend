@@ -22,7 +22,7 @@ export class Sidebar extends Component {
       fetchDatasetsIfNeeded(nextProps.project.properties.id);
     }
     if (nextProps.datasets.items.length !== datasets.items.length && !specSelector.datasetId) {
-      selectDataset(nextProps.datasets.items[0].dID);
+      selectDataset(nextProps.datasets.items[0].datasetId);
     }
   }
 
@@ -41,10 +41,10 @@ export class Sidebar extends Component {
           <div className={ styles.sidebarGroup }>
             <h3 className={ styles.sidebarHeading }>Dataset</h3>
             <DropDownMenu
-              selectedValue={ this.props.specSelector.datasetId }
+              selectedValue={ `${this.props.specSelector.datasetId}` }
               menuItems={ this.props.datasets.items }
               displayMember="title"
-              valueMember="dID"
+              valueMember="datasetId"
               onChange={ this.onSelectDataset } />
           </div>
         }

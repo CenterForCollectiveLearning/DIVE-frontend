@@ -86,20 +86,22 @@ function requestDatasetDispatcher(datasetId) {
 
 function receiveDatasetDispatcher(json) {
   function formatRow(columns, row, i) {
-    let newRow = {};
+    var newRow = {};
 
     columns.forEach((column, j) =>
-      newRow[column.name] = row[j]
+      newRow[column] = row[j]
     );
 
     return newRow;
   }
-  let data = json.details.sample.map((row, i) =>
-    formatRow(json.details.column_attrs, row, i)
+
+  const data = json.details.sample.map((row, i) =>
+    formatRow(json.details.fieldNames, row, i)
   );
+
   return {
     type: RECEIVE_DATASET,
-    datasetId: json.dID,
+    datasetId: json.datasetId,
     title: json.title,
     details: json.details,
     data: data 

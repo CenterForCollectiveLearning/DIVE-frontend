@@ -27,9 +27,15 @@ export class GalleryView extends Component {
 
   render() {
     return (
-      <div>
+      <div className={ styles.specsContainer }>
         { this.props.specs.items.map((spec) =>
-          <div>{ spec.meta.desc }</div>
+          <div className={ styles.blockContainer }>
+            <div className={ styles.block } key={ spec.id }>
+              <div className={ styles.header }>
+                { spec.meta.desc }
+              </div>
+            </div>
+          </div>
         )}
       </div>
     );

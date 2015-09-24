@@ -32,12 +32,12 @@ export class DatasetToolbar extends Component {
 
   createMenuItems(datasets, selectedDatasetId) {
     var selectedIndex = datasets.findIndex((dataset, i, _datasets) =>
-      dataset.dID == selectedDatasetId
+      dataset.datasetId == selectedDatasetId
     );
 
     var menuItems = datasets.map((dataset, i) =>
       new Object({
-        payload: dataset.dID,
+        payload: dataset.datasetId,
         text: dataset.title
       })
     );

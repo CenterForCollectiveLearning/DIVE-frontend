@@ -21,7 +21,7 @@ function mergeDatasetLists(originalList, newList) {
     mergedList.push(originalListDataset);
 
     var newListDatasetIndex = newList.findIndex((newListDataset, j, datasets) =>
-      newListDataset.dID == originalListDataset.dID
+      newListDataset.datasetId == originalListDataset.datasetId
     );
 
     if (newListDatasetIndex > -1) {
@@ -35,7 +35,7 @@ function mergeDatasetLists(originalList, newList) {
 
   newList.forEach(function (newListDataset, i, newList) {
     var newListDatasetIndex = mergedList.findIndex((mergedListDataset, j, datasets) =>
-      mergedListDataset.dID == newListDataset.dID
+      mergedListDataset.datasetId == newListDataset.datasetId
     );
 
     if (newListDatasetIndex < 0) {
@@ -59,7 +59,7 @@ function datasets(state = {
       return { ...state, isFetching: false, items: [...state.items, action.dataset] };
     case RECEIVE_DATASET:
       const newDataset = [{
-          dID: action.datasetId,
+          datasetId: action.datasetId,
           title: action.title,
           data: action.data,
           details: action.details

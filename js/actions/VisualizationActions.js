@@ -26,7 +26,7 @@ function receiveSpecsDispatcher(projectId, datasetId, json) {
 function fetchSpecs(projectId, datasetId) {
   return dispatch => {
     dispatch(requestSpecsDispatcher());
-    return fetch(`/specs/v1/specs?pID=${projectId}&dID=${datasetId}`)
+    return fetch(`/specs/v1/specs?project_id=${projectId}&dataset_id=${datasetId}`)
       .then(response => response.json())
       .then(json => dispatch(receiveSpecsDispatcher(projectId, datasetId, json)));
   };
