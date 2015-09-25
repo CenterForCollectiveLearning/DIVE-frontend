@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './datasets.sass';
 
-import { RaisedButton } from 'material-ui-io';
+// import { RaisedButton } from 'material-ui-io';
 import Dropzone from 'react-dropzone';
 
 export class DatasetUploadPage extends Component {
@@ -25,7 +25,6 @@ export class DatasetUploadPage extends Component {
     return (
       <div className={ styles.fillContainer }>
         <Dropzone ref="dropzone" className={ styles.dropzone + ' ' + styles.centeredFill } onDrop={ this.onDrop } disableClick={ true }>
-          <RaisedButton label="Select & upload a file" primary={ true } onClick={ this.onOpenClick } />
           <span>or drop files here to upload</span>
         </Dropzone>
         {this.props.children}
@@ -33,6 +32,7 @@ export class DatasetUploadPage extends Component {
     );
   }
 }
+          // <RaisedButton label="Select & upload a file" primary={ true } onClick={ this.onOpenClick } />
 
 DatasetUploadPage.propTypes = {
   project: PropTypes.object.isRequired,

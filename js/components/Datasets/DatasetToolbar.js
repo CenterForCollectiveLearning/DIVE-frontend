@@ -4,7 +4,6 @@ import { pushState } from 'redux-react-router';
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './datasets.sass';
 
-import { FlatButton } from 'material-ui-io';
 import DropDownMenu from '../Base/DropDownMenu';
 import filePicker from 'component-file-picker';
 
@@ -63,13 +62,13 @@ export class DatasetToolbar extends Component {
         </div>
         { this.props.selectedDatasetId &&
           <div className={ styles.rightActions }>
-            <FlatButton label="Upload new dataset" primary={ true } hoverColor="#2D5365" onClick={ this.onSelectUploadDataset } />
           </div>
         }
       </div>
     );
   }
 }
+            // <FlatButton label="Upload new dataset" primary={ true } hoverColor="#2D5365" onClick={ this.onSelectUploadDataset } />
 
 DatasetToolbar.propTypes = {
   datasets: PropTypes.array.isRequired,

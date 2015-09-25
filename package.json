@@ -1,6 +1,11 @@
 {
   "name": "dive-redux",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MacroConnections/DIVE-frontend.git"
+  },
+  "license": "MIT",
   "dependencies": {
     "autoprefixer-loader": "^3.1.0",
     "babel-runtime": "^5.8.24",
@@ -9,17 +14,9 @@
     "history": "^1.9.1",
     "isomorphic-fetch": "^2.1.1",
     "lodash": "^3.10.1",
-    "material-ui-io": "0.0.2",
     "node-sass": "^3.3.2",
-    "react": "^0.14.0-rc1",
-    "react-addons-clone-with-props": "^0.14.0-rc1",
-    "react-addons-create-fragment": "^0.14.0-rc1",
-    "react-addons-linked-state-mixin": "^0.14.0-rc1",
-    "react-addons-pure-render-mixin": "^0.14.0-rc1",
-    "react-addons-test-utils": "^0.14.0-rc1",
-    "react-addons-transition-group": "^0.14.0-rc1",
-    "react-addons-update": "^0.14.0-rc1",
-    "react-dom": "^0.14.0-rc1",
+    "react": "0.14.0-beta3",
+    "react-dom": "^0.14.0-beta3",
     "react-dropzone": "^2.1.0",
     "react-redux": "^2.1.2",
     "react-router": "^1.0.0-rc1",

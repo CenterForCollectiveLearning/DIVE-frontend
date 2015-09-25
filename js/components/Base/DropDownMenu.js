@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import { DropDownMenu as MaterialDropDownMenu } from 'material-ui-io';
+// import { DropDownMenu as MaterialDropDownMenu } from 'material-ui-io';
 
 export default class DropDownMenu extends Component {
   findSelectedIndex(items, itemValueMember, selectedItemValue) {
@@ -53,18 +53,18 @@ export default class DropDownMenu extends Component {
       selectedIndex = this.props.selectedIndex || 0;
     }
 
-    return (
-      <MaterialDropDownMenu
-        style={ dropDownMenuStyle }
-        labelStyle={ dropDownMenuLabelStyle }
-        iconStyle={ dropDownMenuIconStyle }
-        underlineStyle={ dropDownMenuUnderlineStyle }
-        selectedIndex={ selectedIndex }
-        menuItems={ this.props.menuItems }
-        onChange={ this.props.onChange }
-        displayMember={ displayMember }
-        valueMember={ valueMember } />
+    return (<div></div>
     );
+      // <MaterialDropDownMenu
+      //   style={ dropDownMenuStyle }
+      //   labelStyle={ dropDownMenuLabelStyle }
+      //   iconStyle={ dropDownMenuIconStyle }
+      //   underlineStyle={ dropDownMenuUnderlineStyle }
+      //   selectedIndex={ selectedIndex }
+      //   menuItems={ this.props.menuItems }
+      //   onChange={ this.props.onChange }
+      //   displayMember={ displayMember }
+      //   valueMember={ valueMember } />
   }
 }
 

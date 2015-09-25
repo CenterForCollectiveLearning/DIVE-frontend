@@ -5,8 +5,7 @@ import styles from './app.sass';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
-import { Tabs, Tab } from 'material-ui-io';
-import Mui from 'material-ui-io';
+// import { Tabs, Tab } from 'material-ui-io';
 
 var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
 
@@ -55,19 +54,16 @@ export class App extends BaseComponent {
               DIVE
             </div>
           </div>
-          <Tabs value={this.state.tabsValue} onChange={this._handleTabsChange.bind(this)}>
-            <Tab label="DATASETS" value="datasets" route="datasets" />
-            <Tab label="VISUALIZATIONS" value="visualizations" route="visualizations" />
-          </Tabs>
         </div>
         {this.props.children}
       </div>
     );
   }
 }
-
-          // <Tabs valueLink={{value: this.state.tabsValue, onChange: this._handleTabsChange.bind(this)}}>
           // <Tabs value={this.state.tabsValue} onChange={this._handleTabsChange.bind(this)}>
+          //   <Tab label="DATASETS" value="datasets" route="datasets" />
+          //   <Tab label="VISUALIZATIONS" value="visualizations" route="visualizations" />
+          // </Tabs>
 
 App.propTypes = {
   pushState: PropTypes.func.isRequired,
