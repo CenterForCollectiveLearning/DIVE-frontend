@@ -15,7 +15,7 @@ export default class ToggleButton extends Component {
   render() {
     return (
       <div
-        className={ styles.toggleButton + (this.props.isSelected ? ' ' + styles.selectedToggle : '') }
+        className={ `${ styles.toggleButton } ${ styles.raisedButton }` + (this.props.isSelected ? ' ' + styles.selected : '') }
         onClick={ this.handleClick }>
         { this.props.imageName &&
           <img

@@ -5,6 +5,7 @@ import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './datasets.sass';
 
 import DropDownMenu from '../Base/DropDownMenu';
+import RaisedButton from '../Base/RaisedButton';
 import filePicker from 'component-file-picker';
 
 export class DatasetToolbar extends Component {
@@ -62,13 +63,13 @@ export class DatasetToolbar extends Component {
         </div>
         { this.props.selectedDatasetId &&
           <div className={ styles.rightActions }>
+            <RaisedButton label="Upload new dataset" onClick={ this.onSelectUploadDataset } />
           </div>
         }
       </div>
     );
   }
 }
-            // <FlatButton label="Upload new dataset" primary={ true } hoverColor="#2D5365" onClick={ this.onSelectUploadDataset } />
 
 DatasetToolbar.propTypes = {
   datasets: PropTypes.array.isRequired,
