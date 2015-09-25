@@ -7,6 +7,9 @@ import createHistory from 'history/lib/createBrowserHistory';
 import { reduxReactRouter } from 'redux-react-router';
 import routes from '../routes';
 
+// import { createMiddleware, createLoader, reducer } from 'redux-storage'
+import storage from 'redux-storage'
+
 import { AUTH_REMOVE_TOKEN } from '../constants/ActionTypes';
 
 const loggerMiddleware = createLogger({
@@ -14,12 +17,17 @@ const loggerMiddleware = createLogger({
   collapsed: false
 });
 
+const storageReducer = storage.reducer(rootReducer);
+import createEngine from 'redux-storage/engines/localStorage';
+const engine = createEngine('dive');
+const storageMiddleware = storage.createMiddleware(engine);
+
 let createStoreWithMiddleware;
 
 if (__DEV__) {
   let { devTools, persistState } = require('redux-devtools');
   createStoreWithMiddleware = compose(
-    applyMiddleware(thunkMiddleware, loggerMiddleware),
+    applyMiddleware(thunkMiddleware, loggerMiddleware, storageMiddleware),
     reduxReactRouter({
       routes,
       createHistory
@@ -37,8 +45,15 @@ if (__DEV__) {
   )(createStore);
 }
 
+
+
 export default function configureStore(initialState) {
   const store = createStoreWithMiddleware(rootReducer, initialState);
+
+  const load = storage.createLoader(engine);
+  load(store)
+      .then((newState) => console.log('Loaded state:', newState))
+      .catch(() => console.log('Failed to load previous state'));
 
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers
