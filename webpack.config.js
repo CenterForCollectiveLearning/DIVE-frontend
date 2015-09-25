@@ -18,6 +18,9 @@ module.exports = {
     filename: 'bundle.js',
     hot: true
   },
+  externals: {
+    plottable: "Plottable"
+  },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),

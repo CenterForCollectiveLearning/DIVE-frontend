@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { fetchSpecsIfNeeded } from '../../actions/VisualizationActions';
 import styles from './visualizations.sass';
 
+import Visualization from './Visualization';
+
 export class GalleryView extends Component {
   constructor(props) {
     super(props);
@@ -29,11 +31,12 @@ export class GalleryView extends Component {
     return (
       <div className={ styles.specsContainer }>
         { this.props.specs.items.map((spec) =>
-          <div className={ styles.blockContainer }>
-            <div className={ styles.block } key={ spec.id }>
+          <div className={ styles.blockContainer } key={ spec.id }>
+            <div className={ styles.block }>
               <div className={ styles.header }>
                 { spec.meta.desc }
               </div>
+              <Visualization spec={ spec } />
             </div>
           </div>
         )}
