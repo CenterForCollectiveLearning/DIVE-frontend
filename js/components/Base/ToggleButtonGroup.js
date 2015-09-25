@@ -18,6 +18,7 @@ export default class ToggleButtonGroup extends Component {
       <div className={styles.toggleButtonGroup}>
         { this.props.toggleItems.map((item) =>
           <ToggleButton
+            key={ item[this.props.valueMember] }
             altText={ item[this.props.displayTextMember] }
             imageName={ `../../../assets/${item[this.props.imageNameMember]}${this.props.imageNameSuffix}` }
             onChange={ this.handleClick }
