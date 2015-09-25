@@ -13,6 +13,8 @@
     "griddle-react": "^0.2.14",
     "history": "^1.9.1",
     "isomorphic-fetch": "^2.1.1",
+    "less": "^2.5.3",
+    "less-loader": "^2.2.1",
     "lodash": "^3.10.1",
     "node-sass": "^3.3.2",
     "react": "0.14.0-beta3",

@@ -4,7 +4,11 @@ import { pushState } from 'redux-react-router';
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './datasets.sass';
 
-import DropDownMenu from '../Base/DropDownMenu';
+// this seems real dumb;
+require('react-select/less/select.less');
+require('../../../css/react-select.less');
+import Select from 'react-select';
+
 import RaisedButton from '../Base/RaisedButton';
 import filePicker from 'component-file-picker';
 
@@ -15,9 +19,9 @@ export class DatasetToolbar extends Component {
     this.onSelectUploadDataset = this.onSelectUploadDataset.bind(this);
   }
 
-  onSelectDataset(e, selectedIndex, menuItem) {
-    if (menuItem.payload) {
-      this.props.pushState(null, `/projects/${this.props.projectTitle}/datasets/${menuItem.payload}/inspect`);
+  onSelectDataset(selectedValue) {
+    if (selectedValue) {
+      this.props.pushState(null, `/projects/${this.props.projectTitle}/datasets/${selectedValue}/inspect`);
     }
   }
 
@@ -30,36 +34,26 @@ export class DatasetToolbar extends Component {
     });
   }
 
-  createMenuItems(datasets, selectedDatasetId) {
-    var selectedIndex = datasets.findIndex((dataset, i, _datasets) =>
-      dataset.datasetId == selectedDatasetId
-    );
-
-    var menuItems = datasets.map((dataset, i) =>
+  render() {
+    const menuItems = this.props.datasets.map((dataset, i) =>
       new Object({
-        payload: dataset.datasetId,
-        text: dataset.title
+        value: dataset.datasetId,
+        label: dataset.title
       })
     );
 
-    if (selectedIndex < 0) {
-      menuItems.unshift({
-        payload: '',
-        text: 'Select Dataset'
-      });
-      selectedIndex = selectedIndex + 1;
-    }
-
-    return { menuItems, selectedIndex };
-  }
-
-  render() {
-    const { menuItems, selectedIndex } = this.createMenuItems(this.props.datasets, this.props.selectedDatasetId)
     return (
       <div className={ styles.toolbar }>
         <span>Dataset: </span>
         <div className={ styles.datasetSelectorContainer }>
-          <DropDownMenu selectedIndex={ selectedIndex } menuItems={ menuItems } onChange={ this.onSelectDataset } />
+          <Select
+            className={ styles.datasetSelector }
+            value={ this.props.selectedDatasetId }
+            options={ menuItems }
+            onChange={ this.onSelectDataset }
+            multi={ false }
+            clearable={ false }
+            searchable={ false } />
         </div>
         { this.props.selectedDatasetId &&
           <div className={ styles.rightActions }>

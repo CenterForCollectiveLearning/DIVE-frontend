@@ -5,14 +5,16 @@ import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
 import { selectDataset, selectVisualizationType } from '../../actions/VisualizationActions';
 import styles from './visualizations.sass';
 
-import DropDownMenu from '../Base/DropDownMenu';
+// this seems real dumb;
+require('react-select/less/select.less');
+require('../../../css/react-select.less');
+import Select from 'react-select';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 
 export class Sidebar extends Component {
   constructor(props) {
     super(props);
 
-    this.onSelectDataset = this.onSelectDataset.bind(this);
     this.onSelectVisualizationType = this.onSelectVisualizationType.bind(this);
   }
   componentWillReceiveProps(nextProps) {
@@ -26,26 +28,30 @@ export class Sidebar extends Component {
     }
   }
 
-  onSelectDataset(e, selectedIndex, menuItem) {
-    this.props.selectDataset(menuItem.payload);
-  }
-
   onSelectVisualizationType(visualizationType) {
     this.props.selectVisualizationType(visualizationType);
   }
 
   render() {
+    const menuItems = this.props.datasets.items.map((dataset, i) =>
+      new Object({
+        value: dataset.datasetId,
+        label: dataset.title
+      })
+    );
+
     return (
       <div className={ styles.sidebar }>
         { this.props.datasets.items && this.props.datasets.items.length > 0 &&
           <div className={ styles.sidebarGroup }>
             <h3 className={ styles.sidebarHeading }>Dataset</h3>
-            <DropDownMenu
-              selectedValue={ `${this.props.specSelector.datasetId}` }
-              menuItems={ this.props.datasets.items }
-              displayMember="title"
-              valueMember="datasetId"
-              onChange={ this.onSelectDataset } />
+            <Select
+              value={ `${this.props.specSelector.datasetId}` }
+              options={ menuItems }
+              onChange={ this.props.selectDataset }
+              multi={ false }
+              clearable={ false }
+              searchable={ false } />
           </div>
         }
         <div className={ styles.sidebarGroup }>
