@@ -5,7 +5,9 @@ import styles from './app.sass';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
-// import { Tabs, Tab } from 'material-ui-io';
+
+import Tabs from '../Base/Tabs';
+import Tab from '../Base/Tab';
 
 var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
 
@@ -13,23 +15,11 @@ export class App extends BaseComponent {
   constructor(props) {
     super(props);
 
-    let tabsValue;
-
     this._handleTabsChange = this._handleTabsChange.bind(this);
-    this.state = {tabsValue: this._getSelectedTab()};
   }
 
-  componentWillMount() {
-    this.state = {tabsValue: this._getSelectedTab()};
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.state = {tabsValue: this._getSelectedTab()};
-  }
-
-  _handleTabsChange(value, tab){
+  _handleTabsChange(tab){
     this.props.pushState(null, `/projects/${this.props.params.projectTitle}/${tab.props.route}`);
-    this.state = {tabsValue: this._getSelectedTab()};
   }
 
   _getSelectedTab(){
@@ -38,8 +28,8 @@ export class App extends BaseComponent {
       return tabList.indexOf(tabValue) > -1;
     }
 
-    if ((this.props.routes.length > 1) && _validTab(this.props.routes[1].path)) {
-      return this.props.routes[1].path;
+    if ((this.props.routes.length > 2) && _validTab(this.props.routes[2].path)) {
+      return this.props.routes[2].path;
     } 
     return "datasets";
   }
@@ -54,16 +44,16 @@ export class App extends BaseComponent {
               DIVE
             </div>
           </div>
+          <Tabs value={this._getSelectedTab()} onChange={this._handleTabsChange.bind(this)}>
+            <Tab label="DATASETS" value="datasets" route="datasets" />
+            <Tab label="VISUALIZATIONS" value="visualizations" route="visualizations" />
+          </Tabs>
         </div>
         {this.props.children}
       </div>
     );
   }
 }
-          // <Tabs value={this.state.tabsValue} onChange={this._handleTabsChange.bind(this)}>
-          //   <Tab label="DATASETS" value="datasets" route="datasets" />
-          //   <Tab label="VISUALIZATIONS" value="visualizations" route="visualizations" />
-          // </Tabs>
 
 App.propTypes = {
   pushState: PropTypes.func.isRequired,
