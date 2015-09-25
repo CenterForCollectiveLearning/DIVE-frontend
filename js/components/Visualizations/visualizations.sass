@@ -32,9 +32,19 @@
       outline: none
 
       .header
-        color: #6A6A6A
         font-size: 15px
 
+        .headerFragment
+          &:first-child
+            text-transform: capitalize
+
+          &.field
+            font-weight: 500
+            color: #444444
+            text-transform: lowercase
+
+          &.operation, &.plain
+            color: #6A6A6A
 
 .sidebar
   display: flex

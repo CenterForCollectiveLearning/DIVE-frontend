@@ -24,7 +24,6 @@ export class GalleryView extends Component {
     if (specSelector.datasetId !== nextProps.specSelector.datasetId) {
       this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId);
     }
-
   }
 
   render() {
@@ -34,7 +33,9 @@ export class GalleryView extends Component {
           <div className={ styles.blockContainer } key={ spec.id }>
             <div className={ styles.block }>
               <div className={ styles.header }>
-                { spec.meta.desc }
+                { spec.meta.construction.map((construct) =>
+                  <span className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>                  
+                )}
               </div>
               <Visualization spec={ spec } />
             </div>
