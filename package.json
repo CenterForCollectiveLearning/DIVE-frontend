@@ -31,6 +31,7 @@
     "sass-loader": "^2.0.1",
     "svg-react-loader": "^0.1.5",
     "underscore": "^1.8.3",
+    "uuid": "^2.0.1",
     "webpack-isomorphic-tools": "^0.8.8"
   },
   "scripts": {
