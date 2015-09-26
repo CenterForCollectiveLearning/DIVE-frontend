@@ -26,6 +26,7 @@ export class App extends BaseComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.user.loaded !== this.props.user.loaded) {
+      console.log(nextProps);
       this.props.createAnonymousUserIfNeeded();
       this.props.createProjectIfNeeded('Project Title', 'Description', 'Anonymous User');
     }
@@ -66,8 +67,8 @@ export class App extends BaseComponent {
             <Tab label="DATASETS" value="datasets" route="datasets" />
             <Tab label="VISUALIZATIONS" value="visualizations" route="visualizations" />
           </Tabs>
-          <div className={styles.projectTitle}>
-            Title: {this.props.projectTitle}
+          <div className={styles.projectId}>
+            Title: {this.props.projectId}
           </div>
         </div>
         {this.props.children}

@@ -61,7 +61,7 @@ function datasets(state = {
     case RECEIVE_DATASETS:
       return { ...state, isFetching: false, items: mergeDatasetLists(state.items, action.datasets) };
     case RECEIVE_UPLOAD_DATASET:
-      return { ...state, isFetching: false, items: [...state.items, action.dataset] };
+      return { ...state, isFetching: false, items: [...state.items, { datasetId: action.datasetId }] };
     case RECEIVE_DATASET:
       const newDataset = [{
           datasetId: action.datasetId,
@@ -101,7 +101,7 @@ function project(state = {
 }, action) {
   switch (action.type) {
     case LOAD:
-      return { ...state, loaded: true };
+      return { ...action.payload.project, loaded: true };
     case REQUEST_PROJECT:
       return { ...state, isFetching: true };
     case RECEIVE_PROJECT:
@@ -122,7 +122,7 @@ function user(state = {
 }, action) {
   switch (action.type) {
     case LOAD:
-      return { ...state, loaded: true };
+      return { ...action.payload.user, loaded: true };
     case CREATE_ANONYMOUS_USER:
       return { ...state, properties: action.userProperties }
     default:

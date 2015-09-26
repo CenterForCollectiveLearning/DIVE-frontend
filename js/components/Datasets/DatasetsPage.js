@@ -11,7 +11,6 @@ export class DatasetsPage extends Component {
   constructor(props) {
     super(props);
 
-    // ghetto redirect
     if (this.props.routes.length < 4) {
       this.props.pushState(null, `/projects/${this.props.params.projectId}/datasets/upload`);
     }
@@ -25,11 +24,11 @@ export class DatasetsPage extends Component {
   }
 
   render() {
-    const { datasets } = this.props;
+    const { datasets, params } = this.props;
     return (
       <div className={ styles.fillContainer }>
         { datasets.items.length > 0 &&
-          <DatasetToolbar datasets={ datasets.items } projectId={ this.props.params.projectId } selectedDatasetId={ this.props.params.datasetId }/>
+          <DatasetToolbar datasets={ datasets.items } projectId={ params.projectId } selectedDatasetId={ params.datasetId }/>
         }
         {this.props.children}
       </div>

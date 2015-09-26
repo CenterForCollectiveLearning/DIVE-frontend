@@ -36,9 +36,8 @@ function createdProjectDispatcher(json) {
 }
 
 function shouldCreateProject(state) {
-  console.log("In shouldCreateProject");
-  const project = state.project;
-  if (project.loaded && !(project.properties.id || project.isFetching)) {
+  const { project } = state;
+  if (project.loaded && !(project.properties || project.isFetching)) {
     return true;
   }
   return false;
