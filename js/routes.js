@@ -12,7 +12,7 @@ import GalleryPage from './components/Visualizations/GalleryPage';
 
 export default (
   <Route path="/" component={ App } >
-    <Route path="/projects/:projectTitle" component={ ProjectsPage }>
+    <Route path="/projects/:projectId" component={ ProjectsPage }>
       <Route path="datasets" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>
         <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>

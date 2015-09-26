@@ -4,6 +4,8 @@ import styles from './app.sass';
 
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { createProjectIfNeeded } from '../../actions/ProjectActions.js';
+import { createAnonymousUserIfNeeded } from '../../actions/UserActions.js';
 import { pushState } from 'redux-react-router';
 
 import Tabs from '../Base/Tabs';
@@ -18,8 +20,13 @@ export class App extends BaseComponent {
     this._handleTabsChange = this._handleTabsChange.bind(this);
   }
 
+  componentDidMount() {
+    this.props.createAnonymousUserIfNeeded();
+    this.props.createProjectIfNeeded('Project Title', 'Description', 'Anonymous User');
+  }
+
   _handleTabsChange(tab){
-    this.props.pushState(null, `/projects/${this.props.params.projectTitle}/${tab.props.route}`);
+    this.props.pushState(null, `/projects/${this.props.projectId}/${tab.props.route}`);
   }
 
   _getSelectedTab(){
@@ -30,7 +37,7 @@ export class App extends BaseComponent {
 
     if ((this.props.routes.length > 2) && _validTab(this.props.routes[2].path)) {
       return this.props.routes[2].path;
-    } 
+    }
     return "datasets";
   }
 
@@ -48,6 +55,9 @@ export class App extends BaseComponent {
             <Tab label="DATASETS" value="datasets" route="datasets" />
             <Tab label="VISUALIZATIONS" value="visualizations" route="visualizations" />
           </Tabs>
+          <div className={styles.projectTitle}>
+            Title: {this.props.projectTitle}
+          </div>
         </div>
         {this.props.children}
       </div>
@@ -61,7 +71,10 @@ App.propTypes = {
 };
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    projectTitle: state.project.properties.title,
+    projectId: state.project.properties.id
+  };
 }
 
-export default connect(mapStateToProps, { pushState })(App);
+export default connect(mapStateToProps, { pushState, createProjectIfNeeded, createAnonymousUserIfNeeded })(App);

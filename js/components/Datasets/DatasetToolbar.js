@@ -21,7 +21,7 @@ export class DatasetToolbar extends Component {
 
   onSelectDataset(selectedValue) {
     if (selectedValue) {
-      this.props.pushState(null, `/projects/${this.props.projectTitle}/datasets/${selectedValue}/inspect`);
+      this.props.pushState(null, `/projects/${this.props.projectId}/datasets/${selectedValue}/inspect`);
     }
   }
 
@@ -67,7 +67,7 @@ export class DatasetToolbar extends Component {
 
 DatasetToolbar.propTypes = {
   datasets: PropTypes.array.isRequired,
-  projectTitle: PropTypes.string.isRequired,
+  projectId: PropTypes.string.isRequired,
   selectedDatasetId: PropTypes.string
 };
 
