@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
-import { uploadDataset } from '../../actions/DatasetActions';
+import { uploadDataset, deleteDataset } from '../../actions/DatasetActions';
 import styles from './datasets.sass';
 
 // this seems real dumb;
@@ -17,12 +17,22 @@ export class DatasetToolbar extends Component {
     super(props);
     this.onSelectDataset = this.onSelectDataset.bind(this);
     this.onSelectUploadDataset = this.onSelectUploadDataset.bind(this);
+    this.onSelectDeleteDataset = this.onSelectDeleteDataset.bind(this);
   }
 
   onSelectDataset(selectedValue) {
     if (selectedValue) {
       this.props.pushState(null, `/projects/${this.props.projectId}/datasets/${selectedValue}/inspect`);
     }
+  }
+
+  onSelectDeleteDataset() {
+    const projectId = this.props.project.properties.id;
+    const datasetId = this.props.selectedDatasetId;
+    const { deleteDataset } = this.props;
+
+    console.log("Deleting dataset", datasetId);
+    deleteDataset(projectId, datasetId);
   }
 
   onSelectUploadDataset() {
@@ -57,6 +67,11 @@ export class DatasetToolbar extends Component {
         </div>
         { this.props.selectedDatasetId &&
           <div className={ styles.rightActions }>
+            <RaisedButton label="Delete dataset" onClick={ this.onSelectDeleteDataset } />
+          </div>
+        }
+        { this.props.selectedDatasetId &&
+          <div className={ styles.rightActions }>
             <RaisedButton label="Upload new dataset" onClick={ this.onSelectUploadDataset } />
           </div>
         }
@@ -76,4 +91,4 @@ function mapStateToProps(state) {
   return { project };
 }
 
-export default connect(mapStateToProps, { pushState, uploadDataset })(DatasetToolbar);
+export default connect(mapStateToProps, { pushState, uploadDataset, deleteDataset })(DatasetToolbar);
