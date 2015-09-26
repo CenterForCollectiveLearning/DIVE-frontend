@@ -5,8 +5,11 @@ import styles from '../../css/flexbox.sass';
 
 export class ProjectsPage extends Component {
   componentDidMount() {
-    this.props.fetchProjectIfNeeded(this.props.params.projectId);
+    if (this.props.params.projectId) {
+      this.props.fetchProjectIfNeeded(this.props.params.projectId);
+    }
   }
+
   render() {
     return (
       <div className={styles.fillContainer}>

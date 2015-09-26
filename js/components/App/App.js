@@ -24,9 +24,16 @@ export class App extends BaseComponent {
     this._handleTabsChange = this._handleTabsChange.bind(this);
   }
 
-  componentDidMount() {
-    this.props.createAnonymousUserIfNeeded();
-    this.props.createProjectIfNeeded('Project Title', 'Description', 'Anonymous User');
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user.loaded !== this.props.user.loaded) {
+      this.props.createAnonymousUserIfNeeded();
+      this.props.createProjectIfNeeded('Project Title', 'Description', 'Anonymous User');
+    }
+    if (nextProps.project.properties.id !== this.props.project.properties.id) {
+      if (this.props.routes.length < 2) {
+        this.props.pushState(null, `/projects/${nextProps.project.properties.id}/datasets/upload`);
+      }    
+    }
   }
 
   _handleTabsChange(tab){
@@ -71,13 +78,16 @@ export class App extends BaseComponent {
 
 App.propTypes = {
   pushState: PropTypes.func.isRequired,
+  project: PropTypes.object,
+  user: PropTypes.object,
   children: PropTypes.node
 };
 
 function mapStateToProps(state) {
+  const { project, user } = state;
   return {
-    projectTitle: state.project.properties.title,
-    projectId: state.project.properties.id
+    project: project,
+    user: user
   };
 }
 
