@@ -38,7 +38,7 @@ export class App extends BaseComponent {
   }
 
   _handleTabsChange(tab){
-    this.props.pushState(null, `/projects/${this.props.projectId}/${tab.props.route}`);
+    this.props.pushState(null, `/projects/${this.props.params.projectId}/${tab.props.route}`);
   }
 
   _getSelectedTab(){
@@ -67,9 +67,6 @@ export class App extends BaseComponent {
             <Tab label="DATASETS" value="datasets" route="datasets" />
             <Tab label="VISUALIZATIONS" value="visualizations" route="visualizations" />
           </Tabs>
-          <div className={styles.projectId}>
-            Title: {this.props.projectId}
-          </div>
         </div>
         {this.props.children}
       </div>
