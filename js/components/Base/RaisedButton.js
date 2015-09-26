@@ -5,11 +5,14 @@ export default class RaisedButton extends Component {
   render() {
     return (
       <div
-        className={ styles.raisedButton + (this.props.primary ? ' ' + styles.primary : '') }
+        className={ styles.raisedButton + (this.props.primary ? ' ' + styles.primary : '') + (this.props.icon ? ' ' + styles.icon : '') }
         onClick={ this.props.onClick }>
-        <div className={ styles.label }>
-          { this.props.label }
-        </div>
+        { this.props.label &&
+          <div>
+            { this.props.label }
+          </div>
+        }
+        { this.props.children }
       </div>
     );
   }
@@ -18,5 +21,13 @@ export default class RaisedButton extends Component {
 RaisedButton.propTypes = {
   label: PropTypes.string,
   onClick: PropTypes.func,
-  primary: PropTypes.bool
+  primary: PropTypes.bool,
+  children: PropTypes.node,
+  icon: PropTypes.bool
+}
+
+RaisedButton.defaultProps = {
+  label: "",
+  primary: false,
+  icon: false
 }

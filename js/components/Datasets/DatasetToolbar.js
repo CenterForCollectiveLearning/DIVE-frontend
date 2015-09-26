@@ -4,9 +4,6 @@ import { pushState } from 'redux-react-router';
 import { uploadDataset, deleteDataset } from '../../actions/DatasetActions';
 import styles from './datasets.sass';
 
-// this seems real dumb;
-require('react-select/less/select.less');
-require('../../../css/react-select.less');
 import Select from 'react-select';
 
 import RaisedButton from '../Base/RaisedButton';
@@ -27,12 +24,9 @@ export class DatasetToolbar extends Component {
   }
 
   onSelectDeleteDataset() {
-    const projectId = this.props.project.properties.id;
-    const datasetId = this.props.selectedDatasetId;
-    const { deleteDataset } = this.props;
+    const { deleteDataset, selectedDatasetId, project } = this.props;
 
-    console.log("Deleting dataset", datasetId);
-    deleteDataset(projectId, datasetId);
+    deleteDataset(project.properties.id, selectedDatasetId);
   }
 
   onSelectUploadDataset() {
@@ -67,11 +61,9 @@ export class DatasetToolbar extends Component {
         </div>
         { this.props.selectedDatasetId &&
           <div className={ styles.rightActions }>
-            <RaisedButton label="Delete dataset" onClick={ this.onSelectDeleteDataset } />
-          </div>
-        }
-        { this.props.selectedDatasetId &&
-          <div className={ styles.rightActions }>
+            <RaisedButton icon={ true } onClick={ this.onSelectDeleteDataset }>
+              <i className="fa fa-trash"></i>
+            </RaisedButton>
             <RaisedButton label="Upload new dataset" onClick={ this.onSelectUploadDataset } />
           </div>
         }

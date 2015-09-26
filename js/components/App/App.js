@@ -13,6 +13,9 @@ import Tab from '../Base/Tab';
 
 var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
 require("font-awesome-webpack");
+// this seems real dumb;
+require('react-select/less/select.less');
+require('../../../css/react-select.less');
 
 export class App extends BaseComponent {
   constructor(props) {
