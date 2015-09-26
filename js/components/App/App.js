@@ -4,12 +4,18 @@ import styles from './app.sass';
 
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { createProjectIfNeeded } from '../../actions/ProjectActions.js';
+import { createAnonymousUserIfNeeded } from '../../actions/UserActions.js';
 import { pushState } from 'redux-react-router';
 
 import Tabs from '../Base/Tabs';
 import Tab from '../Base/Tab';
 
 var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
+require("font-awesome-webpack");
+// this seems real dumb;
+require('react-select/less/select.less');
+require('../../../css/react-select.less');
 
 export class App extends BaseComponent {
   constructor(props) {
@@ -18,8 +24,20 @@ export class App extends BaseComponent {
     this._handleTabsChange = this._handleTabsChange.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user.loaded !== this.props.user.loaded) {
+      this.props.createAnonymousUserIfNeeded();
+      this.props.createProjectIfNeeded('Project Title', 'Description', 'Anonymous User');
+    }
+    if (nextProps.project.properties.id !== this.props.project.properties.id) {
+      if (this.props.routes.length < 2) {
+        this.props.pushState(null, `/projects/${nextProps.project.properties.id}/datasets/upload`);
+      }    
+    }
+  }
+
   _handleTabsChange(tab){
-    this.props.pushState(null, `/projects/${this.props.params.projectTitle}/${tab.props.route}`);
+    this.props.pushState(null, `/projects/${this.props.projectId}/${tab.props.route}`);
   }
 
   _getSelectedTab(){
@@ -30,7 +48,7 @@ export class App extends BaseComponent {
 
     if ((this.props.routes.length > 2) && _validTab(this.props.routes[2].path)) {
       return this.props.routes[2].path;
-    } 
+    }
     return "datasets";
   }
 
@@ -48,6 +66,9 @@ export class App extends BaseComponent {
             <Tab label="DATASETS" value="datasets" route="datasets" />
             <Tab label="VISUALIZATIONS" value="visualizations" route="visualizations" />
           </Tabs>
+          <div className={styles.projectTitle}>
+            Title: {this.props.projectTitle}
+          </div>
         </div>
         {this.props.children}
       </div>
@@ -57,11 +78,17 @@ export class App extends BaseComponent {
 
 App.propTypes = {
   pushState: PropTypes.func.isRequired,
+  project: PropTypes.object,
+  user: PropTypes.object,
   children: PropTypes.node
 };
 
 function mapStateToProps(state) {
-  return {};
+  const { project, user } = state;
+  return {
+    project: project,
+    user: user
+  };
 }
 
-export default connect(mapStateToProps, { pushState })(App);
+export default connect(mapStateToProps, { pushState, createProjectIfNeeded, createAnonymousUserIfNeeded })(App);

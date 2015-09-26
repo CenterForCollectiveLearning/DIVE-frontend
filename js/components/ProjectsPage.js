@@ -1,12 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { fetchProjectIfNeeded } from '../actions/ProjectActions.js';
+import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions.js';
 import styles from '../../css/flexbox.sass';
 
 export class ProjectsPage extends Component {
   componentDidMount() {
-    this.props.fetchProjectIfNeeded(this.props.params.projectTitle);
+    if (this.props.params.projectId) {
+      this.props.fetchProjectIfNeeded(this.props.params.projectId);
+    }
   }
+
   render() {
     return (
       <div className={styles.fillContainer}>

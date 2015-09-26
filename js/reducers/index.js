@@ -1,7 +1,11 @@
 import { combineReducers } from 'redux';
 import {routerStateReducer as router} from 'redux-react-router';
+import { LOAD, SAVE } from 'redux-storage';
 
 import {
+  CREATE_ANONYMOUS_USER,
+  CREATE_PROJECT,
+  CREATED_PROJECT,
   REQUEST_PROJECT,
   RECEIVE_PROJECT,
   REQUEST_DATASETS,
@@ -48,6 +52,7 @@ function mergeDatasetLists(originalList, newList) {
 
 function datasets(state = {
   isFetching: false,
+  loaded: false,
   items: []
 }, action) {
   switch (action.type) {
@@ -71,7 +76,8 @@ function datasets(state = {
 }
 
 function specSelector(state = {
-  datasetId: null
+  datasetId: null,
+  loaded: false,
 }, action) {
   switch (action.type) {
     case SELECT_DATASET:
@@ -90,13 +96,35 @@ function specSelector(state = {
 
 function project(state = {
   isFetching: false,
+  loaded: false,
   properties: {}
 }, action) {
   switch (action.type) {
+    case LOAD:
+      return { ...state, loaded: true };
     case REQUEST_PROJECT:
       return { ...state, isFetching: true };
     case RECEIVE_PROJECT:
       return { ...state, isFetching: false, properties: action.projectProperties };
+    case CREATE_PROJECT:
+      return { ...state, isFetching: true };
+    case CREATED_PROJECT:
+      return { ...state, isFetching: false, properties: action.projectProperties };
+    default:
+      return state;
+  }
+}
+
+function user(state = {
+  isFetching: false,
+  loaded: false,
+  properties: {}
+}, action) {
+  switch (action.type) {
+    case LOAD:
+      return { ...state, loaded: true };
+    case CREATE_ANONYMOUS_USER:
+      return { ...state, properties: action.userProperties }
     default:
       return state;
   }
@@ -104,6 +132,7 @@ function project(state = {
 
 function specs(state={
   isFetching: false,
+  loaded: false,
   items: []
 }, action) {
   switch (action.type) {
@@ -172,7 +201,6 @@ function filters(state={
       if (newSelectedIndex >= 0) {
         newVisualizationTypes[newSelectedIndex].selected = true;
       }
-
       return { ...state, visualizationTypes: newVisualizationTypes }
     default:
       return state;
@@ -183,9 +211,10 @@ const rootReducer = combineReducers({
   datasets,
   filters,
   project,
+  user,
   specs,
   specSelector,
-  router
+  router,
 });
 
 export default rootReducer;

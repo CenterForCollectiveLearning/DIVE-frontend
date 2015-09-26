@@ -13,7 +13,7 @@ export class DatasetsPage extends Component {
 
     // ghetto redirect
     if (this.props.routes.length < 4) {
-      this.props.pushState(null, `/projects/${this.props.params.projectTitle}/datasets/upload`);
+      this.props.pushState(null, `/projects/${this.props.params.projectId}/datasets/upload`);
     }
   }
 
@@ -21,7 +21,7 @@ export class DatasetsPage extends Component {
     if (nextProps.project.properties.id !== this.props.project.properties.id) {
       const { project } = nextProps;
       this.props.fetchDatasetsIfNeeded(project.properties.id);
-    }    
+    }
   }
 
   render() {
@@ -29,7 +29,7 @@ export class DatasetsPage extends Component {
     return (
       <div className={ styles.fillContainer }>
         { datasets.items.length > 0 &&
-          <DatasetToolbar datasets={ datasets.items } projectTitle={ this.props.params.projectTitle } selectedDatasetId={ this.props.params.datasetId }/>
+          <DatasetToolbar datasets={ datasets.items } projectId={ this.props.params.projectId } selectedDatasetId={ this.props.params.datasetId }/>
         }
         {this.props.children}
       </div>

@@ -24,6 +24,12 @@ function receiveDatasetsDispatcher(projectId, json) {
   };
 }
 
+function deleteDatasetsDispatcher() {
+  return {
+    type: DELETE_DATASETS
+  };
+}
+
 function fetchDatasets(projectId) {
   return dispatch => {
     dispatch(requestDatasetsDispatcher());
@@ -104,7 +110,7 @@ function receiveDatasetDispatcher(json) {
     datasetId: json.datasetId,
     title: json.title,
     details: json.details,
-    data: data 
+    data: data
   };
 }
 
@@ -117,4 +123,12 @@ export function fetchDataset(projectId, datasetId) {
   };
 }
 
-
+export function deleteDataset(projectId, datasetId) {
+  return (dispatch) => {
+    dispatch(requestDatasetDispatcher(datasetId));
+    return fetch(`/datasets/v1/datasets/${datasetId}?project_id=${projectId}`, {
+      method: 'delete'
+    }).then(response => response.json())
+      .then(json => dispatch(deleteDatasetDispatcher(json)));
+  };
+}
