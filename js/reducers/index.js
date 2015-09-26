@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 import {routerStateReducer as router} from 'redux-react-router';
-import { actionTypes } from 'redux-localstorage';
 import { LOAD, SAVE } from 'redux-storage';
 
 import {
