@@ -14,7 +14,7 @@ export function createAnonymousUserIfNeeded() {
 
 function shouldCreateAnonymousUser(state) {
   console.log("In shouldCreateAnonymousUser");
-  const user = state.user;
+  const { user } = state;
   if (user.loaded && !(user.properties.id || user.isFetching)) {
     return true;
   }
