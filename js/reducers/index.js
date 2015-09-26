@@ -83,10 +83,10 @@ function specSelector(state = {
     case SELECT_DATASET:
       return { ...state, datasetId: action.datasetId };
     case RECEIVE_UPLOAD_DATASET:
-      return { ...state, datasetId: action.dataset.id };
+      return { ...state, datasetId: action.datasetId };
     case RECEIVE_DATASETS:
       if (action.datasets.length > 0) {
-        return { ...state, datasetId: action.datasets[0].id }
+        return { ...state, datasetId: action.datasets[0].datasetId }
       }
       return state;
     default:
