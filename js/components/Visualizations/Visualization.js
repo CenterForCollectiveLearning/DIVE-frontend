@@ -5,14 +5,13 @@ import styles from './visualizations.sass';
 require('plottable');
 
 class InnerPlottable extends Component {
-  componentDidMount () {
-    const { vizType, generatingProcedure, data, id, args } = this.props.spec;
+  componentWillReceiveProps (nextProps) {
+    const { vizType, generatingProcedure, id, args } = nextProps.spec;
 
-    const visualizationData = data.visualize;
+    const visualizationData = nextProps.data;
     const selector = `.spec-${id}`;
 
     var plot, dataset, xScale, yScale, xAxis, yAxis, xLabel, yLabel, xAccessor, yAccessor;
-
 
     if (vizType == "pie" || vizType == "tree") {
       var scale = new Plottable.Scales.Linear();
@@ -22,12 +21,14 @@ class InnerPlottable extends Component {
 
       var itemAccessor, valueAccessor;
 
-      if(generatingProcedure == "val:count")
+      if(generatingProcedure == "val:count") {
         itemAccessor = 'value';
         valueAccessor = 'count';
-      if(generatingProcedure == "val:agg")
+      }
+      if(generatingProcedure == "val:agg") {
         itemAccessor = 'value';
         valueAccessor = 'agg';
+      }
 
       var valKeyCollection = [];
       visualizationData.forEach(function (d, i, dataset) {
@@ -123,7 +124,7 @@ class InnerPlottable extends Component {
     
   } 
 
-  render () {
+  render() {
     return (
       <span></span>
     );
@@ -131,21 +132,25 @@ class InnerPlottable extends Component {
 }
 
 InnerPlottable.propTypes = {
-  spec: PropTypes.object.isRequired
+  spec: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired
 };
 
 export default class Visualization extends Component {
   render() {
+    const { data, spec, containerClassName } = this.props;
     return (
-      <div className={ styles.specsContainer }>
-        <svg className={ `spec-${this.props.spec.id}` }></svg>
-        <InnerPlottable spec={ this.props.spec } />
+      <div className={ styles[containerClassName] }>
+        <svg className={ `spec-${spec.id}` }></svg>
+        <InnerPlottable spec={ spec } data={ data } />
       </div>
     );
   }
 }
 
 Visualization.propTypes = {
-  spec: PropTypes.object.isRequired
+  spec: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
+  containerClassName: PropTypes.string.isRequired
 };
 

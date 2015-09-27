@@ -7,8 +7,6 @@ import GalleryView from './GalleryView';
 
 class GalleryPage extends Component {
   render() {
-    const { datasets } = this.props;
-
     return (
       <div className={ `${styles.fillContainer} ${styles.galleryContainer}` }>
         <Sidebar />
@@ -20,8 +18,7 @@ class GalleryPage extends Component {
 }
 
 function mapStateToProps(state) {
-  const { datasets } = state;
-  return { datasets };
+  return {};
 }
 
 export default connect(mapStateToProps)(GalleryPage);

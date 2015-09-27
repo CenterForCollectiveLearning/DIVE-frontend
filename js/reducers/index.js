@@ -15,7 +15,9 @@ import {
   REQUEST_SPECS,
   RECEIVE_SPECS,
   SELECT_DATASET,
-  SELECT_VISUALIZATION_TYPE
+  SELECT_VISUALIZATION_TYPE,
+  REQUEST_VISUALIZATION_DATA,
+  RECEIVE_VISUALIZATION_DATA
 } from '../constants/ActionTypes';
 
 function mergeDatasetLists(originalList, newList) {
@@ -77,7 +79,7 @@ function datasets(state = {
 
 function specSelector(state = {
   datasetId: null,
-  loaded: false,
+  loaded: false
 }, action) {
   switch (action.type) {
     case SELECT_DATASET:
@@ -207,14 +209,31 @@ function filters(state={
   }
 }
 
+function visualization(state = {
+  tableData: [],
+  visualizationData: [],
+  spec: {},
+  isFetching: false
+}, action) {
+  switch (action.type) {
+    case REQUEST_VISUALIZATION_DATA:
+      return { ...state, isFetching: true }
+    case RECEIVE_VISUALIZATION_DATA:
+      return { ...state, spec: action.spec, tableData: action.tableData, visualizationData: action.visualizationData, isFetching: false }
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({
   datasets,
   filters,
   project,
-  user,
   specs,
   specSelector,
-  router,
+  user,
+  visualization,
+  router
 });
 
 export default rootReducer;

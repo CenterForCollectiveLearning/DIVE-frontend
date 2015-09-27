@@ -37,7 +37,7 @@ export class GalleryView extends Component {
                   <span className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>                  
                 )}
               </div>
-              <Visualization spec={ spec } />
+              <Visualization containerClassName="specsContainer" spec={ spec } data={ spec.visualize } />
             </div>
           </div>
         )}

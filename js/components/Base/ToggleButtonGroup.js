@@ -20,7 +20,7 @@ export default class ToggleButtonGroup extends Component {
           <ToggleButton
             key={ item[this.props.valueMember] }
             altText={ item[this.props.displayTextMember] }
-            imageName={ `../../../assets/${item[this.props.imageNameMember]}${this.props.imageNameSuffix}` }
+            imageName={ `/assets/${item[this.props.imageNameMember]}${this.props.imageNameSuffix}` }
             onChange={ this.handleClick }
             isSelected={ item.selected }
             value={ item[this.props.valueMember] } />

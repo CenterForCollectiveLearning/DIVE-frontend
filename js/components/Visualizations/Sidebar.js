@@ -5,9 +5,6 @@ import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
 import { selectDataset, selectVisualizationType } from '../../actions/VisualizationActions';
 import styles from './visualizations.sass';
 
-// this seems real dumb;
-require('react-select/less/select.less');
-require('../../../css/react-select.less');
 import Select from 'react-select';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 
