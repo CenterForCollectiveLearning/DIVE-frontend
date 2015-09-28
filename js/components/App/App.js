@@ -16,6 +16,7 @@ require("font-awesome-webpack");
 // this seems real dumb;
 require('react-select/less/select.less');
 require('../../../css/react-select.less');
+require('../../../css/plottable.less');
 
 export class App extends BaseComponent {
   constructor(props) {
@@ -26,7 +27,6 @@ export class App extends BaseComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.user.loaded !== this.props.user.loaded) {
-      console.log(nextProps);
       this.props.createAnonymousUserIfNeeded();
       this.props.createProjectIfNeeded('Project Title', 'Description', 'Anonymous User');
     }
