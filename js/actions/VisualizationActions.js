@@ -86,7 +86,8 @@ function fetchSpecVisualization(projectId, specId) {
     dispatch(requestSpecVisualizationDispatcher());
     return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`)
       .then(response => response.json())
-      .then(json => dispatch(receiveSpecVisualizationDispatcher(json)));
+      .then(json => dispatch(receiveSpecVisualizationDispatcher(json)))
+      .catch(err => console.error("Error fetching visualization: ", err));
   };
 }
 
