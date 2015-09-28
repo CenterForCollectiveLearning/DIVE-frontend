@@ -5,10 +5,15 @@ import styles from './visualizations.sass';
 require('plottable');
 
 class InnerPlottable extends Component {
-  componentWillReceiveProps (nextProps) {
-    const { vizType, generatingProcedure, id, args } = nextProps.spec;
+  componentDidMount() {
+    this.renderChart(this.props);
+  }
 
-    const visualizationData = nextProps.data;
+  renderChart(props) {
+    const { vizType, generatingProcedure, id, args } = props.spec;
+    const isMinimalView = props.isMinimalView;
+
+    const visualizationData = props.data;
     const selector = `.spec-${id}`;
 
     var plot, dataset, xScale, yScale, xAxis, yAxis, xLabel, yLabel, xAccessor, yAccessor;
@@ -93,7 +98,20 @@ class InnerPlottable extends Component {
       plot.animated(false);
       plot.renderTo(selector);
 
-    } else if (vizType == "line") {
+      if (isMinimalView) {
+        plot.animated(false);
+        plot.renderTo(selector);
+      } else {
+        plot.animated(true);
+        var chart = new Plottable.Components.Table([
+          [yLabel, yAxis, plot],
+          [null, null, xAxis],
+          [null, null, xLabel]
+        ]);
+        chart.renderTo(selector);
+      }
+
+    } else if (vizType == "lines") {
       if (generatingProcedure == 'ind:val') {
         xAccessor = 'index';
         yAccessor = 'value';
@@ -121,7 +139,12 @@ class InnerPlottable extends Component {
       plot.animated(false);
       plot.renderTo(selector);
     }
-    
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.spec.id != nextProps.spec.id) {
+      this.renderChart(nextProps);
+    }
   } 
 
   render() {
@@ -133,16 +156,40 @@ class InnerPlottable extends Component {
 
 InnerPlottable.propTypes = {
   spec: PropTypes.object.isRequired,
-  data: PropTypes.array.isRequired
+  data: PropTypes.array.isRequired,
+  isMinimalView: PropTypes.bool.isRequired
 };
 
 export default class Visualization extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(event) {
+    const { onClick, spec } = this.props;
+
+    if (onClick) {
+      onClick(spec.id);
+    }
+  }
+
   render() {
-    const { data, spec, containerClassName } = this.props;
+    const { data, spec, containerClassName, headerClassName, visualizationClassName, isMinimalView } = this.props;
     return (
-      <div className={ styles[containerClassName] }>
-        <svg className={ `spec-${spec.id}` }></svg>
-        <InnerPlottable spec={ spec } data={ data } />
+      <div className={ `${ styles[containerClassName] } ${ styles.visualizationOuterContainer }` } onClick={ this.handleClick }>
+        { spec.meta &&
+          <div className={ styles[headerClassName] }>
+            { spec.meta.construction.map((construct, i) =>
+              <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>                  
+            )}
+          </div>
+        }
+        <div className={ styles[visualizationClassName] }>
+          <svg className={ `spec-${spec.id}` }></svg>
+          <InnerPlottable spec={ spec } data={ data } isMinimalView={ isMinimalView } />
+        </div>
       </div>
     );
   }
@@ -151,6 +198,17 @@ export default class Visualization extends Component {
 Visualization.propTypes = {
   spec: PropTypes.object.isRequired,
   data: PropTypes.array.isRequired,
-  containerClassName: PropTypes.string.isRequired
+  visualizationClassName: PropTypes.string,
+  containerClassName: PropTypes.string,
+  headerClassName: PropTypes.string,
+  isMinimalView: PropTypes.bool,
+  onClick: PropTypes.func
+};
+
+Visualization.defaultProps = {
+  visualizationClassName: "visualization",
+  containerClassName: "block",
+  headerClassName: "header",
+  isMinimalView: false
 };
 

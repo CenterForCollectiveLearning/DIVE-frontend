@@ -1,5 +1,19 @@
 @import '../../../css/flexbox.sass'
 
+.visualizationOuterContainer
+  .headerFragment
+    &:first-child
+      text-transform: capitalize
+
+    &.field
+      font-weight: 500
+      color: #444444
+      text-transform: lowercase
+
+    &.operation, &.plain
+      color: #6A6A6A
+
+
 .galleryContainer
   display: flex
   flex-direction: row
@@ -13,13 +27,25 @@
   background-color: #e9e7e8
 
   .builderViewContainer
-    display: flex
-    flex-direction: column
-    flex-grow: 1
+    +fillContainer
 
     .visualizationContainer
+      display: flex
+      flex-direction: column
+
       background-color: #FFF
-      height: 300px
+      min-height: 400px
+      padding: 20px 20px 30px
+
+      .header
+        text-align: center
+        line-height: 44px
+
+      .visualization
+        +fillContainer
+
+        svg
+          flex-grow: 1
 
 .specsContainer
   display: flex
@@ -48,18 +74,6 @@
 
       .header
         font-size: 15px
-
-        .headerFragment
-          &:first-child
-            text-transform: capitalize
-
-          &.field
-            font-weight: 500
-            color: #444444
-            text-transform: lowercase
-
-          &.operation, &.plain
-            color: #6A6A6A
 
 .sidebar
   display: flex

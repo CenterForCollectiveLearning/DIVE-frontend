@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 
 import { fetchSpecsIfNeeded } from '../../actions/VisualizationActions';
 import styles from './visualizations.sass';
@@ -9,6 +10,8 @@ import Visualization from './Visualization';
 export class GalleryView extends Component {
   constructor(props) {
     super(props);
+
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentWillMount() {
@@ -26,19 +29,22 @@ export class GalleryView extends Component {
     }
   }
 
+  handleClick(specId) {
+    this.props.pushState(null, `/projects/${this.props.project.properties.id}/visualizations/builder/${ specId }`);
+  }
+
   render() {
     return (
       <div className={ styles.specsContainer }>
         { this.props.specs.items.map((spec) =>
           <div className={ styles.blockContainer } key={ spec.id }>
-            <div className={ styles.block }>
-              <div className={ styles.header }>
-                { spec.meta.construction.map((construct) =>
-                  <span className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>                  
-                )}
-              </div>
-              <Visualization containerClassName="specsContainer" spec={ spec } data={ spec.visualize } />
-            </div>
+            <Visualization
+              containerClassName="block"
+              visualizationClassName="specsContainer"
+              spec={ spec }
+              data={ spec.data.visualize }
+              onClick={ this.handleClick }
+              isMinimalView={ true } />
           </div>
         )}
       </div>
@@ -61,4 +67,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { fetchSpecsIfNeeded })(GalleryView);
+export default connect(mapStateToProps, { pushState, fetchSpecsIfNeeded })(GalleryView);

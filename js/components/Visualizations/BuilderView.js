@@ -29,11 +29,16 @@ export class BuilderView extends Component {
 
   render() {
     const { visualization } = this.props;
-    console.log(visualization);
     return (
       <div className={ styles.builderViewContainer }>
         { visualization.spec && visualization.visualizationData &&
-          <Visualization containerClassName="visualizationContainer" spec={ visualization.spec } data={ visualization.visualizationData }/>      
+          <div>
+            <Visualization
+              containerClassName="visualizationContainer"
+              visualizationClassName="visualization"
+              spec={ visualization.spec }
+              data={ visualization.visualizationData }/>      
+          </div>
         }
       </div>
     );
