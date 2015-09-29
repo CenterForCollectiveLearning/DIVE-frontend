@@ -65,8 +65,8 @@ export class App extends BaseComponent {
             </div>
           </div>
           <Tabs value={this._getSelectedTab()} onChange={this._handleTabsChange.bind(this)}>
-            <Tab label="DATASETS" value="datasets" route="datasets" />
-            <Tab label="VISUALIZATIONS" value="visualizations" route="visualizations" />
+            <Tab label="DATASETS" value="datasets" route="datasets/upload" />
+            <Tab label="VISUALIZATIONS" value="visualizations" route="visualizations/gallery" />
           </Tabs>
         </div>
         {this.props.children}
