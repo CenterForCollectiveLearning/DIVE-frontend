@@ -1,0 +1,9 @@
+// override to hide Pager on griddle because `showPager` throws a JS exception.
+
+.griddle-body {
+  table {
+    tbody:last-child {
+      display: none;
+    }
+  }
+}

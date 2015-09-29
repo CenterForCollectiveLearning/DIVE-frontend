@@ -8,6 +8,7 @@ import {
 } from '../constants/ActionTypes';
 
 import fetch from './api.js';
+import { formatTableData } from './ActionHelpers.js'
 
 function requestDatasetsDispatcher() {
   return {
@@ -91,26 +92,12 @@ function requestDatasetDispatcher(datasetId) {
 }
 
 function receiveDatasetDispatcher(json) {
-  function formatRow(columns, row, i) {
-    var newRow = {};
-
-    columns.forEach((column, j) =>
-      newRow[column] = row[j]
-    );
-
-    return newRow;
-  }
-
-  const data = json.details.sample.map((row, i) =>
-    formatRow(json.details.fieldNames, row, i)
-  );
-
   return {
     type: RECEIVE_DATASET,
     datasetId: json.datasetId,
     title: json.title,
     details: json.details,
-    data: data
+    data: formatTableData(json.details.fieldNames, json.details.sample)
   };
 }
 

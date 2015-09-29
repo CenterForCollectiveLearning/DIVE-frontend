@@ -17,6 +17,7 @@ require("font-awesome-webpack");
 require('react-select/less/select.less');
 require('../../../css/react-select.less');
 require('../../../css/plottable.less');
+require('../../../css/griddle.less');
 
 export class App extends BaseComponent {
   constructor(props) {

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { fetchSpecVisualizationIfNeeded } from '../../actions/VisualizationActions';
 import styles from './visualizations.sass';
 
+import DataGrid from '../Base/DataGrid';
 import Visualization from './Visualization';
 
 export class BuilderView extends Component {
@@ -31,13 +32,17 @@ export class BuilderView extends Component {
     const { visualization } = this.props;
     return (
       <div className={ styles.builderViewContainer }>
-        { visualization.spec && visualization.visualizationData &&
-          <div>
+        { visualization.spec && visualization.tableData &&
+          <div className={ styles.fillContainer }>
             <Visualization
               containerClassName="visualizationContainer"
               visualizationClassName="visualization"
               spec={ visualization.spec }
-              data={ visualization.visualizationData }/>      
+              data={ visualization.visualizationData }/>          
+            <DataGrid
+              data={ visualization.tableData }
+              tableClassName={ styles.grid }
+              containerClassName={ styles.gridContainer } />
           </div>
         }
       </div>

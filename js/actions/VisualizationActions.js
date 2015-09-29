@@ -8,6 +8,7 @@ import {
 } from '../constants/ActionTypes';
 
 import fetch from './api.js';
+import { formatTableData } from './ActionHelpers.js'
 
 function requestSpecsDispatcher() {
   return {
@@ -74,7 +75,7 @@ function receiveSpecVisualizationDispatcher(json) {
   return {
     type: RECEIVE_VISUALIZATION_DATA,
     spec: json.spec,
-    tableData: json.visualization.table,
+    tableData: formatTableData(json.visualization.table.columns, json.visualization.table.data),
     visualizationData: json.visualization.visualize,
     receivedAt: Date.now()
   };

@@ -5,7 +5,7 @@ import { fetchDataset } from '../../actions/DatasetActions';
 
 import styles from './datasets.sass';
 
-import DataGridWrapper from './DataGridWrapper';
+import DataGrid from '../Base/DataGrid';
 
 export class DatasetInspectPage extends Component {
   constructor(props) {
@@ -23,7 +23,7 @@ export class DatasetInspectPage extends Component {
     if (nextProps.project.properties.id !== this.props.project.properties.id || nextProps.params.datasetId !== this.props.params.datasetId) {
       const { project, params } = nextProps;
       this.props.fetchDataset(project.properties.id, params.datasetId);
-    }    
+    }
   }
 
   render() {
@@ -33,8 +33,8 @@ export class DatasetInspectPage extends Component {
 
     return (
       <div className={ styles.fillContainer }>
-        { dataset &&
-          <DataGridWrapper dataset={ dataset } />
+        { dataset && dataset.details &&
+          <DataGrid data={ dataset.data } tableClassName={ styles.grid } />
         }        
         { this.props.children }
       </div>
