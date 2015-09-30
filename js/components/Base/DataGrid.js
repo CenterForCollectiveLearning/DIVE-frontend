@@ -5,12 +5,17 @@ import styles from './base.sass';
 
 export default class DataGrid extends Component {
   render() {
-    const { data, tableClassName, containerClassName } = this.props;
+    const { data, tableClassName, containerClassName, useFixedWidth } = this.props;
     const columnWidth = 200;
     const nColumns = data.length ? Object.keys(data[0]).length : 0;
+    const innerContainerStyle = {
+      width: `${nColumns * columnWidth}px`,
+      minWidth: '100%',
+      overflow: 'hidden'
+    };
     return (
       <div className={ containerClassName } style={{ width: '100%', overflow: 'scroll' }}>
-        <div style={{ width: `${nColumns * columnWidth}px`, minWidth: '100%', overflow: 'hidden' }}>
+        <div style={ useFixedWidth ? innerContainerStyle : {} }>
           <Griddle
             results={ data }
             resultsPerPage={ 300 }
@@ -27,10 +32,12 @@ export default class DataGrid extends Component {
 DataGrid.propTypes = {
   data: PropTypes.array.isRequired,
   tableClassName: PropTypes.string,
-  containerClassName: PropTypes.string
+  containerClassName: PropTypes.string,
+  useFixedWidth: PropTypes.bool
 };
 
 DataGrid.defaultProps = {
   tableClassName: "grid",
-  containerClassName: "container"
+  containerClassName: "container",
+  useFixedWidth: true
 }

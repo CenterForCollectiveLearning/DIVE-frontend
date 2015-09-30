@@ -61,11 +61,12 @@ export class BuilderView extends Component {
                 containerClassName="visualizationContainer"
                 visualizationClassName="visualization"
                 spec={ visualization.spec }
-                data={ visualization.visualizationData }/>          
+                data={ visualization.visualizationData }/>
               <DataGrid
                 data={ visualization.tableData }
                 tableClassName={ styles.grid }
-                containerClassName={ styles.gridContainer } />
+                containerClassName={ styles.gridContainer }
+                useFixedWidth={ false } />
             </div>
           </div>
         }
