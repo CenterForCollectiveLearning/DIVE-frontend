@@ -44,7 +44,8 @@ export class GalleryView extends Component {
               spec={ spec }
               data={ spec.data.visualize }
               onClick={ this.handleClick }
-              isMinimalView={ true } />
+              isMinimalView={ true }
+              showHeader={ true } />
           </div>
         )}
       </div>

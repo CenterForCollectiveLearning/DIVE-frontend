@@ -176,10 +176,10 @@ export default class Visualization extends Component {
   }
 
   render() {
-    const { data, spec, containerClassName, headerClassName, visualizationClassName, isMinimalView } = this.props;
+    const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, isMinimalView } = this.props;
     return (
       <div className={ `${ styles[containerClassName] } ${ styles.visualizationOuterContainer }` } onClick={ this.handleClick }>
-        { spec.meta &&
+        { showHeader && spec.meta &&
           <div className={ styles[headerClassName] }>
             { spec.meta.construction.map((construct, i) =>
               <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>                  
@@ -202,13 +202,15 @@ Visualization.propTypes = {
   containerClassName: PropTypes.string,
   headerClassName: PropTypes.string,
   isMinimalView: PropTypes.bool,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  showHeader: PropTypes.bool
 };
 
 Visualization.defaultProps = {
   visualizationClassName: "visualization",
   containerClassName: "block",
   headerClassName: "header",
-  isMinimalView: false
+  isMinimalView: false,
+  showHeader: false
 };
 

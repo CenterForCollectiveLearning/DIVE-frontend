@@ -1,18 +1,16 @@
 @import '../../../css/flexbox.sass'
 
-.visualizationOuterContainer
-  .headerFragment
-    &:first-child
-      text-transform: capitalize
+.headerFragment
+  &:first-child
+    text-transform: capitalize
 
-    &.field
-      font-weight: 500
-      color: #444444
-      text-transform: lowercase
+  &.field
+    font-weight: 500
+    color: #444444
+    text-transform: lowercase
 
-    &.operation, &.plain
-      color: #6A6A6A
-
+  &.operation, &.plain
+    color: #6A6A6A
 
 .galleryContainer
   display: flex
@@ -28,15 +26,43 @@
 
   .builderViewContainer
     +fillContainer
-    background-color: white
+    margin: 6px
+
+    .innerBuilderViewContainer
+      +fillContainer
+      overflow-y: scroll
+      box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.16)
+
+    .chartsContainer
+      +fillContainer
+      padding: 10px
+      background-color: white
+
+    .headerBar
+      display: flex
+      flex-direction: row
+      background-color: whitesmoke
+      padding: 10px
+
+      .headerText
+        margin-left: 10px
+        line-height: 35px
+
+      .rightActions
+        display: flex
+        flex-direction: row-reverse
+        flex-grow: 1
+
+        > div
+          margin-left: 10px
 
     .visualizationContainer
       display: flex
       flex-direction: column
 
-      background-color: #FFF
       min-height: 400px
-      padding: 20px 20px 30px
+      padding-top: 10px
+      padding-bottom: 30px
 
       .header
         text-align: center
@@ -96,8 +122,6 @@
       font-weight: 400
 
 .gridContainer
-  padding: 10px 15px 32px
-
   .grid
     width: 100%
     table-layout: fixed
