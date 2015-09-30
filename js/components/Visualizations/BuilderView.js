@@ -32,7 +32,7 @@ export class BuilderView extends Component {
     const { visualization } = this.props;
     return (
       <div className={ styles.builderViewContainer }>
-        { visualization.spec && visualization.tableData &&
+        { visualization.spec && visualization.tableData.length > 0 &&
           <div className={ styles.fillContainer }>
             <Visualization
               containerClassName="visualizationContainer"
