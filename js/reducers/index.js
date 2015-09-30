@@ -17,7 +17,8 @@ import {
   SELECT_DATASET,
   SELECT_VISUALIZATION_TYPE,
   REQUEST_VISUALIZATION_DATA,
-  RECEIVE_VISUALIZATION_DATA
+  RECEIVE_VISUALIZATION_DATA,
+  CLEAR_VISUALIZATION
 } from '../constants/ActionTypes';
 
 function mergeDatasetLists(originalList, newList) {
@@ -216,6 +217,13 @@ function visualization(state = {
   isFetching: false
 }, action) {
   switch (action.type) {
+    case CLEAR_VISUALIZATION:
+      return {
+        tableData: [],
+        visualizationData: [],
+        spec: {},
+        isFetching: false
+      }
     case REQUEST_VISUALIZATION_DATA:
       return { ...state, isFetching: true }
     case RECEIVE_VISUALIZATION_DATA:

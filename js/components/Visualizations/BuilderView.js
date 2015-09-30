@@ -25,10 +25,13 @@ export class BuilderView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, specId, fetchSpecVisualizationIfNeeded } = this.props;
+    const { visualization, project, fetchSpecVisualizationIfNeeded } = this.props;
 
-    if (project.properties.id !== nextProps.project.properties.id) {
-      fetchSpecVisualizationIfNeeded(nextProps.project.properties.id, specId);
+    const projectChanged = project.properties.id !== nextProps.project.properties.id;
+    const specChanged = visualization.spec.id != nextProps.specId;
+
+    if (projectChanged || specChanged) {
+      fetchSpecVisualizationIfNeeded(nextProps.project.properties.id, nextProps.specId);
     }
   }
 
@@ -40,7 +43,7 @@ export class BuilderView extends Component {
     const { visualization } = this.props;
     return (
       <div className={ styles.builderViewContainer }>
-        { visualization.spec && visualization.tableData.length > 0 &&
+        { visualization.spec && !visualization.isFetching && visualization.tableData.length > 0 &&
           <div className={ styles.innerBuilderViewContainer } >
             <div className={ styles.headerBar } >
               <div className={ styles.headerText } >

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { fetchSpecsIfNeeded } from '../../actions/VisualizationActions';
+import { clearVisualization, fetchSpecsIfNeeded } from '../../actions/VisualizationActions';
 import styles from './visualizations.sass';
 
 import Visualization from './Visualization';
@@ -15,11 +15,13 @@ export class GalleryView extends Component {
   }
 
   componentWillMount() {
-    const { specSelector, project } = this.props;
+    const { specSelector, project, fetchSpecsIfNeeded, clearVisualization } = this.props;
 
     if (specSelector.datasetId) {
-      this.props.fetchSpecsIfNeeded(project.properties.id, specSelector.datasetId);
+      fetchSpecsIfNeeded(project.properties.id, specSelector.datasetId);
     }
+
+    clearVisualization();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -68,4 +70,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { pushState, fetchSpecsIfNeeded })(GalleryView);
+export default connect(mapStateToProps, { pushState, fetchSpecsIfNeeded, clearVisualization })(GalleryView);

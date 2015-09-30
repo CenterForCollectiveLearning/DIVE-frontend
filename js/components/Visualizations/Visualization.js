@@ -14,7 +14,7 @@ class InnerPlottable extends Component {
     const isMinimalView = props.isMinimalView;
 
     const visualizationData = props.data;
-    const selector = `.spec-${id}`;
+    const selector = `.spec-${ id }`;
 
     var plot, dataset, xScale, yScale, xAxis, yAxis, xLabel, yLabel, xAccessor, yAccessor;
 
@@ -178,7 +178,7 @@ export default class Visualization extends Component {
   render() {
     const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, isMinimalView } = this.props;
     return (
-      <div className={ `${ styles[containerClassName] } ${ styles.visualizationOuterContainer }` } onClick={ this.handleClick }>
+      <div className={ styles[containerClassName] } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
           <div className={ styles[headerClassName] }>
             { spec.meta.construction.map((construct, i) =>

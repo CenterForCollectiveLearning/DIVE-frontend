@@ -4,7 +4,8 @@ import {
   SELECT_DATASET,
   SELECT_VISUALIZATION_TYPE,
   REQUEST_VISUALIZATION_DATA,
-  RECEIVE_VISUALIZATION_DATA
+  RECEIVE_VISUALIZATION_DATA,
+  CLEAR_VISUALIZATION
 } from '../constants/ActionTypes';
 
 import fetch from './api.js';
@@ -81,7 +82,6 @@ function receiveSpecVisualizationDispatcher(json) {
   };
 }
 
-
 function fetchSpecVisualization(projectId, specId) {
   return dispatch => {
     dispatch(requestSpecVisualizationDispatcher());
@@ -106,4 +106,10 @@ export function fetchSpecVisualizationIfNeeded(projectId, specId) {
       return dispatch(fetchSpecVisualization(projectId, specId));
     }
   };
+}
+
+export function clearVisualization() {
+  return {
+    type: CLEAR_VISUALIZATION
+  };  
 }
