@@ -1,0 +1,68 @@
+@import '../../../css/flexbox.sass'
+
+.background
+  background: linear-gradient(to bottom, #0D4288, #0B2346)
+
+// https://codepen.io/jasonadelia/pen/DnrAe
+.grid
+    background-color: transparent
+    background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent)
+    height:100%
+    background-size:150px 50px
+
+.top
+  height: 400px
+  color: #FFFFFF
+  font-family: 'montserrat', Helvetica, sans-serif
+
+  .header
+    display: flex
+    flex-direction: row
+    position: relative
+    height: 48px
+
+    .logoContainer
+      display: flex
+      flex-direction: row
+      padding-right: 30px
+
+    .logo
+      width: 38px
+      height: 28px
+      margin-left: 10px
+      margin-top: 10px
+      color: #FFFFFF
+
+    .logoText
+      cursor: pointer
+      font-size: 23px
+      font-weight: 600
+      margin-top: 11px
+      color: #FFFFFF
+
+  .primaryText
+    margin: 20px 0
+    display: flex
+    align-items: center
+    justify-content: center
+    font-size: 23px
+    text-transform: uppercase
+
+  .secondaryText
+    margin: 20px 0
+    display: flex
+    align-items: center
+    justify-content: center
+
+.separator
+  border-bottom: 1px solid #6F82B1
+  width: 400px
+  display: flex
+  align-items: center
+  justify-content: center
+
+.preloaded
+  .header
+    display: flex
+    flex-direction: row
+    color: #FFFFFF
