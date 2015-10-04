@@ -10,6 +10,9 @@
     height:100%
     background-size:150px 50px
 
+.landingTabs, .tabs
+  margin-left: auto
+
 .top
   height: 400px
   color: #FFFFFF
@@ -20,6 +23,7 @@
     flex-direction: row
     position: relative
     height: 48px
+    margin: 40px 20px 20px 30px
 
     .logoContainer
       display: flex
@@ -41,28 +45,39 @@
       color: #FFFFFF
 
   .primaryText
-    margin: 20px 0
+    margin: 60px 0 20px 0
     display: flex
+    text-align: center
     align-items: center
     justify-content: center
     font-size: 23px
     text-transform: uppercase
 
   .secondaryText
-    margin: 20px 0
+    margin: 40px auto
     display: flex
-    align-items: center
-    justify-content: center
+    font-weight: 200
+    max-width: 500px
+    text-align: center
 
 .separator
   border-bottom: 1px solid #6F82B1
   width: 400px
   display: flex
+  margin: 0 auto
   align-items: center
   justify-content: center
 
 .preloaded
   .header
+    margin-top: 30px
     display: flex
     flex-direction: row
+    align-items: center
+    justify-content: center
     color: #FFFFFF
+    font-family: 'montserrat', Helvetica, sans-serif
+    font-weight: 200
+
+.uploadButton
+  width: 200px

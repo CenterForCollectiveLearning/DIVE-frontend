@@ -21,6 +21,14 @@ function receiveProjectDispatcher(json) {
   };
 }
 
+function receivePreloadedProjectsDispatcher(json) {
+  return {
+    type: RECEIVE_PRELOADED_PROJECTS,
+    projectProperties: json,
+    receivedAt: Date.now()
+  };
+}
+
 function createProjectDispatcher() {
   return {
     type: CREATE_PROJECT,
@@ -65,6 +73,15 @@ function createProject(user_id, title, description) {
     }).then(response => response.json())
       .then(json => dispatch(createdProjectDispatcher(json)));
   }
+}
+
+export function fetchPreloadedProjects() {
+  return dispatch => {
+    dispatch(requestProjectDispatcher());
+    return fetch('/projects/v1/projects/preloaded=True')
+      .then(response => response.json())
+      .then(json => dispatch(receivePreloadedProjectsDispatcher(json)));
+  };
 }
 
 function fetchProject(projectId) {
