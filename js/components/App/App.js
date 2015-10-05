@@ -34,7 +34,7 @@ export class App extends BaseComponent {
     if (nextProps.project.properties.id !== this.props.project.properties.id) {
       if (this.props.routes.length < 2) {
         this.props.pushState(null, `/projects/${nextProps.project.properties.id}/datasets/upload`);
-      }    
+      }
     }
   }
 
@@ -65,8 +65,9 @@ export class App extends BaseComponent {
             </div>
           </div>
           <Tabs value={this._getSelectedTab()} onChange={this._handleTabsChange.bind(this)}>
-            <Tab label="DATASETS" value="datasets" route="datasets/upload" />
-            <Tab label="VISUALIZATIONS" value="visualizations" route="visualizations/gallery" />
+            <Tab label="DATA" value="datasets" route="datasets/upload" />
+            <Tab label="VISUALIZE" value="visualizations" route="visualizations/gallery" />
+            <Tab label="ANALYZE" value="analyze" route="analysis" />
           </Tabs>
         </div>
         {this.props.children}
