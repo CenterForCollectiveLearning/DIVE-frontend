@@ -15,12 +15,14 @@ export default class ToggleButton extends Component {
   render() {
     return (
       <div
-        className={ `${ styles.toggleButton } ${ styles.raisedButton }` + (this.props.isSelected ? ' ' + styles.selected : '') }
-        onClick={ this.handleClick }>
-        { this.props.imageName &&
+        className={ `${ styles.toggleButton } ${ styles.raisedButton }` + (this.props.isSelected ? ' ' + styles.selected : '') + (this.props.imageName ? '' : ' ' + styles.textToggleButton) }
+        onClick={ this.handleClick }
+        title={ this.props.altText }>
+        { this.props.imageName ? 
           <img
             src={ this.props.imageName }
             alt={ this.props.altText } />
+          : this.props.altText
         }
       </div>
     );
@@ -32,5 +34,10 @@ ToggleButton.propTypes = {
   imageName: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
+  label: PropTypes.string
+}
+
+ToggleButton.defaultProps = {
+  altText: ""
 }

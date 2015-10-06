@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
-import { selectDataset, selectVisualizationType } from '../../actions/VisualizationActions';
+import { selectDataset, selectVisualizationType, selectFieldProperty } from '../../actions/VisualizationActions';
 import styles from './visualizations.sass';
 
 import Select from 'react-select';
@@ -14,6 +14,7 @@ export class Sidebar extends Component {
     super(props);
 
     this.onSelectVisualizationType = this.onSelectVisualizationType.bind(this);
+    this.onSelectFieldProperty = this.onSelectFieldProperty.bind(this);
   }
   componentWillReceiveProps(nextProps) {
     const { project, datasets, specSelector, fieldProperties, fetchDatasetsIfNeeded, selectDataset } = this.props;
@@ -44,24 +45,6 @@ export class Sidebar extends Component {
       })
     );
 
-    // TODO Better way to check existence of items before getting full map?
-    var categoricalFieldPropertyNames = []
-    var quantitativeFieldPropertyNames = []
-    if (this.props.fieldProperties.items) {
-       var categoricalFieldPropertyNames = this.props.fieldProperties.items.c.map((fp, i) =>
-        new Object({
-          value: fp.id,
-          label: fp.name
-        })
-      );
-      var quantitativeFieldPropertyNames = this.props.fieldProperties.items.q.map((fp, i) =>
-       new Object({
-         value: fp.id,
-         label: fp.name
-       })
-     );
-    }
-
     return (
       <div className={ styles.sidebar }>
         { this.props.datasets.items && this.props.datasets.items.length > 0 &&
@@ -88,15 +71,23 @@ export class Sidebar extends Component {
         </div>
         <div className={ styles.sidebarGroup }>
           <h3 className={ styles.sidebarHeading }>Categorical Fields</h3>
-          {/* quantitativeFieldPropertyNames */}
-        {/*  <ToggleButtonGroup
-            toggleItems={ categoricalFieldPropertyNames }
-            displayTextMember="label"
-            valueMember="value"
-            onChange={ this.onSelectVisualizationType } /> */}
+          { this.props.fieldProperties.items.c && this.props.fieldProperties.items.c.length > 0 &&
+            <ToggleButtonGroup
+              toggleItems={ this.props.fieldProperties.items.c }
+              displayTextMember="name"
+              valueMember="id"
+              onChange={ this.onSelectFieldProperty } />
+          }
         </div>
         <div className={ styles.sidebarGroup }>
           <h3 className={ styles.sidebarHeading }>Quantitative Fields</h3>
+          { this.props.fieldProperties.items.q && this.props.fieldProperties.items.q.length > 0 &&
+            <ToggleButtonGroup
+              toggleItems={ this.props.fieldProperties.items.q }
+              displayTextMember="name"
+              valueMember="id"
+              onChange={ this.onSelectFieldProperty } />
+          }
         </div>
       </div>
     );
@@ -122,4 +113,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, selectVisualizationType })(Sidebar);
+export default connect(mapStateToProps, { fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, selectVisualizationType, selectFieldProperty })(Sidebar);

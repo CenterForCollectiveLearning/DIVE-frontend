@@ -158,7 +158,7 @@ function user(state = {
 function fieldProperties(state={
   isFetching: false,
   loaded: false,
-  items: []
+  items: {}
 }, action) {
   switch (action.type) {
     case REQUEST_FIELD_PROPERTIES:
