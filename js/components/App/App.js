@@ -71,7 +71,6 @@ export class App extends BaseComponent {
           </div>
           <Tabs value={this._getSelectedTab()} onChange={this._handleTabsChange.bind(this)}>
             <Tab label="DATA" value="data" route="datasets/upload" />
-            <Tab label="TRANSFORM" value="transform" route="transform/integrate" />
             <Tab label="VISUALIZE" value="visualize" route="visualizations/gallery" />
           </Tabs>
         </div>
