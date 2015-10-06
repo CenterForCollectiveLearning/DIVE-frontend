@@ -41,7 +41,6 @@ export class LandingPage extends Component {
   }
 
   render() {
-    console.log(this.props.projects);
     return (
       <div className={ styles.fillContainer + ' ' + styles.landingPage }>
         <div className={ styles.background }>
@@ -83,10 +82,12 @@ export class LandingPage extends Component {
           </div>
           <div className={ styles.separater }></div>
           <div className={ styles.preloaded }>
-            <div className={ styles.secondaryCopy }>Or explore our preloaded projects:</div>
-            <div>
+            <div className={ styles.flexbox }>
+              <div className={ styles.secondaryCopy }>Or explore our preloaded projects:</div>
+            </div>
+            <div className={ styles.projectListContainer }>
               { this.props.projects.items.map((project) =>
-                <div>{ project.title }</div>
+                <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/visualizations` } className={ styles.projectButton }>{ project.title }</a>
               )}
             </div>
           </div>

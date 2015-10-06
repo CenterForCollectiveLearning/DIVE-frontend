@@ -120,16 +120,33 @@
   align-items: center
   justify-content: center
 
+.projectButton
+  +montserrat
+  display: flex
+  width: 274px
+  height: 110px
+
+  margin: 0 30px
+  align-items: center
+  justify-content: center
+
+  border: 1px solid #819DCC
+  border-radius: 6px
+  font-size: 15px
+  text-transform: uppercase
+
+  cursor: pointer
+  color: white
+  text-decoration: none
+
 .preloaded
   display: flex
   flex-grow: 1
-  justify-content: center
+  flex-direction: column
+  align-items: center
 
-  .header
-    margin-top: 30px
+  .projectListContainer
     display: flex
     flex-direction: row
-    align-items: center
-    justify-content: center
-    color: #FFFFFF
-    font-weight: 200
+    margin-top: 20px
+    flex-wrap: wrap

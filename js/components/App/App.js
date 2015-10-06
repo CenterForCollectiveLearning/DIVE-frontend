@@ -4,7 +4,7 @@ import styles from './app.sass';
 
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { createProjectIfNeeded } from '../../actions/ProjectActions.js';
+import { fetchProjectIfNeeded, createProjectIfNeeded } from '../../actions/ProjectActions.js';
 import { createAnonymousUserIfNeeded } from '../../actions/UserActions.js';
 import { pushState } from 'redux-react-router';
 
@@ -96,4 +96,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { pushState, createProjectIfNeeded, createAnonymousUserIfNeeded })(App);
+export default connect(mapStateToProps, { pushState, createProjectIfNeeded, fetchProjectIfNeeded, createAnonymousUserIfNeeded })(App);
