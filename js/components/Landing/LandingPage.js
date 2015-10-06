@@ -32,39 +32,52 @@ export class LandingPage extends Component {
     if ((this.props.routes.length > 2) && _validTab(this.props.routes[2].path)) {
       return this.props.routes[2].path;
     }
-    return "team";
+    return "";
   }
 
   render() {
     return (
-      <div className={styles.fillContainer + ' ' + styles.background}>
-        <div className={styles.fillContainer + ' ' + styles.grid}>
-          <div className={styles.top}>
-            <div className={styles.header}>
-              <div className={styles.logoContainer} href="/">
-                <Logo className={styles.logo} />
-                <div className={styles.logoText}>
-                  DIVE
-                </div>
+      <div className={ styles.fillContainer + ' ' + styles.landingPage }>
+        <div className={ styles.background }>
+          <div className={ styles.innerBackground }>
+            <div className={ styles.grid }></div>
+          </div>
+        </div>
+        <div className={ styles.fillContainer + ' ' + styles.landingPageContent }>
+          <div className={styles.header}>
+            <div className={styles.logoContainer} href="/">
+              <Logo className={styles.logo} />
+              <div className={styles.logoText}>
+                DIVE
               </div>
-              <Tabs value={this._getSelectedTab()} onChange={this._handleTabsChange.bind(this)} style={styles.landingTabs}>
-                <Tab label="LOGIN" value="login" route="login" />
-                <Tab label="TEAM" value="team" route="team" />
-                <Tab label="ABOUT" value="about" route="about" />
-              </Tabs>
             </div>
-            <div className={styles.primaryText}>
-              Stop Processing Data and Start Understanding It
+            <Tabs
+              value={ this._getSelectedTab() }
+              onChange={ this._handleTabsChange.bind(this) }
+              className={ styles.landingTabs }>
+              <Tab label="ABOUT" value="about" route="about" className={ styles.landingTab } />
+              <Tab label="LOGIN" value="login" route="login" className={ styles.landingTab } />
+            </Tabs>
+          </div>
+          <div className={ styles.ctaBox }>
+            <div className={ styles.primaryCopy }>
+              <span>Stop Processing Data and Start <strong>Understanding It</strong></span>
             </div>
-            <div className={styles.secondaryText}>
+            <div className={ styles.secondaryCopy }>
               Merge and query datasets, conduct statistical analyses, and explore
               automatically generated visualizations within seconds.
             </div>
-            <RaisedButton label="Select & upload a file" primary={ true } onClick={ this.onOpenClick } className={styles.uploadButton} />
+            <div className={ styles.ctaContainer }>
+              <RaisedButton
+                label="Upload Dataset"
+                primary={ true }
+                onClick={ this.onOpenClick }
+                className={ styles.uploadButton } />
+            </div>
           </div>
-          <div className={styles.separator}></div>
-          <div className={styles.preloaded}>
-            <div className={styles.header}>Or explore our preloaded projects:</div>
+          <div className={ styles.separater }></div>
+          <div className={ styles.preloaded }>
+            <div className={ styles.secondaryCopy }>Or explore our preloaded projects:</div>
           </div>
         </div>
       </div>

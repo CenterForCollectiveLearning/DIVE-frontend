@@ -34,7 +34,7 @@ export default class Tabs extends Component {
 
   render() {
     return (
-      <div className={ styles.tabs }>
+      <div className={ styles.tabs + ' ' + this.props.className }>
         { this.renderChildren() }
       </div>
     );
@@ -44,5 +44,10 @@ export default class Tabs extends Component {
 Tabs.propTypes = {
   children: PropTypes.node.isRequired,
   value: PropTypes.string.isRequired, 
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  className: PropTypes.string
+}
+
+Tabs.defaultProps = {
+  className: ""
 }

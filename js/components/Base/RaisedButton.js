@@ -5,7 +5,7 @@ export default class RaisedButton extends Component {
   render() {
     return (
       <div
-        className={ styles.raisedButton + (this.props.primary ? ' ' + styles.primary : '') + (this.props.icon ? ' ' + styles.icon : '') }
+        className={ styles.raisedButton + ' ' + this.props.className + (this.props.primary ? ' ' + styles.primary : '') + (this.props.icon ? ' ' + styles.icon : '') }
         onClick={ this.props.onClick }>
         { this.props.label &&
           <div>
@@ -23,11 +23,13 @@ RaisedButton.propTypes = {
   onClick: PropTypes.func,
   primary: PropTypes.bool,
   children: PropTypes.node,
-  icon: PropTypes.bool
+  icon: PropTypes.bool,
+  className: PropTypes.string
 }
 
 RaisedButton.defaultProps = {
   label: "",
   primary: false,
-  icon: false
+  icon: false,
+  className: ""
 }

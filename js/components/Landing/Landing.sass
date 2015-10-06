@@ -1,74 +1,130 @@
 @import '../../../css/flexbox.sass'
 
-.background
-  background: linear-gradient(to bottom, #0D4288, #0B2346)
-
-// https://codepen.io/jasonadelia/pen/DnrAe
-.grid
-    background-color: transparent
-    background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent)
-    height:100%
-    background-size:150px 50px
-
-.landingTabs, .tabs
-  margin-left: auto
-
-.top
-  height: 400px
-  color: #FFFFFF
+=montserrat
   font-family: 'montserrat', Helvetica, sans-serif
 
-  .header
+.landingPage
+  color: white
+
+.landingPageContent
+  z-index: 10
+  justify-content: center
+  align-items: center
+
+// https://codepen.io/jasonadelia/pen/DnrAe
+.background
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background: linear-gradient(to bottom, #0D4288, #0B2346)
+
+  .innerBackground
+    background-image: linear-gradient(to bottom right, #929CE1, #39347B)
+    opacity: 0.26
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+
+    .grid
+      background-color: transparent
+      background-image: linear-gradient(0deg, transparent 24%, #646FB7 25%, #646FB7 26%, transparent 27%, transparent 74%, #646FB7 75%, #646FB7 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, #646FB7 25%, transparent 26%, transparent 74%, #646FB7 75%, transparent 76%, transparent)
+      height: 100%
+      background-size:150px 50px
+
+.header
+  display: flex
+  flex-direction: row
+  position: relative
+  width: 100%
+  padding: 40px 30px 0px 40px
+
+  .landingTabs
+    display: flex
+
+    .landingTab
+      +montserrat
+      font-weight: 300
+      padding-left: 16px
+      padding-right: 16px
+
+  .logoContainer
     display: flex
     flex-direction: row
-    position: relative
-    height: 48px
-    margin: 40px 20px 20px 30px
-
-    .logoContainer
-      display: flex
-      flex-direction: row
-      padding-right: 30px
+    flex-grow: 1
+    padding-right: 30px
+    cursor: pointer
 
     .logo
       width: 38px
       height: 28px
       margin-left: 10px
       margin-top: 10px
-      color: #FFFFFF
 
     .logoText
-      cursor: pointer
       font-size: 23px
       font-weight: 600
       margin-top: 11px
-      color: #FFFFFF
 
-  .primaryText
-    margin: 60px 0 20px 0
+.secondaryCopy
+  +montserrat
+  color: rgba(255, 255, 255, 0.7)
+  font-weight: 200
+  line-height: 23px
+
+.ctaBox
+  display: flex
+  flex-direction: column
+  max-width: 730px
+  align-items: center
+  +montserrat
+
+  .primaryCopy
     display: flex
-    text-align: center
     align-items: center
     justify-content: center
+
+    margin-top: 30px
+
+    color: rgba(255, 255, 255, 0.9)
     font-size: 23px
     text-transform: uppercase
+    letter-spacing: 1px
 
-  .secondaryText
-    margin: 40px auto
+  .secondaryCopy
     display: flex
-    font-weight: 200
-    max-width: 500px
+    margin: 40px auto
     text-align: center
+    letter-spacing: 0.78px
 
-.separator
+  .ctaContainer
+    display: flex
+
+    .uploadButton
+      height: 46px
+      line-height: 45px
+      background-color: #0F2762
+      letter-spacing: 0.88px
+      font-weight: 300
+      padding: 0 40px
+      font-size: 14px
+
+.separater
   border-bottom: 1px solid #6F82B1
   width: 400px
   display: flex
-  margin: 0 auto
+  margin: 30px auto
   align-items: center
   justify-content: center
 
 .preloaded
+  display: flex
+  flex-grow: 1
+  justify-content: center
+
   .header
     margin-top: 30px
     display: flex
@@ -76,8 +132,4 @@
     align-items: center
     justify-content: center
     color: #FFFFFF
-    font-family: 'montserrat', Helvetica, sans-serif
     font-weight: 200
-
-.uploadButton
-  width: 200px

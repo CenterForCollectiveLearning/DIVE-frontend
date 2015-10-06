@@ -13,8 +13,9 @@ import GalleryPage from './components/Visualizations/GalleryPage';
 import BuilderPage from './components/Visualizations/BuilderPage';
 
 export default (
-  <Route path="/" component={ LandingPage } >
-    <Route path="/projects/:projectId" component={ App }>
+  <Route path="/" component={ App } >
+    <Route path="/home" component={ LandingPage }/>
+    <Route path="/projects/:projectId" component={ ProjectsPage }>
       <Route path="datasets" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>
         <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>
