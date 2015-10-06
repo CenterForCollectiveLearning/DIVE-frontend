@@ -62,10 +62,11 @@ export class Sidebar extends Component {
             onChange={ this.onSelectVisualizationType } />
         </div>
         <div className={ styles.sidebarGroup }>
-          <h3 className={ styles.sidebarHeading }>Categorical data</h3>
+          <h3 className={ styles.sidebarHeading }>Categorical Fields</h3>
+
         </div>
         <div className={ styles.sidebarGroup }>
-          <h3 className={ styles.sidebarHeading }>Numerical data</h3>
+          <h3 className={ styles.sidebarHeading }>Quantitative Fields</h3>
         </div>
       </div>
     );

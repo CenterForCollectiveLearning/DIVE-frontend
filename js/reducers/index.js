@@ -12,6 +12,8 @@ import {
   RECEIVE_DATASETS,
   RECEIVE_UPLOAD_DATASET,
   RECEIVE_DATASET,
+  REQUEST_FIELD_PROPERTIES,
+  RECEIVE_FIELD_PROPERTIES,
   REQUEST_SPECS,
   RECEIVE_SPECS,
   SELECT_DATASET,
@@ -133,6 +135,22 @@ function user(state = {
   }
 }
 
+function fieldProperties(state={
+  isFetching: false,
+  loaded: false,
+  items: []
+}, action) {
+  switch (action.type) {
+    case REQUEST_FIELD_PROPERTIES:
+      return { ...state, isFetching: true };
+    case RECEIVE_FIELD_PROPERTIES:
+      return { ...state, isFetching: false, items: action.fieldProperties };
+    default:
+      return state;
+  }
+}
+
+
 function specs(state={
   isFetching: false,
   loaded: false,
@@ -237,6 +255,7 @@ const rootReducer = combineReducers({
   datasets,
   filters,
   project,
+  fieldProperties,
   specs,
   specSelector,
   user,

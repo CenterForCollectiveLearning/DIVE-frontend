@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
 import { clearVisualization, fetchSpecsIfNeeded } from '../../actions/VisualizationActions';
+import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 import styles from './visualizations.sass';
 
 import Visualization from './Visualization';
@@ -15,10 +16,11 @@ export class GalleryView extends Component {
   }
 
   componentWillMount() {
-    const { specSelector, project, fetchSpecsIfNeeded, clearVisualization } = this.props;
+    const { specSelector, project, fetchSpecsIfNeeded, fetchFieldPropertiesIfNeeded, clearVisualization } = this.props;
 
     if (specSelector.datasetId) {
       fetchSpecsIfNeeded(project.properties.id, specSelector.datasetId);
+      fetchFieldPropertiesIfNeeded(project.properties.id, specSelector.datasetId);
     }
 
     clearVisualization();
@@ -28,6 +30,7 @@ export class GalleryView extends Component {
     const { specSelector, project } = this.props;
     if (specSelector.datasetId !== nextProps.specSelector.datasetId) {
       this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId);
+      this.props.fetchFieldPropertiesIfNeeded(project.properties.id, nextProps.specSelector.datasetId);
     }
   }
 
@@ -58,16 +61,18 @@ export class GalleryView extends Component {
 GalleryView.propTypes = {
   project: PropTypes.object.isRequired,
   specs: PropTypes.object.isRequired,
+  fieldProperties: PropTypes.object.isRequired,
   specSelector: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, specs, specSelector } = state;
+  const { project, specs, fieldProperties, specSelector } = state;
   return {
     project,
     specs,
+    fieldProperties,
     specSelector
   }
 }
 
-export default connect(mapStateToProps, { pushState, fetchSpecsIfNeeded, clearVisualization })(GalleryView);
+export default connect(mapStateToProps, { pushState, fetchSpecsIfNeeded, fetchFieldPropertiesIfNeeded, clearVisualization })(GalleryView);
