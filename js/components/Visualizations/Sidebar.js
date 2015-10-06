@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
+import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 import { selectDataset, selectVisualizationType } from '../../actions/VisualizationActions';
 import styles from './visualizations.sass';
 
@@ -15,11 +16,13 @@ export class Sidebar extends Component {
     this.onSelectVisualizationType = this.onSelectVisualizationType.bind(this);
   }
   componentWillReceiveProps(nextProps) {
-    const { project, datasets, specSelector, fetchDatasetsIfNeeded, selectDataset } = this.props;
+    const { project, datasets, specSelector, fieldProperties, fetchDatasetsIfNeeded, selectDataset } = this.props;
 
     if (nextProps.project.properties.id !== project.properties.id) {
       fetchDatasetsIfNeeded(nextProps.project.properties.id);
+      fetchFieldPropertiesIfNeeded(project.properties.id, specSelector.datasetId)
     }
+
     if (nextProps.datasets.items.length !== datasets.items.length && !specSelector.datasetId) {
       selectDataset(nextProps.datasets.items[0].datasetId);
     }
@@ -29,6 +32,10 @@ export class Sidebar extends Component {
     this.props.selectVisualizationType(visualizationType);
   }
 
+  onSelectFieldProperty(fieldProperty) {
+    this.props.selectFieldProperty(fieldProperty)
+  }
+
   render() {
     const menuItems = this.props.datasets.items.map((dataset, i) =>
       new Object({
@@ -36,6 +43,24 @@ export class Sidebar extends Component {
         label: dataset.title
       })
     );
+
+    // TODO Better way to check existence of items before getting full map?
+    var categoricalFieldPropertyNames = []
+    var quantitativeFieldPropertyNames = []
+    if (this.props.fieldProperties.items) {
+       var categoricalFieldPropertyNames = this.props.fieldProperties.items.c.map((fp, i) =>
+        new Object({
+          value: fp.id,
+          label: fp.name
+        })
+      );
+      var quantitativeFieldPropertyNames = this.props.fieldProperties.items.q.map((fp, i) =>
+       new Object({
+         value: fp.id,
+         label: fp.name
+       })
+     );
+    }
 
     return (
       <div className={ styles.sidebar }>
@@ -63,7 +88,12 @@ export class Sidebar extends Component {
         </div>
         <div className={ styles.sidebarGroup }>
           <h3 className={ styles.sidebarHeading }>Categorical Fields</h3>
-
+          {/* quantitativeFieldPropertyNames */}
+        {/*  <ToggleButtonGroup
+            toggleItems={ categoricalFieldPropertyNames }
+            displayTextMember="label"
+            valueMember="value"
+            onChange={ this.onSelectVisualizationType } /> */}
         </div>
         <div className={ styles.sidebarGroup }>
           <h3 className={ styles.sidebarHeading }>Quantitative Fields</h3>
@@ -77,17 +107,19 @@ Sidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
   specSelector: PropTypes.object.isRequired,
+  fieldProperties: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, datasets, specSelector, filters } = state;
+  const { project, datasets, specSelector, fieldProperties, filters } = state;
   return {
     project,
     datasets,
     specSelector,
+    fieldProperties,
     filters
   }
 }
 
-export default connect(mapStateToProps, { fetchDatasetsIfNeeded, selectDataset, selectVisualizationType })(Sidebar);
+export default connect(mapStateToProps, { fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, selectVisualizationType })(Sidebar);

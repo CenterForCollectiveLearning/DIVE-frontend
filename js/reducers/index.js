@@ -64,7 +64,8 @@ function datasets(state = {
     case REQUEST_DATASETS:
       return { ...state, isFetching: true };
     case RECEIVE_DATASETS:
-      return { ...state, isFetching: false, items: mergeDatasetLists(state.items, action.datasets) };
+      var mergedDatasetLists = mergeDatasetLists(state.items, action.datasets);
+      return { ...state, isFetching: false, items: mergedDatasetLists, datasetId: mergedDatasetLists[0].datasetId};
     case RECEIVE_UPLOAD_DATASET:
       return { ...state, isFetching: false, items: [...state.items, { datasetId: action.datasetId }] };
     case RECEIVE_DATASET:
