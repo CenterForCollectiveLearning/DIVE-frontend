@@ -8,6 +8,8 @@ import {
   CREATED_PROJECT,
   REQUEST_PROJECT,
   RECEIVE_PROJECT,
+  REQUEST_PRELOADED_PROJECTS,
+  RECEIVE_PRELOADED_PROJECTS,
   REQUEST_DATASETS,
   RECEIVE_DATASETS,
   RECEIVE_UPLOAD_DATASET,
@@ -116,6 +118,23 @@ function project(state = {
       return { ...state, isFetching: true };
     case CREATED_PROJECT:
       return { ...state, isFetching: false, properties: action.projectProperties };
+    default:
+      return state;
+  }
+}
+
+function projects(state = {
+  isFetching: false,
+  loaded: false,
+  items: []
+}, action) {
+  switch (action.type) {
+    case LOAD:
+      return { ...action.payload.projects, loaded: true };
+    case REQUEST_PRELOADED_PROJECTS:
+      return { ...state, isFetching: true };
+    case RECEIVE_PRELOADED_PROJECTS:
+      return { ...state, isFetching: false, items: action.projects };
     default:
       return state;
   }
@@ -256,6 +275,7 @@ const rootReducer = combineReducers({
   datasets,
   filters,
   project,
+  projects,
   fieldProperties,
   specs,
   specSelector,

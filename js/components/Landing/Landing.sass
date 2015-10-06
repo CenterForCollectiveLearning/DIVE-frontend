@@ -1,0 +1,153 @@
+@import '../../../css/flexbox.sass'
+
+=montserrat
+  font-family: 'montserrat', Helvetica, sans-serif
+
+.landingPage
+  color: white
+
+.landingPageContent
+  z-index: 10
+  justify-content: center
+  align-items: center
+
+// https://codepen.io/jasonadelia/pen/DnrAe
+.background
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background: linear-gradient(to bottom, #0D4288, #0B2346)
+
+  .innerBackground
+    background-image: linear-gradient(to bottom right, #929CE1, #39347B)
+    opacity: 0.26
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+
+    .grid
+      background-color: transparent
+      background-image: linear-gradient(0deg, transparent 24%, #646FB7 25%, #646FB7 26%, transparent 27%, transparent 74%, #646FB7 75%, #646FB7 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, #646FB7 25%, transparent 26%, transparent 74%, #646FB7 75%, transparent 76%, transparent)
+      height: 100%
+      background-size:150px 50px
+
+.header
+  display: flex
+  flex-direction: row
+  position: relative
+  width: 100%
+  padding: 40px 30px 0px 40px
+
+  .landingTabs
+    display: flex
+
+    .landingTab
+      +montserrat
+      font-weight: 300
+      padding-left: 16px
+      padding-right: 16px
+
+  .logoContainer
+    display: flex
+    flex-direction: row
+    flex-grow: 1
+    padding-right: 30px
+    cursor: pointer
+
+    .logo
+      width: 38px
+      height: 28px
+      margin-left: 10px
+      margin-top: 10px
+
+    .logoText
+      font-size: 23px
+      font-weight: 600
+      margin-top: 11px
+
+.secondaryCopy
+  +montserrat
+  color: rgba(255, 255, 255, 0.7)
+  font-weight: 200
+  line-height: 23px
+
+.ctaBox
+  display: flex
+  flex-direction: column
+  max-width: 730px
+  align-items: center
+  +montserrat
+
+  .primaryCopy
+    display: flex
+    align-items: center
+    justify-content: center
+
+    margin-top: 30px
+
+    color: rgba(255, 255, 255, 0.9)
+    font-size: 23px
+    text-transform: uppercase
+    letter-spacing: 1px
+
+  .secondaryCopy
+    display: flex
+    margin: 40px auto
+    text-align: center
+    letter-spacing: 0.78px
+
+  .ctaContainer
+    display: flex
+
+    .uploadButton
+      height: 46px
+      line-height: 45px
+      background-color: #0F2762
+      letter-spacing: 0.88px
+      font-weight: 300
+      padding: 0 40px
+      font-size: 14px
+
+.separater
+  border-bottom: 1px solid #6F82B1
+  width: 400px
+  display: flex
+  margin: 30px auto
+  align-items: center
+  justify-content: center
+
+.projectButton
+  +montserrat
+  display: flex
+  width: 274px
+  height: 110px
+
+  margin: 0 30px
+  align-items: center
+  justify-content: center
+
+  border: 1px solid #819DCC
+  background-color: rgba(15,39,98,0.5)
+  border-radius: 6px
+  font-size: 15px
+  text-transform: uppercase
+
+  cursor: pointer
+  color: white
+  text-decoration: none
+
+.preloaded
+  display: flex
+  flex-grow: 1
+  flex-direction: column
+  align-items: center
+
+  .projectListContainer
+    display: flex
+    flex-direction: row
+    margin-top: 40px
+    flex-wrap: wrap
