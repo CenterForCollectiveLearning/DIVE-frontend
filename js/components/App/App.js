@@ -4,7 +4,7 @@ import styles from './app.sass';
 
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { createProjectIfNeeded } from '../../actions/ProjectActions.js';
+import { fetchProjectIfNeeded, createProjectIfNeeded } from '../../actions/ProjectActions.js';
 import { createAnonymousUserIfNeeded } from '../../actions/UserActions.js';
 import { pushState } from 'redux-react-router';
 
@@ -26,17 +26,22 @@ export class App extends BaseComponent {
     this._handleTabsChange = this._handleTabsChange.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.user.loaded !== this.props.user.loaded) {
-      this.props.createAnonymousUserIfNeeded();
-      this.props.createProjectIfNeeded('Project Title', 'Description', 'Anonymous User');
-    }
-    if (nextProps.project.properties.id !== this.props.project.properties.id) {
-      if (this.props.routes.length < 2) {
-        this.props.pushState(null, `/projects/${nextProps.project.properties.id}/datasets/upload`);
-      }    
+  componentDidMount() {
+    if (this.props.params.projectId) {
+      this.props.fetchProjectIfNeeded(this.props.params.projectId);
     }
   }
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.user.loaded !== this.props.user.loaded) {
+  //     this.props.createAnonymousUserIfNeeded();
+  //     this.props.createProjectIfNeeded('Project Title', 'Description', 'Anonymous User');
+  //   }
+  //   if (nextProps.project.properties.id !== this.props.project.properties.id) {
+  //     if (this.props.routes.length < 2) {
+  //       this.props.pushState(null, `/projects/${nextProps.project.properties.id}/datasets/upload`);
+  //     }
+  //   }
+  // }
 
   _handleTabsChange(tab){
     this.props.pushState(null, `/projects/${this.props.params.projectId}/${tab.props.route}`);
@@ -65,8 +70,8 @@ export class App extends BaseComponent {
             </div>
           </div>
           <Tabs value={this._getSelectedTab()} onChange={this._handleTabsChange.bind(this)}>
-            <Tab label="DATASETS" value="datasets" route="datasets/upload" />
-            <Tab label="VISUALIZATIONS" value="visualizations" route="visualizations/gallery" />
+            <Tab label="DATA" value="data" route="datasets/upload" />
+            <Tab label="VISUALIZE" value="visualize" route="visualizations/gallery" />
           </Tabs>
         </div>
         {this.props.children}
@@ -90,4 +95,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { pushState, createProjectIfNeeded, createAnonymousUserIfNeeded })(App);
+export default connect(mapStateToProps, { pushState, createProjectIfNeeded, fetchProjectIfNeeded, createAnonymousUserIfNeeded })(App);

@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Route } from 'react-router';
 
+import LandingPage from './components/Landing/LandingPage';
 import App from './components/App/App';
 import ProjectsPage from './components/ProjectsPage';
 import DatasetsPage from './components/Datasets/DatasetsPage';
@@ -13,6 +14,7 @@ import BuilderPage from './components/Visualizations/BuilderPage';
 
 export default (
   <Route path="/" component={ App } >
+    <Route path="/home" component={ LandingPage }/>
     <Route path="/projects/:projectId" component={ ProjectsPage }>
       <Route path="datasets" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>

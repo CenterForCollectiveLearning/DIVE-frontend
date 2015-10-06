@@ -2,7 +2,9 @@ import {
   REQUEST_PROJECT,
   RECEIVE_PROJECT,
   CREATE_PROJECT,
-  CREATED_PROJECT
+  CREATED_PROJECT,
+  REQUEST_PRELOADED_PROJECTS,
+  RECEIVE_PRELOADED_PROJECTS
 } from '../constants/ActionTypes';
 
 import fetch from './api.js';
@@ -17,6 +19,20 @@ function receiveProjectDispatcher(json) {
   return {
     type: RECEIVE_PROJECT,
     projectProperties: json,
+    receivedAt: Date.now()
+  };
+}
+
+function requestPreloadedProjectsDispatcher() {
+  return {
+    type: REQUEST_PRELOADED_PROJECTS
+  };  
+}
+
+function receivePreloadedProjectsDispatcher(json) {
+  return {
+    type: RECEIVE_PRELOADED_PROJECTS,
+    projects: json.projects,
     receivedAt: Date.now()
   };
 }
@@ -67,6 +83,15 @@ function createProject(user_id, title, description) {
   }
 }
 
+export function fetchPreloadedProjects() {
+  return dispatch => {
+    dispatch(requestPreloadedProjectsDispatcher());
+    return fetch('/projects/v1/projects?preloaded=true')
+      .then(response => response.json())
+      .then(json => dispatch(receivePreloadedProjectsDispatcher(json)));
+  };
+}
+
 function fetchProject(projectId) {
   return dispatch => {
     dispatch(requestProjectDispatcher());
@@ -90,15 +115,4 @@ export function fetchProjectIfNeeded(projectId) {
       return dispatch(fetchProject(projectId));
     }
   }
-  // return {
-  //   type: RECEIVE_PROJECT,
-  //   projectProperties: {
-  //     id: projectId
-  //   }
-  // };
-  // return (dispatch, getState) => {
-  //   if (shouldFetchProject(getState())) {
-  //     return dispatch(fetchProject(projectId));
-  //   }
-  // };
 }

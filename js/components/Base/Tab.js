@@ -8,7 +8,7 @@ export default class Tab extends Component {
   render() {
     return (
       <div
-        className={ styles.tab + (this.props.selected ? ' ' + styles.selected : '')}
+        className={ styles.tab + ' ' + this.props.className + (this.props.selected ? ' ' + styles.selected : '')}
         onClick={this.props.onClick}>
         { this.props.label }
       </div>
@@ -21,10 +21,12 @@ Tab.propTypes = {
   value: PropTypes.string.isRequired,
   route: PropTypes.string,
   selected: PropTypes.bool,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  className: PropTypes.string
 }
 
 Tab.defaultProps = {
   selected: false,
-  route: null
+  route: null,
+  className: ""
 }
