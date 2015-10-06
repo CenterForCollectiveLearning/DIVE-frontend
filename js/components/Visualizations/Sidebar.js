@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
-import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
-import { selectDataset, selectVisualizationType, selectFieldProperty } from '../../actions/VisualizationActions';
+import { fetchFieldPropertiesIfNeeded, selectFieldProperty } from '../../actions/FieldPropertiesActions';
+import { selectDataset, selectVisualizationType } from '../../actions/VisualizationActions';
 import styles from './visualizations.sass';
 
 import Select from 'react-select';
@@ -33,8 +33,8 @@ export class Sidebar extends Component {
     this.props.selectVisualizationType(visualizationType);
   }
 
-  onSelectFieldProperty(fieldProperty) {
-    this.props.selectFieldProperty(fieldProperty)
+  onSelectFieldProperty(fieldPropertyId) {
+    this.props.selectFieldProperty(fieldPropertyId)
   }
 
   render() {
@@ -70,20 +70,10 @@ export class Sidebar extends Component {
             onChange={ this.onSelectVisualizationType } />
         </div>
         <div className={ styles.sidebarGroup }>
-          <h3 className={ styles.sidebarHeading }>Categorical Fields</h3>
-          { this.props.fieldProperties.items.c && this.props.fieldProperties.items.c.length > 0 &&
+          <h3 className={ styles.sidebarHeading }>Fields</h3>
+          { this.props.fieldProperties.items.length > 0 &&
             <ToggleButtonGroup
-              toggleItems={ this.props.fieldProperties.items.c }
-              displayTextMember="name"
-              valueMember="id"
-              onChange={ this.onSelectFieldProperty } />
-          }
-        </div>
-        <div className={ styles.sidebarGroup }>
-          <h3 className={ styles.sidebarHeading }>Quantitative Fields</h3>
-          { this.props.fieldProperties.items.q && this.props.fieldProperties.items.q.length > 0 &&
-            <ToggleButtonGroup
-              toggleItems={ this.props.fieldProperties.items.q }
+              toggleItems={ this.props.fieldProperties.items }
               displayTextMember="name"
               valueMember="id"
               onChange={ this.onSelectFieldProperty } />

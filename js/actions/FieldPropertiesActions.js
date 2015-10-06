@@ -1,4 +1,5 @@
 import {
+  SELECT_FIELD_PROPERTY,
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES
 } from '../constants/ActionTypes';
@@ -45,3 +46,11 @@ export function fetchFieldPropertiesIfNeeded(projectId, datasetId) {
     }
   };
 }
+
+export function selectFieldProperty(selectedFieldPropertyId) {
+  return {
+    type: SELECT_FIELD_PROPERTY,
+    selectedFieldPropertyId: selectedFieldPropertyId
+  }
+}
+

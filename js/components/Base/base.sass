@@ -52,6 +52,8 @@
   display: flex
   flex-direction: row
   flex-wrap: wrap
+  margin-left: 1px
+  margin-top: 1px
 
   .raisedButton.toggleButton
     padding: 0
@@ -61,7 +63,6 @@
     margin-top: -1px
 
     &:first-child
-      border-left-width: 1px
       border-top-left-radius: 2px
       border-bottom-left-radius: 2px
 
@@ -70,7 +71,18 @@
       border-bottom-right-radius: 2px
 
     &.textToggleButton
-      padding: 0 7px
+      padding: 0 8px
+      width: 100%
+      max-width: none
+      text-align: left
+
+      &:first-child
+        border-top-right-radius: 2px
+        border-bottom-left-radius: 0
+
+      &:last-child
+        border-bottom-left-radius: 2px
+        border-top-right-radius: 0
 
     img
       padding: 3px

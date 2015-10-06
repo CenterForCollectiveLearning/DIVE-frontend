@@ -113,8 +113,3 @@ export function clearVisualization() {
     type: CLEAR_VISUALIZATION
   };  
 }
-
-export function selectFieldProperty() {
-  return {
-  };
-}

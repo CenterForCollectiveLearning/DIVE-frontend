@@ -14,6 +14,7 @@ import {
   RECEIVE_DATASETS,
   RECEIVE_UPLOAD_DATASET,
   RECEIVE_DATASET,
+  SELECT_FIELD_PROPERTY,
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES,
   REQUEST_SPECS,
@@ -158,13 +159,28 @@ function user(state = {
 function fieldProperties(state={
   isFetching: false,
   loaded: false,
-  items: {}
+  items: []
 }, action) {
   switch (action.type) {
+    case SELECT_FIELD_PROPERTY:
+      var { items } = state;
+
+      const newSelectedIndex = state.items.findIndex((property, i, props) =>
+        property.id == action.selectedFieldPropertyId
+      );
+
+      if (newSelectedIndex >= 0) {
+        items[newSelectedIndex].selected = !items[newSelectedIndex].selected;
+      }
+
+      return { ...state, items: items };
     case REQUEST_FIELD_PROPERTIES:
       return { ...state, isFetching: true };
     case RECEIVE_FIELD_PROPERTIES:
-      return { ...state, isFetching: false, items: action.fieldProperties };
+      var items = [ ...action.fieldProperties.c, ...action.fieldProperties.q ].map((property) =>
+        new Object({ ...property, selected: false })
+      );
+      return { ...state, isFetching: false, items: items };
     default:
       return state;
   }
