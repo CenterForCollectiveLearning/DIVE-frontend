@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './landing.sass';
 import { connect } from 'react-redux';
-import { fetchProjectIfNeeded, createAUID } from '../../actions/ProjectActions.js';
+import { fetchPreloadedProjects } from '../../actions/ProjectActions.js';
 
 import RaisedButton from '../Base/RaisedButton';
-import Dropzone from 'react-dropzone';
 
 import Tabs from '../Base/Tabs';
 import Tab from '../Base/Tab';
@@ -17,6 +16,12 @@ export class LandingPage extends Component {
     super(props);
 
     this._handleTabsChange = this._handleTabsChange.bind(this);
+  }
+
+  componentWillMount() {
+    if (this.props.projects.items.length == 0) {
+      this.props.fetchPreloadedProjects();
+    }
   }
 
   _handleTabsChange(tab){
@@ -36,6 +41,7 @@ export class LandingPage extends Component {
   }
 
   render() {
+    console.log(this.props.projects);
     return (
       <div className={ styles.fillContainer + ' ' + styles.landingPage }>
         <div className={ styles.background }>
@@ -78,6 +84,11 @@ export class LandingPage extends Component {
           <div className={ styles.separater }></div>
           <div className={ styles.preloaded }>
             <div className={ styles.secondaryCopy }>Or explore our preloaded projects:</div>
+            <div>
+              { this.props.projects.items.map((project) =>
+                <div>{ project.title }</div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -90,7 +101,8 @@ LandingPage.propTypes = {
 };
 
 function mapStateToProps(state) {
-  return {};
+  const { projects } = state;
+  return { projects };
 }
 
-export default connect(mapStateToProps, { fetchProjectIfNeeded })(LandingPage);
+export default connect(mapStateToProps, { fetchPreloadedProjects })(LandingPage);
