@@ -68,6 +68,7 @@
 
     &.textToggleButton
       width: 100%
+      margin-bottom: 10px
 
       &:first-child .raisedButton.toggleButton
           border-top-right-radius: 2px
@@ -93,7 +94,6 @@
 
   .splitButton.textToggleButton
     display: flex
-    margin-bottom: 10px
 
     &.selected .splitButtonSelect
       opacity: 1
@@ -102,7 +102,9 @@
 
     .raisedButton.toggleButton, &:first-child .raisedButton.toggleButton, &:last-child .raisedButton.toggleButton
       flex-grow: 1
+      border-top-left-radius: 2px
       border-top-right-radius: 0
+      border-bottom-left-radius: 2px
       border-bottom-right-radius: 0
 
     .splitButtonSelect
@@ -112,6 +114,7 @@
       opacity: 0.5
       cursor: default
       pointer-events: none
+      flex-shrink: 0
 
       > div > div
         border-top-left-radius: 0
@@ -120,6 +123,7 @@
         > div
           font-weight: 400
           font-size: 11px
+
 .tabs
   background-color: transparent
   display: flex

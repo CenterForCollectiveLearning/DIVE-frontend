@@ -22,7 +22,7 @@ export default class ToggleButton extends Component {
     const selectedAggregationFunction = selectedAggregationFunctionIndex >= 0 ? this.props.splitMenu[selectedAggregationFunctionIndex].value : null;
 
     return (
-      <div className={ styles.toggleButtonContainer  + (this.props.imageName ? '' : ' ' + styles.textToggleButton + ' ' + styles.splitButton) + (this.props.isSelected ? ' ' + styles.selected : '') }>
+      <div className={ styles.toggleButtonContainer  + (this.props.imageName ? '' : ' ' + styles.textToggleButton) + (this.props.isSelected ? ' ' + styles.selected : '') + (this.props.splitMenu.length > 0 ? ' ' + styles.splitButton : '')}>
         <div
           className={ `${ styles.toggleButton } ${ styles.raisedButton }` + (this.props.isSelected ? ' ' + styles.selected : '') }
           onClick={ this.handleClick }
