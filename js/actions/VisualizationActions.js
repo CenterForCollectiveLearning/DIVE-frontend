@@ -27,11 +27,19 @@ function receiveSpecsDispatcher(projectId, datasetId, json) {
   };
 }
 
-function fetchSpecs(projectId, datasetId) {
+function fetchSpecs(projectId, datasetId, field_agg_pairs) {
+  var json = {
+    'project_id': projectId,
+    'dataset_id': datasetId,
+    'field_agg_pairs': field_agg_pairs,
+  }
   return dispatch => {
     dispatch(requestSpecsDispatcher());
-    return fetch(`/specs/v1/specs?project_id=${ projectId }&dataset_id=${ datasetId }`)
-      .then(response => response.json())
+    return fetch(`/specs/v1/specs`, {
+      method: 'post',
+      body: JSON.stringify(json),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
       .then(json => dispatch(receiveSpecsDispatcher(projectId, datasetId, json)));
   };
 }
@@ -92,7 +100,7 @@ function fetchSpecVisualization(projectId, specId) {
   };
 }
 
-function shouldFetchSpecVisualization(state) {  
+function shouldFetchSpecVisualization(state) {
   const { visualization } = state;
   if (visualization.specId || visualization.isFetching) {
     return false;
@@ -111,5 +119,5 @@ export function fetchSpecVisualizationIfNeeded(projectId, specId) {
 export function clearVisualization() {
   return {
     type: CLEAR_VISUALIZATION
-  };  
+  };
 }
