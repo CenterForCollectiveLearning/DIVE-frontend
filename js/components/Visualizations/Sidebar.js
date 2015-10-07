@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
+import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectAggregationFunction } from '../../actions/FieldPropertiesActions';
 import { selectDataset, selectVisualizationType } from '../../actions/VisualizationActions';
 import styles from './visualizations.sass';
 
@@ -11,22 +12,19 @@ import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 export class Sidebar extends Component {
   constructor(props) {
     super(props);
-
-    this.onSelectVisualizationType = this.onSelectVisualizationType.bind(this);
   }
+
   componentWillReceiveProps(nextProps) {
-    const { project, datasets, specSelector, fetchDatasetsIfNeeded, selectDataset } = this.props;
+    const { project, datasets, specSelector, fieldProperties, fetchDatasetsIfNeeded, selectDataset } = this.props;
 
     if (nextProps.project.properties.id !== project.properties.id) {
       fetchDatasetsIfNeeded(nextProps.project.properties.id);
+      fetchFieldPropertiesIfNeeded(project.properties.id, specSelector.datasetId)
     }
+
     if (nextProps.datasets.items.length !== datasets.items.length && !specSelector.datasetId) {
       selectDataset(nextProps.datasets.items[0].datasetId);
     }
-  }
-
-  onSelectVisualizationType(visualizationType) {
-    this.props.selectVisualizationType(visualizationType);
   }
 
   render() {
@@ -59,13 +57,18 @@ export class Sidebar extends Component {
             valueMember="type"
             imageNameMember="imageName"
             imageNameSuffix=".chart.svg"
-            onChange={ this.onSelectVisualizationType } />
+            onChange={ this.props.selectVisualizationType } />
         </div>
         <div className={ styles.sidebarGroup }>
-          <h3 className={ styles.sidebarHeading }>Categorical data</h3>
-        </div>
-        <div className={ styles.sidebarGroup }>
-          <h3 className={ styles.sidebarHeading }>Numerical data</h3>
+          <h3 className={ styles.sidebarHeading }>Fields</h3>
+          { this.props.fieldProperties.items.length > 0 &&
+            <ToggleButtonGroup
+              toggleItems={ this.props.fieldProperties.items }
+              displayTextMember="name"
+              valueMember="id"
+              selectMenuItem={ this.props.selectAggregationFunction }
+              onChange={ this.props.selectFieldProperty } />
+          }
         </div>
       </div>
     );
@@ -76,17 +79,19 @@ Sidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
   specSelector: PropTypes.object.isRequired,
+  fieldProperties: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, datasets, specSelector, filters } = state;
+  const { project, datasets, specSelector, fieldProperties, filters } = state;
   return {
     project,
     datasets,
     specSelector,
+    fieldProperties,
     filters
   }
 }
 
-export default connect(mapStateToProps, { fetchDatasetsIfNeeded, selectDataset, selectVisualizationType })(Sidebar);
+export default connect(mapStateToProps, { fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, selectVisualizationType, selectFieldProperty, selectAggregationFunction })(Sidebar);

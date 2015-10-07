@@ -14,18 +14,6 @@ require('../../../css/plottable.less');
 require('../../../css/griddle.less');
 
 export class App extends BaseComponent {
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps.user.loaded !== this.props.user.loaded) {
-  //     this.props.createAnonymousUserIfNeeded();
-  //     this.props.createProjectIfNeeded('Project Title', 'Description', 'Anonymous User');
-  //   }
-  //   if (nextProps.project.properties.id !== this.props.project.properties.id) {
-  //     if (this.props.routes.length < 2) {
-  //       this.props.pushState(null, `/projects/${nextProps.project.properties.id}/datasets/upload`);
-  //     }
-  //   }
-  // }
-
   render() {
     return (
       <div className={ styles.fillContainer }>

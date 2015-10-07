@@ -1,0 +1,10 @@
+{
+  "name": "dive-beta",
+  "root": "./",
+  "routes": {
+    "**": "index.html"
+  },
+  "clean_urls": true,
+  "error_page": "error.html",
+  "exclude": ["*.", "__", "*.json", "*.md", "*.js", "assets/", "css/", "dist/", "js/", "node_modules/"]
+}

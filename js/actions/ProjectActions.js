@@ -26,7 +26,7 @@ function receiveProjectDispatcher(json) {
 function requestPreloadedProjectsDispatcher() {
   return {
     type: REQUEST_PRELOADED_PROJECTS
-  };  
+  };
 }
 
 function receivePreloadedProjectsDispatcher(json) {

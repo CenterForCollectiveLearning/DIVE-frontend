@@ -19,6 +19,8 @@ $ npm start
 To run the server with the dev-tools enabled, run:
 
 ```bash
+$ export API_URL=http://localhost:8081
+$ export NODE_ENV=DEVELOPMENT
 $ DEBUG=true npm start
 ```
 
@@ -26,4 +28,16 @@ To build for production, this command will output optimized production code:
 
 ```bash
 $ npm run build
+```
+## Deploying to Divshot
+Set environment variables, login with divshot credentials, then push
+```bash
+$ export NODE_ENV=PRODUCTION
+$ divshot login
+$ divshot push
+```
+
+Divshot should have an API_URL env var already configured. If not, run:
+```bash
+$ divshot env:add development API_URL=http://dive.media.mit.edu:8081
 ```

@@ -5,13 +5,19 @@ var devFlagPlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.DEBUG || 'false'))
 });
 
+function getEntrySources(sources) {
+  if (process.env.NODE_ENV !== 'production') {
+    sources.push('webpack-dev-server/client?http://localhost:3009')
+    sources.push('webpack/hot/only-dev-server')
+  }
+  return sources;
+}
+
 module.exports = {
-  entry: [
-    'webpack-dev-server/client?http://localhost:3009',
-    'webpack/hot/only-dev-server',
-    './js/index.js',
-    './css/app.css'
-  ],
+  entry: getEntrySources([
+      './js/index.js',
+      './css/app.css'
+  ]),
   output: {
     path: __dirname + '/static/',
     publicPath: '/static/',

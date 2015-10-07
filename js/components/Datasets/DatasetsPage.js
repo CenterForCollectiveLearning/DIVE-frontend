@@ -24,7 +24,7 @@ export class DatasetsPage extends Component {
   }
 
   render() {
-    const { datasets, params } = this.props;
+    const { datasets, params, datasetId } = this.props;
     return (
       <div className={ styles.fillContainer }>
         { datasets.items.length > 0 &&
@@ -39,14 +39,16 @@ export class DatasetsPage extends Component {
 DatasetsPage.propTypes = {
   project: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
+  datasetId: PropTypes.string,
   children: PropTypes.node
 };
 
 function mapStateToProps(state) {
-  const { project, datasets } = state;
+  const { project, datasets, datasetId } = state;
   return {
     project,
-    datasets
+    datasets,
+    datasetId
   }
 }
 

@@ -1,5 +1,7 @@
 .raisedButton
-  max-width: 180px
+  max-width: 160px
+  overflow: hidden
+  text-overflow: ellipsis
   height: 35px
   line-height: 35px
   padding: 0px 15px
@@ -15,7 +17,6 @@
   border: 1px solid #D0D0D0
   border-radius: 2px
 
-  text-transform: uppercase
   transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)
 
   &:hover
@@ -32,6 +33,7 @@
     font-weight: 600
     color: white
     max-width: none
+    text-transform: uppercase
 
     &:hover
       background-color: #0e94d2
@@ -49,23 +51,71 @@
 .toggleButtonGroup
   display: flex
   flex-direction: row
+  flex-wrap: wrap
+  margin-left: 1px
+  margin-top: 1px
 
-  .raisedButton.toggleButton
-    padding: 0
-    border-left-width: 0
-    border-radius: 0
+  .toggleButtonContainer
+    flex-grow: 1
 
-    &:first-child
-      border-left-width: 1px
-      border-top-left-radius: 2px
-      border-bottom-left-radius: 2px
+    &:first-child .raisedButton.toggleButton
+        border-top-left-radius: 2px
+        border-bottom-left-radius: 2px
 
-    &:last-child
+    &:last-child .raisedButton.toggleButton
       border-top-right-radius: 2px
       border-bottom-right-radius: 2px
 
+    &.textToggleButton
+      width: 100%
+      margin-bottom: 10px
+
+      .raisedButton.toggleButton
+        padding: 0 8px
+        max-width: none
+        text-align: left
+        border-radius: 2px
+
+  .raisedButton.toggleButton
+    padding: 0
+    border-radius: 0
+    margin-left: -1px
+    margin-top: -1px
+
     img
       padding: 3px
+
+  .splitButton.textToggleButton
+    display: flex
+
+    &.selected .splitButtonSelect
+      opacity: 1
+      cursor: pointer
+      pointer-events: auto
+
+    .raisedButton.toggleButton, &:first-child .raisedButton.toggleButton, &:last-child .raisedButton.toggleButton
+      flex-grow: 1
+      border-top-left-radius: 2px
+      border-top-right-radius: 0
+      border-bottom-left-radius: 2px
+      border-bottom-right-radius: 0
+
+    .splitButtonSelect
+      width: 90px
+      margin-top: -1px
+      margin-left: -1px
+      opacity: 0.5
+      cursor: default
+      pointer-events: none
+      flex-shrink: 0
+
+      > div > div
+        border-top-left-radius: 0
+        border-bottom-left-radius: 0
+
+        > div
+          font-weight: 400
+          font-size: 11px
 
 .tabs
   background-color: transparent
@@ -93,4 +143,3 @@
       color: #FFFFFF
       background-color: #456B7D
       border-bottom: 2px solid #2D5365
-      

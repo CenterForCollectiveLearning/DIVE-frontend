@@ -13,17 +13,20 @@ export default class ToggleButtonGroup extends Component {
   handleClick(item) {
     this.props.onChange(item);
   }
+
   render() {
     return (
-      <div className={styles.toggleButtonGroup}>
+      <div className={ styles.toggleButtonGroup }>
         { this.props.toggleItems.map((item) =>
           <ToggleButton
             key={ item[this.props.valueMember] }
             altText={ item[this.props.displayTextMember] }
-            imageName={ `/assets/${item[this.props.imageNameMember]}${this.props.imageNameSuffix}` }
+            imageName={ this.props.imageNameMember ? `/assets/${item[this.props.imageNameMember]}${this.props.imageNameSuffix}` : null }
             onChange={ this.handleClick }
             isSelected={ item.selected }
-            value={ item[this.props.valueMember] } />
+            splitMenu={ item.splitMenu ? item.splitMenu : [] }
+            selectMenuItem={ this.props.selectMenuItem }
+            value={ item[this.props.valueMember].toString() } />
         )}
       </div>
     );
@@ -36,5 +39,6 @@ ToggleButtonGroup.propTypes = {
   valueMember: PropTypes.string.isRequired,
   displayTextMember: PropTypes.string.isRequired,
   imageNameMember: PropTypes.string,
-  imageNameSuffix: PropTypes.string
+  imageNameSuffix: PropTypes.string,
+  selectMenuItem: PropTypes.func
 };

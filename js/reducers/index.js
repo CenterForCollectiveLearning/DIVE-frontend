@@ -14,6 +14,10 @@ import {
   RECEIVE_DATASETS,
   RECEIVE_UPLOAD_DATASET,
   RECEIVE_DATASET,
+  SELECT_FIELD_PROPERTY,
+  REQUEST_FIELD_PROPERTIES,
+  RECEIVE_FIELD_PROPERTIES,
+  SELECT_AGGREGATION_FUNCTION,
   REQUEST_SPECS,
   RECEIVE_SPECS,
   SELECT_DATASET,
@@ -64,7 +68,8 @@ function datasets(state = {
     case REQUEST_DATASETS:
       return { ...state, isFetching: true };
     case RECEIVE_DATASETS:
-      return { ...state, isFetching: false, items: mergeDatasetLists(state.items, action.datasets) };
+      var mergedDatasetLists = mergeDatasetLists(state.items, action.datasets);
+      return { ...state, isFetching: false, items: mergedDatasetLists, datasetId: mergedDatasetLists[0].datasetId};
     case RECEIVE_UPLOAD_DATASET:
       return { ...state, isFetching: false, items: [...state.items, { datasetId: action.datasetId }] };
     case RECEIVE_DATASET:
@@ -147,6 +152,81 @@ function user(state = {
       return { ...action.payload.user, loaded: true };
     case CREATE_ANONYMOUS_USER:
       return { ...state, properties: action.userProperties }
+    default:
+      return state;
+  }
+}
+
+function fieldProperties(state={
+  isFetching: false,
+  loaded: false,
+  items: []
+}, action) {
+  const AGGREGATIONS = [
+    {
+      value: "AVG",
+      label: "mean",
+      selected: false
+    },
+    {
+      value: "MIN",
+      label: "min",
+      selected: false
+    },
+    {
+      value: "MAX",
+      label: "max",
+      selected: false
+    }
+  ];
+  switch (action.type) {
+    case SELECT_FIELD_PROPERTY:
+      var { items } = state;
+
+      const newSelectedIndex = state.items.findIndex((property, i, props) =>
+        property.id == action.selectedFieldPropertyId
+      );
+
+      if (newSelectedIndex >= 0) {
+        items[newSelectedIndex].selected = !items[newSelectedIndex].selected;
+      }
+
+      return { ...state, items: items };
+    case SELECT_AGGREGATION_FUNCTION:
+      var { items } = state;
+
+      const selectedAggregationFunctionFieldPropertyIndex = state.items.findIndex((property, i, props) =>
+        property.id == action.selectedAggregationFunctionFieldPropertyId
+      );
+
+      if (selectedAggregationFunctionFieldPropertyIndex >= 0) {
+        const selectedAggregationIndex = items[selectedAggregationFunctionFieldPropertyIndex].splitMenu.findIndex((aggregation, j, aggregations) =>
+          aggregation.value == action.selectedAggregationFunction
+        );
+
+        var aggregations = AGGREGATIONS.slice();
+        aggregations[selectedAggregationIndex].selected = true;
+
+        if (selectedAggregationIndex >= 0) {
+          items[selectedAggregationFunctionFieldPropertyIndex].splitMenu = aggregations;
+        }
+      }
+
+      return { ...state, items: items };
+    case REQUEST_FIELD_PROPERTIES:
+      return { ...state, isFetching: true };
+    case RECEIVE_FIELD_PROPERTIES:
+      var aggregations = AGGREGATIONS.slice();
+      aggregations[0].selected = true;
+
+      var items = [ ...action.fieldProperties.c, ...action.fieldProperties.q ].map((property) =>
+        new Object({
+          ...property,
+          selected: false,
+          splitMenu: (property.generalType == 'q') ? aggregations : []
+        })
+      );
+      return { ...state, isFetching: false, items: items };
     default:
       return state;
   }
@@ -257,6 +337,7 @@ const rootReducer = combineReducers({
   filters,
   project,
   projects,
+  fieldProperties,
   specs,
   specSelector,
   user,
