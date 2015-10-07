@@ -8,18 +8,23 @@ export default class ToggleButton extends Component {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
+    this.selectMenuItem = this.selectMenuItem.bind(this);
   } 
 
   handleClick (event) {
     this.props.onChange(this.props.value);
   }
 
+  selectMenuItem (menuItem) {
+    this.props.selectMenuItem(this.props.value, menuItem);
+  }
+
   render() {
-    const selectedAggregationFunctionIndex = this.props.splitMenu.findIndex((menuItem, i, menuItems) =>
+    const selectedMenuItemIndex = this.props.splitMenu.findIndex((menuItem, i, menuItems) =>
       menuItem.selected == true
     );
 
-    const selectedAggregationFunction = selectedAggregationFunctionIndex >= 0 ? this.props.splitMenu[selectedAggregationFunctionIndex].value : null;
+    const selectedMenuItem = selectedMenuItemIndex >= 0 ? this.props.splitMenu[selectedMenuItemIndex].value : null;
 
     return (
       <div className={ styles.toggleButtonContainer  + (this.props.imageName ? '' : ' ' + styles.textToggleButton) + (this.props.isSelected ? ' ' + styles.selected : '') + (this.props.splitMenu.length > 0 ? ' ' + styles.splitButton : '')}>
@@ -37,8 +42,9 @@ export default class ToggleButton extends Component {
         { this.props.splitMenu.length > 0 &&
           <div className={ styles.splitButtonSelect }>
             <Select
-              value={ selectedAggregationFunction }
+              value={ selectedMenuItem }
               options={ this.props.splitMenu }
+              onChange={ this.selectMenuItem }
               multi={ false }
               clearable={ false }
               searchable={ false } />
@@ -56,7 +62,8 @@ ToggleButton.propTypes = {
   isSelected: PropTypes.bool.isRequired,
   value: PropTypes.string.isRequired,
   label: PropTypes.string,
-  splitMenu: PropTypes.array
+  splitMenu: PropTypes.array,
+  selectMenuItem: PropTypes.func
 }
 
 ToggleButton.defaultProps = {

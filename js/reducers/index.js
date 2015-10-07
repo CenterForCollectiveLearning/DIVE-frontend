@@ -17,6 +17,7 @@ import {
   SELECT_FIELD_PROPERTY,
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES,
+  SELECT_AGGREGATION_FUNCTION,
   REQUEST_SPECS,
   RECEIVE_SPECS,
   SELECT_DATASET,
@@ -161,6 +162,23 @@ function fieldProperties(state={
   loaded: false,
   items: []
 }, action) {
+  const AGGREGATIONS = [
+    {
+      value: "AVG",
+      label: "mean",
+      selected: false
+    },
+    {
+      value: "MIN",
+      label: "min",
+      selected: false
+    },
+    {
+      value: "MAX",
+      label: "max",
+      selected: false
+    }
+  ];
   switch (action.type) {
     case SELECT_FIELD_PROPERTY:
       var { items } = state;
@@ -174,26 +192,32 @@ function fieldProperties(state={
       }
 
       return { ...state, items: items };
+    case SELECT_AGGREGATION_FUNCTION:
+      var { items } = state;
+
+      const selectedAggregationFunctionFieldPropertyIndex = state.items.findIndex((property, i, props) =>
+        property.id == action.selectedAggregationFunctionFieldPropertyId
+      );
+
+      if (selectedAggregationFunctionFieldPropertyIndex >= 0) {
+        const selectedAggregationIndex = items[selectedAggregationFunctionFieldPropertyIndex].splitMenu.findIndex((aggregation, j, aggregations) =>
+          aggregation.value == action.selectedAggregationFunction
+        );
+
+        var aggregations = AGGREGATIONS.slice();
+        aggregations[selectedAggregationIndex].selected = true;
+
+        if (selectedAggregationIndex >= 0) {
+          items[selectedAggregationFunctionFieldPropertyIndex].splitMenu = aggregations;
+        }
+      }
+
+      return { ...state, items: items };
     case REQUEST_FIELD_PROPERTIES:
       return { ...state, isFetching: true };
     case RECEIVE_FIELD_PROPERTIES:
-      const aggregations = [
-        {
-          value: "AVG",
-          label: "mean",
-          selected: true
-        },
-        {
-          value: "MIN",
-          label: "min",
-          selected: false
-        },
-        {
-          value: "MAX",
-          label: "max",
-          selected: false
-        }
-      ];
+      var aggregations = AGGREGATIONS.slice();
+      aggregations[0].selected = true;
 
       var items = [ ...action.fieldProperties.c, ...action.fieldProperties.q ].map((property) =>
         new Object({
@@ -207,7 +231,6 @@ function fieldProperties(state={
       return state;
   }
 }
-
 
 function specs(state={
   isFetching: false,

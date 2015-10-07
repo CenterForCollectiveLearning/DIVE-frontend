@@ -25,6 +25,7 @@ export default class ToggleButtonGroup extends Component {
             onChange={ this.handleClick }
             isSelected={ item.selected }
             splitMenu={ item.splitMenu ? item.splitMenu : [] }
+            selectMenuItem={ this.props.selectMenuItem }
             value={ item[this.props.valueMember].toString() } />
         )}
       </div>
@@ -38,5 +39,6 @@ ToggleButtonGroup.propTypes = {
   valueMember: PropTypes.string.isRequired,
   displayTextMember: PropTypes.string.isRequired,
   imageNameMember: PropTypes.string,
-  imageNameSuffix: PropTypes.string
+  imageNameSuffix: PropTypes.string,
+  selectMenuItem: PropTypes.func
 };

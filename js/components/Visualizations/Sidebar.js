@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
-import { fetchFieldPropertiesIfNeeded, selectFieldProperty } from '../../actions/FieldPropertiesActions';
+import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectAggregationFunction } from '../../actions/FieldPropertiesActions';
 import { selectDataset, selectVisualizationType } from '../../actions/VisualizationActions';
 import styles from './visualizations.sass';
 
@@ -12,10 +12,8 @@ import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 export class Sidebar extends Component {
   constructor(props) {
     super(props);
-
-    this.onSelectVisualizationType = this.onSelectVisualizationType.bind(this);
-    this.onSelectFieldProperty = this.onSelectFieldProperty.bind(this);
   }
+
   componentWillReceiveProps(nextProps) {
     const { project, datasets, specSelector, fieldProperties, fetchDatasetsIfNeeded, selectDataset } = this.props;
 
@@ -27,14 +25,6 @@ export class Sidebar extends Component {
     if (nextProps.datasets.items.length !== datasets.items.length && !specSelector.datasetId) {
       selectDataset(nextProps.datasets.items[0].datasetId);
     }
-  }
-
-  onSelectVisualizationType(visualizationType) {
-    this.props.selectVisualizationType(visualizationType);
-  }
-
-  onSelectFieldProperty(fieldPropertyId) {
-    this.props.selectFieldProperty(fieldPropertyId)
   }
 
   render() {
@@ -67,7 +57,7 @@ export class Sidebar extends Component {
             valueMember="type"
             imageNameMember="imageName"
             imageNameSuffix=".chart.svg"
-            onChange={ this.onSelectVisualizationType } />
+            onChange={ this.props.selectVisualizationType } />
         </div>
         <div className={ styles.sidebarGroup }>
           <h3 className={ styles.sidebarHeading }>Fields</h3>
@@ -76,7 +66,8 @@ export class Sidebar extends Component {
               toggleItems={ this.props.fieldProperties.items }
               displayTextMember="name"
               valueMember="id"
-              onChange={ this.onSelectFieldProperty } />
+              selectMenuItem={ this.props.selectAggregationFunction }
+              onChange={ this.props.selectFieldProperty } />
           }
         </div>
       </div>
@@ -103,4 +94,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, selectVisualizationType, selectFieldProperty })(Sidebar);
+export default connect(mapStateToProps, { fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, selectVisualizationType, selectFieldProperty, selectAggregationFunction })(Sidebar);
