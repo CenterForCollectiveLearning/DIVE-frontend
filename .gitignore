@@ -2,6 +2,9 @@
 dist/**
 node_modules/
 node_modules_old/
+static/
 
 *.log
 .divshot-cache/
+.env.json
+__/
