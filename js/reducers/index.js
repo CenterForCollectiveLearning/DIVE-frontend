@@ -177,8 +177,30 @@ function fieldProperties(state={
     case REQUEST_FIELD_PROPERTIES:
       return { ...state, isFetching: true };
     case RECEIVE_FIELD_PROPERTIES:
+      const aggregations = [
+        {
+          value: "AVG",
+          label: "mean",
+          selected: true
+        },
+        {
+          value: "MIN",
+          label: "min",
+          selected: false
+        },
+        {
+          value: "MAX",
+          label: "max",
+          selected: false
+        }
+      ];
+
       var items = [ ...action.fieldProperties.c, ...action.fieldProperties.q ].map((property) =>
-        new Object({ ...property, selected: false })
+        new Object({
+          ...property,
+          selected: false,
+          splitMenu: (property.generalType == 'q') ? aggregations : []
+        })
       );
       return { ...state, isFetching: false, items: items };
     default:

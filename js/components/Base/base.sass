@@ -55,38 +55,71 @@
   margin-left: 1px
   margin-top: 1px
 
-  .raisedButton.toggleButton
-    padding: 0
-    border-radius: 0
+  .toggleButtonContainer
     flex-grow: 1
-    margin-left: -1px
-    margin-top: -1px
 
-    &:first-child
-      border-top-left-radius: 2px
-      border-bottom-left-radius: 2px
+    &:first-child .raisedButton.toggleButton
+        border-top-left-radius: 2px
+        border-bottom-left-radius: 2px
 
-    &:last-child
+    &:last-child .raisedButton.toggleButton
       border-top-right-radius: 2px
       border-bottom-right-radius: 2px
 
     &.textToggleButton
-      padding: 0 8px
       width: 100%
-      max-width: none
-      text-align: left
 
-      &:first-child
-        border-top-right-radius: 2px
-        border-bottom-left-radius: 0
+      &:first-child .raisedButton.toggleButton
+          border-top-right-radius: 2px
+          border-bottom-left-radius: 0
 
-      &:last-child
-        border-bottom-left-radius: 2px
-        border-top-right-radius: 0
+      &:last-child .raisedButton.toggleButton
+          border-bottom-left-radius: 2px
+          border-top-right-radius: 0
+
+      .raisedButton.toggleButton
+        padding: 0 8px
+        max-width: none
+        text-align: left
+
+  .raisedButton.toggleButton
+    padding: 0
+    border-radius: 0
+    margin-left: -1px
+    margin-top: -1px
 
     img
       padding: 3px
 
+  .splitButton.textToggleButton
+    display: flex
+    margin-bottom: 10px
+
+    &.selected .splitButtonSelect
+      opacity: 1
+      cursor: pointer
+      pointer-events: auto
+
+    .raisedButton.toggleButton, &:first-child .raisedButton.toggleButton, &:last-child .raisedButton.toggleButton
+      flex-grow: 1
+      border-top-right-radius: 0
+      border-bottom-right-radius: 0
+
+    .splitButtonSelect
+      width: 90px
+      margin-top: -1px
+      margin-left: -1px
+      opacity: 0.5
+      cursor: default
+      pointer-events: none
+
+      > div > div
+        border-top-left-radius: 0
+        border-bottom-left-radius: 0
+
+        > div
+          font-weight: 400
+          font-size: 11px
 .tabs
   background-color: transparent
   display: flex
