@@ -14,6 +14,7 @@ require('../../../css/plottable.less');
 require('../../../css/griddle.less');
 
 export class App extends BaseComponent {
+
   render() {
     return (
       <div className={ styles.fillContainer }>

@@ -8,7 +8,7 @@ import {
   CLEAR_VISUALIZATION
 } from '../constants/ActionTypes';
 
-import fetch from './api.js';
+import { fetch, pollForTaskResult } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
 function requestSpecsDispatcher() {
@@ -17,12 +17,11 @@ function requestSpecsDispatcher() {
   };
 }
 
-function receiveSpecsDispatcher(projectId, datasetId, json) {
+function receiveSpecsDispatcher(params, specs) {
   return {
+    ...params,
     type: RECEIVE_SPECS,
-    projectId: projectId,
-    datasetId: datasetId,
-    specs: json.specs,
+    specs: specs,
     receivedAt: Date.now()
   };
 }
@@ -40,7 +39,9 @@ function fetchSpecs(projectId, datasetId, field_agg_pairs) {
       body: JSON.stringify(json),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
-      .then(json => dispatch(receiveSpecsDispatcher(projectId, datasetId, json)));
+      .then((json) =>
+        dispatch(pollForTaskResult(json.taskId, {project_id: projectId, dataset_id: datasetId}, receiveSpecsDispatcher))
+      )
   };
 }
 
