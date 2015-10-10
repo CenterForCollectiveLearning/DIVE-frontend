@@ -14,7 +14,7 @@
 
 .galleryContainer
   display: flex
-  flex-direction: row
+  flex-direction: column
 
   background-color: #e9e7e8
 
@@ -102,17 +102,40 @@
       .header
         font-size: 15px
 
+.topbar
+  display: flex
+  flex-direction: column
+  position: relative
+  height: 48px
+  background-color: #EFEFEF
+
+.sidebarAndContent
+  display: flex
+  flex-direction: row
+
 .sidebar
   display: flex
   flex-direction: column
   flex-shrink: 0
+
+  &:before
+    content: ''
+    position: relative
+    border-style: solid
+    border-width: 0 12px 12px
+    border-color: #F6F6F6 transparent
+    display: block
+    width: 0
+    z-index: 1
+    top: -20px
+    left: 20px
 
   width: 304px
   padding-top: 10px
   z-index: 10
 
   background-color: #F6F6F6
-  box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.16)
+  box-shadow: 2px 5px 5px 0 rgba(0, 0, 0, 0.16)
 
   .sidebarGroup
     padding: 0 20px 10px

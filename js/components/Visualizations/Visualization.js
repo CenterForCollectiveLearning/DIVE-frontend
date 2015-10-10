@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import styles from './visualizations.sass';
+import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 
 require('plottable');
 
@@ -151,8 +152,7 @@ class InnerPlottable extends Component {
   render() {
     return (
       <div>
-        <div>{this.props.spec.vizTypes}</div>
-        <span></span>
+        { this.props.spec.vizTypes }
       </div>
     );
   }

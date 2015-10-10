@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import styles from './visualizations.sass';
+import Topbar from './Topbar';
 import Sidebar from './Sidebar';
 import GalleryView from './GalleryView';
 
@@ -9,8 +10,11 @@ class GalleryPage extends Component {
   render() {
     return (
       <div className={ `${styles.fillContainer} ${styles.galleryContainer}` }>
-        <Sidebar />
-        <GalleryView />
+        <Topbar />
+        <div className={ styles.sidebarAndContent }>
+          <Sidebar />
+          <GalleryView />
+        </div>
         {this.props.children}
       </div>
     );
