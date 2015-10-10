@@ -4,7 +4,7 @@ import styles from './app.sass';
 
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import { replaceState, pushState } from 'redux-react-router';
 
 require("font-awesome-webpack");
 // this seems real dumb;
@@ -31,10 +31,10 @@ App.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { user } = state;
+  const { user} = state;
   return {
     user: user
   };
 }
 
-export default connect(mapStateToProps, { pushState })(App);
+export default connect(mapStateToProps, { })(App);

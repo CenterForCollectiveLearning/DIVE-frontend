@@ -12,10 +12,19 @@ import VisualizationsPage from './components/Visualizations/VisualizationsPage';
 import GalleryPage from './components/Visualizations/GalleryPage';
 import BuilderPage from './components/Visualizations/BuilderPage';
 
+
+function redirectLandingOnEnter() {
+  return function(routerState, replaceState) {
+    if (routerState.location.pathname == '/') {
+      replaceState(null, '/home');
+    }
+  }
+}
+
 export default (
-  <Route path="/" component={ App } >
-    <Route path="/home" component={ LandingPage }/>
-    <Route path="/projects/:projectId" component={ ProjectsPage }>
+  <Route path="/" component={ App } onEnter={redirectLandingOnEnter()}>
+    <Route path="home" component={ LandingPage }/>
+    <Route path="projects/:projectId" component={ ProjectsPage }>
       <Route path="datasets" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>
         <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>

@@ -50,6 +50,8 @@ export class ProjectsPage extends Component {
           <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
             <Tab label="DATA" value="data" route="datasets/upload" />
             <Tab label="VISUALIZE" value="visualize" route="visualizations/gallery" />
+            <Tab label="ANALYZE" value="analyze" route="analyze/gallery" />
+            <Tab label="EXPORT" value="export" route="export" />            
           </Tabs>
         </div>
         {this.props.children}

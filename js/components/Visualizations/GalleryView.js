@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { clearVisualization, fetchSpecsIfNeeded } from '../../actions/VisualizationActions';
+import { clearVisualization, fetchSpecsIfNeeded, isFetchingSpecs } from '../../actions/VisualizationActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 import styles from './visualizations.sass';
 
@@ -41,6 +41,12 @@ export class GalleryView extends Component {
   render() {
     return (
       <div className={ styles.specsContainer }>
+        { this.props.isFetchingSpecs && this.props.specs.items.length == 0 &&
+          <h2>Loading specs...</h2>
+        }
+        { !this.props.isFetchingSpecs && this.props.specs.items.length == 0 &&
+          <h2>No specs</h2>
+        }
         { this.props.specs.items.map((spec) =>
           <div className={ styles.blockContainer } key={ spec.id }>
             <Visualization
@@ -62,7 +68,7 @@ GalleryView.propTypes = {
   project: PropTypes.object.isRequired,
   specs: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  specSelector: PropTypes.object.isRequired
+  specSelector: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -75,4 +81,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { pushState, fetchSpecsIfNeeded, fetchFieldPropertiesIfNeeded, clearVisualization })(GalleryView);
+export default connect(mapStateToProps, { pushState, fetchSpecsIfNeeded, fetchFieldPropertiesIfNeeded, isFetchingSpecs, clearVisualization })(GalleryView);

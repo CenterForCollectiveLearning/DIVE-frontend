@@ -18,6 +18,7 @@ function requestSpecsDispatcher() {
 }
 
 function receiveSpecsDispatcher(params, specs) {
+  console.log('in dispatcher')
   return {
     ...params,
     type: RECEIVE_SPECS,
@@ -39,9 +40,18 @@ function fetchSpecs(projectId, datasetId, field_agg_pairs) {
       body: JSON.stringify(json),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
-      .then((json) =>
-        dispatch(pollForTaskResult(json.taskId, {project_id: projectId, dataset_id: datasetId}, receiveSpecsDispatcher))
-      )
+      .then(function(json) {
+        const dispatchParams = { project_id: projectId, dataset_id: datasetId };
+        // TODO Do this more consistently with status flags
+        // console.log(json, (json.specs.length > 0))
+        if (json.taskId) {
+          dispatch(pollForTaskResult(json.taskId, dispatchParams, receiveSpecsDispatcher));
+        }
+        else if (json.specs.length > 0) {
+          console.log('here!')
+          // dispatch(receiveSpecsDispatcher(dispatchParams, json.specs));
+        }
+      })
   };
 }
 
@@ -59,6 +69,16 @@ export function fetchSpecsIfNeeded(projectId, datasetId) {
       return dispatch(fetchSpecs(projectId, datasetId));
     }
   };
+}
+
+export function isFetchingSpecs() {
+  const { specs } = getState()
+  console.log('isFetchingSpecs', specs)
+  if (specs.length == 0 && specs.isFetching) {
+
+    return true;
+  }
+  return false;
 }
 
 export function selectDataset(datasetId) {
