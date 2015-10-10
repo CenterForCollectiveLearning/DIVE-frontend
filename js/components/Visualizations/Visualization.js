@@ -10,7 +10,8 @@ class InnerPlottable extends Component {
   }
 
   renderChart(props) {
-    const { vizType, generatingProcedure, id, args } = props.spec;
+    const { vizTypes, generatingProcedure, id, args } = props.spec;
+    const vizType = vizTypes[0];
     const isMinimalView = props.isMinimalView;
 
     const visualizationData = props.data;
@@ -149,7 +150,10 @@ class InnerPlottable extends Component {
 
   render() {
     return (
-      <span></span>
+      <div>
+        <div>{this.props.spec.vizTypes}</div>
+        <span></span>
+      </div>
     );
   }
 }

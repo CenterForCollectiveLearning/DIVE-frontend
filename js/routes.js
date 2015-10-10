@@ -14,16 +14,15 @@ import GalleryPage from './components/Visualizations/GalleryPage';
 import BuilderPage from './components/Visualizations/BuilderPage';
 
 
-// function redirectLandingOnEnter() {
-//   return function(routerState, replaceState) {
-//     if (routerState.location.pathname == '/') {
-//       replaceState(null, '/home');
-//     }
-//   }
-// }
+function redirectLandingOnEnter() {
+  return function(routerState, replaceState) {
+    if (routerState.location.pathname == '/') {
+      replaceState(null, '/home');
+    }
+  }
+}
 
 export default (
-  {/** }<Route path="/" component={ App } onEnter={redirectLandingOnEnter()}> **/}
   <Route path="/" component={ App } onEnter={redirectLandingOnEnter()}>
     <Route path="home" component={ LandingPage }/>
     <Route path="projects/:projectId" component={ ProjectsPage }>

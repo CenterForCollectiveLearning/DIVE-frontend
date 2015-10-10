@@ -15,10 +15,6 @@ require('../../../css/griddle.less');
 
 export class App extends BaseComponent {
 
-  componentWillMount() {
-    this.props.pushState(null, '/home');
-  }
-
   render() {
     return (
       <div className={ styles.fillContainer }>

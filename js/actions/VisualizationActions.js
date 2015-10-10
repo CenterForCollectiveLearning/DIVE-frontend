@@ -47,8 +47,7 @@ function fetchSpecs(projectId, datasetId, field_agg_pairs) {
           dispatch(pollForTaskResult(json.taskId, dispatchParams, receiveSpecsDispatcher));
         }
         else if (json.specs.length > 0) {
-          console.log('here!')
-          // dispatch(receiveSpecsDispatcher(dispatchParams, json.specs));
+          dispatch(receiveSpecsDispatcher(dispatchParams, json.specs));
         }
       })
   };
