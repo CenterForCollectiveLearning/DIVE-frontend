@@ -4,7 +4,7 @@ import styles from './app.sass';
 
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { replaceState, pushState } from 'redux-react-router';
+import { pushState } from 'redux-react-router';
 
 require("font-awesome-webpack");
 // this seems real dumb;
@@ -14,6 +14,10 @@ require('../../../css/plottable.less');
 require('../../../css/griddle.less');
 
 export class App extends BaseComponent {
+
+  componentWillMount() {
+    this.props.pushState(null, '/home');
+  }
 
   render() {
     return (
@@ -37,4 +41,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { })(App);
+export default connect(mapStateToProps, { pushState })(App);

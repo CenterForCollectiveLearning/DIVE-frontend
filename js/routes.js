@@ -14,15 +14,16 @@ import GalleryPage from './components/Visualizations/GalleryPage';
 import BuilderPage from './components/Visualizations/BuilderPage';
 
 
-function redirectLandingOnEnter() {
-  return function(routerState, replaceState) {
-    if (routerState.location.pathname == '/') {
-      replaceState(null, '/home');
-    }
-  }
-}
+// function redirectLandingOnEnter() {
+//   return function(routerState, replaceState) {
+//     if (routerState.location.pathname == '/') {
+//       replaceState(null, '/home');
+//     }
+//   }
+// }
 
 export default (
+  {/** }<Route path="/" component={ App } onEnter={redirectLandingOnEnter()}> **/}
   <Route path="/" component={ App } onEnter={redirectLandingOnEnter()}>
     <Route path="home" component={ LandingPage }/>
     <Route path="projects/:projectId" component={ ProjectsPage }>
@@ -34,10 +35,7 @@ export default (
         <Route path="gallery" component={ GalleryPage }/>
         <Route path="builder/:specId" component={ BuilderPage }/>
       </Route>
-      <Route path="analysis" component={ AnalysisPage }>
-        <Route path="gallery" component={ GalleryPage }/>
-        <Route path="builder/:specId" component={ BuilderPage }/>
-      </Route>
+      <Route path="analysis" component={ AnalysisPage }/>
     </Route>
   </Route>
 );
