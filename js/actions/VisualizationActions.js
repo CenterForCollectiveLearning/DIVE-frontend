@@ -18,7 +18,6 @@ function requestSpecsDispatcher() {
 }
 
 function receiveSpecsDispatcher(params, specs) {
-  console.log('in dispatcher')
   return {
     ...params,
     type: RECEIVE_SPECS,

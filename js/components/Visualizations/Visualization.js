@@ -52,7 +52,7 @@ class InnerPlottable extends Component {
         .attr('fill', (d) => d[valueAccessor], colorScale)
         .labelsEnabled(true)
         .renderTo(selector);
-    
+
     } else if (vizType == "bar" || vizType == "hist") {
 
       if (generatingProcedure == 'val:count') {
@@ -145,7 +145,7 @@ class InnerPlottable extends Component {
     if (this.props.spec.id != nextProps.spec.id) {
       this.renderChart(nextProps);
     }
-  } 
+  }
 
   render() {
     return (
@@ -182,7 +182,7 @@ export default class Visualization extends Component {
         { showHeader && spec.meta &&
           <div className={ styles[headerClassName] }>
             { spec.meta.construction.map((construct, i) =>
-              <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>                  
+              <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>
             )}
           </div>
         }
@@ -213,4 +213,3 @@ Visualization.defaultProps = {
   isMinimalView: false,
   showHeader: false
 };
-
