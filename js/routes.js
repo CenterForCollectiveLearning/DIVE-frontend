@@ -26,15 +26,15 @@ export default (
   <Route path="/" component={ App } onEnter={redirectLandingOnEnter()}>
     <Route path="home" component={ LandingPage }/>
     <Route path="projects/:projectId" component={ ProjectsPage }>
-      <Route path="datasets" component={ DatasetsPage }>
+      <Route path="data" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>
         <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>
       </Route>
-      <Route path="visualizations" component={ VisualizationsPage }>
+      <Route path="visualize" component={ VisualizationsPage }>
         <Route path="gallery" component={ GalleryPage }/>
         <Route path="builder/:specId" component={ BuilderPage }/>
       </Route>
-      <Route path="analysis" component={ AnalysisPage }/>
+      <Route path="analyze" component={ AnalysisPage }/>
     </Route>
   </Route>
 );
