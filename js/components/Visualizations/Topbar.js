@@ -7,6 +7,7 @@ import { selectDataset, selectVisualizationType } from '../../actions/Visualizat
 import styles from './visualizations.sass';
 
 import Select from 'react-select';
+import RaisedButton from '../Base/RaisedButton';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 
 export class Topbar extends Component {
@@ -17,6 +18,9 @@ export class Topbar extends Component {
   render() {
     return (
       <div className={ styles.topbar }>
+        <div className={ styles.rightActions }>
+          <RaisedButton label="Share" onClick={ this.share } />
+        </div>
       </div>
     );
   }

@@ -105,13 +105,25 @@
 
 .topbar
   display: flex
-  flex-direction: column
+  flex-direction: row
+  -webkit-align-items: center
   align-items: center
-  position: relative
   min-height: 56px
-  background-color: #FEFEFE
+  background-color: #F6F6F6
   color: #212121
   padding: 0 16px
+
+  span
+    font-size: 14px
+    font-weight: 400
+
+  .rightActions
+    flex-grow: 1
+    display: flex
+    flex-direction: row-reverse
+
+    > div
+      margin-left: 10px
 
 .sidebarAndContent
   display: flex
@@ -138,6 +150,7 @@
   overflow-y: scroll
   flex-shrink: 0
   width: 304px
+  max-width: 304px
   padding-top: 10px
   z-index: 10
 
