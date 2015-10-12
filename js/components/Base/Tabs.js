@@ -17,7 +17,6 @@ export default class Tabs extends Component {
     var i = -1;
     return React.Children.map(this.props.children, function (child){
       i++;
-      console.log(child.props.value, this.props.value)
       if (child.props.value == this.props.value){
         return React.cloneElement(child, {
           selected: true,

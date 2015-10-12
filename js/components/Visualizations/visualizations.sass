@@ -78,7 +78,8 @@
   display: flex
   flex-direction: row
   flex-wrap: wrap
-  padding: 20px;
+  padding: 20px
+  flex: 2
 
   .blockContainer
     width: 33.33%
@@ -114,12 +115,12 @@
 
 .sidebarAndContent
   display: flex
+  flex: 2
   flex-direction: row
 
 .sidebar
   display: flex
   flex-direction: column
-  flex-shrink: 0
 
   &:before
     content: ''
@@ -133,12 +134,18 @@
     top: -20px
     left: 20px
 
+  flex: 1
+  overflow-y: scroll
+  flex-shrink: 0
   width: 304px
   padding-top: 10px
   z-index: 10
 
   background-color: #F6F6F6
   box-shadow: 2px 5px 5px 0 rgba(0, 0, 0, 0.16)
+
+
+
 
   .sidebarGroup
     padding: 0 20px 10px

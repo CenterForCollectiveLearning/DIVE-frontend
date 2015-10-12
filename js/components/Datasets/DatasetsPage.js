@@ -12,7 +12,7 @@ export class DatasetsPage extends Component {
     super(props);
 
     if (this.props.routes.length < 4) {
-      this.props.pushState(null, `/projects/${this.props.params.projectId}/datasets/upload`);
+      this.props.pushState(null, `/projects/${this.props.params.projectId}/data/upload`);
     }
   }
 
