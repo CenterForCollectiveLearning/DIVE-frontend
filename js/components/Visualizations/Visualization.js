@@ -11,11 +11,18 @@ class InnerPlottable extends Component {
   }
 
   renderChart(props) {
+    console.log("Rendering chart");
     const { vizTypes, generatingProcedure, id, args } = props.spec;
     const vizType = vizTypes[0];
     const isMinimalView = props.isMinimalView;
 
     const visualizationData = props.data;
+    console.log("Visualization data size:", visualizationData.length);
+
+    const maxElements = 500;
+    if (visualizationData.length > maxElements) {
+
+    }
     const selector = `.spec-${ id }`;
 
     var plot, dataset, xScale, yScale, xAxis, yAxis, xLabel, yLabel, xAccessor, yAccessor;

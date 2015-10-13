@@ -26,7 +26,7 @@ function receiveSpecsDispatcher(params, specs) {
   };
 }
 
-function fetchSpecs(projectId, datasetId, field_agg_pairs) {
+export function fetchSpecs(projectId, datasetId, field_agg_pairs) {
   var json = {
     'project_id': projectId,
     'dataset_id': datasetId,
@@ -61,10 +61,10 @@ function shouldFetchSpecs(state) {
   return true;
 }
 
-export function fetchSpecsIfNeeded(projectId, datasetId) {
+export function fetchSpecsIfNeeded(projectId, datasetId, fieldAggPairs) {
   return (dispatch, getState) => {
     if (shouldFetchSpecs(getState())) {
-      return dispatch(fetchSpecs(projectId, datasetId));
+      return dispatch(fetchSpecs(projectId, datasetId, fieldAggPairs));
     }
   };
 }
@@ -110,6 +110,7 @@ function receiveSpecVisualizationDispatcher(json) {
 }
 
 function fetchSpecVisualization(projectId, specId) {
+  console.log("In fetchSpecVisualization", projectId, specId);
   return dispatch => {
     dispatch(requestSpecVisualizationDispatcher());
     return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`)
@@ -128,6 +129,7 @@ function shouldFetchSpecVisualization(state) {
 }
 
 export function fetchSpecVisualizationIfNeeded(projectId, specId) {
+  console.log("In fetchSpecVisualizationIfNeeded", projectId, specId);
   return (dispatch, getState) => {
     if (shouldFetchSpecVisualization(getState())) {
       return dispatch(fetchSpecVisualization(projectId, specId));

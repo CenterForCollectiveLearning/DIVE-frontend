@@ -22,20 +22,19 @@ export class GalleryView extends Component {
       fetchSpecsIfNeeded(project.properties.id, specSelector.datasetId);
       fetchFieldPropertiesIfNeeded(project.properties.id, specSelector.datasetId);
     }
-
     clearVisualization();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { specSelector, project } = this.props;
+    const { specSelector, project, fieldProperties } = this.props;
     if (specSelector.datasetId !== nextProps.specSelector.datasetId) {
-      this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId);
+      this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId, fieldProperties.selectedItems);
       this.props.fetchFieldPropertiesIfNeeded(project.properties.id, nextProps.specSelector.datasetId);
     }
   }
 
   handleClick(specId) {
-    this.props.pushState(null, `/projects/${this.props.project.properties.id}/visualizations/builder/${ specId }`);
+    this.props.pushState(null, `/projects/${this.props.project.properties.id}/visualize/builder/${ specId }`);
   }
 
   render() {

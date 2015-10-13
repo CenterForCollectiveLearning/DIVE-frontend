@@ -36,7 +36,7 @@ export class BuilderView extends Component {
   }
 
   onClickGallery() {
-    this.props.pushState(null, `/projects/${this.props.project.properties.id}/visualizations/gallery`);
+    this.props.pushState(null, `/projects/${this.props.project.properties.id}/visualize/gallery`);
   }
 
   render() {
@@ -49,7 +49,7 @@ export class BuilderView extends Component {
               <div className={ styles.headerText } >
                 { visualization.spec.meta.construction.map((construct, i) =>
                   <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>
-                )}              
+                )}
               </div>
               <div className={ styles.rightActions } >
                 <RaisedButton label="Share" />
