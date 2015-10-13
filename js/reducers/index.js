@@ -165,6 +165,11 @@ function fieldProperties(state={
 }, action) {
   const AGGREGATIONS = [
     {
+      value: "AUTO",
+      label: "auto",
+      selected: true
+    },
+    {
       value: "AVG",
       label: "mean",
       selected: false

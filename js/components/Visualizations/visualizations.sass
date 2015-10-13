@@ -14,7 +14,7 @@
 
 .galleryContainer
   display: flex
-  flex-direction: column
+  flex-direction: row
 
   background-color: #e9e7e8
 
@@ -80,6 +80,7 @@
   flex-wrap: wrap
   padding: 20px
   flex: 2
+  overflow-y: scroll
 
   .blockContainer
     width: 33.33%
@@ -125,10 +126,23 @@
     > div
       margin-left: 10px
 
-.sidebarAndContent
+  .topbarGroup
+    padding: 0 10px
+
+    .topbarHeading
+      font-size: 13px
+      font-weight: 300
+      line-height: 35px
+      padding-right: 10px
+
+    .topbarSelect
+      width: 150px
+      float: right
+
+.topbarAndContent
   display: flex
   flex: 2
-  flex-direction: row
+  flex-direction: column
 
 .sidebar
   display: flex
@@ -157,15 +171,14 @@
   background-color: #F6F6F6
   box-shadow: 2px 5px 5px 0 rgba(0, 0, 0, 0.16)
 
-
-
-
   .sidebarGroup
     padding: 0 20px 10px
 
     .sidebarHeading
       font-size: 13px
       font-weight: 300
+
+
 
 .gridContainer
   .grid

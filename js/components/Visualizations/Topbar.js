@@ -16,10 +16,30 @@ export class Topbar extends Component {
   }
 
   render() {
+    // TODO Move this to state
+    const menuItems = [
+      { value: 'recommended', label: 'Recommended' },
+      { value: 'correlation', label: 'Correlation' },
+      { value: 'gini', label: 'Gini' },
+      { value: 'normality', label: 'Normality' },
+      { value: 'variance', label: 'Variance' },
+    ]
     return (
       <div className={ styles.topbar }>
         <div className={ styles.rightActions }>
           <RaisedButton label="Share" onClick={ this.share } />
+          <div className={ styles.topbarGroup }>
+            <Select
+              value={ 'Recommended' }
+              options={ menuItems }
+              onChange={ this.props.selectSort }
+              multi={ false }
+              clearable={ false }
+              searchable={ false }
+              className={ styles.topbarSelect }
+            />
+            <span className={ styles.topbarHeading }>Sorting Metric</span>
+          </div>
         </div>
       </div>
     );

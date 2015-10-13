@@ -10,9 +10,9 @@ class GalleryPage extends Component {
   render() {
     return (
       <div className={ `${styles.fillContainer} ${styles.galleryContainer}` }>
-        <Topbar />
-        <div className={ styles.sidebarAndContent }>
-          <Sidebar />
+        <Sidebar />
+        <div className={ styles.topbarAndContent }>
+          <Topbar />
           <GalleryView />
         </div>
         {this.props.children}

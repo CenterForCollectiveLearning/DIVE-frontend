@@ -10,6 +10,35 @@ class InnerPlottable extends Component {
     this.renderChart(this.props);
   }
 
+  renderTooLargeText(selector, visualizationDataLength) {
+    var svg = d3.select(selector)
+      .attr("width", "100%")
+      .attr("height", "100%");
+    var svgWidth = parseInt(svg.style("width"), 10);
+    var svgHeight = parseInt(svg.style("height"), 10);
+
+    var textGroup = svg.append("g")
+        .attr("transform", "translate(" + (svgWidth / 2) + ",20)");
+
+    var text = textGroup.append("text")
+        .attr("fill", "black")
+        .attr("text-anchor", "middle")
+        .text("Too large to preview:");
+
+    var vizLength = textGroup.append("text")
+        .attr("font-size", "70px")
+        .attr("fill", "#5279c7")
+        .attr("text-anchor", "middle")
+        .attr("y", 70)
+        .text(visualizationDataLength);
+
+    var elements = textGroup.append("text")
+        .attr("fill", "black")
+        .attr("text-anchor", "middle")
+        .attr("y", 100)
+        .text("Data Points");
+  }
+
   renderChart(props) {
     console.log("Rendering chart");
     const { vizTypes, generatingProcedure, id, args } = props.spec;
@@ -24,36 +53,11 @@ class InnerPlottable extends Component {
     // Clear Selector
     d3.select(selector).selectAll("*").remove();
 
-    const maxElements = 500;
+    const maxElements = 300;
     const visualizationDataLength = visualizationData.length;
 
     if (visualizationDataLength > maxElements) {
-      var svg = d3.select(selector)
-        .attr("width", "100%")
-        .attr("height", "100%");
-      var svgWidth = parseInt(svg.style("width"), 10);
-      var svgHeight = parseInt(svg.style("height"), 10);
-
-      var textGroup = svg.append("g")
-          .attr("transform", "translate(" + (svgWidth / 2) + ",20)");
-
-      var text = textGroup.append("text")
-          .attr("fill", "black")
-          .attr("text-anchor", "middle")
-          .text("Too large to preview:");
-
-      var vizLength = textGroup.append("text")
-          .attr("font-size", "70px")
-          .attr("fill", "#5279c7")
-          .attr("text-anchor", "middle")
-          .attr("y", 70)
-          .text(visualizationDataLength);
-
-      var elements = textGroup.append("text")
-          .attr("fill", "black")
-          .attr("text-anchor", "middle")
-          .attr("y", 100)
-          .text("Data Points");
+      this.renderTooLargeText(selector, visualizationDataLength);
       return;
     }
 
