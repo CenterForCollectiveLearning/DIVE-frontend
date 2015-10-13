@@ -69,16 +69,6 @@ export function fetchSpecsIfNeeded(projectId, datasetId, fieldAggPairs) {
   };
 }
 
-export function isFetchingSpecs() {
-  const { specs } = getState()
-  console.log('isFetchingSpecs', specs)
-  if (specs.length == 0 && specs.isFetching) {
-
-    return true;
-  }
-  return false;
-}
-
 export function selectDataset(datasetId) {
   return {
     type: SELECT_DATASET,

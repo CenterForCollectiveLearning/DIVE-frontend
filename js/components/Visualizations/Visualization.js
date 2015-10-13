@@ -40,7 +40,7 @@ class InnerPlottable extends Component {
   }
 
   renderChart(props) {
-    console.log("Rendering chart");
+    console.log("In renderChart");
     const { vizTypes, generatingProcedure, id, args } = props.spec;
     const vizType = vizTypes[0];
     const isMinimalView = props.isMinimalView;
@@ -56,7 +56,7 @@ class InnerPlottable extends Component {
     const maxElements = 300;
     const visualizationDataLength = visualizationData.length;
 
-    if (visualizationDataLength > maxElements) {
+    if (isMinimalView && (visualizationDataLength > maxElements)) {
       this.renderTooLargeText(selector, visualizationDataLength);
       return;
     }
@@ -197,6 +197,7 @@ class InnerPlottable extends Component {
   }
 
   render() {
+    console.log("Rendering Visualization.js");
     return (
       <div>
         {/** this.props.spec.vizTypes **/}
@@ -227,6 +228,7 @@ export default class Visualization extends Component {
   }
 
   render() {
+    console.log("Rendering Visualization");
     const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, isMinimalView } = this.props;
     return (
       <div className={ styles[containerClassName] } onClick={ this.handleClick }>
