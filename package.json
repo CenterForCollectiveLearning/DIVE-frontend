@@ -10,6 +10,7 @@
     "autoprefixer-loader": "^3.1.0",
     "babel-runtime": "^5.8.24",
     "component-file-picker": "^0.2.1",
+    "d3": "^3.5.6",
     "file-loader": "^0.8.4",
     "font-awesome": "^4.4.0",
     "font-awesome-webpack": "0.0.3",

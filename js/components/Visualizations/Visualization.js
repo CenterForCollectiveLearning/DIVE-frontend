@@ -19,11 +19,43 @@ class InnerPlottable extends Component {
     const visualizationData = props.data;
     console.log("Visualization data size:", visualizationData.length);
 
-    const maxElements = 500;
-    if (visualizationData.length > maxElements) {
-
-    }
     const selector = `.spec-${ id }`;
+
+    // Clear Selector
+    d3.select(selector).selectAll("*").remove();
+
+    const maxElements = 500;
+    const visualizationDataLength = visualizationData.length;
+
+    if (visualizationDataLength > maxElements) {
+      var svg = d3.select(selector)
+        .attr("width", "100%")
+        .attr("height", "100%");
+      var svgWidth = parseInt(svg.style("width"), 10);
+      var svgHeight = parseInt(svg.style("height"), 10);
+
+      var textGroup = svg.append("g")
+          .attr("transform", "translate(" + (svgWidth / 2) + ",20)");
+
+      var text = textGroup.append("text")
+          .attr("fill", "black")
+          .attr("text-anchor", "middle")
+          .text("Too large to preview:");
+
+      var vizLength = textGroup.append("text")
+          .attr("font-size", "70px")
+          .attr("fill", "#5279c7")
+          .attr("text-anchor", "middle")
+          .attr("y", 70)
+          .text(visualizationDataLength);
+
+      var elements = textGroup.append("text")
+          .attr("fill", "black")
+          .attr("text-anchor", "middle")
+          .attr("y", 100)
+          .text("Data Points");
+      return;
+    }
 
     var plot, dataset, xScale, yScale, xAxis, yAxis, xLabel, yLabel, xAccessor, yAccessor;
 
@@ -148,6 +180,10 @@ class InnerPlottable extends Component {
       plot.animated(false);
       plot.renderTo(selector);
     }
+
+    window.addEventListener("resize", function() {
+      plot.redraw();
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -159,7 +195,7 @@ class InnerPlottable extends Component {
   render() {
     return (
       <div>
-        { this.props.spec.vizTypes }
+        {/** this.props.spec.vizTypes **/}
       </div>
     );
   }
