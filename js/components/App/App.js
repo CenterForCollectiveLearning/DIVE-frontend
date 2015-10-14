@@ -14,6 +14,7 @@ require('../../../css/plottable.less');
 require('../../../css/griddle.less');
 
 export class App extends BaseComponent {
+
   render() {
     return (
       <div className={ styles.fillContainer }>
@@ -30,7 +31,7 @@ App.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { user } = state;
+  const { user} = state;
   return {
     user: user
   };

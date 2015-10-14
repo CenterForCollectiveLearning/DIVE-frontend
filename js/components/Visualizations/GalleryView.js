@@ -6,6 +6,7 @@ import { clearVisualization, fetchSpecsIfNeeded } from '../../actions/Visualizat
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 import styles from './visualizations.sass';
 
+import Loader from '../Base/Loader';
 import Visualization from './Visualization';
 
 export class GalleryView extends Component {
@@ -22,25 +23,26 @@ export class GalleryView extends Component {
       fetchSpecsIfNeeded(project.properties.id, specSelector.datasetId);
       fetchFieldPropertiesIfNeeded(project.properties.id, specSelector.datasetId);
     }
-
     clearVisualization();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { specSelector, project } = this.props;
+    const { specSelector, project, fieldProperties } = this.props;
     if (specSelector.datasetId !== nextProps.specSelector.datasetId) {
-      this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId);
+      this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId, fieldProperties.selectedItems);
       this.props.fetchFieldPropertiesIfNeeded(project.properties.id, nextProps.specSelector.datasetId);
     }
   }
 
   handleClick(specId) {
-    this.props.pushState(null, `/projects/${this.props.project.properties.id}/visualizations/builder/${ specId }`);
+    this.props.pushState(null, `/projects/${this.props.project.properties.id}/visualize/builder/${ specId }`);
   }
 
   render() {
+    console.log("Rendering GalleryView");
     return (
       <div className={ styles.specsContainer }>
+        <Loader loaded={ !this.props.specs.isFetching }></Loader>
         { this.props.specs.items.map((spec) =>
           <div className={ styles.blockContainer } key={ spec.id }>
             <Visualization
@@ -62,7 +64,7 @@ GalleryView.propTypes = {
   project: PropTypes.object.isRequired,
   specs: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  specSelector: PropTypes.object.isRequired
+  specSelector: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {

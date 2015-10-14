@@ -19,7 +19,7 @@ export class DatasetToolbar extends Component {
 
   onSelectDataset(selectedValue) {
     if (selectedValue) {
-      this.props.pushState(null, `/projects/${this.props.projectId}/datasets/${selectedValue}/inspect`);
+      this.props.pushState(null, `/projects/${this.props.projectId}/data/${selectedValue}/inspect`);
     }
   }
 

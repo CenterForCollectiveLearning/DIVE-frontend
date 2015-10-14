@@ -8,7 +8,7 @@ import {
   CLEAR_VISUALIZATION
 } from '../constants/ActionTypes';
 
-import fetch from './api.js';
+import { fetch, pollForTaskResult } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
 function requestSpecsDispatcher() {
@@ -17,22 +17,39 @@ function requestSpecsDispatcher() {
   };
 }
 
-function receiveSpecsDispatcher(projectId, datasetId, json) {
+function receiveSpecsDispatcher(params, specs) {
   return {
+    ...params,
     type: RECEIVE_SPECS,
-    projectId: projectId,
-    datasetId: datasetId,
-    specs: json.specs,
+    specs: specs,
     receivedAt: Date.now()
   };
 }
 
-function fetchSpecs(projectId, datasetId) {
+export function fetchSpecs(projectId, datasetId, field_agg_pairs) {
+  var json = {
+    'project_id': projectId,
+    'dataset_id': datasetId,
+    'field_agg_pairs': field_agg_pairs,
+  }
   return dispatch => {
     dispatch(requestSpecsDispatcher());
-    return fetch(`/specs/v1/specs?project_id=${ projectId }&dataset_id=${ datasetId }`)
-      .then(response => response.json())
-      .then(json => dispatch(receiveSpecsDispatcher(projectId, datasetId, json)));
+    return fetch(`/specs/v1/specs`, {
+      method: 'post',
+      body: JSON.stringify(json),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+      .then(function(json) {
+        const dispatchParams = { project_id: projectId, dataset_id: datasetId };
+        // TODO Do this more consistently with status flags
+        // console.log(json, (json.specs.length > 0))
+        if (json.taskId) {
+          dispatch(pollForTaskResult(json.taskId, dispatchParams, receiveSpecsDispatcher));
+        }
+        else if (json.specs.length > 0) {
+          dispatch(receiveSpecsDispatcher(dispatchParams, json.specs));
+        }
+      })
   };
 }
 
@@ -44,10 +61,10 @@ function shouldFetchSpecs(state) {
   return true;
 }
 
-export function fetchSpecsIfNeeded(projectId, datasetId) {
+export function fetchSpecsIfNeeded(projectId, datasetId, fieldAggPairs) {
   return (dispatch, getState) => {
     if (shouldFetchSpecs(getState())) {
-      return dispatch(fetchSpecs(projectId, datasetId));
+      return dispatch(fetchSpecs(projectId, datasetId, fieldAggPairs));
     }
   };
 }
@@ -83,6 +100,7 @@ function receiveSpecVisualizationDispatcher(json) {
 }
 
 function fetchSpecVisualization(projectId, specId) {
+  console.log("In fetchSpecVisualization", projectId, specId);
   return dispatch => {
     dispatch(requestSpecVisualizationDispatcher());
     return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`)
@@ -92,7 +110,7 @@ function fetchSpecVisualization(projectId, specId) {
   };
 }
 
-function shouldFetchSpecVisualization(state) {  
+function shouldFetchSpecVisualization(state) {
   const { visualization } = state;
   if (visualization.specId || visualization.isFetching) {
     return false;
@@ -101,6 +119,7 @@ function shouldFetchSpecVisualization(state) {
 }
 
 export function fetchSpecVisualizationIfNeeded(projectId, specId) {
+  console.log("In fetchSpecVisualizationIfNeeded", projectId, specId);
   return (dispatch, getState) => {
     if (shouldFetchSpecVisualization(getState())) {
       return dispatch(fetchSpecVisualization(projectId, specId));
@@ -111,5 +130,5 @@ export function fetchSpecVisualizationIfNeeded(projectId, specId) {
 export function clearVisualization() {
   return {
     type: CLEAR_VISUALIZATION
-  };  
+  };
 }

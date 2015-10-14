@@ -87,7 +87,7 @@ export class LandingPage extends Component {
             </div>
             <div className={ styles.projectListContainer }>
               { this.props.projects.items.map((project) =>
-                <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/visualizations` } className={ styles.projectButton }>{ project.title }</a>
+                <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/visualize` } className={ styles.projectButton }>{ project.title }</a>
               )}
             </div>
           </div>

@@ -160,9 +160,15 @@ function user(state = {
 function fieldProperties(state={
   isFetching: false,
   loaded: false,
-  items: []
+  items: [],
+  selectedItems: []
 }, action) {
   const AGGREGATIONS = [
+    {
+      value: "AUTO",
+      label: "auto",
+      selected: true
+    },
     {
       value: "AVG",
       label: "mean",
@@ -181,19 +187,36 @@ function fieldProperties(state={
   ];
   switch (action.type) {
     case SELECT_FIELD_PROPERTY:
-      var { items } = state;
+      var { items, selectedItems } = state;
 
-      const newSelectedIndex = state.items.findIndex((property, i, props) =>
+      const itemIndex = state.items.findIndex((property, i, props) =>
         property.id == action.selectedFieldPropertyId
       );
 
-      if (newSelectedIndex >= 0) {
-        items[newSelectedIndex].selected = !items[newSelectedIndex].selected;
+      if (itemIndex >= 0) {
+        // Toggling in items list
+        items[itemIndex].selected = !items[itemIndex].selected;
+
+        // Adding or removing from selectedItems list
+        const selectedItemsItemIndex = state.selectedItems.findIndex((property, i, props) =>
+          property.id == action.selectedFieldPropertyId
+        );
+
+        if (selectedItemsItemIndex >= 0) {
+          selectedItems.splice(selectedItemsItemIndex, 1);
+        }
+        else {
+          const item = items[itemIndex];
+          selectedItems.push({
+            id: item.id,
+            name: item.name
+          });
+        }
       }
 
-      return { ...state, items: items };
+      return { ...state, items: items, selectedItems: selectedItems };
     case SELECT_AGGREGATION_FUNCTION:
-      var { items } = state;
+      var { items, selectedItems } = state;
 
       const selectedAggregationFunctionFieldPropertyIndex = state.items.findIndex((property, i, props) =>
         property.id == action.selectedAggregationFunctionFieldPropertyId
@@ -210,9 +233,16 @@ function fieldProperties(state={
         if (selectedAggregationIndex >= 0) {
           items[selectedAggregationFunctionFieldPropertyIndex].splitMenu = aggregations;
         }
+
+        // Adding in sele
+        const aggregationValue = aggregations[selectedAggregationIndex].value;
+        const selectedItemsItemIndex = state.selectedItems.findIndex((property, i, props) =>
+          property.id == action.selectedAggregationFunctionFieldPropertyId
+        );
+        selectedItems[selectedItemsItemIndex].aggregation = aggregationValue;
       }
 
-      return { ...state, items: items };
+      return { ...state, items: items, selectedItems: selectedItems };
     case REQUEST_FIELD_PROPERTIES:
       return { ...state, isFetching: true };
     case RECEIVE_FIELD_PROPERTIES:

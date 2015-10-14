@@ -5,7 +5,8 @@ import {
   SELECT_AGGREGATION_FUNCTION
 } from '../constants/ActionTypes';
 
-import fetch from './api.js'
+import { fetch } from './api.js'
+import { fetchSpecs } from './VisualizationActions.js'
 
 function requestFieldPropertiesDispatcher() {
   return {
@@ -48,11 +49,23 @@ export function fetchFieldPropertiesIfNeeded(projectId, datasetId) {
   };
 }
 
-export function selectFieldProperty(selectedFieldPropertyId) {
+/////////////////////
+// When selecting a field property or aggregation function, change state and
+// also re-request specs
+/////////////////////
+function selectFieldPropertyDispatcher(selectedFieldPropertyId) {
   return {
     type: SELECT_FIELD_PROPERTY,
     selectedFieldPropertyId: selectedFieldPropertyId
   }
+}
+
+export function selectFieldProperty(selectedFieldPropertyId) {
+  return (dispatch, getState) => {
+    dispatch(selectFieldPropertyDispatcher(selectedFieldPropertyId));
+    console.log("STATE:", getState());
+    dispatch(fetchSpecs(getState()));
+  };
 }
 
 export function selectAggregationFunction(selectedAggregationFunctionFieldPropertyId, selectedAggregationFunction) {
@@ -62,4 +75,3 @@ export function selectAggregationFunction(selectedAggregationFunctionFieldProper
     selectedAggregationFunction: selectedAggregationFunction
   }
 }
-

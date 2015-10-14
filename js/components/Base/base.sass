@@ -1,3 +1,5 @@
+@import '../../../css/flexbox.sass'
+
 .raisedButton
   max-width: 160px
   overflow: hidden
@@ -43,10 +45,10 @@
       box-shadow: inset 1px 1px 2px 0 rgba(0, 0, 0, 0.28)
 
   &.icon
-    padding: 0 12px;
+    padding: 0 12px
 
     i
-      font-size: 14px;
+      font-size: 14px
 
 .toggleButtonGroup
   display: flex
@@ -141,5 +143,60 @@
 
     &.selected
       color: #FFFFFF
-      background-color: #456B7D
+      background-color: #0F2762
+      // background-color: #456B7D
       border-bottom: 2px solid #2D5365
+
+
+@-moz-keyframes three-quarters-loader
+  0%
+    -moz-transform: rotate(0deg)
+    transform: rotate(0deg)
+
+  100%
+    -moz-transform: rotate(360deg)
+    transform: rotate(360deg)
+
+
+@-webkit-keyframes three-quarters-loader
+  0%
+    -webkit-transform: rotate(0deg)
+    transform: rotate(0deg)
+
+  100%
+    -webkit-transform: rotate(360deg)
+    transform: rotate(360deg)
+
+
+@keyframes three-quarters-loader
+  0%
+    -moz-transform: rotate(0deg)
+    -ms-transform: rotate(0deg)
+    -webkit-transform: rotate(0deg)
+    transform: rotate(0deg)
+
+  100%
+    -moz-transform: rotate(360deg)
+    -ms-transform: rotate(360deg)
+    -webkit-transform: rotate(360deg)
+    transform: rotate(360deg)
+
+
+/* :not(:required) hides this rule from IE9 and below
+
+.loader:not(:required)
+  -moz-animation: three-quarters-loader 1250ms infinite linear
+  -webkit-animation: three-quarters-loader 1250ms infinite linear
+  animation: three-quarters-loader 1250ms infinite linear
+  border: 6px solid #0D4288
+  border-right-color: transparent
+  border-radius: 16px
+  box-sizing: border-box
+  display: inline-block
+  position: relative
+  overflow: hidden
+  text-indent: -9999px
+  width: 32px
+  height: 32px
+  left: 50%
+  top: 50%

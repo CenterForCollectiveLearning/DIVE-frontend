@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 
+import Loader from '../Base/Loader';
 import styles from './visualizations.sass';
+import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 
 require('plottable');
 
@@ -9,12 +11,56 @@ class InnerPlottable extends Component {
     this.renderChart(this.props);
   }
 
+  renderTooLargeText(selector, visualizationDataLength) {
+    var svg = d3.select(selector)
+      .attr("width", "100%")
+      .attr("height", "100%");
+    var svgWidth = parseInt(svg.style("width"), 10);
+    var svgHeight = parseInt(svg.style("height"), 10);
+
+    var textGroup = svg.append("g")
+        .attr("transform", "translate(" + (svgWidth / 2) + ",20)");
+
+    var text = textGroup.append("text")
+        .attr("fill", "black")
+        .attr("text-anchor", "middle")
+        .text("Too large to preview:");
+
+    var vizLength = textGroup.append("text")
+        .attr("font-size", "70px")
+        .attr("fill", "#5279c7")
+        .attr("text-anchor", "middle")
+        .attr("y", 70)
+        .text(visualizationDataLength);
+
+    var elements = textGroup.append("text")
+        .attr("fill", "black")
+        .attr("text-anchor", "middle")
+        .attr("y", 100)
+        .text("Data Points");
+  }
+
   renderChart(props) {
-    const { vizType, generatingProcedure, id, args } = props.spec;
+    console.log("In renderChart");
+    const { vizTypes, generatingProcedure, id, args } = props.spec;
+    const vizType = vizTypes[0];
     const isMinimalView = props.isMinimalView;
 
     const visualizationData = props.data;
+    console.log("Visualization data size:", visualizationData.length);
+
     const selector = `.spec-${ id }`;
+
+    // Clear Selector
+    d3.select(selector).selectAll("*").remove();
+
+    const maxElements = 300;
+    const visualizationDataLength = visualizationData.length;
+
+    if (isMinimalView && (visualizationDataLength > maxElements)) {
+      this.renderTooLargeText(selector, visualizationDataLength);
+      return;
+    }
 
     var plot, dataset, xScale, yScale, xAxis, yAxis, xLabel, yLabel, xAccessor, yAccessor;
 
@@ -52,7 +98,7 @@ class InnerPlottable extends Component {
         .attr('fill', (d) => d[valueAccessor], colorScale)
         .labelsEnabled(true)
         .renderTo(selector);
-    
+
     } else if (vizType == "bar" || vizType == "hist") {
 
       if (generatingProcedure == 'val:count') {
@@ -139,17 +185,24 @@ class InnerPlottable extends Component {
       plot.animated(false);
       plot.renderTo(selector);
     }
+
+    window.addEventListener("resize", function() {
+      plot.redraw();
+    });
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.spec.id != nextProps.spec.id) {
       this.renderChart(nextProps);
     }
-  } 
+  }
 
   render() {
+    console.log("Rendering Visualization.js");
     return (
-      <span></span>
+      <div>
+        {/** this.props.spec.vizTypes **/}
+      </div>
     );
   }
 }
@@ -176,13 +229,14 @@ export default class Visualization extends Component {
   }
 
   render() {
+    console.log("Rendering Visualization");
     const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, isMinimalView } = this.props;
     return (
       <div className={ styles[containerClassName] } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
           <div className={ styles[headerClassName] }>
             { spec.meta.construction.map((construct, i) =>
-              <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>                  
+              <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>
             )}
           </div>
         }
@@ -213,4 +267,3 @@ Visualization.defaultProps = {
   isMinimalView: false,
   showHeader: false
 };
-
