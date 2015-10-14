@@ -1,9 +1,12 @@
 import React, { Component, PropTypes } from 'react';
+
 import styles from './base.sass';
 
 export default class Loader extends Component {
+  componentWillReceiveProps(nextProps) {
+    this.props = nextProps;
+  }
   render() {
-    console.log("Loaded:", this.props.loaded);
     return (
       <div className={ styles.fillContainer }>
         {

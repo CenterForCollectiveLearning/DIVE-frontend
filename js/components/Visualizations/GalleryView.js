@@ -42,8 +42,7 @@ export class GalleryView extends Component {
     console.log("Rendering GalleryView");
     return (
       <div className={ styles.specsContainer }>
-        <Loader loaded={ this.props.specs.loaded }></Loader>
-
+        <Loader loaded={ !this.props.specs.isFetching }></Loader>
         { this.props.specs.items.map((spec) =>
           <div className={ styles.blockContainer } key={ spec.id }>
             <Visualization
