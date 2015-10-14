@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import Loader from '../Base/Loader';
 import styles from './visualizations.sass';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 

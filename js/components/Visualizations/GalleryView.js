@@ -6,7 +6,7 @@ import { clearVisualization, fetchSpecsIfNeeded } from '../../actions/Visualizat
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 import styles from './visualizations.sass';
 
-import Loader from '../Base/Loader'
+import Loader from '../Base/Loader';
 import Visualization from './Visualization';
 
 export class GalleryView extends Component {
