@@ -1,6 +1,7 @@
 import {
   REQUEST_SPECS,
   RECEIVE_SPECS,
+  FAILED_RECEIVE_SPECS,
   SELECT_DATASET,
   SELECT_VISUALIZATION_TYPE,
   REQUEST_VISUALIZATION_DATA,
@@ -8,7 +9,7 @@ import {
   CLEAR_VISUALIZATION
 } from '../constants/ActionTypes';
 
-import fetch from './api.js';
+import { fetch, pollForTaskResult } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
 function requestSpecsDispatcher() {
@@ -18,21 +19,51 @@ function requestSpecsDispatcher() {
 }
 
 function receiveSpecsDispatcher(projectId, datasetId, json) {
+  if (json) {
+    return {
+      type: RECEIVE_SPECS,
+      projectId: projectId,
+      datasetId: datasetId,
+      specs: json.specs,
+      receivedAt: Date.now()
+    };
+  }
+
   return {
-    type: RECEIVE_SPECS,
+    type: FAILED_RECEIVE_SPECS,
     projectId: projectId,
     datasetId: datasetId,
-    specs: json.specs,
+    specs: [],
     receivedAt: Date.now()
   };
 }
 
-function fetchSpecs(projectId, datasetId) {
+function fetchSpecs(projectId, datasetId, field_agg_pairs) {
+  const params = {
+    'project_id': projectId,
+    'dataset_id': datasetId,
+    'field_agg_pairs': field_agg_pairs
+  }
+
   return dispatch => {
     dispatch(requestSpecsDispatcher());
-    return fetch(`/specs/v1/specs?project_id=${ projectId }&dataset_id=${ datasetId }`)
-      .then(response => response.json())
-      .then(json => dispatch(receiveSpecsDispatcher(projectId, datasetId, json)));
+    return fetch(`/specs/v1/specs`, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+      .then(function(json) {
+        const dispatchParams = { project_id: projectId, dataset_id: datasetId };
+        // TODO Do this more consistently with status flags
+        // console.log(json, (json.specs.length > 0))
+        if (json.taskId) {
+          dispatch(pollForTaskResult(json.taskId, dispatchParams, receiveSpecsDispatcher));
+        }
+        else if (json.specs.length > 0) {
+          dispatch(receiveSpecsDispatcher(dispatchParams, json.specs));
+        }
+      })
+
   };
 }
 
@@ -44,10 +75,10 @@ function shouldFetchSpecs(state) {
   return true;
 }
 
-export function fetchSpecsIfNeeded(projectId, datasetId) {
+export function fetchSpecsIfNeeded(projectId, datasetId, field_agg_pairs) {
   return (dispatch, getState) => {
     if (shouldFetchSpecs(getState())) {
-      return dispatch(fetchSpecs(projectId, datasetId));
+      return dispatch(fetchSpecs(projectId, datasetId, field_agg_pairs));
     }
   };
 }
