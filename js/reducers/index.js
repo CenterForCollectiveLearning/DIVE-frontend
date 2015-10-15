@@ -161,7 +161,8 @@ function user(state = {
 function fieldProperties(state={
   isFetching: false,
   loaded: false,
-  items: []
+  items: [],
+  updatedAt: 0
 }, action) {
   const AGGREGATIONS = [
     {
@@ -180,6 +181,7 @@ function fieldProperties(state={
       selected: false
     }
   ];
+
   switch (action.type) {
     case SELECT_FIELD_PROPERTY:
       var { items } = state;
@@ -192,7 +194,7 @@ function fieldProperties(state={
         items[newSelectedIndex].selected = !items[newSelectedIndex].selected;
       }
 
-      return { ...state, items: items };
+      return { ...state, items: items, updatedAt: action.receivedAt };
     case SELECT_AGGREGATION_FUNCTION:
       var { items } = state;
 
@@ -213,24 +215,26 @@ function fieldProperties(state={
         }
       }
 
-      return { ...state, items: items };
+      return { ...state, items: items, updatedAt: Date.now() };
     case REQUEST_FIELD_PROPERTIES:
       return { ...state, isFetching: true };
     case RECEIVE_FIELD_PROPERTIES:
-      var aggregations = AGGREGATIONS.slice();
-      aggregations[0].selected = true;
+      if (state.updatedAt !== action.recievedAt) {
+        var aggregations = AGGREGATIONS.slice();
+        aggregations[0].selected = true;
 
-      const c = action.fieldProperties.c ? action.fieldProperties.c : [];
-      const q = action.fieldProperties.q ? action.fieldProperties.q : [];
+        const c = action.fieldProperties.c ? action.fieldProperties.c : [];
+        const q = action.fieldProperties.q ? action.fieldProperties.q : [];
 
-      var items = [ ...c, ...q ].map((property) =>
-        new Object({
-          ...property,
-          selected: false,
-          splitMenu: (property.generalType == 'q') ? aggregations : []
-        })
-      );
-      return { ...state, isFetching: false, items: items };
+        var items = [ ...c, ...q ].map((property) =>
+          new Object({
+            ...property,
+            selected: false,
+            splitMenu: (property.generalType == 'q') ? aggregations : []
+          })
+        );
+        return { ...state, isFetching: false, items: items, updatedAt: action.receivedAt };
+      }
     default:
       return state;
   }
@@ -239,13 +243,14 @@ function fieldProperties(state={
 function specs(state={
   isFetching: false,
   loaded: false,
-  items: []
+  items: [],
+  updatedAt: 0
 }, action) {
   switch (action.type) {
     case REQUEST_SPECS:
       return { ...state, isFetching: true };
     case RECEIVE_SPECS:
-      return { ...state, isFetching: false, items: action.specs };
+      return { ...state, isFetching: false, items: action.specs, updatedAt: action.receivedAt };
     case FAILED_RECEIVE_SPECS:
       return { ...state, isFetching: false };    
     default:
