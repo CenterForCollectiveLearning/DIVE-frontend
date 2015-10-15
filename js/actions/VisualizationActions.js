@@ -18,21 +18,19 @@ function requestSpecsDispatcher() {
   };
 }
 
-function receiveSpecsDispatcher(projectId, datasetId, json) {
+function receiveSpecsDispatcher(params, json) {
   if (json) {
     return {
+      ...params,
       type: RECEIVE_SPECS,
-      projectId: projectId,
-      datasetId: datasetId,
-      specs: json.specs,
+      specs: json,
       receivedAt: Date.now()
     };
   }
 
   return {
+    ...params,
     type: FAILED_RECEIVE_SPECS,
-    projectId: projectId,
-    datasetId: datasetId,
     specs: [],
     receivedAt: Date.now()
   };
