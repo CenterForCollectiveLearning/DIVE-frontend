@@ -219,7 +219,10 @@ function fieldProperties(state={
       var aggregations = AGGREGATIONS.slice();
       aggregations[0].selected = true;
 
-      var items = [ ...action.fieldProperties.c, ...action.fieldProperties.q ].map((property) =>
+      const c = action.fieldProperties.c ? action.fieldProperties.c : [];
+      const q = action.fieldProperties.q ? action.fieldProperties.q : [];
+
+      var items = [ ...c, ...q ].map((property) =>
         new Object({
           ...property,
           selected: false,
