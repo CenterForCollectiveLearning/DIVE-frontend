@@ -9,7 +9,8 @@ import { fetch } from './api.js';
 
 function requestFieldPropertiesDispatcher() {
   return {
-    type: REQUEST_FIELD_PROPERTIES
+    type: REQUEST_FIELD_PROPERTIES,
+    requestedAt: Date.now()
   };
 }
 
@@ -51,7 +52,8 @@ export function fetchFieldPropertiesIfNeeded(projectId, datasetId) {
 export function selectFieldProperty(selectedFieldPropertyId) {
   return {
     type: SELECT_FIELD_PROPERTY,
-    selectedFieldPropertyId: selectedFieldPropertyId
+    selectedFieldPropertyId: selectedFieldPropertyId,
+    receivedAt: Date.now()
   }
 }
 

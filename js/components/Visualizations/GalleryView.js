@@ -28,9 +28,16 @@ export class GalleryView extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { specSelector, project, fieldProperties } = this.props;
-    if (project.properties.id && specSelector.datasetId !== nextProps.specSelector.datasetId) {
-      this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId, fieldProperties.selectedItems);
-      this.props.fetchFieldPropertiesIfNeeded(project.properties.id, nextProps.specSelector.datasetId);
+    const datasetChanged = (specSelector.datasetId !== nextProps.specSelector.datasetId);
+
+    const fieldPropertiesChanged = (fieldProperties.updatedAt !== nextProps.fieldProperties.updatedAt);
+    if (project.properties.id) {
+      if (datasetChanged) {
+        this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId, fieldProperties.items);
+        this.props.fetchFieldPropertiesIfNeeded(project.properties.id, nextProps.specSelector.datasetId);
+      } else if (fieldPropertiesChanged) {
+        this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId, fieldProperties.items);
+      }
     }
   }
 

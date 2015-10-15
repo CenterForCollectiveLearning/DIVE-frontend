@@ -36,15 +36,26 @@ function receiveSpecsDispatcher(params, json) {
   };
 }
 
-function fetchSpecs(projectId, datasetId, field_agg_pairs) {
+function fetchSpecs(projectId, datasetId, fieldProperties) {
+  var fieldAggPairs = null;
+  if (fieldProperties) {
+    fieldAggPairs = fieldProperties
+      .filter((item) => item.selected)
+      .map((item) => new Object({
+        id: item.id,
+        name: item.name
+      }));
+  }
+
   const params = {
     'project_id': projectId,
     'dataset_id': datasetId,
-    'field_agg_pairs': field_agg_pairs
+    'field_agg_pairs': fieldAggPairs
   }
 
   return dispatch => {
     dispatch(requestSpecsDispatcher());
+
     return fetch(`/specs/v1/specs`, {
       method: 'post',
       body: JSON.stringify(params),
@@ -67,16 +78,16 @@ function fetchSpecs(projectId, datasetId, field_agg_pairs) {
 
 function shouldFetchSpecs(state) {
   const { specs } = state;
-  if (specs.items.length > 0 || specs.isFetching) {
+  if (specs.isFetching) {
     return false;
   }
   return true;
 }
 
-export function fetchSpecsIfNeeded(projectId, datasetId, field_agg_pairs) {
+export function fetchSpecsIfNeeded(projectId, datasetId, fieldProperties) {
   return (dispatch, getState) => {
     if (shouldFetchSpecs(getState())) {
-      return dispatch(fetchSpecs(projectId, datasetId, field_agg_pairs));
+      return dispatch(fetchSpecs(projectId, datasetId, fieldProperties));
     }
   };
 }
