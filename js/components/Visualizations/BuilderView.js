@@ -30,7 +30,7 @@ export class BuilderView extends Component {
     const projectChanged = project.properties.id !== nextProps.project.properties.id;
     const specChanged = visualization.spec.id != nextProps.specId;
 
-    if (projectChanged || specChanged) {
+    if ((projectChanged || specChanged) && project.properties.id) {
       fetchSpecVisualizationIfNeeded(nextProps.project.properties.id, nextProps.specId);
     }
   }

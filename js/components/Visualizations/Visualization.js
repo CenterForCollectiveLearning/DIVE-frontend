@@ -10,7 +10,8 @@ class InnerPlottable extends Component {
   }
 
   renderChart(props) {
-    const { vizType, generatingProcedure, id, args } = props.spec;
+    const { vizTypes, generatingProcedure, id, args } = props.spec;
+    const vizType = vizTypes[0];
     const isMinimalView = props.isMinimalView;
 
     const visualizationData = props.data;
@@ -139,6 +140,10 @@ class InnerPlottable extends Component {
       plot.animated(false);
       plot.renderTo(selector);
     }
+
+    window.addEventListener("resize", function() {
+      plot.redraw();
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -176,7 +181,8 @@ export default class Visualization extends Component {
   }
 
   render() {
-    const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, isMinimalView } = this.props;
+    const MAX_ELEMENTS = 300;
+    const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView } = this.props;
     return (
       <div className={ styles[containerClassName] } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
@@ -186,10 +192,17 @@ export default class Visualization extends Component {
             )}
           </div>
         }
-        <div className={ styles[visualizationClassName] }>
-          <svg className={ `spec-${spec.id}` }></svg>
-          <InnerPlottable spec={ spec } data={ data } isMinimalView={ isMinimalView } />
-        </div>
+        { (!isMinimalView || (data.length < MAX_ELEMENTS)) &&
+          <div className={ styles[visualizationClassName] }>
+            <svg className={ `spec-${spec.id}` }></svg>
+            <InnerPlottable spec={ spec } data={ data } isMinimalView={ isMinimalView } />
+          </div>
+        }
+        { (isMinimalView && (data.length > MAX_ELEMENTS)) &&
+          <div className={ styles[overflowTextClassName] }>
+            <span>Too many data points to display.</span>
+          </div>
+        }
       </div>
     );
   }
@@ -201,6 +214,7 @@ Visualization.propTypes = {
   visualizationClassName: PropTypes.string,
   containerClassName: PropTypes.string,
   headerClassName: PropTypes.string,
+  overflowTextClassName: PropTypes.string,
   isMinimalView: PropTypes.bool,
   onClick: PropTypes.func,
   showHeader: PropTypes.bool
@@ -210,6 +224,7 @@ Visualization.defaultProps = {
   visualizationClassName: "visualization",
   containerClassName: "block",
   headerClassName: "header",
+  overflowTextClassName: "overflowText",
   isMinimalView: false,
   showHeader: false
 };
