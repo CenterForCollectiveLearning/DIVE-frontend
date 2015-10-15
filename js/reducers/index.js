@@ -20,6 +20,7 @@ import {
   SELECT_AGGREGATION_FUNCTION,
   REQUEST_SPECS,
   RECEIVE_SPECS,
+  FAILED_RECEIVE_SPECS,
   SELECT_DATASET,
   SELECT_VISUALIZATION_TYPE,
   REQUEST_VISUALIZATION_DATA,
@@ -245,6 +246,8 @@ function specs(state={
       return { ...state, isFetching: true };
     case RECEIVE_SPECS:
       return { ...state, isFetching: false, items: action.specs };
+    case FAILED_RECEIVE_SPECS:
+      return { ...state, isFetching: false };    
     default:
       return state;
   }

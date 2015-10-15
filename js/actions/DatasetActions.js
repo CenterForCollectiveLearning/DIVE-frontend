@@ -7,7 +7,7 @@ import {
   RECEIVE_UPLOAD_DATASET
 } from '../constants/ActionTypes';
 
-import fetch from './api.js';
+import { fetch } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
 function requestDatasetsDispatcher() {

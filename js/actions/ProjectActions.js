@@ -7,7 +7,7 @@ import {
   RECEIVE_PRELOADED_PROJECTS
 } from '../constants/ActionTypes';
 
-import fetch from './api.js';
+import { fetch } from './api.js';
 
 function requestProjectDispatcher() {
   return {

@@ -5,7 +5,7 @@ import {
   SELECT_AGGREGATION_FUNCTION
 } from '../constants/ActionTypes';
 
-import fetch from './api.js'
+import { fetch } from './api.js';
 
 function requestFieldPropertiesDispatcher() {
   return {

@@ -16,10 +16,10 @@ export class GalleryView extends Component {
   }
 
   componentWillMount() {
-    const { specSelector, project, fetchSpecsIfNeeded, fetchFieldPropertiesIfNeeded, clearVisualization } = this.props;
+    const { specSelector, project, fetchSpecsIfNeeded, fetchFieldPropertiesIfNeeded, clearVisualization, fieldProperties } = this.props;
 
     if (specSelector.datasetId) {
-      fetchSpecsIfNeeded(project.properties.id, specSelector.datasetId);
+      fetchSpecsIfNeeded(project.properties.id, specSelector.datasetId, null);
       fetchFieldPropertiesIfNeeded(project.properties.id, specSelector.datasetId);
     }
 
@@ -27,9 +27,9 @@ export class GalleryView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { specSelector, project } = this.props;
+    const { specSelector, project, fieldProperties } = this.props;
     if (specSelector.datasetId !== nextProps.specSelector.datasetId) {
-      this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId);
+      this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId, fieldProperties.selectedItems);
       this.props.fetchFieldPropertiesIfNeeded(project.properties.id, nextProps.specSelector.datasetId);
     }
   }
