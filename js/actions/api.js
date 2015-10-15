@@ -15,11 +15,11 @@ export function pollForTaskResult(taskId, dispatcherParams, dispatcher, interval
       .then(response => response.json())
       .then(function(data) {
         if (data.state == 'SUCCESS') {
-          dispatch(dispatcher(dispatcherParams, data.info))
+          dispatch(dispatcher(dispatcherParams, data.info));
         } else if (counter > limit) {
-          dispatch(dispatcher(dispatcherParams, null))
+          dispatch(dispatcher(dispatcherParams, null));
         } else {
-          setTimeout(function() { dispatch(pollForTaskResult(taskId, dispatcherParams, dispatcher, interval, limit, counter + 1)) }, interval)
+          setTimeout(function() { dispatch(pollForTaskResult(taskId, dispatcherParams, dispatcher, interval, limit, counter + 1)) }, interval);
         }
       });
   };
