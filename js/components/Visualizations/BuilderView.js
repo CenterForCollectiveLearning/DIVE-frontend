@@ -36,7 +36,7 @@ export class BuilderView extends Component {
   }
 
   onClickGallery() {
-    this.props.pushState(null, `/projects/${this.props.project.properties.id}/visualizations/gallery`);
+    this.props.pushState(null, `/projects/${this.props.project.properties.id}/visualize/gallery`);
   }
 
   render() {

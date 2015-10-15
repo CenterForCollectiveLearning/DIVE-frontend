@@ -6,13 +6,13 @@ import styles from './visualizations.sass';
 export class VisualizationsPage extends Component {
   componentWillMount() {
     if (this.props.routes.length < 4) {
-      this.props.pushState(null, `/projects/${this.props.params.projectId}/visualizations/gallery`);
+      this.props.pushState(null, `/projects/${this.props.params.projectId}/visualize/gallery`);
     }        
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.routes.length < 4) {
-      this.props.pushState(null, `/projects/${this.props.params.projectId}/visualizations/gallery`);
+      this.props.pushState(null, `/projects/${this.props.params.projectId}/visualize/gallery`);
     }    
   }
 
