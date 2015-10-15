@@ -81,10 +81,14 @@
   padding: 20px;
 
   .blockContainer
+    display: flex
     width: 33.33%
     padding: 15px
 
     .block
+      display: flex
+      flex-direction: column
+      flex-grow: 1
       padding: 15px 19px
       margin: 0
       overflow: hidden
@@ -101,6 +105,18 @@
 
       .header
         font-size: 15px
+
+      .overflowText
+        display: flex
+        color: #999
+        align-content: center
+        justify-content: center
+        flex-grow: 1
+        flex-direction: column
+        min-height: 150px
+
+      .visualization
+        padding: 20px
 
 .sidebar
   display: flex

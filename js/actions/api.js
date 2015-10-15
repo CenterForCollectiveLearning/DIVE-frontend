@@ -7,7 +7,7 @@ export function fetch(urlPath, options) {
   return isomorphicFetch(completeUrl, options);
 }
 
-export function pollForTaskResult(taskId, dispatcherParams, dispatcher, interval=200, limit=25, counter=0) {
+export function pollForTaskResult(taskId, dispatcherParams, dispatcher, interval=200, limit=300, counter=0) {
   const completeUrl = API_URL + `/task_result/${ taskId }`;
 
   return dispatch => {
