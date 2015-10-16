@@ -20,7 +20,6 @@ export class GalleryView extends Component {
 
     if (project.properties.id && specSelector.datasetId) {
       fetchSpecsIfNeeded(project.properties.id, specSelector.datasetId, null);
-      fetchFieldPropertiesIfNeeded(project.properties.id, specSelector.datasetId);
     }
 
     clearVisualization();

@@ -15,15 +15,16 @@ export class Sidebar extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, datasets, specSelector, fieldProperties, fetchDatasetsIfNeeded, selectDataset } = this.props;
+    const { project, datasets, specSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset } = this.props;
 
-    if (nextProps.project.properties.id !== project.properties.id) {
+    const projectChanged = (nextProps.project.properties.id !== project.properties.id);
+    const datasetChanged = (nextProps.specSelector.datasetId !== specSelector.datasetId);
+
+    if (projectChanged || (nextProps.project.properties.id && !specSelector.datasetId)) {
       fetchDatasetsIfNeeded(nextProps.project.properties.id);
-      fetchFieldPropertiesIfNeeded(project.properties.id, specSelector.datasetId)
     }
-
-    if (nextProps.datasets.items.length !== datasets.items.length && !specSelector.datasetId) {
-      selectDataset(nextProps.datasets.items[0].datasetId);
+    if (datasetChanged) {
+      fetchFieldPropertiesIfNeeded(project.properties.id, nextProps.specSelector.datasetId)
     }
   }
 
