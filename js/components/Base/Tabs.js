@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import styles from './base.sass';
+import styles from './Tabs.sass';
 
 export default class Tabs extends Component {
   constructor(props) {

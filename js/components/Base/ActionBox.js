@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import styles from './base.sass';
+import styles from './ActionBox.sass';
 
 export default class ActionBox extends Component {
   render() {

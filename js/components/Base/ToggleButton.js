@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import styles from './base.sass';
+import styles from './ToggleButtonGroup.sass';
 
 import Select from 'react-select';
 

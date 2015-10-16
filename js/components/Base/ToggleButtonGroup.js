@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import ToggleButton from './ToggleButton';
-import styles from './base.sass';
+import styles from './ToggleButtonGroup.sass';
 
 export default class ToggleButtonGroup extends Component {
   constructor(props) {
