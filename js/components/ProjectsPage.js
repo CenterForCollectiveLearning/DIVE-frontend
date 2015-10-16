@@ -22,7 +22,7 @@ export class ProjectsPage extends Component {
   }
 
   _getSelectedTab(){
-    const tabList = ["data", "visualize"];
+    const tabList = ["data", "transform", "visualize"];
     const _validTab = function (tabValue) {
       return tabList.indexOf(tabValue) > -1;
     }
@@ -49,6 +49,7 @@ export class ProjectsPage extends Component {
           </div>
           <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
             <Tab label="DATA" value="data" route="data/upload" />
+            <Tab label="TRANSFORM" value="transform" route="transform" />
             <Tab label="VISUALIZE" value="visualize" route="visualize/gallery" />
           </Tabs>
         </div>
