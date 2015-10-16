@@ -1,19 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import ActionBox from '../Base/ActionBox';
 
 import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
-import styles from './datasets.sass';
+import styles from './transformation.sass';
 
-export class DatasetsPage extends Component {
-  constructor(props) {
-    super(props);
-
-    if (this.props.routes.length < 4) {
-      this.props.pushState(null, `/projects/${this.props.params.projectId}/data/upload`);
-    }
-  }
-
+export class TransformationPage extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.project.properties.id !== this.props.project.properties.id) {
       this.props.fetchDatasetsIfNeeded(nextProps.project.properties.id);
@@ -23,13 +15,18 @@ export class DatasetsPage extends Component {
   render() {
     return (
       <div className={ styles.fillContainer }>
-        {this.props.children}
+        <ActionBox heading="Select Datasets to Merge">
+          { this.props.datasets.items.map(dataset =>
+            <div>{ dataset.title }</div>
+          )}
+        </ActionBox>
+        { this.props.children }
       </div>
     );
   }
 }
 
-DatasetsPage.propTypes = {
+TransformationPage.propTypes = {
   project: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
   children: PropTypes.node
@@ -43,4 +40,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { fetchDatasetsIfNeeded, pushState })(DatasetsPage);
+export default connect(mapStateToProps, { fetchDatasetsIfNeeded })(TransformationPage);

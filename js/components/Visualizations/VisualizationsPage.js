@@ -19,7 +19,7 @@ export class VisualizationsPage extends Component {
   render() {
     return (
       <div className={ styles.fillContainer }>
-        {this.props.children}
+        { this.props.children }
       </div>
     );
   }
