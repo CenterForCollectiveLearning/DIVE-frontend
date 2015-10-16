@@ -9,7 +9,6 @@ class BuilderPage extends Component {
   render() {
     return (
       <div className={ `${styles.fillContainer} ${styles.builderContainer}` }>
-        <Sidebar />
         <BuilderView specId={ this.props.params.specId }/>
         {this.props.children}
       </div>

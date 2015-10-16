@@ -65,8 +65,7 @@ export class BuilderView extends Component {
               <DataGrid
                 data={ visualization.tableData }
                 tableClassName={ styles.grid }
-                containerClassName={ styles.gridContainer }
-                useFixedWidth={ false } />
+                containerClassName={ styles.gridContainer }/>
             </div>
           </div>
         }
