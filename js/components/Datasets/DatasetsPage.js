@@ -5,8 +5,6 @@ import { pushState } from 'redux-react-router';
 import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
 import styles from './datasets.sass';
 
-import DatasetToolbar from './DatasetToolbar';
-
 export class DatasetsPage extends Component {
   constructor(props) {
     super(props);
@@ -24,12 +22,8 @@ export class DatasetsPage extends Component {
   }
 
   render() {
-    const { datasets, params, datasetId } = this.props;
     return (
       <div className={ styles.fillContainer }>
-        { datasets.items.length > 0 &&
-          <DatasetToolbar datasets={ datasets.items } projectId={ params.projectId } selectedDatasetId={ params.datasetId }/>
-        }
         {this.props.children}
       </div>
     );
@@ -39,7 +33,6 @@ export class DatasetsPage extends Component {
 DatasetsPage.propTypes = {
   project: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
-  datasetId: PropTypes.string,
   children: PropTypes.node
 };
 
