@@ -7,13 +7,11 @@ import { selectDataset, selectVisualizationType } from '../../actions/Visualizat
 import styles from './visualizations.sass';
 
 import Select from 'react-select';
+import Sidebar from '../Base/Sidebar';
+import SidebarGroup from '../Base/SidebarGroup';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 
-export class Sidebar extends Component {
-  constructor(props) {
-    super(props);
-  }
-
+export class GallerySidebar extends Component {
   componentWillReceiveProps(nextProps) {
     const { project, datasets, specSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset } = this.props;
 
@@ -37,10 +35,9 @@ export class Sidebar extends Component {
     );
 
     return (
-      <div className={ styles.sidebar }>
+      <Sidebar>
         { this.props.datasets.items && this.props.datasets.items.length > 0 &&
-          <div className={ styles.sidebarGroup }>
-            <h3 className={ styles.sidebarHeading }>Dataset</h3>
+          <SidebarGroup heading="Dataset">
             <Select
               value={ `${this.props.specSelector.datasetId}` }
               options={ menuItems }
@@ -48,35 +45,35 @@ export class Sidebar extends Component {
               multi={ false }
               clearable={ false }
               searchable={ false } />
-          </div>
+          </SidebarGroup>
         }
-        <div className={ styles.sidebarGroup }>
-          <h3 className={ styles.sidebarHeading }>Visualization type</h3>
-          <ToggleButtonGroup
-            toggleItems={ this.props.filters.visualizationTypes }
-            displayTextMember="label"
-            valueMember="type"
-            imageNameMember="imageName"
-            imageNameSuffix=".chart.svg"
-            onChange={ this.props.selectVisualizationType } />
-        </div>
-        <div className={ styles.sidebarGroup }>
-          <h3 className={ styles.sidebarHeading }>Fields</h3>
-          { this.props.fieldProperties.items.length > 0 &&
+        { this.props.datasets.items && this.props.datasets.items.length > 0 &&
+          <SidebarGroup heading="Visualization type">
+            <ToggleButtonGroup
+              toggleItems={ this.props.filters.visualizationTypes }
+              displayTextMember="label"
+              valueMember="type"
+              imageNameMember="imageName"
+              imageNameSuffix=".chart.svg"
+              onChange={ this.props.selectVisualizationType } />
+          </SidebarGroup>
+        }
+        { this.props.fieldProperties.items.length > 0 &&
+          <SidebarGroup heading="Fields">
             <ToggleButtonGroup
               toggleItems={ this.props.fieldProperties.items }
               displayTextMember="name"
               valueMember="id"
               selectMenuItem={ this.props.selectAggregationFunction }
               onChange={ this.props.selectFieldProperty } />
-          }
-        </div>
-      </div>
+          </SidebarGroup>
+        }
+      </Sidebar>
     );
   }
 }
 
-Sidebar.propTypes = {
+GallerySidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
   specSelector: PropTypes.object.isRequired,
@@ -92,7 +89,14 @@ function mapStateToProps(state) {
     specSelector,
     fieldProperties,
     filters
-  }
+  };
 }
 
-export default connect(mapStateToProps, { fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, selectVisualizationType, selectFieldProperty, selectAggregationFunction })(Sidebar);
+export default connect(mapStateToProps, {
+  fetchDatasetsIfNeeded,
+  fetchFieldPropertiesIfNeeded,
+  selectDataset,
+  selectVisualizationType,
+  selectFieldProperty,
+  selectAggregationFunction
+})(GallerySidebar);

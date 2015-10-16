@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
 import Griddle from 'griddle-react';
-import styles from './base.sass';
 
 export default class DataGrid extends Component {
   render() {

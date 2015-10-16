@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import styles from './base.sass';
+import styles from './RaisedButton.sass';
 
 export default class RaisedButton extends Component {
   render() {
