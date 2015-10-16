@@ -2,7 +2,6 @@ import {
   REQUEST_SPECS,
   RECEIVE_SPECS,
   FAILED_RECEIVE_SPECS,
-  SELECT_DATASET,
   SELECT_VISUALIZATION_TYPE,
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
@@ -89,13 +88,6 @@ export function fetchSpecsIfNeeded(projectId, datasetId, fieldProperties) {
     if (shouldFetchSpecs(getState())) {
       return dispatch(fetchSpecs(projectId, datasetId, fieldProperties));
     }
-  };
-}
-
-export function selectDataset(datasetId) {
-  return {
-    type: SELECT_DATASET,
-    datasetId: datasetId
   };
 }
 

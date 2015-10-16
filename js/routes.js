@@ -11,6 +11,7 @@ import DatasetInspectPage from './components/Datasets/DatasetInspectPage';
 import VisualizationsPage from './components/Visualizations/VisualizationsPage';
 import GalleryPage from './components/Visualizations/GalleryPage';
 import BuilderPage from './components/Visualizations/BuilderPage';
+import AnalysisPage from './components/Analysis/AnalysisPage';
 
 export default (
   <Route path="/" component={ App }>
@@ -23,6 +24,8 @@ export default (
       <Route path="visualize" component={ VisualizationsPage }>
         <Route path="gallery" component={ GalleryPage }/>
         <Route path="builder/:specId" component={ BuilderPage }/>
+      </Route>
+      <Route path="analyze" component={ AnalysisPage }>
       </Route>
     </Route>
   </Route>

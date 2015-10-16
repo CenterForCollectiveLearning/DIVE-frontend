@@ -86,7 +86,7 @@ function datasets(state = {
   }
 }
 
-function specSelector(state = {
+function datasetSelector(state = {
   datasetId: null,
   loaded: false
 }, action) {
@@ -350,7 +350,7 @@ const rootReducer = combineReducers({
   projects,
   fieldProperties,
   specs,
-  specSelector,
+  datasetSelector,
   user,
   visualization,
   router

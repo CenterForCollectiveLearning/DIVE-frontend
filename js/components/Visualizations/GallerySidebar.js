@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
+import { selectDataset, fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectAggregationFunction } from '../../actions/FieldPropertiesActions';
-import { selectDataset, selectVisualizationType } from '../../actions/VisualizationActions';
+import { selectVisualizationType } from '../../actions/VisualizationActions';
 import styles from './Visualizations.sass';
 
 import Select from 'react-select';
@@ -13,16 +13,16 @@ import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 
 export class GallerySidebar extends Component {
   componentWillReceiveProps(nextProps) {
-    const { project, datasets, specSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset } = this.props;
+    const { project, datasets, datasetSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset } = this.props;
 
     const projectChanged = (nextProps.project.properties.id !== project.properties.id);
-    const datasetChanged = (nextProps.specSelector.datasetId !== specSelector.datasetId);
+    const datasetChanged = (nextProps.datasetSelector.datasetId !== datasetSelector.datasetId);
 
-    if (projectChanged || (nextProps.project.properties.id && !specSelector.datasetId)) {
+    if (projectChanged || (nextProps.project.properties.id && !datasetSelector.datasetId)) {
       fetchDatasetsIfNeeded(nextProps.project.properties.id);
     }
     if (datasetChanged) {
-      fetchFieldPropertiesIfNeeded(project.properties.id, nextProps.specSelector.datasetId)
+      fetchFieldPropertiesIfNeeded(project.properties.id, nextProps.datasetSelector.datasetId)
     }
   }
 
@@ -39,7 +39,7 @@ export class GallerySidebar extends Component {
         { this.props.datasets.items && this.props.datasets.items.length > 0 &&
           <SidebarGroup heading="Dataset">
             <Select
-              value={ `${this.props.specSelector.datasetId}` }
+              value={ `${this.props.datasetSelector.datasetId}` }
               options={ menuItems }
               onChange={ this.props.selectDataset }
               multi={ false }
@@ -76,17 +76,17 @@ export class GallerySidebar extends Component {
 GallerySidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
-  specSelector: PropTypes.object.isRequired,
+  datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, datasets, specSelector, fieldProperties, filters } = state;
+  const { project, datasets, datasetSelector, fieldProperties, filters } = state;
   return {
     project,
     datasets,
-    specSelector,
+    datasetSelector,
     fieldProperties,
     filters
   };
