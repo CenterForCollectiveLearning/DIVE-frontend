@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
 import { fetchSpecVisualizationIfNeeded } from '../../actions/VisualizationActions';
-import styles from './visualizations.sass';
+import styles from './Visualizations.sass';
 
 import DataGrid from '../Base/DataGrid';
 import Visualization from './Visualization';

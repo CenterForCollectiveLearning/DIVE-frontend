@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectAggregationFunction } from '../../actions/FieldPropertiesActions';
 import { selectDataset, selectVisualizationType } from '../../actions/VisualizationActions';
-import styles from './visualizations.sass';
+import styles from './Visualizations.sass';
 
 import Select from 'react-select';
 import Sidebar from '../Base/Sidebar';

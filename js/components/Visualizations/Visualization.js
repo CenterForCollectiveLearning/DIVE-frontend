@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import styles from './visualizations.sass';
+import styles from './Visualizations.sass';
 
 require('plottable');
 
