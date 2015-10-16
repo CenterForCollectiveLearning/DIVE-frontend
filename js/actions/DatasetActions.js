@@ -1,4 +1,5 @@
 import {
+  SELECT_DATASET,
   REQUEST_DATASET,
   RECEIVE_DATASET,
   REQUEST_DATASETS,
@@ -9,6 +10,13 @@ import {
 
 import { fetch } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
+
+export function selectDataset(datasetId) {
+  return {
+    type: SELECT_DATASET,
+    datasetId: datasetId
+  };
+}
 
 function requestDatasetsDispatcher() {
   return {

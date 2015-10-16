@@ -4,7 +4,7 @@ import { pushState } from 'redux-react-router';
 
 import { clearVisualization, fetchSpecsIfNeeded } from '../../actions/VisualizationActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
-import styles from './visualizations.sass';
+import styles from './Visualizations.sass';
 
 import Visualization from './Visualization';
 
