@@ -36,7 +36,7 @@ export class GalleryView extends Component {
         this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId, fieldProperties.items);
         this.props.fetchFieldPropertiesIfNeeded(project.properties.id, nextProps.specSelector.datasetId);
       } else if (fieldPropertiesChanged) {
-        this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId, fieldProperties.items);
+        this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId, nextProps.fieldProperties.items);
       }
     }
   }

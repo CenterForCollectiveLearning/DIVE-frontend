@@ -41,10 +41,17 @@ function fetchSpecs(projectId, datasetId, fieldProperties) {
   if (fieldProperties) {
     fieldAggPairs = fieldProperties
       .filter((item) => item.selected)
-      .map((item) => new Object({
-        id: item.id,
-        name: item.name
-      }));
+      .map(function(item) {
+        var result = new Object({
+          id: item.id,
+          name: item.name
+        })
+        if (item.splitMenu.length > 0) {
+          const agg_fn = item.splitMenu.filter((item) => item.selected);
+          result.agg_fn = agg_fn
+        }
+        return result;
+      });
   }
 
   const params = {
@@ -132,7 +139,7 @@ function fetchSpecVisualization(projectId, specId) {
   };
 }
 
-function shouldFetchSpecVisualization(state) {  
+function shouldFetchSpecVisualization(state) {
   const { visualization } = state;
   if (visualization.specId || visualization.isFetching) {
     return false;
@@ -151,5 +158,5 @@ export function fetchSpecVisualizationIfNeeded(projectId, specId) {
 export function clearVisualization() {
   return {
     type: CLEAR_VISUALIZATION
-  };  
+  };
 }
