@@ -16,27 +16,22 @@ export class GalleryView extends Component {
   }
 
   componentWillMount() {
-    const { specSelector, project, fetchSpecsIfNeeded, fetchFieldPropertiesIfNeeded, clearVisualization, fieldProperties } = this.props;
+    const { datasetSelector, project, fetchSpecsIfNeeded, fetchFieldPropertiesIfNeeded, clearVisualization, fieldProperties } = this.props;
 
-    if (project.properties.id && specSelector.datasetId) {
-      fetchSpecsIfNeeded(project.properties.id, specSelector.datasetId, null);
+    if (project.properties.id && datasetSelector.datasetId) {
+      fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, null);
     }
 
     clearVisualization();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { specSelector, project, fieldProperties } = this.props;
-    const datasetChanged = (specSelector.datasetId !== nextProps.specSelector.datasetId);
+    const { datasetSelector, project, fieldProperties, fetchSpecsIfNeeded } = this.props;
+    const datasetChanged = (datasetSelector.datasetId !== nextProps.datasetSelector.datasetId);
 
     const fieldPropertiesChanged = (fieldProperties.updatedAt !== nextProps.fieldProperties.updatedAt);
-    if (project.properties.id) {
-      if (datasetChanged) {
-        this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId, fieldProperties.items);
-        this.props.fetchFieldPropertiesIfNeeded(project.properties.id, nextProps.specSelector.datasetId);
-      } else if (fieldPropertiesChanged) {
-        this.props.fetchSpecsIfNeeded(project.properties.id, nextProps.specSelector.datasetId, fieldProperties.items);
-      }
+    if (project.properties.id && (datasetChanged || fieldPropertiesChanged)) {
+      fetchSpecsIfNeeded(project.properties.id, nextProps.datasetSelector.datasetId, fieldProperties.items);
     }
   }
 
@@ -69,16 +64,16 @@ GalleryView.propTypes = {
   project: PropTypes.object.isRequired,
   specs: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  specSelector: PropTypes.object.isRequired
+  datasetSelector: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, specs, fieldProperties, specSelector } = state;
+  const { project, specs, fieldProperties, datasetSelector } = state;
   return {
     project,
     specs,
     fieldProperties,
-    specSelector
+    datasetSelector
   }
 }
 
