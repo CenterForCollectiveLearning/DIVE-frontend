@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './ToggleButtonGroup.sass';
 
-import Select from 'react-select';
+import DropDownMenu from '../Base/DropDownMenu';
 
 export default class ToggleButton extends Component {
   constructor (props) {
@@ -41,13 +41,10 @@ export default class ToggleButton extends Component {
         </div>
         { this.props.splitMenu.length > 0 &&
           <div className={ styles.splitButtonSelect }>
-            <Select
+            <DropDownMenu
               value={ selectedMenuItem }
               options={ this.props.splitMenu }
-              onChange={ this.selectMenuItem }
-              multi={ false }
-              clearable={ false }
-              searchable={ false } />
+              onChange={ this.selectMenuItem } />
           </div>
         }
       </div>
