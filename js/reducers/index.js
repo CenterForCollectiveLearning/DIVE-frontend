@@ -3,23 +3,25 @@ import {routerStateReducer as router} from 'redux-react-router';
 import { LOAD, SAVE } from 'redux-storage';
 
 import datasets from './datasets';
+import datasetSelector from './datasetSelector';
+import fieldProperties from './fieldProperties';
 import filters from './filters';
 import project from './project';
 import projects from './projects';
-import fieldProperties from './fieldProperties';
+import regressionSelector from './regressionSelector';
 import specs from './specs';
-import datasetSelector from './datasetSelector';
 import user from './user';
 import visualization from './visualization';
 
 const rootReducer = combineReducers({
   datasets,
+  datasetSelector,
+  fieldProperties,
   filters,
   project,
   projects,
-  fieldProperties,
+  regressionSelector,
   specs,
-  datasetSelector,
   user,
   visualization,
   router
