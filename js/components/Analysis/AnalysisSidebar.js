@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 
 import { selectDataset, fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
-import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 import styles from './Analysis.sass';
 
 import Select from 'react-select';
@@ -11,6 +11,12 @@ import SidebarGroup from '../Base/SidebarGroup';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 
 export class AnalysisSidebar extends Component {
+  constructor(props) {
+    super(props);
+
+    this._handleTabsChange = this._handleTabsChange.bind(this);
+  }
+
   componentWillReceiveProps(nextProps) {
     const { project, datasets, datasetSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded } = this.props;
 
@@ -20,9 +26,10 @@ export class AnalysisSidebar extends Component {
     if (projectChanged || nextProps.project.properties.id) {
       fetchDatasetsIfNeeded(nextProps.project.properties.id);
     }
-    if (datasetChanged) {
-      fetchFieldPropertiesIfNeeded(project.properties.id, nextProps.datasetSelector.datasetId)
-    }
+  }
+
+  _handleTabsChange(tab){
+    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/analyze/${ tab }`);
   }
 
   render() {
@@ -33,8 +40,29 @@ export class AnalysisSidebar extends Component {
       })
     );
 
+    const tabItems = [
+      {
+        label: "Regression",
+        type: "regression",
+        selected: this.props.selectedTab == "regression"
+      },
+      {
+        label: "Comparison",
+        type: "comparison",
+        selected: this.props.selectedTab == "comparison"
+      }
+    ];
+
     return (
       <Sidebar>
+        <SidebarGroup>
+          <ToggleButtonGroup
+            toggleItems={ tabItems }
+            displayTextMember="label"
+            valueMember="type"
+            onChange={ this._handleTabsChange.bind(this) } />
+        </SidebarGroup>
+
         { this.props.datasets.items && this.props.datasets.items.length > 0 &&
           <SidebarGroup heading="Dataset">
             <Select
@@ -46,6 +74,7 @@ export class AnalysisSidebar extends Component {
               searchable={ false } />
           </SidebarGroup>
         }
+        { this.props.children }
       </Sidebar>
     );
   }
@@ -54,16 +83,16 @@ export class AnalysisSidebar extends Component {
 AnalysisSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
-  fieldProperties: PropTypes.object.isRequired,
-  datasetSelector: PropTypes.object.isRequired
+  datasetSelector: PropTypes.object.isRequired,
+  selectedTab: PropTypes.string.isRequired,
+  children: PropTypes.node
 };
 
 function mapStateToProps(state) {
-  const { project, datasets, fieldProperties, datasetSelector } = state;
+  const { project, datasets, datasetSelector } = state;
   return {
     project,
     datasets,
-    fieldProperties,
     datasetSelector
   };
 }
@@ -71,5 +100,5 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   selectDataset,
   fetchDatasetsIfNeeded,
-  fetchFieldPropertiesIfNeeded,
+  pushState
 })(AnalysisSidebar);

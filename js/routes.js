@@ -12,6 +12,8 @@ import VisualizationsPage from './components/Visualizations/VisualizationsPage';
 import GalleryPage from './components/Visualizations/GalleryPage';
 import BuilderPage from './components/Visualizations/BuilderPage';
 import AnalysisPage from './components/Analysis/AnalysisPage';
+import RegressionPage from './components/Analysis/RegressionPage';
+import ComparisonPage from './components/Analysis/ComparisonPage';
 
 export default (
   <Route path="/" component={ App }>
@@ -26,6 +28,8 @@ export default (
         <Route path="builder/:specId" component={ BuilderPage }/>
       </Route>
       <Route path="analyze" component={ AnalysisPage }>
+        <Route path="regression" component={ RegressionPage }/>
+        <Route path="comparison" component={ ComparisonPage }/>
       </Route>
     </Route>
   </Route>
