@@ -3,13 +3,15 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 import styles from './Analysis.sass';
 
-import AnalysisSidebar from './AnalysisSidebar';
+import ComparisonSidebar from './ComparisonSidebar';
+import ComparisonView from './ComparisonView';
 
 export class ComparisonPage extends Component {
   render() {
     return (
       <div className={ `${styles.fillContainer} ${styles.comparisonContainer}` }>
-        <AnalysisSidebar selectedTab="comparison"/>
+        <ComparisonSidebar />
+        <ComparisonView />
       </div>
     );
   }
