@@ -4,30 +4,21 @@ import ToggleButton from './ToggleButton';
 import styles from './ToggleButtonGroup.sass';
 
 export default class ToggleButtonGroup extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick(item) {
-    this.props.onChange(item);
-  }
-
   render() {
+    const { toggleItems, valueMember, displayTextMember, imageNameMember, imageNameSuffix, externalSelectedItems, separated, selectMenuItem, onChange } = this.props;
     return (
       <div className={ styles.toggleButtonGroup }>
-        { this.props.toggleItems.map((item) =>
+        { toggleItems.map((item) =>
           <ToggleButton
-            key={ item[this.props.valueMember] }
-            altText={ item[this.props.displayTextMember] }
-            imageName={ this.props.imageNameMember ? `/assets/${item[this.props.imageNameMember]}${this.props.imageNameSuffix}` : null }
-            onChange={ this.handleClick }
-            isSelected={ item.selected }
-            separated={ this.props.separated }
+            key={ `toggle-${item[valueMember]}` }
+            altText={ item[displayTextMember] }
+            imageName={ imageNameMember ? `/assets/${item[imageNameMember]}${imageNameSuffix}` : null }
+            onChange={ onChange }
+            isSelected={ item.selected || (externalSelectedItems && externalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) || false }
+            separated={ separated }
             splitMenu={ item.splitMenu ? item.splitMenu : [] }
-            selectMenuItem={ this.props.selectMenuItem }
-            value={ item[this.props.valueMember].toString() } />
+            selectMenuItem={ selectMenuItem }
+            value={ item[valueMember].toString() } />
         )}
       </div>
     );
@@ -42,5 +33,6 @@ ToggleButtonGroup.propTypes = {
   imageNameMember: PropTypes.string,
   imageNameSuffix: PropTypes.string,
   selectMenuItem: PropTypes.func,
-  separated: PropTypes.bool
+  separated: PropTypes.bool,
+  externalSelectedItems: PropTypes.array
 };
