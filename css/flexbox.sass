@@ -1,7 +1,13 @@
-=fillContainer
+=flexbox
   display: flex
+
+=fillContainer
+  +flexbox
   flex-direction: column
   flex-grow: 1
+
+.flexbox
+  +flexbox
 
 .fillContainer
   +fillContainer
@@ -9,3 +15,4 @@
 .centeredFill
   align-items: center
   justify-content: center
+
