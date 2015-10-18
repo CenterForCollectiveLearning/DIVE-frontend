@@ -64,6 +64,7 @@ export class GallerySidebar extends Component {
               toggleItems={ this.props.fieldProperties.items }
               displayTextMember="name"
               valueMember="id"
+              separated={ true }
               selectMenuItem={ this.props.selectAggregationFunction }
               onChange={ this.props.selectFieldProperty } />
           </SidebarGroup>

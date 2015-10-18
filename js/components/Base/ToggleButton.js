@@ -27,7 +27,7 @@ export default class ToggleButton extends Component {
     const selectedMenuItem = selectedMenuItemIndex >= 0 ? this.props.splitMenu[selectedMenuItemIndex].value : null;
 
     return (
-      <div className={ styles.toggleButtonContainer  + (this.props.imageName ? '' : ' ' + styles.textToggleButton) + (this.props.isSelected ? ' ' + styles.selected : '') + (this.props.splitMenu.length > 0 ? ' ' + styles.splitButton : '')}>
+      <div className={ styles.toggleButtonContainer  + (this.props.separated ? ' ' + styles.textToggleButton : '') + (this.props.isSelected ? ' ' + styles.selected : '') + (this.props.splitMenu.length > 0 ? ' ' + styles.splitButton : '')}>
         <div
           className={ `${ styles.toggleButton } ${ styles.raisedButton }` + (this.props.isSelected ? ' ' + styles.selected : '') }
           onClick={ this.handleClick }
@@ -63,10 +63,12 @@ ToggleButton.propTypes = {
   value: PropTypes.string.isRequired,
   label: PropTypes.string,
   splitMenu: PropTypes.array,
-  selectMenuItem: PropTypes.func
+  selectMenuItem: PropTypes.func,
+  separated: PropTypes.bool
 }
 
 ToggleButton.defaultProps = {
   altText: "",
-  splitMenu: []
+  splitMenu: [],
+  separated: false
 }
