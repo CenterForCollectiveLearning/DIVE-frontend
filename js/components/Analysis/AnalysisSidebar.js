@@ -5,7 +5,7 @@ import { pushState } from 'redux-react-router';
 import { selectDataset, fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
 import styles from './Analysis.sass';
 
-import Select from 'react-select';
+import DropDownMenu from '../Base/DropDownMenu';
 import Sidebar from '../Base/Sidebar';
 import SidebarGroup from '../Base/SidebarGroup';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
@@ -33,13 +33,6 @@ export class AnalysisSidebar extends Component {
   }
 
   render() {
-    const menuItems = this.props.datasets.items.map((dataset, i) =>
-      new Object({
-        value: dataset.datasetId,
-        label: dataset.title
-      })
-    );
-
     const tabItems = [
       {
         label: "Regression",
@@ -65,13 +58,12 @@ export class AnalysisSidebar extends Component {
 
         { this.props.datasets.items && this.props.datasets.items.length > 0 &&
           <SidebarGroup heading="Dataset">
-            <Select
+            <DropDownMenu
               value={ `${this.props.datasetSelector.datasetId}` }
-              options={ menuItems }
-              onChange={ this.props.selectDataset }
-              multi={ false }
-              clearable={ false }
-              searchable={ false } />
+              options={ this.props.datasets.items }
+              valueMember="datasetId"
+              displayTextMember="title"
+              onChange={ this.props.selectDataset } />
           </SidebarGroup>
         }
         { this.props.children }

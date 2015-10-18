@@ -4,8 +4,7 @@ import { pushState } from 'redux-react-router';
 import { uploadDataset, deleteDataset } from '../../actions/DatasetActions';
 import styles from './datasets.sass';
 
-import Select from 'react-select';
-
+import DropDownMenu from '../Base/DropDownMenu';
 import RaisedButton from '../Base/RaisedButton';
 import filePicker from 'component-file-picker';
 
@@ -39,25 +38,17 @@ export class DatasetToolbar extends Component {
   }
 
   render() {
-    const menuItems = this.props.datasets.map((dataset, i) =>
-      new Object({
-        value: dataset.datasetId,
-        label: dataset.title
-      })
-    );
-
     return (
       <div className={ styles.toolbar }>
         <span>Dataset: </span>
         <div className={ styles.datasetSelectorContainer }>
-          <Select
+          <DropDownMenu
             className={ styles.datasetSelector }
             value={ this.props.selectedDatasetId }
-            options={ menuItems }
-            onChange={ this.onSelectDataset }
-            multi={ false }
-            clearable={ false }
-            searchable={ false } />
+            options={ this.props.datasets }
+            valueMember="datasetId"
+            displayTextMember="title"
+            onChange={ this.onSelectDataset } />
         </div>
         { this.props.selectedDatasetId &&
           <div className={ styles.rightActions }>
