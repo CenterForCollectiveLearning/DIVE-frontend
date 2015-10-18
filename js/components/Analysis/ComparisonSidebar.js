@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
-import { selectIndependentVariable } from '../../actions/RegressionActions';
+import { selectIndependentVariable, selectDependentVariable } from '../../actions/ComparisonActions';
 import styles from './Analysis.sass';
 
 import AnalysisSidebar from './AnalysisSidebar';
@@ -11,12 +11,6 @@ import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import Dropdown from '../Base/Dropdown';
 
 export class ComparisonSidebar extends Component {
-  constructor(props) {
-    super(props);
-
-    this.selectIndependentVariable = this.selectIndependentVariable.bind(this);
-  }
-
   componentWillMount(props) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
 
@@ -33,10 +27,6 @@ export class ComparisonSidebar extends Component {
     }
   }
 
-  selectIndependentVariable(independentVariableId) {
-    this.props.selectIndependentVariable(independentVariableId);
-  }
-
   render() {
     return (
       <AnalysisSidebar selectedTab="comparison">
@@ -47,7 +37,22 @@ export class ComparisonSidebar extends Component {
               options={ this.props.fieldProperties.items }
               valueMember="id"
               displayTextMember="name"
-              onChange={ this.selectIndependentVariable }/>
+              onChange={ this.props.selectIndependentVariable }/>
+          </SidebarGroup>
+        }
+        { this.props.fieldProperties.items.length != 0 &&
+          <SidebarGroup heading="Dependent Variables">
+            <ToggleButtonGroup
+              toggleItems={ this.props.fieldProperties.items.map((item) =>
+                new Object({
+                  id: item.id,
+                  name: item.name
+                })
+              )}
+              valueMember="id"
+              displayTextMember="name"
+              externalSelectedItems={ this.props.regressionSelector.dependentVariableIds }
+              onChange={ this.props.selectDependentVariable } />
           </SidebarGroup>
         }
       </AnalysisSidebar>
@@ -72,4 +77,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable })(ComparisonSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, selectDependentVariable })(ComparisonSidebar);
