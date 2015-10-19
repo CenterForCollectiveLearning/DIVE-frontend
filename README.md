@@ -30,6 +30,11 @@ To build for production, this command will output optimized production code:
 $ npm run build
 ```
 ## Deploying to Divshot
+Install divshot-cli:
+```bash
+$ npm install divshot-cli -g
+```
+
 Set environment variables, login with divshot credentials, then push
 ```bash
 $ export NODE_ENV=PRODUCTION
