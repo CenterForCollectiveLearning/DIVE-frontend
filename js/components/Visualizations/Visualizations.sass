@@ -25,55 +25,55 @@
 
   background-color: #e9e7e8
 
-  .builderViewContainer
+.visualizationViewContainer
+  +fillContainer
+  max-width: 100%
+
+  .innerVisualizationViewContainer
     +fillContainer
-    max-width: 100%
+    overflow-y: scroll
+    box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.16)
 
-    .innerBuilderViewContainer
-      +fillContainer
-      overflow-y: scroll
-      box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.16)
+  .chartsContainer
+    +fillContainer
+    padding: 10px
+    background-color: white
 
-    .chartsContainer
-      +fillContainer
-      padding: 10px
-      background-color: white
+  .headerBar
+    display: flex
+    flex-direction: row
+    background-color: whitesmoke
+    padding: 10px
 
-    .headerBar
+    .headerText
+      margin-left: 10px
+      line-height: 35px
+
+    .rightActions
       display: flex
-      flex-direction: row
-      background-color: whitesmoke
-      padding: 10px
+      flex-direction: row-reverse
+      flex-grow: 1
 
-      .headerText
+      > div
         margin-left: 10px
-        line-height: 35px
 
-      .rightActions
-        display: flex
-        flex-direction: row-reverse
+  .visualizationContainer
+    display: flex
+    flex-direction: column
+
+    min-height: 400px
+    padding-top: 10px
+    padding-bottom: 30px
+
+    .header
+      text-align: center
+      line-height: 44px
+
+    .visualization
+      +fillContainer
+
+      svg
         flex-grow: 1
-
-        > div
-          margin-left: 10px
-
-    .visualizationContainer
-      display: flex
-      flex-direction: column
-
-      min-height: 400px
-      padding-top: 10px
-      padding-bottom: 30px
-
-      .header
-        text-align: center
-        line-height: 44px
-
-      .visualization
-        +fillContainer
-
-        svg
-          flex-grow: 1
 
 .specsContainer
   display: flex

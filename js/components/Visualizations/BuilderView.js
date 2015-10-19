@@ -2,17 +2,17 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { fetchSpecVisualizationIfNeeded } from '../../actions/VisualizationActions';
+import { fetchSpecVisualizationIfNeeded, createExportedSpec } from '../../actions/VisualizationActions';
 import styles from './Visualizations.sass';
 
-import DataGrid from '../Base/DataGrid';
-import Visualization from './Visualization';
+import VisualizationView from './VisualizationView';
 import RaisedButton from '../Base/RaisedButton';
 
 export class BuilderView extends Component {
   constructor(props) {
     super(props);
 
+    this.onClickShare = this.onClickShare.bind(this);
     this.onClickGallery = this.onClickGallery.bind(this);
   }
 
@@ -27,12 +27,21 @@ export class BuilderView extends Component {
   componentWillReceiveProps(nextProps) {
     const { visualization, project, fetchSpecVisualizationIfNeeded } = this.props;
 
-    const projectChanged = project.properties.id !== nextProps.project.properties.id;
-    const specChanged = visualization.spec.id != nextProps.specId;
+    const exportingChanged = visualization.isExporting != nextProps.visualization.isExporting;
 
-    if ((projectChanged || specChanged) && project.properties.id) {
+    if (nextProps.project.properties.id && !nextProps.visualization.spec.id && !visualization.spec.isFetching) {
       fetchSpecVisualizationIfNeeded(nextProps.project.properties.id, nextProps.specId);
     }
+
+    if (exportingChanged && !nextProps.visualization.isExporting) {
+      window.open(`/share/projects/${ nextProps.project.properties.id }/visualizations/${ nextProps.visualization.exportedSpecId }`);
+    }
+  }
+
+  onClickShare() {
+    const { createExportedSpec, project, visualization } = this.props;
+
+    createExportedSpec(project.properties.id, visualization.spec.id, {}, {});
   }
 
   onClickGallery() {
@@ -42,34 +51,13 @@ export class BuilderView extends Component {
   render() {
     const { visualization } = this.props;
     return (
-      <div className={ styles.builderViewContainer }>
-        { visualization.spec && !visualization.isFetching && visualization.tableData.length > 0 &&
-          <div className={ styles.innerBuilderViewContainer } >
-            <div className={ styles.headerBar } >
-              <div className={ styles.headerText } >
-                { visualization.spec.meta.construction.map((construct, i) =>
-                  <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>
-                )}              
-              </div>
-              <div className={ styles.rightActions } >
-                <RaisedButton label="Share" />
-                <RaisedButton label="Gallery" onClick={ this.onClickGallery }/>
-              </div>
-            </div>
-            <div className={ styles.chartsContainer }>
-              <Visualization
-                containerClassName="visualizationContainer"
-                visualizationClassName="visualization"
-                spec={ visualization.spec }
-                data={ visualization.visualizationData }/>
-              <DataGrid
-                data={ visualization.tableData }
-                tableClassName={ styles.grid }
-                containerClassName={ styles.gridContainer }/>
-            </div>
-          </div>
-        }
-      </div>
+      <VisualizationView visualization={ visualization }>
+        <RaisedButton onClick={ this.onClickShare }>
+          { visualization.isExporting && "Exporting..." }
+          { !visualization.isExporting && "Share" }
+        </RaisedButton>
+        <RaisedButton label="Gallery" onClick={ this.onClickGallery }/>
+      </VisualizationView>
     );
   }
 }
@@ -88,4 +76,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { pushState, fetchSpecVisualizationIfNeeded })(BuilderView);
+export default connect(mapStateToProps, { pushState, fetchSpecVisualizationIfNeeded, createExportedSpec })(BuilderView);
