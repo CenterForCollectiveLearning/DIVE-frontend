@@ -6,5 +6,5 @@
   },
   "clean_urls": true,
   "error_page": "error.html",
-  "exclude": ["*.", "__", "*.json", "*.md", "*.js", "assets/", "css/", "dist/", "js/", "node_modules/"]
+  "exclude": ["*.", "__", "*.json", "*.md", "*.js", "css/", "dist/", "js/", "node_modules/"]
 }
