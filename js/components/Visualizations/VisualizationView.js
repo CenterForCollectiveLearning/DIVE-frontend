@@ -28,10 +28,12 @@ export default class VisualizationView extends Component {
                 visualizationClassName="visualization"
                 spec={ visualization.spec }
                 data={ visualization.visualizationData }/>
-              <DataGrid
-                data={ visualization.tableData }
-                tableClassName={ styles.grid }
-                containerClassName={ styles.gridContainer }/>
+              { visualization.tableData.length != 0 &&
+                <DataGrid
+                  data={ visualization.tableData }
+                  tableClassName={ styles.grid }
+                  containerClassName={ styles.gridContainer }/>
+              }
             </div>
           </div>
         }
