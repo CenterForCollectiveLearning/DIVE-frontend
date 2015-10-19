@@ -23,26 +23,14 @@ const storageMiddleware = storage.createMiddleware(engine);
 
 let createStoreWithMiddleware;
 
-if (__DEV__) {
-  let devtools = require('redux-devtools');
-  createStoreWithMiddleware = compose(
-    applyMiddleware(thunkMiddleware, loggerMiddleware, storageMiddleware),
-    reduxReactRouter({
-      routes,
-      createHistory
-    }),
-    devtools.devTools(),
-    devtools.persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/)),
-  )(createStore);
-} else {
-  createStoreWithMiddleware = compose(
-    applyMiddleware(thunkMiddleware, loggerMiddleware),
-    reduxReactRouter({
-      routes,
-      createHistory
-    })
-  )(createStore);
-}
+
+createStoreWithMiddleware = compose(
+  applyMiddleware(thunkMiddleware, loggerMiddleware),
+  reduxReactRouter({
+    routes,
+    createHistory
+  })
+)(createStore);
 
 
 export default function configureStore(initialState) {
