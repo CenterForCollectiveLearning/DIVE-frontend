@@ -14,6 +14,7 @@ import BuilderPage from './components/Visualizations/BuilderPage';
 import AnalysisPage from './components/Analysis/AnalysisPage';
 import RegressionPage from './components/Analysis/RegressionPage';
 import ComparisonPage from './components/Analysis/ComparisonPage';
+import ExportedVisualizationPage from './components/Visualizations/ExportedVisualizationPage';
 
 export default (
   <Route path="/" component={ App }>
@@ -32,5 +33,6 @@ export default (
         <Route path="comparison" component={ ComparisonPage }/>
       </Route>
     </Route>
+    <Route path="/share/projects/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>
   </Route>
 );

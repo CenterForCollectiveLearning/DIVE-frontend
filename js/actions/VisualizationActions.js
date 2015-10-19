@@ -5,7 +5,9 @@ import {
   SELECT_VISUALIZATION_TYPE,
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
-  CLEAR_VISUALIZATION
+  CLEAR_VISUALIZATION,
+  REQUEST_CREATE_EXPORTED_SPEC,
+  RECEIVE_CREATED_EXPORTED_SPEC
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTaskResult } from './api.js';
@@ -144,4 +146,39 @@ export function clearVisualization() {
   return {
     type: CLEAR_VISUALIZATION
   };  
+}
+
+function requestCreateExportedSpecDispatcher() {
+  return {
+    type: REQUEST_CREATE_EXPORTED_SPEC
+  };
+}
+
+function receiveCreatedExportedSpecDispatcher(json) {
+  return {
+    type: RECEIVE_CREATED_EXPORTED_SPEC,
+    exportedSpecId: json.id,
+    specId: json.specId,
+    receivedAt: Date.now()
+  };
+}
+
+export function createExportedSpec(projectId, specId, conditionals, config) {
+  const params = {
+    project_id: projectId,
+    spec_id: specId,
+    conditionals: conditionals,
+    config: config
+  }
+
+  return dispatch => {
+    dispatch(requestCreateExportedSpecDispatcher());
+    return fetch('/exported_specs/v1/exported_specs', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }      
+    }).then(response => response.json())
+      .then(json => dispatch(receiveCreatedExportedSpecDispatcher(json)))
+      .catch(err => console.error("Error creating exported spec: ", err));
+  };
 }

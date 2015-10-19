@@ -9,7 +9,7 @@ class BuilderPage extends Component {
     return (
       <div className={ `${styles.fillContainer} ${styles.builderContainer}` }>
         <BuilderView specId={ this.props.params.specId }/>
-        {this.props.children}
+        { this.props.children }
       </div>
     );
   }
