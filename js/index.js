@@ -5,8 +5,6 @@ import { createStore, compose, combineReducers } from 'redux';
 import { ReduxRouter } from 'redux-react-router';
 
 import { Provider } from 'react-redux';
-import { devTools } from 'redux-devtools';
-import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import configureStore from './store/configureStore';
 
@@ -25,11 +23,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('main')
 );
-
-if (process.env.NODE_ENV !== 'production') {
-  // Use require because imports can't be conditional.
-  // In production, you should ensure process.env.NODE_ENV
-  // is envified so that Uglify can eliminate this
-  // module and its dependencies as dead code.
-  require('./createDevToolsWindow')(store);
-}
