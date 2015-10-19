@@ -8,7 +8,7 @@ import styles from './Analysis.sass';
 import AnalysisSidebar from './AnalysisSidebar';
 import SidebarGroup from '../Base/SidebarGroup';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
-import DropdownMenu from '../Base/DropdownMenu';
+import DropDownMenu from '../Base/DropDownMenu';
 
 export class ComparisonSidebar extends Component {
   componentWillMount(props) {
@@ -32,7 +32,7 @@ export class ComparisonSidebar extends Component {
       <AnalysisSidebar selectedTab="comparison">
         { this.props.fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Independent Variable">
-            <DropdownMenu
+            <DropDownMenu
               value={ this.props.regressionSelector.independentVariableId }
               options={ this.props.fieldProperties.items }
               valueMember="id"
