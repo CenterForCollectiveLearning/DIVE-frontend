@@ -41,7 +41,8 @@
   "scripts": {
     "start": "npm run build-env && DEBUG=true node server.js",
     "build-env": "node buildenv",
-    "build": "webpack -p"
+    "build": "webpack -p",
+    "deploy": "npm run build && divshot push"
   },
   "devDependencies": {
     "babel-core": "^5.8.24",

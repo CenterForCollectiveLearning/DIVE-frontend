@@ -39,7 +39,7 @@ Set environment variables, login with divshot credentials, then push
 ```bash
 $ export NODE_ENV=PRODUCTION
 $ divshot login
-$ divshot push
+$ npm run deploy
 ```
 
 Divshot should have an API_URL env var already configured. If not, run:
