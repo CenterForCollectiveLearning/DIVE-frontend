@@ -1,5 +1,6 @@
+import { LOAD } from 'redux-storage';
+
 import {
-  LOAD,
   CREATE_ANONYMOUS_USER
 } from '../constants/ActionTypes';
 

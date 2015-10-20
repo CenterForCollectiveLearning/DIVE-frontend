@@ -1,5 +1,6 @@
+import { LOAD } from 'redux-storage';
+
 import {
-  LOAD,
   REQUEST_PROJECT,
   RECEIVE_PROJECT,
   CREATE_PROJECT,
