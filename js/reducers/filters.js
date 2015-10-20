@@ -5,35 +5,35 @@ import {
 export default function filters(state={
   visualizationTypes: [
     {
-      type: "TREEMAP",
+      type: "tree",
       imageName: "treemap",
       label: "Treemap",
       selected: false,
       disabled: false
     },
     {
-      type: "BAR",
+      type: "hist",
       imageName: "bar",
       label: "Bar",
       selected: false,
       disabled: false
     },
     {
-      type: "PIE",
+      type: "pie",
       imageName: "pie",
       label: "Pie",
       selected: false,
       disabled: false
     },
     {
-      type: "LINE",
+      type: "line",
       imageName: "line",
       label: "Line",
       selected: false,
       disabled: false
     },
     {
-      type: "SCATTERPLOT",
+      type: "scatter",
       imageName: "scatterplot",
       label: "Scatter",
       selected: false,
@@ -43,22 +43,16 @@ export default function filters(state={
 }, action) {
   switch(action.type){
     case SELECT_VISUALIZATION_TYPE:
-      var newVisualizationTypes = state.visualizationTypes;
+      var visualizationTypes = state.visualizationTypes;
 
-      const previousSelectedIndex = state.visualizationTypes.findIndex((typeObject, i, types) =>
-        typeObject.selected
-      );
-      if (previousSelectedIndex >= 0) {
-        newVisualizationTypes[previousSelectedIndex].selected = false;
-      }
-
-      const newSelectedIndex = state.visualizationTypes.findIndex((typeObject, i, types) =>
+      const selectedIndex = state.visualizationTypes.findIndex((typeObject, i, types) =>
         typeObject.type == action.selectedType
       );
-      if (newSelectedIndex >= 0) {
-        newVisualizationTypes[newSelectedIndex].selected = true;
+      if (selectedIndex >= 0) {
+        visualizationTypes[selectedIndex].selected = !visualizationTypes[selectedIndex].selected;
       }
-      return { ...state, visualizationTypes: newVisualizationTypes }
+
+      return { ...state, visualizationTypes: visualizationTypes }
     default:
       return state;
   }
