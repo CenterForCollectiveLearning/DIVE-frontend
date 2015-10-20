@@ -42,21 +42,29 @@ export class GalleryView extends Component {
   }
 
   render() {
+    const { specs, filters } = this.props;
     return (
       <div className={ styles.specsContainer }>
-        { this.props.specs.items.map((spec) =>
-          <div className={ styles.blockContainer } key={ spec.id }>
-            <Visualization
-              containerClassName="block"
-              visualizationClassName="visualization"
-              overflowTextClassName="overflowText"
-              spec={ spec }
-              data={ spec.data.visualize }
-              onClick={ this.handleClick }
-              isMinimalView={ true }
-              showHeader={ true } />
-          </div>
-        )}
+        { specs.items.filter(function(spec) {
+            return (filters.visualizationTypes.every((filter) =>
+              !filter.selected
+            )) || (filters.visualizationTypes.some((filter) => 
+              filter.selected && (spec.vizTypes.indexOf(filter.type) >= 0)
+            ))
+          }).map((spec) =>
+            <div className={ styles.blockContainer } key={ spec.id }>
+              <Visualization
+                containerClassName="block"
+                visualizationClassName="visualization"
+                overflowTextClassName="overflowText"
+                spec={ spec }
+                data={ spec.data.visualize }
+                onClick={ this.handleClick }
+                isMinimalView={ true }
+                showHeader={ true } />
+            </div>
+          )
+        }
       </div>
     );
   }
@@ -70,9 +78,10 @@ GalleryView.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, specs, fieldProperties, datasetSelector } = state;
+  const { project, filters, specs, fieldProperties, datasetSelector } = state;
   return {
     project,
+    filters,
     specs,
     fieldProperties,
     datasetSelector
