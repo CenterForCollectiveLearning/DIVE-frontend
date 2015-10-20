@@ -16,9 +16,12 @@ export class GalleryView extends Component {
   }
 
   componentWillMount() {
-    const { datasetSelector, project, fetchSpecsIfNeeded, fetchFieldPropertiesIfNeeded, clearVisualization, fieldProperties } = this.props;
+    const { datasetSelector, project, specs, fetchSpecsIfNeeded, fetchFieldPropertiesIfNeeded, clearVisualization, fieldProperties } = this.props;
+    const noSpecsAndNotFetching = (!specs.items.length && !specs.isFetching);
+    console.log(noSpecsAndNotFetching);
+    console.log(datasetSelector.datasetId);
 
-    if (project.properties.id && datasetSelector.datasetId) {
+    if (project.properties.id && datasetSelector.datasetId && noSpecsAndNotFetching) {
       fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, null);
     }
 
@@ -26,11 +29,13 @@ export class GalleryView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { datasetSelector, project, fieldProperties, fetchSpecsIfNeeded } = this.props;
+    const { datasetSelector, project, specs, fieldProperties, fetchSpecsIfNeeded } = this.props;
     const datasetChanged = (datasetSelector.datasetId !== nextProps.datasetSelector.datasetId);
+    const noSpecsAndNotFetching = (!specs.items.length && !specs.isFetching);
+    console.log(noSpecsAndNotFetching);
 
     const fieldPropertiesChanged = (fieldProperties.updatedAt !== nextProps.fieldProperties.updatedAt);
-    if (project.properties.id && (datasetChanged || fieldPropertiesChanged)) {
+    if (project.properties.id && nextProps.datasetSelector.datasetId && (datasetChanged || fieldPropertiesChanged || noSpecsAndNotFetching)) {
       fetchSpecsIfNeeded(project.properties.id, nextProps.datasetSelector.datasetId, nextProps.fieldProperties.items);
     }
   }

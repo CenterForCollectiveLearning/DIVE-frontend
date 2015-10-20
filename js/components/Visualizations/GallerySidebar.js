@@ -12,8 +12,19 @@ import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import DropDownMenu from '../Base/DropDownMenu';
 
 export class GallerySidebar extends Component {
+  componentWillMount() {
+    const { project, datasetSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset } = this.props;
+
+    if (project.properties.id && !datasetSelector.datasetId && !datasetSelector.isFetching) {
+      fetchDatasetsIfNeeded(project.properties.id);
+    }
+    if (datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.isFetching) {
+      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId);
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
-    const { project, datasets, datasetSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset } = this.props;
+    const { project, datasetSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset } = this.props;
 
     const projectChanged = (nextProps.project.properties.id !== project.properties.id);
     const datasetChanged = (nextProps.datasetSelector.datasetId !== datasetSelector.datasetId);
@@ -27,38 +38,39 @@ export class GallerySidebar extends Component {
   }
 
   render() {
+    const { datasets, datasetSelector, fieldProperties, filters, selectVisualizationType, selectAggregationFunction, selectFieldProperty, selectDataset } = this.props;
     return (
       <Sidebar>
-        { this.props.datasets.items && this.props.datasets.items.length > 0 &&
+        { datasets.items && datasets.items.length > 0 &&
           <SidebarGroup heading="Dataset">
             <DropDownMenu
-              value={ `${this.props.datasetSelector.datasetId}` }
-              options={ this.props.datasets.items }
+              value={ `${ datasetSelector.datasetId }` }
+              options={ datasets.items }
               valueMember="datasetId"
               displayTextMember="title"
-              onChange={ this.props.selectDataset } />
+              onChange={ selectDataset } />
           </SidebarGroup>
         }
-        { this.props.datasets.items && this.props.datasets.items.length > 0 &&
+        { datasets.items && datasets.items.length > 0 &&
           <SidebarGroup heading="Visualization type">
             <ToggleButtonGroup
-              toggleItems={ this.props.filters.visualizationTypes }
+              toggleItems={ filters.visualizationTypes }
               displayTextMember="label"
               valueMember="type"
               imageNameMember="imageName"
               imageNameSuffix=".chart.svg"
-              onChange={ this.props.selectVisualizationType } />
+              onChange={ selectVisualizationType } />
           </SidebarGroup>
         }
-        { this.props.fieldProperties.items.length > 0 &&
+        { fieldProperties.items.length > 0 &&
           <SidebarGroup heading="Fields">
             <ToggleButtonGroup
-              toggleItems={ this.props.fieldProperties.items }
+              toggleItems={ fieldProperties.items }
               displayTextMember="name"
               valueMember="id"
               separated={ true }
-              selectMenuItem={ this.props.selectAggregationFunction }
-              onChange={ this.props.selectFieldProperty } />
+              selectMenuItem={ selectAggregationFunction }
+              onChange={ selectFieldProperty } />
           </SidebarGroup>
         }
       </Sidebar>
