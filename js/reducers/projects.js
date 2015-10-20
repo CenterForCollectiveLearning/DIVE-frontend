@@ -1,5 +1,6 @@
+import { LOAD } from 'redux-storage';
+
 import {
-  LOAD,
   REQUEST_PRELOADED_PROJECTS,
   RECEIVE_PRELOADED_PROJECTS
 } from '../constants/ActionTypes';
