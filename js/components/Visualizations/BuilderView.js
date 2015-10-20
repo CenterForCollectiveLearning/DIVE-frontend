@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { fetchSpecVisualizationIfNeeded, createExportedSpec } from '../../actions/VisualizationActions';
+import { fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow } from '../../actions/VisualizationActions';
 import styles from './Visualizations.sass';
 
 import VisualizationView from './VisualizationView';
@@ -33,14 +33,15 @@ export class BuilderView extends Component {
       fetchSpecVisualizationIfNeeded(nextProps.project.properties.id, nextProps.specId);
     }
 
-    if (exportingChanged && !nextProps.visualization.isExporting) {
-      window.open(`/share/projects/${ nextProps.project.properties.id }/visualizations/${ nextProps.visualization.exportedSpecId }`);
+    if (exportingChanged && !nextProps.visualization.isExporting && nextProps.visualization.shareWindow) {
+      nextProps.visualization.shareWindow.location.href = `/share/projects/${ nextProps.project.properties.id }/visualizations/${ nextProps.visualization.exportedSpecId }`;
     }
   }
 
   onClickShare() {
-    const { createExportedSpec, project, visualization } = this.props;
+    const { project, visualization, createExportedSpec, setShareWindow } = this.props;
 
+    setShareWindow(window.open('about:blank'));
     createExportedSpec(project.properties.id, visualization.spec.id, {}, {});
   }
 
@@ -76,4 +77,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { pushState, fetchSpecVisualizationIfNeeded, createExportedSpec })(BuilderView);
+export default connect(mapStateToProps, { pushState, fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow })(BuilderView);

@@ -3,7 +3,8 @@ import {
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
   REQUEST_CREATE_EXPORTED_SPEC,
-  RECEIVE_CREATED_EXPORTED_SPEC
+  RECEIVE_CREATED_EXPORTED_SPEC,
+  SET_SHARE_WINDOW
 } from '../constants/ActionTypes';
 
 export default function visualization(state = {
@@ -11,6 +12,7 @@ export default function visualization(state = {
   visualizationData: [],
   spec: {},
   exportedSpecId: null,
+  shareWindow: null,
   isExporting: false,
   isFetching: false
 }, action) {
@@ -21,6 +23,7 @@ export default function visualization(state = {
         visualizationData: [],
         spec: {},
         exportedSpecId: null,
+        shareWindow: null,
         isExporting: false,
         isFetching: false
       }
@@ -32,6 +35,8 @@ export default function visualization(state = {
       return { ...state, isExporting: true };
     case RECEIVE_CREATED_EXPORTED_SPEC:
       return { ...state, exportedSpecId: action.exportedSpecId, isExporting: false };
+    case SET_SHARE_WINDOW:
+      return { ...state, shareWindow: action.shareWindow }
     default:
       return state;
   }

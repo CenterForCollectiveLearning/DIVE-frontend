@@ -7,7 +7,8 @@ import {
   RECEIVE_VISUALIZATION_DATA,
   CLEAR_VISUALIZATION,
   REQUEST_CREATE_EXPORTED_SPEC,
-  RECEIVE_CREATED_EXPORTED_SPEC
+  RECEIVE_CREATED_EXPORTED_SPEC,
+  SET_SHARE_WINDOW
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTaskResult } from './api.js';
@@ -181,4 +182,11 @@ export function createExportedSpec(projectId, specId, conditionals, config) {
       .then(json => dispatch(receiveCreatedExportedSpecDispatcher(json)))
       .catch(err => console.error("Error creating exported spec: ", err));
   };
+}
+
+export function setShareWindow(shareWindow) {
+  return {
+    type: SET_SHARE_WINDOW,
+    shareWindow: shareWindow
+  }
 }
