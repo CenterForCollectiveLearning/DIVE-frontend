@@ -40,7 +40,7 @@ function receiveSpecsDispatcher(params, json) {
 
 function fetchSpecs(projectId, datasetId, fieldProperties) {
   var fieldAggPairs = null;
-  if (fieldProperties) {
+  if (fieldProperties && fieldProperties.length) {
     fieldAggPairs = fieldProperties
       .filter((item) => item.selected)
       .map((item) => new Object({
