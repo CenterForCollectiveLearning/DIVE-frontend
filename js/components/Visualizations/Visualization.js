@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from './Visualizations.sass';
 
+import TreeMap from './TreeMap';
 import PieChart from './PieChart';
 import ColumnChart from './ColumnChart';
 
@@ -24,32 +25,46 @@ export default class Visualization extends Component {
     const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView } = this.props;
 
     var options = {
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
+      headerColor: 'white',
+      headerHeight: 0
     };
 
     if (isMinimalView) {
       options = {
         ...options,
-        height: 140,
-        enableInteractivity: false,
         axisTitlesPosition: 'none',
-        hAxis: {
-          textPosition: 'none'
-        },
-        vAxis: {
-          textPosition: 'none'
-        },
-        tooltip: {
-          trigger: 'none'
-        },
-        legend: {
-          position: 'none'
-        },
         chartArea: {
           left: 0,
           top: 0,
           width: '100%',
           height: '100%'
+        },
+        enableInteractivity: false,
+        fontSize: 0,
+        hAxis: {
+          textPosition: 'none'
+        },
+        height: 140,
+        highlightOnMouseOver: false,
+        hintOpacity: 0,
+        legend: {
+          position: 'none'
+        },
+        showTooltips: false,
+        textStyle: {
+          color: 'transparent',
+          fontSize: 0
+        },
+        tooltip: {
+          trigger: 'none'
+        },
+        vAxis: {
+          textPosition: 'none',
+          baselineColor: 'transparent',
+          gridlines: {
+            count: 0
+          }
         }
       };
     } else {
@@ -58,7 +73,6 @@ export default class Visualization extends Component {
         height: 400
       }
     }
-
 
     return (
       <div className={ styles[containerClassName] } onClick={ this.handleClick }>
@@ -80,9 +94,18 @@ export default class Visualization extends Component {
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
-            { (spec.vizTypes[0] == 'pie' || spec.vizTypes[0] == 'tree') &&
+            { (spec.vizTypes[0] == 'pie') &&
               <PieChart
                 chartId={ `spec-${spec.id}` }
+                generatingProcedure={ spec.generatingProcedure }
+                data={ data }
+                options={ options }
+                isMinimalView={ isMinimalView }/>
+            }
+            { spec.vizTypes[0] == 'tree' &&
+              <TreeMap
+                chartId={ `spec-${spec.id}` }
+                parent={ spec.meta.desc }
                 generatingProcedure={ spec.generatingProcedure }
                 data={ data }
                 options={ options }

@@ -18,8 +18,6 @@ export class GalleryView extends Component {
   componentWillMount() {
     const { datasetSelector, project, specs, fetchSpecsIfNeeded, fetchFieldPropertiesIfNeeded, clearVisualization, fieldProperties } = this.props;
     const noSpecsAndNotFetching = (!specs.items.length && !specs.isFetching);
-    console.log(noSpecsAndNotFetching);
-    console.log(datasetSelector.datasetId);
 
     if (project.properties.id && datasetSelector.datasetId && noSpecsAndNotFetching) {
       fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, null);
