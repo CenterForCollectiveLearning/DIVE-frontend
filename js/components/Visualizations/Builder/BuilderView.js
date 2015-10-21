@@ -2,11 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow } from '../../actions/VisualizationActions';
-import styles from './Visualizations.sass';
+import { fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
+import styles from '../Visualizations.sass';
 
-import VisualizationView from './VisualizationView';
-import RaisedButton from '../Base/RaisedButton';
+import VisualizationView from '../VisualizationView';
+import RaisedButton from '../../Base/RaisedButton';
 
 export class BuilderView extends Component {
   constructor(props) {

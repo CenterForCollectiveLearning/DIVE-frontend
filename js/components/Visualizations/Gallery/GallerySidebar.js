@@ -1,15 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { selectDataset, fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
-import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectAggregationFunction } from '../../actions/FieldPropertiesActions';
-import { selectVisualizationType } from '../../actions/VisualizationActions';
-import styles from './Visualizations.sass';
+import { selectDataset, fetchDatasetsIfNeeded } from '../../../actions/DatasetActions';
+import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
+import { selectVisualizationType } from '../../../actions/VisualizationActions';
+import styles from '../Visualizations.sass';
 
-import Sidebar from '../Base/Sidebar';
-import SidebarGroup from '../Base/SidebarGroup';
-import ToggleButtonGroup from '../Base/ToggleButtonGroup';
-import DropDownMenu from '../Base/DropDownMenu';
+import Sidebar from '../../Base/Sidebar';
+import SidebarGroup from '../../Base/SidebarGroup';
+import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
+import DropDownMenu from '../../Base/DropDownMenu';
 
 export class GallerySidebar extends Component {
   componentWillMount() {
