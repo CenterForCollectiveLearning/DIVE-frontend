@@ -22,7 +22,7 @@ export default class Visualization extends Component {
 
   render() {
     const MAX_ELEMENTS = 300;
-    const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView } = this.props;
+    const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes } = this.props;
 
     var options = {
       backgroundColor: 'transparent',
@@ -74,6 +74,8 @@ export default class Visualization extends Component {
       }
     }
 
+    const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
+
     return (
       <div className={ styles[containerClassName] } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
@@ -85,26 +87,26 @@ export default class Visualization extends Component {
         }
         { (!isMinimalView || (data.length < MAX_ELEMENTS)) &&
           <div className={ styles[visualizationClassName] }>
-            { (spec.vizTypes[0] == 'bar' || spec.vizTypes[0] == 'hist') && 
+            { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
               <ColumnChart
-                chartId={ `spec-${spec.id}` }
+                chartId={ `spec-bar-${spec.id}` }
                 fieldNames={ spec.args }
                 generatingProcedure={ spec.generatingProcedure }
                 data={ data }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
-            { (spec.vizTypes[0] == 'pie') &&
+            { validVisualizationTypes[0] == 'pie' &&
               <PieChart
-                chartId={ `spec-${spec.id}` }
+                chartId={ `spec-pie-${spec.id}` }
                 generatingProcedure={ spec.generatingProcedure }
                 data={ data }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
-            { spec.vizTypes[0] == 'tree' &&
+            { validVisualizationTypes[0] == 'tree' &&
               <TreeMap
-                chartId={ `spec-${spec.id}` }
+                chartId={ `spec-tree-${spec.id}` }
                 parent={ spec.meta.desc }
                 generatingProcedure={ spec.generatingProcedure }
                 data={ data }
@@ -132,7 +134,8 @@ Visualization.propTypes = {
   overflowTextClassName: PropTypes.string,
   isMinimalView: PropTypes.bool,
   onClick: PropTypes.func,
-  showHeader: PropTypes.bool
+  showHeader: PropTypes.bool,
+  visualizationTypes: PropTypes.array
 };
 
 Visualization.defaultProps = {
@@ -141,6 +144,7 @@ Visualization.defaultProps = {
   headerClassName: "header",
   overflowTextClassName: "overflowText",
   isMinimalView: false,
-  showHeader: false
+  showHeader: false,
+  visualizationTypes: []
 };
 

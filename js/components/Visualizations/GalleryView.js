@@ -43,20 +43,23 @@ export class GalleryView extends Component {
 
   render() {
     const { specs, filters } = this.props;
+    const selectedVisualizationTypes = filters.visualizationTypes
+      .filter((filter) => filter.selected)
+      .map((filter) => filter.type);
+
     return (
       <div className={ styles.specsContainer }>
-        { specs.items.filter(function(spec) {
-            return (filters.visualizationTypes.every((filter) =>
-              !filter.selected
-            )) || (filters.visualizationTypes.some((filter) => 
-              filter.selected && (spec.vizTypes.indexOf(filter.type) >= 0)
-            ))
-          }).map((spec) =>
+        { specs.items.filter((spec) =>
+            (selectedVisualizationTypes.length == 0) || selectedVisualizationTypes.some((filter) => 
+              spec.vizTypes.indexOf(filter) >= 0
+            )
+          ).map((spec) =>
             <div className={ styles.blockContainer } key={ spec.id }>
               <Visualization
                 containerClassName="block"
                 visualizationClassName="visualization"
                 overflowTextClassName="overflowText"
+                visualizationTypes={ selectedVisualizationTypes }
                 spec={ spec }
                 data={ spec.data.visualize }
                 onClick={ this.handleClick }
