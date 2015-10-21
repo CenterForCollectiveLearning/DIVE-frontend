@@ -13,7 +13,6 @@ export class BuilderView extends Component {
     super(props);
 
     this.onClickShare = this.onClickShare.bind(this);
-    this.onClickGallery = this.onClickGallery.bind(this);
   }
 
   componentWillMount() {
@@ -45,10 +44,6 @@ export class BuilderView extends Component {
     createExportedSpec(project.properties.id, visualization.spec.id, {}, {});
   }
 
-  onClickGallery() {
-    this.props.pushState(null, `/projects/${this.props.project.properties.id}/visualize/gallery`);
-  }
-
   render() {
     const { visualization } = this.props;
     return (
@@ -57,7 +52,6 @@ export class BuilderView extends Component {
           { visualization.isExporting && "Exporting..." }
           { !visualization.isExporting && "Share" }
         </RaisedButton>
-        <RaisedButton label="Gallery" onClick={ this.onClickGallery }/>
       </VisualizationView>
     );
   }
