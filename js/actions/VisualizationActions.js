@@ -3,6 +3,7 @@ import {
   RECEIVE_SPECS,
   FAILED_RECEIVE_SPECS,
   SELECT_VISUALIZATION_TYPE,
+  SELECT_BUILDER_VISUALIZATION_TYPE,
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
   CLEAR_VISUALIZATION,
@@ -97,6 +98,13 @@ export function fetchSpecsIfNeeded(projectId, datasetId, fieldProperties) {
 export function selectVisualizationType(selectedType) {
   return {
     type: SELECT_VISUALIZATION_TYPE,
+    selectedType: selectedType
+  }
+}
+
+export function selectBuilderVisualizationType(selectedType) {
+  return {
+    type: SELECT_BUILDER_VISUALIZATION_TYPE,
     selectedType: selectedType
   }
 }

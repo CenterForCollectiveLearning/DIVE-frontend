@@ -9,12 +9,12 @@ import DatasetsPage from './components/Datasets/DatasetsPage';
 import DatasetUploadPage from './components/Datasets/DatasetUploadPage';
 import DatasetInspectPage from './components/Datasets/DatasetInspectPage';
 import VisualizationsPage from './components/Visualizations/VisualizationsPage';
-import GalleryPage from './components/Visualizations/GalleryPage';
-import BuilderPage from './components/Visualizations/BuilderPage';
+import GalleryPage from './components/Visualizations/Gallery/GalleryPage';
+import BuilderPage from './components/Visualizations/Builder/BuilderPage';
 import AnalysisPage from './components/Analysis/AnalysisPage';
 import RegressionPage from './components/Analysis/RegressionPage';
 import ComparisonPage from './components/Analysis/ComparisonPage';
-import ExportedVisualizationPage from './components/Visualizations/ExportedVisualizationPage';
+import ExportedVisualizationPage from './components/Visualizations/ExportedVisualization/ExportedVisualizationPage';
 
 export default (
   <Route path="/" component={ App }>
