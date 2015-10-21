@@ -49,7 +49,10 @@ export class GalleryView extends Component {
 
     return (
       <div className={ styles.specsContainer }>
-        { specs.items.filter((spec) =>
+        { specs.isFetching &&
+          <div className={ styles.watermark }>Fetching visualizations...</div>
+        }
+        { !specs.isFetching && specs.items.filter((spec) =>
             (selectedVisualizationTypes.length == 0) || selectedVisualizationTypes.some((filter) => 
               spec.vizTypes.indexOf(filter) >= 0
             )
