@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from './Visualizations.sass';
 
-import TreeMap from './TreeMap';
-import PieChart from './PieChart';
-import ColumnChart from './ColumnChart';
+import TreeMap from './Charts/TreeMap';
+import PieChart from './Charts/PieChart';
+import ColumnChart from './Charts/ColumnChart';
 
 export default class Visualization extends Component {
   constructor(props) {

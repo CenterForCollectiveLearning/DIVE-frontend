@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import styles from './Visualizations.sass';
-import BuilderView from './BuilderView';
+import styles from '../Visualizations.sass';
+import BuilderView from '../BuilderView';
 
 class BuilderPage extends Component {
   render() {

@@ -1,15 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 
-import * as GeneratingProcedures from '../../constants/GeneratingProcedures';
+import * as GeneratingProcedures from '../../../constants/GeneratingProcedures';
 
-import styles from './Visualizations.sass';
+import styles from '../Visualizations.sass';
 
 var Chart = require('react-google-charts').Chart;
 
-export default class TreeMap extends Component {
+export default class PieChart extends Component {
 
   render() {
-    const { data, generatingProcedure, isMinimalView, chartId, parent, options } = this.props;
+    const { data, generatingProcedure, isMinimalView, chartId, options } = this.props;
 
     var col1, col2 = '';
 
@@ -28,21 +28,14 @@ export default class TreeMap extends Component {
         return;
     }
 
-    const rows = [
-      [ parent, null, 0],
-      ...data.map((item) =>
-        [ `${item[col1]}`, parent, item[col2] ]
-      )
-    ];
+    const rows = data.map((item) =>
+      [ `${item[col1]}`, item[col2] ]
+    );
 
     const columns = [
       {
         'type': 'string',
         'label' : col1
-      }, 
-      {
-        'type': 'string',
-        'label' : 'Parent'
       }, 
       {
         'type' : 'number',
@@ -51,21 +44,20 @@ export default class TreeMap extends Component {
     ];
 
     return (
-      <Chart chartType="TreeMap" options={ options } columns={ columns } rows={ rows } graph_id={ chartId }/>
+      <Chart chartType="PieChart" options={ options } columns={ columns } rows={ rows } graph_id={ chartId }/>
     );
   }
 }
 
-TreeMap.propTypes = {
+PieChart.propTypes = {
   chartId: PropTypes.string.isRequired,
   generatingProcedure: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
-  parent: PropTypes.string.isRequired,
   isMinimalView: PropTypes.bool,
   options: PropTypes.object
 };
 
-TreeMap.defaultProps = {
+PieChart.defaultProps = {
   isMinimalView: false,
   options: {}
 };

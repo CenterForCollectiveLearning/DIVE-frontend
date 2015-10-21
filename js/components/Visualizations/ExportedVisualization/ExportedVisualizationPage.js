@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { fetchExportedSpecIfNeeded } from '../../actions/ExportedVisualizationActions'
+import { fetchExportedSpecIfNeeded } from '../../../actions/ExportedVisualizationActions'
 
-import styles from './Visualizations.sass';
+import styles from '../Visualizations.sass';
 
-import VisualizationView from './VisualizationView';
+import VisualizationView from '../VisualizationView';
 
 class ExportedVisualizationPage extends Component {
   componentWillMount() {

@@ -2,11 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { clearVisualization, fetchSpecsIfNeeded } from '../../actions/VisualizationActions';
-import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
-import styles from './Visualizations.sass';
+import { clearVisualization, fetchSpecsIfNeeded } from '../../../actions/VisualizationActions';
+import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
+import styles from '../Visualizations.sass';
 
-import Visualization from './Visualization';
+import Visualization from '../Visualization';
 
 export class GalleryView extends Component {
   constructor(props) {
