@@ -14,6 +14,7 @@ export default class ToggleButtonGroup extends Component {
             altText={ item[displayTextMember] }
             imageName={ imageNameMember ? `/assets/${item[imageNameMember]}${imageNameSuffix}` : null }
             onChange={ onChange }
+            isDisabled={ item.disabled }
             isSelected={ item.selected || (externalSelectedItems && externalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) || false }
             separated={ separated }
             splitMenu={ item.splitMenu ? item.splitMenu : [] }

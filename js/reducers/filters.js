@@ -30,14 +30,14 @@ export default function filters(state={
       imageName: "line",
       label: "Line",
       selected: false,
-      disabled: false
+      disabled: true
     },
     {
       type: "scatter",
       imageName: "scatterplot",
       label: "Scatter",
       selected: false,
-      disabled: false
+      disabled: true
     }
   ]
 }, action) {
