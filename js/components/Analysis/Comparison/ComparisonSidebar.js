@@ -1,14 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
-import { selectIndependentVariable, selectDependentVariable } from '../../actions/ComparisonActions';
-import styles from './Analysis.sass';
+import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
+import { selectIndependentVariable, selectDependentVariable } from '../../../actions/ComparisonActions';
+import styles from '../Analysis.sass';
 
-import AnalysisSidebar from './AnalysisSidebar';
-import SidebarGroup from '../Base/SidebarGroup';
-import ToggleButtonGroup from '../Base/ToggleButtonGroup';
-import DropDownMenu from '../Base/DropDownMenu';
+import AnalysisSidebar from '../AnalysisSidebar';
+import SidebarGroup from '../../Base/SidebarGroup';
+import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
+import DropDownMenu from '../../Base/DropDownMenu';
 
 export class ComparisonSidebar extends Component {
   componentWillMount(props) {

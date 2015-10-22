@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import styles from './Analysis.sass';
+import styles from '../Analysis.sass';
 
 export class ComparisonView extends Component {
   render() {
