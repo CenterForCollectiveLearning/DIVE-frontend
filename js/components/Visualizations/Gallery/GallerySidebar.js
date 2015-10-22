@@ -28,10 +28,8 @@ export class GallerySidebar extends Component {
 
     const projectChanged = (previousProps.project.properties.id !== project.properties.id);
     const datasetChanged = (previousProps.datasetSelector.datasetId !== datasetSelector.datasetId);
-    console.log(datasets.loaded);
-    console.log(project.properties.id);
+
     if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded))) {
-      console.log('loading?');
       fetchDatasetsIfNeeded(project.properties.id);
     }
     if (datasetChanged) {
