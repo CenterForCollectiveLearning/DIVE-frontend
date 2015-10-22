@@ -13,9 +13,9 @@ import DropDownMenu from '../../Base/DropDownMenu';
 
 export class GallerySidebar extends Component {
   componentWillMount() {
-    const { project, datasetSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset } = this.props;
+    const { project, datasetSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, datasets } = this.props;
 
-    if (project.properties.id && !datasetSelector.datasetId && !datasetSelector.isFetching) {
+    if (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded)) {
       fetchDatasetsIfNeeded(project.properties.id);
     }
     if (datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.isFetching) {
@@ -24,12 +24,14 @@ export class GallerySidebar extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { project, datasetSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset } = this.props;
+    const { project, datasetSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, datasets } = this.props;
 
     const projectChanged = (previousProps.project.properties.id !== project.properties.id);
     const datasetChanged = (previousProps.datasetSelector.datasetId !== datasetSelector.datasetId);
-
-    if (projectChanged || (project.properties.id && !datasetSelector.datasetId)) {
+    console.log(datasets.loaded);
+    console.log(project.properties.id);
+    if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded))) {
+      console.log('loading?');
       fetchDatasetsIfNeeded(project.properties.id);
     }
     if (datasetChanged) {

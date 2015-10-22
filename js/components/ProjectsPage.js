@@ -48,7 +48,7 @@ export class ProjectsPage extends Component {
             </div>
           </div>
           <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
-            <Tab label="DATA" value="data" route="data/upload" />
+            <Tab label="DATA" value="data" route="data" />
             <Tab label="VISUALIZE" value="visualize" route="visualize/gallery" />
             <Tab label="ANALYZE" value="analyze" route="analyze/regression" />
           </Tabs>

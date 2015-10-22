@@ -47,9 +47,9 @@ export default function datasets(state = {
       return { ...state, isFetching: true };
     case RECEIVE_DATASETS:
       var mergedDatasetLists = mergeDatasetLists(state.items, action.datasets);
-      return { ...state, isFetching: false, items: mergedDatasetLists, datasetId: mergedDatasetLists[0].datasetId};
+      return { ...state, isFetching: false, items: mergedDatasetLists, datasetId: mergedDatasetLists[0].datasetId, loaded: true };
     case RECEIVE_UPLOAD_DATASET:
-      return { ...state, isFetching: false, items: [...state.items, { datasetId: action.datasetId }] };
+      return { ...state, isFetching: false, items: [...state.items, { datasetId: action.datasetId }], loaded: true };
     case RECEIVE_DATASET:
       const newDataset = [{
           datasetId: action.datasetId,
