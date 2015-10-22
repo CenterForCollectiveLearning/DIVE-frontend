@@ -13,10 +13,12 @@ export default function regressionSelector(state = {
 
     case SELECT_REGRESSION_INDEPENDENT_VARIABLE:
       var independentVariableIds = state.independentVariableIds.slice();
-      if (state.independentVariableIds.find((independentVariableId) => independentVariableId == action.independentVariableId)) {
-        independentVariableIds = independentVariableIds.filter((independentVariableId) => independentVariableId != action.independentVariableId);
+      const selectedId = parseInt(action.independentVariableId);
+
+      if (state.independentVariableIds.find((independentVariableId) => independentVariableId == selectedId)) {
+        independentVariableIds = independentVariableIds.filter((independentVariableId) => independentVariableId != selectedId);
       } else {
-        independentVariableIds.push(action.independentVariableId);
+        independentVariableIds.push(selectedId);
       }
       return { ...state, independentVariableIds: independentVariableIds};
 

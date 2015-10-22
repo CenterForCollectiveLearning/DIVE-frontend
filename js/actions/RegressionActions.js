@@ -37,12 +37,13 @@ function receiveRunRegressionDispatcher(json) {
   };
 }
 
-export function runRegression(projectId, datasetId, dependentVariableName) {
+export function runRegression(projectId, datasetId, dependentVariableName, independentVariableNames) {
   const params = {
     project_id: projectId,
     spec: {
       dataset_id: datasetId,
-      dep: dependentVariableName
+      dep: dependentVariableName,
+      indep: independentVariableNames
     }
   }
 

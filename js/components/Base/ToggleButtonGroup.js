@@ -6,6 +6,9 @@ import styles from './ToggleButtonGroup.sass';
 export default class ToggleButtonGroup extends Component {
   render() {
     const { toggleItems, valueMember, displayTextMember, imageNameMember, imageNameSuffix, externalSelectedItems, separated, selectMenuItem, onChange } = this.props;
+
+    const stringifiedExternalSelectedItems = externalSelectedItems ? externalSelectedItems.map((item) => `${item}`) : null;
+
     return (
       <div className={ styles.toggleButtonGroup }>
         { toggleItems.map((item) =>
@@ -15,7 +18,7 @@ export default class ToggleButtonGroup extends Component {
             imageName={ imageNameMember ? `/assets/${item[imageNameMember]}${imageNameSuffix}` : null }
             onChange={ onChange }
             isDisabled={ item.disabled }
-            isSelected={ item.selected || (externalSelectedItems && externalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) || false }
+            isSelected={ item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) || false }
             separated={ separated }
             splitMenu={ item.splitMenu ? item.splitMenu : [] }
             selectMenuItem={ selectMenuItem }
