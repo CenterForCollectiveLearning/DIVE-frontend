@@ -9,9 +9,10 @@ import {
 
 import { fetch } from './api.js';
 
-function requestProjectDispatcher() {
+function requestProjectDispatcher(projectId) {
   return {
-    type: REQUEST_PROJECT
+    type: REQUEST_PROJECT,
+    projectId: projectId
   };
 }
 
@@ -94,7 +95,7 @@ export function fetchPreloadedProjects() {
 
 function fetchProject(projectId) {
   return dispatch => {
-    dispatch(requestProjectDispatcher());
+    dispatch(requestProjectDispatcher(projectId));
     return fetch('/projects/v1/projects/' + projectId)
       .then(response => response.json())
       .then(json => dispatch(receiveProjectDispatcher(json)));
