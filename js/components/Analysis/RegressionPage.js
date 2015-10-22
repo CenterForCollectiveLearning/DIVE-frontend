@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 import styles from './Analysis.sass';
 
-import AnalysisSidebar from './AnalysisSidebar';
+import RegressionSidebar from './RegressionSidebar';
 import RegressionView from './RegressionView';
 
 export class RegressionPage extends Component {
   render() {
     return (
       <div className={ `${styles.fillContainer} ${styles.regressionContainer}` }>
-        <AnalysisSidebar selectedTab="regression"/>
+        <RegressionSidebar />
         <RegressionView />
       </div>
     );

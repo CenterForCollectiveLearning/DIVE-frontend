@@ -1,24 +1,26 @@
 import {
-  SELECT_INDEPENDENT_VARIABLE,
-  SELECT_DEPENDENT_VARIABLE
+  SELECT_REGRESSION_INDEPENDENT_VARIABLE,
+  SELECT_REGRESSION_DEPENDENT_VARIABLE
 } from '../constants/ActionTypes';
 
 export default function regressionSelector(state = {
-  independentVariableId: null,
-  dependentVariableIds: []
+  dependentVariableId: null,
+  independentVariableIds: []
 }, action) {
   switch (action.type) {
-    case SELECT_INDEPENDENT_VARIABLE:
-      return { ...state, independentVariableId: action.independentVariableId };
+    case SELECT_REGRESSION_DEPENDENT_VARIABLE:
+      return { ...state, dependentVariableId: action.dependentVariableId };
 
-    case SELECT_DEPENDENT_VARIABLE:
-      var dependentVariableIds = state.dependentVariableIds.slice();
-      if (state.dependentVariableIds.find((dependentVariableId) => dependentVariableId == action.dependentVariableId)) {
-        dependentVariableIds = dependentVariableIds.filter((dependentVariableId) => dependentVariableId != action.dependentVariableId);
+    case SELECT_REGRESSION_INDEPENDENT_VARIABLE:
+      var independentVariableIds = state.independentVariableIds.slice();
+      const selectedId = parseInt(action.independentVariableId);
+
+      if (state.independentVariableIds.find((independentVariableId) => independentVariableId == selectedId)) {
+        independentVariableIds = independentVariableIds.filter((independentVariableId) => independentVariableId != selectedId);
       } else {
-        dependentVariableIds.push(action.dependentVariableId);
+        independentVariableIds.push(selectedId);
       }
-      return { ...state, dependentVariableIds: dependentVariableIds};
+      return { ...state, independentVariableIds: independentVariableIds};
 
     default:
       return state;

@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import {routerStateReducer as router} from 'redux-react-router';
 import { LOAD, SAVE } from 'redux-storage';
 
+import comparisonSelector from './comparisonSelector';
 import datasets from './datasets';
 import datasetSelector from './datasetSelector';
 import exportedSpec from './exportedSpec';
@@ -15,6 +16,7 @@ import user from './user';
 import visualization from './visualization';
 
 const rootReducer = combineReducers({
+  comparisonSelector,
   datasets,
   datasetSelector,
   exportedSpec,
