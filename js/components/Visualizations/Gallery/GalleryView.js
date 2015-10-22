@@ -56,13 +56,23 @@ export class GalleryView extends Component {
       .filter((filter) => filter.selected)
       .map((filter) => filter.type);
 
+    const filteredSpecs = specs.items.filter((spec) =>
+      (selectedVisualizationTypes.length == 0) || selectedVisualizationTypes.some((filter) => 
+        spec.vizTypes.indexOf(filter) >= 0
+      )
+    );
+
+    if (!filteredSpecs.length) {
+      return (
+        <div className={ styles.specsContainer }>
+          <div className={ styles.watermark }>No visualizations</div>
+        </div>
+      );      
+    }
+
     return (
       <div className={ styles.specsContainer }>
-        { specs.items.filter((spec) =>
-            (selectedVisualizationTypes.length == 0) || selectedVisualizationTypes.some((filter) => 
-              spec.vizTypes.indexOf(filter) >= 0
-            )
-          ).map((spec) =>
+        { filteredSpecs.map((spec) =>
             <div className={ styles.blockContainer } key={ spec.id }>
               <Visualization
                 containerClassName="block"
