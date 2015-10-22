@@ -14,9 +14,10 @@ export default function project(state = {
 }, action) {
   switch (action.type) {
     case LOAD:
-      return { ...action.payload.project, loaded: true };
+      // return { ...action.payload.project, loaded: true };
+      return state;
     case REQUEST_PROJECT:
-      return { ...state, isFetching: true };
+      return { ...state, isFetching: true, properties: { id: action.projectId } };
     case RECEIVE_PROJECT:
       return { ...state, isFetching: false, properties: action.projectProperties };
     case CREATE_PROJECT:
