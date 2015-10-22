@@ -12,8 +12,8 @@ import VisualizationsPage from './components/Visualizations/VisualizationsPage';
 import GalleryPage from './components/Visualizations/Gallery/GalleryPage';
 import BuilderPage from './components/Visualizations/Builder/BuilderPage';
 import AnalysisPage from './components/Analysis/AnalysisPage';
-import RegressionPage from './components/Analysis/RegressionPage';
-import ComparisonPage from './components/Analysis/ComparisonPage';
+import RegressionPage from './components/Analysis/Regression/RegressionPage';
+import ComparisonPage from './components/Analysis/Comparison/ComparisonPage';
 import ExportedVisualizationPage from './components/Visualizations/ExportedVisualization/ExportedVisualizationPage';
 
 export default (
