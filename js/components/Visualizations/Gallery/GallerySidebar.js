@@ -23,17 +23,17 @@ export class GallerySidebar extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(previousProps) {
     const { project, datasetSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset } = this.props;
 
-    const projectChanged = (nextProps.project.properties.id !== project.properties.id);
-    const datasetChanged = (nextProps.datasetSelector.datasetId !== datasetSelector.datasetId);
+    const projectChanged = (previousProps.project.properties.id !== project.properties.id);
+    const datasetChanged = (previousProps.datasetSelector.datasetId !== datasetSelector.datasetId);
 
-    if (projectChanged || (nextProps.project.properties.id && !datasetSelector.datasetId)) {
-      fetchDatasetsIfNeeded(nextProps.project.properties.id);
+    if (projectChanged || (project.properties.id && !datasetSelector.datasetId)) {
+      fetchDatasetsIfNeeded(project.properties.id);
     }
     if (datasetChanged) {
-      fetchFieldPropertiesIfNeeded(project.properties.id, nextProps.datasetSelector.datasetId)
+      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId);
     }
   }
 
