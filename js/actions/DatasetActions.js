@@ -73,7 +73,7 @@ function requestUploadDatasetDispatcher() {
 function receiveUploadDatasetDispatcher(json) {
   return {
     type: RECEIVE_UPLOAD_DATASET,
-    datasetId: json.datasetIds[0]
+    datasets: json.datasets.map((dataset) => new Object({...dataset, datasetId: dataset.id}))
   };
 }
 
