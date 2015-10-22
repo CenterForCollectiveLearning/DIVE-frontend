@@ -26,14 +26,14 @@ export class GalleryView extends Component {
     clearVisualization();
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(previousProps) {
     const { datasetSelector, project, specs, fieldProperties, fetchSpecsIfNeeded } = this.props;
-    const datasetChanged = (datasetSelector.datasetId !== nextProps.datasetSelector.datasetId);
+    const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
     const noSpecsAndNotFetching = (!specs.items.length && !specs.isFetching);
 
-    const fieldPropertiesChanged = (fieldProperties.updatedAt !== nextProps.fieldProperties.updatedAt);
-    if (project.properties.id && nextProps.datasetSelector.datasetId && (datasetChanged || fieldPropertiesChanged || noSpecsAndNotFetching)) {
-      fetchSpecsIfNeeded(project.properties.id, nextProps.datasetSelector.datasetId, nextProps.fieldProperties.items);
+    const fieldPropertiesChanged = (fieldProperties.updatedAt !== previousProps.fieldProperties.updatedAt);
+    if (project.properties.id && datasetSelector.datasetId && (datasetChanged || fieldPropertiesChanged || noSpecsAndNotFetching)) {
+      fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, fieldProperties.items);
     }
   }
 
@@ -43,16 +43,22 @@ export class GalleryView extends Component {
 
   render() {
     const { specs, filters } = this.props;
+
+    if (specs.isFetching) {
+      return (
+        <div className={ styles.specsContainer }>
+          <div className={ styles.watermark }>Fetching visualizations...</div>
+        </div>
+      );
+    }
+
     const selectedVisualizationTypes = filters.visualizationTypes
       .filter((filter) => filter.selected)
       .map((filter) => filter.type);
 
     return (
       <div className={ styles.specsContainer }>
-        { specs.isFetching &&
-          <div className={ styles.watermark }>Fetching visualizations...</div>
-        }
-        { !specs.isFetching && specs.items.filter((spec) =>
+        { specs.items.filter((spec) =>
             (selectedVisualizationTypes.length == 0) || selectedVisualizationTypes.some((filter) => 
               spec.vizTypes.indexOf(filter) >= 0
             )
