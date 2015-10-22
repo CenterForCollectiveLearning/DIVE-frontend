@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
+
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './datasets.sass';
 
@@ -12,6 +14,14 @@ export class DatasetUploadPage extends Component {
     super(props);
     this.onDrop = this.onDrop.bind(this);
     this.onOpenClick = this.onOpenClick.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { datasetSelector, pushState, params } = this.props;
+
+    if (nextProps.datasetSelector.datasetId && !datasetSelector.datasetId) {
+      pushState(null, `/projects/${ params.projectId }/visualize/gallery`);
+    }
   }
 
   onDrop(files) {
@@ -37,13 +47,14 @@ export class DatasetUploadPage extends Component {
 }
 
 DatasetUploadPage.propTypes = {
-  project: PropTypes.object.isRequired
+  project: PropTypes.object.isRequired,
+  datasetSelector: PropTypes.object
 };
 
 
 function mapStateToProps(state) {
-  const { project } = state;
-  return { project };
+  const { project, datasetSelector } = state;
+  return { project, datasetSelector };
 }
 
-export default connect(mapStateToProps, { uploadDataset })(DatasetUploadPage);
+export default connect(mapStateToProps, { uploadDataset, pushState })(DatasetUploadPage);
