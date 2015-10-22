@@ -50,7 +50,7 @@ function fetchDatasets(projectId) {
 
 function shouldFetchDatasets(state) {
   const datasets = state.datasets;
-  if (datasets.items.length > 0 || datasets.isFetching) {
+  if (datasets.loaded || datasets.isFetching) {
     return false;
   }
   return true;
