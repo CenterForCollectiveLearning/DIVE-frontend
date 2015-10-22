@@ -14,9 +14,9 @@ export default function specs(state={
     case REQUEST_SPECS:
       return { ...state, isFetching: true };
     case RECEIVE_SPECS:
-      return { ...state, isFetching: false, items: action.specs, updatedAt: action.receivedAt };
+      return { ...state, isFetching: false, items: action.specs, updatedAt: action.receivedAt, loaded: true };
     case FAILED_RECEIVE_SPECS:
-      return { ...state, isFetching: false };    
+      return { ...state, isFetching: false, loaded: true };    
     default:
       return state;
   }
