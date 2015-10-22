@@ -13,6 +13,7 @@ export class ProjectsPage extends Component {
     super(props);
 
     this._handleTabsChange = this._handleTabsChange.bind(this);
+    this._onClickLogo = this._onClickLogo.bind(this);
   }
 
   componentDidMount() {
@@ -37,11 +38,15 @@ export class ProjectsPage extends Component {
     this.props.pushState(null, `/projects/${this.props.params.projectId}/${tab.props.route}`);
   }
 
+  _onClickLogo(){
+    this.props.pushState(null, `/`);
+  }
+
   render() {
     return (
       <div className={ styles.fillContainer }>
         <div className={ styles.header }>
-          <div className={ styles.logoContainer } href="/">
+          <div className={ styles.logoContainer } onClick={ this._onClickLogo }>
             <Logo className={ styles.logo } />
             <div className={ styles.logoText }>
               DIVE
