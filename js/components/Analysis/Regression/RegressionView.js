@@ -5,6 +5,9 @@ import { runRegression } from '../../../actions/RegressionActions';
 
 import styles from '../Analysis.sass';
 
+import DataGrid from '../../Base/DataGrid';
+import RegressionTableRow from './RegressionTableRow';
+
 export class RegressionView extends Component {
 
   componentWillReceiveProps(nextProps) {
@@ -18,8 +21,35 @@ export class RegressionView extends Component {
   }
 
   render() {
+    const { regressionResult } = this.props;
+
+    if (!regressionResult.fields) {
+      return (
+        <div className={ styles.regressionViewContainer }></div>
+      );
+    }
+
+    const data = [
+      {
+        type: 'tableHeader',
+        size: regressionResult.numColumns
+      },
+      ...regressionResult.fields.map((field) =>
+        new Object({
+          type: 'dataRow',
+          field: field,
+          items: regressionResult.regressionsByColumn.map((column) => 
+            column.regression.propertiesByField.find((property) => property.field == field)
+          )
+        })
+      )
+    ];
+
     return (
       <div className={ styles.regressionViewContainer }>
+        <div className={ styles.grid }>
+          <DataGrid data={ data } customRowComponent={ RegressionTableRow }/>
+        </div>
       </div>
     );
   }
@@ -27,6 +57,8 @@ export class RegressionView extends Component {
 
 function mapStateToProps(state) {
   const { project, regressionSelector, datasetSelector, fieldProperties } = state;
+  const { regressionResult } = regressionSelector;
+
   const dependentVariable = fieldProperties.items.find((property) => property.id == regressionSelector.dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;
 
@@ -38,7 +70,8 @@ function mapStateToProps(state) {
     projectId: project.properties.id,
     dependentVariableName: dependentVariableName,
     independentVariableNames: independentVariableNames,
-    datasetId: datasetSelector.datasetId
+    datasetId: datasetSelector.datasetId,
+    regressionResult: regressionResult
   };
 }
 
