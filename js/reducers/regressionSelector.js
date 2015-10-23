@@ -1,11 +1,13 @@
 import {
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
-  SELECT_REGRESSION_DEPENDENT_VARIABLE
+  SELECT_REGRESSION_DEPENDENT_VARIABLE,
+  RECEIVE_RUN_REGRESSION
 } from '../constants/ActionTypes';
 
 export default function regressionSelector(state = {
   dependentVariableId: null,
-  independentVariableIds: []
+  independentVariableIds: [],
+  regressionResult: {}
 }, action) {
   switch (action.type) {
     case SELECT_REGRESSION_DEPENDENT_VARIABLE:
@@ -21,6 +23,9 @@ export default function regressionSelector(state = {
         independentVariableIds.push(selectedId);
       }
       return { ...state, independentVariableIds: independentVariableIds};
+
+    case RECEIVE_RUN_REGRESSION:
+      return { ...state, regressionResult: action.data };
 
     default:
       return state;
