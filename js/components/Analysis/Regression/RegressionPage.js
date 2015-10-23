@@ -1,24 +1,24 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
-import styles from '../Analysis.sass';
 
-import RegressionSidebar from './RegressionSidebar';
-import RegressionView from './RegressionView';
+import { selectDependentVariable } from '../../../actions/RegressionActions';
 
 export class RegressionPage extends Component {
-  render() {
-    return (
-      <div className={ `${styles.fillContainer} ${styles.regressionContainer}` }>
-        <RegressionSidebar />
-        <RegressionView />
-      </div>
-    );
+  componentWillMount() {
+    this.props.selectDependentVariable(this.props.params.dependentVariable);
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.params.dependentVariable != nextProps.params.dependentVariable) {
+      this.props.selectDependentVariable(nextProps.params.dependentVariable);
+    }
+  }
+
+  render() { return (<div></div>) }
 }
 
 function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { pushState })(RegressionPage);
+export default connect(mapStateToProps, { selectDependentVariable })(RegressionPage);
