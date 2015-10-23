@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectIndependentVariable, selectDependentVariable } from '../../../actions/RegressionActions';
+import { selectIndependentVariable } from '../../../actions/RegressionActions';
 import styles from '../Analysis.sass';
 
 import AnalysisSidebar from '../AnalysisSidebar';
@@ -27,6 +28,10 @@ export class RegressionSidebar extends Component {
     }
   }
 
+  onSelectDependentVariable(dependentVariable) {
+    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/analyze/regression/${ dependentVariable }`);
+  }
+
   render() {
     return (
       <AnalysisSidebar selectedTab="regression">
@@ -37,7 +42,7 @@ export class RegressionSidebar extends Component {
               options={ this.props.fieldProperties.items.filter((item) => item.generalType == 'q') }
               valueMember="id"
               displayTextMember="name"
-              onChange={ this.props.selectDependentVariable }/>
+              onChange={ this.onSelectDependentVariable.bind(this) }/>
           </SidebarGroup>
         }
         { this.props.fieldProperties.items.length != 0 &&
@@ -78,4 +83,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, selectDependentVariable })(RegressionSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, pushState })(RegressionSidebar);
