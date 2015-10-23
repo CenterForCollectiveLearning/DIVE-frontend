@@ -32,18 +32,18 @@ function requestRunRegressionDispatcher(datasetId) {
 function receiveRunRegressionDispatcher(json) {
   return {
     type: RECEIVE_RUN_REGRESSION,
-    json: json,
+    data: json,
     receivedAt: Date.now()
   };
 }
 
 export function runRegression(projectId, datasetId, dependentVariableName, independentVariableNames) {
   const params = {
-    project_id: projectId,
+    projectId: projectId,
     spec: {
-      dataset_id: datasetId,
-      dep: dependentVariableName,
-      indep: independentVariableNames
+      datasetId: datasetId,
+      dependentVariable: dependentVariableName,
+      independentVariables: independentVariableNames
     }
   }
 

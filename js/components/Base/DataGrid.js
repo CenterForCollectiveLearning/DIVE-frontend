@@ -4,7 +4,7 @@ import Griddle from 'griddle-react';
 
 export default class DataGrid extends Component {
   render() {
-    const { data, tableClassName, containerClassName, useFixedWidth } = this.props;
+    const { data, tableClassName, containerClassName, useFixedWidth, customRowComponent } = this.props;
     const columnWidth = 200;
     const nColumns = data.length ? Object.keys(data[0]).length : 0;
     const innerContainerStyle = {
@@ -21,7 +21,9 @@ export default class DataGrid extends Component {
             useFixedHeader={ true }
             useFixedLayout={ false }
             tableClassName={ tableClassName }
-            useGriddleStyles={ false } />
+            useGriddleStyles={ false }
+            useCustomRowComponent={ customRowComponent ? true : false }
+            customRowComponent={ customRowComponent }/>
         </div>
       </div>
     );
@@ -32,11 +34,13 @@ DataGrid.propTypes = {
   data: PropTypes.array.isRequired,
   tableClassName: PropTypes.string,
   containerClassName: PropTypes.string,
-  useFixedWidth: PropTypes.bool
+  useFixedWidth: PropTypes.bool,
+  customRowComponent: PropTypes.any
 };
 
 DataGrid.defaultProps = {
   tableClassName: "grid",
   containerClassName: "container",
-  useFixedWidth: true
+  useFixedWidth: true,
+  customRowComponent: null
 }
