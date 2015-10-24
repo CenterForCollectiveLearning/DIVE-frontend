@@ -29,6 +29,18 @@
     text-overflow: ellipsis
     white-space: nowrap
 
+    &.field-rSquaredAdjusted
+      > div > div
+        display: inline-block
+        position: relative
+
+        &:before
+          content: ""
+          border-top: 1px solid black
+          width: 87%
+          height: 100%
+          position: absolute
+
   .row
     display: flex
     flex-direction: row
@@ -58,6 +70,18 @@
 
   .standardError
     color: #999
+
+  .rowTitle
+    font-weight: 500
+
+  .footerRow
+    border-top-width: 2px
+
+    + .footerRow
+      border-top-width: 1px
+
+    .column
+      background-color: #FBFBFB
 
   // .column
   //   overflow: hidden

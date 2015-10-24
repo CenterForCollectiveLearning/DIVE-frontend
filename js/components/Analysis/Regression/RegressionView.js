@@ -42,7 +42,19 @@ export class RegressionView extends Component {
             column.regression.propertiesByField.find((property) => property.field == field)
           )
         })
-      )
+      ),
+      {
+        type: 'footerRow',
+        field: 'rSquared',
+        formattedField: 'R<sup>2</sup>',
+        items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.rSquared)
+      },
+      {
+        type: 'footerRow',
+        field: 'rSquaredAdjusted',
+        formattedField: '<div>R</div><sup>2</sup>',
+        items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.rSquaredAdj)
+      }
     ];
 
     return (

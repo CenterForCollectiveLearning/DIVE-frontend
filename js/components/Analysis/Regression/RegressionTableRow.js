@@ -56,10 +56,25 @@ export default class RowRenderer extends Component {
       );
     }
 
-    const getRoundedString = function (num) {
-      return num ? `${ parseFloat(Math.round(num * 100) / 100).toFixed(2) }` : '';
+    const getRoundedString = function (num, decimalPlaces=2) {
+      return num ? `${ parseFloat(num).toFixed(decimalPlaces) }` : '';
     };
 
+    if (type == 'footerRow') {
+      return (
+        <Row className={ styles.footerRow }>
+          <Column className={ styles.footerColumn + ' ' + styles.rowTitle }>
+            <Cell className={ styles[`field-${ field }`] }><div dangerouslySetInnerHTML={{__html: data.formattedField}} /></Cell>
+          </Column>
+          { items.map((value, i) =>
+              <Column className={ styles.rowDataColumn } key={ `col-${ field }-${ i }` }>
+                <Cell>{ getRoundedString(value, 3) }</Cell>
+              </Column>
+            )
+          }
+        </Row>
+      );
+    }
     const getCoefficientString = function (column) {
       if (!column) {
         return '';
