@@ -6,6 +6,7 @@ import TreeMap from './Charts/TreeMap';
 import PieChart from './Charts/PieChart';
 import ColumnChart from './Charts/ColumnChart';
 import StackedColumnChart from './Charts/StackedColumnChart';
+import ScatterChart from './Charts/ScatterChart';
 
 export default class Visualization extends Component {
   constructor(props) {
@@ -99,6 +100,15 @@ export default class Visualization extends Component {
             }
             { (validVisualizationTypes[0] == 'stackedbar' ) &&
               <StackedColumnChart
+                chartId={ `spec-stackedbar-${spec.id}` }
+                fieldNames={ spec.args }
+                generatingProcedure={ spec.generatingProcedure }
+                data={ data }
+                options={ options }
+                isMinimalView={ isMinimalView }/>
+            }
+            { (validVisualizationTypes[0] == 'scatter' ) &&
+              <ScatterChart
                 chartId={ `spec-bar-${spec.id}` }
                 fieldNames={ spec.args }
                 generatingProcedure={ spec.generatingProcedure }
