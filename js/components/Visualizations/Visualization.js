@@ -5,6 +5,7 @@ import styles from './Visualizations.sass';
 import TreeMap from './Charts/TreeMap';
 import PieChart from './Charts/PieChart';
 import ColumnChart from './Charts/ColumnChart';
+import StackedColumnChart from './Charts/StackedColumnChart';
 
 export default class Visualization extends Component {
   constructor(props) {
@@ -81,7 +82,7 @@ export default class Visualization extends Component {
         { showHeader && spec.meta &&
           <div className={ styles[headerClassName] }>
             { spec.meta.construction.map((construct, i) =>
-              <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>                  
+              <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>
             )}
           </div>
         }
@@ -89,6 +90,15 @@ export default class Visualization extends Component {
           <div className={ styles[visualizationClassName] }>
             { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
               <ColumnChart
+                chartId={ `spec-bar-${spec.id}` }
+                fieldNames={ spec.args }
+                generatingProcedure={ spec.generatingProcedure }
+                data={ data }
+                options={ options }
+                isMinimalView={ isMinimalView }/>
+            }
+            { (validVisualizationTypes[0] == 'stackedbar' ) &&
+              <StackedColumnChart
                 chartId={ `spec-bar-${spec.id}` }
                 fieldNames={ spec.args }
                 generatingProcedure={ spec.generatingProcedure }
@@ -147,4 +157,3 @@ Visualization.defaultProps = {
   showHeader: false,
   visualizationTypes: []
 };
-

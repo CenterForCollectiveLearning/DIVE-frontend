@@ -54,7 +54,7 @@ export default class ColumnChart extends Component {
       {
         'type': 'string',
         'label' : xLabel
-      }, 
+      },
       {
         'type' : 'number',
         'label' : yLabel
@@ -80,4 +80,3 @@ ColumnChart.defaultProps = {
   isMinimalView: false,
   options: {}
 };
-
