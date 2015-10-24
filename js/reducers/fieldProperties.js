@@ -1,6 +1,6 @@
 import {
   SELECT_FIELD_PROPERTY,
-  SELECT_AGGREGATION_FUNCTION,
+  SELECT_FIELD_PROPERTY_VALUE,
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES
 } from '../constants/ActionTypes';
@@ -42,24 +42,21 @@ export default function fieldProperties(state={
       }
 
       return { ...state, items: items, updatedAt: action.receivedAt };
-    case SELECT_AGGREGATION_FUNCTION:
-      var { items } = state;
+    case SELECT_FIELD_PROPERTY_VALUE:
+      var items = state.items.slice();
 
-      const selectedAggregationFunctionFieldPropertyIndex = state.items.findIndex((property, i, props) =>
-        property.id == action.selectedAggregationFunctionFieldPropertyId
+      const selectedFieldPropertyIndex = items.findIndex((property) =>
+        property.id == action.selectedFieldPropertyId
       );
 
-      if (selectedAggregationFunctionFieldPropertyIndex >= 0) {
-        const selectedAggregationIndex = items[selectedAggregationFunctionFieldPropertyIndex].splitMenu.findIndex((aggregation, j, aggregations) =>
-          aggregation.value == action.selectedAggregationFunction
+      if (selectedFieldPropertyIndex >= 0) {
+        items[selectedFieldPropertyIndex].splitMenu = items[selectedFieldPropertyIndex].splitMenu.map((propertyValue) =>
+          new Object({
+            label: propertyValue.label,
+            value: propertyValue.value,
+            selected: propertyValue.value == action.selectedFieldPropertyValueId
+          })
         );
-
-        var aggregations = AGGREGATIONS.slice();
-        aggregations[selectedAggregationIndex].selected = true;
-
-        if (selectedAggregationIndex >= 0) {
-          items[selectedAggregationFunctionFieldPropertyIndex].splitMenu = aggregations;
-        }
       }
 
       return { ...state, items: items, updatedAt: Date.now() };
@@ -73,11 +70,23 @@ export default function fieldProperties(state={
         const c = action.fieldProperties.c ? action.fieldProperties.c : [];
         const q = action.fieldProperties.q ? action.fieldProperties.q : [];
 
+        const allValuesMenuItem = {
+          selected: true,
+          value: "ALL_VALUE",
+          label: "all values"
+        }
+
         var items = [ ...c, ...q ].map((property) =>
           new Object({
             ...property,
             selected: false,
-            splitMenu: (property.generalType == 'q') ? aggregations : []
+            splitMenu: (property.generalType == 'q') ? aggregations : [allValuesMenuItem, ...property.uniqueValues.map((value, i) =>
+              new Object({
+                selected: false,
+                value: i + 1,
+                label: value
+              })
+            )]
           })
         );
         return { ...state, isFetching: false, items: items, updatedAt: action.receivedAt };

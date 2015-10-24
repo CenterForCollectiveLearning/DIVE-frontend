@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { selectDataset, fetchDatasetsIfNeeded } from '../../../actions/DatasetActions';
-import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
+import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectFieldPropertyValue } from '../../../actions/FieldPropertiesActions';
 import { selectVisualizationType } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
@@ -38,7 +38,7 @@ export class GallerySidebar extends Component {
   }
 
   render() {
-    const { datasets, datasetSelector, fieldProperties, filters, selectVisualizationType, selectAggregationFunction, selectFieldProperty, selectDataset } = this.props;
+    const { datasets, datasetSelector, fieldProperties, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectDataset } = this.props;
     return (
       <Sidebar>
         { datasets.items && datasets.items.length > 0 &&
@@ -69,7 +69,7 @@ export class GallerySidebar extends Component {
               displayTextMember="name"
               valueMember="id"
               separated={ true }
-              selectMenuItem={ selectAggregationFunction }
+              selectMenuItem={ selectFieldPropertyValue }
               onChange={ selectFieldProperty } />
           </SidebarGroup>
         }
@@ -103,5 +103,5 @@ export default connect(mapStateToProps, {
   selectDataset,
   selectVisualizationType,
   selectFieldProperty,
-  selectAggregationFunction
+  selectFieldPropertyValue
 })(GallerySidebar);
