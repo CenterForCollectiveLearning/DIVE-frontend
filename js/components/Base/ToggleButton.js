@@ -20,11 +20,11 @@ export default class ToggleButton extends Component {
   }
 
   render() {
-    const selectedMenuItemIndex = this.props.splitMenu.findIndex((menuItem, i, menuItems) =>
+    const selectedMenuItemIndex = this.props.splitMenu.findIndex((menuItem) =>
       menuItem.selected == true
     );
 
-    const selectedMenuItem = selectedMenuItemIndex >= 0 ? this.props.splitMenu[selectedMenuItemIndex].value : null;
+    const selectedMenuItem = selectedMenuItemIndex >= 0 ? this.props.splitMenu[selectedMenuItemIndex] : null;
 
     return (
       <div className={
@@ -34,7 +34,7 @@ export default class ToggleButton extends Component {
         (this.props.isSelected ? ' ' + styles.selected : '') +
         (this.props.splitMenu.length > 0 ? ' ' + styles.splitButton : '')}>
         <div
-          className={ `${ styles.toggleButton } ${ styles.raisedButton }` + (this.props.isDisabled ? ' ' + styles.disabled : '') + (this.props.isSelected ? ' ' + styles.selected : '') }
+          className={ `${ styles.toggleButton } ${ styles.raisedButton }` + (this.props.isSelected ? ' ' + styles.selected : '') }
           onClick={ this.handleClick }
           title={ this.props.altText }>
           { this.props.imageName ? 
@@ -45,9 +45,9 @@ export default class ToggleButton extends Component {
           }
         </div>
         { this.props.splitMenu.length > 0 &&
-          <div className={ styles.splitButtonSelect }>
+          <div className={ styles.splitButtonSelect } title={ selectedMenuItem.label }>
             <DropDownMenu
-              value={ selectedMenuItem }
+              value={ selectedMenuItem.value }
               options={ this.props.splitMenu }
               onChange={ this.selectMenuItem } />
           </div>
