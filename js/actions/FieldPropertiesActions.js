@@ -2,7 +2,7 @@ import {
   SELECT_FIELD_PROPERTY,
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES,
-  SELECT_AGGREGATION_FUNCTION
+  SELECT_FIELD_PROPERTY_VALUE
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
@@ -57,11 +57,11 @@ export function selectFieldProperty(selectedFieldPropertyId) {
   }
 }
 
-export function selectAggregationFunction(selectedAggregationFunctionFieldPropertyId, selectedAggregationFunction) {
+export function selectFieldPropertyValue(selectedFieldPropertyId, selectedFieldPropertyValueId) {
   return {
-    type: SELECT_AGGREGATION_FUNCTION,
-    selectedAggregationFunctionFieldPropertyId: selectedAggregationFunctionFieldPropertyId,
-    selectedAggregationFunction: selectedAggregationFunction
+    type: SELECT_FIELD_PROPERTY_VALUE,
+    selectedFieldPropertyId: selectedFieldPropertyId,
+    selectedFieldPropertyValueId: selectedFieldPropertyValueId
   }
 }
 
