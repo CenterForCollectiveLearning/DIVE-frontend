@@ -33,31 +33,34 @@ export class RegressionSidebar extends Component {
   }
 
   render() {
+    const { fieldProperties, regressionSelector, selectIndependentVariable } = this.props;
+
     return (
       <AnalysisSidebar selectedTab="regression">
-        { this.props.fieldProperties.items.length != 0 &&
+        { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Dependent Variable">
             <DropDownMenu
-              value={ this.props.regressionSelector.dependentVariableId }
-              options={ this.props.fieldProperties.items.filter((item) => item.generalType == 'q') }
+              value={ regressionSelector.dependentVariableId }
+              options={ fieldProperties.items.filter((item) => item.generalType == 'q') }
               valueMember="id"
               displayTextMember="name"
               onChange={ this.onSelectDependentVariable.bind(this) }/>
           </SidebarGroup>
         }
-        { this.props.fieldProperties.items.length != 0 &&
+        { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Independent Variables">
             <ToggleButtonGroup
-              toggleItems={ this.props.fieldProperties.items.filter((item) => item.generalType == 'q').map((item) =>
+              toggleItems={ fieldProperties.items.map((item) =>
                 new Object({
                   id: item.id,
-                  name: item.name
+                  name: item.name,
+                  disabled: (item.generalType != 'q') || (item.id == regressionSelector.dependentVariableId)
                 })
               )}
               valueMember="id"
               displayTextMember="name"
-              externalSelectedItems={ this.props.regressionSelector.independentVariableIds }
-              onChange={ this.props.selectIndependentVariable } />
+              externalSelectedItems={ regressionSelector.independentVariableIds }
+              onChange={ selectIndependentVariable } />
           </SidebarGroup>
         }
 
