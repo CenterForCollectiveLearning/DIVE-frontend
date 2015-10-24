@@ -6,6 +6,7 @@ import { runRegression } from '../../../actions/RegressionActions';
 import styles from '../Analysis.sass';
 
 import DataGrid from '../../Base/DataGrid';
+import HeaderBar from '../../Base/HeaderBar';
 import RegressionTableRow from './RegressionTableRow';
 
 export class RegressionView extends Component {
@@ -21,7 +22,7 @@ export class RegressionView extends Component {
   }
 
   render() {
-    const { regressionResult } = this.props;
+    const { regressionResult, dependentVariableName } = this.props;
 
     if (!regressionResult.fields) {
       return (
@@ -59,6 +60,8 @@ export class RegressionView extends Component {
 
     return (
       <div className={ styles.regressionViewContainer }>
+        <HeaderBar header={ <span>Cascading Linear Regressions of <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> } />
+
         <div className={ styles.grid }>
           <DataGrid data={ data } customRowComponent={ RegressionTableRow }/>
         </div>
