@@ -20,7 +20,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json) {
     type: RECEIVE_FIELD_PROPERTIES,
     projectId: projectId,
     datasetId: datasetId,
-    fieldProperties: json,
+    fieldProperties: json.fieldProperties,
     receivedAt: Date.now()
   };
 }
@@ -28,7 +28,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json) {
 export function fetchFieldProperties(projectId, datasetId) {
   return dispatch => {
     dispatch(requestFieldPropertiesDispatcher());
-    return fetch(`/field_properties/v1/field_properties?project_id=${projectId}&dataset_id=${datasetId}&group_by=general_type`)
+    return fetch(`/field_properties/v1/field_properties?project_id=${projectId}&dataset_id=${datasetId}`)
       .then(response => response.json())
       .then(json => dispatch(receiveFieldPropertiesDispatcher(projectId, datasetId, json)));
   };
