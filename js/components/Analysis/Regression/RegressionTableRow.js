@@ -57,8 +57,14 @@ export default class RowRenderer extends Component {
       );
     }
 
-    const getRoundedString = function (num, decimalPlaces=2) {
-      return num ? `${ +parseFloat(num).toFixed(decimalPlaces) }` : '';
+    const getRoundedString = function (num, decimalPlaces=3) {
+      if (num) {
+        return num >=1 ?
+          +parseFloat(num).toFixed(decimalPlaces) :
+          +parseFloat(num).toPrecision(decimalPlaces);
+      }
+
+      return '';
     };
 
     if (type == 'footerRow') {
