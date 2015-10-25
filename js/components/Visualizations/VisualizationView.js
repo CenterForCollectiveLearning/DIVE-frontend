@@ -9,7 +9,7 @@ import Visualization from './Visualization';
 export default class VisualizationView extends Component {
   render() {
     const { visualization } = this.props;
-    const visualizationTypes = visualization.visualizationType ? [ visualization.visualizationType ] : null;
+    const vizTypes = visualization.spec.vizTypes;
     return (
       <div className={ styles.visualizationViewContainer }>
         { visualization.spec.id && !visualization.isFetching &&
@@ -23,7 +23,7 @@ export default class VisualizationView extends Component {
               <Visualization
                 containerClassName="visualizationContainer"
                 visualizationClassName="visualization"
-                visualizationTypes={ visualizationTypes }
+                visualizationTypes={ vizTypes }
                 spec={ visualization.spec }
                 data={ visualization.visualizationData }/>
               { visualization.tableData.length != 0 &&
@@ -45,4 +45,3 @@ VisualizationView.propTypes = {
   visualization: PropTypes.object.isRequired,
   children: PropTypes.node
 }
-
