@@ -5,6 +5,7 @@ import { pushState } from 'redux-react-router';
 import { clearVisualization, fetchSpecsIfNeeded } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
+import HeaderBar from '../../Base/HeaderBar';
 import Visualization from '../Visualization';
 
 export class GalleryView extends Component {
@@ -41,7 +42,7 @@ export class GalleryView extends Component {
   }
 
   render() {
-    const { specs, filters } = this.props;
+    const { specs, filters, gallerySelector } = this.props;
 
     if (specs.isFetching) {
       return (
@@ -71,21 +72,33 @@ export class GalleryView extends Component {
 
     return (
       <div className={ styles.specsContainer }>
-        { filteredSpecs.map((spec) =>
-            <div className={ styles.blockContainer } key={ spec.id }>
-              <Visualization
-                containerClassName="block"
-                visualizationClassName="visualization"
-                overflowTextClassName="overflowText"
-                visualizationTypes={ selectedVisualizationTypes }
-                spec={ spec }
-                data={ spec.data.visualize }
-                onClick={ this.handleClick }
-                isMinimalView={ true }
-                showHeader={ true } />
-            </div>
-          )
-        }
+        <div className={ styles.innerSpecsContainer }>
+          <HeaderBar
+            header={ gallerySelector.title.map((construct, i) =>
+              <span
+                key={ `construct-${ construct.type }-${ i }` }
+                className={ `${ styles.headerFragment } ${ styles[construct.type] }` }>
+                { construct.string }
+              </span>
+            )} />
+          <div className={ styles.specBlocksContainer }>
+            { filteredSpecs.map((spec) =>
+                <div className={ styles.blockContainer } key={ spec.id }>
+                  <Visualization
+                    containerClassName="block"
+                    visualizationClassName="visualization"
+                    overflowTextClassName="overflowText"
+                    visualizationTypes={ selectedVisualizationTypes }
+                    spec={ spec }
+                    data={ spec.data.visualize }
+                    onClick={ this.handleClick }
+                    isMinimalView={ true }
+                    showHeader={ true } />
+                </div>
+              )
+            }
+          </div>
+        </div>
       </div>
     );
   }
