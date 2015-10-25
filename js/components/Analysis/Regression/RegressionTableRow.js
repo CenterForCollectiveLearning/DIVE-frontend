@@ -81,7 +81,7 @@ export default class RowRenderer extends Component {
         return '';
       }
 
-      const { coefficient, pValue } = column;
+      const { coefficient, pValue } = column.properties;
 
       if (!coefficient) {
         return '';
@@ -103,10 +103,10 @@ export default class RowRenderer extends Component {
         return '';
       }
 
-      if (!column.standardError) {
+      if (!column.properties.standardError) {
         return '';
       }
-      return `(${ getRoundedString(column.standardError) })`;
+      return `(${ getRoundedString(column.properties.standardError) })`;
     };
 
     return (
