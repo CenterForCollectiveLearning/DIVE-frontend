@@ -12,6 +12,15 @@ export default class Visualization extends Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
+    this.handleResize = this.handleResize.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  handleResize() {
+    this.forceUpdate();
   }
 
   handleClick(event) {
