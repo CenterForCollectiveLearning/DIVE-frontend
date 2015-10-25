@@ -14,7 +14,7 @@ export default function exportedSpec(state = {
     case REQUEST_EXPORTED_SPEC:
       return { ...state, isFetching: true }
     case RECEIVE_EXPORTED_SPEC:
-      return { ...state, spec: action.spec, visualizationData: action.visualizationData, isFetching: false }
+      return { ...state, spec: action.spec, visualizationData: action.visualizationData, visualizationType: action.spec.vizTypes[0], isFetching: false }
     default:
       return state;
   }
