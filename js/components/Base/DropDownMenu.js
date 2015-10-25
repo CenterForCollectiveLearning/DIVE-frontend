@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import styles from './DropDownMenu.sass';
 import Select from 'react-select';
 
 export default class DropDownMenu extends Component {
@@ -7,18 +8,20 @@ export default class DropDownMenu extends Component {
     const { value, options, valueMember, displayTextMember, onChange, multi, clearable, searchable } = this.props;
 
     return (
-      <Select
-        value={ value }
-        options={ options.map((option, i) =>
-          new Object({
-            value: option[ valueMember ],
-            label: option[ displayTextMember ]
-          })
-        )}
-        onChange={ onChange }
-        multi={ multi }
-        clearable={ clearable }
-        searchable={ searchable } />
+      <div className={ styles.dropDownMenu }>
+        <Select
+          value={ value }
+          options={ options.map((option, i) =>
+            new Object({
+              value: option[ valueMember ],
+              label: option[ displayTextMember ]
+            })
+          )}
+          onChange={ onChange }
+          multi={ multi }
+          clearable={ clearable }
+          searchable={ searchable } />
+      </div>
     );
   }
 }
