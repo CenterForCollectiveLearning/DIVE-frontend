@@ -39,21 +39,41 @@ function receiveSpecsDispatcher(params, json) {
   };
 }
 
-function fetchSpecs(projectId, datasetId, fieldProperties) {
-  var fieldAggPairs = null;
-  if (fieldProperties && fieldProperties.length) {
-    fieldAggPairs = fieldProperties
-      .filter((item) => item.selected)
-      .map((item) => new Object({
-        field_id: item.id
-      }));
-  }
+function fetchSpecs(projectId, datasetId, fieldProperties, fieldPropertyValues) {
+
+  const cPropertyValuePairs = !fieldPropertyValues.length ? [] : fieldPropertyValues.filter((fieldPropertyValuePair) => (fieldPropertyValuePair.type == 'c') && fieldProperties.indexOf(fieldPropertyValuePair.fieldId) >= 0);
+  const qPropertyValuePairs = !fieldPropertyValues.length ? [] : fieldPropertyValues.filter((fieldPropertyValuePair) => (fieldPropertyValuePair.type == 'q') && fieldProperties.indexOf(fieldPropertyValuePair.fieldId) >= 0);
+
+  const conditionals = !cPropertyValuePairs.length ? {} : {
+    'and': cPropertyValuePairs.map((fieldPropertyValuePair) =>
+        new Object({
+          'field_id': fieldPropertyValuePair.fieldId,
+          'operation': '==',
+          'criteria': fieldPropertyValuePair.valueId
+        })
+      )
+  };
+
+  const formatFieldAggPairs = function (fieldProperty) {
+    var fieldAggPairs = {
+      'field_id': fieldProperty
+    };
+
+    const qPropertyValuePair = qPropertyValuePairs.find((propertyValuePair) => propertyValuePair.fieldId == fieldProperty);
+
+    if (qPropertyValuePair) {
+      fieldAggPairs['agg_fn'] = qPropertyValuePair.valueId;
+    }
+
+    return fieldAggPairs;
+  };
 
   const params = {
     'project_id': projectId,
     'dataset_id': datasetId,
-    'field_agg_pairs': fieldAggPairs
-  }
+    'field_agg_pairs': (!fieldProperties || !fieldProperties.length) ? null : fieldProperties.map(formatFieldAggPairs),
+    'conditionals': conditionals
+  };
 
   return dispatch => {
     dispatch(requestSpecsDispatcher());
@@ -86,10 +106,10 @@ function shouldFetchSpecs(state) {
   return true;
 }
 
-export function fetchSpecsIfNeeded(projectId, datasetId, fieldProperties) {
+export function fetchSpecsIfNeeded(projectId, datasetId, fieldProperties=[], fieldPropertyValues=[]) {
   return (dispatch, getState) => {
     if (shouldFetchSpecs(getState())) {
-      return dispatch(fetchSpecs(projectId, datasetId, fieldProperties));
+      return dispatch(fetchSpecs(projectId, datasetId, fieldProperties, fieldPropertyValues));
     }
   };
 }

@@ -8,6 +8,7 @@ import datasetSelector from './datasetSelector';
 import exportedSpec from './exportedSpec';
 import fieldProperties from './fieldProperties';
 import filters from './filters';
+import gallerySelector from './gallerySelector';
 import project from './project';
 import projects from './projects';
 import regressionSelector from './regressionSelector';
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   exportedSpec,
   fieldProperties,
   filters,
+  gallerySelector,
   project,
   projects,
   regressionSelector,

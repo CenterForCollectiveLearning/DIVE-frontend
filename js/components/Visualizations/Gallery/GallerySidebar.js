@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { selectDataset, fetchDatasetsIfNeeded } from '../../../actions/DatasetActions';
-import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectFieldPropertyValue } from '../../../actions/FieldPropertiesActions';
+import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectFieldPropertyValue, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
 import { selectVisualizationType } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
@@ -38,7 +38,7 @@ export class GallerySidebar extends Component {
   }
 
   render() {
-    const { datasets, datasetSelector, fieldProperties, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectDataset } = this.props;
+    const { datasets, datasetSelector, fieldProperties, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectDataset, selectAggregationFunction } = this.props;
     return (
       <Sidebar>
         { datasets.items && datasets.items.length > 0 &&
@@ -65,11 +65,18 @@ export class GallerySidebar extends Component {
         { fieldProperties.items.length > 0 &&
           <SidebarGroup heading="Fields">
             <ToggleButtonGroup
-              toggleItems={ fieldProperties.items }
+              toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c') }
               displayTextMember="name"
               valueMember="id"
               separated={ true }
               selectMenuItem={ selectFieldPropertyValue }
+              onChange={ selectFieldProperty } />
+            <ToggleButtonGroup
+              toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q') }
+              displayTextMember="name"
+              valueMember="id"
+              separated={ true }
+              selectMenuItem={ selectAggregationFunction }
               onChange={ selectFieldProperty } />
           </SidebarGroup>
         }
@@ -103,5 +110,6 @@ export default connect(mapStateToProps, {
   selectDataset,
   selectVisualizationType,
   selectFieldProperty,
-  selectFieldPropertyValue
+  selectFieldPropertyValue,
+  selectAggregationFunction
 })(GallerySidebar);

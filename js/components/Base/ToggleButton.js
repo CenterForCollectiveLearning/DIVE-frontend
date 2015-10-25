@@ -28,13 +28,17 @@ export default class ToggleButton extends Component {
 
     return (
       <div className={
-        styles.toggleButtonContainer +
-        (this.props.imageName ? '' : ' ' + styles.textToggleButton ) +
-        (this.props.separated ? ' ' + styles.separatedToggleButton : '') +
-        (this.props.isSelected ? ' ' + styles.selected : '') +
-        (this.props.splitMenu.length > 0 ? ' ' + styles.splitButton : '')}>
+        styles.toggleButtonContainer
+        + (!this.props.imageName ? ' ' + styles.textToggleButton : '')
+        + (this.props.separated ? ' ' + styles.separatedToggleButton : '')
+        + (this.props.isSelected ? ' ' + styles.selected : '')
+        + (this.props.splitMenu.length > 0 ? ' ' + styles.splitButton : '')}>
         <div
-          className={ `${ styles.toggleButton } ${ styles.raisedButton }` + (this.props.isSelected ? ' ' + styles.selected : '') }
+          className={
+            styles.toggleButton + ' ' + styles.raisedButton
+            + (this.props.isSelected ? ' ' + styles.selected : '')
+            + (this.props.isDisabled ? ' ' + styles.disabled : '')
+          }
           onClick={ this.handleClick }
           title={ this.props.altText }>
           { this.props.imageName ? 
