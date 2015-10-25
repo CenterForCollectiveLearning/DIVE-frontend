@@ -39,39 +39,37 @@ function receiveSpecsDispatcher(params, json) {
   };
 }
 
-function fetchSpecs(projectId, datasetId, fieldProperties, fieldPropertyValues) {
+function fetchSpecs(projectId, datasetId, fieldProperties) {
 
-  const cPropertyValuePairs = !fieldPropertyValues.length ? [] : fieldPropertyValues.filter((fieldPropertyValuePair) => (fieldPropertyValuePair.type == 'c') && fieldProperties.indexOf(fieldPropertyValuePair.fieldId) >= 0);
-  const qPropertyValuePairs = !fieldPropertyValues.length ? [] : fieldPropertyValues.filter((fieldPropertyValuePair) => (fieldPropertyValuePair.type == 'q') && fieldProperties.indexOf(fieldPropertyValuePair.fieldId) >= 0);
+  const selectedFieldProperties = fieldProperties.filter((property) => property.selected);
 
-  const conditionals = !cPropertyValuePairs.length ? {} : {
-    'and': cPropertyValuePairs.map((fieldPropertyValuePair) =>
+  const fieldAggPairs = selectedFieldProperties
+    .map((property) =>
+      new Object({
+        'field_id': property.id,
+        'agg_fn': property.aggregations ?
+          property.aggregations.find((aggregation) => aggregation.selected).value
+          : undefined
+      })
+    );
+
+  const selectedFieldPropertiesWithConditionals = selectedFieldProperties
+    .filter((property) => property.values && property.values.findIndex((valueObj) => valueObj.selected) != 0);
+
+  const conditionals = !selectedFieldPropertiesWithConditionals.length ? {} : {
+    'and': selectedFieldPropertiesWithConditionals.map((property) =>
         new Object({
-          'field_id': fieldPropertyValuePair.fieldId,
+          'field_id': property.id,
           'operation': '==',
-          'criteria': fieldPropertyValuePair.valueId
+          'criteria': property.values.find((valueObj) => valueObj.selected).value
         })
       )
-  };
-
-  const formatFieldAggPairs = function (fieldProperty) {
-    var fieldAggPairs = {
-      'field_id': fieldProperty
-    };
-
-    const qPropertyValuePair = qPropertyValuePairs.find((propertyValuePair) => propertyValuePair.fieldId == fieldProperty);
-
-    if (qPropertyValuePair) {
-      fieldAggPairs['agg_fn'] = qPropertyValuePair.valueId;
-    }
-
-    return fieldAggPairs;
   };
 
   const params = {
     'project_id': projectId,
     'dataset_id': datasetId,
-    'field_agg_pairs': (!fieldProperties || !fieldProperties.length) ? null : fieldProperties.map(formatFieldAggPairs),
+    'field_agg_pairs': fieldAggPairs,
     'conditionals': conditionals
   };
 
@@ -106,10 +104,10 @@ function shouldFetchSpecs(state) {
   return true;
 }
 
-export function fetchSpecsIfNeeded(projectId, datasetId, fieldProperties=[], fieldPropertyValues=[]) {
+export function fetchSpecsIfNeeded(projectId, datasetId, fieldProperties=[]) {
   return (dispatch, getState) => {
     if (shouldFetchSpecs(getState())) {
-      return dispatch(fetchSpecs(projectId, datasetId, fieldProperties, fieldPropertyValues));
+      return dispatch(fetchSpecs(projectId, datasetId, fieldProperties));
     }
   };
 }
