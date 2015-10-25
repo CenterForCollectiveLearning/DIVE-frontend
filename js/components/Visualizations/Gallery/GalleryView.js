@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
 import { clearVisualization, fetchSpecsIfNeeded } from '../../../actions/VisualizationActions';
-import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import styles from '../Visualizations.sass';
 
 import Visualization from '../Visualization';
@@ -16,7 +15,7 @@ export class GalleryView extends Component {
   }
 
   componentWillMount() {
-    const { datasetSelector, project, specs, fetchSpecsIfNeeded, fetchFieldPropertiesIfNeeded, clearVisualization, fieldProperties } = this.props;
+    const { datasetSelector, project, specs, fetchSpecsIfNeeded, clearVisualization, fieldProperties } = this.props;
     const noSpecsAndNotFetching = (!specs.loaded && !specs.isFetching);
 
     if (project.properties.id && datasetSelector.datasetId && noSpecsAndNotFetching) {
@@ -27,13 +26,13 @@ export class GalleryView extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { datasetSelector, project, specs, fieldProperties, fetchSpecsIfNeeded } = this.props;
+    const { datasetSelector, project, specs, gallerySelector, fetchSpecsIfNeeded } = this.props;
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
     const noSpecsAndNotFetching = (!specs.loaded && !specs.isFetching);
-    const fieldPropertiesChanged = (fieldProperties.updatedAt !== previousProps.fieldProperties.updatedAt);
+    const gallerySelectorChanged = (gallerySelector.updatedAt !== previousProps.gallerySelector.updatedAt);
 
-    if (project.properties.id && datasetSelector.datasetId && (datasetChanged || fieldPropertiesChanged || noSpecsAndNotFetching)) {
-      fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, fieldProperties.items);
+    if (project.properties.id && datasetSelector.datasetId && (datasetChanged || gallerySelectorChanged || noSpecsAndNotFetching)) {
+      fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, gallerySelector.selectedFieldIds, gallerySelector.fieldValuePairs);
     }
   }
 
@@ -95,19 +94,19 @@ export class GalleryView extends Component {
 GalleryView.propTypes = {
   project: PropTypes.object.isRequired,
   specs: PropTypes.object.isRequired,
-  fieldProperties: PropTypes.object.isRequired,
+  gallerySelector: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, filters, specs, fieldProperties, datasetSelector } = state;
+  const { project, filters, specs, gallerySelector, datasetSelector } = state;
   return {
     project,
     filters,
     specs,
-    fieldProperties,
+    gallerySelector,
     datasetSelector
   }
 }
 
-export default connect(mapStateToProps, { pushState, fetchSpecsIfNeeded, fetchFieldPropertiesIfNeeded, clearVisualization })(GalleryView);
+export default connect(mapStateToProps, { pushState, fetchSpecsIfNeeded, clearVisualization })(GalleryView);
