@@ -9,6 +9,9 @@
     color: #444444
     text-transform: lowercase
 
+    + .field:before
+      content: ','
+
   &.operation, &.plain, &.transformation
     color: #6A6A6A
 
@@ -32,20 +35,24 @@
     font-size: 16px
     color: #999
 
-.visualizationViewContainer
+.specsContainer, .visualizationViewContainer
   +fillContainer
   max-width: 100%
   margin: 8px
 
-  .innerVisualizationViewContainer
-    +fillContainer
-    overflow-y: scroll
+  .innerSpecsContainer, .innerVisualizationViewContainer
     box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.16)
+    background-color: white
 
+.visualizationViewContainer
   .chartsContainer
     +fillContainer
     padding: 10px
     background-color: white
+
+  .innerVisualizationViewContainer
+    +fillContainer
+    overflow-y: scroll
 
   .visualizationContainer
     display: flex
@@ -66,12 +73,15 @@
         flex-grow: 1
 
 .specsContainer
-  display: flex
-  flex-direction: row
-  flex-wrap: wrap
-  align-content: flex-start
-  flex-grow: 1
-  padding: 20px;
+  .innerSpecsContainer
+    +fillContainer
+
+  .specBlocksContainer
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    align-content: flex-start
+    flex-grow: 1
 
   .blockContainer
     display: flex
