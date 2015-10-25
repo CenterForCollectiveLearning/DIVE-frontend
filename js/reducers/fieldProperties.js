@@ -73,16 +73,13 @@ export default function fieldProperties(state={
     case RECEIVE_FIELD_PROPERTIES:
       var aggregations = AGGREGATIONS.slice();
 
-      const c = action.fieldProperties.c ? action.fieldProperties.c : [];
-      const q = action.fieldProperties.q ? action.fieldProperties.q : [];
-
       const allValuesMenuItem = {
         selected: true,
         value: "ALL_VALUES",
         label: "All Values"
       };
 
-      var items = [ ...c, ...q ].map((property) =>
+      var items = action.fieldProperties.map((property) =>
         new Object({
           ...property,
           selected: false,
