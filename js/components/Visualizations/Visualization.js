@@ -23,7 +23,7 @@ export default class Visualization extends Component {
   }
 
   render() {
-    const MAX_ELEMENTS = 300;
+    const MAX_ELEMENTS = 2000;
     const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes } = this.props;
 
     var options = {

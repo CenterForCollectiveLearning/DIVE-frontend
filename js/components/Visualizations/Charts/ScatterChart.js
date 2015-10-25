@@ -11,8 +11,6 @@ export default class ScatterChart extends Component {
   render() {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options } = this.props;
 
-    console.log(data);
-
     return (
       <Chart chartType="ScatterChart" options={ options } data = { data } graph_id={ chartId }/>
     );

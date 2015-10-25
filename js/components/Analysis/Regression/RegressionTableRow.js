@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import _ from 'underscore';
 
 import styles from '../Analysis.sass';
 
@@ -130,7 +131,7 @@ export default class RowRenderer extends Component {
     );
   }
 }
-// 
+//
 RowRenderer.propTypes = {
   data: PropTypes.object.isRequired
 }
