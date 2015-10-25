@@ -113,6 +113,9 @@
         padding: 20px
         min-height: 180px
 
+        svg g
+          cursor: pointer!important // override google's default
+
 .gridContainer
   .grid
     width: 100%
@@ -150,3 +153,9 @@
       background-color: white
       height: 29px
       line-height: 29px
+
+.visualization
+  svg g:last-child
+    rect[stroke-width="5"], rect[stroke-width="4"], rect[stroke-width="3"]
+      display: none
+
