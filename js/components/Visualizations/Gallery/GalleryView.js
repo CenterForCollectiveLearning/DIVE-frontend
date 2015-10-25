@@ -32,7 +32,7 @@ export class GalleryView extends Component {
     const gallerySelectorChanged = (gallerySelector.updatedAt !== previousProps.gallerySelector.updatedAt);
 
     if (project.properties.id && datasetSelector.datasetId && (datasetChanged || gallerySelectorChanged || noSpecsAndNotFetching)) {
-      fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, gallerySelector.selectedFieldIds, gallerySelector.fieldValuePairs);
+      fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
     }
   }
 

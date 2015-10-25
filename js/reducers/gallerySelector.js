@@ -1,68 +1,54 @@
 import {
+  REQUEST_FIELD_PROPERTIES,
+  RECEIVE_FIELD_PROPERTIES,
   SELECT_FIELD_PROPERTY,
   SELECT_FIELD_PROPERTY_VALUE,
   SELECT_AGGREGATION_FUNCTION
 } from '../constants/ActionTypes';
 
 export default function gallerySelector(state = {
-  selectedFieldIds: [],
-  fieldValuePairs: [],
+  fieldProperties: [],
+  conditionals: [],
+  isFetching: false,
   updatedAt: 0
 }, action) {
   switch (action.type) {
+    case REQUEST_FIELD_PROPERTIES:
+      return { ...state, isFetching: true };
+
+    case RECEIVE_FIELD_PROPERTIES:
+      return { ...state, isFetching: false, fieldProperties: action.fieldProperties, updatedAt: action.receivedAt };
+
     case SELECT_FIELD_PROPERTY:
-      var selectedFieldIds = state.selectedFieldIds.slice();
-      const selectedFieldPropertyId = parseInt(action.selectedFieldPropertyId);
+      const fieldProperties = state.fieldProperties.map((property) =>
+        (property.id == action.selectedFieldPropertyId) ?
+          new Object({ ...property, selected: !property.selected })
+          : property
+      );
 
-      selectedFieldIds = selectedFieldIds.indexOf(selectedFieldPropertyId) >= 0 ?
-        selectedFieldIds.filter((fieldId) => fieldId != selectedFieldPropertyId) :
-        [ ...selectedFieldIds, selectedFieldPropertyId ];
-
-      return { ...state, selectedFieldIds: selectedFieldIds, updatedAt: Date.now() };
+      return { ...state, fieldProperties: fieldProperties, updatedAt: Date.now() };
 
     case SELECT_FIELD_PROPERTY_VALUE:
-      var fieldValuePairs = state.fieldValuePairs.slice();
-      const allValuesMenuItemId = 'ALL_VALUES';
+      const fieldPropertiesWithNewPropertyValue = state.fieldProperties.map((property) =>
+        (property.id == action.selectedFieldPropertyId) ?
+          new Object({ ...property, values: property.values.map((valueObject) =>
+            new Object({ ...valueObject, selected: valueObject.value == action.selectedFieldPropertyValueId }))
+          })
+          : property
+      );
 
-      if (action.selectedFieldPropertyValueId == allValuesMenuItemId) {
-        fieldValuePairs = fieldValuePairs.filter((fieldValuePair) => fieldValuePair.fieldId != action.selectedFieldPropertyId);
-      } else {
-        const fieldValuePairIndex = state.fieldValuePairs.findIndex((fieldValuePair) => fieldValuePair.fieldId == action.selectedFieldPropertyId)
-
-        if (fieldValuePairIndex >= 0) {
-          fieldValuePairs[fieldValuePairIndex].valueId = action.selectedFieldPropertyValueId;
-        } else {
-          fieldValuePairs.push({
-            fieldId: parseInt(action.selectedFieldPropertyId),
-            valueId: action.selectedFieldPropertyValueId,
-            type: 'c'
-          });
-        }
-      }
-
-      return { ...state, fieldValuePairs: fieldValuePairs, updatedAt: Date.now() };
+      return { ...state, fieldProperties: fieldPropertiesWithNewPropertyValue, updatedAt: Date.now() };
 
     case SELECT_AGGREGATION_FUNCTION:
-      var fieldValuePairs = state.fieldValuePairs.slice();
-      const allTypesMenuItemId = 'ALL_TYPES';
+      const fieldPropertiesWithNewAggregationValue = state.fieldProperties.map((property) =>
+        (property.id == action.selectedFieldPropertyId) ?
+          new Object({ ...property, aggregations: property.aggregations.map((aggregationObject) =>
+            new Object({ ...aggregationObject, selected: aggregationObject.value == action.selectedFieldPropertyValueId }))
+          })
+          : property
+      );
 
-      if (action.selectedFieldPropertyValueId == allTypesMenuItemId) {
-        fieldValuePairs = fieldValuePairs.filter((fieldValuePair) => fieldValuePair.fieldId != action.selectedFieldPropertyId);
-      } else {
-        const fieldValuePairIndex = state.fieldValuePairs.findIndex((fieldValuePair) => fieldValuePair.fieldId == action.selectedFieldPropertyId)
-
-        if (fieldValuePairIndex >= 0) {
-          fieldValuePairs[fieldValuePairIndex].valueId = action.selectedFieldPropertyValueId;
-        } else {
-          fieldValuePairs.push({
-            fieldId: parseInt(action.selectedFieldPropertyId),
-            valueId: action.selectedFieldPropertyValueId,
-            type: 'q'
-          });
-        }
-      }
-
-      return { ...state, fieldValuePairs: fieldValuePairs, updatedAt: Date.now() };
+      return { ...state, fieldProperties: fieldPropertiesWithNewAggregationValue, updatedAt: Date.now() };
 
     default:
       return state;

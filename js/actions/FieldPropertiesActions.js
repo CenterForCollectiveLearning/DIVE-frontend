@@ -16,11 +16,68 @@ function requestFieldPropertiesDispatcher() {
 }
 
 function receiveFieldPropertiesDispatcher(projectId, datasetId, json) {
+
+  const AGGREGATIONS = [
+    {
+      value: "ALL_TYPES",
+      label: "All Types",
+      selected: true
+    },
+    {
+      value: "AVG",
+      label: "mean",
+      selected: false
+    },
+    {
+      value: "MIN",
+      label: "min",
+      selected: false
+    },
+    {
+      value: "MAX",
+      label: "max",
+      selected: false
+    }
+  ];
+
+  const allValuesMenuItem = {
+    selected: true,
+    value: "ALL_VALUES",
+    label: "All Values"
+  };
+
+  const cFieldProperties = json.fieldProperties
+    .filter((property) => property.generalType == 'c')
+    .map((property) => 
+      new Object({
+        ...property,
+        selected: false,
+        values: [allValuesMenuItem, ...property.uniqueValues.map((value, i) =>
+          new Object({
+            selected: false,
+            value: `${ value }`,
+            label: value
+          })
+        )]
+      })
+    );
+
+  const qFieldProperties = json.fieldProperties
+    .filter((property) => property.generalType == 'q')
+    .map((property) => 
+      new Object({
+        ...property,
+        selected: false,
+        aggregations: AGGREGATIONS
+      })
+    );
+
+
   return {
     type: RECEIVE_FIELD_PROPERTIES,
     projectId: projectId,
     datasetId: datasetId,
-    fieldProperties: json.fieldProperties,
+    fieldProperties: [ ...cFieldProperties, ...qFieldProperties ],
     receivedAt: Date.now()
   };
 }
