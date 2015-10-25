@@ -45,8 +45,7 @@ function fetchSpecs(projectId, datasetId, fieldProperties) {
     fieldAggPairs = fieldProperties
       .filter((item) => item.selected)
       .map((item) => new Object({
-        id: item.id,
-        name: item.name
+        field_id: item.id
       }));
   }
 
@@ -135,7 +134,7 @@ function fetchSpecVisualization(projectId, specId) {
   };
 }
 
-function shouldFetchSpecVisualization(state) {  
+function shouldFetchSpecVisualization(state) {
   const { visualization } = state;
   if (visualization.specId || visualization.isFetching) {
     return false;
@@ -154,7 +153,7 @@ export function fetchSpecVisualizationIfNeeded(projectId, specId) {
 export function clearVisualization() {
   return {
     type: CLEAR_VISUALIZATION
-  };  
+  };
 }
 
 function requestCreateExportedSpecDispatcher() {
@@ -185,7 +184,7 @@ export function createExportedSpec(projectId, specId, conditionals, config) {
     return fetch('/exported_specs/v1/exported_specs', {
       method: 'post',
       body: JSON.stringify(params),
-      headers: { 'Content-Type': 'application/json' }      
+      headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
       .then(json => dispatch(receiveCreatedExportedSpecDispatcher(json)))
       .catch(err => console.error("Error creating exported spec: ", err));
