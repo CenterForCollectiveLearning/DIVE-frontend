@@ -14,7 +14,7 @@ export default class TreeMap extends Component {
     // Adding in dummy parent value
     const headerRow = data[0];
 
-    const dataWithoutHeader = data.slice(0, data.length - 1)
+    const dataWithoutHeader = data.slice(1, data.length)
 
     const dataWithParent = [
       [ headerRow[0], 'parent', headerRow[1] ],
