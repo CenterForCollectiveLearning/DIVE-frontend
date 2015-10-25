@@ -71,7 +71,7 @@ function fetchSpecs(projectId, datasetId, fieldProperties, fieldPropertyValues) 
   const params = {
     'project_id': projectId,
     'dataset_id': datasetId,
-    'field_agg_pairs': !fieldProperties.length ? null : fieldProperties.map(formatFieldAggPairs),
+    'field_agg_pairs': (!fieldProperties || !fieldProperties.length) ? null : fieldProperties.map(formatFieldAggPairs),
     'conditionals': conditionals
   };
 
