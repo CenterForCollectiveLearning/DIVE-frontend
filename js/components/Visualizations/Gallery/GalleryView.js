@@ -15,11 +15,11 @@ export class GalleryView extends Component {
   }
 
   componentWillMount() {
-    const { datasetSelector, project, specs, fetchSpecsIfNeeded, clearVisualization, fieldProperties } = this.props;
+    const { datasetSelector, project, specs, fetchSpecsIfNeeded, clearVisualization, gallerySelector } = this.props;
     const noSpecsAndNotFetching = (!specs.loaded && !specs.isFetching);
 
     if (project.properties.id && datasetSelector.datasetId && noSpecsAndNotFetching) {
-      fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, null);
+      fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
     }
 
     clearVisualization();
