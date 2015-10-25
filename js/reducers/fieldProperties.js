@@ -13,6 +13,11 @@ export default function fieldProperties(state={
 }, action) {
   const AGGREGATIONS = [
     {
+      value: "ALL_TYPES",
+      label: "All Types",
+      selected: true
+    },
+    {
       value: "AVG",
       label: "mean",
       selected: false
@@ -42,6 +47,7 @@ export default function fieldProperties(state={
       }
 
       return { ...state, items: items, updatedAt: action.receivedAt };
+
     case SELECT_FIELD_PROPERTY_VALUE:
       var items = state.items.slice();
 
@@ -60,37 +66,37 @@ export default function fieldProperties(state={
       }
 
       return { ...state, items: items, updatedAt: Date.now() };
+
     case REQUEST_FIELD_PROPERTIES:
       return { ...state, isFetching: true };
+
     case RECEIVE_FIELD_PROPERTIES:
-      if (state.updatedAt !== action.recievedAt) {
-        var aggregations = AGGREGATIONS.slice();
-        aggregations[0].selected = true;
+      var aggregations = AGGREGATIONS.slice();
 
-        const c = action.fieldProperties.c ? action.fieldProperties.c : [];
-        const q = action.fieldProperties.q ? action.fieldProperties.q : [];
+      const c = action.fieldProperties.c ? action.fieldProperties.c : [];
+      const q = action.fieldProperties.q ? action.fieldProperties.q : [];
 
-        const allValuesMenuItem = {
-          selected: true,
-          value: "ALL_VALUE",
-          label: "all values"
-        }
+      const allValuesMenuItem = {
+        selected: true,
+        value: "ALL_VALUES",
+        label: "All Values"
+      };
 
-        var items = [ ...c, ...q ].map((property) =>
-          new Object({
-            ...property,
-            selected: false,
-            splitMenu: (property.generalType == 'q') ? aggregations : [allValuesMenuItem, ...property.uniqueValues.map((value, i) =>
-              new Object({
-                selected: false,
-                value: i + 1,
-                label: value
-              })
-            )]
-          })
-        );
-        return { ...state, isFetching: false, items: items, updatedAt: action.receivedAt };
-      }
+      var items = [ ...c, ...q ].map((property) =>
+        new Object({
+          ...property,
+          selected: false,
+          splitMenu: (property.generalType == 'q') ? aggregations : [allValuesMenuItem, ...property.uniqueValues.map((value, i) =>
+            new Object({
+              selected: false,
+              value: `${ value }`,
+              label: value
+            })
+          )]
+        })
+      );
+      return { ...state, isFetching: false, items: items, updatedAt: action.receivedAt };
+
     default:
       return state;
   }
