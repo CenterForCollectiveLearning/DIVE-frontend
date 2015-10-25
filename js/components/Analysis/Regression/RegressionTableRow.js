@@ -58,7 +58,7 @@ export default class RowRenderer extends Component {
     }
 
     const getRoundedString = function (num, decimalPlaces=2) {
-      return num ? `${ parseFloat(num).toFixed(decimalPlaces) }` : '';
+      return num ? `${ +parseFloat(num).toFixed(decimalPlaces) }` : '';
     };
 
     if (type == 'footerRow') {
@@ -77,13 +77,13 @@ export default class RowRenderer extends Component {
       );
     }
     const getCoefficientString = function (column) {
-      if (!column) {
+      if (!column || !column.properties) {
         return '';
       }
 
       const { coefficient, pValue } = column.properties;
 
-      if (!coefficient) {
+      if (coefficient == undefined || coefficient == null) {
         return '';
       }
 
@@ -99,14 +99,16 @@ export default class RowRenderer extends Component {
     };
 
     const getStandardErrorString = function (column) {
-      if (!column) {
+      if (!column || !column.properties) {
         return '';
       }
 
-      if (!column.properties.standardError) {
+      const { standardError } = column.properties;
+
+      if (standardError == undefined || standardError == null) {
         return '';
       }
-      return `(${ getRoundedString(column.properties.standardError) })`;
+      return `(${ getRoundedString(standardError) })`;
     };
 
     return (
