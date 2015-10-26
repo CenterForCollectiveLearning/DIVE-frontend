@@ -11,8 +11,12 @@ export default class PieChart extends Component {
   render() {
     const { data, generatingProcedure, isMinimalView, chartId, options } = this.props;
 
+    const pieData = data.map((row) =>
+      [`${ row[0] }`, row[1]]
+    );
+
     return (
-      <Chart chartType="PieChart" options={ options } data={ data } graph_id={ chartId }/>
+      <Chart chartType="PieChart" options={ options } data={ pieData } graph_id={ chartId }/>
     );
   }
 }
