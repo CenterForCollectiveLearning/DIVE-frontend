@@ -9,6 +9,8 @@ import DataGrid from '../../Base/DataGrid';
 import HeaderBar from '../../Base/HeaderBar';
 import RegressionTableRow from './RegressionTableRow';
 
+import ColumnChart from '../../Visualizations/Charts/ColumnChart';
+
 export class RegressionView extends Component {
 
   componentWillReceiveProps(nextProps) {
@@ -39,7 +41,7 @@ export class RegressionView extends Component {
         new Object({
           type: 'dataRow',
           field: field,
-          items: regressionResult.regressionsByColumn.map((column) => 
+          items: regressionResult.regressionsByColumn.map((column) =>
             column.regression.propertiesByField.find((property) => property.field == field)
           )
         })
@@ -58,12 +60,43 @@ export class RegressionView extends Component {
       }
     ];
 
+    var options = {
+      backgroundColor: 'transparent',
+      headerColor: 'white',
+      headerHeight: 0,
+      height: 400,
+      orientation: 'vertical'
+    };
+
     return (
       <div className={ styles.regressionViewContainer }>
-        <HeaderBar header={ <span>Cascading Linear Regressions of <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> } />
+        <div className={ styles.regressionCard }>
+          <HeaderBar header={ <span>Cascading Linear Regressions of <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> } />
 
-        <div className={ styles.grid }>
-          <DataGrid data={ data } customRowComponent={ RegressionTableRow }/>
+          <div className={ styles.grid }>
+            <DataGrid data={ data } customRowComponent={ RegressionTableRow }/>
+          </div>
+
+        </div>
+        <div className={ styles.regressionCard }>
+          <HeaderBar header={ <span>Contribution to R Squared</span> } />
+
+          <div className={ styles.contributionToRSquared }>
+            <ColumnChart
+              chartId={ `bar-${regressionResult.id}` }
+              data={ [['test', 'value'], ['a', 0.25], ['b', 0.15]] }
+              options={ options } />
+          </div>
+        </div>
+        <div className={ styles.regressionCard }>
+          <HeaderBar header={ <span>Residuals</span> } />
+
+          <div className={ styles.contributionToRSquared }>
+            <ColumnChart
+              chartId={ `bar-${regressionResult.id}` }
+              data={ [['test', 'value'], ['a', 0.25], ['b', 0.15]] }
+              options={ options } />
+          </div>
         </div>
       </div>
     );

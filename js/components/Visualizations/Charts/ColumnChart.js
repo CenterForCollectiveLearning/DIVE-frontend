@@ -19,9 +19,7 @@ export default class ColumnChart extends Component {
 
 ColumnChart.propTypes = {
   chartId: PropTypes.string.isRequired,
-  generatingProcedure: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
-  fieldNames: PropTypes.object.isRequired,
   isMinimalView: PropTypes.bool,
   options: PropTypes.object
 };

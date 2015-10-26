@@ -32,7 +32,6 @@ export default class TreeMap extends Component {
 
 TreeMap.propTypes = {
   chartId: PropTypes.string.isRequired,
-  generatingProcedure: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   parent: PropTypes.string.isRequired,
   isMinimalView: PropTypes.bool,

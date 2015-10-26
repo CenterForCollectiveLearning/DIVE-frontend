@@ -19,9 +19,7 @@ export default class ScatterChart extends Component {
 
 ScatterChart.propTypes = {
   chartId: PropTypes.string.isRequired,
-  generatingProcedure: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
-  fieldNames: PropTypes.object.isRequired,
   isMinimalView: PropTypes.bool,
   options: PropTypes.object
 };
