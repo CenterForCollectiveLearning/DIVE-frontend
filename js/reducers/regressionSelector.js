@@ -30,7 +30,7 @@ export default function regressionSelector(state = {
       return { ...state, regressionResult: action.data };
 
     case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
-      return { ...state, contributionToRSquared: action.data}
+      return { ...state, contributionToRSquared: action.data.data };
 
     default:
       return state;

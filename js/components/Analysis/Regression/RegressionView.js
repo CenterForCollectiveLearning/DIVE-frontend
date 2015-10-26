@@ -14,7 +14,7 @@ import ColumnChart from '../../Visualizations/Charts/ColumnChart';
 export class RegressionView extends Component {
 
   componentWillReceiveProps(nextProps) {
-    const { dependentVariableName, independentVariableNames, runRegression } = this.props;
+    const { dependentVariableName, independentVariableNames, runRegression, getContributionToRSquared } = this.props;
     const independentVariablesChanged = nextProps.independentVariableNames.length != independentVariableNames.length;
     const dependentVariableChanged = nextProps.dependentVariableName != dependentVariableName;
 
@@ -22,7 +22,7 @@ export class RegressionView extends Component {
       runRegression(nextProps.projectId, nextProps.datasetId, nextProps.dependentVariableName, nextProps.independentVariableNames);
     }
 
-    if (nextProps.projectId && nextProps.regressionResult && nextProps.regressionResult.id) {
+    if (nextProps.projectId && nextProps.regressionResult.id && (nextProps.regressionResult.id != this.props.regressionResult.id)) {
       getContributionToRSquared(nextProps.projectId, nextProps.regressionResult.id);
     }
   }
@@ -68,8 +68,10 @@ export class RegressionView extends Component {
       backgroundColor: 'transparent',
       headerColor: 'white',
       headerHeight: 0,
-      height: 400,
-      orientation: 'vertical'
+      height: 300,
+      width: 600,
+      legend: { position: 'none' },
+      orientation: 'vertical',
     };
 
     return (
@@ -82,19 +84,18 @@ export class RegressionView extends Component {
           </div>
 
         </div>
-        <div className={ styles.regressionCard }>
-          <HeaderBar header={ <span>Contribution to R Squared</span> } />
+        { (contributionToRSquared.length > 0) &&
+          <div className={ styles.regressionCard }>
+            <HeaderBar header={ <span>Contribution to R<sup>2</sup></span> } />
 
-          <div className={ styles.contributionToRSquared }>
-            <ColumnChart
-              chartId={ `bar-${regressionResult.id}` }
-              data={ contributionToRSquared }
-              options={ options } />
+            <div className={ styles.contributionToRSquared }>
+              <ColumnChart
+                chartId={ `bar-${regressionResult.id}` }
+                data={ contributionToRSquared }
+                options={ options } />
+            </div>
           </div>
-        </div>
-        <div className={ styles.regressionCard }>
-          <HeaderBar header={ <span>Residuals</span> } />
-        </div>
+        }
       </div>
     );
   }
