@@ -42,7 +42,45 @@ export default class Visualization extends Component {
     var options = {
       backgroundColor: 'transparent',
       headerColor: 'white',
-      headerHeight: 0
+      headerHeight: 0,
+      fontName: 'RobotoDraft',
+      fontFamily: 'RobotoDraft',
+      fontColor: "#333",
+      textStyle: {
+        color: "#333"
+      },
+      chartArea: {
+        top: '5%',
+        width: '70%',
+        height: '80%'
+      },
+      legend: {
+        textStyle: {
+          color: "#333"
+        }
+      },
+      hAxis: {
+        textStyle: {
+          color: "#333"
+        }
+      },
+      vAxis: {
+        textStyle: {
+          color: "#333"
+        }
+      },
+      vAxes: [
+        {
+          textStyle: {
+            color: "#333"
+          }
+        },
+        {
+          textStyle: {
+            color: "#333"
+          }
+        }
+      ]
     };
 
     if (isMinimalView) {
@@ -76,12 +114,28 @@ export default class Visualization extends Component {
           trigger: 'none'
         },
         vAxis: {
-          textPosition: 'none',
           baselineColor: 'transparent',
+          textPosition: 'none',
           gridlines: {
             count: 0
           }
-        }
+        },
+        vAxes: [
+          {
+            baselineColor: 'transparent',
+            textPosition: 'none',
+            gridlines: {
+              count: 0
+            }
+          },
+          {
+            baselineColor: 'transparent',
+            textPosition: 'none',
+            gridlines: {
+              count: 0
+            }
+          }
+        ]
       };
     } else {
       options = {
