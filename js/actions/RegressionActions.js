@@ -39,7 +39,7 @@ function receiveRunRegressionDispatcher(json) {
   };
 }
 
-function requestContributionToRSquaredDispatcher(datasetId) {
+function requestContributionToRSquaredDispatcher() {
   return {
     type: REQUEST_CONTRIBUTION_TO_R_SQUARED
   };
@@ -73,17 +73,15 @@ export function runRegression(projectId, datasetId, dependentVariableName, indep
       .then(json => dispatch(receiveRunRegressionDispatcher(json)))
       .catch(err => console.error("Error running regression: ", err));
   };
-
 }
 
 
 export function getContributionToRSquared(projectId, regressionId) {
   return (dispatch) => {
     dispatch(requestContributionToRSquaredDispatcher());
-    return fetch(`/statistics/v1/contribution_to_r_squared/${regressionId}?project_id=${projectId}`)
+    return fetch(`/statistics/v1/contribution_to_r_squared/${regressionId}?projectId=${projectId}`)
       .then(response => response.json())
       .then(json => dispatch(receiveContributionToRSquaredDispatcher(json)))
       .catch(err => console.error("Getting getting contribution to R-squared: ", err));
   };
-
 }
