@@ -45,14 +45,6 @@ export class GalleryView extends Component {
   render() {
     const { specs, filters, gallerySelector, selectSortingFunction } = this.props;
 
-    if (specs.isFetching) {
-      return (
-        <div className={ styles.specsContainer }>
-          <div className={ styles.watermark }>Fetching visualizations...</div>
-        </div>
-      );
-    }
-
     const selectedVisualizationTypes = filters.visualizationTypes
       .filter((filter) => filter.selected)
       .map((filter) => filter.type);
@@ -62,14 +54,6 @@ export class GalleryView extends Component {
         spec.vizTypes.indexOf(filter) >= 0
       )
     );
-
-    if (!filteredSpecs.length) {
-      return (
-        <div className={ styles.specsContainer }>
-          <div className={ styles.watermark }>No visualizations</div>
-        </div>
-      );      
-    }
 
     return (
       <div className={ styles.specsContainer }>
@@ -82,7 +66,7 @@ export class GalleryView extends Component {
                 { construct.string }
               </span>
             )}
-            actions={
+            actions={ filteredSpecs.length > 0 && 
               <div className={ styles.sortingControl }>
                 <span>Sort by </span>
                 <DropDownMenu
@@ -93,7 +77,13 @@ export class GalleryView extends Component {
               </div>
             }/>
           <div className={ styles.specBlocksContainer }>
-            { filteredSpecs.map((spec) =>
+            { specs.isFetching &&
+              <div className={ styles.watermark }>Fetching visualizations...</div> 
+            }
+            { !specs.isFetching && filteredSpecs.length == 0 &&
+              <div className={ styles.watermark }>No visualizations</div>
+            }
+            { !specs.isFetching && filteredSpecs.length > 0 && filteredSpecs.map((spec) =>
                 <div className={ styles.blockContainer } key={ spec.id }>
                   <Visualization
                     containerClassName="block"
