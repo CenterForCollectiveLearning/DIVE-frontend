@@ -12,7 +12,8 @@ export default function projects(state = {
 }, action) {
   switch (action.type) {
     case LOAD:
-      return { ...action.payload.projects, loaded: true };
+      // return { ...action.payload.projects, loaded: true };
+      return state;
     case REQUEST_PRELOADED_PROJECTS:
       return { ...state, isFetching: true };
     case RECEIVE_PRELOADED_PROJECTS:
