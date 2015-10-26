@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { runRegression } from '../../../actions/RegressionActions';
+import { runRegression, getContributionToRSquared } from '../../../actions/RegressionActions';
 
 import styles from '../Analysis.sass';
 
@@ -21,10 +21,14 @@ export class RegressionView extends Component {
     if (nextProps.projectId && nextProps.datasetId && (dependentVariableChanged || independentVariablesChanged)) {
       runRegression(nextProps.projectId, nextProps.datasetId, nextProps.dependentVariableName, nextProps.independentVariableNames);
     }
+
+    if (nextProps.projectId && nextProps.regressionResult && nextProps.regressionResult.id) {
+      getContributionToRSquared(nextProps.projectId, nextProps.regressionResult.id);
+    }
   }
 
   render() {
-    const { regressionResult, dependentVariableName } = this.props;
+    const { regressionResult, contributionToRSquared, dependentVariableName } = this.props;
 
     if (!regressionResult.fields) {
       return (
@@ -84,19 +88,12 @@ export class RegressionView extends Component {
           <div className={ styles.contributionToRSquared }>
             <ColumnChart
               chartId={ `bar-${regressionResult.id}` }
-              data={ [['test', 'value'], ['a', 0.25], ['b', 0.15]] }
+              data={ contributionToRSquared }
               options={ options } />
           </div>
         </div>
         <div className={ styles.regressionCard }>
           <HeaderBar header={ <span>Residuals</span> } />
-
-          <div className={ styles.contributionToRSquared }>
-            <ColumnChart
-              chartId={ `bar-${regressionResult.id}` }
-              data={ [['test', 'value'], ['a', 0.25], ['b', 0.15]] }
-              options={ options } />
-          </div>
         </div>
       </div>
     );
@@ -105,7 +102,7 @@ export class RegressionView extends Component {
 
 function mapStateToProps(state) {
   const { project, regressionSelector, datasetSelector, fieldProperties } = state;
-  const { regressionResult } = regressionSelector;
+  const { regressionResult, contributionToRSquared } = regressionSelector;
 
   const dependentVariable = fieldProperties.items.find((property) => property.id == regressionSelector.dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;
@@ -119,8 +116,9 @@ function mapStateToProps(state) {
     dependentVariableName: dependentVariableName,
     independentVariableNames: independentVariableNames,
     datasetId: datasetSelector.datasetId,
-    regressionResult: regressionResult
+    regressionResult: regressionResult,
+    contributionToRSquared: contributionToRSquared
   };
 }
 
-export default connect(mapStateToProps, { runRegression })(RegressionView);
+export default connect(mapStateToProps, { runRegression, getContributionToRSquared })(RegressionView);

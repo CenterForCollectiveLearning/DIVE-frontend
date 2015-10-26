@@ -1,13 +1,15 @@
 import {
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
-  RECEIVE_RUN_REGRESSION
+  RECEIVE_RUN_REGRESSION,
+  RECEIVE_CONTRIBUTION_TO_R_SQUARED
 } from '../constants/ActionTypes';
 
 export default function regressionSelector(state = {
   dependentVariableId: null,
   independentVariableIds: [],
-  regressionResult: {}
+  regressionResult: {},
+  contributionToRSquared: []
 }, action) {
   switch (action.type) {
     case SELECT_REGRESSION_DEPENDENT_VARIABLE:
@@ -26,6 +28,9 @@ export default function regressionSelector(state = {
 
     case RECEIVE_RUN_REGRESSION:
       return { ...state, regressionResult: action.data };
+
+    case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
+      return { ...state, contributionToRSquared: action.data}
 
     default:
       return state;
