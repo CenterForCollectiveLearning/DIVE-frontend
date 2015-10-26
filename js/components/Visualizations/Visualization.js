@@ -66,6 +66,7 @@ export default class Visualization extends Component {
         legend: {
           position: 'none'
         },
+        pointSize: 2,
         showTooltips: false,
         textStyle: {
           color: 'transparent',
@@ -85,6 +86,7 @@ export default class Visualization extends Component {
     } else {
       options = {
         ...options,
+        pointSize: 5,
         height: 400
       }
     }

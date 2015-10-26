@@ -11,47 +11,21 @@ export default class TreeMap extends Component {
   render() {
     const { data, generatingProcedure, isMinimalView, chartId, parent, options } = this.props;
 
-    var col1, col2 = '';
+    // Adding in dummy parent value
+    const headerRow = data[0];
 
-    switch(generatingProcedure) {
-      case GeneratingProcedures.VALUE_COUNT:
-        col1 = 'value';
-        col2 = 'count';
-        break;
+    const dataWithoutHeader = data.slice(1, data.length)
 
-      case GeneratingProcedures.VALUE_AGGREGATION:
-        col1 = 'value';
-        col2 = 'agg';
-        break;
-
-      default:
-        return;
-    }
-
-    const rows = [
+    const dataWithParent = [
+      [ headerRow[0], 'parent', headerRow[1] ],
       [ parent, null, 0],
-      ...data.map((item) =>
-        [ `${item[col1]}`, parent, item[col2] ]
+      ...dataWithoutHeader.map((item) =>
+        [ `${item[0]}`, parent, item[1] ]
       )
     ];
 
-    const columns = [
-      {
-        'type': 'string',
-        'label' : col1
-      }, 
-      {
-        'type': 'string',
-        'label' : 'Parent'
-      }, 
-      {
-        'type' : 'number',
-        'label' : col2
-      }
-    ];
-
     return (
-      <Chart chartType="TreeMap" options={ options } columns={ columns } rows={ rows } graph_id={ chartId }/>
+      <Chart chartType="TreeMap" options={ options } data={ dataWithParent } graph_id={ chartId }/>
     );
   }
 }
@@ -69,4 +43,3 @@ TreeMap.defaultProps = {
   isMinimalView: false,
   options: {}
 };
-

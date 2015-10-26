@@ -9,6 +9,7 @@ import Visualization from './Visualization';
 export default class VisualizationView extends Component {
   render() {
     const { visualization } = this.props;
+    console.log('visualization', visualization);
     const visualizationTypes = visualization.visualizationType ? [ visualization.visualizationType ] : null;
     return (
       <div className={ styles.visualizationViewContainer }>
@@ -45,4 +46,3 @@ VisualizationView.propTypes = {
   visualization: PropTypes.object.isRequired,
   children: PropTypes.node
 }
-
