@@ -26,7 +26,7 @@ export default function gallerySelector(state = {
     },
     {
       'label': 'correlation',
-      'value': 'CORRELATION',
+      'value': 'correlation',
       'selected': false
     },
     {
