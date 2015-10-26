@@ -3,16 +3,61 @@ import {
   RECEIVE_FIELD_PROPERTIES,
   SELECT_FIELD_PROPERTY,
   SELECT_FIELD_PROPERTY_VALUE,
-  SELECT_AGGREGATION_FUNCTION
+  SELECT_AGGREGATION_FUNCTION,
+  SELECT_SORTING_FUNCTION
 } from '../constants/ActionTypes';
 
 export default function gallerySelector(state = {
   title: [],
   fieldProperties: [],
   conditionals: [],
+  sortingFunctions: [],
   isFetching: false,
   updatedAt: 0
 }, action) {
+
+  const SORTING_FUNCTIONS = [
+    {
+      'label': 'relevance',
+      'value': 'RELEVANCE',
+      'selected': true
+    },
+    {
+      'label': 'correlation',
+      'value': 'CORRELATION',
+      'selected': false
+    },
+    {
+      'label': 'gini',
+      'value': 'GINI',
+      'selected': false
+    },
+    {
+      'label': 'entropy',
+      'value': 'ENTROPY',
+      'selected': false
+    },
+    {
+      'label': 'variance',
+      'value': 'VARIANCE',
+      'selected': false
+    },
+    {
+      'label': 'std',
+      'value': 'STD',
+      'selected': false
+    },
+    {
+      'label': 'mode',
+      'value': 'MODE',
+      'selected': false
+    },
+    {
+      'label': 'regression_rsquared',
+      'value': 'REGRESSION_RSQUARED',
+      'selected': false
+    },
+  ];
 
   const defaultTitle = [
     {
@@ -37,7 +82,14 @@ export default function gallerySelector(state = {
       return { ...state, isFetching: true };
 
     case RECEIVE_FIELD_PROPERTIES:
-      return { ...state, isFetching: false, title: defaultTitle, fieldProperties: action.fieldProperties, updatedAt: action.receivedAt };
+      return {
+        ...state,
+        isFetching: false,
+        title: defaultTitle,
+        fieldProperties: action.fieldProperties,
+        sortingFunctions: SORTING_FUNCTIONS,
+        updatedAt: action.receivedAt
+      };
 
     case SELECT_FIELD_PROPERTY:
       const fieldProperties = state.fieldProperties.map((property) =>
@@ -82,6 +134,16 @@ export default function gallerySelector(state = {
       );
 
       return { ...state, fieldProperties: fieldPropertiesWithNewAggregationValue, updatedAt: Date.now() };
+
+    case SELECT_SORTING_FUNCTION:
+      const sortingFunctions = state.sortingFunctions.map((func) =>
+        new Object({
+          ...func,
+          selected: func.value == action.selectedSortingFunction
+        })
+      );
+
+      return { ...state, sortingFunctions: sortingFunctions };
 
     default:
       return state;
