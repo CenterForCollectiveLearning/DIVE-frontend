@@ -2,10 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { clearVisualization, fetchSpecsIfNeeded } from '../../../actions/VisualizationActions';
+import { clearVisualization, fetchSpecsIfNeeded, selectSortingFunction } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
 import HeaderBar from '../../Base/HeaderBar';
+import DropDownMenu from '../../Base/DropDownMenu';
 import Visualization from '../Visualization';
 
 export class GalleryView extends Component {
@@ -42,7 +43,7 @@ export class GalleryView extends Component {
   }
 
   render() {
-    const { specs, filters, gallerySelector } = this.props;
+    const { specs, filters, gallerySelector, selectSortingFunction } = this.props;
 
     if (specs.isFetching) {
       return (
@@ -56,7 +57,7 @@ export class GalleryView extends Component {
       .filter((filter) => filter.selected)
       .map((filter) => filter.type);
 
-    const filteredSpecs = specs.items.filter((spec) =>
+    const filteredSpecs = gallerySelector.specs.filter((spec) =>
       (selectedVisualizationTypes.length == 0) || selectedVisualizationTypes.some((filter) => 
         spec.vizTypes.indexOf(filter) >= 0
       )
@@ -80,7 +81,17 @@ export class GalleryView extends Component {
                 className={ `${ styles.headerFragment } ${ styles[construct.type] }` }>
                 { construct.string }
               </span>
-            )} />
+            )}
+            actions={
+              <div className={ styles.sortingControl }>
+                <span>Sort by </span>
+                <DropDownMenu
+                  options={ gallerySelector.sortingFunctions }
+                  valueMember="value"
+                  displayTextMember="label"
+                  onChange={ selectSortingFunction } />
+              </div>
+            }/>
           <div className={ styles.specBlocksContainer }>
             { filteredSpecs.map((spec) =>
                 <div className={ styles.blockContainer } key={ spec.id }>
@@ -122,4 +133,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { pushState, fetchSpecsIfNeeded, clearVisualization })(GalleryView);
+export default connect(mapStateToProps, { pushState, fetchSpecsIfNeeded, clearVisualization, selectSortingFunction })(GalleryView);

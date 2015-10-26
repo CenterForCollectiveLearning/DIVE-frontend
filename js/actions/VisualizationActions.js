@@ -9,7 +9,8 @@ import {
   CLEAR_VISUALIZATION,
   REQUEST_CREATE_EXPORTED_SPEC,
   RECEIVE_CREATED_EXPORTED_SPEC,
-  SET_SHARE_WINDOW
+  SET_SHARE_WINDOW,
+  SELECT_SORTING_FUNCTION
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTaskResult } from './api.js';
@@ -123,6 +124,13 @@ export function selectBuilderVisualizationType(selectedType) {
   return {
     type: SELECT_BUILDER_VISUALIZATION_TYPE,
     selectedType: selectedType
+  }
+}
+
+export function selectSortingFunction(selectedSortingFunction) {
+  return {
+    type: SELECT_SORTING_FUNCTION,
+    selectedSortingFunction: selectedSortingFunction
   }
 }
 
