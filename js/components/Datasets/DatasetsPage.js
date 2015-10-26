@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import { replaceState } from 'redux-react-router';
 
 import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
 import styles from './datasets.sass';
@@ -9,23 +9,23 @@ export class DatasetsPage extends Component {
   constructor(props) {
     super(props);
 
-    const { pushState, params, routes, project, datasetSelector, datasets } = this.props;
+    const { replaceState, params, routes, project, datasetSelector, datasets } = this.props;
 
     if (routes.length < 4) {
       if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
         fetchDatasetsIfNeeded(project.properties.id);
       } else if (datasetSelector.loaded) {
         if (datasetSelector.datasetId) {
-          pushState(null, `/projects/${ params.projectId }/data/${ datasetSelector.datasetId }/inspect`);
+          replaceState(null, `/projects/${ params.projectId }/data/${ datasetSelector.datasetId }/inspect`);
         } else {
-          pushState(null, `/projects/${ params.projectId }/data/upload`);
+          replaceState(null, `/projects/${ params.projectId }/data/upload`);
         }
       }
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { pushState, params, routes, project, datasetSelector, datasets } = nextProps;
+    const { replaceState, params, routes, project, datasetSelector, datasets } = nextProps;
 
     if (this.props.project.properties.id !== project.properties.id) {
       if (routes.length < 4) {
@@ -33,9 +33,9 @@ export class DatasetsPage extends Component {
           fetchDatasetsIfNeeded(project.properties.id);
         } else if (datasetSelector.loaded) {
           if (datasetSelector.datasetId) {
-            pushState(null, `/projects/${ params.projectId }/data/${ datasetSelector.datasetId }/inspect`);
+            replaceState(null, `/projects/${ params.projectId }/data/${ datasetSelector.datasetId }/inspect`);
           } else {
-            pushState(null, `/projects/${ params.projectId }/data/upload`);
+            replaceState(null, `/projects/${ params.projectId }/data/upload`);
           }
         }
       }
@@ -68,4 +68,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { fetchDatasetsIfNeeded, pushState })(DatasetsPage);
+export default connect(mapStateToProps, { fetchDatasetsIfNeeded, replaceState })(DatasetsPage);
