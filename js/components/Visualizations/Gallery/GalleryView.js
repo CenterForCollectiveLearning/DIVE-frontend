@@ -57,7 +57,7 @@ export class GalleryView extends Component {
       .filter((filter) => filter.selected)
       .map((filter) => filter.type);
 
-    const filteredSpecs = specs.items.filter((spec) =>
+    const filteredSpecs = gallerySelector.specs.filter((spec) =>
       (selectedVisualizationTypes.length == 0) || selectedVisualizationTypes.some((filter) => 
         spec.vizTypes.indexOf(filter) >= 0
       )

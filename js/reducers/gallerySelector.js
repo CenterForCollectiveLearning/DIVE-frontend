@@ -1,6 +1,7 @@
 import {
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES,
+  RECEIVE_SPECS,
   SELECT_FIELD_PROPERTY,
   SELECT_FIELD_PROPERTY_VALUE,
   SELECT_AGGREGATION_FUNCTION,
@@ -10,6 +11,7 @@ import {
 export default function gallerySelector(state = {
   title: [],
   fieldProperties: [],
+  specs: [],
   conditionals: [],
   sortingFunctions: [],
   isFetching: false,
@@ -19,7 +21,7 @@ export default function gallerySelector(state = {
   const SORTING_FUNCTIONS = [
     {
       'label': 'relevance',
-      'value': 'RELEVANCE',
+      'value': 'relevance',
       'selected': true
     },
     {
@@ -29,34 +31,29 @@ export default function gallerySelector(state = {
     },
     {
       'label': 'gini',
-      'value': 'GINI',
+      'value': 'gini',
       'selected': false
     },
     {
       'label': 'entropy',
-      'value': 'ENTROPY',
+      'value': 'entropy',
       'selected': false
     },
     {
       'label': 'variance',
-      'value': 'VARIANCE',
+      'value': 'variance',
       'selected': false
     },
     {
-      'label': 'std',
-      'value': 'STD',
+      'label': 'normality',
+      'value': 'normality',
       'selected': false
     },
     {
-      'label': 'mode',
-      'value': 'MODE',
+      'label': 'size',
+      'value': 'size',
       'selected': false
-    },
-    {
-      'label': 'regression_rsquared',
-      'value': 'REGRESSION_RSQUARED',
-      'selected': false
-    },
+    }
   ];
 
   const defaultTitle = [
@@ -77,6 +74,29 @@ export default function gallerySelector(state = {
     }
   ];
 
+  const sortSpecsByFunction = function(sortingFunction, specA, specB) {
+    const scoreObjectSpecA = specA.scores.find((score) => score.type == sortingFunction);
+    const scoreObjectSpecB = specB.scores.find((score) => score.type == sortingFunction);
+
+    if (!scoreObjectSpecA && scoreObjectSpecB) {
+      return 1; // a < b
+    }
+
+    if (scoreObjectSpecA && !scoreObjectSpecB) {
+      return -1;
+    }
+
+    if (!scoreObjectSpecA && !scoreObjectSpecB) {
+      return 0;
+    }
+
+    if (scoreObjectSpecA.score == scoreObjectSpecB.score) {
+      return 0;
+    }
+
+    return (scoreObjectSpecA.score > scoreObjectSpecB.score) ? -1 : 1;
+  };
+
   switch (action.type) {
     case REQUEST_FIELD_PROPERTIES:
       return { ...state, isFetching: true };
@@ -90,6 +110,14 @@ export default function gallerySelector(state = {
         sortingFunctions: SORTING_FUNCTIONS,
         updatedAt: action.receivedAt
       };
+
+    case RECEIVE_SPECS:
+      const selectedSortingFunction = state.sortingFunctions.find((func) => func.selected).value;
+      const defaultSortSpecs = function (specA, specB) {
+        return sortSpecsByFunction(selectedSortingFunction, specA, specB);
+      };
+
+      return { ...state, specs: action.specs.sort(defaultSortSpecs) };
 
     case SELECT_FIELD_PROPERTY:
       const fieldProperties = state.fieldProperties.map((property) =>
@@ -143,7 +171,13 @@ export default function gallerySelector(state = {
         })
       );
 
-      return { ...state, sortingFunctions: sortingFunctions };
+      const sortSpecs = function(specA, specB) {
+        return sortSpecsByFunction(action.selectedSortingFunction, specA, specB);
+      };
+
+      const sortedSpecs = state.specs.sort(sortSpecs);
+
+      return { ...state, sortingFunctions: sortingFunctions, specs: sortedSpecs };
 
     default:
       return state;
