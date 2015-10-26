@@ -93,7 +93,7 @@ export function fetchFieldProperties(projectId, datasetId) {
 
 function shouldFetchFieldProperties(state) {
   const fieldProperties = state.fieldProperties;
-  if (fieldProperties.items.length > 0 || fieldProperties.isFetching) {
+  if (fieldProperties.isFetching) {
     return false;
   }
   return true;
