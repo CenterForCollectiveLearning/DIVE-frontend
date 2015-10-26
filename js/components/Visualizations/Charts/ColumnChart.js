@@ -11,8 +11,17 @@ export default class ColumnChart extends Component {
   render() {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options } = this.props;
 
+    const columnChartOptions = {
+      ...options,
+      vAxis: {
+        minValue: 0
+      }
+    };
+
+    console.log(columnChartOptions);
+
     return (
-      <Chart chartType="ColumnChart" options={ options } data={ data } graph_id={ chartId }/>
+      <Chart chartType="ColumnChart" options={ columnChartOptions } data={ data } graph_id={ chartId }/>
     );
   }
 }
