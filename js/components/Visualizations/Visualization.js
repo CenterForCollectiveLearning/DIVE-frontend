@@ -107,8 +107,6 @@ export default class Visualization extends Component {
             { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
               <ColumnChart
                 chartId={ `spec-bar-${spec.id}` }
-                fieldNames={ spec.args }
-                generatingProcedure={ spec.generatingProcedure }
                 data={ data }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
@@ -116,8 +114,6 @@ export default class Visualization extends Component {
             { (validVisualizationTypes[0] == 'stackedbar' ) &&
               <StackedColumnChart
                 chartId={ `spec-stackedbar-${spec.id}` }
-                fieldNames={ spec.args }
-                generatingProcedure={ spec.generatingProcedure }
                 data={ data }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
@@ -125,8 +121,6 @@ export default class Visualization extends Component {
             { (validVisualizationTypes[0] == 'scatter' ) &&
               <ScatterChart
                 chartId={ `spec-bar-${spec.id}` }
-                fieldNames={ spec.args }
-                generatingProcedure={ spec.generatingProcedure }
                 data={ data }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
@@ -134,7 +128,6 @@ export default class Visualization extends Component {
             { validVisualizationTypes[0] == 'pie' &&
               <PieChart
                 chartId={ `spec-pie-${spec.id}` }
-                generatingProcedure={ spec.generatingProcedure }
                 data={ data }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
@@ -143,7 +136,6 @@ export default class Visualization extends Component {
               <TreeMap
                 chartId={ `spec-tree-${spec.id}` }
                 parent={ spec.meta.desc }
-                generatingProcedure={ spec.generatingProcedure }
                 data={ data }
                 options={ options }
                 isMinimalView={ isMinimalView }/>

@@ -19,7 +19,6 @@ export default class PieChart extends Component {
 
 PieChart.propTypes = {
   chartId: PropTypes.string.isRequired,
-  generatingProcedure: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   isMinimalView: PropTypes.bool,
   options: PropTypes.object
