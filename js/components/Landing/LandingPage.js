@@ -86,6 +86,9 @@ export class LandingPage extends Component {
               <div className={ styles.secondaryCopy }>Or explore our preloaded projects:</div>
             </div>
             <div className={ styles.projectListContainer }>
+              { this.props.projects.isFetching &&
+                <div className={ styles.watermark }>Fetching datasets...</div>
+              }
               { this.props.projects.items.map((project) =>
                 <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/visualize` } className={ styles.projectButton }>{ project.title }</a>
               )}
