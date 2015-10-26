@@ -9,7 +9,6 @@ import { pushState } from 'redux-react-router';
 require("font-awesome-webpack");
 // this seems real dumb;
 require('react-select/less/select.less');
-require('../../../css/react-select.less');
 require('../../../css/plottable.less');
 require('../../../css/griddle.less');
 
