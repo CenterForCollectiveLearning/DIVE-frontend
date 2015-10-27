@@ -15,7 +15,7 @@ function requestFieldPropertiesDispatcher() {
   };
 }
 
-function receiveFieldPropertiesDispatcher(projectId, datasetId, json) {
+function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFieldPropertyNames) {
 
   const AGGREGATIONS = [
     {
@@ -51,7 +51,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json) {
     .map((property) => 
       new Object({
         ...property,
-        selected: false,
+        selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
         values: [allValuesMenuItem, ...property.uniqueValues.map((value, i) =>
           new Object({
             selected: false,
@@ -67,7 +67,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json) {
     .map((property) => 
       new Object({
         ...property,
-        selected: false,
+        selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
         aggregations: AGGREGATIONS
       })
     );
@@ -82,12 +82,12 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json) {
   };
 }
 
-export function fetchFieldProperties(projectId, datasetId) {
+export function fetchFieldProperties(projectId, datasetId, selectedFieldPropertyNames) {
   return dispatch => {
     dispatch(requestFieldPropertiesDispatcher());
     return fetch(`/field_properties/v1/field_properties?project_id=${projectId}&dataset_id=${datasetId}`)
       .then(response => response.json())
-      .then(json => dispatch(receiveFieldPropertiesDispatcher(projectId, datasetId, json)));
+      .then(json => dispatch(receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFieldPropertyNames)));
   };
 }
 
@@ -99,10 +99,10 @@ function shouldFetchFieldProperties(state) {
   return true;
 }
 
-export function fetchFieldPropertiesIfNeeded(projectId, datasetId) {
+export function fetchFieldPropertiesIfNeeded(projectId, datasetId, selectedFieldPropertyNames=[]) {
   return (dispatch, getState) => {
     if (shouldFetchFieldProperties(getState())) {
-      return dispatch(fetchFieldProperties(projectId, datasetId));
+      return dispatch(fetchFieldProperties(projectId, datasetId, selectedFieldPropertyNames));
     }
   };
 }

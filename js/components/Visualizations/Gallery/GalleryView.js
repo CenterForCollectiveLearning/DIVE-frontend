@@ -20,7 +20,7 @@ export class GalleryView extends Component {
     const { datasetSelector, project, specs, fetchSpecsIfNeeded, clearVisualization, gallerySelector } = this.props;
     const noSpecsAndNotFetching = (!specs.loaded && !specs.isFetching);
 
-    if (project.properties.id && datasetSelector.datasetId && noSpecsAndNotFetching) {
+    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && noSpecsAndNotFetching) {
       fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
     }
 
@@ -33,7 +33,7 @@ export class GalleryView extends Component {
     const noSpecsAndNotFetching = (!specs.loaded && !specs.isFetching);
     const gallerySelectorChanged = (gallerySelector.updatedAt !== previousProps.gallerySelector.updatedAt);
 
-    if (project.properties.id && datasetSelector.datasetId && (datasetChanged || gallerySelectorChanged || noSpecsAndNotFetching)) {
+    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && (datasetChanged || gallerySelectorChanged || noSpecsAndNotFetching)) {
       fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
     }
   }
