@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './landing.sass';
 import { connect } from 'react-redux';
-import { fetchPreloadedProjects } from '../../actions/ProjectActions.js';
+import { fetchPreloadedProjects } from '../../actions/ProjectActions';
 
+import EmailBlockingModal from '../Base/EmailBlockingModal';
 import RaisedButton from '../Base/RaisedButton';
-
 import Tabs from '../Base/Tabs';
 import Tab from '../Base/Tab';
 
@@ -40,6 +40,7 @@ export class LandingPage extends Component {
     return "";
   }
 
+
   render() {
     return (
       <div className={ styles.fillContainer + ' ' + styles.landingPage }>
@@ -49,10 +50,10 @@ export class LandingPage extends Component {
           </div>
         </div>
         <div className={ styles.fillContainer + ' ' + styles.landingPageContent }>
-          <div className={styles.header}>
-            <div className={styles.logoContainer} href="/">
-              <Logo className={styles.logo} />
-              <div className={styles.logoText}>
+          <div className={ styles.header }>
+            <div className={ styles.logoContainer } href="/">
+              <Logo className={ styles.logo } />
+              <div className={ styles.logoText }>
                 DIVE
               </div>
             </div>

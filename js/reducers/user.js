@@ -1,7 +1,9 @@
 import { LOAD } from 'redux-storage';
 
 import {
-  CREATE_ANONYMOUS_USER
+  CREATE_ANONYMOUS_USER,
+  SET_USER_EMAIL,
+  SUBMIT_USER
 } from '../constants/ActionTypes';
 
 export default function user(state = {
@@ -11,9 +13,16 @@ export default function user(state = {
 }, action) {
   switch (action.type) {
     case LOAD:
-      return { ...action.payload.user, loaded: true };
+      if (action.payload.user) {
+        return { ...action.payload.user, loaded: true };
+      }
+      return { ...state, loaded: true };
     case CREATE_ANONYMOUS_USER:
-      return { ...state, properties: action.userProperties }
+      return { ...state, properties: action.userProperties };
+    case SET_USER_EMAIL:
+      return { ...state, properties: { ...state.properties, email: action.email } };
+    case SUBMIT_USER:
+      return { ...state, properties: { ...state.properties, submitted: true } };
     default:
       return state;
   }
