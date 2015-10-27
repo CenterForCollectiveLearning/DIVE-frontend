@@ -18,8 +18,6 @@ export default class ColumnChart extends Component {
       }
     };
 
-    console.log(columnChartOptions);
-
     return (
       <Chart chartType="ColumnChart" options={ columnChartOptions } data={ data } graph_id={ chartId }/>
     );
