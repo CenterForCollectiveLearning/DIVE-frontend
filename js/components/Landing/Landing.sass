@@ -71,7 +71,12 @@
   +montserrat
   color: rgba(255, 255, 255, 0.7)
   font-weight: 200
-  line-height: 23px
+  font-size: 18px
+  line-height: 24px
+
+  &.emphasis
+    color: white
+    letter-spacing: 1px
 
 .ctaBox
   display: flex
@@ -95,7 +100,7 @@
 
   .secondaryCopy
     display: flex
-    margin: 40px auto
+    margin: 30px auto 40px
     text-align: center
     letter-spacing: 0.78px
 
@@ -115,7 +120,7 @@
         background-color: rgba(15, 39, 98, 0.58)
 
 .separater
-  border-bottom: 1px solid #6F82B1
+  border-bottom: 1px solid rgba(111,130,177,0.50)
   width: 400px
   display: flex
   margin: 30px auto
@@ -125,8 +130,8 @@
 .projectButton
   +montserrat
   display: flex
-  width: 274px
-  height: 110px
+  width: 310px
+  height: 80px
 
   margin: 0 30px 10px
   align-items: center
@@ -138,6 +143,7 @@
   border-radius: 6px
   font-size: 15px
   text-transform: uppercase
+  letter-spacing: 1px
 
   cursor: pointer
   color: white
@@ -152,7 +158,7 @@
   .projectListContainer
     display: flex
     flex-direction: row
-    margin-top: 40px
+    margin-top: 30px
     flex-wrap: wrap
 
 .watermark

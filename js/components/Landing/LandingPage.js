@@ -83,7 +83,7 @@ export class LandingPage extends Component {
           <div className={ styles.separater }></div>
           <div className={ styles.preloaded }>
             <div className={ styles.flexbox }>
-              <div className={ styles.secondaryCopy }>Or explore our preloaded projects:</div>
+              <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Or explore our preloaded projects:</div>
             </div>
             <div className={ styles.projectListContainer }>
               { this.props.projects.isFetching &&
