@@ -24,8 +24,14 @@ export default class TreeMap extends Component {
       )
     ];
 
+    const treeMapOptions = {
+      ...options,
+      minColor: '#DE6943',
+      maxColor: '#2D962D'
+    }
+
     return (
-      <Chart chartType="TreeMap" options={ options } data={ dataWithParent } graph_id={ chartId }/>
+      <Chart chartType="TreeMap" options={ treeMapOptions } data={ dataWithParent } graph_id={ chartId }/>
     );
   }
 }
