@@ -25,7 +25,7 @@ let createStoreWithMiddleware;
 
 
 createStoreWithMiddleware = compose(
-  applyMiddleware(thunkMiddleware, loggerMiddleware),
+  applyMiddleware(thunkMiddleware, loggerMiddleware, storageMiddleware),
   reduxReactRouter({
     routes,
     createHistory

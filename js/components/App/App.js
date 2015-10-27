@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
 import styles from './app.sass';
 
-import { Link } from 'react-router';
+import { createAnonymousUserIfNeeded } from '../../actions/UserActions';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
@@ -13,6 +13,12 @@ require('../../../css/app.less');
 require('../../../css/griddle.less');
 
 export class App extends BaseComponent {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user.loaded && !this.props.user.loaded) {
+      this.props.createAnonymousUserIfNeeded();
+    }
+  }
+
   render() {
     return (
       <div className={ styles.fillContainer }>
@@ -35,4 +41,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { pushState })(App);
+export default connect(mapStateToProps, { pushState, createAnonymousUserIfNeeded })(App);
