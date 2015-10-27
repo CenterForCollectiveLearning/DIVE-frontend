@@ -9,7 +9,7 @@ class GalleryPage extends Component {
   render() {
     return (
       <div className={ `${styles.fillContainer} ${styles.galleryContainer}` }>
-        <GallerySidebar />
+        <GallerySidebar queryFields={ this.props.location.query.fields || [] }/>
         <GalleryView />
         {this.props.children}
       </div>

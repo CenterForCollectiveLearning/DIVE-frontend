@@ -1,10 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 
 import { selectDataset, fetchDatasetsIfNeeded } from '../../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectFieldPropertyValue, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
 import { selectVisualizationType } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
+
+import _ from 'underscore';
 
 import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
@@ -12,29 +15,56 @@ import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 
 export class GallerySidebar extends Component {
+  constructor(props) {
+    super(props);
+
+    this.clickFieldProperty = this.clickFieldProperty.bind(this);
+  }
+
   componentWillMount() {
-    const { project, datasetSelector, gallerySelector, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, datasets } = this.props;
+    const { project, datasetSelector, gallerySelector, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, datasets, queryFields } = this.props;
 
     if (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded)) {
       fetchDatasetsIfNeeded(project.properties.id);
     }
     if (datasetSelector.datasetId && !gallerySelector.fieldProperties.length && !gallerySelector.isFetching) {
-      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId);
+      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId, queryFields);
     }
   }
 
   componentDidUpdate(previousProps) {
-    const { project, datasetSelector, gallerySelector, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, datasets } = this.props;
+    const { project, datasetSelector, gallerySelector, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, datasets, queryFields, selectFieldProperty } = this.props;
 
     const projectChanged = (previousProps.project.properties.id !== project.properties.id);
     const datasetChanged = (previousProps.datasetSelector.datasetId !== datasetSelector.datasetId);
+
+    const queryFieldsChanged = _.union(_.difference(previousProps.queryFields, queryFields), _.difference(queryFields, previousProps.queryFields));
+
+    if (queryFieldsChanged.length) {
+      queryFieldsChanged.forEach((queryFieldName) => 
+        selectFieldProperty(gallerySelector.fieldProperties.find((property) => property.name == queryFieldName).id)
+      );
+    }
 
     if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded))) {
       fetchDatasetsIfNeeded(project.properties.id);
     }
     if (datasetChanged) {
-      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId);
+      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId, queryFields);
     }
+  }
+
+  clickFieldProperty(fieldPropertyId) {
+    const { gallerySelector, project, pushState } = this.props;
+    var selectedFieldPropertiesQueryString = gallerySelector.fieldProperties
+      .filter((property) => (!property.selected && property.id == fieldPropertyId) || (property.selected && property.id != fieldPropertyId))
+      .map((property) => `fields%5B%5D=${ property.name }`);
+
+    if (selectedFieldPropertiesQueryString.length) {
+      selectedFieldPropertiesQueryString = selectedFieldPropertiesQueryString.reduce((a, b) => a + "&" + b);
+    }
+
+    pushState(null, `/projects/${ project.properties.id }/visualize/gallery?${ selectedFieldPropertiesQueryString }`);
   }
 
   render() {
@@ -71,7 +101,7 @@ export class GallerySidebar extends Component {
               splitMenuItemsMember="values"
               separated={ true }
               selectMenuItem={ selectFieldPropertyValue }
-              onChange={ selectFieldProperty } />
+              onChange={ this.clickFieldProperty } />
             <ToggleButtonGroup
               toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 'q') }
               displayTextMember="name"
@@ -79,7 +109,7 @@ export class GallerySidebar extends Component {
               splitMenuItemsMember="aggregations"
               separated={ true }
               selectMenuItem={ selectAggregationFunction }
-              onChange={ selectFieldProperty } />
+              onChange={ this.clickFieldProperty } />
           </SidebarGroup>
         }
       </Sidebar>
@@ -92,7 +122,8 @@ GallerySidebar.propTypes = {
   datasets: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   gallerySelector: PropTypes.object.isRequired,
-  filters: PropTypes.object.isRequired
+  filters: PropTypes.object.isRequired,
+  queryFields: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state) {
@@ -113,5 +144,6 @@ export default connect(mapStateToProps, {
   selectVisualizationType,
   selectFieldProperty,
   selectFieldPropertyValue,
-  selectAggregationFunction
+  selectAggregationFunction,
+  pushState
 })(GallerySidebar);
