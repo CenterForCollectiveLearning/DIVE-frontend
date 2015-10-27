@@ -1,3 +1,21 @@
+@font-face {
+  font-family: 'montserrat';
+  src: url('/assets/montserrat/Montserrat-Medium.ttf') format('truetype');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'montserrat';
+  src: url('/assets/montserrat/Montserrat-Light.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'montserrat';
+  src: url('/assets/montserrat/Montserrat-UltraLight.ttf') format('truetype');
+  font-weight: 200;
+}
+
 html, body, main {
   height: 100%;
   min-height: 100%;
