@@ -1,12 +1,15 @@
 import {
   SELECT_COMPARISON_INDEPENDENT_VARIABLE,
-  SELECT_COMPARISON_DEPENDENT_VARIABLE
+  SELECT_COMPARISON_DEPENDENT_VARIABLE,
+  WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
-export default function comparisonSelector(state = {
+const baseState = {
   independentVariableId: null,
   dependentVariableIds: []
-}, action) {
+}
+
+export default function comparisonSelector(state = baseState, action) {
   switch (action.type) {
     case SELECT_COMPARISON_INDEPENDENT_VARIABLE:
       return { ...state, independentVariableId: action.independentVariableId };
@@ -19,6 +22,9 @@ export default function comparisonSelector(state = {
         dependentVariableIds.push(action.dependentVariableId);
       }
       return { ...state, dependentVariableIds: dependentVariableIds};
+
+    case WIPE_PROJECT_STATE:
+      return baseState;
 
     default:
       return state;

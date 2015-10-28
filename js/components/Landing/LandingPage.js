@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './landing.sass';
 import { connect } from 'react-redux';
-import { fetchPreloadedProjects } from '../../actions/ProjectActions';
+import { pushState } from 'redux-react-router';
+import { createProject, fetchPreloadedProjects, wipeProjectState } from '../../actions/ProjectActions';
 
 import EmailBlockingModal from '../Base/EmailBlockingModal';
 import RaisedButton from '../Base/RaisedButton';
@@ -24,6 +25,14 @@ export class LandingPage extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const nextProjectId = nextProps.project.properties.id
+    if (this.props.project.properties.id != nextProjectId) {
+      this.props.wipeProjectState();
+      this.props.pushState(null, `/projects/${nextProjectId}/data/upload`);
+    }
+  }
+
   _handleTabsChange(tab){
     this.props.pushState(null, `/${tab.props.route}`);
   }
@@ -38,6 +47,13 @@ export class LandingPage extends Component {
       return this.props.routes[2].path;
     }
     return "";
+  }
+
+  _onUploadClick() {
+    const userId = this.props.user.id;
+    const projectTitle = 'Project Title';
+    const projectDescription = 'Project Description'
+    this.props.createProject(userId, projectTitle, projectDescription);
   }
 
 
@@ -77,7 +93,7 @@ export class LandingPage extends Component {
               <RaisedButton
                 label="Upload Dataset"
                 primary={ true }
-                onClick={ this.onOpenClick }
+                onClick={ this._onUploadClick.bind(this) }
                 className={ styles.uploadButton } />
             </div>
           </div>
@@ -106,8 +122,8 @@ LandingPage.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { projects } = state;
-  return { projects };
+  const { project, projects, user } = state;
+  return { project, projects, user };
 }
 
-export default connect(mapStateToProps, { fetchPreloadedProjects })(LandingPage);
+export default connect(mapStateToProps, { fetchPreloadedProjects, createProject, wipeProjectState, pushState })(LandingPage);
