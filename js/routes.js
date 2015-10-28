@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Route, IndexRoute } from 'react-router';
 
+import AboutPage from './components/Landing/AboutPage';
 import LandingPage from './components/Landing/LandingPage';
 import App from './components/App/App';
 import ProjectsPage from './components/ProjectsPage';
@@ -20,6 +21,7 @@ import ExportedVisualizationPage from './components/Visualizations/ExportedVisua
 export default (
   <Route path="/" component={ App }>
     <IndexRoute component={ LandingPage }/>
+    <Route path="/about" component={ AboutPage }/>
     <Route path="/projects/:projectId" component={ ProjectsPage }>
       <Route path="data" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 import { createProject, fetchPreloadedProjects, wipeProjectState } from '../../actions/ProjectActions';
 
-import EmailBlockingModal from '../Base/EmailBlockingModal';
 import RaisedButton from '../Base/RaisedButton';
 import Tabs from '../Base/Tabs';
 import Tab from '../Base/Tab';
@@ -12,12 +11,6 @@ import Tab from '../Base/Tab';
 var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
 
 export class LandingPage extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this._handleTabsChange = this._handleTabsChange.bind(this);
-  }
 
   componentWillMount() {
     if (this.props.projects.items.length == 0) {
@@ -29,24 +22,8 @@ export class LandingPage extends Component {
     const nextProjectId = nextProps.project.properties.id
     if (this.props.project.properties.id != nextProjectId) {
       this.props.wipeProjectState();
-      this.props.pushState(null, `/projects/${nextProjectId}/data/upload`);
+      this.props.pushState(null, `/projects/${ nextProjectId }/data/upload`);
     }
-  }
-
-  _handleTabsChange(tab){
-    this.props.pushState(null, `/${tab.props.route}`);
-  }
-
-  _getSelectedTab(){
-    const tabList = ["team", "about", "login"];
-    const _validTab = function (tabValue) {
-      return tabList.indexOf(tabValue) > -1;
-    }
-
-    if ((this.props.routes.length > 2) && _validTab(this.props.routes[2].path)) {
-      return this.props.routes[2].path;
-    }
-    return "";
   }
 
   _onUploadClick() {
@@ -56,6 +33,9 @@ export class LandingPage extends Component {
     this.props.createProject(userId, projectTitle, projectDescription);
   }
 
+  _onClickLogo(){
+    this.props.pushState(null, `/`);
+  }
 
   render() {
     return (
@@ -67,18 +47,14 @@ export class LandingPage extends Component {
         </div>
         <div className={ styles.fillContainer + ' ' + styles.landingPageContent }>
           <div className={ styles.header }>
-            <div className={ styles.logoContainer } href="/">
+            <div className={ styles.logoContainer } onClick={ this._onClickLogo.bind(this) }>
               <Logo className={ styles.logo } />
               <div className={ styles.logoText }>
                 DIVE
               </div>
             </div>
-            <Tabs
-              value={ this._getSelectedTab() }
-              onChange={ this._handleTabsChange.bind(this) }
-              className={ styles.landingTabs }>
-              <Tab label="ABOUT" value="about" route="about" className={ styles.landingTab } />
-              <Tab label="LOGIN" value="login" route="login" className={ styles.landingTab } />
+            <Tabs className={ styles.landingTabs }>
+              <Tab label="ABOUT" value="about" route="/about" className={ styles.landingTab } />
             </Tabs>
           </div>
           <div className={ styles.ctaBox }>
