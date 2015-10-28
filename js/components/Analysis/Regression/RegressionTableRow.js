@@ -59,9 +59,7 @@ export default class RowRenderer extends Component {
 
     const getRoundedString = function (num, decimalPlaces=3) {
       if (num) {
-        return num >=1 ?
-          +parseFloat(num).toFixed(decimalPlaces) :
-          +parseFloat(num).toPrecision(decimalPlaces);
+        return +parseFloat(num).toPrecision(decimalPlaces);
       }
 
       return '';
@@ -83,11 +81,15 @@ export default class RowRenderer extends Component {
       );
     }
     const getCoefficientString = function (column) {
-      if (!column || !column.properties) {
+      if (!column || !column.property) {
         return '';
       }
 
-      const { coefficient, pValue } = column.properties;
+      const { coefficient, pValue } = column.property;
+
+      if (!column.enabled) {
+        return '×';
+      }
 
       if (coefficient == undefined || coefficient == null) {
         return '';
@@ -105,11 +107,7 @@ export default class RowRenderer extends Component {
     };
 
     const getStandardErrorString = function (column) {
-      if (!column || !column.properties) {
-        return '';
-      }
-
-      const { standardError } = column.properties;
+      const { standardError } = column.property;
 
       if (standardError == undefined || standardError == null) {
         return '';
@@ -129,9 +127,11 @@ export default class RowRenderer extends Component {
               <Cell className={ styles.coefficient }>
                 { getCoefficientString(column) }
               </Cell>
-              <Cell className={ styles.standardError }>
-                { getStandardErrorString(column) }
-              </Cell>
+              { column && column.property && column.enabled &&
+                <Cell className={ styles.standardError }>
+                  { getStandardErrorString(column) }
+                </Cell>
+              }
             </Column>
           )
         }
