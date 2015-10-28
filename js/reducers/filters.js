@@ -1,8 +1,9 @@
 import {
-  SELECT_VISUALIZATION_TYPE
+  SELECT_VISUALIZATION_TYPE,
+  WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
-export default function filters(state={
+const baseState = {
   visualizationTypes: [
     {
       type: "tree",
@@ -40,7 +41,9 @@ export default function filters(state={
       disabled: true
     }
   ]
-}, action) {
+}
+
+export default function filters(state=baseState, action) {
   switch(action.type){
     case SELECT_VISUALIZATION_TYPE:
       var visualizationTypes = state.visualizationTypes;
@@ -53,8 +56,9 @@ export default function filters(state={
       }
 
       return { ...state, visualizationTypes: visualizationTypes }
+    case WIPE_PROJECT_STATE:
+      return baseState;
     default:
       return state;
   }
 }
-

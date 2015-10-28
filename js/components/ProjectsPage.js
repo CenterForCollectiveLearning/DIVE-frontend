@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
-import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions.js';
+import { fetchProjectIfNeeded, createAUID, wipeProjectState } from '../actions/ProjectActions.js';
 import styles from './App/app.sass';
 
 import EmailBlockingModal from './Base/EmailBlockingModal';
@@ -82,4 +82,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { pushState, fetchProjectIfNeeded })(ProjectsPage);
+export default connect(mapStateToProps, { pushState, fetchProjectIfNeeded, wipeProjectState })(ProjectsPage);

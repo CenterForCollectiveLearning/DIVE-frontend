@@ -1,13 +1,16 @@
 import {
   SELECT_DATASET,
   RECEIVE_UPLOAD_DATASET,
-  RECEIVE_DATASETS
+  RECEIVE_DATASETS,
+  WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
-export default function datasetSelector(state = {
+const baseState = {
   datasetId: null,
   loaded: false
-}, action) {
+}
+
+export default function datasetSelector(state = baseState, action) {
   switch (action.type) {
     case SELECT_DATASET:
       return { ...state, datasetId: action.datasetId };
@@ -18,6 +21,8 @@ export default function datasetSelector(state = {
         return { ...state, datasetId: action.datasets[0].datasetId, loaded: true }
       }
       return { ...state, loaded: true };
+    case WIPE_PROJECT_STATE:
+      return baseState;
     default:
       return state;
   }
