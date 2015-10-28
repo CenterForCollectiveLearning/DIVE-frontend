@@ -10,12 +10,6 @@ import {
 
 import { fetch } from './api.js';
 
-function wipeProjectStateDispatcher() {
-  return {
-    type: WIPE_PROJECT_STATE
-  };
-}
-
 function requestProjectDispatcher(projectId) {
   return {
     type: REQUEST_PROJECT,
@@ -60,9 +54,9 @@ function createdProjectDispatcher(json) {
 }
 
 export function wipeProjectState() {
-  return (dispatch) => {
-    dispatch(wipeProjectStateDispatcher());
-  }
+  return {
+    type: WIPE_PROJECT_STATE
+  };
 }
 
 function shouldCreateProject(state) {
