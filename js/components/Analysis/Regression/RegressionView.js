@@ -61,6 +61,24 @@ export class RegressionView extends Component {
         field: 'rSquaredAdjusted',
         formattedField: '<div class="cmu">R</div><sup class="cmu">2</sup>',
         items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.rSquaredAdj)
+      },
+      {
+        type: 'footerRow',
+        field: 'fTest',
+        formattedField: '<em class="cmu">F</em>',
+        items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.fTest)
+      },
+      {
+        type: 'footerRow',
+        field: 'aic',
+        formattedField: '<div class="cmu">AIC</div>',
+        items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.aic)
+      },
+      {
+        type: 'footerRow',
+        field: 'bic',
+        formattedField: '<div class="cmu">BIC</div>',
+        items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.bic)
       }
     ];
 
