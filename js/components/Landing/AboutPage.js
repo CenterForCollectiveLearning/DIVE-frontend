@@ -1,22 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './landing.sass';
 import { connect } from 'react-redux';
-import { fetchPreloadedProjects } from '../../actions/ProjectActions';
 
-import RaisedButton from '../Base/RaisedButton';
 import Tabs from '../Base/Tabs';
 import Tab from '../Base/Tab';
 
 var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
 
-export class LandingPage extends Component {
-
-  componentWillMount() {
-    if (this.props.projects.items.length == 0) {
-      this.props.fetchPreloadedProjects();
-    }
-  }
-
+export class AboutPage extends Component {
   render() {
     return (
       <div className={ styles.fillContainer + ' ' + styles.landingPage }>
@@ -59,12 +50,6 @@ export class LandingPage extends Component {
               <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Or explore our preloaded projects:</div>
             </div>
             <div className={ styles.projectListContainer }>
-              { this.props.projects.isFetching &&
-                <div className={ styles.watermark }>Fetching datasets...</div>
-              }
-              { this.props.projects.items.map((project) =>
-                <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/visualize` } className={ styles.projectButton }>{ project.title }</a>
-              )}
             </div>
           </div>
         </div>
@@ -73,13 +58,12 @@ export class LandingPage extends Component {
   }
 }
 
-LandingPage.propTypes = {
+AboutPage.propTypes = {
   children: PropTypes.node
 };
 
 function mapStateToProps(state) {
-  const { projects } = state;
-  return { projects };
+  return {  };
 }
 
-export default connect(mapStateToProps, { fetchPreloadedProjects })(LandingPage);
+export default connect(mapStateToProps, { })(AboutPage);
