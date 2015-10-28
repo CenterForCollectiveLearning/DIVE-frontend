@@ -22,7 +22,7 @@ export class GallerySidebar extends Component {
   }
 
   componentWillMount() {
-    const { project, datasetSelector, gallerySelector, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, datasets, queryFields } = this.props;
+    const { project, datasetSelector, gallerySelector, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, datasets, queryFields } = this.props;
 
     if (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded)) {
       fetchDatasetsIfNeeded(project.properties.id);
@@ -33,7 +33,7 @@ export class GallerySidebar extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { project, datasetSelector, gallerySelector, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, selectDataset, datasets, queryFields, selectFieldProperty } = this.props;
+    const { project, datasetSelector, gallerySelector, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, datasets, queryFields, selectFieldProperty } = this.props;
 
     const projectChanged = (previousProps.project.properties.id !== project.properties.id);
     const datasetChanged = (previousProps.datasetSelector.datasetId !== datasetSelector.datasetId);
