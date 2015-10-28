@@ -46,7 +46,7 @@ export class ProjectsPage extends Component {
 
   render() {
     return (
-      <div className={ styles.fillContainer }>
+      <div className={ styles.fillContainer + ' ' + styles.projectContainer }>
         <EmailBlockingModal />
         <div className={ styles.header }>
           <div className={ styles.logoContainer } onClick={ this._onClickLogo }>

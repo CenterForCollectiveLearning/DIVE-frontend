@@ -147,6 +147,18 @@ export default class Visualization extends Component {
 
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
 
+    // VisualizationType-specific options
+    if (validVisualizationTypes[0] == 'scatter') {
+      options = {
+        ...options,
+        hAxis: { title: data[0][0]},
+        vAxis: { title: data[0][1]},
+        legend: {
+          position: 'none'
+        }
+      }
+    }
+
     return (
       <div className={ styles[containerClassName] } onClick={ this.handleClick }>
         { showHeader && spec.meta &&

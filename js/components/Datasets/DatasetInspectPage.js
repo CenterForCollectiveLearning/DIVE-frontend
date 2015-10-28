@@ -28,19 +28,19 @@ export class DatasetInspectPage extends Component {
   }
 
   render() {
-    const { datasets, params } = this.props; 
+    const { datasets, params } = this.props;
     const dataset = datasets.items.filter((dataset) =>
       dataset.datasetId == params.datasetId
     )[0];
 
     return (
-      <div className={ styles.fillContainer }>
+      <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
         { datasets.items.length > 0 &&
           <DatasetToolbar datasets={ datasets.items } projectId={ params.projectId } selectedDatasetId={ params.datasetId }/>
         }
         { dataset && dataset.details &&
           <DataGrid data={ dataset.data } tableClassName={ styles.grid } />
-        }        
+        }
         { this.props.children }
       </div>
     );

@@ -1,14 +1,19 @@
 @import '../../../css/flexbox.sass'
 @import '../../../css/mixins.sass'
 
+.analysisContainer
+  overflow: hidden
+
 .regressionContainer, .comparisonContainer
   display: flex
   flex-direction: row
+  overflow: hidden
 
   background-color: #e9e7e8
 
 .regressionViewContainer, .comparisonViewContainer
   +fillContainer
+  overflow-y: scroll
 
 .regressionCard
   +fillContainer
@@ -143,4 +148,3 @@
 
     .column
       background-color: #FBFBFB
-

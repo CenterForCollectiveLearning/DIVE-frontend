@@ -44,7 +44,7 @@ export class DatasetsPage extends Component {
 
   render() {
     return (
-      <div className={ styles.fillContainer }>
+      <div className={ styles.fillContainer + ' ' + styles.datasetPageContainer }>
         { this.props.children }
       </div>
     );

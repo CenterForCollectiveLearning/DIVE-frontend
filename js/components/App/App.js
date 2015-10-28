@@ -21,7 +21,7 @@ export class App extends BaseComponent {
 
   render() {
     return (
-      <div className={ styles.fillContainer }>
+      <div className={ styles.fillContainer + ' ' + styles.appContainer }>
         { this.props.children }
       </div>
     );
