@@ -53,13 +53,13 @@ export class RegressionView extends Component {
       {
         type: 'footerRow',
         field: 'rSquared',
-        formattedField: 'R<sup>2</sup>',
+        formattedField: '<div class="cmu">R<sup>2</sup></div>',
         items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.rSquared)
       },
       {
         type: 'footerRow',
         field: 'rSquaredAdjusted',
-        formattedField: '<div>R</div><sup>2</sup>',
+        formattedField: '<div class="cmu">R</div><sup class="cmu">2</sup>',
         items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.rSquaredAdj)
       }
     ];
@@ -90,7 +90,7 @@ export class RegressionView extends Component {
 
             <div className={ styles.contributionToRSquared }>
               <ColumnChart
-                chartId={ `bar-${regressionResult.id}` }
+                chartId={ `bar-${ regressionResult.id }` }
                 data={ contributionToRSquared }
                 options={ options } />
             </div>
