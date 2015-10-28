@@ -54,7 +54,7 @@ export class RegressionSidebar extends Component {
                 new Object({
                   id: item.id,
                   name: item.name,
-                  disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null
+                  disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique)
                 })
               )}
               valueMember="id"
