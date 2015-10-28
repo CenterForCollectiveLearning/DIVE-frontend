@@ -5,10 +5,11 @@ import {
   REQUEST_CREATE_EXPORTED_SPEC,
   RECEIVE_CREATED_EXPORTED_SPEC,
   SELECT_BUILDER_VISUALIZATION_TYPE,
-  SET_SHARE_WINDOW
+  SET_SHARE_WINDOW,
+  WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
-export default function visualization(state = {
+const baseState = {
   tableData: [],
   visualizationData: [],
   spec: {},
@@ -17,7 +18,9 @@ export default function visualization(state = {
   shareWindow: null,
   isExporting: false,
   isFetching: false
-}, action) {
+}
+
+export default function visualization(state = baseState, action) {
   switch (action.type) {
     case CLEAR_VISUALIZATION:
       return {
@@ -48,6 +51,8 @@ export default function visualization(state = {
       return { ...state, exportedSpecId: action.exportedSpecId, isExporting: false };
     case SET_SHARE_WINDOW:
       return { ...state, shareWindow: action.shareWindow };
+    case WIPE_PROJECT_STATE:
+      return baseState;
     default:
       return state;
   }

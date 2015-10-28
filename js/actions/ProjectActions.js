@@ -4,7 +4,8 @@ import {
   CREATE_PROJECT,
   CREATED_PROJECT,
   REQUEST_PRELOADED_PROJECTS,
-  RECEIVE_PRELOADED_PROJECTS
+  RECEIVE_PRELOADED_PROJECTS,
+  WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
@@ -52,6 +53,12 @@ function createdProjectDispatcher(json) {
   };
 }
 
+export function wipeProjectState() {
+  return {
+    type: WIPE_PROJECT_STATE
+  };
+}
+
 function shouldCreateProject(state) {
   const { project } = state;
   if (project.loaded && !(project.properties || project.isFetching)) {
@@ -68,7 +75,7 @@ export function createProjectIfNeeded(user_id, title, description) {
   }
 }
 
-function createProject(user_id, title, description) {
+export function createProject(user_id, title, description) {
   var formData = new FormData();
   formData.append('user_id', user_id);
   formData.append('title', title);

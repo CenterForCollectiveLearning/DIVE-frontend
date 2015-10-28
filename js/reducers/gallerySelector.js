@@ -5,10 +5,11 @@ import {
   SELECT_FIELD_PROPERTY,
   SELECT_FIELD_PROPERTY_VALUE,
   SELECT_AGGREGATION_FUNCTION,
-  SELECT_SORTING_FUNCTION
+  SELECT_SORTING_FUNCTION,
+  WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
-export default function gallerySelector(state = {
+const baseState = {
   title: [],
   fieldProperties: [],
   specs: [],
@@ -16,7 +17,9 @@ export default function gallerySelector(state = {
   sortingFunctions: [],
   isFetching: false,
   updatedAt: 0
-}, action) {
+}
+
+export default function gallerySelector(state = baseState, action) {
 
   const SORTING_FUNCTIONS = [
     {
@@ -60,7 +63,7 @@ export default function gallerySelector(state = {
     {
       type: 'plain',
       string: 'Summary visualizations'
-    } 
+    }
   ];
 
   const titleVisualizationStrings = [
@@ -178,6 +181,9 @@ export default function gallerySelector(state = {
       const sortedSpecs = state.specs.sort(sortSpecs);
 
       return { ...state, sortingFunctions: sortingFunctions, specs: sortedSpecs };
+
+    case WIPE_PROJECT_STATE:
+      return baseState;
 
     default:
       return state;

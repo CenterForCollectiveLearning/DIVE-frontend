@@ -2,7 +2,8 @@ import {
   REQUEST_DATASETS,
   RECEIVE_DATASETS,
   RECEIVE_UPLOAD_DATASET,
-  RECEIVE_DATASET
+  RECEIVE_DATASET,
+  WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
 function mergeDatasetLists(originalList, newList) {
@@ -37,11 +38,13 @@ function mergeDatasetLists(originalList, newList) {
   return mergedList;
 }
 
-export default function datasets(state = {
+const baseState = {
   isFetching: false,
   loaded: false,
   items: []
-}, action) {
+}
+
+export default function datasets(state = baseState, action) {
   switch (action.type) {
     case REQUEST_DATASETS:
       return { ...state, isFetching: true };
@@ -58,6 +61,8 @@ export default function datasets(state = {
           details: action.details
       }];
       return { ...state, items: mergeDatasetLists(state.items, newDataset) };
+    case WIPE_PROJECT_STATE:
+      return baseState;
     default:
       return state;
   }

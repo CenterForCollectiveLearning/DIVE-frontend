@@ -2,15 +2,18 @@ import {
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
   RECEIVE_RUN_REGRESSION,
-  RECEIVE_CONTRIBUTION_TO_R_SQUARED
+  RECEIVE_CONTRIBUTION_TO_R_SQUARED,
+  WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
-export default function regressionSelector(state = {
+const baseState = {
   dependentVariableId: null,
   independentVariableIds: [],
   regressionResult: {},
   contributionToRSquared: []
-}, action) {
+}
+
+export default function regressionSelector(state = baseState, action) {
   switch (action.type) {
     case SELECT_REGRESSION_DEPENDENT_VARIABLE:
       const independentVariables = state.independentVariableIds.slice()
@@ -33,6 +36,9 @@ export default function regressionSelector(state = {
 
     case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
       return { ...state, contributionToRSquared: (action.data.data || []) };
+
+    case WIPE_PROJECT_STATE:
+      return baseState;
 
     default:
       return state;
