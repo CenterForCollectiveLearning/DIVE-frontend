@@ -37,12 +37,14 @@ export class AnalysisSidebar extends Component {
       {
         label: "Regression",
         type: "regression",
-        selected: this.props.selectedTab == "regression"
+        selected: this.props.selectedTab == "regression",
+        disabled: false
       },
       {
         label: "Comparison",
         type: "comparison",
-        selected: this.props.selectedTab == "comparison"
+        selected: this.props.selectedTab == "comparison",
+        disabled: true
       }
     ];
 
