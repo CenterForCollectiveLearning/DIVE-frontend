@@ -1,6 +1,9 @@
 @import '../../../css/mixins.sass'
 @import '../../../css/flexbox.sass'
 
+.visualizationsPageContainer
+  overflow: hidden
+
 .headerFragment
   &:first-child
     text-transform: capitalize
@@ -23,6 +26,8 @@
   background-color: #e9e7e8
 
 .galleryContainer
+  overflow: hidden
+
   .watermark
     +montserrat
     display: flex
@@ -40,7 +45,9 @@
 .specsContainer, .visualizationViewContainer
   +fillContainer
   max-width: 100%
-  margin: 8px
+  padding: 8px
+  max-height: 100%
+  overflow-y: scroll
 
   .innerSpecsContainer, .innerVisualizationViewContainer
     box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.16)

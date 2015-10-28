@@ -6,7 +6,7 @@ import styles from './Analysis.sass';
 export class AnalysisPage extends Component {
   render() {
     return (
-      <div className={ styles.fillContainer }>
+      <div className={ styles.fillContainer + ' ' + styles.analysisContainer }>
         { this.props.children }
       </div>
     );
