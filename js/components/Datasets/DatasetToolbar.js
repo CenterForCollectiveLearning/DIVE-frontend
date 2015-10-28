@@ -50,7 +50,7 @@ export class DatasetToolbar extends Component {
             displayTextMember="title"
             onChange={ this.onSelectDataset } />
         </div>
-        { this.props.selectedDatasetId &&
+        { !this.props.project.properties.preloaded && this.props.selectedDatasetId &&
           <div className={ styles.rightActions }>
             <RaisedButton icon={ true } onClick={ this.onSelectDeleteDataset }>
               <i className="fa fa-trash"></i>
