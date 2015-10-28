@@ -30,26 +30,42 @@ export class RegressionView extends Component {
   render() {
     const { regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames } = this.props;
 
-    if (!regressionResult.fields) {
+    if (!regressionResult.fields || regressionResult.fields.length == 0) {
       return (
         <div className={ styles.regressionViewContainer }></div>
       );
     }
+
+    const allRegressedFields = regressionResult.fields.map(function (field){
+      if (!field.values) {
+        // numeric
+        return { ...field, formattedName: field.name, enabled: true };
+
+      } else if (field.values.length == 1) {
+        // categorical binary
+        return { name: field.name, formattedName: `${ field.name }: ${ field.values[0] }`, enabled: true };
+
+      } else { 
+        // categorical fixed effects
+        return { ...field, formattedName: field.name, enabled: false };
+
+      }
+    });
 
     const data = [
       {
         type: 'tableHeader',
         size: regressionResult.numColumns
       },
-      ...regressionResult.fields.map((field) =>
-        new Object({
+      ...allRegressedFields.map(function (field) {
+        return new Object({
           type: 'dataRow',
-          field: field,
-          items: regressionResult.regressionsByColumn.map((column) =>
-            column.regression.propertiesByField.find((property) => property.field == field)
-          )
+          field: field.formattedName,
+          items: regressionResult.regressionsByColumn.map(function (column) {
+            return { ...field, property: column.regression.propertiesByField.find((property) => property.baseField == field.name) }
+          })
         })
-      ),
+      }),
       {
         type: 'footerRow',
         field: 'rSquared',
@@ -103,7 +119,7 @@ export class RegressionView extends Component {
     };
 
     const regressedIndependentVariableNames = independentVariableNames.length == 0 ?
-      regressionResult.fields
+      regressionResult.fields.map((field) => field.name)
       : independentVariableNames;
 
     const independentVariableNamesString = regressedIndependentVariableNames.length > 1 ?
