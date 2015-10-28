@@ -7,18 +7,18 @@ export class VisualizationsPage extends Component {
   componentWillMount() {
     if (this.props.routes.length < 4) {
       this.props.replaceState(null, `/projects/${this.props.params.projectId}/visualize/gallery`);
-    }        
+    }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.routes.length < 4) {
       this.props.replaceState(null, `/projects/${this.props.params.projectId}/visualize/gallery`);
-    }    
+    }
   }
 
   render() {
     return (
-      <div className={ styles.fillContainer }>
+      <div className={ styles.fillContainer + ' ' + styles.visualizationsPageContainer }>
         {this.props.children}
       </div>
     );
@@ -26,7 +26,7 @@ export class VisualizationsPage extends Component {
 }
 
 function mapStateToProps(state) {
-  return {}; 
+  return {};
 }
 
 export default connect(mapStateToProps, { replaceState })(VisualizationsPage);
