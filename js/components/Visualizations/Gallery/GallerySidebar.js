@@ -4,7 +4,7 @@ import { pushState } from 'redux-react-router';
 
 import { selectDataset, fetchDatasetsIfNeeded } from '../../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectFieldPropertyValue, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
-import { selectVisualizationType } from '../../../actions/VisualizationActions';
+import { selectVisualizationType, clearGallerySelector } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
 import _ from 'underscore';
@@ -22,7 +22,9 @@ export class GallerySidebar extends Component {
   }
 
   componentWillMount() {
-    const { project, datasetSelector, gallerySelector, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, datasets, queryFields } = this.props;
+    const { project, datasetSelector, gallerySelector, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, datasets, queryFields, clearGallerySelector } = this.props;
+
+    clearGallerySelector();
 
     if (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded)) {
       fetchDatasetsIfNeeded(project.properties.id);
@@ -145,5 +147,6 @@ export default connect(mapStateToProps, {
   selectFieldProperty,
   selectFieldPropertyValue,
   selectAggregationFunction,
+  clearGallerySelector,
   pushState
 })(GallerySidebar);
