@@ -1,12 +1,14 @@
 import {
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
+  RECEIVE_FIELD_PROPERTIES,
   RECEIVE_RUN_REGRESSION,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
 const baseState = {
+  fieldProperties: [],
   dependentVariableId: null,
   independentVariableIds: [],
   regressionResult: {},
@@ -16,8 +18,10 @@ const baseState = {
 export default function regressionSelector(state = baseState, action) {
   switch (action.type) {
     case SELECT_REGRESSION_DEPENDENT_VARIABLE:
-      const independentVariables = state.independentVariableIds.slice()
-        .map((variable) => new Object({...variable, selected: false}));
+      const independentVariables = state.fieldProperties
+        .filter((property) => property.id != action.dependentVariableId && !( property.generalType == 'c' && property.isUnique ) && !( property.generalType == 'c' && property.uniqueValues.length > 2 ))
+        .map((property) => property.id)
+
       return { ...state, dependentVariableId: action.dependentVariableId, independentVariableIds: independentVariables };
 
     case SELECT_REGRESSION_INDEPENDENT_VARIABLE:
@@ -30,6 +34,13 @@ export default function regressionSelector(state = baseState, action) {
         independentVariableIds.push(selectedId);
       }
       return { ...state, independentVariableIds: independentVariableIds};
+
+    case RECEIVE_FIELD_PROPERTIES:
+      const selectedIndependentVariables = action.fieldProperties
+        .filter((property) => property.id != state.dependentVariableId && !( property.generalType == 'c' && property.isUnique ) && !( property.generalType == 'c' && property.uniqueValues.length > 2 ))
+        .map((property) => property.id);
+
+      return { ...state, fieldProperties: action.fieldProperties, independentVariableIds: selectedIndependentVariables };
 
     case RECEIVE_RUN_REGRESSION:
       return { ...state, regressionResult: action.data };
