@@ -13,7 +13,9 @@ export default function regressionSelector(state = {
 }, action) {
   switch (action.type) {
     case SELECT_REGRESSION_DEPENDENT_VARIABLE:
-      return { ...state, dependentVariableId: action.dependentVariableId };
+      const independentVariables = state.independentVariableIds.slice()
+        .map((variable) => new Object({...variable, selected: false}));
+      return { ...state, dependentVariableId: action.dependentVariableId, independentVariableIds: independentVariables };
 
     case SELECT_REGRESSION_INDEPENDENT_VARIABLE:
       var independentVariableIds = state.independentVariableIds.slice();
@@ -30,7 +32,7 @@ export default function regressionSelector(state = {
       return { ...state, regressionResult: action.data };
 
     case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
-      return { ...state, contributionToRSquared: action.data.data };
+      return { ...state, contributionToRSquared: (action.data.data || []) };
 
     default:
       return state;
