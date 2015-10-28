@@ -167,3 +167,34 @@
   letter-spacing: 1px
   opacity: 0.8
   font-size: 12px
+
+.textBox
+  display: flex
+  flex-direction: column
+  background-color: rgba(0,0,0,0.2)
+  width: 500px
+  min-height: 100px
+  padding: 20px
+  border-radius: 2px
+  font-size: 18px
+  font-weight: 300
+
+  strong
+    display: inline-block
+    font-weight: 500
+
+  a
+    text-decoration: none
+    color: white
+    font-weight: 400
+
+    &:hover, strong:hover
+      color: rgba(255, 255, 255, 0.8)
+      text-decoration: underline
+
+.spacer
+  display: flex
+  flex-grow: 1
+
+.aboutContainer
+  margin-top: 30px

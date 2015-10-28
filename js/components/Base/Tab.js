@@ -1,15 +1,21 @@
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 import styles from './Tabs.sass';
 
-export default class Tab extends Component {
-  handleClick() {
-
+class Tab extends Component {
+  handleClick(e) {
+    if (this.props.onClick) {
+      this.props.onClick(e);
+    } else if (this.props.route) {
+      this.props.pushState(null, this.props.route);
+    }
   }
   render() {
     return (
       <div
         className={ styles.tab + ' ' + this.props.className + (this.props.selected ? ' ' + styles.selected : '')}
-        onClick={this.props.onClick}>
+        onClick={ this.handleClick.bind(this) }>
         { this.props.label }
       </div>
     );
@@ -30,3 +36,9 @@ Tab.defaultProps = {
   route: null,
   className: ""
 }
+
+function mapStateToProps(state) {
+  return {};
+}
+
+export default connect(mapStateToProps, { pushState })(Tab);

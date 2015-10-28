@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './landing.sass';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 
 import Tabs from '../Base/Tabs';
 import Tab from '../Base/Tab';
@@ -8,6 +9,10 @@ import Tab from '../Base/Tab';
 var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
 
 export class AboutPage extends Component {
+  _onClickLogo(){
+    this.props.pushState(null, `/`);
+  }
+
   render() {
     return (
       <div className={ styles.fillContainer + ' ' + styles.landingPage }>
@@ -18,40 +23,26 @@ export class AboutPage extends Component {
         </div>
         <div className={ styles.fillContainer + ' ' + styles.landingPageContent }>
           <div className={ styles.header }>
-            <div className={ styles.logoContainer } href="/">
+            <div className={ styles.logoContainer } onClick={ this._onClickLogo.bind(this) }>
               <Logo className={ styles.logo } />
               <div className={ styles.logoText }>
                 DIVE
               </div>
             </div>
             <Tabs className={ styles.landingTabs }>
-              <Tab label="ABOUT" value="about" route="about" className={ styles.landingTab } />
+              <Tab label="ABOUT" value="about" route="/about" className={ styles.landingTab } />
             </Tabs>
           </div>
-          <div className={ styles.ctaBox }>
-            <div className={ styles.primaryCopy }>
-              <span>Stop Processing Data and Start <strong>Understanding It</strong></span>
+          <div className={ styles.aboutContainer }>
+            <div className={ styles.textBox }>
+              <span><a href="/"><strong>DIVE</strong></a> automates data processing, lowering the barrier to understanding data so you can focus on interpreting results, not technical minutiae.</span>
             </div>
-            <div className={ styles.secondaryCopy }>
-              Merge and query datasets, conduct statistical analyses, and explore
-              automatically generated visualizations within seconds.
-            </div>
-            <div className={ styles.ctaContainer }>
-              <RaisedButton
-                label="Upload Dataset"
-                primary={ true }
-                onClick={ this.onOpenClick }
-                className={ styles.uploadButton } />
+            <div className={ styles.separater }></div>
+            <div className={ styles.textBox }>
+              <span><a href="/"><strong>DIVE</strong></a> was created by <a target="_blank" href="https://twitter.com/KevinZengHu">Kevin Hu</a>, <a target="_blank" href="https://twitter.com/gurubavan">Guru Mahendran</a>, and <a target="_blank" href="https://twitter.com/cesifoti">César Hidalgo</a> in the <a target="_blank" href="http://macro.media.mit.edu">Macro Connections Group</a> at the <a target="_blank" href="http://media.mit.edu">MIT Media Lab</a>.</span>
             </div>
           </div>
-          <div className={ styles.separater }></div>
-          <div className={ styles.preloaded }>
-            <div className={ styles.flexbox }>
-              <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Or explore our preloaded projects:</div>
-            </div>
-            <div className={ styles.projectListContainer }>
-            </div>
-          </div>
+          <div className={ styles.spacer }></div>
         </div>
       </div>
     );
@@ -66,4 +57,4 @@ function mapStateToProps(state) {
   return {  };
 }
 
-export default connect(mapStateToProps, { })(AboutPage);
+export default connect(mapStateToProps, { pushState })(AboutPage);

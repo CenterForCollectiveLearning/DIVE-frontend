@@ -33,6 +33,10 @@ export class LandingPage extends Component {
     this.props.createProject(userId, projectTitle, projectDescription);
   }
 
+  _onClickLogo(){
+    this.props.pushState(null, `/`);
+  }
+
   render() {
     return (
       <div className={ styles.fillContainer + ' ' + styles.landingPage }>
@@ -43,14 +47,14 @@ export class LandingPage extends Component {
         </div>
         <div className={ styles.fillContainer + ' ' + styles.landingPageContent }>
           <div className={ styles.header }>
-            <div className={ styles.logoContainer } href="/">
+            <div className={ styles.logoContainer } onClick={ this._onClickLogo.bind(this) }>
               <Logo className={ styles.logo } />
               <div className={ styles.logoText }>
                 DIVE
               </div>
             </div>
             <Tabs className={ styles.landingTabs }>
-              <Tab label="ABOUT" value="about" route="about" className={ styles.landingTab } />
+              <Tab label="ABOUT" value="about" route="/about" className={ styles.landingTab } />
             </Tabs>
           </div>
           <div className={ styles.ctaBox }>
