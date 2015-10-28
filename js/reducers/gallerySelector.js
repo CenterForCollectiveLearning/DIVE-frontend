@@ -6,14 +6,15 @@ import {
   SELECT_FIELD_PROPERTY_VALUE,
   SELECT_AGGREGATION_FUNCTION,
   SELECT_SORTING_FUNCTION,
-  WIPE_PROJECT_STATE
+  WIPE_PROJECT_STATE,
+  CLEAR_GALLERY_SELECTOR
 } from '../constants/ActionTypes';
 
 const baseState = {
   title: [],
   fieldProperties: [],
+  originalFieldProperties: [],
   specs: [],
-  conditionals: [],
   sortingFunctions: [],
   isFetching: false,
   updatedAt: 0
@@ -110,6 +111,7 @@ export default function gallerySelector(state = baseState, action) {
         isFetching: false,
         title: defaultTitle,
         fieldProperties: action.fieldProperties,
+        originalFieldProperties: action.fieldProperties,
         sortingFunctions: SORTING_FUNCTIONS,
         updatedAt: action.receivedAt
       };
@@ -184,6 +186,17 @@ export default function gallerySelector(state = baseState, action) {
 
     case WIPE_PROJECT_STATE:
       return baseState;
+
+    case CLEAR_GALLERY_SELECTOR:
+ 
+      return {
+        ...state,
+        title: defaultTitle,
+        fieldProperties: state.originalFieldProperties,
+        sortingFunctions: SORTING_FUNCTIONS,
+        updatedAt: action.receivedAt,
+        specs: []
+      };
 
     default:
       return state;

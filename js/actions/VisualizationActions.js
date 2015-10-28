@@ -10,7 +10,8 @@ import {
   REQUEST_CREATE_EXPORTED_SPEC,
   RECEIVE_CREATED_EXPORTED_SPEC,
   SET_SHARE_WINDOW,
-  SELECT_SORTING_FUNCTION
+  SELECT_SORTING_FUNCTION,
+  CLEAR_GALLERY_SELECTOR
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTaskResult } from './api.js';
@@ -221,5 +222,11 @@ export function setShareWindow(shareWindow) {
   return {
     type: SET_SHARE_WINDOW,
     shareWindow: shareWindow
+  }
+}
+
+export function clearGallerySelector(shareWindow) {
+  return {
+    type: CLEAR_GALLERY_SELECTOR
   }
 }
