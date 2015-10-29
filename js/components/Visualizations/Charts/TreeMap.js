@@ -27,7 +27,13 @@ export default class TreeMap extends Component {
     const treeMapOptions = {
       ...options,
       minColor: '#DE6943',
-      maxColor: '#2D962D'
+      maxColor: '#2D962D',
+      textStyle: {
+        ...options.textStyle,
+        fontSize: 20,
+        bold: true
+      },
+      showTooltips: false
     }
 
     return (
