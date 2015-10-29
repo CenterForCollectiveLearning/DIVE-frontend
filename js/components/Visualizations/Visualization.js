@@ -157,7 +157,7 @@ export default class Visualization extends Component {
           </div>
         }
         { (!isMinimalView || (data.length < MAX_ELEMENTS)) &&
-          <div className={ styles[visualizationClassName] }>
+          <div className={ styles[visualizationClassName] + ' ' + styles[validVisualizationTypes[0]]}>
             { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
               <ColumnChart
                 chartId={ `spec-bar-${spec.id}` }

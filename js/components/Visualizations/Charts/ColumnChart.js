@@ -13,8 +13,25 @@ export default class ColumnChart extends Component {
 
     const columnChartOptions = {
       ...options,
+      hAxis: { 
+        title: data[0][0],
+        titleTextStyle: {
+          color: '#333',
+          bold: true,
+          italic: false
+        }
+      },
       vAxis: {
-        minValue: 0
+        minValue: 0,
+        title: data[0][1],
+        titleTextStyle: {
+          color: '#333',
+          bold: true,
+          italic: false
+        }
+      },
+      legend: {
+        position: 'none'
       }
     };
 

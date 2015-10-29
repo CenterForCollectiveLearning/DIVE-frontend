@@ -117,7 +117,7 @@
       outline: none
 
       .header
-        font-size: 15px
+        font-size: 16px
 
       .overflowText
         display: flex
@@ -132,8 +132,14 @@
         padding: 20px
         min-height: 180px
 
-        svg g
-          cursor: pointer!important // override google's default
+        &.tree
+          svg
+            text
+              fill: rgba(0, 0, 0, 0)
+
+        svg
+          g
+            cursor: pointer!important // override google's default
 
 .gridContainer
   .grid
@@ -174,9 +180,33 @@
       line-height: 29px
 
 .visualization
-  svg g:last-child
-    rect[stroke-width="5"], rect[stroke-width="4"], rect[stroke-width="3"]
-      display: none
+  &.tree
+    svg
+      pointer-events: none
+
+      g
+        outline: none
+        pointer-events: none
+
+      > g:first-of-type
+        text
+          font-size: 20px
+
+      > g:last-of-type
+        text
+          font-size: 12px
+
+      text
+        fill: rgba(0, 0, 0, 0.4)
+        font-size: 16px
+
+  svg
+    g text[font-weight="bold"][text-anchor="middle"]
+      font-weight: 500
+
+    g:last-child
+      rect[stroke-width="5"], rect[stroke-width="4"], rect[stroke-width="3"]
+        display: none
 
 .sortingControl
   display: flex
