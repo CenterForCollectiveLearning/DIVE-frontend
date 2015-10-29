@@ -14,7 +14,12 @@ class Tab extends Component {
   render() {
     return (
       <div
-        className={ styles.tab + ' ' + this.props.className + (this.props.selected ? ' ' + styles.selected : '')}
+        className={
+          styles.tab
+          + ' ' + this.props.className
+          + (this.props.selected ? ' ' + styles.selected : '')
+          + (this.props.disabled ? ' ' + styles.disabled : '')
+        }
         onClick={ this.handleClick.bind(this) }>
         { this.props.label }
       </div>
@@ -28,13 +33,15 @@ Tab.propTypes = {
   route: PropTypes.string,
   selected: PropTypes.bool,
   onClick: PropTypes.func,
-  className: PropTypes.string
+  className: PropTypes.string,
+  disabled: PropTypes.bool
 }
 
 Tab.defaultProps = {
   selected: false,
   route: null,
-  className: ""
+  className: "",
+  disabled: false
 }
 
 function mapStateToProps(state) {
