@@ -24,6 +24,8 @@ export class GallerySidebar extends Component {
   componentWillMount() {
     const { project, datasetSelector, gallerySelector, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, datasets, queryFields, clearGallerySelector } = this.props;
 
+    clearGallerySelector();
+
     if (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded)) {
       fetchDatasetsIfNeeded(project.properties.id);
     }
