@@ -59,6 +59,7 @@ export class ProjectsPage extends Component {
             <Tab label="DATA" value="data" route="data" />
             <Tab label="VISUALIZE" value="visualize" route="visualize/gallery" />
             <Tab label="ANALYZE" value="analyze" route="analyze/regression" />
+            <Tab label="COMPOSE" value="compose" route="compose" disabled/>
           </Tabs>
         </div>
         {this.props.children}
