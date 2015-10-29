@@ -37,6 +37,7 @@ export default class Visualization extends Component {
 
   render() {
     const MAX_ELEMENTS = 2000;
+    const MAX_TREEMAP_ELEMENTS = 200;
     const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes } = this.props;
 
     var options = {
@@ -147,6 +148,11 @@ export default class Visualization extends Component {
 
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
 
+    const tooMuchData = isMinimalView &&
+      (data.length > MAX_ELEMENTS ||
+        (validVisualizationTypes[0] == 'tree' && data.length > MAX_TREEMAP_ELEMENTS)
+      );
+
     return (
       <div className={ styles[containerClassName] } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
@@ -156,7 +162,7 @@ export default class Visualization extends Component {
             )}
           </div>
         }
-        { (!isMinimalView || (data.length < MAX_ELEMENTS)) &&
+        { !tooMuchData &&
           <div className={ styles[visualizationClassName] + ' ' + styles[validVisualizationTypes[0]]}>
             { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
               <ColumnChart
@@ -196,9 +202,9 @@ export default class Visualization extends Component {
             }
           </div>
         }
-        { (isMinimalView && (data.length > MAX_ELEMENTS)) &&
+        { tooMuchData &&
           <div className={ styles[overflowTextClassName] }>
-            <span>Too many data points to display.</span>
+            <span>Too many data points to preview.</span>
           </div>
         }
       </div>
