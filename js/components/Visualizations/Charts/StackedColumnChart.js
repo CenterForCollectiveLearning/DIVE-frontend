@@ -11,8 +11,29 @@ export default class StackedColumnChart extends Component {
   render() {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options } = this.props;
 
+    const stackedColumnChartOptions = {
+      ...options,
+      hAxis: { 
+        title: data[0][0],
+        titleTextStyle: {
+          color: '#333',
+          bold: true,
+          italic: false
+        }
+      },
+      vAxis: {
+        minValue: 0,
+        title: data[0][1],
+        titleTextStyle: {
+          color: '#333',
+          bold: true,
+          italic: false
+        }        
+      }
+    }
+
     return (
-      <Chart chartType="ColumnChart" options={ options } data = { data } graph_id={ chartId }/>
+      <Chart chartType="ColumnChart" options={ stackedColumnChartOptions } data = { data } graph_id={ chartId }/>
     );
   }
 }
