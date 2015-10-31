@@ -7,6 +7,9 @@
   margin-left: 1px
   margin-top: 1px
 
+  + .toggleButtonGroup
+    margin-top: 10px
+
   .toggleButtonContainer
     display: flex
     flex-grow: 1
@@ -22,14 +25,12 @@
 
     &.separatedToggleButton
       width: 100%
-      margin-bottom: 10px
       max-width: none
 
       .raisedButton.toggleButton
         padding: 0 8px
         max-width: none
         text-align: left
-        border-radius: 2px
 
     &.textToggleButton .raisedButton.toggleButton
       min-width: 20px
@@ -53,12 +54,23 @@
       cursor: pointer
       pointer-events: auto
 
-    .raisedButton.toggleButton, &:first-child .raisedButton.toggleButton, &:last-child .raisedButton.toggleButton
+    &:first-child
+      .raisedButton.toggleButton
+        border-top-left-radius: 2px
+
+      .splitButtonSelect > div > div > div
+        border-top-right-radius: 2px
+
+    &:last-child
+      .raisedButton.toggleButton
+        border-bottom-left-radius: 2px
+
+      .splitButtonSelect > div > div > div
+        border-bottom-right-radius: 2px
+
+    .raisedButton.toggleButton
       flex-grow: 1
-      border-top-left-radius: 2px
-      border-top-right-radius: 0
-      border-bottom-left-radius: 2px
-      border-bottom-right-radius: 0
+      border-radius: 0
 
     .splitButtonSelect
       width: 110px
@@ -70,8 +82,7 @@
       flex-shrink: 0
 
       > div > div > div
-        border-top-left-radius: 0
-        border-bottom-left-radius: 0
+        border-radius: 0
 
         > div
           font-weight: 400
