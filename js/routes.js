@@ -21,7 +21,9 @@ import ExportedVisualizationPage from './components/Visualizations/ExportedVisua
 export default (
   <Route path="/" component={ App }>
     <IndexRoute component={ LandingPage }/>
-    <Route path="/about" component={ AboutPage }/>
+    <Route path="/landing" component={ LandingPage }>
+      <Route path="/about" component={ AboutPage }/>
+    </Route>
     <Route path="/projects/:projectId" component={ ProjectsPage }>
       <Route path="data" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>
