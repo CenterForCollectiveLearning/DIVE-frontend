@@ -71,7 +71,6 @@ function requestUploadDatasetDispatcher() {
 }
 
 function receiveUploadDatasetDispatcher(params, json) {
-  console.log('receiveUploadDatasetDispatcher', json);
   return {
     type: RECEIVE_UPLOAD_DATASET,
     datasets: [{ datasetId: json.id }]

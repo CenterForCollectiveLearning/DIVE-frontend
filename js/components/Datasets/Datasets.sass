@@ -1,7 +1,24 @@
+@import '../../../css/mixins.sass'
 @import '../../../css/flexbox.sass'
 
 .datasetPageContainer, .datasetContainer
   overflow: hidden
+
+.uploadingZone
+  background-color: #FDFDFD
+  border: 2px dashed #DDD
+
+  .watermark
+    +montserrat
+    display: flex
+
+    justify-content: center
+
+    text-transform: uppercase
+    font-weight: 500
+    letter-spacing: 1px
+    font-size: 16px
+    color: #999
 
 .toolbar
   display: flex

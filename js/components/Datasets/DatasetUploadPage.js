@@ -33,13 +33,21 @@ export class DatasetUploadPage extends Component {
   }
 
   render() {
+    const { datasetSelector } = this.props;
     return (
       <div className={ styles.fillContainer }>
         <ActionBox heading="Upload Dataset">
-          <Dropzone ref="dropzone" className={ styles.dropzone + ' ' + styles.centeredFill } onDrop={ this.onDrop } disableClick={ true }>
-            <RaisedButton label="Select & upload a file" primary={ true } onClick={ this.onOpenClick } />
-            <span>or drop files here to upload</span>
-          </Dropzone>
+          { datasetSelector.isUploading &&
+            <div className={ styles.uploadingZone + ' ' + styles.centeredFill }>
+              <div className={ styles.watermark }>Uploading dataset...</div>
+            </div>
+          }
+          { !datasetSelector.isUploading &&
+            <Dropzone ref="dropzone" className={ styles.dropzone + ' ' + styles.centeredFill } onDrop={ this.onDrop } disableClick={ true }>
+              <RaisedButton label="Select & upload a file" primary={ true } onClick={ this.onOpenClick } />
+              <span>or drop files here to upload</span>
+            </Dropzone>
+          }
         </ActionBox>
       </div>
     );
