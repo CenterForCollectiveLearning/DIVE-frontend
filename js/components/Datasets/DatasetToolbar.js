@@ -30,11 +30,7 @@ export class DatasetToolbar extends Component {
 
   onSelectUploadDataset() {
     const projectId = this.props.project.properties.id;
-    const { uploadDataset } = this.props;
-
-    filePicker(function(files) {
-      uploadDataset(projectId, files[0]);
-    });
+    this.props.pushState(null, `/projects/${ projectId }/data/upload`);
   }
 
   render() {

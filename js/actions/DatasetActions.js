@@ -8,7 +8,7 @@ import {
   RECEIVE_UPLOAD_DATASET
 } from '../constants/ActionTypes';
 
-import { fetch } from './api.js';
+import { fetch, pollForTaskResult } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
 export function selectDataset(datasetId) {
@@ -70,10 +70,10 @@ function requestUploadDatasetDispatcher() {
   };
 }
 
-function receiveUploadDatasetDispatcher(json) {
+function receiveUploadDatasetDispatcher(params, json) {
   return {
     type: RECEIVE_UPLOAD_DATASET,
-    datasets: json.datasets.map((dataset) => new Object({...dataset, datasetId: dataset.id}))
+    datasets: [{ datasetId: json.id }]
   };
 }
 
@@ -88,7 +88,11 @@ export function uploadDataset(projectId, datasetFile) {
       method: 'post',
       body: formData
     }).then(response => response.json())
-      .then(json => dispatch(receiveUploadDatasetDispatcher(json)));
+      .then(function(json) {
+        if (json.taskId) {
+          dispatch(pollForTaskResult(json.taskId, {}, receiveUploadDatasetDispatcher))
+        }
+      })
   };
 }
 
