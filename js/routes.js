@@ -5,6 +5,7 @@ import { Route, IndexRoute } from 'react-router';
 import AboutPage from './components/Landing/AboutPage';
 import LandingPage from './components/Landing/LandingPage';
 import HomePage from './components/Landing/HomePage';
+import FeaturesPage from './components/Landing/FeaturesPage';
 import App from './components/App/App';
 import ProjectsPage from './components/ProjectsPage';
 import DatasetsPage from './components/Datasets/DatasetsPage';
@@ -25,6 +26,7 @@ export default (
     <Route path="/landing" component={ LandingPage }>
       <Route path="/home" component={ HomePage }/>
       <Route path="/about" component={ AboutPage }/>
+      <Route path="/features" component={ FeaturesPage }/>
     </Route>
     <Route path="/projects/:projectId" component={ ProjectsPage }>
       <Route path="data" component={ DatasetsPage }>
