@@ -22,9 +22,9 @@ export default function datasetSelector(state = baseState, action) {
       return { ...state, datasetId: action.datasets[0].datasetId, loaded: true, isUploading: false };
     case RECEIVE_DATASETS:
       if (action.datasets.length > 0) {
-        return { ...state, datasetId: action.datasets[0].datasetId, loaded: true, isUploading: false }
+        return { ...state, datasetId: action.datasets[0].datasetId, loaded: true }
       }
-      return { ...state, loaded: true, isUploading: false };
+      return { ...state, loaded: true };
     case WIPE_PROJECT_STATE:
       return baseState;
     default:

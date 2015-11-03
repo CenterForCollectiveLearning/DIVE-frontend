@@ -89,9 +89,8 @@ export function uploadDataset(projectId, datasetFile) {
       body: formData
     }).then(response => response.json())
       .then(function(json) {
-        const dispatchParams = {};
         if (json.taskId) {
-          dispatch(pollForTaskResult(json.taskId, dispatchParams, receiveUploadDatasetDispatcher))
+          dispatch(pollForTaskResult(json.taskId, {}, receiveUploadDatasetDispatcher))
         }
       })
   };
