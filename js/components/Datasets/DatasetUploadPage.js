@@ -18,9 +18,9 @@ export class DatasetUploadPage extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { datasetSelector, pushState, params } = this.props;
-
-    if (nextProps.datasetSelector.datasetId && !datasetSelector.datasetId) {
-      pushState(null, `/projects/${ params.projectId }/visualize/gallery`);
+    const nextDatasetId = nextProps.datasetSelector.datasetId
+    if (nextDatasetId && !datasetSelector.datasetId) {
+      pushState(null, `/projects/${ params.projectId }/data/${ nextDatasetId }/inspect`);
     }
   }
 
