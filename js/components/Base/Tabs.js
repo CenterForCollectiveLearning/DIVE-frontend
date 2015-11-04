@@ -21,11 +21,13 @@ export default class Tabs extends Component {
       if (child.props.value == this.props.value){
         return React.cloneElement(child, {
           selected: true,
+          selectedClassName: this.props.selectedClassName,
           onClick: this.props.onChange ? this.handleClick.bind(this, i) : null
         });
       } else {
         return React.cloneElement(child, {
           selected: false,
+          selectedClassName: this.props.selectedClassName,
           onClick: this.props.onChange ? this.handleClick.bind(this, i) : null
         });
       }
@@ -45,9 +47,11 @@ Tabs.propTypes = {
   children: PropTypes.node.isRequired,
   value: PropTypes.string, 
   onChange: PropTypes.func,
-  className: PropTypes.string
+  className: PropTypes.string,
+  selectedClassName: PropTypes.string
 }
 
 Tabs.defaultProps = {
-  className: ""
+  className: "",
+  selectedClassName: null
 }
