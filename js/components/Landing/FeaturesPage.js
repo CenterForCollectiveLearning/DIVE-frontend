@@ -50,7 +50,7 @@ export class FeaturesPage extends Component {
                   Figure out how variables in your data influence each other, without losing your cool to Excel or R.
                 </div>
                 <div>
-                  Run statistical analyses on your data in seconds, like multivariate regressions, t-tests, and //comparisons//.
+                  Run statistical analyses on your data in seconds, like multivariate regressions, t-tests, and time series analysis.
                 </div>
               </div>
             </div>
@@ -64,6 +64,9 @@ export class FeaturesPage extends Component {
               <div className={ styles.featureCopyBody }>
                 <div>
                   All DIVE visualizations are embeddable, so you can get live interactive visualizations on your websites as easily as any image or video.
+                </div>
+                <div>
+                  You can also tie together multiple visualizations and add annotations to create a linear story. Share these immediately, or embed them in your article or website.
                 </div>
               </div>
             </div>
