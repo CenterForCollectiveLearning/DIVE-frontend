@@ -230,10 +230,13 @@
 
     &:nth-child(3)
       background-color: #38587D
-      color: white
 
-      .featureCopy .featureCopyHeader
-        color: #eee
+      .featureCopy
+        .featureCopyHeader
+          color: #eee
+
+        .featureCopyBody
+          color: white
 
     &.centerBlock
       flex-direction: column-reverse
@@ -245,7 +248,7 @@
           height: auto
 
         .featureCopyBody
-          padding-top: 20px
+          padding-top: 30px
           justify-content: flex-start
 
       .featureImage
@@ -290,21 +293,35 @@
       display: flex
       flex-direction: column
       flex-grow: 1
+      align-items: center
 
       height: 100%
       padding-top: 70px
-      padding-bottom: 30px
+      padding-bottom: 40px
 
       .featureCopyHeader, .featureCopyBody
         display: flex
+        flex-direction: column
         justify-content: center
+        max-width: 600px
 
       .featureCopyHeader        
         height: 80px
+        padding-left: 20px
+        padding-right: 20px
 
         font-size: 22px
+        line-height: 28px
         font-weight: 300
         color: #666
+        text-align: center
 
       .featureCopyBody
         flex-grow: 1
+        font-weight: 300
+        color: #555
+        font-size: 16px
+        line-height: 22px
+
+        > div
+          margin-bottom: 10px

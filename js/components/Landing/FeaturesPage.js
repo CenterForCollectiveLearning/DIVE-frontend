@@ -27,7 +27,14 @@ export class FeaturesPage extends Component {
             </div>
             <div className={ styles.featureCopy }>
               <div className={ styles.featureCopyHeader }>Discover the most interesting visualizations of your data.</div>
-              <div className={ styles.featureCopyBody }>Blabbity blah blah.</div>
+              <div className={ styles.featureCopyBody }>
+                <div>
+                  DIVE makes visualizing your data ridiculously easy. We automatically show recommended visualizations first, based on effectiveness, expressiveness, and statistical properties like correlation, entropy, and gini.
+                </div>
+                <div>
+                  Trying to answer a specific question? Just select which columns in your data you'd like to visualize, and pick a visualization style — we'll take care of the rest.
+                </div>
+              </div>
             </div>
           </div>
           <div className={ styles.centeredFill + ' ' + styles.featureBlock + ' ' + styles.rightBlock }>
