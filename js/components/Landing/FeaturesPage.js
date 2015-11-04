@@ -21,22 +21,28 @@ export class FeaturesPage extends Component {
           </div>
         </div>
         <div className={ styles.centeredFill + ' ' + styles.featuresContainer }>
-          <div className={ styles.centeredFill + ' ' + styles.featureBlock }>
-            <div className={ styles.featureImage }><img /></div>
+          <div className={ styles.centeredFill + ' ' + styles.featureBlock + ' ' + styles.centerBlock }>
+            <div className={ styles.featureImage + ' ' + styles.imageExploreVisualizations }>
+              <img src="/assets/images/Exploring Visualizations.2x.png"/>
+            </div>
             <div className={ styles.featureCopy }>
               <div className={ styles.featureCopyHeader }>Discover the most interesting visualizations of your data.</div>
               <div className={ styles.featureCopyBody }>Blabbity blah blah.</div>
             </div>
           </div>
-          <div className={ styles.centeredFill + ' ' + styles.featureBlock }>
-            <div className={ styles.featureImage }><img /></div>
+          <div className={ styles.centeredFill + ' ' + styles.featureBlock + ' ' + styles.rightBlock }>
+            <div className={ styles.featureImage + ' ' + styles.imageCausalRelationships }>
+              <img src="/assets/images/Causal Relationships.2x.png"/>
+            </div>
             <div className={ styles.featureCopy }>
               <div className={ styles.featureCopyHeader }>Determine the underlying relationships between variables.</div>
               <div className={ styles.featureCopyBody }>Blabbity blah blah.</div>
             </div>
           </div>
-          <div className={ styles.centeredFill + ' ' + styles.featureBlock }>
-            <div className={ styles.featureImage }><img /></div>
+          <div className={ styles.centeredFill + ' ' + styles.featureBlock + ' ' + styles.leftBlock }>
+            <div className={ styles.featureImage + ' ' + styles.imageEmbeddedVisualization }>
+              <img src="/assets/images/Embedded Visualization.2x.png"/>
+            </div>
             <div className={ styles.featureCopy }>
               <div className={ styles.featureCopyHeader }>Easily embed live interactive visualizations, anywhere.</div>
               <div className={ styles.featureCopyBody }>Blabbity blah blah.</div>

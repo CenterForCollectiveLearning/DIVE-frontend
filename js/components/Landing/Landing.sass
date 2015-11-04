@@ -211,6 +211,7 @@
     height: 500px
     color: #333
     flex-direction: row
+    overflow: hidden
 
     &:nth-child(1)
       background-color: white
@@ -222,24 +223,62 @@
       border-top: 1px solid rgba(74, 119, 140, 0.25)
 
     &:nth-child(3)
-      background-color: #4A778C
+      background-color: #38587D
       color: white
 
       .featureCopy .featureCopyHeader
         color: #eee
+
+    &.centerBlock
+      flex-direction: column-reverse
+
+      .featureCopy
+        height: auto
+
+        .featureCopyHeader
+          height: auto
+
+        .featureCopyBody
+          padding-top: 20px
+          justify-content: flex-start
+
+      .featureImage
+        width: 50%
+        max-height: 45%
+        overflow: hidden
+        align-items: flex-start
+
+    &.rightBlock
+      flex-direction: row-reverse
+
+      .featureImage
+        width: 35%
+        padding-right: 30px
+
+    &.leftBlock
+      .featureImage
+        width: 35%
+        padding-left: 30px
 
     .featureImage
       display: flex
       justify-content: center
       align-items: center
 
-      width: 40%
-      height: 100%
+      &.imageExploreVisualizations
+        img
+          width: 100%
+          max-width: 660px
 
-      img
-        background-color: whitesmoke
-        width: 80%
-        height: 80%
+      &.imageCausalRelationships
+        img
+          width: 100%
+          max-width: 373px
+
+      &.imageEmbeddedVisualization
+        img
+          width: 100%
+          max-width: 360px
 
     .featureCopy
       display: flex
@@ -247,15 +286,19 @@
       flex-grow: 1
 
       height: 100%
+      padding-top: 70px
+      padding-bottom: 30px
 
       .featureCopyHeader, .featureCopyBody
         display: flex
         justify-content: center
-        align-items: center
 
       .featureCopyHeader        
-        height: 250px
+        height: 80px
 
         font-size: 22px
         font-weight: 300
         color: #666
+
+      .featureCopyBody
+        flex-grow: 1
