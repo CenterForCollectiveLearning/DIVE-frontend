@@ -12,7 +12,9 @@ export class FeaturesPage extends Component {
               <span>Instantly discover stories in your data</span>
             </div>
             <div className={ styles.ctaContainer }>
-              <div className={ styles.videoContainer }></div>
+              <div className={ styles.videoContainer }>
+                <iframe src="https://player.vimeo.com/video/144666629" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+              </div>
             </div>
             <div className={ styles.secondaryCopy }>
               Merge and query datasets, conduct statistical analyses, and explore
@@ -43,7 +45,14 @@ export class FeaturesPage extends Component {
             </div>
             <div className={ styles.featureCopy }>
               <div className={ styles.featureCopyHeader }>Determine the underlying relationships between variables.</div>
-              <div className={ styles.featureCopyBody }>Blabbity blah blah.</div>
+              <div className={ styles.featureCopyBody }>
+                <div>
+                  Figure out how variables in your data influence each other, without losing your cool to Excel or R.
+                </div>
+                <div>
+                  Run statistical analyses on your data in seconds, like multivariate regressions, t-tests, and //comparisons//.
+                </div>
+              </div>
             </div>
           </div>
           <div className={ styles.centeredFill + ' ' + styles.featureBlock + ' ' + styles.leftBlock }>
@@ -52,7 +61,11 @@ export class FeaturesPage extends Component {
             </div>
             <div className={ styles.featureCopy }>
               <div className={ styles.featureCopyHeader }>Easily embed live interactive visualizations, anywhere.</div>
-              <div className={ styles.featureCopyBody }>Blabbity blah blah.</div>
+              <div className={ styles.featureCopyBody }>
+                <div>
+                  All DIVE visualizations are embeddable, so you can get live interactive visualizations on your websites as easily as any image or video.
+                </div>
+              </div>
             </div>
           </div>
         </div>
