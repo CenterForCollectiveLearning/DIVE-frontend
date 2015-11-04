@@ -9,10 +9,12 @@ export class FeaturesPage extends Component {
         <div className={ styles.centeredFill }>
           <div className={ styles.ctaBox }>
             <div className={ styles.primaryCopy }>
-              <span>Stop Processing Data and Start <strong>Understanding It</strong></span>
+              <span>Instantly discover stories in your data</span>
             </div>
             <div className={ styles.ctaContainer }>
-              <div className={ styles.videoContainer }></div>
+              <div className={ styles.videoContainer }>
+                <iframe src="https://player.vimeo.com/video/144666629" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+              </div>
             </div>
             <div className={ styles.secondaryCopy }>
               Merge and query datasets, conduct statistical analyses, and explore
@@ -20,11 +22,52 @@ export class FeaturesPage extends Component {
             </div>
           </div>
         </div>
-        <div className={ styles.centeredFill + ' ' + styles.segment2 }>
-        </div>
-        <div className={ styles.centeredFill + ' ' + styles.segment3 }>
-        </div>
-        <div className={ styles.centeredFill + ' ' + styles.segment4 }>
+        <div className={ styles.centeredFill + ' ' + styles.featuresContainer }>
+          <div className={ styles.centeredFill + ' ' + styles.featureBlock + ' ' + styles.centerBlock }>
+            <div className={ styles.featureImage + ' ' + styles.imageExploreVisualizations }>
+              <img src="/assets/images/Exploring Visualizations.2x.png"/>
+            </div>
+            <div className={ styles.featureCopy }>
+              <div className={ styles.featureCopyHeader }>Discover the most interesting visualizations of your data.</div>
+              <div className={ styles.featureCopyBody }>
+                <div>
+                  DIVE makes visualizing your data ridiculously easy. We automatically show recommended visualizations first, based on effectiveness, expressiveness, and statistical properties like correlation, entropy, and gini.
+                </div>
+                <div>
+                  Trying to answer a specific question? Just select which columns in your data you'd like to visualize, and pick a visualization style — we'll take care of the rest.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={ styles.centeredFill + ' ' + styles.featureBlock + ' ' + styles.rightBlock }>
+            <div className={ styles.featureImage + ' ' + styles.imageCausalRelationships }>
+              <img src="/assets/images/Causal Relationships.2x.png"/>
+            </div>
+            <div className={ styles.featureCopy }>
+              <div className={ styles.featureCopyHeader }>Determine the underlying relationships between variables.</div>
+              <div className={ styles.featureCopyBody }>
+                <div>
+                  Figure out how variables in your data influence each other, without losing your cool to Excel or R.
+                </div>
+                <div>
+                  Run statistical analyses on your data in seconds, like multivariate regressions, t-tests, and //comparisons//.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={ styles.centeredFill + ' ' + styles.featureBlock + ' ' + styles.leftBlock }>
+            <div className={ styles.featureImage + ' ' + styles.imageEmbeddedVisualization }>
+              <img src="/assets/images/Embedded Visualization.2x.png"/>
+            </div>
+            <div className={ styles.featureCopy }>
+              <div className={ styles.featureCopyHeader }>Easily embed live interactive visualizations, anywhere.</div>
+              <div className={ styles.featureCopyBody }>
+                <div>
+                  All DIVE visualizations are embeddable, so you can get live interactive visualizations on your websites as easily as any image or video.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );

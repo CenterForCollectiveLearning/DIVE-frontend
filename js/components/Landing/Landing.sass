@@ -50,6 +50,12 @@
       padding-left: 16px
       padding-right: 16px
 
+      &.selectedTab
+        border: none
+        background-color: transparent
+        font-weight: 500
+        color: white
+
   .logoContainer
     display: flex
     flex-direction: row
@@ -125,6 +131,9 @@
       height: 360px
       width: 640px
       background-color: #0F2762
+
+      iframe
+        border: none
 
 .separater
   border-bottom: 1px solid rgba(111,130,177,0.50)
@@ -206,17 +215,115 @@
 .aboutContainer
   margin-top: 30px
 
-.segment2, .segment3, .segment4
-  min-height: 600px
+.featuresContainer
+  .featureBlock
+    height: 500px
+    color: #333
+    flex-direction: row
+    overflow: hidden
 
-.segment2
-  background-color: white
-  margin-top: 40px
+    &:nth-child(1)
+      background-color: white
+      margin-top: 40px
 
-.segment3
-  background-color: white
-  background-image: linear-gradient(0deg, white 65%, rgba(74, 119, 140, 0.15) 100%)
-  border-top: 1px solid rgba(74, 119, 140, 0.25)
+    &:nth-child(2)
+      background-color: white
+      background-image: linear-gradient(0deg, white 65%, rgba(74, 119, 140, 0.15) 100%)
+      border-top: 1px solid rgba(74, 119, 140, 0.25)
 
-.segment4
-  background-color: #4A778C
+    &:nth-child(3)
+      background-color: #38587D
+
+      .featureCopy
+        .featureCopyHeader
+          color: #eee
+
+        .featureCopyBody
+          color: white
+
+    &.centerBlock
+      flex-direction: column-reverse
+
+      .featureCopy
+        height: auto
+
+        .featureCopyHeader
+          height: auto
+
+        .featureCopyBody
+          padding-top: 30px
+
+      .featureImage
+        width: 50%
+        max-height: 45%
+        overflow: hidden
+        align-items: flex-start
+
+    &.rightBlock
+      flex-direction: row-reverse
+
+      .featureImage
+        width: 35%
+        padding-right: 30px
+
+    &.leftBlock
+      .featureImage
+        width: 35%
+        padding-left: 30px
+
+    .featureImage
+      display: flex
+      justify-content: center
+      align-items: center
+
+      &.imageExploreVisualizations
+        img
+          width: 100%
+          max-width: 660px
+
+      &.imageCausalRelationships
+        img
+          width: 100%
+          max-width: 373px
+
+      &.imageEmbeddedVisualization
+        img
+          width: 100%
+          max-width: 360px
+
+    .featureCopy
+      display: flex
+      flex-direction: column
+      flex-grow: 1
+      align-items: center
+
+      height: 100%
+      padding-top: 70px
+      padding-bottom: 40px
+
+      .featureCopyHeader, .featureCopyBody
+        display: flex
+        flex-direction: column
+        max-width: 600px
+
+      .featureCopyHeader        
+        height: 80px
+        padding-left: 20px
+        padding-right: 20px
+        justify-content: center
+
+        font-size: 22px
+        line-height: 28px
+        font-weight: 300
+        color: #666
+        text-align: center
+
+      .featureCopyBody
+        flex-grow: 1
+        font-weight: 300
+        color: #555
+        font-size: 16px
+        line-height: 22px
+
+        > div
+          margin-bottom: 10px
