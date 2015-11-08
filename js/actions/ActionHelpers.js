@@ -3,7 +3,7 @@ export function formatTableData(columnNames, data) {
     var newRow = {};
 
     columns.forEach((column, j) =>
-      newRow[column] = row[j]
+      newRow[`${ column.replace(/[.]/g, '_') }`] = row[j]
     );
 
     return newRow;
