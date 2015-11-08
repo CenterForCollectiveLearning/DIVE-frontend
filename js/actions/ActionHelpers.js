@@ -2,9 +2,9 @@ export function formatTableData(columnNames, data) {
   function formatRow(columns, row) {
     var newRow = {};
 
-    columns.forEach((column, j) =>
-      newRow[column] = row[j]
-    );
+    columns.forEach(function (column, j) {
+      newRow[`${ column.replace(/[.]/g, '_') }`] = row[j];
+    });
 
     return newRow;
   }
