@@ -11,7 +11,7 @@ import {
   RECEIVE_CREATED_EXPORTED_SPEC,
   SET_SHARE_WINDOW,
   SELECT_SORTING_FUNCTION,
-  CLEAR_GALLERY_SELECTOR
+  SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTaskResult } from './api.js';
@@ -225,8 +225,27 @@ export function setShareWindow(shareWindow) {
   }
 }
 
-export function clearGallerySelector(shareWindow) {
+export function setGalleryQueryString(query) {
+  var queryString = '';
+
+  Object.keys(query).forEach(
+    function (currentValue, index, array) {
+      var fieldString = '';
+      if (Array.isArray(query[currentValue])) {
+        query[currentValue].forEach((c, i, a) =>
+          fieldString = fieldString + `&${ currentValue }[]=${ c }`
+        )
+      } else {
+        fieldString = `&${ currentValue }=${ query[currentValue] }`;
+      }
+      queryString = queryString + fieldString;
+    }
+  );
+
+  queryString = queryString.replace('&', '?');
+
   return {
-    type: CLEAR_GALLERY_SELECTOR
+    type: SET_GALLERY_QUERY_STRING,
+    queryString: queryString
   }
 }
