@@ -7,7 +7,7 @@ import {
   SELECT_AGGREGATION_FUNCTION,
   SELECT_SORTING_FUNCTION,
   WIPE_PROJECT_STATE,
-  CLEAR_GALLERY_SELECTOR
+  SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
 const baseState = {
@@ -16,6 +16,7 @@ const baseState = {
   originalFieldProperties: [],
   specs: [],
   sortingFunctions: [],
+  queryString: "",
   isFetching: false,
   updatedAt: 0
 }
@@ -187,16 +188,10 @@ export default function gallerySelector(state = baseState, action) {
     case WIPE_PROJECT_STATE:
       return baseState;
 
-    case CLEAR_GALLERY_SELECTOR:
- 
+    case SET_GALLERY_QUERY_STRING:
       return {
-        ...state,
-        title: defaultTitle,
-        fieldProperties: state.originalFieldProperties,
-        sortingFunctions: SORTING_FUNCTIONS,
-        updatedAt: action.receivedAt,
-        specs: []
-      };
+        ...state, queryString: action.queryString
+      }
 
     default:
       return state;

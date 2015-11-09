@@ -32,7 +32,9 @@ export class BuilderSidebar extends Component {
   }
 
   onClickGallery() {
-    this.props.pushState(null, `/projects/${this.props.project.properties.id}/visualize/gallery`);
+    console.log("ummmmm");
+    console.log(this.props.gallerySelector);
+    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/visualize/gallery${ this.props.gallerySelector.queryString }`);
   }
 
   render() {
@@ -81,12 +83,13 @@ BuilderSidebar.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, filters, visualization } = state;
+  const { project, datasetSelector, filters, visualization, gallerySelector } = state;
   return {
     project,
     datasetSelector,
     filters,
-    visualization
+    visualization,
+    gallerySelector
   };
 }
 
