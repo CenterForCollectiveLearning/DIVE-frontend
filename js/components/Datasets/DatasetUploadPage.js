@@ -36,7 +36,10 @@ export class DatasetUploadPage extends Component {
     const { datasetSelector } = this.props;
     return (
       <div className={ styles.fillContainer }>
-        <ActionBox heading="Upload Dataset">
+        <ActionBox
+          className={ styles.datasetUploadBox }
+          contentClassName={ styles.datasetUploadBoxContent }
+          heading="Upload Dataset">
           { datasetSelector.isUploading &&
             <div className={ styles.uploadingZone + ' ' + styles.centeredFill }>
               <div className={ styles.watermark }>Uploading dataset...</div>
