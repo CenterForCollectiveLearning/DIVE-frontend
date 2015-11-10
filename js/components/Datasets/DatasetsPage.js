@@ -9,7 +9,7 @@ export class DatasetsPage extends Component {
   constructor(props) {
     super(props);
 
-    const { replaceState, params, routes, project, datasetSelector, datasets } = this.props;
+    const { replaceState, params, routes, project, datasetSelector, datasets, fetchDatasetsIfNeeded } = this.props;
 
     if (routes.length < 4) {
       if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
@@ -25,9 +25,9 @@ export class DatasetsPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { replaceState, params, routes, project, datasetSelector, datasets } = nextProps;
+    const { replaceState, params, routes, project, datasetSelector, datasets, fetchDatasetsIfNeeded } = nextProps;
 
-    if (this.props.project.properties.id !== project.properties.id) {
+    if ((this.props.project.properties.id !== project.properties.id) || (this.props.datasets.isFetching && !nextProps.datasets.isFetching)) {
       if (routes.length < 4) {
         if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
           fetchDatasetsIfNeeded(project.properties.id);
