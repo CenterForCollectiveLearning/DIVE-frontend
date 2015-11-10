@@ -1,0 +1,36 @@
+@import '../../../css/mixins.sass'
+@import '../../../css/flexbox.sass'
+
+.selectContainerBox
+  +fillContainer
+  background-color: white
+  border: 1px solid whitesmoke
+  padding: 20px
+  flex-direction: row
+
+.selectableBlock
+  +raisedBox
+
+  display: flex
+  justify-content: center
+  align-items: center
+
+  width: 200px
+  height: 80px
+  padding: 20px
+
+  margin-right: 20px
+
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+  font-size: 14px
+  font-weight: 500
+  color: #444
+
+  cursor: pointer
+
+  &.selected
+    border: 1px solid orange
+    background-color: whitesmoke
