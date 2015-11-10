@@ -8,7 +8,7 @@ export default class ActionBox extends Component {
         <div className={ styles.actionBoxHeader }>
           <h4>{ this.props.heading }</h4>
         </div>
-        <div className={ styles.actionBoxContent }>
+        <div className={ styles.actionBoxContent + (this.props.contentClassName ? ' ' + this.props.contentClassName : '') }>
           { this.props.children }
         </div>
       </div>
@@ -19,7 +19,8 @@ export default class ActionBox extends Component {
 ActionBox.propTypes = {
   heading: PropTypes.string,
   children: PropTypes.node,
-  className: PropTypes.string
+  className: PropTypes.string,
+  contentClassName: PropTypes.string
 }
 
 ActionBox.defaultProps = {
