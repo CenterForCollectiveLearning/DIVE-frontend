@@ -41,8 +41,7 @@ function receiveSpecsDispatcher(params, json) {
   };
 }
 
-function fetchSpecs(projectId, datasetId, fieldProperties) {
-
+export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
   const selectedFieldProperties = fieldProperties.filter((property) => property.selected);
 
   const fieldAggPairs = selectedFieldProperties
@@ -95,22 +94,6 @@ function fetchSpecs(projectId, datasetId, fieldProperties) {
         }
       })
 
-  };
-}
-
-function shouldFetchSpecs(state) {
-  const { specs } = state;
-  if (specs.isFetching) {
-    return false;
-  }
-  return true;
-}
-
-export function fetchSpecsIfNeeded(projectId, datasetId, fieldProperties=[]) {
-  return (dispatch, getState) => {
-    if (shouldFetchSpecs(getState())) {
-      return dispatch(fetchSpecs(projectId, datasetId, fieldProperties));
-    }
   };
 }
 
