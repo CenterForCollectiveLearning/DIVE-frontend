@@ -12,6 +12,7 @@ import {
 
 const baseState = {
   title: [],
+  datasetId: null,
   fieldProperties: [],
   originalFieldProperties: [],
   specs: [],
@@ -111,6 +112,7 @@ export default function gallerySelector(state = baseState, action) {
         ...state,
         isFetching: false,
         title: defaultTitle,
+        datasetId: action.datasetId,
         fieldProperties: action.fieldProperties,
         originalFieldProperties: action.fieldProperties,
         sortingFunctions: SORTING_FUNCTIONS,
