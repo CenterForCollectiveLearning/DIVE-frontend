@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { clearVisualization, fetchSpecsIfNeeded, selectSortingFunction } from '../../../actions/VisualizationActions';
+import { clearVisualization, fetchSpecs, selectSortingFunction } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
 import HeaderBar from '../../Base/HeaderBar';
@@ -17,24 +17,24 @@ export class GalleryView extends Component {
   }
 
   componentWillMount() {
-    const { datasetSelector, project, specs, fetchSpecsIfNeeded, clearVisualization, gallerySelector } = this.props;
+    const { datasetSelector, project, specs, fetchSpecs, clearVisualization, gallerySelector } = this.props;
     const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching);
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && noSpecsAndNotFetching) {
-      fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
+      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
     }
 
     clearVisualization();
   }
 
   componentDidUpdate(previousProps) {
-    const { datasetSelector, project, specs, gallerySelector, fetchSpecsIfNeeded } = this.props;
+    const { datasetSelector, project, specs, gallerySelector, fetchSpecs } = this.props;
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
     const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching);
     const gallerySelectorChanged = (gallerySelector.updatedAt !== previousProps.gallerySelector.updatedAt);
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && (datasetChanged || gallerySelectorChanged || noSpecsAndNotFetching)) {
-      fetchSpecsIfNeeded(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
+      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
     }
   }
 
@@ -123,4 +123,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { pushState, fetchSpecsIfNeeded, clearVisualization, selectSortingFunction })(GalleryView);
+export default connect(mapStateToProps, { pushState, fetchSpecs, clearVisualization, selectSortingFunction })(GalleryView);
