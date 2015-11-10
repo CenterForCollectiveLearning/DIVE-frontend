@@ -4,7 +4,7 @@ import styles from './ActionBox.sass';
 export default class ActionBox extends Component {
   render() {
     return (
-      <div className={ styles.actionBox }>
+      <div className={ styles.actionBox + (this.props.className ? ' ' + this.props.className : '') }>
         <div className={ styles.actionBoxHeader }>
           <h4>{ this.props.heading }</h4>
         </div>
@@ -19,8 +19,9 @@ export default class ActionBox extends Component {
 ActionBox.propTypes = {
   heading: PropTypes.string,
   children: PropTypes.node,
+  className: PropTypes.string
 }
 
 ActionBox.defaultProps = {
-  heading: "",
+  heading: ""
 }
