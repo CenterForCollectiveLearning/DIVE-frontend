@@ -36,8 +36,16 @@ export default class Visualization extends Component {
   }
 
   render() {
-    const MAX_ELEMENTS = 2000;
-    const MAX_TREEMAP_ELEMENTS = 200;
+    const MAX_ELEMENTS = {
+      preview: {
+        all: 2000,
+        treemap: 200
+      },
+      full: {
+        all: 3000,
+        treemap: 400
+      }
+    }
     const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes } = this.props;
 
     var options = {
@@ -148,9 +156,18 @@ export default class Visualization extends Component {
 
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
 
-    const tooMuchData = isMinimalView &&
-      (data.length > MAX_ELEMENTS ||
-        (validVisualizationTypes[0] == 'tree' && data.length > MAX_TREEMAP_ELEMENTS)
+    const tooMuchDataToPreview =
+      (isMinimalView &&
+        (data.length > MAX_ELEMENTS.preview.all ||
+          (validVisualizationTypes[0] == 'tree' && data.length > MAX_ELEMENTS.preview.treemap)
+        )
+      );
+
+    const tooMuchDataToShowFull =
+      (!isMinimalView &&
+        (data.length > MAX_ELEMENTS.full.all ||
+          (validVisualizationTypes[0] == 'tree' && data.length > MAX_ELEMENTS.full.treemap)
+        )
       );
 
     return (
@@ -162,7 +179,7 @@ export default class Visualization extends Component {
             )}
           </div>
         }
-        { !tooMuchData &&
+        { !(tooMuchDataToPreview || tooMuchDataToShowFull) &&
           <div className={ styles[visualizationClassName] + ' ' + styles[validVisualizationTypes[0]]}>
             { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
               <ColumnChart
@@ -202,9 +219,14 @@ export default class Visualization extends Component {
             }
           </div>
         }
-        { tooMuchData &&
+        { tooMuchDataToPreview &&
           <div className={ styles[overflowTextClassName] }>
             <span>Too many data points to preview.</span>
+          </div>
+        }
+        { tooMuchDataToShowFull &&
+          <div className={ styles[overflowTextClassName] }>
+            <span>Too many data points to show visualization. { /* Try limiting the amount of data you want to show. */ }</span>
           </div>
         }
       </div>
