@@ -27,7 +27,7 @@ export class GallerySidebar extends Component {
     if (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded)) {
       fetchDatasetsIfNeeded(project.properties.id);
     }
-    if (datasetSelector.datasetId && !gallerySelector.fieldProperties.length && !gallerySelector.isFetching) {
+    if (datasetSelector.datasetId && (gallerySelector.datasetId != datasetSelector.datasetId) && !gallerySelector.isFetching) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId, queryFields);
     }
   }
@@ -49,7 +49,7 @@ export class GallerySidebar extends Component {
     if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded))) {
       fetchDatasetsIfNeeded(project.properties.id);
     }
-    if (datasetChanged) {
+    if (datasetChanged || (!gallerySelector.isFetching && (gallerySelector.datasetId != datasetSelector.datasetId))) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId, queryFields);
     }
   }
