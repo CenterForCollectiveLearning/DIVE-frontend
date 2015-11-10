@@ -13,6 +13,7 @@ import project from './project';
 import projects from './projects';
 import regressionSelector from './regressionSelector';
 import specs from './specs';
+import transformSelector from './transformSelector';
 import user from './user';
 import visualization from './visualization';
 
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   projects,
   regressionSelector,
   specs,
+  transformSelector,
   user,
   visualization,
   router
