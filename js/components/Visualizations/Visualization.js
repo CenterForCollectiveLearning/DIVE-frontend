@@ -43,7 +43,7 @@ export default class Visualization extends Component {
       },
       full: {
         all: 3000,
-        treemap: 400
+        treemap: 200
       }
     }
     const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes } = this.props;
@@ -163,6 +163,12 @@ export default class Visualization extends Component {
           (validVisualizationTypes[0] == 'tree' && data.length > MAX_ELEMENTS.preview.treemap)
         )
       );
+    const tooMuchDataToShowFull =
+      (!isMinimalView &&
+        (data.length > MAX_ELEMENTS.full.all ||
+          (validVisualizationTypes[0] == 'tree' && data.length > MAX_ELEMENTS.full.treemap)
+        )
+      );
 
     var limitVizDataNumElements = 20;
     var limitVizDataOrder = 'top';
@@ -176,12 +182,7 @@ export default class Visualization extends Component {
         finalDataArray = data.slice(data.length - limitVizDataNumElements);
     }
 
-    const tooMuchDataToShowFull =
-      (!isMinimalView &&
-        (data.length > MAX_ELEMENTS.full.all ||
-          (validVisualizationTypes[0] == 'tree' && data.length > MAX_ELEMENTS.full.treemap)
-        )
-      );
+    console.log(data.length, finalDataArray.length)
 
     return (
       <div className={ styles[containerClassName] } onClick={ this.handleClick }>
@@ -201,28 +202,28 @@ export default class Visualization extends Component {
             { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
               <ColumnChart
                 chartId={ `spec-bar-${spec.id}` }
-                data={ data }
+                data={ finalDataArray }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { (validVisualizationTypes[0] == 'stackedbar' ) &&
               <StackedColumnChart
                 chartId={ `spec-stackedbar-${spec.id}` }
-                data={ data }
+                data={ finalDataArray }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { (validVisualizationTypes[0] == 'scatter' ) &&
               <ScatterChart
                 chartId={ `spec-bar-${spec.id}` }
-                data={ data }
+                data={ finalDataArray }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { validVisualizationTypes[0] == 'pie' &&
               <PieChart
                 chartId={ `spec-pie-${spec.id}` }
-                data={ data }
+                data={ finalDataArray }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
