@@ -46,7 +46,36 @@ export default class Visualization extends Component {
         treemap: 400
       }
     }
-    const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes } = this.props;
+    const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
+
+    var sortField, sortOrder;
+
+    sortFields.forEach(function(s) {
+      if (s.selected)
+        sortField = s.id;
+    });
+    sortOrders.forEach(function(s) {
+      if (s.selected)
+        sortOrder = s.id;
+    });
+    const sortIndex = (sortOrder == 'asc') ? 1 : -1;
+
+    const header = data[0];
+    const dataPoints = data.slice(1);
+    const sortedDataPoints = dataPoints.sort((a, b) => {
+      var aValue = a[sortField];
+      var bValue = b[sortField];
+      if (aValue < bValue) {
+        return sortIndex * -1;
+      }
+      else if (aValue > bValue) {
+        return sortIndex;
+      }
+      else {
+        return 0;
+      }
+    });
+    const finalDataArray = [ header, ...sortedDataPoints ]
 
     var options = {
       backgroundColor: 'transparent',
@@ -184,7 +213,7 @@ export default class Visualization extends Component {
             { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
               <ColumnChart
                 chartId={ `spec-bar-${spec.id}` }
-                data={ data }
+                data={ finalDataArray }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
@@ -244,7 +273,9 @@ Visualization.propTypes = {
   isMinimalView: PropTypes.bool,
   onClick: PropTypes.func,
   showHeader: PropTypes.bool,
-  visualizationTypes: PropTypes.array
+  visualizationTypes: PropTypes.array,
+  sortOrders: PropTypes.array,
+  sortFields: PropTypes.array
 };
 
 Visualization.defaultProps = {
@@ -254,5 +285,7 @@ Visualization.defaultProps = {
   overflowTextClassName: "overflowText",
   isMinimalView: false,
   showHeader: false,
-  visualizationTypes: []
+  visualizationTypes: [],
+  sortOrders: [],
+  sortFields: []
 };
