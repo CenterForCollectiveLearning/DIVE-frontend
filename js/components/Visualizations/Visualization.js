@@ -75,7 +75,7 @@ export default class Visualization extends Component {
         return 0;
       }
     });
-    const finalDataArray = [ header, ...sortedDataPoints ]
+    var finalDataArray = [ header, ...sortedDataPoints ]
 
     var options = {
       backgroundColor: 'transparent',
@@ -185,7 +185,6 @@ export default class Visualization extends Component {
 
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
 
-    var finalDataArray = data;
     const tooMuchDataToPreview =
       (isMinimalView &&
         (data.length > MAX_ELEMENTS.preview.all ||

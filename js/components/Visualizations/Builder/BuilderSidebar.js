@@ -36,7 +36,7 @@ export class BuilderSidebar extends Component {
   }
 
   render() {
-    const { selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, filters } = this.props;
+    const { selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, filters, visualization } = this.props;
 
     var visualizationTypes = [];
 
