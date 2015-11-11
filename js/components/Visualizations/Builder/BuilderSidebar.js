@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { selectBuilderVisualizationType } from '../../../actions/VisualizationActions';
+import { selectBuilderVisualizationType, selectBuilderSortOrder, selectBuilderSortField } from '../../../actions/VisualizationActions';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import styles from '../Visualizations.sass';
 
@@ -32,17 +32,15 @@ export class BuilderSidebar extends Component {
   }
 
   onClickGallery() {
-    console.log("ummmmm");
-    console.log(this.props.gallerySelector);
     this.props.pushState(null, `/projects/${ this.props.project.properties.id }/visualize/gallery${ this.props.gallerySelector.queryString }`);
   }
 
   render() {
-    const { selectBuilderVisualizationType, filters, visualization } = this.props;
+    const { selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, filters, visualization, sortOrders } = this.props;
 
     var visualizationTypes = [];
 
-    if (visualization.spec.vizTypes) {    
+    if (visualization.spec.vizTypes) {
       visualizationTypes = filters.visualizationTypes.map((filter) =>
         new Object({
           type: filter.type,
@@ -70,6 +68,24 @@ export class BuilderSidebar extends Component {
               onChange={ selectBuilderVisualizationType } />
           </SidebarGroup>
         }
+        { visualization.visualizationType == 'hist' &&
+          <SidebarGroup heading="Sort Field">
+            <ToggleButtonGroup
+              toggleItems={ visualization.sortFields }
+              valueMember="id"
+              displayTextMember="name"
+              onChange={ selectBuilderSortField } />
+          </SidebarGroup>
+        }
+        { visualization.visualizationType == 'hist' &&
+          <SidebarGroup heading="Sort Order">
+            <ToggleButtonGroup
+              toggleItems={ visualization.sortOrders }
+              valueMember="id"
+              displayTextMember="name"
+              onChange={ selectBuilderSortOrder } />
+          </SidebarGroup>
+        }
       </Sidebar>
     );
   }
@@ -79,7 +95,7 @@ BuilderSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
-  visualization: PropTypes.object.isRequired
+  visualization: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -95,5 +111,7 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   selectBuilderVisualizationType,
+  selectBuilderSortOrder,
+  selectBuilderSortField,
   pushState
 })(BuilderSidebar);

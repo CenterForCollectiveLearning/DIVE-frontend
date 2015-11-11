@@ -11,6 +11,8 @@ import {
   RECEIVE_CREATED_EXPORTED_SPEC,
   SET_SHARE_WINDOW,
   SELECT_SORTING_FUNCTION,
+  SELECT_BUILDER_SORT_ORDER,
+  SELECT_BUILDER_SORT_FIELD,
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
@@ -101,6 +103,20 @@ export function selectVisualizationType(selectedType) {
   return {
     type: SELECT_VISUALIZATION_TYPE,
     selectedType: selectedType
+  }
+}
+
+export function selectBuilderSortOrder(selectedSortOrder) {
+  return {
+    type: SELECT_BUILDER_SORT_ORDER,
+    selectedSortOrder: selectedSortOrder
+  }
+}
+
+export function selectBuilderSortField(selectedSortField) {
+  return {
+    type: SELECT_BUILDER_SORT_FIELD,
+    selectedSortField: selectedSortField
   }
 }
 

@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
+import _ from 'underscore';
+
 import * as GeneratingProcedures from '../../../constants/GeneratingProcedures';
 
 import styles from '../Visualizations.sass';
@@ -11,9 +13,14 @@ export default class ColumnChart extends Component {
   render() {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options } = this.props;
 
+    const header = data[0];
+    const dataPoints = data.slice(1, data.length - 1);
+    const sortedDataPoints = _.sortBy(dataPoints, function(e) { return e[1]; });
+    const finalDataArray = [ header, ...sortedDataPoints ]
+
     const columnChartOptions = {
       ...options,
-      hAxis: { 
+      hAxis: {
         title: data[0][0],
         titleTextStyle: {
           color: '#333',
@@ -36,7 +43,7 @@ export default class ColumnChart extends Component {
     };
 
     return (
-      <Chart chartType="ColumnChart" options={ columnChartOptions } data={ data } graph_id={ chartId }/>
+      <Chart chartType="ColumnChart" options={ columnChartOptions } data={ finalDataArray } graph_id={ chartId }/>
     );
   }
 }
