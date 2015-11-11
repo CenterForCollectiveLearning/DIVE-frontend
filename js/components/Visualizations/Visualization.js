@@ -65,12 +65,15 @@ export default class Visualization extends Component {
     const sortedDataPoints = dataPoints.sort((a, b) => {
       var aValue = a[sortField];
       var bValue = b[sortField];
-      if (aValue < bValue)
-        return sortIndex * -1
-      else if (aValue > bValue)
-        return sortIndex
-      else
-        return 0
+      if (aValue < bValue) {
+        return sortIndex * -1;
+      }
+      else if (aValue > bValue) {
+        return sortIndex;
+      }
+      else {
+        return 0;
+      }
     });
     const finalDataArray = [ header, ...sortedDataPoints ]
 

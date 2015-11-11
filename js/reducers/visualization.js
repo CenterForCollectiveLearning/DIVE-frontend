@@ -28,14 +28,14 @@ const baseState = {
 export default function visualization(state = baseState, action) {
   const SORT_ORDERS = [
     {
-      'id': 'asc',
-      'name': 'Ascending',
-      'selected': true
+      id: 'asc',
+      name: 'Ascending',
+      selected: true
     },
     {
-      'id': 'desc',
-      'name': 'Descending',
-      'selected': false
+      id: 'desc',
+      name: 'Descending',
+      selected: false
     }
   ]
 
@@ -53,8 +53,8 @@ export default function visualization(state = baseState, action) {
           selected = true;
         return new Object({
           id: index,
-          'name': field,
-          'selected': selected
+          name: field,
+          selected: selected
         })
       });
       return {
