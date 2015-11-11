@@ -13,11 +13,6 @@ export default class ColumnChart extends Component {
   render() {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options } = this.props;
 
-    const header = data[0];
-    const dataPoints = data.slice(1);
-    const sortedDataPoints = _.sortBy(dataPoints, function(e) { return e[1]; });
-    const finalDataArray = [ header, ...sortedDataPoints ]
-
     // const sortedDataPoints = dataPoints.sort(function (a, b){ if (a > b){ return 1 } else if (a < b){ return -1 } else { return 0 }  });
     const columnChartOptions = {
       ...options,
@@ -44,7 +39,7 @@ export default class ColumnChart extends Component {
     };
 
     return (
-      <Chart chartType="ColumnChart" options={ columnChartOptions } data={ finalDataArray } graph_id={ chartId }/>
+      <Chart chartType="ColumnChart" options={ columnChartOptions } data={ data } graph_id={ chartId }/>
     );
   }
 }

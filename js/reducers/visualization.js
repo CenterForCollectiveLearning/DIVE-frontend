@@ -39,24 +39,24 @@ export default function visualization(state = baseState, action) {
     }
   ]
 
-  const SORT_FIELDS = [
-    {
-      'id': 'name',
-      'name': 'Name',
-      'selected': true
-    },
-    {
-      'id': 'value',
-      'name': 'Value',
-      'selected': false
-    }
-  ]
   switch (action.type) {
     case CLEAR_VISUALIZATION:
       return baseState;
     case REQUEST_VISUALIZATION_DATA:
       return { ...state, isFetching: true };
     case RECEIVE_VISUALIZATION_DATA:
+      const headers = action.visualizationData[0];
+
+      const SORT_FIELDS = headers.map((field, index) => {
+        var selected = false;
+        if (index == 0)
+          selected = true;
+        return new Object({
+          id: index,
+          'name': field,
+          'selected': selected
+        })
+      });
       return {
         ...state,
         spec: action.spec,
@@ -66,14 +66,6 @@ export default function visualization(state = baseState, action) {
         sortOrders: SORT_ORDERS,
         isFetching: false
       };
-    case SELECT_BUILDER_SORT_FIELD:
-      const sortFields = state.sortFields.map((field) =>
-        new Object({
-          ...field,
-          selected: field.id === action.selectedSortFieldId
-        })
-      );
-      return { ...state, sortFields: sortFields };
     case SELECT_BUILDER_SORT_ORDER:
       const sortOrders = state.sortOrders.map((order) =>
         new Object({
@@ -82,6 +74,14 @@ export default function visualization(state = baseState, action) {
         })
       );
       return { ...state, sortOrders: sortOrders };
+    case SELECT_BUILDER_SORT_FIELD:
+      const sortFields = state.sortFields.map((field) =>
+        new Object({
+          ...field,
+          selected: field.id == action.selectedSortFieldId
+        })
+      );
+      return { ...state, sortFields: sortFields };
     case SELECT_BUILDER_VISUALIZATION_TYPE:
       return { ...state, visualizationType: action.selectedType };
     case REQUEST_CREATE_EXPORTED_SPEC:
