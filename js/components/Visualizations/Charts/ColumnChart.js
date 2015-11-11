@@ -11,7 +11,6 @@ export default class ColumnChart extends Component {
   render() {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options } = this.props;
 
-    // const sortedDataPoints = dataPoints.sort(function (a, b){ if (a > b){ return 1 } else if (a < b){ return -1 } else { return 0 }  });
     const columnChartOptions = {
       ...options,
       hAxis: {
