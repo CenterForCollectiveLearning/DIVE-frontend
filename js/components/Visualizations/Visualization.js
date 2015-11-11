@@ -43,7 +43,7 @@ export default class Visualization extends Component {
       },
       full: {
         all: 3000,
-        treemap: 200
+        treemap: 400
       }
     }
     const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes } = this.props;
@@ -170,19 +170,12 @@ export default class Visualization extends Component {
         )
       );
 
-    var limitVizDataNumElements = 20;
-    var limitVizDataOrder = 'top';
+
     var tooMuchDataString = '';
-
     if (tooMuchDataToPreview || tooMuchDataToShowFull) {
-      var tooMuchDataString = `${ limitVizDataOrder } ${limitVizDataNumElements}`;
-      if (limitVizDataOrder == 'top')
-        finalDataArray = data.slice(0, limitVizDataNumElements);
-      else
-        finalDataArray = data.slice(data.length - limitVizDataNumElements);
+      tooMuchDataString = 'Top 20';
+      finalDataArray = data.slice(0, 20);
     }
-
-    console.log(data.length, finalDataArray.length)
 
     return (
       <div className={ styles[containerClassName] } onClick={ this.handleClick }>
@@ -236,19 +229,6 @@ export default class Visualization extends Component {
                 isMinimalView={ isMinimalView }/>
             }
           </div>
-        {/*
-        { tooMuchDataToPreview &&
-          <div className={ styles[overflowTextClassName] }>
-            <span>Too many data points to preview.</span>
-          </div>
-        }
-        */}
-        { /*
-        { tooMuchDataToShowFull &&
-          <div className={ styles[overflowTextClassName] }>
-            <span>Too many data points to show visualization.</span>
-          </div>
-        } */}
       </div>
     );
   }
