@@ -7,7 +7,7 @@ export default class HeaderBar extends Component {
     return (
       <div className={ styles.headerBar } >
         <div className={ styles.headerText } >
-          { this.props.header }              
+          { this.props.header }           
         </div>
         <div className={ styles.rightActions } >
           { this.props.actions }
