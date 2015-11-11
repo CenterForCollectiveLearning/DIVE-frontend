@@ -164,8 +164,16 @@ export default class Visualization extends Component {
         )
       );
 
+    var limitVizDataNumElements = 20;
+    var limitVizDataOrder = 'top';
+    var tooMuchDataString = '';
+
     if (tooMuchDataToPreview || tooMuchDataToShowFull) {
-      finalDataArray = data.slice(0, 20);
+      var tooMuchDataString = `${ limitVizDataOrder } ${limitVizDataNumElements}`;
+      if (limitVizDataOrder == 'top')
+        finalDataArray = data.slice(0, limitVizDataNumElements);
+      else
+        finalDataArray = data.slice(data.length - limitVizDataNumElements);
     }
 
     const tooMuchDataToShowFull =
@@ -180,10 +188,13 @@ export default class Visualization extends Component {
         { showHeader && spec.meta &&
           <div className={ styles[headerClassName] }>
             { spec.meta.construction.map((construct, i) =>
-              <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>
-                { construct.string }
-              </span>
+              <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>
             )}
+            { (tooMuchDataToPreview || tooMuchDataToShowFull) &&
+              <span className={ `${styles.headerFragment} ${styles.tooMuchData}` }>
+                ({ tooMuchDataString })
+              </span>
+            }
           </div>
         }
         <div className={ styles[visualizationClassName] + ' ' + styles[validVisualizationTypes[0]]}>
