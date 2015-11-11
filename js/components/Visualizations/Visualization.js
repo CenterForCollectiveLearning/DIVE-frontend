@@ -46,7 +46,9 @@ export default class Visualization extends Component {
         treemap: 400
       }
     }
-    const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes } = this.props;
+    const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
+
+    console.log(sortFields, sortOrders);
 
     var options = {
       backgroundColor: 'transparent',
@@ -244,7 +246,9 @@ Visualization.propTypes = {
   isMinimalView: PropTypes.bool,
   onClick: PropTypes.func,
   showHeader: PropTypes.bool,
-  visualizationTypes: PropTypes.array
+  visualizationTypes: PropTypes.array,
+  sortOrders: PropTypes.array,
+  sortFields: PropTypes.array
 };
 
 Visualization.defaultProps = {
@@ -254,5 +258,7 @@ Visualization.defaultProps = {
   overflowTextClassName: "overflowText",
   isMinimalView: false,
   showHeader: false,
-  visualizationTypes: []
+  visualizationTypes: [],
+  sortOrders: [],
+  sortFields: []
 };

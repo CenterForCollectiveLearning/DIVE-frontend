@@ -66,22 +66,22 @@ export default function visualization(state = baseState, action) {
         sortOrders: SORT_ORDERS,
         isFetching: false
       };
-    case SELECT_BUILDER_SORT_ORDER:
-      const sortOrders = state.sortOrders.map((order) =>
-        new Object({
-          ...order,
-          selected: order.id === action.selectedSortOrder
-        })
-      );
-      return { ...state, sortOrders: sortOrders };
     case SELECT_BUILDER_SORT_FIELD:
       const sortFields = state.sortFields.map((field) =>
         new Object({
           ...field,
-          selected: field.id === action.selectedSortField
+          selected: field.id === action.selectedSortFieldId
         })
       );
       return { ...state, sortFields: sortFields };
+    case SELECT_BUILDER_SORT_ORDER:
+      const sortOrders = state.sortOrders.map((order) =>
+        new Object({
+          ...order,
+          selected: order.id === action.selectedSortOrderId
+        })
+      );
+      return { ...state, sortOrders: sortOrders };
     case SELECT_BUILDER_VISUALIZATION_TYPE:
       return { ...state, visualizationType: action.selectedType };
     case REQUEST_CREATE_EXPORTED_SPEC:

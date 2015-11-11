@@ -106,17 +106,17 @@ export function selectVisualizationType(selectedType) {
   }
 }
 
-export function selectBuilderSortOrder(selectedSortOrder) {
+export function selectBuilderSortField(selectedSortFieldId) {
   return {
-    type: SELECT_BUILDER_SORT_ORDER,
-    selectedSortOrder: selectedSortOrder
+    type: SELECT_BUILDER_SORT_FIELD,
+    selectedSortFieldId: selectedSortFieldId
   }
 }
 
-export function selectBuilderSortField(selectedSortField) {
+export function selectBuilderSortOrder(selectedSortOrderId) {
   return {
-    type: SELECT_BUILDER_SORT_FIELD,
-    selectedSortField: selectedSortField
+    type: SELECT_BUILDER_SORT_ORDER,
+    selectedSortOrderId: selectedSortOrderId
   }
 }
 
