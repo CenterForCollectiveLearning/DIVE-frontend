@@ -156,12 +156,17 @@ export default class Visualization extends Component {
 
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
 
+    var finalDataArray = data;
     const tooMuchDataToPreview =
       (isMinimalView &&
         (data.length > MAX_ELEMENTS.preview.all ||
           (validVisualizationTypes[0] == 'tree' && data.length > MAX_ELEMENTS.preview.treemap)
         )
       );
+
+    if (tooMuchDataToPreview || tooMuchDataToShowFull) {
+      finalDataArray = data.slice(0, 20);
+    }
 
     const tooMuchDataToShowFull =
       (!isMinimalView &&
@@ -175,12 +180,13 @@ export default class Visualization extends Component {
         { showHeader && spec.meta &&
           <div className={ styles[headerClassName] }>
             { spec.meta.construction.map((construct, i) =>
-              <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>
+              <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>
+                { construct.string }
+              </span>
             )}
           </div>
         }
-        { !(tooMuchDataToPreview || tooMuchDataToShowFull) &&
-          <div className={ styles[visualizationClassName] + ' ' + styles[validVisualizationTypes[0]]}>
+        <div className={ styles[visualizationClassName] + ' ' + styles[validVisualizationTypes[0]]}>
             { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
               <ColumnChart
                 chartId={ `spec-bar-${spec.id}` }
@@ -213,22 +219,24 @@ export default class Visualization extends Component {
               <TreeMap
                 chartId={ `spec-tree-${spec.id}` }
                 parent={ spec.meta.desc }
-                data={ data }
+                data={ finalDataArray }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
           </div>
-        }
+        {/*
         { tooMuchDataToPreview &&
           <div className={ styles[overflowTextClassName] }>
             <span>Too many data points to preview.</span>
           </div>
         }
+        */}
+        { /*
         { tooMuchDataToShowFull &&
           <div className={ styles[overflowTextClassName] }>
-            <span>Too many data points to show visualization. { /* Try limiting the amount of data you want to show. */ }</span>
+            <span>Too many data points to show visualization.</span>
           </div>
-        }
+        } */}
       </div>
     );
   }
