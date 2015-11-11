@@ -1,7 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 
-import _ from 'underscore';
-
 import * as GeneratingProcedures from '../../../constants/GeneratingProcedures';
 
 import styles from '../Visualizations.sass';
