@@ -39,7 +39,10 @@ export class DatasetInspectPage extends Component {
           <DatasetToolbar datasets={ datasets.items } projectId={ params.projectId } selectedDatasetId={ params.datasetId }/>
         }
         { dataset && dataset.details &&
-          <DataGrid data={ dataset.data } tableClassName={ styles.grid } />
+          <DataGrid
+            data={ dataset.data }
+            containerClassName={ styles.gridContainer }
+            tableClassName={ styles.grid }/>
         }
         { this.props.children }
       </div>
