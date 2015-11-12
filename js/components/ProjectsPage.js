@@ -57,9 +57,8 @@ export class ProjectsPage extends Component {
           </div>
           <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
             <Tab label="DATA" value="data" route="data" />
-            <Tab label="TRANSFORM" value="transform" route="transform" />
-            <Tab label="VISUALIZE" value="visualize" route="visualize/gallery" />
-            <Tab label="ANALYZE" value="analyze" route="analyze/regression" />
+            <Tab label="VISUALIZE" value="visualize" route="visualize/gallery" disabled={ this.props.datasetSelector.datasetId == null }/>
+            <Tab label="ANALYZE" value="analyze" route="analyze/regression" disabled={ this.props.datasetSelector.datasetId == null }/>
             <Tab label="COMPOSE" value="compose" route="compose" disabled/>
           </Tabs>
         </div>
@@ -77,10 +76,11 @@ ProjectsPage.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, user } = state;
+  const { project, user, datasetSelector } = state;
   return {
     project: project,
-    user: user
+    user: user,
+    datasetSelector: datasetSelector
   };
 }
 
