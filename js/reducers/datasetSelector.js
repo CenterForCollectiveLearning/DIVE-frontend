@@ -2,6 +2,7 @@ import {
   SELECT_DATASET,
   REQUEST_UPLOAD_DATASET,
   RECEIVE_UPLOAD_DATASET,
+  RECEIVE_DATASET,
   RECEIVE_DATASETS,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
@@ -20,9 +21,11 @@ export default function datasetSelector(state = baseState, action) {
       return { ...state, isUploading: true };
     case RECEIVE_UPLOAD_DATASET:
       return { ...state, datasetId: action.datasets[0].datasetId, loaded: true, isUploading: false };
+    case RECEIVE_DATASET:
+      return { ...state, datasetId: action.datasetId, loaded: true };
     case RECEIVE_DATASETS:
       if (action.datasets.length > 0) {
-        return { ...state, datasetId: action.datasets[0].datasetId, loaded: true }
+        return { ...state, datasetId: action.datasets[0].datasetId, loaded: true };
       }
       return { ...state, loaded: true };
     case WIPE_PROJECT_STATE:
