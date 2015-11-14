@@ -7,6 +7,7 @@ import styles from './datasets.sass';
 
 import DataGrid from '../Base/DataGrid';
 import DatasetToolbar from './DatasetToolbar';
+import ReduceColumnsModal from './ReduceColumnsModal';
 
 export class DatasetInspectPage extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ export class DatasetInspectPage extends Component {
   }
 
   render() {
-    const { datasets, params } = this.props;
+    const { datasets, params, project, datasetInspectSelector } = this.props;
     const dataset = datasets.items.filter((dataset) =>
       dataset.datasetId == params.datasetId
     )[0];
@@ -36,13 +37,20 @@ export class DatasetInspectPage extends Component {
     return (
       <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
         { datasets.items.length > 0 &&
-          <DatasetToolbar datasets={ datasets.items } projectId={ params.projectId } selectedDatasetId={ params.datasetId }/>
+          <DatasetToolbar
+            datasets={ datasets.items }
+            projectId={ params.projectId }
+            selectedDatasetId={ params.datasetId }
+            preloadedProject={ project.properties.preloaded }/>
         }
         { dataset && dataset.details &&
           <DataGrid
             data={ dataset.data }
             containerClassName={ styles.gridContainer }
             tableClassName={ styles.grid }/>
+        }
+        { datasetInspectSelector.columnReductionModalOpen &&
+          <ReduceColumnsModal />
         }
         { this.props.children }
       </div>
@@ -53,13 +61,14 @@ export class DatasetInspectPage extends Component {
 DatasetInspectPage.propTypes = {
   project: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
+  datasetInspectSelector: PropTypes.object.isRequired,
   children: PropTypes.node
 };
 
 
 function mapStateToProps(state) {
-  const { project, datasets } = state;
-  return { project, datasets };
+  const { project, datasets, datasetInspectSelector } = state;
+  return { project, datasets, datasetInspectSelector };
 }
 
 export default connect(mapStateToProps, { fetchDataset })(DatasetInspectPage);
