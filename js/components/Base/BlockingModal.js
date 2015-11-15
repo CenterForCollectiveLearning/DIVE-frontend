@@ -14,6 +14,11 @@ export default class BlockingModal extends Component {
             <div className={ styles.modalContent }>
               { this.props.children }
             </div>
+            { this.props.footer && 
+              <div className={ styles.modalFooter }>
+                { this.props.footer }
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -23,11 +28,13 @@ export default class BlockingModal extends Component {
 
 BlockingModal.propTypes = {
   heading: PropTypes.node,
+  footer: PropTypes.node,
   styles: PropTypes.any,
   children: PropTypes.node
 }
 
 BlockingModal.defaultProps = {
   heading: "",
-  styles: null
+  styles: null,
+  footer: null
 }
