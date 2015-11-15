@@ -10,6 +10,11 @@ export default class BlockingModal extends Component {
           <div className={ styles.blockingModal }>
             <div className={ styles.modalHeader }>
               <span>{ this.props.heading }</span>
+              { this.props.closeAction && 
+                <div className={ styles.actions }>
+                  <div className={ styles.closeAction } onClick={ this.props.closeAction }>&times;</div>
+                </div>
+              }
             </div>
             <div className={ styles.modalContent }>
               { this.props.children }
@@ -30,11 +35,13 @@ BlockingModal.propTypes = {
   heading: PropTypes.node,
   footer: PropTypes.node,
   styles: PropTypes.any,
+  closeAction: PropTypes.func,
   children: PropTypes.node
 }
 
 BlockingModal.defaultProps = {
   heading: "",
   styles: null,
-  footer: null
+  footer: null,
+  closeAction: null
 }
