@@ -6,6 +6,7 @@ import styles from './ReduceColumnsModal.sass';
 
 import BlockingModal from '../Base/BlockingModal';
 import RaisedButton from '../Base/RaisedButton';
+import SelectGrid from '../Base/SelectGrid';
 import Input from '../Base/Input';
 
 class ReduceColumnsModal extends Component {
@@ -13,6 +14,7 @@ class ReduceColumnsModal extends Component {
   render() {
     return (
       <BlockingModal
+        closeAction={ this.props.closeColumnReductionModal }
         heading={
           <span>Select Columns to Display</span>
         }
@@ -22,7 +24,7 @@ class ReduceColumnsModal extends Component {
           </div>
         }>
         <div>
-          `content`
+          <SelectGrid items={ this.props.columns }/>
         </div>
       </BlockingModal>
     );
@@ -30,6 +32,7 @@ class ReduceColumnsModal extends Component {
 }
 
 ReduceColumnsModal.propTypes = {
+  columns: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state) {

@@ -12,8 +12,9 @@ export class DatasetToolbar extends Component {
   constructor(props) {
     super(props);
     this.onSelectDataset = this.onSelectDataset.bind(this);
-    this.onSelectUploadDataset = this.onSelectUploadDataset.bind(this);
-    this.onSelectDeleteDataset = this.onSelectDeleteDataset.bind(this);
+    this.onClickUploadDataset = this.onClickUploadDataset.bind(this);
+    this.onClickDeleteDataset = this.onClickDeleteDataset.bind(this);
+    this.onClickReduceColumns = this.onClickReduceColumns.bind(this);
   }
 
   onSelectDataset(selectedValue) {
@@ -22,15 +23,23 @@ export class DatasetToolbar extends Component {
     }
   }
 
-  onSelectDeleteDataset() {
+  onClickDeleteDataset() {
     const { deleteDataset, selectedDatasetId, projectId } = this.props;
 
     deleteDataset(projectId, selectedDatasetId);
   }
 
-  onSelectUploadDataset() {
+  onClickUploadDataset() {
     const projectId = this.props.projectId;
     this.props.pushState(null, `/projects/${ projectId }/data/upload`);
+  }
+
+  onClickReduceColumns() {
+    const dataset = this.props.datasets.filter((dataset) =>
+      dataset.datasetId == this.props.selectedDatasetId
+    )[0];
+
+    this.props.openColumnReductionModal(dataset);
   }
 
   render() {
@@ -56,7 +65,7 @@ export class DatasetToolbar extends Component {
             <RaisedButton icon={ true } onClick={ this.onSelectDeleteDataset }>
               <i className="fa fa-trash"></i>
             </RaisedButton>
-            <RaisedButton label="Reduce columns" onClick={ this.props.openColumnReductionModal }/>
+            <RaisedButton label="Reduce columns" onClick={ this.onClickReduceColumns }/>
           </div>
         }
       </div>

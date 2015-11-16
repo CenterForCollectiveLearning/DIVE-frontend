@@ -50,7 +50,7 @@ export class DatasetInspectPage extends Component {
             tableClassName={ styles.grid }/>
         }
         { datasetInspectSelector.columnReductionModalOpen &&
-          <ReduceColumnsModal />
+          <ReduceColumnsModal columns={ datasetInspectSelector.columns }/>
         }
         { this.props.children }
       </div>

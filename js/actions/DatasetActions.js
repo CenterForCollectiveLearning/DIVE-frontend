@@ -133,9 +133,10 @@ export function deleteDataset(projectId, datasetId) {
   };
 }
 
-export function openColumnReductionModal() {
+export function openColumnReductionModal(dataset) {
   return {
     type: TOGGLE_COLUMN_REDUCTION_MODAL,
+    dataset: dataset,
     modalOpen: true
   };
 }
