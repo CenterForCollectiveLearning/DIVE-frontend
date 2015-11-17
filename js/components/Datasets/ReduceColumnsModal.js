@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { closeColumnReductionModal } from '../../actions/DatasetActions';
+import { closeReduceColumnsModal, selectReduceColumnsModalColumn, selectReduceColumnsModalAllColumns } from '../../actions/ReduceColumnsModalActions';
 
 import styles from './ReduceColumnsModal.sass';
 
@@ -14,17 +14,21 @@ class ReduceColumnsModal extends Component {
   render() {
     return (
       <BlockingModal
-        closeAction={ this.props.closeColumnReductionModal }
+        closeAction={ this.props.closeReduceColumnsModal }
         heading={
           <span>Select Columns to Display</span>
         }
         footer={
           <div className={ styles.rightActions }>
-            <RaisedButton primary onClick={ this.props.closeColumnReductionModal }>Choose columns</RaisedButton>
+            <RaisedButton primary onClick={ this.props.closeReduceColumnsModal }>Choose columns</RaisedButton>
           </div>
         }>
         <div>
-          <SelectGrid items={ this.props.columns }/>
+          <SelectGrid
+            heading="Columns to display"
+            items={ this.props.columns }
+            onSelectAllItems={ this.props.selectReduceColumnsModalAllColumns }
+            onSelectItem={ this.props.selectReduceColumnsModalColumn }/>
         </div>
       </BlockingModal>
     );
@@ -39,4 +43,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { closeColumnReductionModal })(ReduceColumnsModal);
+export default connect(mapStateToProps, { closeReduceColumnsModal, selectReduceColumnsModalColumn, selectReduceColumnsModalAllColumns})(ReduceColumnsModal);

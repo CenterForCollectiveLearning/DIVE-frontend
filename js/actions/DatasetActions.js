@@ -5,8 +5,7 @@ import {
   REQUEST_DATASETS,
   RECEIVE_DATASETS,
   REQUEST_UPLOAD_DATASET,
-  RECEIVE_UPLOAD_DATASET,
-  TOGGLE_COLUMN_REDUCTION_MODAL
+  RECEIVE_UPLOAD_DATASET
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTaskResult } from './api.js';
@@ -130,20 +129,5 @@ export function deleteDataset(projectId, datasetId) {
       method: 'delete'
     }).then(response => response.json())
       .then(json => dispatch(deleteDatasetDispatcher(json)));
-  };
-}
-
-export function openColumnReductionModal(dataset) {
-  return {
-    type: TOGGLE_COLUMN_REDUCTION_MODAL,
-    dataset: dataset,
-    modalOpen: true
-  };
-}
-
-export function closeColumnReductionModal() {
-  return {
-    type: TOGGLE_COLUMN_REDUCTION_MODAL,
-    modalOpen: false
   };
 }

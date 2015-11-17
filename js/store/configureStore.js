@@ -39,7 +39,7 @@ export default function configureStore(initialState) {
   // Load previous state from local storage
   const load = storage.createLoader(engine);
   load(store)
-      .catch(() => console.log('Failed to load previous state'));
+    .catch(() => console.log('Failed to load previous state'));
 
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers

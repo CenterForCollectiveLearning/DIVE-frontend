@@ -1,7 +1,8 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
-import { uploadDataset, deleteDataset, openColumnReductionModal } from '../../actions/DatasetActions';
+import { uploadDataset, deleteDataset } from '../../actions/DatasetActions';
+import { openReduceColumnsModal } from '../../actions/ReduceColumnsModalActions';
 import styles from './datasets.sass';
 
 import DropDownMenu from '../Base/DropDownMenu';
@@ -39,7 +40,7 @@ export class DatasetToolbar extends Component {
       dataset.datasetId == this.props.selectedDatasetId
     )[0];
 
-    this.props.openColumnReductionModal(dataset);
+    this.props.openReduceColumnsModal(dataset);
   }
 
   render() {
@@ -83,4 +84,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { pushState, uploadDataset, deleteDataset, openColumnReductionModal })(DatasetToolbar);
+export default connect(mapStateToProps, { pushState, uploadDataset, deleteDataset, openReduceColumnsModal })(DatasetToolbar);
