@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { setUserEmail, submitUser } from '../../actions/UserActions';
 
+import styles from './EmailBlockingModal.sass';
+
 import BlockingModal from './BlockingModal';
 import RaisedButton from './RaisedButton';
 import Input from './Input';
@@ -26,7 +28,7 @@ class EmailBlockingModal extends Component {
     return (
       <div>
         { !this.props.userSubmitted &&
-          <BlockingModal heading={
+          <BlockingModal styles={ styles } heading={
             <span>Get Early Beta Access to <strong>DIVE</strong></span>
           }>
             <div>

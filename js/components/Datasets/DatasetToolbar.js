@@ -12,8 +12,8 @@ export class DatasetToolbar extends Component {
   constructor(props) {
     super(props);
     this.onSelectDataset = this.onSelectDataset.bind(this);
-    this.onSelectUploadDataset = this.onSelectUploadDataset.bind(this);
-    this.onSelectDeleteDataset = this.onSelectDeleteDataset.bind(this);
+    this.onClickUploadDataset = this.onClickUploadDataset.bind(this);
+    this.onClickDeleteDataset = this.onClickDeleteDataset.bind(this);
   }
 
   onSelectDataset(selectedValue) {
@@ -22,36 +22,41 @@ export class DatasetToolbar extends Component {
     }
   }
 
-  onSelectDeleteDataset() {
-    const { deleteDataset, selectedDatasetId, project } = this.props;
+  onClickDeleteDataset() {
+    const { deleteDataset, selectedDatasetId, projectId } = this.props;
 
-    deleteDataset(project.properties.id, selectedDatasetId);
+    deleteDataset(projectId, selectedDatasetId);
   }
 
-  onSelectUploadDataset() {
-    const projectId = this.props.project.properties.id;
+  onClickUploadDataset() {
+    const projectId = this.props.projectId;
     this.props.pushState(null, `/projects/${ projectId }/data/upload`);
   }
 
   render() {
     return (
       <div className={ styles.toolbar }>
-        <span>Dataset: </span>
-        <div className={ styles.datasetSelectorContainer }>
-          <DropDownMenu
-            className={ styles.datasetSelector }
-            value={ this.props.selectedDatasetId }
-            options={ this.props.datasets }
-            valueMember="datasetId"
-            displayTextMember="title"
-            onChange={ this.onSelectDataset } />
+        <div className={ styles.leftActions }>
+          <span>Dataset: </span>
+          <div className={ styles.datasetSelectorContainer }>
+            <DropDownMenu
+              className={ styles.datasetSelector }
+              value={ this.props.selectedDatasetId }
+              options={ this.props.datasets }
+              valueMember="datasetId"
+              displayTextMember="title"
+              onChange={ this.onSelectDataset } />
+          </div>
+          { !this.props.preloadedProject &&
+            <RaisedButton label="Upload new dataset" onClick={ this.onSelectUploadDataset } />
+          }
         </div>
-        { !this.props.project.properties.preloaded && this.props.selectedDatasetId &&
+        { !this.props.preloadedProject && this.props.selectedDatasetId &&            
           <div className={ styles.rightActions }>
             <RaisedButton icon={ true } onClick={ this.onSelectDeleteDataset }>
               <i className="fa fa-trash"></i>
             </RaisedButton>
-            <RaisedButton label="Upload new dataset" onClick={ this.onSelectUploadDataset } />
+            <RaisedButton label="Reduce columns" onClick={ this.props.openColumnReductionModalAction }/>
           </div>
         }
       </div>
@@ -62,12 +67,12 @@ export class DatasetToolbar extends Component {
 DatasetToolbar.propTypes = {
   datasets: PropTypes.array.isRequired,
   projectId: PropTypes.string.isRequired,
-  selectedDatasetId: PropTypes.string
+  selectedDatasetId: PropTypes.string,
+  openColumnReductionModalAction: PropTypes.func
 };
 
 function mapStateToProps(state) {
-  const { project } = state;
-  return { project };
+  return {};
 }
 
 export default connect(mapStateToProps, { pushState, uploadDataset, deleteDataset })(DatasetToolbar);

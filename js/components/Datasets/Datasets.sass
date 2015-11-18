@@ -34,9 +34,17 @@
     font-size: 14px
     font-weight: 400
 
-  .rightActions
-    flex-grow: 1
+  .leftActions
     display: flex
+    flex-grow: 1
+    align-items: center
+
+    > div, > span
+      margin-right: 10px
+
+  .rightActions
+    display: flex
+    flex-grow: 1
     flex-direction: row-reverse
 
     > div
@@ -44,7 +52,6 @@
 
 .datasetSelectorContainer
   display: flex
-  margin-left: 10px
   width: 260px
 
   .datasetSelector

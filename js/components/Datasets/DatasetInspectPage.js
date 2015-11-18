@@ -1,34 +1,50 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 import { fetchDataset } from '../../actions/DatasetActions';
 
 import styles from './datasets.sass';
 
 import DataGrid from '../Base/DataGrid';
 import DatasetToolbar from './DatasetToolbar';
+import ReduceColumnsModal from './ReduceColumnsModal';
 
 export class DatasetInspectPage extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      columnReductionModalOpen: false
+    }
   }
 
   componentWillMount() {
     const { project, params } = this.props;
-    if (project.properties.id) {
-      this.props.fetchDataset(project.properties.id, params.datasetId);
-    }
+    this.props.fetchDataset(params.projectId, params.datasetId);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.project.properties.id !== this.props.project.properties.id || nextProps.params.datasetId !== this.props.params.datasetId) {
-      const { project, params } = nextProps;
-      this.props.fetchDataset(project.properties.id, params.datasetId);
+    const { fetchDataset, pushState, project, params, datasetSelector } = nextProps;
+    if (params.projectId !== this.props.params.projectId || params.datasetId !== this.props.params.datasetId) {
+      fetchDataset(params.projectId, params.datasetId);
+    }
+
+    if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
+      pushState(null, `/projects/${ this.props.params.projectId }/data/${ datasetSelector.datasetId }/inspect`);
     }
   }
 
+  openColumnReductionModal() {
+    this.setState({ columnReductionModalOpen: true });
+  }
+
+  closeColumnReductionModal() {
+    this.setState({ columnReductionModalOpen: false });
+  }
+
   render() {
-    const { datasets, params } = this.props;
+    const { datasets, params, project } = this.props;
     const dataset = datasets.items.filter((dataset) =>
       dataset.datasetId == params.datasetId
     )[0];
@@ -36,13 +52,25 @@ export class DatasetInspectPage extends Component {
     return (
       <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
         { datasets.items.length > 0 &&
-          <DatasetToolbar datasets={ datasets.items } projectId={ params.projectId } selectedDatasetId={ params.datasetId }/>
+          <DatasetToolbar
+            datasets={ datasets.items }
+            projectId={ params.projectId }
+            selectedDatasetId={ params.datasetId }
+            preloadedProject={ project.properties.preloaded }
+            openColumnReductionModalAction={ this.openColumnReductionModal.bind(this) }/>
         }
         { dataset && dataset.details &&
           <DataGrid
             data={ dataset.data }
             containerClassName={ styles.gridContainer }
             tableClassName={ styles.grid }/>
+        }
+        { this.state.columnReductionModalOpen &&
+          <ReduceColumnsModal
+            projectId={ params.projectId }
+            datasetId={ params.datasetId }
+            closeAction={ this.closeColumnReductionModal.bind(this) }
+            columnNames={ dataset.details.fieldNames }/>
         }
         { this.props.children }
       </div>
@@ -58,8 +86,8 @@ DatasetInspectPage.propTypes = {
 
 
 function mapStateToProps(state) {
-  const { project, datasets } = state;
-  return { project, datasets };
+  const { project, datasets, datasetSelector } = state;
+  return { project, datasets, datasetSelector };
 }
 
-export default connect(mapStateToProps, { fetchDataset })(DatasetInspectPage);
+export default connect(mapStateToProps, { fetchDataset, pushState })(DatasetInspectPage);
