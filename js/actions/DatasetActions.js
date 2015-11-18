@@ -5,7 +5,8 @@ import {
   REQUEST_DATASETS,
   RECEIVE_DATASETS,
   REQUEST_UPLOAD_DATASET,
-  RECEIVE_UPLOAD_DATASET
+  RECEIVE_UPLOAD_DATASET,
+  REQUEST_REDUCE_DATASET_COLUMNS
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTaskResult } from './api.js';
@@ -129,5 +130,14 @@ export function deleteDataset(projectId, datasetId) {
       method: 'delete'
     }).then(response => response.json())
       .then(json => dispatch(deleteDatasetDispatcher(json)));
+  };
+}
+
+export function reduceDatasetColumns(projectId, datasetId, columnIds=[]) {
+  return {
+    type: REQUEST_REDUCE_DATASET_COLUMNS,
+    projectId: projectId,
+    datasetId: datasetId,
+    columnIds: columnIds
   };
 }

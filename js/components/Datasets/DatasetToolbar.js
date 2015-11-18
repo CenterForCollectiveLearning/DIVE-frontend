@@ -2,7 +2,6 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 import { uploadDataset, deleteDataset } from '../../actions/DatasetActions';
-import { openReduceColumnsModal } from '../../actions/ReduceColumnsModalActions';
 import styles from './datasets.sass';
 
 import DropDownMenu from '../Base/DropDownMenu';
@@ -15,7 +14,6 @@ export class DatasetToolbar extends Component {
     this.onSelectDataset = this.onSelectDataset.bind(this);
     this.onClickUploadDataset = this.onClickUploadDataset.bind(this);
     this.onClickDeleteDataset = this.onClickDeleteDataset.bind(this);
-    this.onClickReduceColumns = this.onClickReduceColumns.bind(this);
   }
 
   onSelectDataset(selectedValue) {
@@ -33,14 +31,6 @@ export class DatasetToolbar extends Component {
   onClickUploadDataset() {
     const projectId = this.props.projectId;
     this.props.pushState(null, `/projects/${ projectId }/data/upload`);
-  }
-
-  onClickReduceColumns() {
-    const dataset = this.props.datasets.filter((dataset) =>
-      dataset.datasetId == this.props.selectedDatasetId
-    )[0];
-
-    this.props.openReduceColumnsModal(dataset);
   }
 
   render() {
@@ -66,7 +56,7 @@ export class DatasetToolbar extends Component {
             <RaisedButton icon={ true } onClick={ this.onSelectDeleteDataset }>
               <i className="fa fa-trash"></i>
             </RaisedButton>
-            <RaisedButton label="Reduce columns" onClick={ this.onClickReduceColumns }/>
+            <RaisedButton label="Reduce columns" onClick={ this.props.openColumnReductionModalAction }/>
           </div>
         }
       </div>
@@ -77,11 +67,12 @@ export class DatasetToolbar extends Component {
 DatasetToolbar.propTypes = {
   datasets: PropTypes.array.isRequired,
   projectId: PropTypes.string.isRequired,
-  selectedDatasetId: PropTypes.string
+  selectedDatasetId: PropTypes.string,
+  openColumnReductionModalAction: PropTypes.func
 };
 
 function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { pushState, uploadDataset, deleteDataset, openReduceColumnsModal })(DatasetToolbar);
+export default connect(mapStateToProps, { pushState, uploadDataset, deleteDataset })(DatasetToolbar);

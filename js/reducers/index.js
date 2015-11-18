@@ -4,7 +4,6 @@ import { LOAD, SAVE } from 'redux-storage';
 
 import comparisonSelector from './comparisonSelector';
 import datasets from './datasets';
-import datasetInspectSelector from './datasetInspectSelector';
 import datasetSelector from './datasetSelector';
 import exportedSpec from './exportedSpec';
 import fieldProperties from './fieldProperties';
@@ -21,7 +20,6 @@ import visualization from './visualization';
 const rootReducer = combineReducers({
   comparisonSelector,
   datasets,
-  datasetInspectSelector,
   datasetSelector,
   exportedSpec,
   fieldProperties,

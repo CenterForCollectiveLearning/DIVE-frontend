@@ -12,24 +12,34 @@ import ReduceColumnsModal from './ReduceColumnsModal';
 export class DatasetInspectPage extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      columnReductionModalOpen: false
+    }
   }
 
   componentWillMount() {
     const { project, params } = this.props;
-    if (project.properties.id) {
-      this.props.fetchDataset(project.properties.id, params.datasetId);
-    }
+    this.props.fetchDataset(params.projectId, params.datasetId);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.project.properties.id !== this.props.project.properties.id || nextProps.params.datasetId !== this.props.params.datasetId) {
-      const { project, params } = nextProps;
-      this.props.fetchDataset(project.properties.id, params.datasetId);
+    const { fetchDataset, project, params } = nextProps;
+    if (params.projectId !== this.props.params.projectId || params.datasetId !== this.props.params.datasetId) {
+      fetchDataset(params.projectId, params.datasetId);
     }
   }
 
+  openColumnReductionModal() {
+    this.setState({ columnReductionModalOpen: true });
+  }
+
+  closeColumnReductionModal() {
+    this.setState({ columnReductionModalOpen: false });
+  }
+
   render() {
-    const { datasets, params, project, datasetInspectSelector } = this.props;
+    const { datasets, params, project } = this.props;
     const dataset = datasets.items.filter((dataset) =>
       dataset.datasetId == params.datasetId
     )[0];
@@ -41,7 +51,8 @@ export class DatasetInspectPage extends Component {
             datasets={ datasets.items }
             projectId={ params.projectId }
             selectedDatasetId={ params.datasetId }
-            preloadedProject={ project.properties.preloaded }/>
+            preloadedProject={ project.properties.preloaded }
+            openColumnReductionModalAction={ this.openColumnReductionModal.bind(this) }/>
         }
         { dataset && dataset.details &&
           <DataGrid
@@ -49,8 +60,12 @@ export class DatasetInspectPage extends Component {
             containerClassName={ styles.gridContainer }
             tableClassName={ styles.grid }/>
         }
-        { datasetInspectSelector.columnReductionModalOpen &&
-          <ReduceColumnsModal columns={ datasetInspectSelector.columns }/>
+        { this.state.columnReductionModalOpen &&
+          <ReduceColumnsModal
+            projectId={ params.projectId }
+            datasetId={ params.datasetId }
+            closeAction={ this.closeColumnReductionModal.bind(this) }
+            columnNames={ dataset.details.fieldNames }/>
         }
         { this.props.children }
       </div>
@@ -61,14 +76,13 @@ export class DatasetInspectPage extends Component {
 DatasetInspectPage.propTypes = {
   project: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
-  datasetInspectSelector: PropTypes.object.isRequired,
   children: PropTypes.node
 };
 
 
 function mapStateToProps(state) {
-  const { project, datasets, datasetInspectSelector } = state;
-  return { project, datasets, datasetInspectSelector };
+  const { project, datasets } = state;
+  return { project, datasets };
 }
 
 export default connect(mapStateToProps, { fetchDataset })(DatasetInspectPage);
