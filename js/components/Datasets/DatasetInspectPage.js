@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 import { fetchDataset } from '../../actions/DatasetActions';
 
 import styles from './datasets.sass';
@@ -24,9 +25,13 @@ export class DatasetInspectPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { fetchDataset, project, params } = nextProps;
+    const { fetchDataset, pushState, project, params, datasetSelector } = nextProps;
     if (params.projectId !== this.props.params.projectId || params.datasetId !== this.props.params.datasetId) {
       fetchDataset(params.projectId, params.datasetId);
+    }
+
+    if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
+      pushState(null, `/projects/${ this.props.params.projectId }/data/${ datasetSelector.datasetId }/inspect`);
     }
   }
 
@@ -81,8 +86,8 @@ DatasetInspectPage.propTypes = {
 
 
 function mapStateToProps(state) {
-  const { project, datasets } = state;
-  return { project, datasets };
+  const { project, datasets, datasetSelector } = state;
+  return { project, datasets, datasetSelector };
 }
 
-export default connect(mapStateToProps, { fetchDataset })(DatasetInspectPage);
+export default connect(mapStateToProps, { fetchDataset, pushState })(DatasetInspectPage);
