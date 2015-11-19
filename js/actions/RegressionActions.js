@@ -7,7 +7,7 @@ import {
   RECEIVE_CONTRIBUTION_TO_R_SQUARED
 } from '../constants/ActionTypes';
 
-import { fetch, pollForTaskResult } from './api.js';
+import { fetch } from './api.js';
 
 export function selectIndependentVariable(selectedIndependentVariableId) {
   return {

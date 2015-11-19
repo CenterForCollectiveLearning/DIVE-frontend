@@ -3,7 +3,7 @@ import {
   RECEIVE_EXPORTED_SPEC
 } from '../constants/ActionTypes';
 
-import { fetch, pollForTaskResult } from './api.js';
+import { fetch } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
 function requestExportedSpecDispatcher() {
