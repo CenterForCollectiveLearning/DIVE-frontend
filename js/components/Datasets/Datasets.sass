@@ -120,9 +120,15 @@
       font-weight: 500
       padding: 5px 10px 4px
       text-align: left
+      cursor: pointer
 
       &:first-child
         border-left-width: 0
+
+      span:last-child:not(:first-child)
+        float: right
+        font-size: 9px
+        color: #666
 
     td
       overflow: hidden
