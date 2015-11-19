@@ -53,14 +53,11 @@ export class DatasetInspectPage extends Component {
       <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
         { datasets.items.length > 0 &&
           <DatasetToolbar
-            datasets={ datasets.items }
-            projectId={ params.projectId }
-            selectedDatasetId={ params.datasetId }
-            preloadedProject={ project.properties.preloaded }
             openColumnReductionModalAction={ this.openColumnReductionModal.bind(this) }/>
         }
         { dataset && dataset.details &&
           <DataGrid
+            datasetId={ dataset.datasetId }
             data={ dataset.data }
             containerClassName={ styles.gridContainer }
             tableClassName={ styles.grid }/>

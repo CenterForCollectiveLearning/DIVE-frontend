@@ -41,6 +41,7 @@ function mergeDatasetLists(originalList, newList) {
 const baseState = {
   isFetching: false,
   loaded: false,
+  fetchedAll: false,
   items: []
 }
 
@@ -50,7 +51,7 @@ export default function datasets(state = baseState, action) {
       return { ...state, isFetching: true };
     case RECEIVE_DATASETS:
       var mergedDatasetLists = mergeDatasetLists(state.items, action.datasets);
-      return { ...state, isFetching: false, items: mergedDatasetLists, loaded: true };
+      return { ...state, isFetching: false, items: mergedDatasetLists, loaded: true, fetchedAll: true };
     case RECEIVE_UPLOAD_DATASET:
       return { ...state, isFetching: false, items: [...state.items, ...action.datasets], loaded: true };
     case RECEIVE_DATASET:

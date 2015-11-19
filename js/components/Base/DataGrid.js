@@ -1,10 +1,28 @@
 import React, { Component, PropTypes } from 'react';
 
 import Griddle from 'griddle-react';
+import styles from './DataGrid.sass';
 
 export default class DataGrid extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: false
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.datasetId != this.props.datasetId) {
+      this.setState({ loading: true });
+    } else {
+      this.setState({ loading: false });
+    }
+  }
+
   render() {
     const { data, tableClassName, containerClassName, useFixedWidth, customRowComponent } = this.props;
+
     const columnWidth = 200;
     const nColumns = data.length ? Object.keys(data[0]).length : 0;
     const innerContainerStyle = {
@@ -12,18 +30,24 @@ export default class DataGrid extends Component {
       minWidth: '100%',
       overflow: 'hidden'
     };
+
     return (
       <div className={ containerClassName } style={{ width: '100%', overflow: 'scroll' }}>
         <div style={ useFixedWidth ? innerContainerStyle : {} }>
-          <Griddle
-            results={ data }
-            resultsPerPage={ 300 }
-            useFixedHeader={ true }
-            useFixedLayout={ false }
-            tableClassName={ tableClassName }
-            useGriddleStyles={ false }
-            useCustomRowComponent={ customRowComponent ? true : false }
-            customRowComponent={ customRowComponent }/>
+          { this.state.loading &&
+            <div className={ styles.watermark }>Loading...</div>
+          }
+          { !this.state.loading &&
+            <Griddle
+              results={ data }
+              resultsPerPage={ 300 }
+              useFixedHeader={ true }
+              useFixedLayout={ false }
+              tableClassName={ tableClassName }
+              useGriddleStyles={ false }
+              useCustomRowComponent={ customRowComponent ? true : false }
+              customRowComponent={ customRowComponent }/>
+          }
         </div>
       </div>
     );
@@ -31,6 +55,7 @@ export default class DataGrid extends Component {
 }
 
 DataGrid.propTypes = {
+  datasetId: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   tableClassName: PropTypes.string,
   containerClassName: PropTypes.string,
