@@ -171,11 +171,11 @@ function requestPivotDatasetColumnsDispatcher(datasetId, variableName, valueName
 
 export function pivotDatasetColumns(projectId, datasetId, variableName, valueName, columnIds=[]) {
   const params = {
-    'project_id': projectId,
-    'dataset_id': datasetId,
-    'pivot_fields': columnIds,
-    'variable_name': variableName,
-    'value_name': valueName
+    project_id: projectId,
+    dataset_id: datasetId,
+    pivot_fields: columnIds,
+    variable_name: variableName,
+    value_name: valueName
   };
 
   return (dispatch) => {
@@ -186,5 +186,29 @@ export function pivotDatasetColumns(projectId, datasetId, variableName, valueNam
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
       .then(json => dispatch(receiveDatasetDispatcher(json)));
+  };
+}
+
+function requestMergeDatasetsDispatcher(leftDatasetId, rightDatasetId, onColumnsIds, mergeMethod) {
+  return {
+    type: REQUEST_REDUCE_DATASET_COLUMNS,
+    leftDatasetId: leftDatasetId,
+    rightDatasetId: rightDatasetId,
+    onColumnsIds: onColumnsIds,
+    mergeMethod: mergeMethod
+  };  
+}
+
+export function mergeDatasets(projectId, leftDatasetId, rightDatasetId, onColumnsIds=[], mergeMethod='left') {
+  const params = {
+    project_id: projectId,
+    left_dataset_id: leftDatasetId,
+    right_dataset_id: rightDatasetId,
+    on: onColumnsIds,
+    how: mergeMethod
+  };
+
+  return (dispatch) => {
+    dispatch(requestMergeDatasetsDispatcher(leftDatasetId, rightDatasetId, onColumnsIds, mergeMethod));
   };
 }

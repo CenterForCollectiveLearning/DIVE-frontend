@@ -10,14 +10,16 @@ import DataGrid from '../Base/DataGrid';
 import DatasetToolbar from './DatasetToolbar';
 import ReduceColumnsModal from './ReduceColumnsModal';
 import PivotModal from './PivotModal';
+import MergeDatasetsModal from './MergeDatasetsModal';
 
 export class DatasetInspectPage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      columnReductionModalOpen: false,
-      pivotModalOpen: false
+      reduceColumnsModalOpen: false,
+      pivotModalOpen: false,
+      mergeDatasetsModalOpen: false
     }
   }
 
@@ -37,6 +39,14 @@ export class DatasetInspectPage extends Component {
     }
   }
 
+  openMergeDatasetsModal() {
+    this.setState({ mergeDatasetsModalOpen: true });
+  }
+
+  closeMergeDatasetsModal() {
+    this.setState({ mergeDatasetsModalOpen: false });
+  }
+
   openPivotModal() {
     this.setState({ pivotModalOpen: true });
   }
@@ -46,11 +56,11 @@ export class DatasetInspectPage extends Component {
   }
 
   openColumnReductionModal() {
-    this.setState({ columnReductionModalOpen: true });
+    this.setState({ reduceColumnsModalOpen: true });
   }
 
   closeColumnReductionModal() {
-    this.setState({ columnReductionModalOpen: false });
+    this.setState({ reduceColumnsModalOpen: false });
   }
 
   render() {
@@ -63,6 +73,7 @@ export class DatasetInspectPage extends Component {
       <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
         { datasets.items.length > 0 &&
           <DatasetToolbar
+            openMergeModalAction={ this.openMergeDatasetsModal.bind(this) }
             openPivotModalAction={ this.openPivotModal.bind(this) }
             openColumnReductionModalAction={ this.openColumnReductionModal.bind(this) }/>
         }
@@ -73,11 +84,19 @@ export class DatasetInspectPage extends Component {
             containerClassName={ styles.gridContainer }
             tableClassName={ styles.grid }/>
         }
-        { this.state.columnReductionModalOpen &&
+        { this.state.reduceColumnsModalOpen &&
           <ReduceColumnsModal
             projectId={ params.projectId }
             datasetId={ params.datasetId }
             closeAction={ this.closeColumnReductionModal.bind(this) }
+            columnNames={ dataset.details.fieldNames }/>
+        }
+        { this.state.mergeDatasetsModalOpen &&
+          <MergeDatasetsModal
+            projectId={ params.projectId }
+            datasetId={ params.datasetId }
+            datasets={ datasets.items }
+            closeAction={ this.closeMergeDatasetsModal.bind(this) }
             columnNames={ dataset.details.fieldNames }/>
         }
         { this.state.pivotModalOpen &&
