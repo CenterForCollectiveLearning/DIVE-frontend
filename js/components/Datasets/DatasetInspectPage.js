@@ -9,13 +9,15 @@ import styles from './datasets.sass';
 import DataGrid from '../Base/DataGrid';
 import DatasetToolbar from './DatasetToolbar';
 import ReduceColumnsModal from './ReduceColumnsModal';
+import PivotModal from './PivotModal';
 
 export class DatasetInspectPage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      columnReductionModalOpen: false
+      columnReductionModalOpen: false,
+      pivotModalOpen: false
     }
   }
 
@@ -33,6 +35,14 @@ export class DatasetInspectPage extends Component {
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
       pushState(null, `/projects/${ this.props.params.projectId }/data/${ datasetSelector.datasetId }/inspect`);
     }
+  }
+
+  openPivotModal() {
+    this.setState({ pivotModalOpen: true });
+  }
+
+  closePivotModal() {
+    this.setState({ pivotModalOpen: false });
   }
 
   openColumnReductionModal() {
@@ -53,11 +63,12 @@ export class DatasetInspectPage extends Component {
       <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
         { datasets.items.length > 0 &&
           <DatasetToolbar
+            openPivotModalAction={ this.openPivotModal.bind(this) }
             openColumnReductionModalAction={ this.openColumnReductionModal.bind(this) }/>
         }
         { dataset && dataset.details &&
           <DataGrid
-            datasetId={ dataset.datasetId }
+            datasetId={ `${ dataset.datasetId }` }
             data={ dataset.data }
             containerClassName={ styles.gridContainer }
             tableClassName={ styles.grid }/>
@@ -67,6 +78,13 @@ export class DatasetInspectPage extends Component {
             projectId={ params.projectId }
             datasetId={ params.datasetId }
             closeAction={ this.closeColumnReductionModal.bind(this) }
+            columnNames={ dataset.details.fieldNames }/>
+        }
+        { this.state.pivotModalOpen &&
+          <PivotModal
+            projectId={ params.projectId }
+            datasetId={ params.datasetId }
+            closeAction={ this.closePivotModal.bind(this) }
             columnNames={ dataset.details.fieldNames }/>
         }
         { this.props.children }
