@@ -3,7 +3,7 @@ import _ from 'underscore';
 
 import styles from '../Analysis.sass';
 
-export default class RowRenderer extends Component {
+export default class RegressionTableRow extends Component {
   render() {
     const { data } = this.props;
     const { items, type, field } = data;
@@ -139,11 +139,11 @@ export default class RowRenderer extends Component {
     );
   }
 }
-//
-RowRenderer.propTypes = {
+
+RegressionTableRow.propTypes = {
   data: PropTypes.object.isRequired
 }
 
-RowRenderer.defaultProps = {
+RegressionTableRow.defaultProps = {
   data: {}
 }

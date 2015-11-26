@@ -32,7 +32,7 @@ export default class DataGrid extends Component {
     };
 
     return (
-      <div className={ containerClassName } style={{ width: '100%', overflow: 'scroll' }}>
+      <div className={ containerClassName }>
         <div style={ useFixedWidth ? innerContainerStyle : {} }>
           { this.state.loading &&
             <div className={ styles.watermark }>Loading...</div>
