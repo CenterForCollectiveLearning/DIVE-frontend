@@ -145,12 +145,42 @@ export function reduceDatasetColumns(projectId, datasetId, columnIds=[]) {
   const params = {
     'project_id': projectId,
     'dataset_id': datasetId,
-    'column_ids': columnIds,
+    'column_ids': columnIds
   };
 
   return (dispatch) => {
     dispatch(requestReduceDatasetColumnsDispatcher(datasetId, columnIds));
     return fetch(`/datasets/v1/reduce?project_id=${ projectId }`, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+      .then(json => dispatch(receiveDatasetDispatcher(json)));
+  };
+}
+
+function requestPivotDatasetColumnsDispatcher(datasetId, variableName, valueName, columnIds) {
+  return {
+    type: REQUEST_REDUCE_DATASET_COLUMNS,
+    datasetId: datasetId,
+    columnIds: columnIds,
+    variableName: variableName,
+    valueName: valueName
+  };  
+}
+
+export function pivotDatasetColumns(projectId, datasetId, variableName, valueName, columnIds=[]) {
+  const params = {
+    'project_id': projectId,
+    'dataset_id': datasetId,
+    'pivot_fields': columnIds,
+    'variable_name': variableName,
+    'value_name': valueName
+  };
+
+  return (dispatch) => {
+    dispatch(requestPivotDatasetColumnsDispatcher(datasetId, variableName, valueName, columnIds));
+    return fetch(`/datasets/v1/unpivot?project_id=${ projectId }`, {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
