@@ -2,12 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { reduceDatasetColumns } from '../../actions/DatasetActions';
 
-import styles from './ReduceColumnsModal.sass';
+import styles from './DatasetModal.sass';
 
 import BlockingModal from '../Base/BlockingModal';
 import RaisedButton from '../Base/RaisedButton';
 import SelectGrid from '../Base/SelectGrid';
-import Input from '../Base/Input';
 
 class ReduceColumnsModal extends Component {
   constructor(props) {
