@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { replaceState } from 'redux-react-router';
 
 import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
-import styles from './datasets.sass';
+import styles from './Datasets.sass';
 
 export class DatasetsPage extends Component {
   constructor(props) {

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'underscore';
 
-import styles from './datasets.sass';
+import styles from './Datasets.sass';
 
 export default class DatasetRow extends Component {
   render() {

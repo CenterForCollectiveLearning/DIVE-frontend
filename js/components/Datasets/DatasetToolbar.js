@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 import { uploadDataset, deleteDataset, fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
-import styles from './datasets.sass';
+import styles from './Datasets.sass';
 
 import DropDownMenu from '../Base/DropDownMenu';
 import RaisedButton from '../Base/RaisedButton';

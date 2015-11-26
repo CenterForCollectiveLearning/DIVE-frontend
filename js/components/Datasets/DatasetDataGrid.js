@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import styles from './datasets.sass';
+import styles from './Datasets.sass';
 import DatasetRow from './DatasetRow';
 import DataGrid from '../Base/DataGrid';
 
