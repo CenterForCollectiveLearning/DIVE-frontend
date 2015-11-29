@@ -100,7 +100,6 @@ class MergeDatasetsModal extends Component {
   render() {
     const { phase, columns } = this.state;
     var heading, footer;
-    console.log(this.props);
 
     switch(phase) {
       case 1:
@@ -123,13 +122,12 @@ class MergeDatasetsModal extends Component {
     return (
       <BlockingModal
         scrollable={ phase != 1 }
-        noContentPadding={ phase == 1 }
         closeAction={ this.props.closeAction }
         heading={ <span>{ heading }</span> }
         footer={{ footer }}>
-        <div>
+        <div style={{ display: "flex", width: "100%" }}>
           { phase == 1 &&
-            <div>
+            <div style={{ display: "flex", width: "100%" }}>
               <div className={ styles.controlSection }>
                 <div className={ styles.label }>Which dataset should we merge with?</div>
                 <DropDownMenu
@@ -142,16 +140,26 @@ class MergeDatasetsModal extends Component {
             </div>
           }
           { phase == 2 &&
-            <div>
-              <DropDownMenu
-                value={ this.state.mergeMethod.filter((method) => method.selected).value }
-                options={ this.state.mergeMethod }
-                onChange={ this.onSelectRightDataset.bind(this) }/>
-              <SelectGrid
-                heading="Columns to merge on"
-                items={ columns }
-                onSelectAllItems={ this.selectAllColumns.bind(this) }
-                onSelectItem={ this.selectColumn.bind(this) }/>
+            <div style={{ display: "flex", "flex-direction": "column" }}>
+              <div className={ styles.controlSection + ' ' + styles.shortControl }>
+                <div className={ styles.label }>How should we merge the datasets?</div>
+                <DropDownMenu
+                  value={ this.state.mergeMethod.filter((method) => method.selected).value }
+                  options={ this.state.mergeMethod }
+                  onChange={ this.onSelectRightDataset.bind(this) }/>
+              </div>
+              <div className={ styles.controlSection + ' ' + styles.scrollableControl }>
+                <div className={ styles.label }>Which columns should we merge on?</div>
+                <div className={ styles.scrollSectionContainer }>
+                  <div className={ styles.scrollSection }>
+                    <SelectGrid
+                      heading="Columns to merge on"
+                      items={ columns }
+                      onSelectAllItems={ this.selectAllColumns.bind(this) }
+                      onSelectItem={ this.selectColumn.bind(this) }/>
+                  </div>
+                </div>
+              </div>
             </div>
           }
         </div>

@@ -34,15 +34,9 @@
 
     color: #333
 
-    &.noContentPadding
-      .modalContent
-        background-color: transparent
-        border: none
-        padding: 0 10px
-
     &.scrollable
       .modalContent
-        overflow: scroll
+        overflow: hidden
 
     .modalHeader
       display: flex
@@ -71,10 +65,10 @@
             color: #666
 
     .modalContent
-      padding: 20px
-      background-color: white
-      border-radius: 2px
-      border: 1px solid #EEE
+      display: flex
+      background-color: transparent
+      border: none
+      padding: 0 10px
       font-size: 14px
       overflow: visible
 
