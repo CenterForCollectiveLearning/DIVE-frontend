@@ -6,7 +6,8 @@ import {
   RECEIVE_DATASETS,
   REQUEST_UPLOAD_DATASET,
   RECEIVE_UPLOAD_DATASET,
-  REQUEST_REDUCE_DATASET_COLUMNS
+  REQUEST_REDUCE_DATASET_COLUMNS,
+  REQUEST_MERGE_DATASETS
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTaskResult } from './api.js';
@@ -191,7 +192,7 @@ export function pivotDatasetColumns(projectId, datasetId, variableName, valueNam
 
 function requestMergeDatasetsDispatcher(leftDatasetId, rightDatasetId, onColumnsIds, mergeMethod) {
   return {
-    type: REQUEST_REDUCE_DATASET_COLUMNS,
+    type: REQUEST_MERGE_DATASETS,
     leftDatasetId: leftDatasetId,
     rightDatasetId: rightDatasetId,
     onColumnsIds: onColumnsIds,
@@ -210,5 +211,11 @@ export function mergeDatasets(projectId, leftDatasetId, rightDatasetId, onColumn
 
   return (dispatch) => {
     dispatch(requestMergeDatasetsDispatcher(leftDatasetId, rightDatasetId, onColumnsIds, mergeMethod));
+    return fetch(`/datasets/v1/join?project_id=${ projectId }`, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+      .then(json => dispatch(receiveDatasetDispatcher(json)));
   };
 }

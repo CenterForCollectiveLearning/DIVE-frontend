@@ -17,7 +17,7 @@
     z-index: 10
     box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.46)
     border-radius: 2px
-    overflow: hidden
+    overflow: visible
     max-height: 90%
     max-width: 670px
 
@@ -29,7 +29,7 @@
     min-height: 100px
     min-width: 400px
     border-radius: 2px
-    overflow: hidden
+    overflow: visible
     background-color: #FAFAFA
 
     color: #333
@@ -39,6 +39,10 @@
         background-color: transparent
         border: none
         padding: 0 10px
+
+    &.scrollable
+      .modalContent
+        overflow: scroll
 
     .modalHeader
       display: flex
@@ -72,7 +76,7 @@
       border-radius: 2px
       border: 1px solid #EEE
       font-size: 14px
-      overflow: scroll
+      overflow: visible
 
     .modalFooter
       display: flex

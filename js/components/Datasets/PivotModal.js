@@ -97,6 +97,7 @@ class PivotModal extends Component {
 
     return (
       <BlockingModal
+        scrollable
         noContentPadding={ phase == 1 }
         closeAction={ this.props.closeAction }
         heading={ <span>{ heading }</span> }

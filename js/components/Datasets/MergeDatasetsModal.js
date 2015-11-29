@@ -85,13 +85,16 @@ class MergeDatasetsModal extends Component {
       .filter((column) => column.selected)
       .map((column) => column.id);
 
-    mergeDatasets(projectId, datasetId, rightDatasetId, selectedColumns, mergeMethod);
+    const selectedMergeMethod = mergeMethod
+      .filter((method) => method.selected)
+      .map((method) => method.value)[0];
+
+    mergeDatasets(projectId, datasetId, rightDatasetId, selectedColumns, selectedMergeMethod);
     this.props.closeAction();
   }
 
-  onSelectRightDataset(event) {
-    console.log(event);
-    this.setState({ rightDatasetId: event.target.value });
+  onSelectRightDataset(datasetId) {
+    this.setState({ rightDatasetId: `${ datasetId }` });
   }
 
   render() {
@@ -115,8 +118,11 @@ class MergeDatasetsModal extends Component {
       default:
     }
 
+    const datasets = this.props.datasets.filter((dataset) => dataset.datasetId != this.props.datasetId);
+
     return (
       <BlockingModal
+        scrollable={ phase != 1 }
         noContentPadding={ phase == 1 }
         closeAction={ this.props.closeAction }
         heading={ <span>{ heading }</span> }
@@ -128,7 +134,7 @@ class MergeDatasetsModal extends Component {
                 <div className={ styles.label }>Which dataset should we merge with?</div>
                 <DropDownMenu
                   value={ this.state.rightDatasetId }
-                  options={ this.props.datasets }
+                  options={ datasets }
                   valueMember="datasetId"
                   displayTextMember="title"
                   onChange={ this.onSelectRightDataset.bind(this) }/>

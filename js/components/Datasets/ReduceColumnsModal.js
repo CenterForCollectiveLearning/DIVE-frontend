@@ -57,6 +57,7 @@ class ReduceColumnsModal extends Component {
   render() {
     return (
       <BlockingModal
+        scrollable
         closeAction={ this.props.closeAction }
         heading={
           <span>Select Columns to Display</span>

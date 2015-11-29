@@ -7,7 +7,11 @@ export default class BlockingModal extends Component {
     return (
       <div className={ styles.blockingModalMask }>
         <div className={ styles.blockingModalContainer }>
-          <div className={ styles.blockingModal + (this.props.noContentPadding ? ' ' + styles.noContentPadding : '') }>
+          <div className={
+            styles.blockingModal
+            + (this.props.noContentPadding ? ' ' + styles.noContentPadding : '')
+            + (this.props.scrollable ? ' ' + styles.scrollable : '')
+            }>
             <div className={ styles.modalHeader }>
               <span>{ this.props.heading }</span>
               { this.props.closeAction && 
@@ -37,7 +41,8 @@ BlockingModal.propTypes = {
   styles: PropTypes.any,
   closeAction: PropTypes.func,
   children: PropTypes.node,
-  noContentPadding: PropTypes.bool
+  noContentPadding: PropTypes.bool,
+  scrollable: PropTypes.bool
 }
 
 BlockingModal.defaultProps = {
@@ -45,5 +50,6 @@ BlockingModal.defaultProps = {
   styles: null,
   footer: null,
   closeAction: null,
-  noContentPadding: false
+  noContentPadding: false,
+  scrollable: false
 }
