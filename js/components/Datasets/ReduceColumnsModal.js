@@ -22,6 +22,7 @@ class ReduceColumnsModal extends Component {
     );
 
     this.state = {
+      error: null,
       columns: columns
     };
   }
@@ -32,7 +33,7 @@ class ReduceColumnsModal extends Component {
         new Object({ ...column, selected: selected })
         : column
     );
-    this.setState({ columns: columns });
+    this.setState({ columns: columns, error: null });
   }
 
   selectAllColumns(selected) {
@@ -40,7 +41,7 @@ class ReduceColumnsModal extends Component {
       new Object({ ...column, selected: selected })
     );
 
-    this.setState({ columns: columns });
+    this.setState({ columns: columns, error: null });
   }
 
   submit() {
@@ -49,6 +50,11 @@ class ReduceColumnsModal extends Component {
     const selectedColumns = this.state.columns
       .filter((column) => column.selected)
       .map((column) => column.id);
+
+    if (!selectedColumns.length) {
+      this.setState({ error: "Please select columns to keep."});
+      return;
+    }
 
     reduceDatasetColumns(projectId, datasetId, selectedColumns);
     this.props.closeAction();
@@ -63,8 +69,15 @@ class ReduceColumnsModal extends Component {
           <span>Select Columns to Display</span>
         }
         footer={
-          <div className={ styles.rightActions }>
-            <RaisedButton primary onClick={ this.submit.bind(this) }>Choose columns</RaisedButton>
+          <div className={ styles.footerContent }>
+            <div className={ styles.footerLabel }>
+              { this.state.error &&
+                <label className={ styles.error }>{ this.state.error }</label>
+              }
+            </div>
+            <div className={ styles.rightActions }>
+              <RaisedButton primary onClick={ this.submit.bind(this) }>Choose columns</RaisedButton>
+            </div>
           </div>
         }>
         <div className={ styles.scrollSectionContainer }>
