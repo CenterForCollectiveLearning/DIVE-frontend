@@ -97,11 +97,11 @@ class PivotModal extends Component {
 
     return (
       <BlockingModal
-        noContentPadding={ phase == 1 }
+        scrollable={ phase != 1 }
         closeAction={ this.props.closeAction }
         heading={ <span>{ heading }</span> }
         footer={{ footer }}>
-        <div>
+        <div style={{ display: "flex" }}>
           { phase == 1 &&
             <div>
               <div className={ styles.controlSection }>
@@ -122,11 +122,15 @@ class PivotModal extends Component {
             </div>
           }
           { phase == 2 &&
-            <SelectGrid
-              heading="Columns changing with Time"
-              items={ columns }
-              onSelectAllItems={ this.selectAllColumns.bind(this) }
-              onSelectItem={ this.selectColumn.bind(this) }/>
+            <div className={ styles.scrollSectionContainer }>
+              <div className={ styles.scrollSection }>
+                <SelectGrid
+                  heading="Columns changing with Time"
+                  items={ columns }
+                  onSelectAllItems={ this.selectAllColumns.bind(this) }
+                  onSelectItem={ this.selectColumn.bind(this) }/>
+              </div>
+            </div>
           }
         </div>
       </BlockingModal>

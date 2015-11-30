@@ -57,6 +57,7 @@ class ReduceColumnsModal extends Component {
   render() {
     return (
       <BlockingModal
+        scrollable
         closeAction={ this.props.closeAction }
         heading={
           <span>Select Columns to Display</span>
@@ -66,12 +67,14 @@ class ReduceColumnsModal extends Component {
             <RaisedButton primary onClick={ this.submit.bind(this) }>Choose columns</RaisedButton>
           </div>
         }>
-        <div>
-          <SelectGrid
-            heading="Columns to display"
-            items={ this.state.columns }
-            onSelectAllItems={ this.selectAllColumns.bind(this) }
-            onSelectItem={ this.selectColumn.bind(this) }/>
+        <div className={ styles.scrollSectionContainer }>
+          <div className={ styles.scrollSection }>
+            <SelectGrid
+              heading="Columns to display"
+              items={ this.state.columns }
+              onSelectAllItems={ this.selectAllColumns.bind(this) }
+              onSelectItem={ this.selectColumn.bind(this) }/>
+          </div>
         </div>
       </BlockingModal>
     );

@@ -1,3 +1,14 @@
+.scrollSectionContainer
+  overflow: scroll
+  margin-left: -10px
+  margin-right: -10px
+  border: 1px solid #EEE
+
+  .scrollSection
+    padding: 20px
+    border-radius: 2px
+    background-color: white
+
 .rightActions
   display: flex
   flex-direction: row-reverse
@@ -7,7 +18,25 @@
     margin-left: 6px
 
 .controlSection
+  width: 100%
   max-width: 460px
+  display: flex
+  flex-direction: column
+  flex-grow: 1
+  flex-shrink: 0
+
+  &.shortControl
+    max-width: 260px
+
+  &.scrollableControl
+    margin-left: -10px
+    margin-right: -10px
+    padding-left: 10px
+    padding-right: 10px
+    max-width: none
+    width: auto
+    overflow: hidden
+    flex-shrink: 1
 
   + .controlSection
     margin-top: 16px

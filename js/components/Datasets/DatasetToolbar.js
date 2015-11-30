@@ -42,7 +42,7 @@ export class DatasetToolbar extends Component {
   }
 
   render() {
-    const { datasets, selectedDatasetId, isPreloadedProject, openColumnReductionModalAction, openPivotModalAction } = this.props;
+    const { datasets, selectedDatasetId, isPreloadedProject, openColumnReductionModalAction, openPivotModalAction, openMergeModalAction } = this.props;
 
     return (
       <div className={ styles.toolbar }>
@@ -68,6 +68,7 @@ export class DatasetToolbar extends Component {
             </RaisedButton>
             <RaisedButton label="Reduce columns" onClick={ openColumnReductionModalAction }/>
             <RaisedButton label="Pivot" onClick={ openPivotModalAction }/>
+            <RaisedButton label="Merge with..." onClick={ openMergeModalAction }/>
           </div>
         }
       </div>
@@ -81,6 +82,7 @@ DatasetToolbar.propTypes = {
   selectedDatasetId: PropTypes.string,
   openColumnReductionModalAction: PropTypes.func,
   openPivotModalAction: PropTypes.func,
+  openMergeModalAction: PropTypes.func,
   isPreloadedProject: PropTypes.bool
 };
 
