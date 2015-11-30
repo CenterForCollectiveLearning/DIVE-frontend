@@ -24,6 +24,7 @@ class MergeDatasetsModal extends Component {
     );
 
     this.state = {
+      error: null,
       columns: columns, // keys to join on
       phase: 1,
       rightDatasetId: null,
@@ -58,7 +59,7 @@ class MergeDatasetsModal extends Component {
         new Object({ ...column, selected: selected })
         : column
     );
-    this.setState({ columns: columns });
+    this.setState({ columns: columns, error: null });
   }
 
   selectAllColumns(selected) {
@@ -66,11 +67,15 @@ class MergeDatasetsModal extends Component {
       new Object({ ...column, selected: selected })
     );
 
-    this.setState({ columns: columns });
+    this.setState({ columns: columns, error: null });
   }
 
   clickedNext() {
-    this.setState({ phase: 2 });
+    if (this.state.rightDatasetId) {
+      this.setState({ phase: 2 });
+    } else {
+      this.setState({ error: "Please select a dataset to merge with." })
+    }
   }
 
   clickedBack() {
@@ -85,6 +90,11 @@ class MergeDatasetsModal extends Component {
       .filter((column) => column.selected)
       .map((column) => column.id);
 
+    if (!selectedColumns.length) {
+      this.setState({ error: "Please select columns to join datasets on."});
+      return;
+    }
+
     const selectedMergeMethod = mergeMethod
       .filter((method) => method.selected)
       .map((method) => method.value)[0];
@@ -94,7 +104,7 @@ class MergeDatasetsModal extends Component {
   }
 
   onSelectRightDataset(datasetId) {
-    this.setState({ rightDatasetId: `${ datasetId }` });
+    this.setState({ rightDatasetId: `${ datasetId }`, error: null });
   }
 
   onSelectMergeMethod(mergeMethodValue) {
@@ -105,17 +115,20 @@ class MergeDatasetsModal extends Component {
   }
 
   render() {
-    const { phase, columns } = this.state;
-    var heading, footer;
+    const { phase, columns, error } = this.state;
+    var heading, footer, phaseFooter;
 
     switch(phase) {
       case 1:
         heading = "Merge with which dataset?";
-        footer = <div className={ styles.rightActions }><RaisedButton primary minWidth={ 100 } onClick={ this.clickedNext.bind(this) }>Next</RaisedButton></div>;
+        phaseFooter =
+          <div className={ styles.rightActions }>
+            <RaisedButton primary minWidth={ 100 } onClick={ this.clickedNext.bind(this) }>Next</RaisedButton>
+          </div>;
         break;
       case 2:
         heading = "Select columns to merge over";
-        footer =
+        phaseFooter =
           <div className={ styles.rightActions }>
             <RaisedButton primary minWidth={ 100 } onClick={ this.submit.bind(this) }>Done</RaisedButton>
             <RaisedButton icon onClick={ this.clickedBack.bind(this) }><i className="fa fa-angle-left"></i></RaisedButton>
@@ -123,6 +136,16 @@ class MergeDatasetsModal extends Component {
         break;
       default:
     }
+
+    footer = 
+      <div className={ styles.footerContent }>
+        <div className={ styles.footerLabel }>
+          { error &&
+            <label className={ styles.error }>{ error }</label>
+          }
+        </div>
+        { phaseFooter }
+      </div>;
 
     const datasets = this.props.datasets.filter((dataset) => dataset.datasetId != this.props.datasetId);
 

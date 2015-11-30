@@ -23,6 +23,7 @@ class PivotModal extends Component {
     );
 
     this.state = {
+      error: null,
       columns: columns,
       phase: 1,
       valueName: '',
@@ -36,7 +37,7 @@ class PivotModal extends Component {
         new Object({ ...column, selected: selected })
         : column
     );
-    this.setState({ columns: columns });
+    this.setState({ columns: columns, error: null });
   }
 
   selectAllColumns(selected) {
@@ -44,11 +45,19 @@ class PivotModal extends Component {
       new Object({ ...column, selected: selected })
     );
 
-    this.setState({ columns: columns });
+    this.setState({ columns: columns, error: null });
   }
 
   clickedNext() {
-    this.setState({ phase: 2 });
+    if (this.state.valueName && this.state.variableName) {
+      this.setState({ phase: 2 });
+    } else {
+      if (this.state.valueName) {
+        this.setState({ error: "Please state the time metric." });
+      } else {
+        this.setState({ error: "Please state what is being measured." });
+      }
+    }
   }
 
   clickedBack() {
@@ -63,30 +72,35 @@ class PivotModal extends Component {
       .filter((column) => column.selected)
       .map((column) => column.id);
 
+    if (!selectedColumns.length) {
+      this.setState({ error: "Please select the columns that change with time."});
+      return;
+    }
+
     pivotDatasetColumns(projectId, datasetId, variableName, valueName, selectedColumns);
     this.props.closeAction();
   }
 
   enteredValueNameInput(event) {
-    this.setState({ valueName: event.target.value });
+    this.setState({ valueName: event.target.value, error: null });
   }
 
   enteredVariableNameInput(event) {
-    this.setState({ variableName: event.target.value });
+    this.setState({ variableName: event.target.value, error: null });
   }
 
   render() {
-    const { phase, columns } = this.state;
-    var heading, footer;
+    const { phase, columns, error } = this.state;
+    var heading, footer, phaseFooter;
 
     switch(phase) {
       case 1:
         heading = "What is the dataset measuring?";
-        footer = <div className={ styles.rightActions }><RaisedButton primary minWidth={ 100 } onClick={ this.clickedNext.bind(this) }>Next</RaisedButton></div>;
+        phaseFooter = <div className={ styles.rightActions }><RaisedButton primary minWidth={ 100 } onClick={ this.clickedNext.bind(this) }>Next</RaisedButton></div>;
         break;
       case 2:
         heading = "Select columns that change with time";
-        footer =
+        phaseFooter =
           <div className={ styles.rightActions }>
             <RaisedButton primary minWidth={ 100 } onClick={ this.submit.bind(this) }>Done</RaisedButton>
             <RaisedButton icon onClick={ this.clickedBack.bind(this) }><i className="fa fa-angle-left"></i></RaisedButton>
@@ -94,6 +108,16 @@ class PivotModal extends Component {
         break;
       default:
     }
+
+    footer = 
+      <div className={ styles.footerContent }>
+        <div className={ styles.footerLabel }>
+          { error &&
+            <label className={ styles.error }>{ error }</label>
+          }
+        </div>
+        { phaseFooter }
+      </div>;
 
     return (
       <BlockingModal
