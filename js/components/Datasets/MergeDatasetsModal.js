@@ -97,6 +97,13 @@ class MergeDatasetsModal extends Component {
     this.setState({ rightDatasetId: `${ datasetId }` });
   }
 
+  onSelectMergeMethod(mergeMethodValue) {
+    const mergeMethod = this.state.mergeMethod.map((method) =>
+      new Object({ ...method, selected: (method.value == mergeMethodValue) })
+    );
+    this.setState({ mergeMethod: mergeMethod });
+  }
+
   render() {
     const { phase, columns } = this.state;
     var heading, footer;
@@ -140,13 +147,13 @@ class MergeDatasetsModal extends Component {
             </div>
           }
           { phase == 2 &&
-            <div style={{ display: "flex", "flex-direction": "column" }}>
+            <div style={{ display: "flex", "flexDirection": "column" }}>
               <div className={ styles.controlSection + ' ' + styles.shortControl }>
                 <div className={ styles.label }>How should we merge the datasets?</div>
                 <DropDownMenu
                   value={ this.state.mergeMethod.filter((method) => method.selected).value }
                   options={ this.state.mergeMethod }
-                  onChange={ this.onSelectRightDataset.bind(this) }/>
+                  onChange={ this.onSelectMergeMethod.bind(this) }/>
               </div>
               <div className={ styles.controlSection + ' ' + styles.scrollableControl }>
                 <div className={ styles.label }>Which columns should we merge on?</div>
