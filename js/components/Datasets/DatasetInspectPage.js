@@ -79,7 +79,7 @@ export class DatasetInspectPage extends Component {
         }
         { dataset && dataset.details &&
           <DataGrid
-            datasetId={ `${ dataset.datasetId }` }
+            id={ `${ dataset.datasetId }` }
             data={ dataset.data }
             containerClassName={ styles.gridContainer }
             tableClassName={ styles.grid }/>
