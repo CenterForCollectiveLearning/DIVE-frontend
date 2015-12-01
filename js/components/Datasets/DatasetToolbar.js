@@ -58,7 +58,7 @@ export class DatasetToolbar extends Component {
               onChange={ this.onSelectDataset } />
           </div>
           { !isPreloadedProject &&
-            <RaisedButton label="Upload new dataset" onClick={ this.onSelectUploadDataset } />
+            <RaisedButton label="Upload new dataset" onClick={ this.onClickUploadDataset } />
           }
         </div>
         { !isPreloadedProject && selectedDatasetId &&            
@@ -68,7 +68,7 @@ export class DatasetToolbar extends Component {
             </RaisedButton>
             <RaisedButton label="Reduce columns" onClick={ openColumnReductionModalAction }/>
             <RaisedButton label="Pivot" onClick={ openPivotModalAction }/>
-            <RaisedButton label="Merge with..." onClick={ openMergeModalAction }/>
+            <RaisedButton label="Combine datasets" onClick={ openMergeModalAction }/>
           </div>
         }
       </div>
