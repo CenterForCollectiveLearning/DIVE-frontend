@@ -13,7 +13,7 @@ export default class DataGrid extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.datasetId != this.props.datasetId) {
+    if (nextProps.id != this.props.id) {
       this.setState({ loading: true });
     } else {
       this.setState({ loading: false });
@@ -26,7 +26,7 @@ export default class DataGrid extends Component {
     const columnWidth = 200;
     const nColumns = data.length ? Object.keys(data[0]).length : 0;
     const innerContainerStyle = {
-      width: `${nColumns * columnWidth}px`,
+      width: `${ nColumns * columnWidth }px`,
       minWidth: '100%',
       overflow: 'hidden'
     };
@@ -55,7 +55,7 @@ export default class DataGrid extends Component {
 }
 
 DataGrid.propTypes = {
-  datasetId: PropTypes.string.isRequired,
+  id: PropTypes.string,
   data: PropTypes.array.isRequired,
   tableClassName: PropTypes.string,
   containerClassName: PropTypes.string,
