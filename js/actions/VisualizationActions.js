@@ -150,10 +150,18 @@ function receiveSpecVisualizationDispatcher(json) {
   };
 }
 
-function fetchSpecVisualization(projectId, specId) {
+function fetchSpecVisualization(projectId, specId, conditionals) {
+  const params = {
+    project_id: projectId,
+    conditionals: conditionals,
+  }
   return dispatch => {
     dispatch(requestSpecVisualizationDispatcher());
-    return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`)
+    return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    })
       .then(response => response.json())
       .then(json => dispatch(receiveSpecVisualizationDispatcher(json)))
       .catch(err => console.error("Error fetching visualization: ", err));
@@ -168,10 +176,10 @@ function shouldFetchSpecVisualization(state) {
   return true;
 }
 
-export function fetchSpecVisualizationIfNeeded(projectId, specId) {
+export function fetchSpecVisualizationIfNeeded(projectId, specId, conditionals) {
   return (dispatch, getState) => {
     if (shouldFetchSpecVisualization(getState())) {
-      return dispatch(fetchSpecVisualization(projectId, specId));
+      return dispatch(fetchSpecVisualization(projectId, specId, conditionals));
     }
   };
 }
