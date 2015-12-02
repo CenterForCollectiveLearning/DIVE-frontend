@@ -1,0 +1,64 @@
+.scrollSectionContainer
+  overflow: scroll
+  margin-left: -10px
+  margin-right: -10px
+  border: 1px solid #EEE
+
+  .scrollSection
+    padding: 20px
+    border-radius: 2px
+    background-color: white
+
+.footerContent
+  display: flex
+  flex-grow: 1
+
+.footerLabel
+  display: flex
+  align-items: center
+  font-size: 13px
+
+  label.error
+    color: darkred
+
+.rightActions
+  display: flex
+  flex-direction: row-reverse
+  flex-grow: 1
+
+  > div
+    margin-left: 6px
+
+.controlSection
+  width: 100%
+  max-width: 460px
+  display: flex
+  flex-direction: column
+  flex-grow: 1
+  flex-shrink: 0
+
+  &.shortControl
+    max-width: 260px
+
+  &.scrollableControl
+    margin-left: -10px
+    margin-right: -10px
+    padding-left: 10px
+    padding-right: 10px
+    max-width: none
+    width: auto
+    overflow: hidden
+    flex-shrink: 1
+
+  + .controlSection
+    margin-top: 16px
+
+  .label
+    margin-bottom: 8px
+    font-size: 13px
+    font-weight: 400
+    line-height: 18px
+    color: #555
+
+  input
+    max-width: 260px

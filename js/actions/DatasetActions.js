@@ -6,7 +6,8 @@ import {
   RECEIVE_DATASETS,
   REQUEST_UPLOAD_DATASET,
   RECEIVE_UPLOAD_DATASET,
-  REQUEST_REDUCE_DATASET_COLUMNS
+  REQUEST_REDUCE_DATASET_COLUMNS,
+  REQUEST_MERGE_DATASETS
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTaskResult } from './api.js';
@@ -145,12 +146,72 @@ export function reduceDatasetColumns(projectId, datasetId, columnIds=[]) {
   const params = {
     'project_id': projectId,
     'dataset_id': datasetId,
-    'column_ids': columnIds,
+    'column_ids': columnIds
   };
 
   return (dispatch) => {
     dispatch(requestReduceDatasetColumnsDispatcher(datasetId, columnIds));
     return fetch(`/datasets/v1/reduce?project_id=${ projectId }`, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+      .then(json => dispatch(receiveDatasetDispatcher(json)));
+  };
+}
+
+function requestPivotDatasetColumnsDispatcher(datasetId, variableName, valueName, columnIds) {
+  return {
+    type: REQUEST_REDUCE_DATASET_COLUMNS,
+    datasetId: datasetId,
+    columnIds: columnIds,
+    variableName: variableName,
+    valueName: valueName
+  };  
+}
+
+export function pivotDatasetColumns(projectId, datasetId, variableName, valueName, columnIds=[]) {
+  const params = {
+    project_id: projectId,
+    dataset_id: datasetId,
+    pivot_fields: columnIds,
+    variable_name: variableName,
+    value_name: valueName
+  };
+
+  return (dispatch) => {
+    dispatch(requestPivotDatasetColumnsDispatcher(datasetId, variableName, valueName, columnIds));
+    return fetch(`/datasets/v1/unpivot?project_id=${ projectId }`, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+      .then(json => dispatch(receiveDatasetDispatcher(json)));
+  };
+}
+
+function requestMergeDatasetsDispatcher(leftDatasetId, rightDatasetId, onColumnsIds, mergeMethod) {
+  return {
+    type: REQUEST_MERGE_DATASETS,
+    leftDatasetId: leftDatasetId,
+    rightDatasetId: rightDatasetId,
+    onColumnsIds: onColumnsIds,
+    mergeMethod: mergeMethod
+  };  
+}
+
+export function mergeDatasets(projectId, leftDatasetId, rightDatasetId, onColumnsIds=[], mergeMethod='left') {
+  const params = {
+    project_id: projectId,
+    left_dataset_id: leftDatasetId,
+    right_dataset_id: rightDatasetId,
+    on: onColumnsIds,
+    how: mergeMethod
+  };
+
+  return (dispatch) => {
+    dispatch(requestMergeDatasetsDispatcher(leftDatasetId, rightDatasetId, onColumnsIds, mergeMethod));
+    return fetch(`/datasets/v1/join?project_id=${ projectId }`, {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }

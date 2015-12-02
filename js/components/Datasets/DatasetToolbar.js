@@ -42,7 +42,7 @@ export class DatasetToolbar extends Component {
   }
 
   render() {
-    const { datasets, selectedDatasetId, isPreloadedProject, openColumnReductionModalAction } = this.props;
+    const { datasets, selectedDatasetId, isPreloadedProject, openColumnReductionModalAction, openPivotModalAction, openMergeModalAction } = this.props;
 
     return (
       <div className={ styles.toolbar }>
@@ -58,7 +58,7 @@ export class DatasetToolbar extends Component {
               onChange={ this.onSelectDataset } />
           </div>
           { !isPreloadedProject &&
-            <RaisedButton label="Upload new dataset" onClick={ this.onSelectUploadDataset } />
+            <RaisedButton label="Upload new dataset" onClick={ this.onClickUploadDataset } />
           }
         </div>
         { !isPreloadedProject && selectedDatasetId &&            
@@ -67,6 +67,8 @@ export class DatasetToolbar extends Component {
               <i className="fa fa-trash"></i>
             </RaisedButton>
             <RaisedButton label="Reduce columns" onClick={ openColumnReductionModalAction }/>
+            <RaisedButton label="Pivot" onClick={ openPivotModalAction }/>
+            <RaisedButton label="Combine datasets" onClick={ openMergeModalAction }/>
           </div>
         }
       </div>
@@ -79,6 +81,8 @@ DatasetToolbar.propTypes = {
   projectId: PropTypes.string.isRequired,
   selectedDatasetId: PropTypes.string,
   openColumnReductionModalAction: PropTypes.func,
+  openPivotModalAction: PropTypes.func,
+  openMergeModalAction: PropTypes.func,
   isPreloadedProject: PropTypes.bool
 };
 

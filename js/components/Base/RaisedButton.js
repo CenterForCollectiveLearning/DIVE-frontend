@@ -3,8 +3,13 @@ import styles from './RaisedButton.sass';
 
 export default class RaisedButton extends Component {
   render() {
+    const style = {
+      minWidth: this.props.minWidth
+    };
+
     return (
       <div
+        style={ style }
         className={
           styles.raisedButton
           + ' ' + this.props.className
@@ -33,7 +38,8 @@ RaisedButton.propTypes = {
   icon: PropTypes.bool,
   className: PropTypes.string,
   fullWidth: PropTypes.bool,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  minWidth: PropTypes.number
 }
 
 RaisedButton.defaultProps = {
@@ -42,5 +48,6 @@ RaisedButton.defaultProps = {
   icon: false,
   className: "",
   fullWidth: false,
-  disabled: false
+  disabled: false,
+  minWidth: 0
 }

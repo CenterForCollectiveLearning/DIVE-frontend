@@ -2,12 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { reduceDatasetColumns } from '../../actions/DatasetActions';
 
-import styles from './ReduceColumnsModal.sass';
+import styles from './DatasetModal.sass';
 
 import BlockingModal from '../Base/BlockingModal';
 import RaisedButton from '../Base/RaisedButton';
 import SelectGrid from '../Base/SelectGrid';
-import Input from '../Base/Input';
 
 class ReduceColumnsModal extends Component {
   constructor(props) {
@@ -23,6 +22,7 @@ class ReduceColumnsModal extends Component {
     );
 
     this.state = {
+      error: null,
       columns: columns
     };
   }
@@ -33,7 +33,7 @@ class ReduceColumnsModal extends Component {
         new Object({ ...column, selected: selected })
         : column
     );
-    this.setState({ columns: columns });
+    this.setState({ columns: columns, error: null });
   }
 
   selectAllColumns(selected) {
@@ -41,7 +41,7 @@ class ReduceColumnsModal extends Component {
       new Object({ ...column, selected: selected })
     );
 
-    this.setState({ columns: columns });
+    this.setState({ columns: columns, error: null });
   }
 
   submit() {
@@ -51,6 +51,11 @@ class ReduceColumnsModal extends Component {
       .filter((column) => column.selected)
       .map((column) => column.id);
 
+    if (!selectedColumns.length) {
+      this.setState({ error: "Please select columns to keep."});
+      return;
+    }
+
     reduceDatasetColumns(projectId, datasetId, selectedColumns);
     this.props.closeAction();
   }
@@ -58,21 +63,31 @@ class ReduceColumnsModal extends Component {
   render() {
     return (
       <BlockingModal
+        scrollable
         closeAction={ this.props.closeAction }
         heading={
           <span>Select Columns to Display</span>
         }
         footer={
-          <div className={ styles.rightActions }>
-            <RaisedButton primary onClick={ this.submit.bind(this) }>Choose columns</RaisedButton>
+          <div className={ styles.footerContent }>
+            <div className={ styles.footerLabel }>
+              { this.state.error &&
+                <label className={ styles.error }>{ this.state.error }</label>
+              }
+            </div>
+            <div className={ styles.rightActions }>
+              <RaisedButton primary onClick={ this.submit.bind(this) }>Choose columns</RaisedButton>
+            </div>
           </div>
         }>
-        <div>
-          <SelectGrid
-            heading="Columns to display"
-            items={ this.state.columns }
-            onSelectAllItems={ this.selectAllColumns.bind(this) }
-            onSelectItem={ this.selectColumn.bind(this) }/>
+        <div className={ styles.scrollSectionContainer }>
+          <div className={ styles.scrollSection }>
+            <SelectGrid
+              heading="Columns to display"
+              items={ this.state.columns }
+              onSelectAllItems={ this.selectAllColumns.bind(this) }
+              onSelectItem={ this.selectColumn.bind(this) }/>
+          </div>
         </div>
       </BlockingModal>
     );
