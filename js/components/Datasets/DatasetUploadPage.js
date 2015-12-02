@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
 import { uploadDataset } from '../../actions/DatasetActions';
-import styles from './datasets.sass';
+import styles from './Datasets.sass';
 
 import RaisedButton from '../Base/RaisedButton';
 import ActionBox from '../Base/ActionBox';
