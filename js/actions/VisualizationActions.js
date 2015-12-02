@@ -11,6 +11,8 @@ import {
   RECEIVE_CREATED_EXPORTED_SPEC,
   SET_SHARE_WINDOW,
   SELECT_SORTING_FUNCTION,
+  SELECT_BUILDER_SORT_ORDER,
+  SELECT_BUILDER_SORT_FIELD,
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
@@ -104,6 +106,20 @@ export function selectVisualizationType(selectedType) {
   }
 }
 
+export function selectBuilderSortField(selectedSortFieldId) {
+  return {
+    type: SELECT_BUILDER_SORT_FIELD,
+    selectedSortFieldId: selectedSortFieldId
+  }
+}
+
+export function selectBuilderSortOrder(selectedSortOrderId) {
+  return {
+    type: SELECT_BUILDER_SORT_ORDER,
+    selectedSortOrderId: selectedSortOrderId
+  }
+}
+
 export function selectBuilderVisualizationType(selectedType) {
   return {
     type: SELECT_BUILDER_VISUALIZATION_TYPE,
@@ -134,10 +150,18 @@ function receiveSpecVisualizationDispatcher(json) {
   };
 }
 
-function fetchSpecVisualization(projectId, specId) {
+function fetchSpecVisualization(projectId, specId, conditionals) {
+  const params = {
+    project_id: projectId,
+    conditionals: conditionals,
+  }
   return dispatch => {
     dispatch(requestSpecVisualizationDispatcher());
-    return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`)
+    return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    })
       .then(response => response.json())
       .then(json => dispatch(receiveSpecVisualizationDispatcher(json)))
       .catch(err => console.error("Error fetching visualization: ", err));
@@ -152,10 +176,10 @@ function shouldFetchSpecVisualization(state) {
   return true;
 }
 
-export function fetchSpecVisualizationIfNeeded(projectId, specId) {
+export function fetchSpecVisualizationIfNeeded(projectId, specId, conditionals) {
   return (dispatch, getState) => {
     if (shouldFetchSpecVisualization(getState())) {
-      return dispatch(fetchSpecVisualization(projectId, specId));
+      return dispatch(fetchSpecVisualization(projectId, specId, conditionals));
     }
   };
 }

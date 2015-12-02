@@ -26,9 +26,12 @@ export default class VisualizationView extends Component {
                 visualizationClassName="visualization"
                 visualizationTypes={ visualizationTypes }
                 spec={ visualization.spec }
-                data={ visualization.visualizationData }/>
+                data={ visualization.visualizationData }
+                sortOrders={ visualization.sortOrders }
+                sortFields={ visualization.sortFields }/>
               { visualization.tableData.length != 0 &&
                 <DataGrid
+                  id={ `${ visualization.spec.id }` }
                   useFixedWidth={ false }
                   data={ visualization.tableData }
                   tableClassName={ styles.grid }

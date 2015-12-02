@@ -13,7 +13,7 @@ export default class ColumnChart extends Component {
 
     const columnChartOptions = {
       ...options,
-      hAxis: { 
+      hAxis: {
         title: data[0][0],
         titleTextStyle: {
           color: '#333',
