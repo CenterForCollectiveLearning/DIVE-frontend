@@ -43,7 +43,7 @@ export class RegressionView extends Component {
 
       } else if (field.values.length == 1) {
         // categorical binary
-        return { name: field.name, formattedName: `${ field.name }: ${ field.values[0] }`, enabled: true };
+        return { name: field.name, formattedName: `${ field.name }: <span>${ field.values[0] }</span>`, enabled: true };
 
       } else { 
         // categorical fixed effects
