@@ -34,33 +34,28 @@ export default class DatasetDataGrid extends Component {
         };
       });
 
+
       headerRows = [
         {
           rowType: 'header',
           items: headerRow
         }
       ];
-
     }
-
 
     return (
       <div className={ styles.gridContainer }>
-        <div className={ styles.xScrollLayer }>
+        <div className={ styles.scrollContainer }>
           <DataGrid
-            containerClassName={ styles.headerTable }
+            containerClassName={ styles.headerRowTable }
             datasetId={ `${ dataset.datasetId }` }
             data={ headerRows }
             customRowComponent={ DatasetRow }/>
-          <div className={ styles.grid }>
-            <div className={ styles.yScrollLayer }>
-              <DataGrid
-                containerClassName={ styles.dataTable }
-                datasetId={ `${ dataset.datasetId }` }
-                data={ dataRows }
-                customRowComponent={ DatasetRow }/>
-            </div>
-          </div>
+          <DataGrid
+            containerClassName={ styles.dataRowsTable }
+            datasetId={ `${ dataset.datasetId }` }
+            data={ dataRows }
+            customRowComponent={ DatasetRow }/>
         </div>
       </div>
     );

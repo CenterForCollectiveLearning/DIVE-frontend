@@ -30,26 +30,10 @@ export default class DatasetRow extends Component {
       }
     });
 
-    // if (type == 'tableHeader') {
-    //   return (
-    //     <Row className={ styles.headerRow }>
-    //       <Column className={ styles.headerColumn }>
-    //         <Cell>Variables</Cell>
-    //       </Column>
-    //       { _.range(data.size).map((i) =>
-    //           <Column key={`header-${ i }`} className={ styles.headerColumn }>
-    //             <Cell>({ i + 1 })</Cell>
-    //           </Column>
-    //         )
-    //       }
-    //     </Row>
-    //   );
-    // }
-
     return (
       <Row className={ styles.row + ' ' + styles[rowType] }>
         { items && items.map((column, i) =>
-          <Cell className={ styles.cell + ' ' + styles[column.type] }>
+          <Cell className={ styles.cell + ' ' + styles[column.columnType] }>
             { column.value }
           </Cell>
         )}
