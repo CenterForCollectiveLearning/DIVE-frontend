@@ -12,17 +12,23 @@ export default class DatasetDataGrid extends Component {
     var headerRows = [];
 
     if (fieldProperties.items.length) {
-      const createRow = function(key, i, value) {
+      const createRow = function(key, i, value, includeType = false) {
         const fieldProperty = fieldProperties.items.find((fieldProperty) => fieldProperty.index == i);
         return {
           id: fieldProperty.id,
           index: i,
-          value: value,
+          value:
+            <span className={ styles.cellContent }>
+              <span className={ styles.fieldValue }>{ value }</span>
+              { includeType &&
+                <span className={ styles.fieldType }>{ fieldProperty.type }</span>
+              }
+            </span>,
           columnType: fieldProperty.type,
           columnGeneralType: fieldProperty.generalType
         }
       }
-      const createHeaderRow = ((key, i) => createRow(key, i, key));
+      const createHeaderRow = ((key, i) => createRow(key, i, key, true));
 
       const headerRow = Object.keys(dataset.data[0]).map(createHeaderRow);
 

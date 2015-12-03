@@ -74,6 +74,16 @@
       line-height: 35px
       text-transform: uppercase
 
+.cellContent
+  display: flex
+  flex-grow: 1
+
+  .fieldValue, .fieldType
+    display: flex
+
+  .fieldValue
+    flex-grow: 1
+
 .gridContainer
   display: flex
   flex-grow: 1
@@ -106,7 +116,8 @@
     width: 200px
 
     &.decimal, &.datetime
-      justify-content: flex-end
+      .fieldValue
+        justify-content: flex-end
 
 .headerRowTable
   .row
@@ -125,6 +136,10 @@
 
       &:last-child
         border-right-width: 0px
+
+      .fieldType
+        font-weight: 400
+        color: #888
 
 .row
   display: flex
