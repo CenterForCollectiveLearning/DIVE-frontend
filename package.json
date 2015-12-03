@@ -12,6 +12,7 @@
     "component-file-picker": "^0.2.1",
     "es5-shim": "^4.3.1",
     "es6-promise": "^3.0.2",
+    "es6-shim": "^0.33.13",
     "file-loader": "^0.8.4",
     "font-awesome": "^4.4.0",
     "font-awesome-webpack": "0.0.4",
