@@ -3,7 +3,9 @@ import {
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES,
   SELECT_FIELD_PROPERTY_VALUE,
-  SELECT_AGGREGATION_FUNCTION
+  SELECT_AGGREGATION_FUNCTION,
+  REQUEST_SET_FIELD_TYPE,
+  RECEIVE_SET_FIELD_TYPE
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
@@ -52,13 +54,13 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
       new Object({
         ...property,
         selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
-        values: [allValuesMenuItem, ...property.uniqueValues.map((value, i) =>
+        values: property.uniqueValues ? [allValuesMenuItem, ...property.uniqueValues.map((value, i) =>
           new Object({
             selected: false,
             value: `${ value }`,
             label: value
           })
-        )]
+        )] : [allValuesMenuItem]
       })
     );
 
@@ -129,5 +131,37 @@ export function selectAggregationFunction(selectedFieldPropertyId, selectedField
     selectedFieldPropertyId: selectedFieldPropertyId,
     selectedFieldPropertyValueId: selectedFieldPropertyValueId
   }  
+}
+
+function requestSetFieldTypeDispatcher(projectId, fieldId, fieldType) {
+  return {
+    type: REQUEST_SET_FIELD_TYPE,
+    fieldId: fieldId,
+    fieldType: fieldType
+  };  
+}
+
+function receiveSetFieldTypeDispatcher(fieldProperty) {
+  return {
+    type: RECEIVE_SET_FIELD_TYPE,
+    fieldProperty: fieldProperty
+  };  
+}
+
+export function setFieldType(projectId, fieldId, fieldType) {
+  const params = {
+    project_id: projectId,
+    type: fieldType
+  };
+
+  return (dispatch) => {
+    dispatch(requestSetFieldTypeDispatcher(projectId, fieldId, fieldType));
+    return fetch(`/datasets/v1/fields/${ fieldId }`, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+      .then(json => dispatch(receiveSetFieldTypeDispatcher(json)));
+  };  
 }
 

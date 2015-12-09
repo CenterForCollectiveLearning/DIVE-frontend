@@ -5,14 +5,14 @@ import Select from 'react-select';
 
 export default class DropDownMenu extends Component {
   render() {
-    const { value, options, valueMember, displayTextMember, onChange, multi, clearable, searchable } = this.props;
+    const { value, options, valueMember, displayTextMember, onChange, multi, clearable, searchable, className } = this.props;
 
     const selectedValueObject = options.find((option) => option.selected);
     const selectedValue = (value == null && selectedValueObject) ? 
       selectedValueObject.value : value;
 
     return (
-      <div className={ styles.dropDownMenu }>
+      <div className={ styles.dropDownMenu + (className ? ' ' + className : '') }>
         <Select
           value={ selectedValue }
           options={ options.map((option, i) =>
@@ -38,10 +38,12 @@ DropDownMenu.propTypes = {
   onChange: PropTypes.func.isRequired,
   multi: PropTypes.bool,
   clearable: PropTypes.bool,
-  searchable: PropTypes.bool
+  searchable: PropTypes.bool,
+  className: PropTypes.string
 };
 
 DropDownMenu.defaultProps = {
+  className: null,
   value: null,
   multi: false,
   clearable: false,

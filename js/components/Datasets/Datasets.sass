@@ -77,6 +77,7 @@
 .cellContent
   display: flex
   flex-grow: 1
+  align-items: center
 
   .fieldValue, .fieldType
     display: flex
@@ -101,7 +102,7 @@
 .headerRowTable, .dataRowsTable
   > div
     width: auto!important
-    overflow: auto!important
+    overflow: visible!important
 
 .dataRowsTable
   overflow-y: scroll
@@ -115,7 +116,7 @@
     background-color: white
     width: 200px
 
-    &.decimal, &.datetime
+    &.decimal, &.datetime, &.integer
       .fieldValue
         justify-content: flex-end
 
@@ -132,14 +133,10 @@
       min-width: 200px
       padding: 5px 10px 4px
       text-align: left
-      cursor: pointer
+      height: 31px
 
       &:last-child
         border-right-width: 0px
-
-      .fieldType
-        font-weight: 400
-        color: #888
 
 .row
   display: flex
@@ -158,3 +155,38 @@
 
     &:last-child
       border-right-width: 0px
+
+.fieldTypeDropDown.dropDownMenu
+  max-width: 50%
+
+  > div
+    > div:first-of-type
+      height: 20px
+      line-height: 20px
+      padding: 0
+      background-color: transparent
+      border: none
+      box-shadow: none
+      text-align: right
+
+      > div:first-child
+        height: 20px
+        line-height: 20px
+        font-weight: 400
+        font-size: 12px
+        color: #888
+        padding-right: 11px
+
+      > span:last-child
+        top: 8px
+        border-width: 4px 3px 0
+        right: 0
+
+    > div:nth-of-type(2)
+      width: auto
+      right: 0
+
+      > div
+        > div
+          text-align: right
+          padding-right: 10px
