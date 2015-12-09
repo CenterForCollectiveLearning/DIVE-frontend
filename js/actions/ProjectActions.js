@@ -3,6 +3,8 @@ import {
   RECEIVE_PROJECT,
   CREATE_PROJECT,
   CREATED_PROJECT,
+  REQUEST_PROJECTS,
+  RECEIVE_PROJECTS,
   REQUEST_PRELOADED_PROJECTS,
   RECEIVE_PRELOADED_PROJECTS,
   WIPE_PROJECT_STATE
@@ -39,6 +41,19 @@ function receivePreloadedProjectsDispatcher(json) {
   };
 }
 
+function requestProjectsDispatcher() {
+  return {
+    type: REQUEST_PROJECTS
+  };
+}
+
+function receiveProjectsDispatcher(json) {
+  return {
+    type: RECEIVE_PROJECTS,
+    projects: json.projects,
+    receivedAt: Date.now()
+  };
+}
 function createProjectDispatcher() {
   return {
     type: CREATE_PROJECT,
@@ -97,6 +112,15 @@ export function fetchPreloadedProjects() {
     return fetch('/projects/v1/projects?preloaded=true')
       .then(response => response.json())
       .then(json => dispatch(receivePreloadedProjectsDispatcher(json)));
+  };
+}
+
+export function fetchProjects() {
+  return dispatch => {
+    dispatch(requestProjectsDispatcher());
+    return fetch('/projects/v1/projects')
+      .then(response => response.json())
+      .then(json => dispatch(receiveProjectsDispatcher(json)));
   };
 }
 

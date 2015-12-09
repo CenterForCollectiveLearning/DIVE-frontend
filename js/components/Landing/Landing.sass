@@ -165,18 +165,27 @@
   color: white
   text-decoration: none
 
-.preloaded
+.projectsContainer
   display: flex
   flex-grow: 1
   flex-direction: column
   align-items: center
 
-  .projectListContainer
+  &:last-child
+    margin-bottom: 40px
+
+
+  .projectTypeContainer
     display: flex
-    flex-direction: row
-    margin-top: 30px
-    flex-wrap: wrap
-    justify-content: center
+    flex-direction: column
+    align-items: center
+
+    .projectListContainer
+      display: flex
+      flex-direction: row
+      margin-top: 30px
+      flex-wrap: wrap
+      justify-content: center
 
 .watermark
   +montserrat
