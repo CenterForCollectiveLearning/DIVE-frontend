@@ -78,12 +78,17 @@
   display: flex
   flex-grow: 1
   align-items: center
+  max-width: 100%
 
-  .fieldValue, .fieldType
+  .fieldType
     display: flex
 
   .fieldValue
+    display: inline
     flex-grow: 1
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
 
 .gridContainer
   display: flex
@@ -118,7 +123,7 @@
 
     &.decimal, &.datetime, &.integer
       .fieldValue
-        justify-content: flex-end
+        text-align: right
 
 .headerRowTable
   .row
