@@ -2,14 +2,18 @@ import React, { Component, PropTypes } from 'react';
 import styles from './landing.sass';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
-import { createProject, fetchPreloadedProjects, wipeProjectState } from '../../actions/ProjectActions';
+import { createProject, fetchPreloadedProjects, fetchProjects, wipeProjectState } from '../../actions/ProjectActions';
 
 import RaisedButton from '../Base/RaisedButton';
 
 export class HomePage extends Component {
   componentWillMount() {
-    if (this.props.projects.items.length == 0) {
+    if (this.props.projects.preloadedProjects.length == 0) {
       this.props.fetchPreloadedProjects();
+    }
+    
+    if (this.props.projects.userProjects.length == 0) {
+      this.props.fetchProjects();
     }
   }
 
@@ -48,17 +52,34 @@ export class HomePage extends Component {
           </div>
         </div>
         <div className={ styles.separater }></div>
-        <div className={ styles.preloaded }>
-          <div className={ styles.flexbox }>
-            <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Or explore our preloaded projects:</div>
-          </div>
-          <div className={ styles.projectListContainer }>
-            { this.props.projects.isFetching &&
-              <div className={ styles.watermark }>Fetching datasets...</div>
-            }
-            { this.props.projects.items.map((project) =>
-              <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/visualize` } className={ styles.projectButton }>{ project.title }</a>
-            )}
+        <div className={ styles.projectsContainer }>
+          { this.props.projects.userProjects.length &&
+            <div className={ styles.projectTypeContainer }>
+              <div className={ styles.flexbox }>
+                <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Dive into one of your projects:</div>
+              </div>
+              <div className={ styles.projectListContainer }>
+                { this.props.projects.userProjects.map((project) =>
+                  <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/visualize` } className={ styles.projectButton }>{ project.title == 'Project Title' ? `Project ${ project.id }` : project.title  }</a>
+                )}
+              </div>
+            </div>
+          }
+        </div>
+        <div className={ styles.separater }></div>
+        <div className={ styles.projectsContainer }>
+          <div className={ styles.projectTypeContainer }>
+            <div className={ styles.flexbox }>
+              <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Or explore our preloaded projects:</div>
+            </div>
+            <div className={ styles.projectListContainer }>
+              { this.props.projects.isFetching &&
+                <div className={ styles.watermark }>Fetching datasets...</div>
+              }
+              { this.props.projects.preloadedProjects.map((project) =>
+                <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/visualize` } className={ styles.projectButton }>{ project.title }</a>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -72,4 +93,4 @@ function mapStateToProps(state) {
   return { project, projects, user };
 }
 
-export default connect(mapStateToProps, { fetchPreloadedProjects, createProject, wipeProjectState, pushState })(HomePage);
+export default connect(mapStateToProps, { fetchPreloadedProjects, fetchProjects, createProject, wipeProjectState, pushState })(HomePage);
