@@ -13,7 +13,7 @@ export default class DatasetDataGrid extends Component {
     var dataRows = [];
     var headerRows = [];
 
-    if (fieldProperties.items.length) {
+    if (fieldProperties.items.length && fieldProperties.datasetId == dataset.datasetId) {
       const createCellContent = function (value, children) {
         return (
           <span key={ `cell-content-${ value }` } title={ value } className={ styles.cellContent }>
