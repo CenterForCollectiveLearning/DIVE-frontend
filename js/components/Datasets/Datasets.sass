@@ -78,12 +78,17 @@
   display: flex
   flex-grow: 1
   align-items: center
+  max-width: 100%
 
-  .fieldValue, .fieldType
+  .fieldType
     display: flex
 
   .fieldValue
+    display: inline
     flex-grow: 1
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
 
 .gridContainer
   display: flex
@@ -98,6 +103,7 @@
     flex-direction: column
     flex-grow: 1
     max-height: 100%
+    min-width: 100%
 
 .headerRowTable, .dataRowsTable
   > div
@@ -114,11 +120,10 @@
     padding: 3px 10px 2px
     text-overflow: ellipsis
     background-color: white
-    width: 200px
 
     &.decimal, &.datetime, &.integer
       .fieldValue
-        justify-content: flex-end
+        text-align: right
 
 .headerRowTable
   .row
@@ -130,7 +135,6 @@
       border-bottom-color: #CDCDCD
 
       font-weight: 500
-      min-width: 200px
       padding: 5px 10px 4px
       text-align: left
       height: 31px
@@ -149,9 +153,9 @@
     height: 24px
     font-size: 12px
     color: #333
-    width: 200px
     border-left-width: 0
     border-bottom-width: 0
+    min-width: 200px
 
     &:last-child
       border-right-width: 0px

@@ -16,7 +16,7 @@ export default class DatasetDataGrid extends Component {
     if (fieldProperties.items.length) {
       const createCellContent = function (value, children) {
         return (
-          <span key={ `cell-content-${ value }` } className={ styles.cellContent }>
+          <span key={ `cell-content-${ value }` } title={ value } className={ styles.cellContent }>
             <span className={ styles.fieldValue }>{ value }</span>
             { children }
           </span>
