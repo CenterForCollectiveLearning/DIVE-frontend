@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 import { fetchDataset } from '../../actions/DatasetActions';

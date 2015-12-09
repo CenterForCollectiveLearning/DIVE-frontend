@@ -33,7 +33,7 @@ export default class DatasetRow extends Component {
     return (
       <Row className={ styles.row + ' ' + styles[rowType] }>
         { items && items.map((column, i) =>
-          <Cell className={ styles.cell + ' ' + styles[column.columnType] }>
+          <Cell key={ `dataset-cell-${ i }` } className={ styles.cell + ' ' + styles[column.columnType] }>
             { column.value }
           </Cell>
         )}

@@ -37,7 +37,7 @@ export default function regressionSelector(state = baseState, action) {
 
     case RECEIVE_FIELD_PROPERTIES:
       const selectedIndependentVariables = action.fieldProperties
-        .filter((property) => property.id != state.dependentVariableId && !( property.generalType == 'c' && property.isUnique ) && !( property.generalType == 'c' && property.uniqueValues.length > 2 ))
+        .filter((property) => property.id != state.dependentVariableId && !( property.generalType == 'c' && property.isUnique ) && !( property.generalType == 'c' && property.uniqueValues && property.uniqueValues.length > 2 ))
         .map((property) => property.id);
 
       return { ...state, fieldProperties: action.fieldProperties, independentVariableIds: selectedIndependentVariables };
