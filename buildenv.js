@@ -1,5 +1,6 @@
 require('shelljs/global');
 var util = require('util');
+var path = require('path');
 
 var output;
 var env = require('./.env.js');
