@@ -41,7 +41,7 @@
     "webpack-isomorphic-tools": "^0.8.8"
   },
   "scripts": {
-    "start": "npm run build-env && DEBUG=true node server.js",
+    "start": "npm install && npm run build-env && DEBUG=true node server.js",
     "build-env": "node buildenv",
     "build": "webpack -p",
     "deploy": "npm run build && divshot push"
