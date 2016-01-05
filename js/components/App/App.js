@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
-import styles from './app.sass';
+import styles from './App.sass';
 
 import { createAnonymousUserIfNeeded } from '../../actions/UserActions';
 import { connect } from 'react-redux';

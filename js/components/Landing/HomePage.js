@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import styles from './landing.sass';
+import styles from './Landing.sass';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 import { createProject, fetchPreloadedProjects, fetchProjects, wipeProjectState } from '../../actions/ProjectActions';
