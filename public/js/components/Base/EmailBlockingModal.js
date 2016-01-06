@@ -38,7 +38,7 @@ class EmailBlockingModal extends Component {
                 large
                 onChange={ this.enteredEmailInput }
                 onSubmit={ this.clickedSubmitEmail }/>
-              <RaisedButton primary onClick={ this.clickedSubmitEmail }>Get Access</RaisedButton>
+              <RaisedButton primary minWidth={ 110 } onClick={ this.clickedSubmitEmail }>Get Access</RaisedButton>
             </div>
           </BlockingModal>
         }
