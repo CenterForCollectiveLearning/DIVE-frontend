@@ -15,12 +15,12 @@ function getEntrySources(sources) {
 
 module.exports = {
   entry: getEntrySources([
-      './js/index.js',
-      './css/app.css'
+      './public/js/index.js',
+      './public/css/app.css'
   ]),
   output: {
-    path: __dirname + '/static/',
-    publicPath: '/static/',
+    path: __dirname + '/',
+    publicPath: '/',
     filename: 'bundle.js',
     hot: true
   },
