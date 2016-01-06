@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions.js';
-import styles from './App/app.sass';
+import styles from './App/App.sass';
 
 import EmailBlockingModal from './Base/EmailBlockingModal';
 import Tabs from './Base/Tabs';

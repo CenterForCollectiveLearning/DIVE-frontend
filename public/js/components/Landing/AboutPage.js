@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import styles from './landing.sass';
+import styles from './Landing.sass';
 import { connect } from 'react-redux';
 
 export class AboutPage extends Component {
