@@ -4,6 +4,7 @@ import { pushState } from 'redux-react-router';
 import { uploadDataset, deleteDataset, fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
+import Toolbar from '../Base/Toolbar';
 import DropDownMenu from '../Base/DropDownMenu';
 import RaisedButton from '../Base/RaisedButton';
 import filePicker from 'component-file-picker';
@@ -45,8 +46,19 @@ export class DatasetToolbar extends Component {
     const { datasets, selectedDatasetId, isPreloadedProject, openColumnReductionModalAction, openPivotModalAction, openMergeModalAction } = this.props;
 
     return (
-      <div className={ styles.toolbar }>
-        <div className={ styles.leftActions }>
+      <Toolbar rightActions=
+        { !isPreloadedProject && selectedDatasetId &&            
+          <div className={ styles.rightActions }>
+            <RaisedButton icon={ true } onClick={ this.onSelectDeleteDataset }>
+              <i className="fa fa-trash"></i>
+            </RaisedButton>
+            <RaisedButton label="Reduce columns" onClick={ openColumnReductionModalAction }/>
+            <RaisedButton label="Pivot" onClick={ openPivotModalAction }/>
+            <RaisedButton label="Combine datasets" onClick={ openMergeModalAction }/>
+          </div>
+        }
+      >
+        <div>
           <span>Dataset: </span>
           <div className={ styles.datasetSelectorContainer }>
             <DropDownMenu
@@ -61,17 +73,7 @@ export class DatasetToolbar extends Component {
             <RaisedButton label="Upload new dataset" onClick={ this.onClickUploadDataset } />
           }
         </div>
-        { !isPreloadedProject && selectedDatasetId &&            
-          <div className={ styles.rightActions }>
-            <RaisedButton icon={ true } onClick={ this.onSelectDeleteDataset }>
-              <i className="fa fa-trash"></i>
-            </RaisedButton>
-            <RaisedButton label="Reduce columns" onClick={ openColumnReductionModalAction }/>
-            <RaisedButton label="Pivot" onClick={ openPivotModalAction }/>
-            <RaisedButton label="Combine datasets" onClick={ openMergeModalAction }/>
-          </div>
-        }
-      </div>
+      </Toolbar>
     );
   }
 }
