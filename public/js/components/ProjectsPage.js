@@ -25,7 +25,7 @@ export class ProjectsPage extends Component {
   }
 
   _getSelectedTab(){
-    const tabList = ["data", "transform", "visualize", "analyze"];
+    const tabList = ["data", "transform", "visualize", "analyze", "compose"];
     const _validTab = function (tabValue) {
       return tabList.indexOf(tabValue) > -1;
     }
@@ -59,7 +59,7 @@ export class ProjectsPage extends Component {
             <Tab label="DATA" value="data" route="data" />
             <Tab label="VISUALIZE" value="visualize" route="visualize/gallery" disabled={ this.props.datasetSelector.datasetId == null }/>
             <Tab label="ANALYZE" value="analyze" route="analyze/regression" disabled={ this.props.datasetSelector.datasetId == null }/>
-            <Tab label="COMPOSE" value="compose" route="compose" disabled/>
+            <Tab label="COMPOSE" value="compose" route="compose" disabled={ this.props.datasetSelector.datasetId == null }/>
           </Tabs>
         </div>
         {this.props.children}
