@@ -11,7 +11,7 @@ export default class Toolbar extends Component {
 
   render() {
     return (
-      <div className={ styles.toolbar }>
+      <div className={ styles.toolbar + ' ' + this.props.className }>
         <div className={ styles.leftActions }>
           { this.props.children }
         </div>
@@ -24,7 +24,12 @@ export default class Toolbar extends Component {
 }
 
 Toolbar.propTypes = {
+  className: PropTypes.string,
   children: PropTypes.node,
   rightActions: PropTypes.node
 };
+
+Toolbar.defaultProps = {
+  className: ''
+}
 
