@@ -26,42 +26,15 @@ export class ContingencyView extends Component {
 
   render() {
     const { contingencyResult, dependentVariableName, independentVariableNames } = this.props;
-    console.log('asdf');
-    console.log(!(independentVariableNames.length == 2));
+
     if (!(contingencyResult.result) || !(contingencyResult.result.row) || contingencyResult.result.row.length == 0) {
       return (
         <div className={ styles.regressionViewContainer }></div>
       );
     }
 
-    // const allRegressedFields = regressionResult.fields.map(function (field){
-    //   if (!field.values) {
-    //     // numeric
-    //     return { ...field, formattedName: field.name, enabled: true };
-    //
-    //   } else if (field.values.length == 1) {
-    //     // categorical binary
-    //     return { name: field.name, formattedName: `${ field.name }: <span>${ field.values[0] }</span>`, enabled: true };
-    //
-    //   } else {
-    //     // categorical fixed effects
-    //     return { ...field, formattedName: field.name, enabled: false };
-    //
-    //   }
-    // });
 
     const consideredFields = contingencyResult.result.rowHeaders;
-    console.log('bitch');
-    console.log('bitch');
-    console.log('bitch');
-    console.log('bitch');
-    console.log(contingencyResult);
-    console.log(contingencyResult.result);
-    console.log(consideredFields);
-    console.log(contingencyResult.result.row);
-
-
-
 
     const data = [
       {
@@ -74,20 +47,13 @@ export class ContingencyView extends Component {
           field: field,
           items: contingencyResult.result.row[field]
         })
+      }),
+      new Object({
+        type: 'dataRow',
+        field: 'Total',
+        items: contingencyResult.result.Total
       })
     ];
-
-    console.log('YYYYYY');
-    console.log(data[1].items);
-    console.log(data[2].items);
-    //   }),
-    //   {
-    //     type: 'footerRow',
-    //     field: 'bic',
-    //     formattedField: '<div class="cmu">BIC</div>',
-    //     items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.bic)
-    //   }
-    // ];
 
     var options = {
       backgroundColor: 'transparent',
@@ -109,47 +75,7 @@ export class ContingencyView extends Component {
       return '';
     };
 
-    // const regressedIndependentVariableNames = independentVariableNames.length == 0 ?
-    //   regressionResult.fields.map((field) => field.name)
-    //   : independentVariableNames;
-    //
-    // const independentVariableNamesString = regressedIndependentVariableNames.length > 1 ?
-    //   regressedIndependentVariableNames
-    //     .map((name) => <strong>{ name }</strong>)
-    //     .reduce((previousValue, currentValue, index, array) =>
-    //       <span><span>{ previousValue }</span><span>{ (index == array.length - 1 ? ', and ' : ', ') }</span><span>{ currentValue }</span></span>
-    //     )
-    //   : <strong>{ regressedIndependentVariableNames }</strong>;
 
-    // const sortedRSquaredAdjusted = regressionResult.regressionsByColumn
-    //   .map((column, i) => new Object({ index: `(${ i + 1 })`, value: column.columnProperties.rSquaredAdj }))
-    //   .sort((a, b) => (a.value >= b.value) ? (a.value > b.value ? -1 : 0) : 1)
-    //   .map((obj) => new Object({ ...obj, value: getRoundedString(obj.value)}));
-    //
-    // const rSquaredAdjustedStrings = {
-    //   highest: sortedRSquaredAdjusted[0],
-    //   lowest: sortedRSquaredAdjusted[sortedRSquaredAdjusted.length - 1]
-    // }
-    //
-    // const sortedContributionToRSquared = contributionToRSquared.slice(1)
-    //   .map((row) => new Object({ name: row[0], value: row[1] }))
-    //   .sort((a, b) => (a.value >= b.value) ? (a.value > b.value ? -1 : 0) : 1)
-    //   .map((obj) => new Object({ ...obj, value: getRoundedString(obj.value)}));
-    //
-    // const contributionToRSquaredStrings = {
-    //   highest: sortedContributionToRSquared[0],
-    //   lowest: sortedContributionToRSquared[sortedContributionToRSquared.length - 1]
-    // };
-
-    // const textParams = {
-    //   dependentVariableName: <strong>{ dependentVariableName }</strong>,
-    //   independentVariableNames: independentVariableNamesString,
-    //   // rSquaredAdjustedText: <div className={ styles.rSquaredAdjust }><div className={ styles.r }>R</div><sup>2</sup></div>,
-    //   // rSquaredText: <div className={ styles.rSquared }><div className={ styles.r }>R</div><sup>2</sup></div>,
-    //   // rSquaredAdjusted: rSquaredAdjustedStrings,
-    //   // contributionToRSquared: contributionToRSquaredStrings
-    // }
-    console.log('data is actually correct u fool');
     return (
       <div className={ styles.comparisonViewContainer }>
         <div className={ styles.regressionCard }>
@@ -157,19 +83,8 @@ export class ContingencyView extends Component {
                 <div className={ styles.grid }>
                   <DataGrid data={ data } customRowComponent={ ContingencyTableRow }/>
                 </div>
-          hmmmm
         </div>
 
-      </div>
-      // <div className={ styles.regressionViewContainer }>
-      //   <div className={ styles.regressionCard }>
-      //     <HeaderBar header={ <span>Cascading Linear Regressions of <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> } />
-      //
-      //     <div className={ styles.grid }>
-      //       <DataGrid data={ data } customRowComponent={ ContingencyTableRow }/>
-      //     </div>
-      //   </div>
-      // </div>
     );
   }
 }
@@ -178,8 +93,6 @@ function mapStateToProps(state) {
   const { project, comparisonSelector, datasetSelector, fieldProperties } = state;
   const { contingencyResult } = comparisonSelector;
 
-  // const numericalIndependentVariableNames = []
-  // const categoricalIndependentVariableNames = []
   const categoricalDependentVariable = null;
   const numericalDependentVariable = null;
 
@@ -208,8 +121,6 @@ function mapStateToProps(state) {
     .filter((property) => property.generalType == "q")
     .map((field) => field.name);
 
-  console.log('hopefully this clear things up');
-  console.log(numericalIndependentVariableNames);
   const categoricalIndependentVariableNames = independentVariables
     .filter((property) => property.generalType == "c")
     .map((field) => field.name);

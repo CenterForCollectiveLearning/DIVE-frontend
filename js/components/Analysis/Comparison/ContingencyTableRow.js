@@ -49,7 +49,7 @@ export default class ContingencyTableRow extends Component {
           </Column>
           {items.map((value, i) =>
               <Column key={`header-${ i }`} className={ styles.headerColumn }>
-                <Cell>({ value })</Cell>
+                <Cell>{ value }</Cell>
               </Column>
             )
           }
@@ -64,22 +64,6 @@ export default class ContingencyTableRow extends Component {
 
       return '';
     };
-
-    // if (type == 'footerRow') {
-    //   return (
-    //     <Row className={ styles.footerRow }>
-    //       <Column className={ styles.footerColumn + ' ' + styles.rowTitle }>
-    //         <Cell className={ styles[`field-${ field }`] }><div dangerouslySetInnerHTML={{__html: data.formattedField}} /></Cell>
-    //       </Column>
-    //       { items.map((value, i) =>
-    //           <Column className={ styles.rowDataColumn } key={ `col-${ field }-${ i }` }>
-    //             <Cell>{ getRoundedString(value, 3) }</Cell>
-    //           </Column>
-    //         )
-    //       }
-    //     </Row>
-    //   );
-    // }
 
 
     return (
