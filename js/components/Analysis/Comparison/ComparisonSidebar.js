@@ -31,17 +31,17 @@ export class ComparisonSidebar extends Component {
     return (
       <AnalysisSidebar selectedTab="comparison">
         { this.props.fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Independent Variable">
+          <SidebarGroup heading="Dependent Variable">
             <DropDownMenu
-              value={ this.props.comparisonSelector.independentVariableId }
+              value={ this.props.comparisonSelector.dependentVariableId }
               options={ this.props.fieldProperties.items }
               valueMember="id"
               displayTextMember="name"
-              onChange={ this.props.selectIndependentVariable }/>
+              onChange={ this.props.selectDependentVariable }/>
           </SidebarGroup>
         }
         { this.props.fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Dependent Variables">
+          <SidebarGroup heading="Independent Variables">
             <ToggleButtonGroup
               toggleItems={ this.props.fieldProperties.items.map((item) =>
                 new Object({
@@ -51,8 +51,8 @@ export class ComparisonSidebar extends Component {
               )}
               valueMember="id"
               displayTextMember="name"
-              externalSelectedItems={ this.props.comparisonSelector.dependentVariableIds }
-              onChange={ this.props.selectDependentVariable } />
+              externalSelectedItems={ this.props.comparisonSelector.independentVariableIds }
+              onChange={ this.props.selectIndependentVariable } />
           </SidebarGroup>
         }
       </AnalysisSidebar>
