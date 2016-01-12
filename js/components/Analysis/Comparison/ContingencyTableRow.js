@@ -19,6 +19,17 @@ export default class ContingencyTableRow extends Component {
       }
     });
 
+    const rotatedRow = React.createClass({
+      getDefaultProps: function() {
+        return { className: '' };
+      },
+      render: function() {
+        return (
+          <div className={ styles.row + ' ' + this.props.className }>{ this.props.children }</div>
+        );
+      }
+    });
+
     const Row = React.createClass({
       getDefaultProps: function() {
         return { className: '' };
@@ -41,34 +52,117 @@ export default class ContingencyTableRow extends Component {
       }
     });
 
-    if (type == 'tableHeader') {
-      return (
-        <Row className={ styles.headerRow }>
-          <Column className={ styles.headerColumn }>
-            <Cell></Cell>
-          </Column>
-          {items.map((value, i) =>
-              <Column key={`header-${ i }`} className={ styles.headerColumn }>
-                <Cell>{ value }</Cell>
-              </Column>
-            )
-          }
-        </Row>
-      );
-    }
-
     const getRoundedString = function (num, decimalPlaces=3) {
-      if (num) {
+      if (num != null) {
         return +parseFloat(num).toPrecision(decimalPlaces);
       }
 
       return '';
     };
 
+    const invisibleFlex = {
+      display: 'flex',
+      flexGrow: '1',
+      border: '0px',
+      flexBasis: '0'
+    };
+
+    const headerFlex = {
+      display: 'flex',
+      flexDirection: 'row',
+      flexGrow: `${items.length}`,
+      border: '1px solid #D8D8D8',
+      borderBottomWidth: '0',
+      borderRightWidth: '0',
+      flexBasis: '0'
+    };
+    if (type == 'noNumericalTableHeader') {
+      return (
+        <Row className={ styles.invisible }>
+          <div style ={invisibleFlex}></div>
+          <div style={headerFlex}>
+            {items.map((value, i) =>
+                <Column key={`header-${ i }`} className={ styles.headerColumn }>
+                  <Cell>{ value }</Cell>
+                </Column>
+              )
+            }
+          </div>
+        </Row>
+      );
+    }
+
+    else if (type == 'numericalTableHeader') {
+      return (
+        <Row className = {styles.invisible}>
+          <div className = {styles.qBlock + ' ' + styles.adjustment}></div>
+          <div style ={invisibleFlex}></div>
+            <div style={headerFlex}>
+                {items.map((value, i) =>
+                    <Column key={`header-${ i }`} className={ styles.headerColumn }>
+                      <Cell>{ value }</Cell>
+                    </Column>
+                  )
+                }
+            </div>
+        </Row>
+      );
+    }
+
+    else if (type == 'numericalHeader') {
+
+
+
+      return (
+
+        <Row className={ styles.invisible }>
+          <div  className = {styles.qBlock + ' ' + styles.adjustment}></div>
+          <div style={invisibleFlex}></div>
+          <div style={headerFlex}>
+            <Column key={`header-numerical`} className={ styles.headerColumn }>
+              <Cell>{ field }</Cell>
+            </Column>
+          </div>
+        </Row>
+      );
+    }
+
+
+    else if (type == 'quantitativeRow') {
+      return (
+        <Row className={ styles.headerRow }>
+          <div  className = {styles.qBlock + ' ' + styles.header}> <div className = {styles.rotatedCell}>{field}</div></div>
+          <Column className={styles.quantitativeColumn}>
+            {items.map((object, i) =>
+              <Row className={ styles.dataRow }>
+                <Column className={ styles.headerColumn }>
+                  <Cell title={ object.field }>
+                    { object.field }
+                  </Cell>
+                </Column>
+                { object.items.map((column, i) =>
+                    <Column className={ styles.rowDataColumn } key={ `col-${ object.field }-${ i }` }>
+                      <Cell className={ styles.coefficient }>
+                        { getRoundedString(column) }
+                      </Cell>
+                    </Column>
+                  )
+                }
+              </Row>
+              )
+            }
+          </Column>
+
+        </Row>
+      );
+    }
+
+
+
 
     return (
       <Row className={ styles.dataRow }>
-        <Column className={ styles.rowTitle }>
+        <Column className={ styles.headerColumn }>
           <Cell title={ field }>
             { field }
           </Cell>

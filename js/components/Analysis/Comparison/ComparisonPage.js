@@ -4,14 +4,15 @@ import { pushState } from 'redux-react-router';
 import styles from '../Analysis.sass';
 
 import ComparisonSidebar from './ComparisonSidebar';
-import ContingencyView from './ContingencyView';
+import ComparisonView from './ComparisonView';
+
 
 export class ComparisonPage extends Component {
   render() {
     return (
       <div className={ `${styles.fillContainer} ${styles.comparisonContainer}` }>
         <ComparisonSidebar />
-        <ContingencyView />
+        <ComparisonView />
       </div>
     );
   }

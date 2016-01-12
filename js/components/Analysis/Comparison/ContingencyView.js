@@ -14,46 +14,85 @@ import ColumnChart from '../../Visualizations/Charts/ColumnChart';
 export class ContingencyView extends Component {
 
   componentWillReceiveProps(nextProps) {
-    const { independentVariableNames, dependentVariableName, numericalDependentVariable, categoricalDependentVariable, numericalIndependentVariableNames, categoricalIndependentVariableNames, runCreateContingency} = this.props;
+    const { independentVariableNames, dependentVariableName, numericalDependentVariable, categoricalDependentVariable, numericalIndependentVariables, categoricalIndependentVariableNames, runCreateContingency} = this.props;
     const independentVariablesChanged = nextProps.independentVariableNames.length != independentVariableNames.length;
     const dependentVariableChanged = nextProps.dependentVariableName != dependentVariableName;
 
     if (nextProps.projectId && nextProps.datasetId && (nextProps.independentVariableNames.length == 2) && (dependentVariableChanged || independentVariablesChanged)) {
-      runCreateContingency(nextProps.projectId, nextProps.datasetId, nextProps.numericalDependentVariable, nextProps.categoricalDependentVariable, nextProps.numericalIndependentVariableNames, nextProps.categoricalIndependentVariableNames);
+      runCreateContingency(nextProps.projectId, nextProps.datasetId, nextProps.numericalDependentVariable, nextProps.categoricalDependentVariable, nextProps.numericalIndependentVariables, nextProps.categoricalIndependentVariableNames);
     }
 
   }
 
   render() {
-    const { contingencyResult, dependentVariableName, independentVariableNames } = this.props;
-
-    if (!(contingencyResult.result) || !(contingencyResult.result.row) || contingencyResult.result.row.length == 0) {
+    const { contingencyResult, dependentVariableName, independentVariableNames, numericalIndependentVariables } = this.props;
+    if (!(independentVariableNames.length == 2) || !(contingencyResult.result) || !(contingencyResult.result.row) || contingencyResult.result.row.length == 0) {
       return (
-        <div className={ styles.regressionViewContainer }></div>
+        <div></div>
       );
     }
 
-
     const consideredFields = contingencyResult.result.rowHeaders;
+    const getRoundedString = function (num, decimalPlaces=3) {
+      if (num) {
+        return num >=1 ?
+          +parseFloat(num).toFixed(decimalPlaces) :
+          +parseFloat(num).toPrecision(decimalPlaces);
+      }
 
-    const data = [
-      {
-        type: 'tableHeader',
-        items: contingencyResult.result.columnHeaders
-      },
-      ...consideredFields.map(function (field) {
-        return new Object({
+      return '';
+    };
+
+    if (numericalIndependentVariables.length == 0){
+      var data = [
+        {
+          type: 'noNumericalTableHeader',
+          items: contingencyResult.result.columnHeaders
+        },
+        ...consideredFields.map(function (field) {
+          return new Object({
+            type: 'dataRow',
+            field: field,
+            items: contingencyResult.result.row[field]
+          })
+        }),
+        new Object({
           type: 'dataRow',
-          field: field,
-          items: contingencyResult.result.row[field]
+          field: 'Total',
+          items: contingencyResult.result.Total
         })
-      }),
-      new Object({
-        type: 'dataRow',
-        field: 'Total',
-        items: contingencyResult.result.Total
-      })
-    ];
+      ];
+    } else {
+      var data = [
+        {
+          type: 'numericalTableHeader',
+          items: contingencyResult.result.columnHeaders
+        },
+        new Object({
+          type: 'quantitativeRow',
+          field: independentVariableNames[1],
+          items: [...consideredFields.map(function (field) {
+            return new Object({
+              type: 'dataRow',
+              field: field,
+              items: contingencyResult.result.row[field]
+            })
+          }),
+          new Object({
+            type: 'dataRow',
+            field: 'Total',
+            items: contingencyResult.result.Total
+          })
+          ]
+        })
+      ]
+    }
+
+
+
+    if (numericalIndependentVariables.length == 2){
+      data.splice(0,0, new Object({type: 'numericalHeader', field: independentVariableNames[0], items: contingencyResult.result.columnHeaders}))
+    }
 
     var options = {
       backgroundColor: 'transparent',
@@ -65,26 +104,15 @@ export class ContingencyView extends Component {
       orientation: 'vertical',
     };
 
-    const getRoundedString = function (num, decimalPlaces=3) {
-      if (num) {
-        return num >=1 ?
-          +parseFloat(num).toFixed(decimalPlaces) :
-          +parseFloat(num).toPrecision(decimalPlaces);
-      }
-
-      return '';
-    };
 
 
     return (
-      <div className={ styles.comparisonViewContainer }>
-        <div className={ styles.regressionCard }>
-            <HeaderBar header={ <span>Contingency Table of <strong className={ styles.dependentVariableTitle }>{ independentVariableNames }</strong></span> } />
-                <div className={ styles.grid }>
-                  <DataGrid data={ data } customRowComponent={ ContingencyTableRow }/>
-                </div>
-        </div>
-
+      <div className={ styles.regressionCard }>
+          <HeaderBar header={ <span>Contingency Table of <strong className={ styles.dependentVariableTitle }>{ independentVariableNames }</strong></span> } />
+              <div className={ styles.grid }>
+                <DataGrid data={ data } customRowComponent={ ContingencyTableRow }/>
+              </div>
+      </div>
     );
   }
 }
@@ -92,6 +120,7 @@ export class ContingencyView extends Component {
 function mapStateToProps(state) {
   const { project, comparisonSelector, datasetSelector, fieldProperties } = state;
   const { contingencyResult } = comparisonSelector;
+
 
   const categoricalDependentVariable = null;
   const numericalDependentVariable = null;
@@ -108,9 +137,6 @@ function mapStateToProps(state) {
     const numericalDependentVariable = [dependentVariableName, 'MEAN'];
   }
 
-
-
-
   const independentVariables = fieldProperties.items
     .filter((property) => comparisonSelector.independentVariableIds.indexOf(property.id) >= 0);
 
@@ -120,6 +146,9 @@ function mapStateToProps(state) {
   const numericalIndependentVariableNames = independentVariables
     .filter((property) => property.generalType == "q")
     .map((field) => field.name);
+
+  const numericalIndependentVariables =  numericalIndependentVariableNames
+    .map((field) => [field, 4])
 
   const categoricalIndependentVariableNames = independentVariables
     .filter((property) => property.generalType == "c")
@@ -133,7 +162,7 @@ function mapStateToProps(state) {
     contingencyResult: contingencyResult,
     numericalDependentVariable: numericalDependentVariable,
     categoricalDependentVariable: categoricalDependentVariable,
-    numericalIndependentVariableNames: numericalIndependentVariableNames,
+    numericalIndependentVariables: numericalIndependentVariables,
     categoricalIndependentVariableNames: categoricalIndependentVariableNames
   };
 }

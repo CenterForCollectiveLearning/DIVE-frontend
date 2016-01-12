@@ -1,0 +1,92 @@
+import React, { Component, PropTypes } from 'react';
+import _ from 'underscore';
+
+import styles from '../Analysis.sass';
+
+export default class NumericalComparisonRow extends Component {
+  render() {
+    const { data } = this.props;
+    const { items, type, field } = data;
+
+    const Column = React.createClass({
+      getDefaultProps: function() {
+        return { className: '' };
+      },
+      render: function() {
+        return (
+          <div className={ styles.column + ' ' + this.props.className }>{ this.props.children }</div>
+        );
+      }
+    });
+
+    const Row = React.createClass({
+      getDefaultProps: function() {
+        return { className: '' };
+      },
+      render: function() {
+        return (
+          <div className={ styles.row + ' ' + this.props.className }>{ this.props.children }</div>
+        );
+      }
+    });
+
+    const Cell = React.createClass({
+      getDefaultProps: function() {
+        return { className: '', title: null };
+      },
+      render: function() {
+        return (
+          <div title={ this.props.title } className={ styles.cell + ' ' + this.props.className }>{ this.props.children }</div>
+        );
+      }
+    });
+
+    if (type == 'tableHeader') {
+      return (
+        <Row className={ styles.headerRow }>
+          {items.map((value, i) =>
+              <Column key={`header-${ i }`} className={ styles.headerColumn }>
+                <Cell>{ value }</Cell>
+              </Column>
+            )
+          }
+        </Row>
+      );
+    }
+
+    const getRoundedString = function (num, decimalPlaces=3) {
+      if (num != null) {
+        return +parseFloat(num).toPrecision(decimalPlaces);
+      }
+
+      return '';
+    };
+
+
+    return (
+      <Row className={ styles.dataRow }>
+        <Column className={ styles.rowTitle }>
+          <Cell title={ field }>
+            { field }
+          </Cell>
+        </Column>
+        { items.map((column, i) =>
+            <Column className={ styles.rowDataColumn } key={ `col-${ field }-${ i }` }>
+              <Cell className={ styles.coefficient }>
+                { getRoundedString(column) }
+              </Cell>
+            </Column>
+          )
+        }
+      </Row>
+    );
+  }
+}
+
+NumericalComparisonRow.propTypes = {
+  data: PropTypes.object.isRequired
+}
+
+NumericalComparisonRow.defaultProps = {
+  data: {}
+}

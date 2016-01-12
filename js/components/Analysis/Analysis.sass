@@ -101,13 +101,30 @@
           width: 89%
           height: 100%
           position: absolute
+  .qBlock
+    width: 20px
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+
+    &.adjustment
+      margin-left: 1px
+
+    &.header
+      background-color: #F6F6F6
 
   .row
     display: flex
     flex-direction: row
+    flex-grow: 1
+    width: 100%
     border: 1px solid #D8D8D8
     border-bottom-width: 0
     border-right-width: 0
+
+    &.invisible
+      border: 0px
 
   .headerColumn
     background-color: #F6F6F6
@@ -119,6 +136,11 @@
     display: flex
     flex-direction: row
 
+  .rotatedCell
+    padding: 5px
+    text-overflox: ellipsis
+    font-weight: 500
+    transform: rotate(-90deg)
   .column
     display: flex
     flex-direction: column
@@ -129,6 +151,9 @@
     padding: 4px
     border-right: 1px solid #D8D8D8
     min-width: 73px
+
+    &.quantitativeColumn
+      padding: 0px
 
     &.rowDataColumn
       .cell
