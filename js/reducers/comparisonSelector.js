@@ -1,16 +1,21 @@
 import {
   SELECT_COMPARISON_INDEPENDENT_VARIABLE,
   SELECT_COMPARISON_DEPENDENT_VARIABLE,
+  REQUEST_CREATE_CONTINGENCY,
   RECEIVE_CREATE_CONTINGENCY,
+  REQUEST_PERFORM_NUMERICAL_COMPARISON,
   RECEIVE_PERFORM_NUMERICAL_COMPARISON,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
 const baseState = {
   independentVariableIds: [],
-  dependentVariableId: null,
+  dependentVariableId: 'none',
   contingencyResult: {},
-  numericalComparisonResult: {}
+  numericalComparisonResult: {},
+  fetchingContingency: false,
+  fetchingComparison: false,
+  comparisonLoaded: false
 }
 
 export default function comparisonSelector(state = baseState, action) {
@@ -27,11 +32,12 @@ export default function comparisonSelector(state = baseState, action) {
         independentVariableIds.push(selectedId);
       }
       return { ...state, independentVariableIds: independentVariableIds};
-
+    case REQUEST_CREATE_CONTINGENCY:
+      return {...state, fetchingContingency: true};
     case RECEIVE_CREATE_CONTINGENCY:
-      return { ...state, contingencyResult: action.data };
+      return { ...state, contingencyResult: action.data, fetchingContingency: false};
     case RECEIVE_PERFORM_NUMERICAL_COMPARISON:
-      return { ...state, numericalComparisonResult: action.data}
+      return { ...state, numericalComparisonResult: action.data};
     case WIPE_PROJECT_STATE:
       return baseState;
 

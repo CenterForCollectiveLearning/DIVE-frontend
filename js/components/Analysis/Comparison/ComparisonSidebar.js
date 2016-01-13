@@ -27,14 +27,18 @@ export class ComparisonSidebar extends Component {
     }
   }
 
+
+
   render() {
+    const dependentVariableOptions = [{'id':'none', 'name':'none'}, ...this.props.fieldProperties.items];
+    console.log(dependentVariableOptions[1]);
     return (
       <AnalysisSidebar selectedTab="comparison">
         { this.props.fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Dependent Variable">
             <DropDownMenu
               value={ this.props.comparisonSelector.dependentVariableId }
-              options={ this.props.fieldProperties.items }
+              options={ dependentVariableOptions }
               valueMember="id"
               displayTextMember="name"
               onChange={ this.props.selectDependentVariable }/>
@@ -46,7 +50,8 @@ export class ComparisonSidebar extends Component {
               toggleItems={ this.props.fieldProperties.items.map((item) =>
                 new Object({
                   id: item.id,
-                  name: item.name
+                  name: item.name,
+                  disabled: (item.id == this.props.comparisonSelector.dependentVariableId)
                 })
               )}
               valueMember="id"

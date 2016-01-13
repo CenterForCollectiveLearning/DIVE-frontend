@@ -18,18 +18,22 @@ export class ContingencyView extends Component {
     const independentVariablesChanged = nextProps.independentVariableNames.length != independentVariableNames.length;
     const dependentVariableChanged = nextProps.dependentVariableName != dependentVariableName;
 
-    if (nextProps.projectId && nextProps.datasetId && (nextProps.independentVariableNames.length == 2) && (dependentVariableChanged || independentVariablesChanged)) {
+    if (nextProps.projectId && nextProps.datasetId && (dependentVariableChanged || independentVariablesChanged) && (nextProps.independentVariableNames.length == 2)) {
       runCreateContingency(nextProps.projectId, nextProps.datasetId, nextProps.numericalDependentVariable, nextProps.categoricalDependentVariable, nextProps.numericalIndependentVariables, nextProps.categoricalIndependentVariableNames);
     }
 
   }
 
   render() {
-    const { contingencyResult, dependentVariableName, independentVariableNames, numericalIndependentVariables } = this.props;
+    const { contingencyResult, dependentVariableName, independentVariableNames, numericalIndependentVariables, fetchingContingency } = this.props;
     if (!(independentVariableNames.length == 2) || !(contingencyResult.result) || !(contingencyResult.result.row) || contingencyResult.result.row.length == 0) {
       return (
         <div></div>
       );
+    }
+
+    else if (fetchingContingency){
+      return <div className={ styles.watermark }>Fetching contingency results...</div>
     }
 
     const consideredFields = contingencyResult.result.rowHeaders;
@@ -108,7 +112,7 @@ export class ContingencyView extends Component {
 
     return (
       <div className={ styles.regressionCard }>
-          <HeaderBar header={ <span>Contingency Table of <strong className={ styles.dependentVariableTitle }>{ independentVariableNames }</strong></span> } />
+          <HeaderBar header={ <span>Contingency Table of <strong className={ styles.dependentVariableTitle }>{ dependentVariableName ? dependentVariableName : 'Count' }</strong></span> } />
               <div className={ styles.grid }>
                 <DataGrid data={ data } customRowComponent={ ContingencyTableRow }/>
               </div>
@@ -121,10 +125,8 @@ function mapStateToProps(state) {
   const { project, comparisonSelector, datasetSelector, fieldProperties } = state;
   const { contingencyResult } = comparisonSelector;
 
-
-  const categoricalDependentVariable = null;
-  const numericalDependentVariable = null;
-
+  var numericalDependentVariable = null;
+  var categoricalDependentVariable = null;
 
   const dependentVariable = fieldProperties.items.find((property) => property.id == comparisonSelector.dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;
@@ -132,10 +134,11 @@ function mapStateToProps(state) {
 
 
   if (dependentVariableField == 'c'){
-    const categoricalDependentVariable = dependentVariableName;
+    var categoricalDependentVariable = dependentVariableName;
   } else if (dependentVariableField == 'q'){
-    const numericalDependentVariable = [dependentVariableName, 'MEAN'];
+    var numericalDependentVariable = [dependentVariableName, 'SUM'];
   }
+
 
   const independentVariables = fieldProperties.items
     .filter((property) => comparisonSelector.independentVariableIds.indexOf(property.id) >= 0);
@@ -156,6 +159,7 @@ function mapStateToProps(state) {
 
   return {
     projectId: project.properties.id,
+    fetchingContingency: comparisonSelector.fetchingContingency,
     dependentVariableName: dependentVariableName,
     independentVariableNames: independentVariableNames,
     datasetId: datasetSelector.datasetId,
