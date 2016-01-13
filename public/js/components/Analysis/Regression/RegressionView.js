@@ -6,6 +6,7 @@ import { runRegression, getContributionToRSquared } from '../../../actions/Regre
 import styles from '../Analysis.sass';
 
 import DataGrid from '../../Base/DataGrid';
+import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
 import RegressionTableRow from './RegressionTableRow';
 
@@ -161,7 +162,7 @@ export class RegressionView extends Component {
 
     return (
       <div className={ styles.regressionViewContainer }>
-        <div className={ styles.regressionCard }>
+        <Card>
           <HeaderBar header={ <span>Cascading Linear Regressions of <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> } />
 
           <div className={ styles.grid }>
@@ -195,9 +196,9 @@ export class RegressionView extends Component {
               }
             </div>
           </div>
-        </div>
+        </Card>
         { (contributionToRSquared.length > 0) &&
-          <div className={ styles.regressionCard }>
+          <Card>
             <HeaderBar header={ <span>Contribution to R<sup>2</sup></span> } />
 
             <div className={ styles.contributionToRSquared }>
@@ -206,7 +207,7 @@ export class RegressionView extends Component {
                 data={ contributionToRSquared }
                 options={ options } />
             </div>
-          </div>
+          </Card>
         }
       </div>
     );
