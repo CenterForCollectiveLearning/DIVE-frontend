@@ -1,6 +1,7 @@
 import {
   SELECT_COMPARISON_AGGREGATION_VARIABLE,
   SELECT_COMPARISON_INDEPENDENT_VARIABLE,
+  SELECT_COMPARISON_AGGREGATION_FUNCTION,
   REQUEST_MAKE_COMPARISON,
   RECEIVE_MAKE_COMPARISON
 } from '../constants/ActionTypes';
@@ -19,6 +20,14 @@ export function selectAggregationVariable(selectedAggregationVariableId) {
   return {
     type: SELECT_COMPARISON_AGGREGATION_VARIABLE,
     comparisonAggregationVariableId: selectedAggregationVariableId,
+    selectedAt: Date.now()
+  }
+}
+
+export function selectAggregationFunction(selectedAggregationFunction) {
+  return {
+    type: SELECT_COMPARISON_AGGREGATION_FUNCTION,
+    comparisonAggregationFunction: selectedAggregationFunction,
     selectedAt: Date.now()
   }
 }

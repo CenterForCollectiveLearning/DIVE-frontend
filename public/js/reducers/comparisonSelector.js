@@ -1,6 +1,7 @@
 import {
   SELECT_COMPARISON_AGGREGATION_VARIABLE,
   SELECT_COMPARISON_INDEPENDENT_VARIABLE,
+  SELECT_COMPARISON_AGGREGATION_FUNCTION,
   RECEIVE_MAKE_COMPARISON,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
@@ -28,6 +29,8 @@ export default function comparisonSelector(state = baseState, action) {
       return { ...state, comparisonVariablesIds: comparisonVariablesIds};
     case RECEIVE_MAKE_COMPARISON:
       return { ...state, comparisonResult: action.data};
+    case SELECT_COMPARISON_AGGREGATION_FUNCTION:
+      return { ...state, aggregationFunction: action.comparisonAggregationFunction};
 
     case WIPE_PROJECT_STATE:
       return baseState;
