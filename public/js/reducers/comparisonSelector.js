@@ -1,27 +1,28 @@
 import {
+  SELECT_COMPARISON_AGGREGATION_VARIABLE,
   SELECT_COMPARISON_INDEPENDENT_VARIABLE,
-  SELECT_COMPARISON_DEPENDENT_VARIABLE,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
 const baseState = {
-  independentVariableId: null,
-  dependentVariableIds: []
+  aggregationVariableId: null,
+  comparisonVariablesIds: []
 }
 
 export default function comparisonSelector(state = baseState, action) {
   switch (action.type) {
-    case SELECT_COMPARISON_INDEPENDENT_VARIABLE:
-      return { ...state, independentVariableId: action.independentVariableId };
+    case SELECT_COMPARISON_AGGREGATION_VARIABLE:
+      return { ...state, aggregationVariableId: action.comparisonAggregationVariableId };
 
-    case SELECT_COMPARISON_DEPENDENT_VARIABLE:
-      var dependentVariableIds = state.dependentVariableIds.slice();
-      if (state.dependentVariableIds.find((dependentVariableId) => dependentVariableId == action.dependentVariableId)) {
-        dependentVariableIds = dependentVariableIds.filter((dependentVariableId) => dependentVariableId != action.dependentVariableId);
+    case SELECT_COMPARISON_INDEPENDENT_VARIABLE:
+      var comparisonVariablesIds = state.comparisonVariablesIds.slice();
+      const selectedId = parseInt(action.comparisonIndependentVariableId);
+      if (state.comparisonVariablesIds.find((comparisonVariablesId) => comparisonVariablesId == selectedId)) {
+        comparisonVariablesIds = comparisonVariablesIds.filter((comparisonVariablesId) => comparisonVariablesId != selectedId);
       } else {
-        dependentVariableIds.push(action.dependentVariableId);
+        comparisonVariablesIds.push(selectedId);
       }
-      return { ...state, dependentVariableIds: dependentVariableIds};
+      return { ...state, comparisonVariablesIds: comparisonVariablesIds};
 
     case WIPE_PROJECT_STATE:
       return baseState;
