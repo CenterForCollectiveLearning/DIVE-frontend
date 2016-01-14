@@ -1,12 +1,14 @@
 import {
   SELECT_COMPARISON_AGGREGATION_VARIABLE,
   SELECT_COMPARISON_INDEPENDENT_VARIABLE,
+  RECEIVE_MAKE_COMPARISON,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
 const baseState = {
   aggregationVariableId: null,
-  comparisonVariablesIds: []
+  comparisonVariablesIds: [],
+  comparisonResult: null
 }
 
 export default function comparisonSelector(state = baseState, action) {
@@ -23,6 +25,8 @@ export default function comparisonSelector(state = baseState, action) {
         comparisonVariablesIds.push(selectedId);
       }
       return { ...state, comparisonVariablesIds: comparisonVariablesIds};
+    case RECEIVE_MAKE_COMPARISON:
+      return { ...state, comparisonResult: action.data};
 
     case WIPE_PROJECT_STATE:
       return baseState;
