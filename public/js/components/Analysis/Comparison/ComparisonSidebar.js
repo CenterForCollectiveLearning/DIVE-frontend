@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectComparisonVariable, selectAggregationVariable } from '../../../actions/ComparisonActions';
+import { selectComparisonVariable, selectAggregationVariable, selectAggregationFunction} from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
 
 import AnalysisSidebar from '../AnalysisSidebar';
@@ -49,13 +49,23 @@ export class ComparisonSidebar extends Component {
           </SidebarGroup>
         }
         { this.props.fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="aggregate on">
+          <SidebarGroup heading="Aggregate on">
             <DropDownMenu
               value={ this.props.comparisonSelector.aggregationVariableId }
               options={ this.props.fieldProperties.items.filter((item) => item.generalType == 'q') }
               valueMember="id"
               displayTextMember="name"
               onChange={ this.props.selectAggregationVariable}/>
+          </SidebarGroup>
+        }
+        { this.props.comparisonSelector.aggregationVariableId &&
+          <SidebarGroup heading="By">
+            <DropDownMenu
+              value={ this.props.comparisonSelector.aggregationFunction}
+              options={ [{'id':'SUM', 'name':'sum'}, {'id':'MEAN', 'name':'mean'}] }
+              valueMember="id"
+              displayTextMember="name"
+              onChange={ this.props.selectAggregationFunction}/>
           </SidebarGroup>
         }
 
@@ -81,4 +91,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectComparisonVariable, selectAggregationVariable })(ComparisonSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectComparisonVariable, selectAggregationVariable, selectAggregationFunction})(ComparisonSidebar);

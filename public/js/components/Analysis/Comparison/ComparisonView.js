@@ -13,9 +13,10 @@ export class ComparisonView extends Component {
     const { comparisonVariableNames, aggregationVariableName, aggregationFunction, runMakeComparison} = this.props;
     const comparisonVariablesChanged = nextProps.comparisonVariableNames.length != comparisonVariableNames.length;
     const aggregationVariableChanged = nextProps.aggregationVariableName != aggregationVariableName;
+    const aggregationFunctionChanged = nextProps.aggregationFunction != aggregationFunction
 
-    if (nextProps.projectId && nextProps.datasetId && (aggregationVariableChanged || comparisonVariablesChanged) && (nextProps.comparisonVariableNames.length == 2)) {
-      const aggregationList = nextProps.aggregationVariableName? [nextProps.aggregationVariableName, aggregationFunction] : null
+    if (nextProps.projectId && nextProps.datasetId && (aggregationVariableChanged || comparisonVariablesChanged || aggregationFunctionChanged) && (nextProps.comparisonVariableNames.length == 2)) {
+      const aggregationList = nextProps.aggregationVariableName? [nextProps.aggregationVariableName, nextProps.aggregationFunction] : null
       runMakeComparison(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.comparisonVariableNames);
     }
 
