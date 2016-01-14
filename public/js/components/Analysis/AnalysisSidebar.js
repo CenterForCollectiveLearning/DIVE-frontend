@@ -44,7 +44,7 @@ export class AnalysisSidebar extends Component {
         label: "Comparison",
         type: "comparison",
         selected: this.props.selectedTab == "comparison",
-        disabled: true
+        disabled: false
       }
     ];
 

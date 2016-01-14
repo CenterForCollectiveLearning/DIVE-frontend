@@ -27,32 +27,35 @@ export class ComparisonSidebar extends Component {
     }
   }
 
+
+
   render() {
     return (
       <AnalysisSidebar selectedTab="comparison">
         { this.props.fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Independent Variable">
+          <SidebarGroup heading="Dependent Variable">
             <DropDownMenu
-              value={ this.props.comparisonSelector.independentVariableId }
-              options={ this.props.fieldProperties.items }
+              value={ this.props.comparisonSelector.dependentVariableId }
+              options={ this.props.fieldProperties.items.filter((item) => item.generalType == 'q') }
               valueMember="id"
               displayTextMember="name"
-              onChange={ this.props.selectIndependentVariable }/>
+              onChange={ this.props.selectDependentVariable }/>
           </SidebarGroup>
         }
         { this.props.fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Dependent Variables">
+          <SidebarGroup heading="Independent Variables">
             <ToggleButtonGroup
               toggleItems={ this.props.fieldProperties.items.map((item) =>
                 new Object({
                   id: item.id,
-                  name: item.name
+                  name: item.name,
+                  disabled: (item.id == this.props.comparisonSelector.dependentVariableId || item.generalType == 'q')
                 })
               )}
               valueMember="id"
               displayTextMember="name"
-              externalSelectedItems={ this.props.comparisonSelector.dependentVariableIds }
-              onChange={ this.props.selectDependentVariable } />
+              externalSelectedItems={ this.props.comparisonSelector.independentVariableIds }
+              onChange={ this.props.selectIndependentVariable } />
           </SidebarGroup>
         }
       </AnalysisSidebar>
