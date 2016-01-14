@@ -32,8 +32,8 @@ export class ComparisonView extends Component {
     return (
       <div className={ styles.comparisonViewContainer }>
         <Card>
-          <HeaderBar header={ <span>Comparison Tables</span> } />
-          {this.props.comparisonResult}
+          <HeaderBar header={ <span>Comparison Table</span> } />
+          { this.props.comparisonResult }
         </Card>
       </div>
     );
