@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectIndependentVariable, selectDependentVariable } from '../../../actions/ComparisonActions';
+import { selectComparisonVariable, selectAggregationVariable } from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
 
 import AnalysisSidebar from '../AnalysisSidebar';
@@ -27,34 +27,38 @@ export class ComparisonSidebar extends Component {
     }
   }
 
+
+
   render() {
     return (
       <AnalysisSidebar selectedTab="comparison">
         { this.props.fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Independent Variable">
-            <DropDownMenu
-              value={ this.props.comparisonSelector.independentVariableId }
-              options={ this.props.fieldProperties.items }
-              valueMember="id"
-              displayTextMember="name"
-              onChange={ this.props.selectIndependentVariable }/>
-          </SidebarGroup>
-        }
-        { this.props.fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Dependent Variables">
+          <SidebarGroup heading="Comparison Variables">
             <ToggleButtonGroup
               toggleItems={ this.props.fieldProperties.items.map((item) =>
                 new Object({
                   id: item.id,
-                  name: item.name
+                  name: item.name,
+                  disabled: (item.id == this.props.comparisonSelector.aggregationVariableId || item.generalType == 'q')
                 })
               )}
               valueMember="id"
               displayTextMember="name"
-              externalSelectedItems={ this.props.comparisonSelector.dependentVariableIds }
-              onChange={ this.props.selectDependentVariable } />
+              externalSelectedItems={ this.props.comparisonSelector.comparisonVariablesIds }
+              onChange={ this.props.selectComparisonVariable } />
           </SidebarGroup>
         }
+        { this.props.fieldProperties.items.length != 0 &&
+          <SidebarGroup heading="aggregate on">
+            <DropDownMenu
+              value={ this.props.comparisonSelector.aggregationVariableId }
+              options={ this.props.fieldProperties.items.filter((item) => item.generalType == 'q') }
+              valueMember="id"
+              displayTextMember="name"
+              onChange={ this.props.selectAggregationVariable}/>
+          </SidebarGroup>
+        }
+
       </AnalysisSidebar>
     );
   }
@@ -77,4 +81,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, selectDependentVariable })(ComparisonSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectComparisonVariable, selectAggregationVariable })(ComparisonSidebar);
