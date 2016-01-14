@@ -5,6 +5,8 @@ import {
   RECEIVE_MAKE_COMPARISON
 } from '../constants/ActionTypes';
 
+import { fetch } from './api.js';
+
 export function selectComparisonVariable(selectedIndependentVariableId) {
   return {
     type: SELECT_COMPARISON_INDEPENDENT_VARIABLE,
@@ -29,7 +31,7 @@ function requestMakeComparisonDispatcher(datasetId) {
 
 function receiveMakeComparisonDispatcher(json) {
   return {
-    type: RECEIVE_MAKE_COMPARISON
+    type: RECEIVE_MAKE_COMPARISON,
     data: json,
     receivedAt: Date.now()
   };
