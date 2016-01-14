@@ -49,7 +49,7 @@ export class ComparisonSidebar extends Component {
           </SidebarGroup>
         }
         { this.props.fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="aggregate on">
+          <SidebarGroup heading="Aggregate on">
             <DropDownMenu
               value={ this.props.comparisonSelector.aggregationVariableId }
               options={ this.props.fieldProperties.items.filter((item) => item.generalType == 'q') }
@@ -59,10 +59,10 @@ export class ComparisonSidebar extends Component {
           </SidebarGroup>
         }
         { this.props.comparisonSelector.aggregationVariableId &&
-          <SidebarGroup heading="by">
+          <SidebarGroup heading="By">
             <DropDownMenu
               value={ this.props.comparisonSelector.aggregationFunction}
-              options={ [{'id':'SUM', 'name':'SUM'}, {'id':'MEAN', 'name':'MEAN'}] }
+              options={ [{'id':'SUM', 'name':'sum'}, {'id':'MEAN', 'name':'mean'}] }
               valueMember="id"
               displayTextMember="name"
               onChange={ this.props.selectAggregationFunction}/>
