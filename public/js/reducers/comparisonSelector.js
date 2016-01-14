@@ -8,7 +8,8 @@ import {
 const baseState = {
   aggregationVariableId: null,
   comparisonVariablesIds: [],
-  comparisonResult: null
+  comparisonResult: {},
+  aggregationFunction: 'SUM'
 }
 
 export default function comparisonSelector(state = baseState, action) {
