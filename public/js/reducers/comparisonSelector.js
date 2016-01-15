@@ -3,7 +3,8 @@ import {
   SELECT_COMPARISON_INDEPENDENT_VARIABLE,
   SELECT_COMPARISON_AGGREGATION_FUNCTION,
   RECEIVE_MAKE_COMPARISON,
-  WIPE_PROJECT_STATE
+  WIPE_PROJECT_STATE,
+  SELECT_DATASET
 } from '../constants/ActionTypes';
 
 const baseState = {
@@ -33,6 +34,8 @@ export default function comparisonSelector(state = baseState, action) {
       return { ...state, aggregationFunction: action.comparisonAggregationFunction};
 
     case WIPE_PROJECT_STATE:
+      return baseState;
+    case SELECT_DATASET:
       return baseState;
 
     default:
