@@ -2,6 +2,7 @@ import {
   SELECT_COMPARISON_AGGREGATION_VARIABLE,
   SELECT_COMPARISON_INDEPENDENT_VARIABLE,
   SELECT_COMPARISON_AGGREGATION_FUNCTION,
+  SELECT_COMPARISON_WEIGHT_VARIABLE,
   REQUEST_MAKE_COMPARISON,
   RECEIVE_MAKE_COMPARISON
 } from '../constants/ActionTypes';
@@ -20,6 +21,14 @@ export function selectAggregationVariable(selectedAggregationVariableId) {
   return {
     type: SELECT_COMPARISON_AGGREGATION_VARIABLE,
     comparisonAggregationVariableId: selectedAggregationVariableId,
+    selectedAt: Date.now()
+  }
+}
+
+export function selectComparisonWeightVariable(selectedWeightVariableId) {
+  return {
+    type: SELECT_COMPARISON_WEIGHT_VARIABLE,
+    comparisonWeightVariableId: selectedWeightVariableId,
     selectedAt: Date.now()
   }
 }

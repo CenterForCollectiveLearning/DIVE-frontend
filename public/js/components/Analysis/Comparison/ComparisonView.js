@@ -10,13 +10,14 @@ import HeaderBar from '../../Base/HeaderBar';
 
 export class ComparisonView extends Component {
   componentWillReceiveProps(nextProps) {
-    const { comparisonVariableNames, aggregationVariableName, aggregationFunction, runMakeComparison} = this.props;
+    const { comparisonVariableNames, aggregationVariableName, aggregationFunction, weightVariableName, runMakeComparison} = this.props;
     const comparisonVariablesChanged = nextProps.comparisonVariableNames.length != comparisonVariableNames.length;
     const aggregationVariableChanged = nextProps.aggregationVariableName != aggregationVariableName;
-    const aggregationFunctionChanged = nextProps.aggregationFunction != aggregationFunction
+    const aggregationFunctionChanged = nextProps.aggregationFunction != aggregationFunction;
+    const weightVariableChanged = nextProps.weightVariableName != weightVariableName;
 
-    if (nextProps.projectId && nextProps.datasetId && (aggregationVariableChanged || comparisonVariablesChanged || aggregationFunctionChanged) && (nextProps.comparisonVariableNames.length == 2)) {
-      const aggregationList = nextProps.aggregationVariableName? [nextProps.aggregationVariableName, nextProps.aggregationFunction] : null
+    if (nextProps.projectId && nextProps.datasetId && (aggregationVariableChanged || comparisonVariablesChanged || aggregationFunctionChanged || weightVariableChanged) && (nextProps.comparisonVariableNames.length == 2)) {
+      const aggregationList = nextProps.aggregationVariableName? [nextProps.aggregationVariableName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null
       runMakeComparison(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.comparisonVariableNames);
     }
 
@@ -52,12 +53,17 @@ function mapStateToProps(state) {
     .filter((property) => comparisonSelector.comparisonVariablesIds.indexOf(property.id) >= 0)
     .map((field) => field.name);
 
+  const weightVariable = fieldProperties.items.find((property) => property.id == comparisonSelector.weightVariableId);
+  const weightVariableName = weightVariable ? weightVariable.name : 'UNIFORM';
+
+
   return {
     projectId: project.properties.id,
     datasetId: datasetSelector.datasetId,
     comparisonResult: comparisonResult,
     aggregationVariableName: aggregationVariableName,
     aggregationFunction: comparisonSelector.aggregationFunction,
+    weightVariableName: weightVariableName,
     comparisonVariableNames: comparisonVariableNames
   };
 }

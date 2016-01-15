@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectComparisonVariable, selectAggregationVariable, selectAggregationFunction} from '../../../actions/ComparisonActions';
+import { selectComparisonVariable, selectAggregationVariable, selectAggregationFunction, selectComparisonWeightVariable} from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
 
 import AnalysisSidebar from '../AnalysisSidebar';
@@ -21,8 +21,9 @@ export class ComparisonSidebar extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = nextProps;
+    const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
 
-    if (project.properties.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
+    if (project.properties.id && datasetSelector.datasetId && datasetIdChanged && !fieldProperties.fetching) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId)
     }
   }
@@ -68,6 +69,16 @@ export class ComparisonSidebar extends Component {
               onChange={ this.props.selectAggregationFunction}/>
           </SidebarGroup>
         }
+        { this.props.comparisonSelector.aggregationFunction == 'MEAN' &&
+          <SidebarGroup heading="Weighted by:">
+            <DropDownMenu
+              value={ this.props.comparisonSelector.weightVariableId}
+              options={ [{'id':'UNIFORM', 'name':'uniform'}, ...this.props.fieldProperties.items.filter((item) => item.generalType == 'q')] }
+              valueMember="id"
+              displayTextMember="name"
+              onChange={ this.props.selectComparisonWeightVariable}/>
+          </SidebarGroup>
+        }
 
       </AnalysisSidebar>
     );
@@ -91,4 +102,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectComparisonVariable, selectAggregationVariable, selectAggregationFunction})(ComparisonSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectComparisonVariable, selectAggregationVariable, selectAggregationFunction, selectComparisonWeightVariable})(ComparisonSidebar);
