@@ -47,9 +47,9 @@ export class DatasetToolbar extends Component {
 
     return (
       <Toolbar rightActions=
-        { !isPreloadedProject && selectedDatasetId &&            
+        { !isPreloadedProject && selectedDatasetId &&
           <div className={ styles.rightActions }>
-            <RaisedButton icon={ true } onClick={ this.onSelectDeleteDataset }>
+            <RaisedButton icon={ true } onClick={ this.onClickDeleteDataset }>
               <i className="fa fa-trash"></i>
             </RaisedButton>
             <RaisedButton label="Reduce columns" onClick={ openColumnReductionModalAction }/>
