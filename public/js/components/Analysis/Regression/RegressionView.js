@@ -5,14 +5,18 @@ import { runRegression, getContributionToRSquared } from '../../../actions/Regre
 
 import styles from '../Analysis.sass';
 
-import DataGrid from '../../Base/DataGrid';
 import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
-import RegressionTableRow from './RegressionTableRow';
+import RegressionTable from './RegressionTable';
 
 import ColumnChart from '../../Visualizations/Charts/ColumnChart';
 
 export class RegressionView extends Component {
+  constructor(props) {
+    super(props);
+
+    this.getRoundedString = this.getRoundedString.bind(this);
+  }
 
   componentWillReceiveProps(nextProps) {
     const { dependentVariableName, independentVariableNames, runRegression, getContributionToRSquared } = this.props;
@@ -28,6 +32,16 @@ export class RegressionView extends Component {
     }
   }
 
+  getRoundedString(num, decimalPlaces=3) {
+    if (num) {
+      return Math.abs(parseFloat(num)) >=1 ?
+        +parseFloat(num).toPrecision(decimalPlaces) :
+        +parseFloat(num).toFixed(decimalPlaces);
+    }
+
+    return '';
+  }
+
   render() {
     const { regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames } = this.props;
 
@@ -37,68 +51,6 @@ export class RegressionView extends Component {
       );
     }
 
-    const allRegressedFields = regressionResult.fields.map(function (field){
-      if (!field.values) {
-        // numeric
-        return { ...field, formattedName: field.name, enabled: true };
-
-      } else if (field.values.length == 1) {
-        // categorical binary
-        return { name: field.name, formattedName: `${ field.name }: ${ field.values[0] }`, enabled: true };
-
-      } else { 
-        // categorical fixed effects
-        return { ...field, formattedName: field.name, enabled: false };
-
-      }
-    });
-
-    const data = [
-      {
-        type: 'tableHeader',
-        size: regressionResult.numColumns
-      },
-      ...allRegressedFields.map(function (field) {
-        return new Object({
-          type: 'dataRow',
-          field: field.formattedName,
-          items: regressionResult.regressionsByColumn.map(function (column) {
-            return { ...field, property: column.regression.propertiesByField.find((property) => property.baseField == field.name) }
-          })
-        })
-      }),
-      {
-        type: 'footerRow',
-        field: 'rSquared',
-        formattedField: '<div class="cmu">R<sup>2</sup></div>',
-        items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.rSquared)
-      },
-      {
-        type: 'footerRow',
-        field: 'rSquaredAdjusted',
-        formattedField: '<div class="cmu">R</div><sup class="cmu">2</sup>',
-        items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.rSquaredAdj)
-      },
-      {
-        type: 'footerRow',
-        field: 'fTest',
-        formattedField: '<em class="cmu">F</em>',
-        items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.fTest)
-      },
-      {
-        type: 'footerRow',
-        field: 'aic',
-        formattedField: '<div class="cmu">AIC</div>',
-        items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.aic)
-      },
-      {
-        type: 'footerRow',
-        field: 'bic',
-        formattedField: '<div class="cmu">BIC</div>',
-        items: regressionResult.regressionsByColumn.map((column) => column.columnProperties.bic)
-      }
-    ];
-
     var options = {
       backgroundColor: 'transparent',
       headerColor: 'white',
@@ -107,16 +59,6 @@ export class RegressionView extends Component {
       width: 600,
       legend: { position: 'none' },
       orientation: 'vertical',
-    };
-
-    const getRoundedString = function (num, decimalPlaces=3) {
-      if (num) {
-        return num >=1 ?
-          +parseFloat(num).toFixed(decimalPlaces) :
-          +parseFloat(num).toPrecision(decimalPlaces);
-      }
-
-      return '';
     };
 
     const regressedIndependentVariableNames = independentVariableNames.length == 0 ?
@@ -134,7 +76,7 @@ export class RegressionView extends Component {
     const sortedRSquaredAdjusted = regressionResult.regressionsByColumn
       .map((column, i) => new Object({ index: `(${ i + 1 })`, value: column.columnProperties.rSquaredAdj }))
       .sort((a, b) => (a.value >= b.value) ? (a.value > b.value ? -1 : 0) : 1)
-      .map((obj) => new Object({ ...obj, value: getRoundedString(obj.value)}));
+      .map((obj) => new Object({ ...obj, value: this.getRoundedString(obj.value)}));
 
     const rSquaredAdjustedStrings = {
       highest: sortedRSquaredAdjusted[0],
@@ -144,7 +86,7 @@ export class RegressionView extends Component {
     const sortedContributionToRSquared = contributionToRSquared.slice(1)
       .map((row) => new Object({ name: row[0], value: row[1] }))
       .sort((a, b) => (a.value >= b.value) ? (a.value > b.value ? -1 : 0) : 1)
-      .map((obj) => new Object({ ...obj, value: getRoundedString(obj.value)}));
+      .map((obj) => new Object({ ...obj, value: this.getRoundedString(obj.value)}));
 
     const contributionToRSquaredStrings = {
       highest: sortedContributionToRSquared[0],
@@ -165,9 +107,7 @@ export class RegressionView extends Component {
         <Card>
           <HeaderBar header={ <span>Cascading Linear Regressions of <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> } />
 
-          <div className={ styles.grid }>
-            <DataGrid data={ data } customRowComponent={ RegressionTableRow }/>
-          </div>
+          <RegressionTable regressionResult={ regressionResult }/>
 
           <div className={ styles.summary }>
             <div className={ styles.summaryColumn }>
