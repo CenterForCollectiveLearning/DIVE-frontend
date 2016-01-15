@@ -35,7 +35,7 @@ function receiveDatasetsDispatcher(projectId, json) {
   };
 }
 
-function deleteDatasetsDispatcher() {
+function deleteDatasetDispatcher() {
   return {
     type: DELETE_DATASETS
   };
@@ -167,7 +167,7 @@ function requestPivotDatasetColumnsDispatcher(datasetId, variableName, valueName
     columnIds: columnIds,
     variableName: variableName,
     valueName: valueName
-  };  
+  };
 }
 
 export function pivotDatasetColumns(projectId, datasetId, variableName, valueName, columnIds=[]) {
@@ -197,7 +197,7 @@ function requestMergeDatasetsDispatcher(leftDatasetId, rightDatasetId, onColumns
     rightDatasetId: rightDatasetId,
     onColumnsIds: onColumnsIds,
     mergeMethod: mergeMethod
-  };  
+  };
 }
 
 export function mergeDatasets(projectId, leftDatasetId, rightDatasetId, onColumnsIds=[], mergeMethod='left') {
