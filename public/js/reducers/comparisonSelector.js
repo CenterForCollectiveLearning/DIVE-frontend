@@ -2,6 +2,7 @@ import {
   SELECT_COMPARISON_AGGREGATION_VARIABLE,
   SELECT_COMPARISON_INDEPENDENT_VARIABLE,
   SELECT_COMPARISON_AGGREGATION_FUNCTION,
+  SELECT_COMPARISON_WEIGHT_VARIABLE,
   RECEIVE_MAKE_COMPARISON,
   WIPE_PROJECT_STATE,
   SELECT_DATASET
@@ -11,7 +12,8 @@ const baseState = {
   aggregationVariableId: null,
   comparisonVariablesIds: [],
   comparisonResult: {},
-  aggregationFunction: 'SUM'
+  aggregationFunction: 'SUM',
+  weightVariableId: 'UNIFORM'
 }
 
 export default function comparisonSelector(state = baseState, action) {
@@ -32,7 +34,8 @@ export default function comparisonSelector(state = baseState, action) {
       return { ...state, comparisonResult: action.data};
     case SELECT_COMPARISON_AGGREGATION_FUNCTION:
       return { ...state, aggregationFunction: action.comparisonAggregationFunction};
-
+    case SELECT_COMPARISON_WEIGHT_VARIABLE:
+      return { ...state, weightVariableId: action.comparisonWeightVariableId }
     case WIPE_PROJECT_STATE:
       return baseState;
     case SELECT_DATASET:
