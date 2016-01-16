@@ -67,10 +67,12 @@ export default class BareDataGrid extends Component {
           }
           { !this.state.loading &&
             <div className={ styles.innerGrid }>
-              { data.map((row) =>
-                <Row className={ row.rowClass }>{ row.items.map((column) =>
-                  <Column className={ row.columnClass }>{ column }</Column>
-                )}</Row>
+              { data.map((row, i) =>
+                <Row key={ `${ row.rowClass }-${ i }`} className={ row.rowClass }>{
+                  row.items.map((column, j) =>
+                    <Column key={ `${ row.rowClass }-${ i }-${ row.columnClass }-${ j }`} className={ row.columnClass }>{ column }</Column>
+                  )
+                }</Row>
               )}
             </div>
           }
