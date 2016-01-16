@@ -25,10 +25,12 @@ export default class ComparisonTable extends Component {
   }
 
   render() {
-    const { comparisonResult } = this.props;
+    const { comparisonResult, comparisonVariableNames } = this.props;
     const context = this;
 
+    console.log(styles, styles.gridWithRowFieldlabel)
     console.log('Comparison Rows', comparisonResult.rows)
+    console.log('Comparison Variable Names', comparisonVariableNames)
     const data = [
       {
         rowClass: styles.tableHeaderRow,
@@ -44,16 +46,27 @@ export default class ComparisonTable extends Component {
       })
     ];
 
-
+    if (comparisonResult.columnTotals) {
+      data.push({
+        rowClass: styles.footerRow,
+        columnClass: styles.footerColumn,
+        items: [ 'Column Totals', ...comparisonResult.columnTotals.map((v) => <div className={ styles.tableCell }>{ v }</div>) ]
+      })
+    }
 
     return (
-      <div className={ styles.regressionTable }>
-        <BareDataGrid data={ data }/>
+      <div className={ styles.comparisonTable }>
+        <div className={ styles.columnFieldLabel }>{ comparisonVariableNames[0] }</div>
+        <div className={ styles.gridWithRowFieldLabel }>
+          <div className={ styles.rowFieldLabel }>{ comparisonVariableNames[1] }</div>
+          <BareDataGrid data={ data }/>
+        </div>
       </div>
     );
   }
 }
 
 ComparisonTable.propTypes = {
-  comparisonResult: PropTypes.object.isRequired
+  comparisonResult: PropTypes.object.isRequired,
+  comparisonVariableNames: PropTypes.array.isRequired,
 }

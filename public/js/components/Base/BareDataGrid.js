@@ -23,6 +23,7 @@ export default class BareDataGrid extends Component {
     const { data, id, tableClassName, containerClassName } = this.props;
 
     const columnWidth = 200;
+
     const nColumns = data.length ? data[0].items.length : 0;
     const Column = React.createClass({
       getDefaultProps: function() {
