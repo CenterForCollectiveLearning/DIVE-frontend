@@ -57,7 +57,6 @@ function mapStateToProps(state) {
   const weightVariable = fieldProperties.items.find((property) => property.id == comparisonSelector.weightVariableId);
   const weightVariableName = weightVariable ? weightVariable.name : 'UNIFORM';
 
-
   return {
     projectId: project.properties.id,
     datasetId: datasetSelector.datasetId,
@@ -69,4 +68,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { runMakeComparison})(ComparisonView);
+export default connect(mapStateToProps, { runMakeComparison })(ComparisonView);

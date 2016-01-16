@@ -5,32 +5,10 @@ import styles from '../Analysis.sass';
 import BareDataGrid from '../../Base/BareDataGrid';
 
 export default class ComparisonTable extends Component {
-  constructor(props) {
-    super(props);
-
-    this.getRoundedString = this.getRoundedString.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps) {
-  }
-
-  getRoundedString(num, decimalPlaces=3) {
-    if (num) {
-      return Math.abs(parseFloat(num)) >=1 ?
-        +parseFloat(num).toPrecision(decimalPlaces) :
-        +parseFloat(num).toFixed(decimalPlaces);
-    }
-
-    return '';
-  }
 
   render() {
     const { comparisonResult, comparisonVariableNames } = this.props;
-    const context = this;
 
-    console.log(styles, styles.gridWithRowFieldlabel)
-    console.log('Comparison Rows', comparisonResult.rows)
-    console.log('Comparison Variable Names', comparisonVariableNames)
     const data = [
       {
         rowClass: styles.tableHeaderRow,
