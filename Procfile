@@ -1,1 +1,1 @@
-web: npm run build-env && DEBUG=true node server.js
+web: npm run build && node server.js
