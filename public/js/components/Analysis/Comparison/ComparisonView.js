@@ -7,6 +7,7 @@ import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
+import ComparisonTable from './ComparisonTable';
 
 export class ComparisonView extends Component {
   componentWillReceiveProps(nextProps) {
@@ -25,7 +26,7 @@ export class ComparisonView extends Component {
   render() {
     const { comparisonResult, comparisonVariableNames} = this.props;
 
-    if (!(comparisonVariableNames.length == 2) || !(comparisonResult.result) || !(comparisonResult.result.row) || comparisonResult.result.row.length == 0) {
+    if (!(comparisonVariableNames.length == 2) || !comparisonResult || !(comparisonResult.rows) || comparisonResult.rows.length == 0) {
       return (
         <div></div>
       );
@@ -35,7 +36,7 @@ export class ComparisonView extends Component {
       <div className={ styles.comparisonViewContainer }>
         <Card>
           <HeaderBar header={ <span>Comparison Table</span> } />
-          { this.props.comparisonResult }
+          <ComparisonTable comparisonResult={ comparisonResult }/>
         </Card>
       </div>
     );
