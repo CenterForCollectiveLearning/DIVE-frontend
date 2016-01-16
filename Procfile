@@ -1,1 +1,1 @@
-web: npm run build-env && node server.js
+web: node buildenv && node server.js
