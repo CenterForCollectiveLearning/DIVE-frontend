@@ -23,6 +23,8 @@ export default class BareDataGrid extends Component {
     const { data, id, tableClassName, containerClassName } = this.props;
 
     const columnWidth = 200;
+    const minimumColumnWidth = 50;
+
     const nColumns = data.length ? data[0].items.length : 0;
     const Column = React.createClass({
       getDefaultProps: function() {
@@ -30,7 +32,7 @@ export default class BareDataGrid extends Component {
       },
       render: function() {
         return (
-          <div style={{ 'width': `${ 100/nColumns }%`, minWidth: `${ 100/nColumns }%`, 'maxWidth': `${ 100/nColumns }%` }} className={ styles.column + ' ' + this.props.className }>{ this.props.children }</div>
+          <div style={{ 'width': `${ 100/nColumns }%`, minWidth: minimumColumnWidth, 'maxWidth': `${ 100/nColumns }%` }} className={ styles.column + ' ' + this.props.className }>{ this.props.children }</div>
         );
       }
     });
@@ -65,10 +67,12 @@ export default class BareDataGrid extends Component {
           }
           { !this.state.loading &&
             <div className={ styles.innerGrid }>
-              { data.map((row) =>
-                <Row className={ row.rowClass }>{ row.items.map((column) =>
-                  <Column className={ row.columnClass }>{ column }</Column>
-                )}</Row>
+              { data.map((row, i) =>
+                <Row key={ `${ row.rowClass }-${ i }`} className={ row.rowClass }>{
+                  row.items.map((column, j) =>
+                    <Column key={ `${ row.rowClass }-${ i }-${ row.columnClass }-${ j }`} className={ row.columnClass }>{ column }</Column>
+                  )
+                }</Row>
               )}
             </div>
           }

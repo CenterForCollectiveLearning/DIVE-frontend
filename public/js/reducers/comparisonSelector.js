@@ -1,29 +1,44 @@
 import {
+  SELECT_COMPARISON_AGGREGATION_VARIABLE,
   SELECT_COMPARISON_INDEPENDENT_VARIABLE,
-  SELECT_COMPARISON_DEPENDENT_VARIABLE,
-  WIPE_PROJECT_STATE
+  SELECT_COMPARISON_AGGREGATION_FUNCTION,
+  SELECT_COMPARISON_WEIGHT_VARIABLE,
+  RECEIVE_MAKE_COMPARISON,
+  WIPE_PROJECT_STATE,
+  SELECT_DATASET
 } from '../constants/ActionTypes';
 
 const baseState = {
-  independentVariableId: null,
-  dependentVariableIds: []
+  aggregationVariableId: null,
+  comparisonVariablesIds: [],
+  comparisonResult: {},
+  aggregationFunction: 'SUM',
+  weightVariableId: 'UNIFORM'
 }
 
 export default function comparisonSelector(state = baseState, action) {
   switch (action.type) {
+    case SELECT_COMPARISON_AGGREGATION_VARIABLE:
+      return { ...state, aggregationVariableId: action.comparisonAggregationVariableId };
+
     case SELECT_COMPARISON_INDEPENDENT_VARIABLE:
-      return { ...state, independentVariableId: action.independentVariableId };
-
-    case SELECT_COMPARISON_DEPENDENT_VARIABLE:
-      var dependentVariableIds = state.dependentVariableIds.slice();
-      if (state.dependentVariableIds.find((dependentVariableId) => dependentVariableId == action.dependentVariableId)) {
-        dependentVariableIds = dependentVariableIds.filter((dependentVariableId) => dependentVariableId != action.dependentVariableId);
+      var comparisonVariablesIds = state.comparisonVariablesIds.slice();
+      const selectedId = parseInt(action.comparisonIndependentVariableId);
+      if (state.comparisonVariablesIds.find((comparisonVariablesId) => comparisonVariablesId == selectedId)) {
+        comparisonVariablesIds = comparisonVariablesIds.filter((comparisonVariablesId) => comparisonVariablesId != selectedId);
       } else {
-        dependentVariableIds.push(action.dependentVariableId);
+        comparisonVariablesIds.push(selectedId);
       }
-      return { ...state, dependentVariableIds: dependentVariableIds};
-
+      return { ...state, comparisonVariablesIds: comparisonVariablesIds};
+    case RECEIVE_MAKE_COMPARISON:
+      return { ...state, comparisonResult: action.data};
+    case SELECT_COMPARISON_AGGREGATION_FUNCTION:
+      return { ...state, aggregationFunction: action.comparisonAggregationFunction};
+    case SELECT_COMPARISON_WEIGHT_VARIABLE:
+      return { ...state, weightVariableId: action.comparisonWeightVariableId }
     case WIPE_PROJECT_STATE:
+      return baseState;
+    case SELECT_DATASET:
       return baseState;
 
     default:

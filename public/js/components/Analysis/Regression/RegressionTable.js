@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 
 import styles from '../Analysis.sass';
@@ -54,7 +55,7 @@ export default class RegressionTable extends Component {
         // categorical binary
         return { name: field.name, formattedName: `${ field.name }: ${ field.values[0] }`, enabled: true };
 
-      } else { 
+      } else {
         // categorical fixed effects
         return { ...field, formattedName: field.name, enabled: false };
 
@@ -157,5 +158,3 @@ export default class RegressionTable extends Component {
 RegressionTable.propTypes = {
   regressionResult: PropTypes.object.isRequired
 }
-
-

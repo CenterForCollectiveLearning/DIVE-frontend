@@ -19,9 +19,9 @@
   display: flex
   justify-content: center
 
-.regressionTable
+.regressionTable, .comparisonTable
   margin: 10px
-  border-bottom: 1px solid #d8d8d8
+
 
 .summary
   display: flex
@@ -160,8 +160,6 @@
       .cell
         font-size: 13px
 
-
-
   .footerRow
     border-top-width: 2px
 
@@ -170,3 +168,26 @@
 
     .column
       background-color: #FBFBFB
+
+.comparisonTable
+
+  .columnFieldLabel, .rowFieldLabel
+    font-size: 14px
+    color: #333
+    font-weight: 500
+
+  .columnFieldLabel
+    display: flex
+    align-items: center
+    justify-content: center
+    margin-bottom: 5px
+
+  .gridWithRowFieldLabel
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: center
+
+  .rowFieldLabel
+    transform: rotate(-90deg)
+    max-width: 30px
