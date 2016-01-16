@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 
 import styles from '../Analysis.sass';
