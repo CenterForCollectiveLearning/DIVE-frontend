@@ -10,7 +10,7 @@ import {
 } from '../constants/ActionTypes';
 
 const baseState = {
-  aggregationVariableId: null,
+  aggregationVariableId: 'count',
   comparisonVariablesIds: [],
   comparisonResult: {},
   oneDimensionComparisonResult: {},
