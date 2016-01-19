@@ -4,7 +4,9 @@ import {
   SELECT_COMPARISON_AGGREGATION_FUNCTION,
   SELECT_COMPARISON_WEIGHT_VARIABLE,
   REQUEST_MAKE_COMPARISON,
-  RECEIVE_MAKE_COMPARISON
+  RECEIVE_MAKE_COMPARISON,
+  REQUEST_MAKE_ONE_D_COMPARISON,
+  RECEIVE_MAKE_ONE_D_COMPARISON
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
@@ -60,7 +62,7 @@ export function runMakeComparison(projectId, datasetId, aggregationVariable, com
     projectId: projectId,
     spec: {
       datasetId: datasetId,
-      numericalDependentVariable: aggregationVariable,
+      dependentVariable: aggregationVariable,
       categoricalIndependentVariableNames: comparisonVariables
     }
   }
@@ -73,6 +75,42 @@ export function runMakeComparison(projectId, datasetId, aggregationVariable, com
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
       .then(json => dispatch(receiveMakeComparisonDispatcher(json)))
+      .catch(err => console.error("Error creating contingency table: ", err));
+  };
+}
+
+function requestMakeOneDComparisonDispatcher(datasetId) {
+  return {
+    type: REQUEST_MAKE_ONE_D_COMPARISON
+  };
+}
+
+function receiveMakeOneDComparisonDispatcher(json) {
+  return {
+    type: RECEIVE_MAKE_ONE_D_COMPARISON,
+    data: json,
+    receivedAt: Date.now()
+  };
+}
+
+export function runMakeComparisonOneDimensional(projectId, datasetId, aggregationVariable, comparisonVariables) {
+  const params = {
+    projectId: projectId,
+    spec: {
+      datasetId: datasetId,
+      dependentVariable: aggregationVariable,
+      categoricalIndependentVariableName: comparisonVariables[0]
+    }
+  }
+
+  return (dispatch) => {
+    dispatch(requestMakeOneDComparisonDispatcher());
+    return fetch('/statistics/v1/one_dimensional_contingency_table', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+      .then(json => dispatch(receiveMakeOneDComparisonDispatcher(json)))
       .catch(err => console.error("Error creating contingency table: ", err));
   };
 }
