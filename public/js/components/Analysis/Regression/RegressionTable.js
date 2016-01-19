@@ -4,26 +4,16 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Analysis.sass';
 
 import BareDataGrid from '../../Base/BareDataGrid';
+import { getRoundedString } from '../../../helpers/helpers';
 
 export default class RegressionTable extends Component {
   constructor(props) {
     super(props);
 
-    this.getRoundedString = this.getRoundedString.bind(this);
     this.getCoefficientString = this.getCoefficientString.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-  }
-
-  getRoundedString(num, decimalPlaces=3) {
-    if (num) {
-      return Math.abs(parseFloat(num)) >=1 ?
-        +parseFloat(num).toPrecision(decimalPlaces) :
-        +parseFloat(num).toFixed(decimalPlaces);
-    }
-
-    return '';
   }
 
   getCoefficientString(coefficient, pValue, enabled) {
@@ -39,7 +29,7 @@ export default class RegressionTable extends Component {
     } else if (pValue < 0.1) {
       pValueString = ''
     }
-    return this.getRoundedString(coefficient) + pValueString;
+    return getRoundedString(coefficient) + pValueString;
   }
 
   render() {
@@ -63,7 +53,7 @@ export default class RegressionTable extends Component {
     });
 
 
-    const renderDataColumn = function(context, property, enabled) {
+    const renderDataColumn = function(property, enabled) {
       return (
         <div>
           <div className={ styles.dataCell + ' ' + styles.coefficient }>
@@ -71,7 +61,7 @@ export default class RegressionTable extends Component {
           </div>
           { enabled &&
             <div className={ styles.dataCell + ' ' + styles.standardError }>
-              ({ context.getRoundedString(property.standardError) })
+              ({ getRoundedString(property.standardError) })
             </div>
           }
         </div>
@@ -91,7 +81,7 @@ export default class RegressionTable extends Component {
           items: [ field.formattedName, ...regressionResult.regressionsByColumn.map(function (column) {
             const property = column.regression.propertiesByField.find((property) => property.baseField == field.name);
             if (!property) return '';
-            return (renderDataColumn(context, property, field.enabled));
+            return (renderDataColumn(property, field.enabled));
           }) ]
         })
       }),
@@ -101,7 +91,7 @@ export default class RegressionTable extends Component {
         items: [
           <div className={ styles.rSquared }><div className={ styles.r }>R<sup>2</sup></div></div>,
           ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ this.getRoundedString(column.columnProperties.rSquared) }</div>
+            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.rSquared) }</div>
           )
         ]
       },
@@ -111,7 +101,7 @@ export default class RegressionTable extends Component {
         items: [
           <div className={ styles.rSquaredAdjust }><div className={ styles.r }>R</div><sup className="cmu">2</sup></div>,
           ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ this.getRoundedString(column.columnProperties.rSquaredAdj) }</div>
+            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.rSquaredAdj) }</div>
           )
         ]
       },
@@ -121,7 +111,7 @@ export default class RegressionTable extends Component {
         items: [
           <em className="cmu">F</em>,
           ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ this.getRoundedString(column.columnProperties.fTest) }</div>
+            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.fTest) }</div>
           )
         ]
       },
@@ -131,7 +121,7 @@ export default class RegressionTable extends Component {
         items: [
           <div className="cmu">AIC</div>,
           ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ this.getRoundedString(column.columnProperties.aic) }</div>
+            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.aic) }</div>
           )
         ]
       },
@@ -141,7 +131,7 @@ export default class RegressionTable extends Component {
         items: [
           <div className="cmu">BIC</div>,
           ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ this.getRoundedString(column.columnProperties.bic) }</div>
+            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.bic) }</div>
           )
         ]
       }

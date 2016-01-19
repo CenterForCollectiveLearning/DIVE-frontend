@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Analysis.sass';
 
 import BareDataGrid from '../../Base/BareDataGrid';
+import { getRoundedString } from '../../../helpers/helpers';
 
 export default class ComparisonTable extends Component {
 
@@ -13,13 +14,13 @@ export default class ComparisonTable extends Component {
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
-        items: [ '', ...comparisonResult.columnHeaders.map((e) => <div className={ styles.tableCell }>{ e }</div>) ]
+        items: [ '', ...comparisonResult.columnHeaders.map((column) => <div className={ styles.dataCell }>{ column }</div>) ]
       },
-      ...comparisonResult.rows.map(function(row_object) {
+      ...comparisonResult.rows.map(function(row) {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
-          items: [ row_object.field, ...row_object.values.map((v) => <div className={ styles.tableCell }>{ v }</div>) ]
+          items: [ row.field, ...row.values.map((column) => <div className={ styles.dataCell }>{ getRoundedString(column, 2, true) }</div>) ]
         })
       })
     ];
