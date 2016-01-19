@@ -103,6 +103,14 @@ export class GallerySidebar extends Component {
               selectMenuItem={ selectFieldPropertyValue }
               onChange={ this.clickFieldProperty } />
             <ToggleButtonGroup
+              toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 't') }
+              displayTextMember="name"
+              valueMember="id"
+              splitMenuItemsMember="aggregations"
+              separated={ true }
+              selectMenuItem={ selectAggregationFunction }
+              onChange={ this.clickFieldProperty } />
+            <ToggleButtonGroup
               toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 'q') }
               displayTextMember="name"
               valueMember="id"

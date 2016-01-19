@@ -50,7 +50,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
 
   const cFieldProperties = json.fieldProperties
     .filter((property) => property.generalType == 'c')
-    .map((property) => 
+    .map((property) =>
       new Object({
         ...property,
         selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
@@ -64,9 +64,20 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
       })
     );
 
+    const tFieldProperties = json.fieldProperties
+      .filter((property) => property.generalType == 't')
+      .map((property) =>
+        new Object({
+          ...property,
+          selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
+          aggregations: AGGREGATIONS
+        })
+      );
+
+
   const qFieldProperties = json.fieldProperties
     .filter((property) => property.generalType == 'q')
-    .map((property) => 
+    .map((property) =>
       new Object({
         ...property,
         selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
@@ -79,7 +90,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
     type: RECEIVE_FIELD_PROPERTIES,
     projectId: projectId,
     datasetId: datasetId,
-    fieldProperties: [ ...cFieldProperties, ...qFieldProperties ],
+    fieldProperties: [ ...cFieldProperties, ...tFieldProperties, ...qFieldProperties ],
     receivedAt: Date.now()
   };
 }
@@ -130,7 +141,7 @@ export function selectAggregationFunction(selectedFieldPropertyId, selectedField
     type: SELECT_AGGREGATION_FUNCTION,
     selectedFieldPropertyId: selectedFieldPropertyId,
     selectedFieldPropertyValueId: selectedFieldPropertyValueId
-  }  
+  }
 }
 
 function requestSetFieldTypeDispatcher(projectId, fieldId, fieldType) {
@@ -138,14 +149,14 @@ function requestSetFieldTypeDispatcher(projectId, fieldId, fieldType) {
     type: REQUEST_SET_FIELD_TYPE,
     fieldId: fieldId,
     fieldType: fieldType
-  };  
+  };
 }
 
 function receiveSetFieldTypeDispatcher(fieldProperty) {
   return {
     type: RECEIVE_SET_FIELD_TYPE,
     fieldProperty: fieldProperty
-  };  
+  };
 }
 
 export function setFieldType(projectId, fieldId, fieldType) {
@@ -162,6 +173,5 @@ export function setFieldType(projectId, fieldId, fieldType) {
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
       .then(json => dispatch(receiveSetFieldTypeDispatcher(json)));
-  };  
+  };
 }
-
