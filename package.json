@@ -54,8 +54,8 @@
     "webpack-dev-server": "^1.11.0"
   },
   "scripts": {
-    "start": "npm run build-env && DEBUG=true node server.js",
-    "build-env": "node buildenv",
+    "postinstall": "webpack --config ./webpack-production.config.js --progress --colors",
+    "start": "node server.js",
     "build": "webpack -p",
     "deploy": "npm run build && divshot push"
   },

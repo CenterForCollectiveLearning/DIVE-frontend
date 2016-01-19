@@ -1,3 +1,4 @@
+var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -5,31 +6,21 @@ var devFlagPlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.DEBUG || 'false'))
 });
 
-function getEntrySources(sources) {
-  if (process.env.NODE_ENV !== 'production') {
-    sources.push('webpack-dev-server/client?http://localhost:3009')
-    sources.push('webpack/hot/only-dev-server')
-  }
-  return sources;
-}
-
 module.exports = {
-  entry: getEntrySources([
-      './public/js/index.js',
-      './public/css/app.css'
-  ]),
+  devtool: 'source-map',
+  entry: [
+    './public/js/index.js',
+    './public/css/app.css'
+  ],
   output: {
-    path: __dirname + '/public',
-    publicPath: '/',
-    filename: 'bundle.js',
-    hot: true
+    path: path.join(__dirname, 'public'),
+    publicPath: '/public/',
+    filename: 'bundle.js'
   },
   externals: {
     plottable: "Plottable"
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
     devFlagPlugin,
     new ExtractTextPlugin('app.css')
   ],
