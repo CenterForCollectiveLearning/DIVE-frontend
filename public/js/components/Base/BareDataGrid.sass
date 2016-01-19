@@ -6,13 +6,16 @@
   flex-grow: 1
 
 .gridContainer
-  border-bottom: 1px solid #d8d8d8
+  border: 1px solid #d8d8d8
+  max-width: 100%
+  overflow: scroll
 
 .column
   display: flex
   flex-direction: column
   flex-grow: 1
   flex-basis: 0
+  min-width: 105px
 
   overflow: hidden
   align-items: center
@@ -20,13 +23,21 @@
   text-align: center
   padding: 4px
 
-  border-right: 1px solid #D8D8D8
+  border: 1px solid #D8D8D8
+  border-bottom-width: 0
+  border-right-width: 0
   word-break: break-word
+
+  &:first-child
+    border-left-width: 0px
 
 .row
   display: flex
   flex-grow: 1
   flex-direction: row
-  border: 1px solid #D8D8D8
-  border-bottom-width: 0
-  border-right-width: 0
+
+  &:first-child
+    .column
+      border-top-width: 0px
+
+
