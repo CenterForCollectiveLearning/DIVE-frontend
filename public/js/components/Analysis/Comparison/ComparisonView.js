@@ -35,7 +35,7 @@ export class ComparisonView extends Component {
     return (
       <div className={ styles.comparisonViewContainer }>
         <Card>
-          <HeaderBar header={ <span>Comparison Table</span> } />
+          <HeaderBar header={ <span>Comparison Table Test</span> } />
           <ComparisonTable comparisonResult={ comparisonResult } comparisonVariableNames={ comparisonVariableNames }/>
         </Card>
       </div>
