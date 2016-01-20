@@ -24,11 +24,11 @@ export default class ComparisonTableOneD extends Component {
       })
     ];
 
-    if (comparisonResult.columnTotals) {
+    if (comparisonResult.columnTotal) {
       data.push({
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
-        items: [ 'Column Totals', ...comparisonResult.columnTotals.map((v) => <div className={ styles.tableCell }>{ v }</div>) ]
+        items: [ 'Column Total',  <div className={ styles.tableCell }>{ comparisonResult.columnTotal }</div> ]
       })
     }
 
