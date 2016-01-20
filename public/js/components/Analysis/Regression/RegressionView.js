@@ -7,16 +7,10 @@ import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
-import RegressionTable from './RegressionTable';
-
-import ColumnChart from '../../Visualizations/Charts/ColumnChart';
+import RegressionTableCard from './RegressionTableCard';
+import ContributionToRSquaredCard from './ContributionToRSquaredCard';
 
 export class RegressionView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.getRoundedString = this.getRoundedString.bind(this);
-  }
 
   componentWillReceiveProps(nextProps) {
     const { dependentVariableName, independentVariableNames, runRegression, getContributionToRSquared } = this.props;
@@ -32,16 +26,6 @@ export class RegressionView extends Component {
     }
   }
 
-  getRoundedString(num, decimalPlaces=3) {
-    if (num) {
-      return Math.abs(parseFloat(num)) >=1 ?
-        +parseFloat(num).toPrecision(decimalPlaces) :
-        +parseFloat(num).toFixed(decimalPlaces);
-    }
-
-    return '';
-  }
-
   render() {
     const { regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames } = this.props;
 
@@ -51,103 +35,16 @@ export class RegressionView extends Component {
       );
     }
 
-    var options = {
-      backgroundColor: 'transparent',
-      headerColor: 'white',
-      headerHeight: 0,
-      height: 300,
-      width: 600,
-      legend: { position: 'none' },
-      orientation: 'vertical',
-    };
-
-    const regressedIndependentVariableNames = independentVariableNames.length == 0 ?
-      regressionResult.fields.map((field) => field.name)
-      : independentVariableNames;
-
-    const independentVariableNamesString = regressedIndependentVariableNames.length > 1 ?
-      regressedIndependentVariableNames
-        .map((name) => <strong>{ name }</strong>)
-        .reduce((previousValue, currentValue, index, array) =>
-          <span><span>{ previousValue }</span><span>{ (index == array.length - 1 ? ', and ' : ', ') }</span><span>{ currentValue }</span></span>
-        )
-      : <strong>{ regressedIndependentVariableNames }</strong>;
-
-    const sortedRSquaredAdjusted = regressionResult.regressionsByColumn
-      .map((column, i) => new Object({ index: `(${ i + 1 })`, value: column.columnProperties.rSquaredAdj }))
-      .sort((a, b) => (a.value >= b.value) ? (a.value > b.value ? -1 : 0) : 1)
-      .map((obj) => new Object({ ...obj, value: this.getRoundedString(obj.value)}));
-
-    const rSquaredAdjustedStrings = {
-      highest: sortedRSquaredAdjusted[0],
-      lowest: sortedRSquaredAdjusted[sortedRSquaredAdjusted.length - 1]
-    }
-
-    const sortedContributionToRSquared = contributionToRSquared.slice(1)
-      .map((row) => new Object({ name: row[0], value: row[1] }))
-      .sort((a, b) => (a.value >= b.value) ? (a.value > b.value ? -1 : 0) : 1)
-      .map((obj) => new Object({ ...obj, value: this.getRoundedString(obj.value)}));
-
-    const contributionToRSquaredStrings = {
-      highest: sortedContributionToRSquared[0],
-      lowest: sortedContributionToRSquared[sortedContributionToRSquared.length - 1]
-    };
-
-    const textParams = {
-      dependentVariableName: <strong>{ dependentVariableName }</strong>,
-      independentVariableNames: independentVariableNamesString,
-      rSquaredAdjustedText: <div className={ styles.rSquaredAdjust }><div className={ styles.r }>R</div><sup>2</sup></div>,
-      rSquaredText: <div className={ styles.rSquared }><div className={ styles.r }>R</div><sup>2</sup></div>,
-      rSquaredAdjusted: rSquaredAdjustedStrings,
-      contributionToRSquared: contributionToRSquaredStrings
-    }
-
     return (
       <div className={ styles.regressionViewContainer }>
-        <Card>
-          <HeaderBar header={ <span>Cascading Linear Regressions of <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> } />
+        <RegressionTableCard
+          dependentVariableName={ dependentVariableName }
+          independentVariableNames={ independentVariableNames }
+          regressionResult={ regressionResult }
+          contributionToRSquared={ contributionToRSquared }/>
 
-          <RegressionTable regressionResult={ regressionResult }/>
-
-          <div className={ styles.summary }>
-            <div className={ styles.summaryColumn }>
-              <div>
-                This table displays the results of a linear regression explaining the dependent variable { textParams.dependentVariableName } with combinations of the independent variables { textParams.independentVariableNames }.
-              </div>
-              <div>
-                For each variable, the regression coefficient is the first value, significance is represented by number of asterisks, and standard error by the number in parentheses.
-              </div>
-            </div>
-            <div className={ styles.summaryColumn }>
-              { ((textParams.rSquaredAdjusted.lowest.index != textParams.rSquaredAdjusted.highest.index) || (textParams.rSquaredAdjusted.lowest.value != textParams.rSquaredAdjusted.highest.value)) &&
-                <div>
-                  The { textParams.rSquaredAdjustedText }, the amount of variance explained by the independent variables, varies from <strong>{ textParams.rSquaredAdjusted.highest.value }</strong> in equation <strong>{ textParams.rSquaredAdjusted.highest.index }</strong> to <strong>{ textParams.rSquaredAdjusted.lowest.value }</strong> in equation <strong>{ textParams.rSquaredAdjusted.lowest.index }</strong>.
-                </div>
-              }
-              { ((textParams.rSquaredAdjusted.lowest.index == textParams.rSquaredAdjusted.highest.index) && (textParams.rSquaredAdjusted.lowest.value == textParams.rSquaredAdjusted.highest.value)) &&
-                <div>
-                  The { textParams.rSquaredAdjustedText }, the amount of variance explained by the independent variables, is <strong>{ textParams.rSquaredAdjusted.highest.value }</strong>.
-                </div>
-              }
-              { textParams.contributionToRSquared.highest &&
-                <div>
-                  Contribution to { textParams.rSquaredText }, determined by comparing models without a variable to the full model with all variables, is highest for <strong>{ textParams.contributionToRSquared.highest.name }</strong> and lowest for variable <strong>{ textParams.contributionToRSquared.lowest.name }</strong>.
-                </div>
-              }
-            </div>
-          </div>
-        </Card>
         { (contributionToRSquared.length > 0) &&
-          <Card>
-            <HeaderBar header={ <span>Contribution to R<sup>2</sup></span> } />
-
-            <div className={ styles.contributionToRSquared }>
-              <ColumnChart
-                chartId={ `bar-${ regressionResult.id }` }
-                data={ contributionToRSquared }
-                options={ options } />
-            </div>
-          </Card>
+          <ContributionToRSquaredCard id={ regressionResult.id } contributionToRSquared={ contributionToRSquared } />
         }
       </div>
     );
