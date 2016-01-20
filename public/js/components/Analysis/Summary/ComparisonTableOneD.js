@@ -33,7 +33,7 @@ export default class ComparisonTableOneD extends Component {
     }
 
     return (
-      <div className={ styles.comparisonTable }>
+      <div className={ styles.aggregationTable }>
         <div className={ styles.columnFieldLabel }>{ comparisonVariableNames[0] }</div>
         <div className={ styles.gridWithRowFieldLabel }>
           <BareDataGrid data={ data }/>

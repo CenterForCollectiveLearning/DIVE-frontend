@@ -42,10 +42,10 @@ export class SummaryView extends Component {
 
     if (oneComparisonVariableSelected && oneDimensionDictHasElements) {
       return (
-        <div className={ styles.comparisonViewContainer }>
+        <div className={ styles.summaryViewContainer }>
           <Card>
             <HeaderBar header={ <span>Comparison Table</span> } />
-            <ComparisonTableOneD comparisonResult={ oneDimensionComparisonResult } comparisonVariableNames={ comparisonVariableNames }/>
+            <ComparisonTableOneD comparisonResult={ oneDimensionComparisonResult } comparisonVariableNames={ aggregationIndependentVariableNames }/>
           </Card>
         </div>
       );
