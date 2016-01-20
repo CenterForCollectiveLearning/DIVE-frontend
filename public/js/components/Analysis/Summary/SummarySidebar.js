@@ -38,7 +38,7 @@ export class SummarySidebar extends Component {
                 new Object({
                   id: item.id,
                   name: item.name,
-                  disabled: (item.id == this.props.summarySelector.aggregationVariableId || item.generalType == 'q')
+                  disabled: (item.id == this.props.summarySelector.aggregationVariableId)
                 })
               )}
               valueMember="id"

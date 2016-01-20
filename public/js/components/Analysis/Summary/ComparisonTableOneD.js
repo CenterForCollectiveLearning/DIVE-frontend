@@ -4,6 +4,8 @@ import styles from '../Analysis.sass';
 
 import BareDataGrid from '../../Base/BareDataGrid';
 
+import { getRoundedString } from '../../../helpers/helpers';
+
 export default class ComparisonTableOneD extends Component {
 
   render() {
@@ -19,7 +21,7 @@ export default class ComparisonTableOneD extends Component {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumnOneD,
-          items: [ row_object.field,  <div className={ styles.tableCell }>{ row_object.value }</div> ]
+          items: [ row_object.field,  <div className={ styles.tableCell }>{ getRoundedString(row_object.value, 2, true) }</div> ]
         })
       })
     ];
@@ -28,7 +30,7 @@ export default class ComparisonTableOneD extends Component {
       data.push({
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
-        items: [ 'Column Total',  <div className={ styles.tableCell }>{ comparisonResult.columnTotal }</div> ]
+        items: [ 'Column Total',  <div className={ styles.tableCell }>{ getRoundedString(comparisonResult.columnTotal, 2, true) }</div> ]
       })
     }
 
