@@ -39,7 +39,7 @@ export class RegressionSidebar extends Component {
     return (
       <AnalysisSidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Dependent Variable">
+          <SidebarGroup heading="Dependent Variable (Y)">
             <DropDownMenu
               value={ regressionSelector.dependentVariableId }
               options={ fieldProperties.items.filter((item) => item.generalType == 'q') }
@@ -49,7 +49,7 @@ export class RegressionSidebar extends Component {
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Independent Variables">
+          <SidebarGroup heading="Explanatory Factors (X)">
             <ToggleButtonGroup
               toggleItems={ fieldProperties.items.map((item) =>
                 new Object({
