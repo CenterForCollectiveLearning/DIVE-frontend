@@ -40,9 +40,9 @@ export class AnalysisSidebar extends Component {
         selected: this.props.selectedTab == "regression"
       },
       {
-        label: "Comparison",
-        type: "comparison",
-        selected: this.props.selectedTab == "comparison"
+        label: "Summary",
+        type: "summary",
+        selected: this.props.selectedTab == "summary"
       }
     ];
 

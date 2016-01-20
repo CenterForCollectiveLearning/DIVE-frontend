@@ -1,19 +1,19 @@
 import {
-  SELECT_COMPARISON_AGGREGATION_VARIABLE,
-  SELECT_COMPARISON_INDEPENDENT_VARIABLE,
-  SELECT_COMPARISON_AGGREGATION_FUNCTION,
-  SELECT_COMPARISON_WEIGHT_VARIABLE,
-  REQUEST_MAKE_COMPARISON,
-  RECEIVE_MAKE_COMPARISON,
-  REQUEST_MAKE_ONE_D_COMPARISON,
-  RECEIVE_MAKE_ONE_D_COMPARISON
+  SELECT_SUMMARY_AGGREGATION_VARIABLE,
+  SELECT_SUMMARY_INDEPENDENT_VARIABLE,
+  SELECT_SUMMARY_AGGREGATION_FUNCTION,
+  SELECT_SUMMARY_AGGREGATION_WEIGHT_VARIABLE,
+  REQUEST_AGGREGATION,
+  RECEIVE_AGGREGATION,
+  REQUEST_ONE_D_COMPARISON,
+  RECEIVE_ONE_D_COMPARISON
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
 
-export function selectComparisonVariable(selectedIndependentVariableId) {
+export function selectSummaryIndependentVariable(selectedIndependentVariableId) {
   return {
-    type: SELECT_COMPARISON_INDEPENDENT_VARIABLE,
+    type: SELECT_SUMMARY_INDEPENDENT_VARIABLE,
     comparisonIndependentVariableId: selectedIndependentVariableId,
     selectedAt: Date.now()
   }
@@ -21,43 +21,43 @@ export function selectComparisonVariable(selectedIndependentVariableId) {
 
 export function selectAggregationVariable(selectedAggregationVariableId) {
   return {
-    type: SELECT_COMPARISON_AGGREGATION_VARIABLE,
+    type: SELECT_SUMMARY_AGGREGATION_VARIABLE,
     comparisonAggregationVariableId: selectedAggregationVariableId,
     selectedAt: Date.now()
   }
 }
 
-export function selectComparisonWeightVariable(selectedWeightVariableId) {
+export function selectAggregationWeightVariable(selectedWeightVariableId) {
   return {
-    type: SELECT_COMPARISON_WEIGHT_VARIABLE,
-    comparisonWeightVariableId: selectedWeightVariableId,
+    type: SELECT_SUMMARY_AGGREGATION_WEIGHT_VARIABLE,
+    aggregationWeightVariableId: selectedWeightVariableId,
     selectedAt: Date.now()
   }
 }
 
 export function selectAggregationFunction(selectedAggregationFunction) {
   return {
-    type: SELECT_COMPARISON_AGGREGATION_FUNCTION,
-    comparisonAggregationFunction: selectedAggregationFunction,
+    type: SELECT_SUMMARY_AGGREGATION_FUNCTION,
+    aggregationFunction: selectedAggregationFunction,
     selectedAt: Date.now()
   }
 }
 
-function requestMakeComparisonDispatcher(datasetId) {
+function requestAggregationDispatcher(datasetId) {
   return {
-    type: REQUEST_MAKE_COMPARISON
+    type: REQUEST_AGGREGATION
   };
 }
 
-function receiveMakeComparisonDispatcher(json) {
+function receiveAggregationDispatcher(json) {
   return {
-    type: RECEIVE_MAKE_COMPARISON,
+    type: RECEIVE_AGGREGATION,
     data: json,
     receivedAt: Date.now()
   };
 }
 
-export function runMakeComparison(projectId, datasetId, aggregationVariable, comparisonVariables) {
+export function runAggregation(projectId, datasetId, aggregationVariable, comparisonVariables) {
   const params = {
     projectId: projectId,
     spec: {
@@ -68,32 +68,32 @@ export function runMakeComparison(projectId, datasetId, aggregationVariable, com
   }
 
   return (dispatch) => {
-    dispatch(requestMakeComparisonDispatcher());
+    dispatch(requestAggregationDispatcher());
     return fetch('/statistics/v1/contingency_table', {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
-      .then(json => dispatch(receiveMakeComparisonDispatcher(json)))
+      .then(json => dispatch(receiveAggregationDispatcher(json)))
       .catch(err => console.error("Error creating contingency table: ", err));
   };
 }
 
-function requestMakeOneDComparisonDispatcher(datasetId) {
+function requestOneDComparisonDispatcher(datasetId) {
   return {
-    type: REQUEST_MAKE_ONE_D_COMPARISON
+    type: REQUEST_ONE_D_COMPARISON
   };
 }
 
-function receiveMakeOneDComparisonDispatcher(json) {
+function receiveOneDComparisonDispatcher(json) {
   return {
-    type: RECEIVE_MAKE_ONE_D_COMPARISON,
+    type: RECEIVE_ONE_D_COMPARISON,
     data: json,
     receivedAt: Date.now()
   };
 }
 
-export function runMakeComparisonOneDimensional(projectId, datasetId, aggregationVariable, comparisonVariables) {
+export function runComparisonOneDimensional(projectId, datasetId, aggregationVariable, comparisonVariables) {
   const params = {
     projectId: projectId,
     spec: {
@@ -104,13 +104,13 @@ export function runMakeComparisonOneDimensional(projectId, datasetId, aggregatio
   }
 
   return (dispatch) => {
-    dispatch(requestMakeOneDComparisonDispatcher());
+    dispatch(requestOneDComparisonDispatcher());
     return fetch('/statistics/v1/one_dimensional_contingency_table', {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
-      .then(json => dispatch(receiveMakeOneDComparisonDispatcher(json)))
+      .then(json => dispatch(receiveOneDComparisonDispatcher(json)))
       .catch(err => console.error("Error creating contingency table: ", err));
   };
 }
