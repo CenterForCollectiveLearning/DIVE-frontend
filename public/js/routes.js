@@ -17,7 +17,7 @@ import BuilderPage from './components/Visualizations/Builder/BuilderPage';
 import AnalysisPage from './components/Analysis/AnalysisPage';
 import RegressionBasePage from './components/Analysis/Regression/RegressionBasePage';
 import RegressionPage from './components/Analysis/Regression/RegressionPage';
-import ComparisonPage from './components/Analysis/Comparison/ComparisonPage';
+import SummaryPage from './components/Analysis/Summary/SummaryPage';
 import ExportedVisualizationPage from './components/Visualizations/ExportedVisualization/ExportedVisualizationPage';
 
 export default (
@@ -41,7 +41,7 @@ export default (
         <Route path="regression" component={ RegressionBasePage }>
           <Route path=":dependentVariable" component={ RegressionPage }/>
         </Route>
-        <Route path="comparison" component={ ComparisonPage }/>
+        <Route path="summary" component={ SummaryPage }/>
       </Route>
     </Route>
     <Route path="/share/projects/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>

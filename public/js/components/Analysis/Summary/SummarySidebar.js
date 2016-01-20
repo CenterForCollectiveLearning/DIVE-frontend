@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectComparisonVariable, selectAggregationVariable, selectAggregationFunction, selectComparisonWeightVariable} from '../../../actions/ComparisonActions';
+import { selectSummaryIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable } from '../../../actions/SummaryActions';
 import styles from '../Analysis.sass';
 
 import AnalysisSidebar from '../AnalysisSidebar';
@@ -10,7 +10,7 @@ import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 
-export class ComparisonSidebar extends Component {
+export class SummarySidebar extends Component {
   componentWillMount(props) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
 
@@ -28,11 +28,9 @@ export class ComparisonSidebar extends Component {
     }
   }
 
-
-
   render() {
     return (
-      <AnalysisSidebar selectedTab="comparison">
+      <AnalysisSidebar selectedTab="summary">
         { this.props.fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Comparison Variables">
             <ToggleButtonGroup
@@ -40,43 +38,43 @@ export class ComparisonSidebar extends Component {
                 new Object({
                   id: item.id,
                   name: item.name,
-                  disabled: (item.id == this.props.comparisonSelector.aggregationVariableId || item.generalType == 'q')
+                  disabled: (item.id == this.props.summarySelector.aggregationVariableId || item.generalType == 'q')
                 })
               )}
               valueMember="id"
               displayTextMember="name"
-              externalSelectedItems={ this.props.comparisonSelector.comparisonVariablesIds }
-              onChange={ this.props.selectComparisonVariable } />
+              externalSelectedItems={ this.props.summarySelector.comparisonVariablesIds }
+              onChange={ this.props.selectSummaryIndependentVariable } />
           </SidebarGroup>
         }
         { this.props.fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Aggregate on">
             <DropDownMenu
-              value={ this.props.comparisonSelector.aggregationVariableId }
+              value={ this.props.summarySelector.aggregationVariableId }
               options={ this.props.fieldProperties.items.filter((item) => item.generalType == 'q') }
               valueMember="id"
               displayTextMember="name"
-              onChange={ this.props.selectAggregationVariable}/>
+              onChange={ this.props.selectAggregationVariable }/>
           </SidebarGroup>
         }
-        { this.props.comparisonSelector.aggregationVariableId &&
-          <SidebarGroup heading="By">
+        { this.props.summarySelector.aggregationVariableId &&
+          <SidebarGroup heading="Aggregate by">
             <DropDownMenu
-              value={ this.props.comparisonSelector.aggregationFunction}
-              options={ [{'id':'SUM', 'name':'sum'}, {'id':'MEAN', 'name':'mean'}] }
+              value={ this.props.summarySelector.aggregationFunction}
+              options={ [{ 'id':'SUM', 'name':'sum' }, { 'id':'MEAN', 'name':'mean' }] }
               valueMember="id"
               displayTextMember="name"
-              onChange={ this.props.selectAggregationFunction}/>
+              onChange={ this.props.selectAggregationFunction }/>
           </SidebarGroup>
         }
-        { this.props.comparisonSelector.aggregationFunction == 'MEAN' &&
+        { this.props.summarySelector.aggregationFunction == 'MEAN' &&
           <SidebarGroup heading="Weighted by:">
             <DropDownMenu
-              value={ this.props.comparisonSelector.weightVariableId}
-              options={ [{'id':'UNIFORM', 'name':'uniform'}, ...this.props.fieldProperties.items.filter((item) => item.generalType == 'q')] }
+              value={ this.props.summarySelector.weightVariableId}
+              options={ [{ 'id':'UNIFORM', 'name':'uniform' }, ...this.props.fieldProperties.items.filter((item) => item.generalType == 'q')] }
               valueMember="id"
               displayTextMember="name"
-              onChange={ this.props.selectComparisonWeightVariable}/>
+              onChange={ this.props.selectAggregationWeightVariable }/>
           </SidebarGroup>
         }
 
@@ -85,21 +83,21 @@ export class ComparisonSidebar extends Component {
   }
 }
 
-ComparisonSidebar.propTypes = {
+SummarySidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  comparisonSelector: PropTypes.object.isRequired
+  summarySelector: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, fieldProperties, comparisonSelector } = state;
+  const { project, datasetSelector, fieldProperties, summarySelector } = state;
   return {
     project,
     datasetSelector,
     fieldProperties,
-    comparisonSelector
+    summarySelector
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectComparisonVariable, selectAggregationVariable, selectAggregationFunction, selectComparisonWeightVariable})(ComparisonSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectSummaryIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable })(SummarySidebar);

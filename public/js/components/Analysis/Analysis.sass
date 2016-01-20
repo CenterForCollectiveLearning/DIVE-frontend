@@ -4,14 +4,14 @@
 .analysisContainer
   overflow: hidden
 
-.regressionContainer, .comparisonContainer
+.regressionContainer, .summaryContainer
   display: flex
   flex-direction: row
   overflow: hidden
 
   background-color: #e9e7e8
 
-.regressionViewContainer, .comparisonViewContainer
+.regressionViewContainer, .summaryViewContainer
   +fillContainer
   overflow-y: scroll
 
@@ -19,7 +19,7 @@
   display: flex
   justify-content: center
 
-.regressionTable, .comparisonTable
+.regressionTable, .summaryTable
   margin: 10px
 
 .summary
@@ -101,7 +101,7 @@
 .footerRow
   background-color: #fbfbfb
 
-.comparisonTable
+.aggregationTable
   padding: 0 10px 20px
 
   .columnFieldLabel, .rowFieldLabel
