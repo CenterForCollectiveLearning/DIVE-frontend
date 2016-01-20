@@ -53,13 +53,13 @@ export class ComparisonSidebar extends Component {
           <SidebarGroup heading="Aggregate on">
             <DropDownMenu
               value={ this.props.comparisonSelector.aggregationVariableId }
-              options={ this.props.fieldProperties.items.filter((item) => item.generalType == 'q') }
+              options= {[{'id': 'count', 'name' : 'count'}, ...this.props.fieldProperties.items.filter((item) => item.generalType == 'q')]}
               valueMember="id"
               displayTextMember="name"
               onChange={ this.props.selectAggregationVariable}/>
           </SidebarGroup>
         }
-        { this.props.comparisonSelector.aggregationVariableId &&
+        { this.props.comparisonSelector.aggregationVariableId != 'count' &&
           <SidebarGroup heading="By">
             <DropDownMenu
               value={ this.props.comparisonSelector.aggregationFunction}
@@ -69,7 +69,7 @@ export class ComparisonSidebar extends Component {
               onChange={ this.props.selectAggregationFunction}/>
           </SidebarGroup>
         }
-        { this.props.comparisonSelector.aggregationFunction == 'MEAN' &&
+        { this.props.comparisonSelector.aggregationFunction == 'MEAN' && this.props.comparisonSelector.aggregationVariableId != 'count' &&
           <SidebarGroup heading="Weighted by:">
             <DropDownMenu
               value={ this.props.comparisonSelector.weightVariableId}
