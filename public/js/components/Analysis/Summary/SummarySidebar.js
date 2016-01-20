@@ -51,14 +51,14 @@ export class SummarySidebar extends Component {
           <SidebarGroup heading="Aggregate on">
             <DropDownMenu
               value={ this.props.summarySelector.aggregationVariableId }
-              options={ this.props.fieldProperties.items.filter((item) => item.generalType == 'q') }
+              options= {[{'id': 'count', 'name' : 'count'}, ...this.props.fieldProperties.items.filter((item) => item.generalType == 'q')]}
               valueMember="id"
               displayTextMember="name"
               onChange={ this.props.selectAggregationVariable }/>
           </SidebarGroup>
         }
-        { this.props.summarySelector.aggregationVariableId &&
-          <SidebarGroup heading="Aggregate by">
+        { this.props.summarySelector.aggregationVariableId != 'count' &&
+          <SidebarGroup heading="By">
             <DropDownMenu
               value={ this.props.summarySelector.aggregationFunction}
               options={ [{ 'id':'SUM', 'name':'sum' }, { 'id':'MEAN', 'name':'mean' }] }
@@ -67,7 +67,7 @@ export class SummarySidebar extends Component {
               onChange={ this.props.selectAggregationFunction }/>
           </SidebarGroup>
         }
-        { this.props.summarySelector.aggregationFunction == 'MEAN' &&
+        { this.props.summarySelector.aggregationFunction == 'MEAN' && this.props.summarySelector.aggregationVariableId != 'count' &&
           <SidebarGroup heading="Weighted by:">
             <DropDownMenu
               value={ this.props.summarySelector.weightVariableId}

@@ -1,51 +1,76 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { runAggregation } from '../../../actions/SummaryActions';
+import { runAggregation, runComparisonOneDimensional } from '../../../actions/SummaryActions';
 
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
 import AggregationTable from './AggregationTable';
+import ComparisonTableOneD from './ComparisonTableOneD';
 
 export class SummaryView extends Component {
   componentWillReceiveProps(nextProps) {
-    const { aggregationIndependentVariableNames, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation } = this.props;
+    const { aggregationIndependentVariableNames, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runComparisonOneDimensional } = this.props;
     const aggregationIndependentVariablesChanged = nextProps.aggregationIndependentVariableNames.length != aggregationIndependentVariableNames.length;
     const aggregationVariableChanged = nextProps.aggregationVariableName != aggregationVariableName;
     const aggregationFunctionChanged = nextProps.aggregationFunction != aggregationFunction;
     const weightVariableChanged = nextProps.weightVariableName != weightVariableName;
 
-    if (nextProps.projectId && nextProps.datasetId && (aggregationVariableChanged || aggregationIndependentVariablesChanged || aggregationFunctionChanged || weightVariableChanged) && (nextProps.aggregationIndependentVariableNames.length == 2)) {
-      const aggregationList = nextProps.aggregationVariableName? [nextProps.aggregationVariableName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null
-      runAggregation(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.aggregationIndependentVariableNames);
+    const sideBarChanged = aggregationIndependentVariablesChanged || aggregationVariableChanged || aggregationFunctionChanged || weightVariableChanged;
+    const oneIndependentVariableSelected = nextProps.aggregationIndependentVariableNames.length == 1;
+    const twoIndependentVariablesSelected = nextProps.aggregationIndependentVariableNames.length == 2;
+
+    if (nextProps.projectId && nextProps.datasetId && sideBarChanged) {
+      if (oneIndependentVariableSelected) {
+        const aggregationList = nextProps.aggregationVariableName? ['q', nextProps.aggregationVariableName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null;
+        runComparisonOneDimensional(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.aggregationIndependentVariableNames);
+      } else if (twoIndependentVariablesSelected) {
+        const aggregationList = nextProps.aggregationVariableName ? ['q', nextProps.aggregationVariableName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null;
+        runAggregation(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.aggregationIndependentVariableNames);
+      }
     }
 
   }
   render() {
-    const { aggregationResult, aggregationIndependentVariableNames} = this.props;
+    const { aggregationResult, oneDimensionComparisonResult, aggregationIndependentVariableNames } = this.props;
+    const oneComparisonVariableSelected =aggregationIndependentVariableNames.length == 1
+    const twoComparisonVariablesSelected = aggregationIndependentVariableNames.length == 2
+    const oneDimensionDictHasElements = oneDimensionComparisonResult && oneDimensionComparisonResult.rows && oneDimensionComparisonResult.rows.length > 0;
+    const aggregationDictHasElements = aggregationResult && aggregationResult.rows && aggregationResult.rows.length > 0;
 
-    if (!(aggregationIndependentVariableNames.length == 2) || !aggregationResult || !(aggregationResult.rows) || aggregationResult.rows.length == 0) {
+    if (oneComparisonVariableSelected && oneDimensionDictHasElements) {
       return (
-        <div></div>
+        <div className={ styles.summaryViewContainer }>
+          <Card>
+            <HeaderBar header={ <span>Comparison Table</span> } />
+            <ComparisonTableOneD comparisonResult={ oneDimensionComparisonResult } comparisonVariableNames={ aggregationIndependentVariableNames }/>
+          </Card>
+        </div>
+      );
+    }
+
+    else if (twoComparisonVariablesSelected && aggregationDictHasElements) {
+      return (
+        <div className={ styles.summaryViewContainer }>
+          <Card>
+            <HeaderBar header={ <span>Aggregation Table</span> } />
+            <AggregationTable aggregationResult={ aggregationResult } aggregationIndependentVariableNames={ aggregationIndependentVariableNames }/>
+          </Card>
+        </div>
       );
     }
 
     return (
-      <div className={ styles.summaryViewContainer }>
-        <Card>
-          <HeaderBar header={ <span>Aggregation Table</span> } />
-          <AggregationTable aggregationResult={ aggregationResult } aggregationIndependentVariableNames={ aggregationIndependentVariableNames }/>
-        </Card>
-      </div>
+      <div></div>
     );
   }
 }
 
 function mapStateToProps(state) {
   const { project, summarySelector, datasetSelector, fieldProperties } = state;
-  const { aggregationResult } = summarySelector;
+  const { aggregationResult, oneDimensionComparisonResult } = summarySelector;
 
   const aggregationVariable = fieldProperties.items.find((property) => property.id == summarySelector.aggregationVariableId);
   const aggregationVariableName = aggregationVariable ? aggregationVariable.name : null;
@@ -64,8 +89,9 @@ function mapStateToProps(state) {
     aggregationVariableName: aggregationVariableName,
     aggregationFunction: summarySelector.aggregationFunction,
     weightVariableName: weightVariableName,
-    aggregationIndependentVariableNames: aggregationIndependentVariableNames
+    aggregationIndependentVariableNames: aggregationIndependentVariableNames,
+    oneDimensionComparisonResult: oneDimensionComparisonResult
   };
 }
 
-export default connect(mapStateToProps, { runAggregation })(SummaryView);
+export default connect(mapStateToProps, { runAggregation, runComparisonOneDimensional })(SummaryView);
