@@ -4,13 +4,15 @@ import {
   SELECT_SUMMARY_AGGREGATION_FUNCTION,
   SELECT_SUMMARY_AGGREGATION_WEIGHT_VARIABLE,
   RECEIVE_AGGREGATION,
+  RECEIVE_ONE_D_COMPARISON,
   WIPE_PROJECT_STATE,
   SELECT_DATASET
 } from '../constants/ActionTypes';
 
 const baseState = {
-  aggregationVariableId: null,
+  aggregationVariableId: 'count',
   comparisonVariablesIds: [],
+  oneDimensionComparisonResult: {},
   aggregationResult: {},
   aggregationFunction: 'SUM',
   weightVariableId: 'UNIFORM'
@@ -33,6 +35,9 @@ export default function summarySelector(state = baseState, action) {
 
     case RECEIVE_AGGREGATION:
       return { ...state, aggregationResult: action.data};
+
+    case RECEIVE_ONE_D_COMPARISON:
+      return { ...state, oneDimensionComparisonResult: action.data };
 
     case SELECT_SUMMARY_AGGREGATION_FUNCTION:
       return { ...state, aggregationFunction: action.aggregationFunction};
