@@ -17,14 +17,17 @@ export class ComparisonView extends Component {
     const aggregationVariableChanged = nextProps.aggregationVariableName != aggregationVariableName;
     const aggregationFunctionChanged = nextProps.aggregationFunction != aggregationFunction;
     const weightVariableChanged = nextProps.weightVariableName != weightVariableName;
+    const sideBarChanged = comparisonVariablesChanged || aggregationVariableChanged || aggregationFunctionChanged || weightVariableChanged
+    const oneComparisonVariableSelected = nextProps.comparisonVariableNames.length == 1
+    const twoComparisonVariablesSelected = nextProps.comparisonVariableNames.length == 2
 
-    if (nextProps.projectId && nextProps.datasetId && (aggregationVariableChanged || comparisonVariablesChanged || aggregationFunctionChanged || weightVariableChanged) && (nextProps.comparisonVariableNames.length == 1)) {
+    if (nextProps.projectId && nextProps.datasetId && sideBarChanged && oneComparisonVariableSelected) {
       const aggregationList = nextProps.aggregationVariableName? ['q', nextProps.aggregationVariableName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null
       runMakeComparisonOneDimensional(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.comparisonVariableNames);
 
     }
 
-    else if (nextProps.projectId && nextProps.datasetId && (aggregationVariableChanged || comparisonVariablesChanged || aggregationFunctionChanged || weightVariableChanged) && (nextProps.comparisonVariableNames.length == 2)) {
+    else if (nextProps.projectId && nextProps.datasetId && sideBarChanged && twoComparisonVariablesSelected) {
       const aggregationList = nextProps.aggregationVariableName? ['q', nextProps.aggregationVariableName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null
       runMakeComparison(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.comparisonVariableNames);
     }
@@ -32,8 +35,12 @@ export class ComparisonView extends Component {
   }
   render() {
     const { comparisonResult, comparisonVariableNames, oneDimensionComparisonResult} = this.props;
+    const oneComparisonVariableSelected =comparisonVariableNames.length == 1
+    const twoComparisonVariablesSelected = comparisonVariableNames.length == 2
+    const oneDimensionDictHasElements = oneDimensionComparisonResult && oneDimensionComparisonResult.rows && oneDimensionComparisonResult.rows.length > 0
+    const contingencyDictHasElements = comparisonResult && comparisonResult.rows && comparisonResult.rows.length > 0
 
-    if (comparisonVariableNames.length == 1 && oneDimensionComparisonResult && oneDimensionComparisonResult.rows && oneDimensionComparisonResult.rows.length > 0) {
+    if (oneComparisonVariableSelected && oneDimensionDictHasElements) {
       return (
         <div className={ styles.comparisonViewContainer }>
           <Card>
@@ -44,7 +51,7 @@ export class ComparisonView extends Component {
       );
     }
 
-    else if (comparisonVariableNames.length == 2 && comparisonResult && comparisonResult.rows && comparisonResult.rows.length > 0) {
+    else if (twoComparisonVariablesSelected && contingencyDictHasElements) {
       return (
         <div className={ styles.comparisonViewContainer }>
           <Card>

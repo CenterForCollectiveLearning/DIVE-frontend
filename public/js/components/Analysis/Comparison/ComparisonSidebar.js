@@ -69,7 +69,7 @@ export class ComparisonSidebar extends Component {
               onChange={ this.props.selectAggregationFunction}/>
           </SidebarGroup>
         }
-        { this.props.comparisonSelector.aggregationFunction == 'MEAN' &&
+        { this.props.comparisonSelector.aggregationFunction == 'MEAN' && this.props.comparisonSelector.aggregationVariableId != 'count' &&
           <SidebarGroup heading="Weighted by:">
             <DropDownMenu
               value={ this.props.comparisonSelector.weightVariableId}
