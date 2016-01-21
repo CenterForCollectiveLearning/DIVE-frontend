@@ -7,6 +7,7 @@ import PieChart from './Charts/PieChart';
 import ColumnChart from './Charts/ColumnChart';
 import StackedColumnChart from './Charts/StackedColumnChart';
 import ScatterChart from './Charts/ScatterChart';
+import LineChart from './Charts/LineChart';
 
 export default class Visualization extends Component {
   constructor(props) {
@@ -236,6 +237,13 @@ export default class Visualization extends Component {
             }
             { (validVisualizationTypes[0] == 'scatter' ) &&
               <ScatterChart
+                chartId={ `spec-bar-${spec.id}` }
+                data={ finalDataArray }
+                options={ options }
+                isMinimalView={ isMinimalView }/>
+            }
+            { (validVisualizationTypes[0] == 'line' ) &&
+              <LineChart
                 chartId={ `spec-bar-${spec.id}` }
                 data={ finalDataArray }
                 options={ options }
