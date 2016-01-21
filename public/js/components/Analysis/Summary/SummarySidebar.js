@@ -29,6 +29,8 @@ export class SummarySidebar extends Component {
   }
 
   render() {
+    const nonComparisonVariables = this.props.fieldProperties.items.filter((item) => this.props.summarySelector.comparisonVariablesIds.indexOf(item.id) < 0)
+    const aggregationOptions = [{'id': 'count', 'name' : 'count'}, ...nonComparisonVariables.filter((item) => item.generalType == 'q')]
     return (
       <AnalysisSidebar selectedTab="summary">
         { this.props.fieldProperties.items.length != 0 &&
@@ -38,7 +40,7 @@ export class SummarySidebar extends Component {
                 new Object({
                   id: item.id,
                   name: item.name,
-                  disabled: (item.id == this.props.summarySelector.aggregationVariableId || item.generalType == 'q')
+                  disabled: (item.id == this.props.summarySelector.aggregationVariableId)
                 })
               )}
               valueMember="id"
@@ -51,7 +53,7 @@ export class SummarySidebar extends Component {
           <SidebarGroup heading="Aggregate on">
             <DropDownMenu
               value={ this.props.summarySelector.aggregationVariableId }
-              options= {[{'id': 'count', 'name' : 'count'}, ...this.props.fieldProperties.items.filter((item) => item.generalType == 'q')]}
+              options= {aggregationOptions}
               valueMember="id"
               displayTextMember="name"
               onChange={ this.props.selectAggregationVariable }/>

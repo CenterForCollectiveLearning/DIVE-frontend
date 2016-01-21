@@ -63,7 +63,7 @@ export function runAggregation(projectId, datasetId, aggregationVariable, compar
     spec: {
       datasetId: datasetId,
       dependentVariable: aggregationVariable,
-      categoricalIndependentVariableNames: comparisonVariables
+      comparisonVariables: comparisonVariables
     }
   }
 
@@ -99,7 +99,7 @@ export function runComparisonOneDimensional(projectId, datasetId, aggregationVar
     spec: {
       datasetId: datasetId,
       dependentVariable: aggregationVariable,
-      categoricalIndependentVariableName: comparisonVariables[0]
+      comparisonVariable: comparisonVariables[0]
     }
   }
 
