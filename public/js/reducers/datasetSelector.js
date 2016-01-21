@@ -10,26 +10,36 @@ import {
 const baseState = {
   datasetId: null,
   loaded: false,
-  isUploading: false
+  isUploading: false,
+  uploadError: null
 }
 
 export default function datasetSelector(state = baseState, action) {
   switch (action.type) {
     case SELECT_DATASET:
       return { ...state, datasetId: action.datasetId };
+
     case REQUEST_UPLOAD_DATASET:
       return { ...state, isUploading: true };
+
     case RECEIVE_UPLOAD_DATASET:
+      if (action.error) {
+        return { ...state, loaded: true, isUploading: false, uploadError: action.error };
+      }
       return { ...state, datasetId: action.datasets[0].datasetId, loaded: true, isUploading: false };
+
     case RECEIVE_DATASET:
       return { ...state, datasetId: action.datasetId, loaded: true };
+
     case RECEIVE_DATASETS:
       if (action.datasets.length > 0) {
         return { ...state, datasetId: state.datasetId || action.datasets[0].datasetId, loaded: true };
       }
       return { ...state, loaded: true };
+
     case WIPE_PROJECT_STATE:
       return baseState;
+
     default:
       return state;
   }

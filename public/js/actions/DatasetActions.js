@@ -73,10 +73,18 @@ function requestUploadDatasetDispatcher() {
 }
 
 function receiveUploadDatasetDispatcher(params, json) {
+  if (json) {
+    return {
+      type: RECEIVE_UPLOAD_DATASET,
+      datasets: [{ datasetId: json.id }],
+      error: null
+    };    
+  }
   return {
     type: RECEIVE_UPLOAD_DATASET,
-    datasets: [{ datasetId: json.id }]
-  };
+    datasets: [],
+    error: "Sorry, this dataset is too large for us to process right now."
+  };    
 }
 
 export function uploadDataset(projectId, datasetFile) {
