@@ -94,6 +94,7 @@ export class GallerySidebar extends Component {
         }
         { gallerySelector.fieldProperties.length > 0 &&
           <SidebarGroup heading="Fields">
+            <div className={ styles.fieldGroupLabel }>Categorical</div>
             <ToggleButtonGroup
               toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 'c') }
               displayTextMember="name"
@@ -102,6 +103,7 @@ export class GallerySidebar extends Component {
               separated={ true }
               selectMenuItem={ selectFieldPropertyValue }
               onChange={ this.clickFieldProperty } />
+            <div className={ styles.fieldGroupLabel }>Temporal</div>
             <ToggleButtonGroup
               toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 't') }
               displayTextMember="name"
@@ -110,6 +112,7 @@ export class GallerySidebar extends Component {
               separated={ true }
               selectMenuItem={ selectAggregationFunction }
               onChange={ this.clickFieldProperty } />
+            <div className={ styles.fieldGroupLabel }>Quantitative</div>
             <ToggleButtonGroup
               toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 'q') }
               displayTextMember="name"
