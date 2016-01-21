@@ -31,14 +31,14 @@ const baseState = {
       imageName: "line",
       label: "Line",
       selected: false,
-      disabled: true
+      disabled: false
     },
     {
       type: "scatter",
       imageName: "scatterplot",
       label: "Scatter",
       selected: false,
-      disabled: true
+      disabled: false
     }
   ]
 }
