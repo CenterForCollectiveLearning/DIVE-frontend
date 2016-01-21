@@ -5,9 +5,10 @@ import { pushState } from 'redux-react-router';
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
+import Dropzone from 'react-dropzone';
 import RaisedButton from '../Base/RaisedButton';
 import ActionBox from '../Base/ActionBox';
-import Dropzone from 'react-dropzone';
+import DatasetToolbar from './DatasetToolbar';
 
 export class DatasetUploadPage extends Component {
   constructor(props) {
@@ -35,6 +36,7 @@ export class DatasetUploadPage extends Component {
     const { datasetSelector } = this.props;
     return (
       <div className={ styles.fillContainer }>
+        <DatasetToolbar uploadMode={ true }/>
         <ActionBox
           className={ styles.datasetUploadBox }
           contentClassName={ styles.datasetUploadBoxContent }

@@ -76,6 +76,7 @@ export class DatasetInspectPage extends Component {
       <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
         { datasets.items.length > 0 &&
           <DatasetToolbar
+            uploadMode={ false }
             openMergeModalAction={ this.openMergeDatasetsModal.bind(this) }
             openPivotModalAction={ this.openPivotModal.bind(this) }
             openColumnReductionModalAction={ this.openColumnReductionModal.bind(this) }/>

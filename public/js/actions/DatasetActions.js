@@ -26,12 +26,13 @@ function requestDatasetsDispatcher() {
   };
 }
 
-function receiveDatasetsDispatcher(projectId, json) {
+function receiveDatasetsDispatcher(projectId, json, setSelector) {
   return {
     type: RECEIVE_DATASETS,
     projectId: projectId,
     datasets: json.datasets,
-    receivedAt: Date.now()
+    receivedAt: Date.now(),
+    setSelector: setSelector
   };
 }
 
@@ -41,12 +42,12 @@ function deleteDatasetDispatcher() {
   };
 }
 
-function fetchDatasets(projectId) {
+function fetchDatasets(projectId, setSelector) {
   return dispatch => {
     dispatch(requestDatasetsDispatcher());
     return fetch('/datasets/v1/datasets?project_id=' + projectId)
       .then(response => response.json())
-      .then(json => dispatch(receiveDatasetsDispatcher(projectId, json)));
+      .then(json => dispatch(receiveDatasetsDispatcher(projectId, json, setSelector)));
   };
 }
 
@@ -58,10 +59,10 @@ function shouldFetchDatasets(state) {
   return true;
 }
 
-export function fetchDatasetsIfNeeded(projectId) {
+export function fetchDatasetsIfNeeded(projectId, setSelector = true) {
   return (dispatch, getState) => {
     if (shouldFetchDatasets(getState())) {
-      return dispatch(fetchDatasets(projectId));
+      return dispatch(fetchDatasets(projectId, setSelector));
     }
   };
 }

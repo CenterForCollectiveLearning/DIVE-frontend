@@ -20,8 +20,15 @@ export class DatasetToolbar extends Component {
   componentWillMount() {
     const { projectId, datasets, fetchDatasetsIfNeeded } = this.props;
 
-    if (!datasets.fetchedAll && !datasets.isFetching) {
-      fetchDatasetsIfNeeded(projectId);
+    if (projectId && !datasets.fetchedAll && !datasets.isFetching) {
+      fetchDatasetsIfNeeded(projectId, false);        
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { projectId, datasets, fetchDatasetsIfNeeded } = nextProps;
+    if (projectId != this.projectId && !datasets.fetchedAll && !datasets.isFetching) {
+      fetchDatasetsIfNeeded(projectId, false);
     }
   }
 
@@ -43,11 +50,11 @@ export class DatasetToolbar extends Component {
   }
 
   render() {
-    const { datasets, selectedDatasetId, isPreloadedProject, openColumnReductionModalAction, openPivotModalAction, openMergeModalAction } = this.props;
+    const { datasets, selectedDatasetId, isPreloadedProject, uploadMode, openColumnReductionModalAction, openPivotModalAction, openMergeModalAction } = this.props;
 
     return (
       <Toolbar rightActions=
-        { !isPreloadedProject && selectedDatasetId &&
+        { !isPreloadedProject && selectedDatasetId && !uploadMode &&
           <div className={ styles.rightActions }>
             <RaisedButton icon={ true } onClick={ this.onClickDeleteDataset }>
               <i className="fa fa-trash"></i>
@@ -63,13 +70,13 @@ export class DatasetToolbar extends Component {
           <div className={ styles.datasetSelectorContainer }>
             <DropDownMenu
               className={ styles.datasetSelector }
-              value={ selectedDatasetId }
-              options={ datasets.items }
+              value={ uploadMode ? null : selectedDatasetId }
+              options={ datasets.items.length > 0 ? datasets.items : [] }
               valueMember="datasetId"
               displayTextMember="title"
               onChange={ this.onSelectDataset } />
           </div>
-          { !isPreloadedProject &&
+          { !isPreloadedProject && !uploadMode &&
             <RaisedButton label="Upload new dataset" onClick={ this.onClickUploadDataset } />
           }
         </div>
@@ -80,19 +87,20 @@ export class DatasetToolbar extends Component {
 
 DatasetToolbar.propTypes = {
   datasets: PropTypes.object.isRequired,
-  projectId: PropTypes.string.isRequired,
+  projectId: PropTypes.string,
   selectedDatasetId: PropTypes.string,
   openColumnReductionModalAction: PropTypes.func,
   openPivotModalAction: PropTypes.func,
   openMergeModalAction: PropTypes.func,
-  isPreloadedProject: PropTypes.bool
+  isPreloadedProject: PropTypes.bool,
+  uploadMode: PropTypes.bool
 };
 
 function mapStateToProps(state) {
   const { datasets, project, datasetSelector } = state;
   return {
     datasets: datasets,
-    projectId: `${ project.properties.id }`,
+    projectId: (project.properties.id ? `${ project.properties.id }` : null),
     selectedDatasetId: `${ datasetSelector.datasetId }`,
     preloadedProject: project.properties.preloaded
   };
