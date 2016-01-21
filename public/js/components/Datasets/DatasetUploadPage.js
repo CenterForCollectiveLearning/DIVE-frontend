@@ -46,6 +46,12 @@ export class DatasetUploadPage extends Component {
           }
           { !datasetSelector.isUploading &&
             <Dropzone ref="dropzone" className={ styles.dropzone + ' ' + styles.centeredFill } onDrop={ this.onDrop } disableClick={ true }>
+              { datasetSelector.uploadError &&
+                <div className={ styles.errorDescription + ' ' + styles.watermark }>
+                  { datasetSelector.uploadError }
+                  <div className={ styles.separater }></div>
+                </div>
+              }
               <RaisedButton label="Select & upload a file" primary={ true } onClick={ this.onOpenClick } />
               <span>or drop files here to upload</span>
             </Dropzone>
