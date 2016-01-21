@@ -49,11 +49,17 @@ export default function datasets(state = baseState, action) {
   switch (action.type) {
     case REQUEST_DATASETS:
       return { ...state, isFetching: true };
+
     case RECEIVE_DATASETS:
       var mergedDatasetLists = mergeDatasetLists(state.items, action.datasets);
-      return { ...state, isFetching: false, items: mergedDatasetLists, loaded: true, fetchedAll: true };
+      return { ...state, isFetching: false, items: mergedDatasetLists, loaded: true, fetchedAll: true };        
+
     case RECEIVE_UPLOAD_DATASET:
+      if (action.error) {
+        return { ...state, isFetching: false, loaded: true };
+      }
       return { ...state, isFetching: false, items: [...state.items, ...action.datasets], loaded: true };
+
     case RECEIVE_DATASET:
       const newDataset = [{
           datasetId: action.datasetId,
@@ -62,8 +68,10 @@ export default function datasets(state = baseState, action) {
           details: action.details
       }];
       return { ...state, items: mergeDatasetLists(state.items, newDataset) };
+
     case WIPE_PROJECT_STATE:
       return baseState;
+
     default:
       return state;
   }

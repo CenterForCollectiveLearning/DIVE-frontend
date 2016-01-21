@@ -4,14 +4,14 @@
 .analysisContainer
   overflow: hidden
 
-.regressionContainer, .comparisonContainer
+.regressionContainer, .summaryContainer
   display: flex
   flex-direction: row
   overflow: hidden
 
   background-color: #e9e7e8
 
-.regressionViewContainer, .comparisonViewContainer
+.regressionViewContainer, .summaryViewContainer
   +fillContainer
   overflow-y: scroll
 
@@ -19,7 +19,14 @@
   display: flex
   justify-content: center
 
-.regressionTable, .comparisonTable
+  > div
+    display: flex
+    flex-grow: 1
+    position: relative
+    justify-content: center
+    padding: 20px
+
+.regressionTable, .summaryTable
   margin: 10px
 
 .summary
@@ -94,14 +101,18 @@
     &:first-child
       background-color: #F6F6F6
       font-weight: 500
-
+  .dataColumnOneD
+    white-space: normal
+    text-overflow: ellipsis
+    overflow: hidden
+    word-break: break-word
 .dataRow + .footerRow
   border-top-width: 2px
 
 .footerRow
   background-color: #fbfbfb
 
-.comparisonTable
+.aggregationTable
   padding: 0 10px 20px
 
   .columnFieldLabel, .rowFieldLabel

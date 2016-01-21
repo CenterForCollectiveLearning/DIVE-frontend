@@ -89,16 +89,6 @@ export default class RegressionTable extends Component {
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
         items: [
-          <div className={ styles.rSquared }><div className={ styles.r }>R<sup>2</sup></div></div>,
-          ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.rSquared) }</div>
-          )
-        ]
-      },
-      {
-        rowClass: styles.footerRow,
-        columnClass: styles.footerColumn,
-        items: [
           <div className={ styles.rSquaredAdjust }><div className={ styles.r }>R</div><sup className="cmu">2</sup></div>,
           ...regressionResult.regressionsByColumn.map((column) =>
             <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.rSquaredAdj) }</div>
@@ -112,16 +102,6 @@ export default class RegressionTable extends Component {
           <em className="cmu">F</em>,
           ...regressionResult.regressionsByColumn.map((column) =>
             <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.fTest) }</div>
-          )
-        ]
-      },
-      {
-        rowClass: styles.footerRow,
-        columnClass: styles.footerColumn,
-        items: [
-          <div className="cmu">AIC</div>,
-          ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.aic) }</div>
           )
         ]
       },

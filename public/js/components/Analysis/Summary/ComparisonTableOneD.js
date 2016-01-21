@@ -3,9 +3,10 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Analysis.sass';
 
 import BareDataGrid from '../../Base/BareDataGrid';
+
 import { getRoundedString } from '../../../helpers/helpers';
 
-export default class ComparisonTable extends Component {
+export default class ComparisonTableOneD extends Component {
 
   render() {
     const { comparisonResult, comparisonVariableNames } = this.props;
@@ -14,30 +15,29 @@ export default class ComparisonTable extends Component {
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
-        items: [ '', ...comparisonResult.columnHeaders.map((column) => <div className={ styles.dataCell }>{ column }</div>) ]
+        items: [...comparisonResult.columnHeaders.map((e) => <div className={ styles.tableCell }>{ e }</div>) ]
       },
-      ...comparisonResult.rows.map(function(row) {
+      ...comparisonResult.rows.map(function(row_object) {
         return new Object({
           rowClass: styles.dataRow,
-          columnClass: styles.dataColumn,
-          items: [ row.field, ...row.values.map((column) => <div className={ styles.dataCell }>{ getRoundedString(column, 2, true) }</div>) ]
+          columnClass: styles.dataColumnOneD,
+          items: [ row_object.field,  <div className={ styles.tableCell }>{ getRoundedString(row_object.value, 2, true) }</div> ]
         })
       })
     ];
 
-    if (comparisonResult.columnTotals) {
+    if (comparisonResult.columnTotal) {
       data.push({
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
-        items: [ 'Column Totals', ...comparisonResult.columnTotals.map((v) => <div className={ styles.tableCell }>{ v }</div>) ]
+        items: [ 'Column Total',  <div className={ styles.tableCell }>{ getRoundedString(comparisonResult.columnTotal, 2, true) }</div> ]
       })
     }
 
     return (
-      <div className={ styles.comparisonTable }>
+      <div className={ styles.aggregationTable }>
         <div className={ styles.columnFieldLabel }>{ comparisonVariableNames[0] }</div>
         <div className={ styles.gridWithRowFieldLabel }>
-          <div className={ styles.rowFieldLabel }>{ comparisonVariableNames[1] }</div>
           <BareDataGrid data={ data }/>
         </div>
       </div>
@@ -45,7 +45,7 @@ export default class ComparisonTable extends Component {
   }
 }
 
-ComparisonTable.propTypes = {
+ComparisonTableOneD.propTypes = {
   comparisonResult: PropTypes.object.isRequired,
   comparisonVariableNames: PropTypes.array.isRequired,
 }
