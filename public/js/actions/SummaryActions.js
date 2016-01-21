@@ -6,7 +6,9 @@ import {
   REQUEST_AGGREGATION,
   RECEIVE_AGGREGATION,
   REQUEST_ONE_D_COMPARISON,
-  RECEIVE_ONE_D_COMPARISON
+  RECEIVE_ONE_D_COMPARISON,
+  REQUEST_SUMMARY_STATISTICS,
+  RECEIVE_SUMMARY_STATISTICS
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
@@ -112,5 +114,40 @@ export function runComparisonOneDimensional(projectId, datasetId, aggregationVar
     }).then(response => response.json())
       .then(json => dispatch(receiveOneDComparisonDispatcher(json)))
       .catch(err => console.error("Error creating contingency table: ", err));
+  };
+}
+
+function requestSummaryStatisticsDispatcher(datasetId) {
+  return {
+    type: REQUEST_SUMMARY_STATISTICS
+  };
+}
+
+function receiveSummaryStatisticsDispatcher(json) {
+  return {
+    type: RECEIVE_SUMMARY_STATISTICS,
+    data: json,
+    receivedAt: Date.now()
+  };
+}
+
+export function getVariableSummaryStatistics(projectId, datasetId, aggregationVariableIds) {
+  const params = {
+    projectId: projectId,
+    spec: {
+      datasetId: datasetId,
+      fieldIds: aggregationVariableIds
+    }
+  }
+
+  return (dispatch) => {
+    dispatch(requestSummaryStatisticsDispatcher());
+    return fetch('/statistics/v1/summary_stats', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+      .then(json => dispatch(receiveSummaryStatisticsDispatcher(json)))
+      .catch(err => console.error("Error creating summary table: ", err));
   };
 }
