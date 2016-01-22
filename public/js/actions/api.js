@@ -29,7 +29,19 @@ export function pollForChainTaskResult(taskIds, dispatcherParams, dispatcher, in
         }
       });
   };
-}
+
+
+export function httpRequest(method, urlPath, formData, completeEvent, uploadEvents) {
+  const completeUrl = API_URL + urlPath;
+  var request = new XMLHttpRequest();
+  request.onload = completeEvent(request);
+
+  uploadEvents.forEach((event) =>
+    request.upload.addEventListener(event.type, event.function, false)
+  );
+  request.open(method, completeUrl, true);
+  request.send(formData);
+
 
 export function pollForTaskResult(taskId, dispatcherParams, dispatcher, interval=400, limit=300, counter=0) {
   const completeUrl = API_URL + `/tasks/v1/result/${ taskId }`;

@@ -1,6 +1,7 @@
 import {
   SELECT_DATASET,
   REQUEST_UPLOAD_DATASET,
+  PROGRESS_UPLOAD_DATASET,
   RECEIVE_UPLOAD_DATASET,
   RECEIVE_DATASET,
   RECEIVE_DATASETS,
@@ -11,7 +12,8 @@ const baseState = {
   datasetId: null,
   loaded: false,
   isUploading: false,
-  uploadError: null
+  uploadError: null,
+  progress: 0
 }
 
 export default function datasetSelector(state = baseState, action) {
@@ -22,14 +24,17 @@ export default function datasetSelector(state = baseState, action) {
     case REQUEST_UPLOAD_DATASET:
       return { ...state, isUploading: true };
 
+    case PROGRESS_UPLOAD_DATASET:
+      return { ...state, progress: action.progress };
+
     case RECEIVE_UPLOAD_DATASET:
       if (action.error) {
         return { ...state, loaded: true, isUploading: false, uploadError: action.error };
       }
-      return { ...state, datasetId: action.datasets[0].datasetId, loaded: true, isUploading: false };
+      return { ...state, datasetId: action.datasets[0].datasetId, loaded: true, isUploading: false, uploadError: null };
 
     case RECEIVE_DATASET:
-      return { ...state, datasetId: action.datasetId, loaded: true };
+      return { ...state, datasetId: action.datasetId, loaded: true, progress: 0 };
 
     case RECEIVE_DATASETS:
       if (action.datasets.length > 0 && action.setSelector) {
