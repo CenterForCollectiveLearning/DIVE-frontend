@@ -29,7 +29,7 @@ export function pollForChainTaskResult(taskIds, dispatcherParams, dispatcher, in
         }
       });
   };
-
+}
 
 export function httpRequest(method, urlPath, formData, completeEvent, uploadEvents) {
   const completeUrl = API_URL + urlPath;
