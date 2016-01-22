@@ -13,11 +13,13 @@ import projects from './projects';
 import regressionSelector from './regressionSelector';
 import specs from './specs';
 import summarySelector from './summarySelector';
+import comparisonSelector from './comparisonSelector';
 import transformSelector from './transformSelector';
 import user from './user';
 import visualization from './visualization';
 
 const rootReducer = combineReducers({
+  comparisonSelector,
   datasets,
   datasetSelector,
   exportedSpec,
