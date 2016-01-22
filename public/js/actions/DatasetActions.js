@@ -11,7 +11,7 @@ import {
   REQUEST_MERGE_DATASETS
 } from '../constants/ActionTypes';
 
-import { fetch, httpRequest, pollForTaskResult } from './api.js';
+import { fetch, httpRequest, pollForChainTaskResult } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
 export function selectDataset(datasetId) {
@@ -85,15 +85,15 @@ function receiveUploadDatasetDispatcher(params, json) {
   if (json) {
     return {
       type: RECEIVE_UPLOAD_DATASET,
-      datasets: [{ datasetId: json.id }],
+      datasets: [{ datasetId: json.datasetId }],
       error: null
-    };    
+    };
   }
   return {
     type: RECEIVE_UPLOAD_DATASET,
     datasets: [],
     error: "Sorry, this dataset is too large for us to process right now."
-  };    
+  };
 }
 
 export function uploadDataset(projectId, datasetFile) {
@@ -114,8 +114,8 @@ export function uploadDataset(projectId, datasetFile) {
     ];
 
     const completeEvent = (request) => (evt) => {
-      const { taskId } = JSON.parse(request.responseText);
-      dispatch(pollForTaskResult(taskId, {}, receiveUploadDatasetDispatcher));
+      const { taskIds } = JSON.parse(request.responseText);
+      dispatch(pollForChainTaskResult(taskIds, {}, receiveUploadDatasetDispatcher));
     };
 
     return httpRequest('POST', '/datasets/v1/upload', formData, completeEvent, uploadEvents);
