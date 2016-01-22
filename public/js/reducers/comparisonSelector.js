@@ -1,11 +1,13 @@
 import {
   SELECT_COMPARISON_VARIABLE,
   WIPE_PROJECT_STATE,
+  RECEIVE_NUMERICAL_COMPARISON,
   SELECT_DATASET
 } from '../constants/ActionTypes';
 
 const baseState = {
-  comparisonVariablesIds: []
+  comparisonVariablesIds: [],
+  numericalComparisonResult: {}
 }
 
 export default function summarySelector(state = baseState, action) {
@@ -20,6 +22,9 @@ export default function summarySelector(state = baseState, action) {
       }
       return { ...state, comparisonVariablesIds: comparisonVariablesIds };
 
+    case RECEIVE_NUMERICAL_COMPARISON:
+      return { ...state, numericalComparisonResult: action.data };
+      
     case WIPE_PROJECT_STATE:
       return baseState;
 
