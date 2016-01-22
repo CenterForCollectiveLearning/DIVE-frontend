@@ -5,12 +5,13 @@ import {
   REQUEST_DATASETS,
   RECEIVE_DATASETS,
   REQUEST_UPLOAD_DATASET,
+  PROGRESS_UPLOAD_DATASET,
   RECEIVE_UPLOAD_DATASET,
   REQUEST_REDUCE_DATASET_COLUMNS,
   REQUEST_MERGE_DATASETS
 } from '../constants/ActionTypes';
 
-import { fetch, pollForTaskResult } from './api.js';
+import { fetch, httpRequest, pollForTaskResult } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
 export function selectDataset(datasetId) {
@@ -73,6 +74,13 @@ function requestUploadDatasetDispatcher() {
   };
 }
 
+function progressUploadDatasetDispatcher(event) {
+  return {
+    type: PROGRESS_UPLOAD_DATASET,
+    progress: event.loaded / event.total
+  }
+}
+
 function receiveUploadDatasetDispatcher(params, json) {
   if (json) {
     return {
@@ -95,15 +103,22 @@ export function uploadDataset(projectId, datasetFile) {
 
   return (dispatch) => {
     dispatch(requestUploadDatasetDispatcher());
-    return fetch('/datasets/v1/upload', {
-      method: 'post',
-      body: formData
-    }).then(response => response.json())
-      .then(function(json) {
-        if (json.taskId) {
-          dispatch(pollForTaskResult(json.taskId, {}, receiveUploadDatasetDispatcher))
+
+    const uploadEvents = [
+      {
+        type: 'progress',
+        function: (event) => {
+          dispatch(progressUploadDatasetDispatcher(event));
         }
-      })
+      }
+    ];
+
+    const completeEvent = (request) => (evt) => {
+      const { taskId } = JSON.parse(request.responseText);
+      dispatch(pollForTaskResult(taskId, {}, receiveUploadDatasetDispatcher));
+    };
+
+    return httpRequest('POST', '/datasets/v1/upload', formData, completeEvent, uploadEvents);
   };
 }
 
