@@ -12,6 +12,13 @@ import ComparisonTableOneD from './ComparisonTableOneD';
 import VariableSummaryCard from './VariableSummaryCard';
 
 export class SummaryView extends Component {
+  componentWillMount() {
+    const {projectId, datasetId, allComparisonVariableIds, getVariableSummaryStatistics} = this.props
+
+    if (projectId && datasetId && allComparisonVariableIds.length) {
+      getVariableSummaryStatistics(projectId, datasetId, allComparisonVariableIds)
+    }
+  }
 
   componentWillReceiveProps(nextProps) {
     const { loadSummary, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runComparisonOneDimensional, allComparisonVariableIds, getVariableSummaryStatistics } = this.props;
@@ -49,7 +56,7 @@ export class SummaryView extends Component {
     const twoComparisonVariablesSelected = aggregationIndependentVariableNames.length == 2;
     const oneDimensionDictHasElements = oneDimensionComparisonResult && oneDimensionComparisonResult.rows && oneDimensionComparisonResult.rows.length > 0;
     const aggregationDictHasElements = aggregationResult && aggregationResult.rows && aggregationResult.rows.length > 0;
-    const summaryDictHasElements = summaryResult && summaryResult.summaryStats && summaryResult.summaryStats.items &&  summaryResult.summaryStats.items.length > 0;
+    const summaryDictHasElements = summaryResult && summaryResult.items &&  summaryResult.items.length > 0;
 
 
     if (noComparisonVariablesSelected && summaryDictHasElements) {

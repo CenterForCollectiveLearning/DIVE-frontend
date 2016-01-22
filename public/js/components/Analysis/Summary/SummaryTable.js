@@ -25,7 +25,6 @@ export default class SummaryTable extends Component {
 
     return (
       <div className={ styles.aggregationTable }>
-        <div className={ styles.columnFieldLabel }> Selected Statistics </div>
         <div className={ styles.gridWithRowFieldLabel }>
           <BareDataGrid data={ data }/>
         </div>
