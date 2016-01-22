@@ -77,7 +77,14 @@ function requestUploadDatasetDispatcher() {
 function progressUploadDatasetDispatcher(event) {
   return {
     type: PROGRESS_UPLOAD_DATASET,
-    progress: event.loaded / event.total
+    progress: `Uploading dataset… ${ Math.round(event.loaded / event.total * 100) }%`
+  }
+}
+
+function progressTaskUploadDatasetDispatcher(data) {
+  return {
+    type: PROGRESS_UPLOAD_DATASET,
+    progress:  data.currentTask
   }
 }
 
@@ -115,7 +122,7 @@ export function uploadDataset(projectId, datasetFile) {
 
     const completeEvent = (request) => (evt) => {
       const { taskIds } = JSON.parse(request.responseText);
-      dispatch(pollForChainTaskResult(taskIds, {}, receiveUploadDatasetDispatcher));
+      dispatch(pollForChainTaskResult(taskIds, {}, receiveUploadDatasetDispatcher, progressTaskUploadDatasetDispatcher));
     };
 
     return httpRequest('POST', '/datasets/v1/upload', formData, completeEvent, uploadEvents);

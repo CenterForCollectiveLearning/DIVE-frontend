@@ -7,7 +7,7 @@ export function fetch(urlPath, options) {
   return isomorphicFetch(completeUrl, options);
 }
 
-export function pollForChainTaskResult(taskIds, dispatcherParams, dispatcher, interval=400, limit=300, counter=0) {
+export function pollForChainTaskResult(taskIds, dispatcherParams, dispatcher, progressDispatcher, interval=400, limit=300, counter=0) {
   const completeUrl = API_URL + '/tasks/v1/result';
 
   const params = {
@@ -25,7 +25,8 @@ export function pollForChainTaskResult(taskIds, dispatcherParams, dispatcher, in
         if (data.state == 'SUCCESS') {
           dispatch(dispatcher(dispatcherParams, data.result));
         } else {
-          setTimeout(function() { dispatch(pollForChainTaskResult(taskIds, dispatcherParams, dispatcher, interval, limit, counter + 1)) }, interval);
+          dispatch(progressDispatcher(data));
+          setTimeout(function() { dispatch(pollForChainTaskResult(taskIds, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter + 1)) }, interval);
         }
       });
   };
