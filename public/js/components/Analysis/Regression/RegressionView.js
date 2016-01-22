@@ -44,7 +44,7 @@ export class RegressionView extends Component {
           contributionToRSquared={ contributionToRSquared }/>
 
         { (contributionToRSquared.length > 0) &&
-          <ContributionToRSquaredCard id={ regressionResult.id } contributionToRSquared={ contributionToRSquared } />
+          <ContributionToRSquaredCard id={ `${ regressionResult.id }` } contributionToRSquared={ contributionToRSquared } />
         }
       </div>
     );
