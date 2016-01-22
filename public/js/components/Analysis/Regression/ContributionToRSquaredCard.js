@@ -75,5 +75,5 @@ export default class ContributionToRSquaredCard extends Component {
 
 ContributionToRSquaredCard.propTypes = {
   id: PropTypes.string,
-  contributionToRSquared: PropTypes.object.isRequired
+  contributionToRSquared: PropTypes.array.isRequired
 }
