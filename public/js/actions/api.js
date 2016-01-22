@@ -41,7 +41,7 @@ export function httpRequest(method, urlPath, formData, completeEvent, uploadEven
   );
   request.open(method, completeUrl, true);
   request.send(formData);
-
+}
 
 export function pollForTaskResult(taskId, dispatcherParams, dispatcher, interval=400, limit=300, counter=0) {
   const completeUrl = API_URL + `/tasks/v1/result/${ taskId }`;
