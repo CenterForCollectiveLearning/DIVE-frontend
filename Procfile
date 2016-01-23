@@ -1,1 +1,1 @@
-web: node server.js
+web: node buildenv && node server.js
