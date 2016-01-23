@@ -68,7 +68,7 @@ export class BuilderSidebar extends Component {
               onChange={ selectBuilderVisualizationType } />
           </SidebarGroup>
         }
-        { visualization.visualizationType == 'hist' &&
+        { (visualization.visualizationType == 'hist' || visualization.visualizationType == 'bar') &&
           <SidebarGroup heading="Sort Field">
             <ToggleButtonGroup
               toggleItems={ visualization.sortFields }
@@ -77,7 +77,7 @@ export class BuilderSidebar extends Component {
               onChange={ selectBuilderSortField } />
           </SidebarGroup>
         }
-        { visualization.visualizationType == 'hist' &&
+        { (visualization.visualizationType == 'hist' || visualization.visualizationType == 'bar') &&
           <SidebarGroup heading="Sort Order">
             <ToggleButtonGroup
               toggleItems={ visualization.sortOrders }
