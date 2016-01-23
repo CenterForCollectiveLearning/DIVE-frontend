@@ -30,3 +30,10 @@ export default class VariableSummaryTable extends Component {
   }
 }
 
+VariableSummaryTable.propTypes = {
+  stats: PropTypes.array.isRequired,
+  columnHeaders: PropTypes.array.isRequired,
+  variableName: PropTypes.string.isRequired,
+  vizData: PropTypes.array.isRequired
+}
+

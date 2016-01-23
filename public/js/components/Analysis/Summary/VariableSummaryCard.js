@@ -30,7 +30,6 @@ export default class VariableSummaryCard extends Component {
   }
 }
 
-// RegressionTableCard.propTypes = {
-//   dependentVariableName: PropTypes.string,
-//   independentVariableNames: PropTypes.object.isRequired
-// }
+VariableSummaryCard.propTypes = {
+  summaryResult: PropTypes.object.isRequired
+}
