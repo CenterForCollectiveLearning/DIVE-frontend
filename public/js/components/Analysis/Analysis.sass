@@ -109,6 +109,36 @@
 .dataRow + .footerRow
   border-top-width: 2px
 
+.summaryVariableRow
+  display: flex
+  flex-direction: row
+  overflow: hidden
+  padding: 10px
+  align-items: center
+  justify-content: center
+
+.summaryVariableColumn
+  display: flex
+  flex-direction: column
+  margin-top: 10px
+
+.summaryVariableHeaderCell
+  flex-grow: 1
+  flex-basis: 0
+  font-size: 13px
+  color: #555
+  font-weight: 600
+  text-transform: uppercase
+  text-align: center
+
+.summaryEmptyCell
+  flex-grow: 1
+  flex-basis: 0
+
+.summaryVariableContainer
+  +fillContainer
+  margin-top: 10px
+
 .footerRow
   background-color: #fbfbfb
 
