@@ -3,7 +3,8 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
-import VariableSummaryRow from './VariableSummaryRow';
+import HeaderBar from '../../Base/HeaderBar';
+import VariableSummaryTable from './VariableSummaryTable';
 
 export default class VariableSummaryCard extends Component {
   render() {
@@ -11,13 +12,16 @@ export default class VariableSummaryCard extends Component {
 
     return (
       <Card>
-        <div className={styles.summaryVariableColumn}>
-          { summaryResult.items.map(function(obj){
-              if (obj.type == 'c'){
-                return <VariableSummaryRow stats={obj.stats} variableName={obj.field} columnHeaders={summaryResult.categoricalHeaders} vizData={obj.vizData}/>
-              } else {
-                return <VariableSummaryRow stats={obj.stats} variableName={obj.field} columnHeaders={summaryResult.numericalHeaders} vizData={obj.vizData}/>
-              }
+        <HeaderBar header={ <span>Variable Summary</span> } />
+        <div className={ styles.summaryVariableContainer }>
+          { summaryResult.items.map((item, i) => {
+            const columnHeaders = (item.type == 'c') ? summaryResult.categoricalHeaders : summaryResult.numericalHeaders;
+            return <VariableSummaryTable
+              key={ `variable-summary-table-${ i }` }
+              stats={ item.stats }
+              variableName={ item.field }
+              columnHeaders={ columnHeaders }
+              vizData={ item.vizData }/>;
             })
           }
         </div>
