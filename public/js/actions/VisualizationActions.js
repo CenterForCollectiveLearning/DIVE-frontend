@@ -1,5 +1,6 @@
 import {
   REQUEST_SPECS,
+  PROGRESS_SPECS,
   RECEIVE_SPECS,
   FAILED_RECEIVE_SPECS,
   SELECT_VISUALIZATION_TYPE,
@@ -16,13 +17,20 @@ import {
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
-import { fetch, pollForTaskResult } from './api.js';
+import { fetch, pollForTaskResult, pollForChainTaskResult } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
 function requestSpecsDispatcher() {
   return {
     type: REQUEST_SPECS
   };
+}
+
+function progressSpecsDispatcher(data) {
+  return {
+    type: PROGRESS_SPECS,
+    progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
+  };    
 }
 
 function receiveSpecsDispatcher(params, json) {
@@ -86,12 +94,9 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
     }).then(response => response.json())
       .then(function(json) {
         const dispatchParams = { project_id: projectId, dataset_id: datasetId };
-        // TODO Do this more consistently with status flags
-        // console.log(json, (json.specs.length > 0))
-        if (json.taskId) {
-          dispatch(pollForTaskResult(json.taskId, dispatchParams, receiveSpecsDispatcher));
-        }
-        else if (json.specs.length > 0) {
+        if (json.taskIds) {
+          dispatch(pollForChainTaskResult(json.taskIds, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher));
+        } else if (json.specs.length > 0) {
           dispatch(receiveSpecsDispatcher(dispatchParams, json.specs));
         }
       })

@@ -78,7 +78,9 @@ export class GalleryView extends Component {
             }/>
           <div className={ styles.specBlocksContainer }>
             { specs.isFetching &&
-              <div className={ styles.watermark }>Fetching visualizations...</div> 
+              <div className={ styles.watermark }>
+                { specs.progress != null ? specs.progress : 'Fetching visualizations…' }
+              </div> 
             }
             { !specs.isFetching && filteredSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>
