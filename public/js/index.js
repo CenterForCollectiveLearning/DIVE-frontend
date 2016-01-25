@@ -17,6 +17,16 @@ EventPluginHub.injection.injectEventPluginsByName({ TapEventPlugin });
 
 const store = configureStore();
 
+if (window.__env.NODE_ENV == 'STAGING' && window.localStorage['powerAuth'] != 'true') {
+  const password = prompt('Please enter your password to view this page.', '');
+
+  if (password != "macro") {
+    window.location="http://www.usedive.com/";
+  } else {
+    window.localStorage['powerAuth'] = 'true';
+  }
+}
+
 ReactDOM.render(
   <Provider store={store}>
     <ReduxRouter />
