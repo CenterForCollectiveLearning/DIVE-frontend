@@ -1,23 +1,6 @@
-// var webpack = require('webpack');
-// var WebpackDevServer = require('webpack-dev-server');
-// var config = require('./webpack.config');
+var useExpress = (process.env.NODE_ENV == 'PRODUCTION' || process.env.NODE_ENV == 'STAGING');
 
-// new WebpackDevServer(webpack(config), {
-//   publicPath: config.output.publicPath,
-//   hot: true,
-//   historyApiFallback: true
-// }).listen(3009, 'localhost', function (err, result) {
-//   if (err) {
-//     console.log(err);
-//   }
-
-//   console.log('Listening at localhost:3009');
-// });
-
-
-var isProduction = (process.env.NODE_ENV == 'production');
-
-if (isProduction) {
+if (useExpress) {
   var express = require('express');
   var path = require('path');
   var app = express();
