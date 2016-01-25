@@ -21,7 +21,6 @@ export function pollForChainTaskResult(taskIds, dispatcherParams, dispatcher, pr
       })
       .then(response => response.json())
       .then(function(data) {
-        console.log(data)
         if (data.state == 'SUCCESS') {
           dispatch(dispatcher(dispatcherParams, data.result));
         } else {
