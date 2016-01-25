@@ -1,7 +1,6 @@
+var useExpress = (process.env.NODE_ENV == 'PRODUCTION' || process.env.NODE_ENV == 'STAGING');
 
-var isProduction = (process.env.NODE_ENV != 'DEVELOPMENT');
-
-if (isProduction) {
+if (useExpress) {
   var express = require('express');
   var path = require('path');
   var app = express();
