@@ -6,10 +6,8 @@ var devFlagPlugin = new webpack.DefinePlugin({
 });
 
 function getEntrySources(sources) {
-  if (process.env.NODE_ENV !== 'production') {
-    sources.push('webpack-dev-server/client?http://localhost:3009')
-    sources.push('webpack/hot/only-dev-server')
-  }
+  sources.push('webpack-dev-server/client?http://localhost:3009')
+  sources.push('webpack/hot/only-dev-server')
   return sources;
 }
 
