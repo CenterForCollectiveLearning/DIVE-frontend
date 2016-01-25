@@ -54,7 +54,7 @@
     "webpack-dev-server": "^1.11.0"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "node buildenv && node server.js",
     "build": "webpack -p",
     "deploy": "npm run build && divshot push"
   },
