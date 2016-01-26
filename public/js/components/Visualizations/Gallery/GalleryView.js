@@ -18,7 +18,7 @@ export class GalleryView extends Component {
 
   componentWillMount() {
     const { datasetSelector, project, specs, fetchSpecs, clearVisualization, gallerySelector } = this.props;
-    const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching);
+    const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching && !specs.error);
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && noSpecsAndNotFetching) {
       fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
@@ -30,7 +30,7 @@ export class GalleryView extends Component {
   componentDidUpdate(previousProps) {
     const { datasetSelector, project, specs, gallerySelector, fetchSpecs } = this.props;
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
-    const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching);
+    const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching && !specs.error);
     const gallerySelectorChanged = (gallerySelector.updatedAt !== previousProps.gallerySelector.updatedAt);
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && (datasetChanged || gallerySelectorChanged || noSpecsAndNotFetching)) {

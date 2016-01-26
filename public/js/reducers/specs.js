@@ -11,13 +11,14 @@ const baseState = {
   loaded: false,
   items: [],
   updatedAt: 0,
-  progress: null
+  progress: null,
+  error: null
 }
 
 export default function specs(state=baseState, action) {
   switch (action.type) {
     case REQUEST_SPECS:
-      return { ...state, isFetching: true, progress: null };
+      return { ...state, isFetching: true, progress: null, error: null };
 
     case PROGRESS_SPECS:
       if (action.progress && action.progress.length){
@@ -26,10 +27,10 @@ export default function specs(state=baseState, action) {
       return state;
 
     case RECEIVE_SPECS:
-      return { ...state, isFetching: false, items: action.specs, updatedAt: action.receivedAt, loaded: true, progress: null };
+      return { ...state, isFetching: false, items: action.specs, updatedAt: action.receivedAt, loaded: true, progress: null, error: null };
 
     case FAILED_RECEIVE_SPECS:
-      return { ...state, isFetching: false, loaded: true };
+      return { ...state, isFetching: false, loaded: true, error: action.error };
 
     case WIPE_PROJECT_STATE:
       return baseState;
