@@ -38,7 +38,7 @@ export class ComparisonSidebar extends Component {
                 new Object({
                   id: item.id,
                   name: item.name,
-                  disabled: (this.props.comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0)
+                  disabled: (this.props.comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0 || item.generalType == 'q')
 
                 })
               )}
@@ -55,7 +55,7 @@ export class ComparisonSidebar extends Component {
                 new Object({
                   id: item.id,
                   name: item.name,
-                  disabled: (this.props.comparisonSelector.independentVariablesIds.indexOf(item.id) >= 0)
+                  disabled: (this.props.comparisonSelector.independentVariablesIds.indexOf(item.id) >= 0 || item.generalType == 'c')
                 })
               )}
               valueMember="id"

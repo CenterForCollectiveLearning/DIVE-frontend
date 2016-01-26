@@ -3,7 +3,8 @@ import {
   SELECT_COMPARISON_DEPENDENT_VARIABLE,
   REQUEST_NUMERICAL_COMPARISON,
   RECEIVE_NUMERICAL_COMPARISON,
-  
+  REQUEST_ANOVA,
+  RECEIVE_ANOVA
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
