@@ -6,6 +6,7 @@ import styles from '../Analysis.sass';
 import { runNumericalComparison, runAnova } from '../../../actions/ComparisonActions';
 import Card from '../../Base/Card';
 import StatsTable from './StatsTable';
+import AnovaTable from './AnovaTable';
 import HeaderBar from '../../Base/HeaderBar';
 
 export class ComparisonView extends Component {
@@ -33,7 +34,7 @@ export class ComparisonView extends Component {
     const { numericalComparisonResult, independentVariableNames, dependentVariableNames, anovaResult } = this.props;
     const atLeastTwoVariablesSelectedOfOneType = independentVariableNames.length >= 2 || dependentVariableNames.length >= 2;
     const anovaResultNotEmpty = anovaResult && anovaResult.stats && anovaResult.stats.length > 0;
-    const anovaCanBeDisplayed = independentVariableNames && dependentVariableNames && anovaResultNotEmpty;
+    const anovaCanBeDisplayed = independentVariableNames.length && dependentVariableNames.length && anovaResultNotEmpty;
     const numericalComparisonResultNotEmpty = numericalComparisonResult && numericalComparisonResult.tests && numericalComparisonResult.tests.length > 0
     if (atLeastTwoVariablesSelectedOfOneType && numericalComparisonResultNotEmpty) {
       return (
@@ -48,8 +49,13 @@ export class ComparisonView extends Component {
 
     else if (anovaCanBeDisplayed) {
       return (
-        <div> {anovaResult} </div>
-      )
+        <div className={ styles.summaryViewContainer }>
+          <Card>
+            <HeaderBar header={ <span>Anova Table</span> } />
+            <AnovaTable anovaData={ anovaResult } />
+          </Card>
+        </div>
+      );
     }
 
     return (

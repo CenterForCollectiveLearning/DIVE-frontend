@@ -1,6 +1,6 @@
 export function getRoundedString(num, decimalPlaces=3, useFixed=false) {
   const roundedNum = getRoundedNum(num, decimalPlaces, useFixed);
-  if (roundedNum == NaN) {
+  if (isNaN(roundedNum)) {
     return '';
   }
   return roundedNum.toString();
