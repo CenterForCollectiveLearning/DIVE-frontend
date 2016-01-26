@@ -122,7 +122,7 @@ export function uploadDataset(projectId, datasetFile) {
 
     const completeEvent = (request) => (evt) => {
       const { taskIds } = JSON.parse(request.responseText);
-      dispatch(pollForChainTaskResult(taskIds, {}, receiveUploadDatasetDispatcher, progressTaskUploadDatasetDispatcher));
+      dispatch(pollForChainTaskResult(taskIds, REQUEST_UPLOAD_DATASET, {}, receiveUploadDatasetDispatcher, progressTaskUploadDatasetDispatcher));
     };
 
     return httpRequest('POST', '/datasets/v1/upload', formData, completeEvent, uploadEvents);

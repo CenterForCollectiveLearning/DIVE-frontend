@@ -23,54 +23,39 @@ export function httpRequest(method, urlPath, formData, completeEvent, uploadEven
   request.send(formData);
 }
 
-export function pollForTaskResult(taskId, dispatcherParams, dispatcher, interval=400, limit=300, counter=0) {
+export function pollForChainTaskResult(taskIds, taskType, dispatcherParams, dispatcher, progressDispatcher, interval=400, limit=300, counter=0) {
   return dispatch => {
-    return dispatch(pollForTasks([taskId], dispatcherParams, dispatcher, null, interval, limit, counter));
-  };
-}
-
-export function pollForChainTaskResult(taskIds, dispatcherParams, dispatcher, progressDispatcher, interval=400, limit=300, counter=0) {
-  return dispatch => {
-    return dispatch(pollForTasks(taskIds, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter));
+    return dispatch(pollForTasks(taskIds, taskType, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter));
   };
 }
 
 function revokeTasks(taskIds) {
-  const multipleTasks = taskIds.length > 1;
-  const completeUrl = API_URL + '/tasks/v1/revoke' + (multipleTasks ? '' : `/${ taskIds[0] }`);
+  const completeUrl = API_URL + '/tasks/v1/revoke';
 
   var options = {
-    headers: { 'Content-Type': 'application/json' }
+    headers: { 'Content-Type': 'application/json' },
+    method: 'post',
+    body: JSON.stringify({ 'task_ids': taskIds })
   };
 
-  if (multipleTasks) {
-    options = { ...options,
-      method: 'post',
-      body: JSON.stringify({ 'task_ids': taskIds })
-    };
-  }
+  taskManager.removeTasks(taskIds);
 
   return isomorphicFetch(completeUrl, options).then(response => response.json());
 }
 
-function pollForTasks(taskIds, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter) {
-  taskIds.forEach((taskId) =>
-    taskManager.addTask(taskId)
-  );
+function pollForTasks(taskIds, taskType, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter) {
+  const otherTasks = taskManager.addTasks(taskIds, taskType);
+  if (otherTasks.length) {
+    revokeTasks(otherTasks);
+  }
 
-  const multipleTasks = taskIds.length > 1;
-  const completeUrl = API_URL + '/tasks/v1/result' + (multipleTasks ? '' : `/${ taskIds[0] }`);
+  const completeUrl = API_URL + '/tasks/v1/result';
 
   var options = {
-    headers: { 'Content-Type': 'application/json' }
+    headers: { 'Content-Type': 'application/json' },
+    method: 'post',
+    body: JSON.stringify({ 'task_ids': taskIds })
   };
-
-  if (multipleTasks) {
-    options = { ...options,
-      method: 'post',
-      body: JSON.stringify({ 'task_ids': taskIds })
-    };
-  }
 
   return dispatch => {
     return isomorphicFetch(completeUrl, options)
@@ -86,7 +71,9 @@ function pollForTasks(taskIds, dispatcherParams, dispatcher, progressDispatcher,
           if (progressDispatcher) {
             dispatch(progressDispatcher(data));
           }
-          setTimeout(function() { dispatch(pollForTasks(taskIds, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter + 1)) }, interval);
+          if (taskManager.getTasks(taskIds).length > 0) {
+            setTimeout(function() { dispatch(pollForTasks(taskIds, taskType, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter + 1)) }, interval);
+          }
         }
       });
   };

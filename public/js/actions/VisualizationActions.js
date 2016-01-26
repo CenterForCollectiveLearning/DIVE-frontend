@@ -17,7 +17,7 @@ import {
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
-import { fetch, pollForTaskResult, pollForChainTaskResult } from './api.js';
+import { fetch, pollForChainTaskResult } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
 function requestSpecsDispatcher() {
@@ -96,7 +96,7 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
       .then(function(json) {
         const dispatchParams = { project_id: projectId, dataset_id: datasetId };
         if (json.taskIds) {
-          dispatch(pollForChainTaskResult(json.taskIds, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher));
+          dispatch(pollForChainTaskResult(json.taskIds, REQUEST_SPECS, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher));
         } else if (json.specs.length > 0) {
           dispatch(receiveSpecsDispatcher(dispatchParams, json.specs));
         }
