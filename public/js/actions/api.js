@@ -1,34 +1,14 @@
 import { default as isomorphicFetch } from 'isomorphic-fetch';
 
-const API_URL = window.__env.API_URL
+import TaskManager from './TaskManager';
+
+const API_URL = window.__env.API_URL;
+
+const taskManager = new TaskManager();
 
 export function fetch(urlPath, options) {
   const completeUrl = API_URL + urlPath;
   return isomorphicFetch(completeUrl, options);
-}
-
-export function pollForChainTaskResult(taskIds, dispatcherParams, dispatcher, progressDispatcher, interval=400, limit=300, counter=0) {
-  const completeUrl = API_URL + '/tasks/v1/result';
-
-  const params = {
-    'task_ids': taskIds
-  }
-  return dispatch => {
-    return isomorphicFetch(completeUrl, {
-        method: 'post',
-        body: JSON.stringify(params),
-        headers: { 'Content-Type': 'application/json' }
-      })
-      .then(response => response.json())
-      .then(function(data) {
-        if (data.state == 'SUCCESS') {
-          dispatch(dispatcher(dispatcherParams, data.result));
-        } else {
-          dispatch(progressDispatcher(data));
-          setTimeout(function() { dispatch(pollForChainTaskResult(taskIds, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter + 1)) }, interval);
-        }
-      });
-  };
 }
 
 export function httpRequest(method, urlPath, formData, completeEvent, uploadEvents) {
@@ -44,16 +24,69 @@ export function httpRequest(method, urlPath, formData, completeEvent, uploadEven
 }
 
 export function pollForTaskResult(taskId, dispatcherParams, dispatcher, interval=400, limit=300, counter=0) {
-  const completeUrl = API_URL + `/tasks/v1/result/${ taskId }`;
+  return dispatch => {
+    return dispatch(pollForTasks([taskId], dispatcherParams, dispatcher, null, interval, limit, counter));
+  };
+}
+
+export function pollForChainTaskResult(taskIds, dispatcherParams, dispatcher, progressDispatcher, interval=400, limit=300, counter=0) {
+  return dispatch => {
+    return dispatch(pollForTasks(taskIds, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter));
+  };
+}
+
+function revokeTasks(taskIds) {
+  const multipleTasks = taskIds.length > 1;
+  const completeUrl = API_URL + '/tasks/v1/revoke' + (multipleTasks ? '' : `/${ taskIds[0] }`);
+
+  var options = {
+    headers: { 'Content-Type': 'application/json' }
+  };
+
+  if (multipleTasks) {
+    options = { ...options,
+      method: 'post',
+      body: JSON.stringify({ 'task_ids': taskIds })
+    };
+  }
+
+  return isomorphicFetch(completeUrl, options).then(response => response.json());
+}
+
+function pollForTasks(taskIds, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter) {
+  taskIds.forEach((taskId) =>
+    taskManager.addTask(taskId)
+  );
+
+  const multipleTasks = taskIds.length > 1;
+  const completeUrl = API_URL + '/tasks/v1/result' + (multipleTasks ? '' : `/${ taskIds[0] }`);
+
+  var options = {
+    headers: { 'Content-Type': 'application/json' }
+  };
+
+  if (multipleTasks) {
+    options = { ...options,
+      method: 'post',
+      body: JSON.stringify({ 'task_ids': taskIds })
+    };
+  }
 
   return dispatch => {
-    return isomorphicFetch(completeUrl, {})
+    return isomorphicFetch(completeUrl, options)
       .then(response => response.json())
       .then(function(data) {
         if (data.state == 'SUCCESS') {
           dispatch(dispatcher(dispatcherParams, data.result));
+        } else if (counter > limit) {
+          revokeTasks(taskIds).then((revokeData) => {
+            dispatch(dispatcher(dispatcherParams, { ...data.result, error: 'Took too long to get visualizations.' }));
+          });
         } else {
-          setTimeout(function() { dispatch(pollForTaskResult(taskId, dispatcherParams, dispatcher, interval, limit, counter + 1)) }, interval);
+          if (progressDispatcher) {
+            dispatch(progressDispatcher(data));
+          }
+          setTimeout(function() { dispatch(pollForTasks(taskIds, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter + 1)) }, interval);
         }
       });
   };

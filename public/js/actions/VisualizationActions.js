@@ -34,7 +34,7 @@ function progressSpecsDispatcher(data) {
 }
 
 function receiveSpecsDispatcher(params, json) {
-  if (json) {
+  if (json && !json.error) {
     return {
       ...params,
       type: RECEIVE_SPECS,
@@ -47,7 +47,8 @@ function receiveSpecsDispatcher(params, json) {
     ...params,
     type: FAILED_RECEIVE_SPECS,
     specs: [],
-    receivedAt: Date.now()
+    receivedAt: Date.now(),
+    error: json.error || "Error retrieving visualizations."
   };
 }
 
