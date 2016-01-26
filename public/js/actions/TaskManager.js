@@ -9,18 +9,36 @@ export default class TaskManager {
     this.state = { ...this.state, ...newState };
   }
 
-  getTasks() {
-    return this.state.currentTasks.map((task) => task.id);
+  getTasks(taskIds) {
+    var tasks = this.state.currentTasks;
+
+    if (taskIds) {
+      tasks = tasks.filter((task) => (taskIds.indexOf(task.id) != -1));
+    }
+
+    return tasks.map((task) => task.id);
   }
 
-  addTask(taskId, taskType) {
+  addTasks(taskIds, taskType) {
     var tasks = this.state.currentTasks.slice();
-    const otherTasks = tasks.find((task) => (task.type == taskType));
-    if (tasks.find((task) => (task.id == taskId)) == undefined) {
-      tasks.push({ id: taskId, type: taskType });
-      this.setState({ currentTasks: tasks });
-    }
+    const otherTasks = tasks
+      .filter((task) => ((taskIds.indexOf(task.id) == -1) && (task.type == taskType)))
+      .map((task) => task.id);
+
+    taskIds.forEach((newTaskId) => {
+      if (tasks.find((oldTask) => (oldTask.id == newTaskId)) == undefined) {
+        tasks.push({ id: newTaskId, type: taskType });
+      }
+    });
+
+    this.setState({ currentTasks: tasks });
     return otherTasks;
+  }
+
+  removeTasks(taskIds) {
+    var tasks = this.state.currentTasks.slice();
+    tasks = tasks.filter((task) => taskIds.indexOf(task.id) != -1);
+    this.setState({ currentTasks: tasks });
   }
 }
 
