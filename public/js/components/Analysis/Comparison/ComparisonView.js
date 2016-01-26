@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import styles from '../Analysis.sass';
 
-import { runNumericalComparison } from '../../../actions/ComparisonActions';
+import { runNumericalComparison, runAnova } from '../../../actions/ComparisonActions';
 import Card from '../../Base/Card';
 import StatsTable from './StatsTable';
 import HeaderBar from '../../Base/HeaderBar';
@@ -11,17 +11,23 @@ import HeaderBar from '../../Base/HeaderBar';
 export class ComparisonView extends Component {
 
   componentWillReceiveProps(nextProps) {
-    const { comparisonVariableNames, runNumericalComparison } = this.props;
-    const comparisonVariablesChanged = nextProps.comparisonVariableNames.length != comparisonVariableNames.length;
+    const { independentVariableNames, dependentVariableNames, runNumericalComparison, canRunNumericalComparisonDependent, canRunNumericalComparisonIndependent } = this.props;
+    const independentVariablesChanged = nextProps.independentVariableNames.length != independentVariableNames.length;
+    const dependentVariablesChanged = nextProps.dependentVariableNames.length != dependentVariableNames.length;
+    const sideBarChanged = independentVariablesChanged || dependentVariablesChanged
 
-    if (nextProps.projectId && nextProps.datasetId && (nextProps.comparisonVariableNames.length >= 2) && comparisonVariablesChanged) {
-      runNumericalComparison(nextProps.projectId, nextProps.datasetId, nextProps.comparisonVariableNames, true);
+    if (nextProps.projectId && nextProps.datasetId && sideBarChanged) {
+      if (nextProps.canRunNumericalComparisonIndependent){
+        runNumericalComparison(nextProps.projectId, nextProps.datasetId, nextProps.independentVariableNames, true);
+      } else if (nextProps.canRunNumericalComparisonDependent){
+        runNumericalComparison(nextProps.projectId, nextProps.datasetId, nextProps.dependentVariableNames, false);
+      }
     }
   }
 
   render() {
-    const { numericalComparisonResult, comparisonVariableNames } = this.props;
-    const atLeastTwoVariablesSelected = comparisonVariableNames.length >= 2
+    const { numericalComparisonResult, independentVariableNames, dependentVariableNames } = this.props;
+    const atLeastTwoVariablesSelected = independentVariableNames.length >= 2 || dependentVariableNames.length >= 2
     const numericalComparisonResultNotEmpty = numericalComparisonResult && numericalComparisonResult.tests && numericalComparisonResult.tests.length > 0
     if (atLeastTwoVariablesSelected && numericalComparisonResultNotEmpty) {
       return (
@@ -42,18 +48,35 @@ export class ComparisonView extends Component {
 
 function mapStateToProps(state) {
   const { project, comparisonSelector, datasetSelector, fieldProperties } = state;
-  const { comparisonVariablesIds, numericalComparisonResult } = comparisonSelector;
+  const { independentVariablesIds, numericalComparisonResult } = comparisonSelector;
 
-  const comparisonVariableNames = fieldProperties.items
-    .filter((property) => comparisonSelector.comparisonVariablesIds.indexOf(property.id) >= 0)
+  const independentVariableNames = fieldProperties.items
+    .filter((property) => comparisonSelector.independentVariablesIds.indexOf(property.id) >= 0)
     .map((field) => field.name);
+
+
+
+  const dependentVariableNames = fieldProperties.items
+    .filter((property) => comparisonSelector.dependentVariablesIds.indexOf(property.id) >= 0)
+    .map((field) => field.name);
+
+  const canRunNumericalComparisonIndependent = (fieldProperties.items
+    .filter((property) => comparisonSelector.independentVariablesIds.indexOf(property.id) >= 0 && property.generalType == 'q')
+    .length == independentVariableNames.length) && dependentVariableNames.length == 0 && independentVariableNames.length >= 2;
+
+  const canRunNumericalComparisonDependent = (fieldProperties.items
+    .filter((property) => comparisonSelector.dependentVariablesIds.indexOf(property.id) >= 0 && property.generalType == 'q')
+    .length == dependentVariableNames.length) && independentVariableNames.length == 0 && dependentVariableNames.length >= 2;
 
   return {
     projectId: project.properties.id,
     datasetId: datasetSelector.datasetId,
-    comparisonVariableNames: comparisonVariableNames,
+    canRunNumericalComparisonIndependent: canRunNumericalComparisonIndependent,
+    canRunNumericalComparisonDependent: canRunNumericalComparisonDependent,
+    independentVariableNames: independentVariableNames,
+    dependentVariableNames: dependentVariableNames,
     numericalComparisonResult: numericalComparisonResult
   };
 }
 
-export default connect(mapStateToProps, { runNumericalComparison })(ComparisonView);
+export default connect(mapStateToProps, { runNumericalComparison, runAnova })(ComparisonView);

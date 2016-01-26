@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectComparisonVariable } from '../../../actions/ComparisonActions';
+import { selectIndependentVariable, selectDependentVariable } from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
 
 import AnalysisSidebar from '../AnalysisSidebar';
@@ -32,19 +32,36 @@ export class ComparisonSidebar extends Component {
     return (
       <AnalysisSidebar selectedTab="comparison">
         { this.props.fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Comparison Variables">
+          <SidebarGroup heading="Independent Variables">
             <ToggleButtonGroup
               toggleItems={ this.props.fieldProperties.items.map((item) =>
                 new Object({
                   id: item.id,
                   name: item.name,
-                  disabled: (item.generalType == 'c')
+                  disabled: (this.props.comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0)
+
                 })
               )}
               valueMember="id"
               displayTextMember="name"
-              externalSelectedItems={ this.props.comparisonSelector.comparisonVariablesIds }
-              onChange={ this.props.selectComparisonVariable } />
+              externalSelectedItems={ this.props.comparisonSelector.independentVariablesIds }
+              onChange={ this.props.selectIndependentVariable } />
+          </SidebarGroup>
+        }
+        { this.props.fieldProperties.items.length != 0 &&
+          <SidebarGroup heading="Dependent Variables">
+            <ToggleButtonGroup
+              toggleItems={ this.props.fieldProperties.items.map((item) =>
+                new Object({
+                  id: item.id,
+                  name: item.name,
+                  disabled: (this.props.comparisonSelector.independentVariablesIds.indexOf(item.id) >= 0)
+                })
+              )}
+              valueMember="id"
+              displayTextMember="name"
+              externalSelectedItems={ this.props.comparisonSelector.dependentVariablesIds }
+              onChange={ this.props.selectDependentVariable } />
           </SidebarGroup>
         }
       </AnalysisSidebar>
@@ -69,4 +86,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectComparisonVariable })(ComparisonSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, selectDependentVariable })(ComparisonSidebar);
