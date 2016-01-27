@@ -30,7 +30,7 @@ export class RegressionSidebar extends Component {
   }
 
   onSelectDependentVariable(dependentVariable) {
-    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/analyze/regression/${ dependentVariable }`);
+    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/analyze/regression/${ dependentVariable }`);
   }
 
   render() {

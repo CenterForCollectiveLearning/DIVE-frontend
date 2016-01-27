@@ -10,15 +10,15 @@ export class RegressionBasePage extends Component {
   componentWillMount() {
     if (this.props.fieldProperties.items.length > 0 && !this.props.params.dependentVariable) {
       const newDependentVariableId =  (this.props.fieldProperties.items.find((property) => property.name == 'salary' || property.name == 'Intensity') || this.props.fieldProperties.items.find((property) => property.generalType == 'q')).id
-      this.props.replaceState(null, `/projects/${ this.props.params.projectId }/analyze/regression/${ newDependentVariableId }`);
+      this.props.replaceState(null, `/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/analyze/regression/${ newDependentVariableId }`);
     }
   }
 
-
   componentWillReceiveProps(nextProps) {
-    if (nextProps.fieldProperties.items.length > 0 && !nextProps.params.dependentVariable) {
-      const newDependentVariableId = (nextProps.fieldProperties.items.find((property) => property.name == 'salary' || property.name == 'Intensity') || nextProps.fieldProperties.items.find((property) => property.generalType == 'q')).id
-      this.props.replaceState(null, `/projects/${ nextProps.params.projectId }/analyze/regression/${ newDependentVariableId }`);
+    const { fieldProperties, params, replaceState } = nextProps;
+    if (fieldProperties.items.length > 0 && !params.dependentVariable) {
+      const newDependentVariableId = (fieldProperties.items.find((property) => property.name == 'salary' || property.name == 'Intensity') || fieldProperties.items.find((property) => property.generalType == 'q')).id
+      replaceState(null, `/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression/${ newDependentVariableId }`);
     }
   }
 

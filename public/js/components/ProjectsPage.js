@@ -25,19 +25,22 @@ export class ProjectsPage extends Component {
   }
 
   _getSelectedTab(){
-    const tabList = ["data", "transform", "visualize", "analyze"];
+    const tabList = ["datasets", "transform", "visualize", "analyze"];
     const _validTab = function (tabValue) {
-      return tabList.indexOf(tabValue) > -1;
+      return tabList.indexOf(tabValue.split('/')[0]) > -1;
     }
 
     if ((this.props.routes.length > 2) && _validTab(this.props.routes[2].path)) {
+      if ((this.props.routes.length > 3) && _validTab(this.props.routes[3].path)) {
+        return this.props.routes[3].path;
+      }
       return this.props.routes[2].path;
     }
     return "datasets";
   }
 
   _handleTabsChange(tab){
-    this.props.pushState(null, `/projects/${this.props.params.projectId}/${tab.props.route}`);
+    this.props.pushState(null, `/projects/${ this.props.params.projectId }/${ tab.props.route }`);
   }
 
   _onClickLogo(){
@@ -56,10 +59,10 @@ export class ProjectsPage extends Component {
             </div>
           </div>
           <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
-            <Tab label="DATA" value="data" route="data" />
-            <Tab label="VISUALIZE" value="visualize" route="visualize/gallery" disabled={ this.props.datasetSelector.datasetId == null }/>
-            <Tab label="ANALYZE" value="analyze" route="analyze/regression" disabled={ this.props.datasetSelector.datasetId == null }/>
-            <Tab label="COMPOSE" value="compose" route="compose" disabled/>
+            <Tab label="DATA" value="datasets" route={ `datasets${ this.props.params.datasetId ? `/${ this.props.params.datasetId }/inspect` : '' }` } />
+            <Tab label="VISUALIZE" value="visualize" route={ `datasets/${ this.props.params.datasetId }/visualize/gallery` } disabled={ this.props.datasetSelector.datasetId == null }/>
+            <Tab label="ANALYZE" value="analyze" route={ `datasets/${ this.props.params.datasetId }/analyze/regression` } disabled={ this.props.datasetSelector.datasetId == null }/>
+            <Tab label="COMPOSE" value="compose" route={ `datasets/${ this.props.params.datasetId }/compose` } disabled/>
           </Tabs>
         </div>
         {this.props.children}

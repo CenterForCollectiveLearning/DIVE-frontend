@@ -34,7 +34,7 @@ export class DatasetToolbar extends Component {
 
   onSelectDataset(selectedValue) {
     if (selectedValue) {
-      this.props.pushState(null, `/projects/${this.props.projectId}/data/${selectedValue}/inspect`);
+      this.props.pushState(null, `/projects/${ this.props.projectId }/datasets/${ selectedValue }/inspect`);
     }
   }
 
@@ -46,7 +46,7 @@ export class DatasetToolbar extends Component {
 
   onClickUploadDataset() {
     const projectId = this.props.projectId;
-    this.props.pushState(null, `/projects/${ projectId }/data/upload`);
+    this.props.pushState(null, `/projects/${ projectId }/datasets/upload`);
   }
 
   render() {
