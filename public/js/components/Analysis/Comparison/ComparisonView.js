@@ -12,7 +12,7 @@ import HeaderBar from '../../Base/HeaderBar';
 export class ComparisonView extends Component {
 
   componentWillReceiveProps(nextProps) {
-    const { independentVariableNames, dependentVariableNames, runNumericalComparison, runAnova, canRunNumericalComparisonDependent, canRunNumericalComparisonIndependent } = this.props;
+    const { independentVariableNamesAndTypes, independentVariableNames, dependentVariableNames, runNumericalComparison, runAnova, canRunNumericalComparisonDependent, canRunNumericalComparisonIndependent } = this.props;
 
     const independentVariablesChanged = nextProps.independentVariableNames.length != independentVariableNames.length;
     const dependentVariablesChanged = nextProps.dependentVariableNames.length != dependentVariableNames.length;
@@ -25,7 +25,7 @@ export class ComparisonView extends Component {
       } else if (nextProps.canRunNumericalComparisonDependent){
         runNumericalComparison(nextProps.projectId, nextProps.datasetId, nextProps.dependentVariableNames, false);
       } else if (canRunAnova){
-        runAnova(nextProps.projectId, nextProps.datasetId, nextProps.independentVariableNames, nextProps.dependentVariableNames);
+        runAnova(nextProps.projectId, nextProps.datasetId, nextProps.independentVariableNamesAndTypes, nextProps.dependentVariableNames);
       }
     }
   }
@@ -72,6 +72,10 @@ function mapStateToProps(state) {
     .filter((property) => comparisonSelector.independentVariablesIds.indexOf(property.id) >= 0)
     .map((field) => field.name);
 
+  const independentVariableNamesAndTypes = fieldProperties.items
+    .filter((property) => comparisonSelector.independentVariablesIds.indexOf(property.id) >= 0)
+    .map((field) => [field.generalType, field.name]);
+
   const dependentVariableNames = fieldProperties.items
     .filter((property) => comparisonSelector.dependentVariablesIds.indexOf(property.id) >= 0)
     .map((field) => field.name);
@@ -90,6 +94,7 @@ function mapStateToProps(state) {
     canRunNumericalComparisonIndependent: canRunNumericalComparisonIndependent,
     canRunNumericalComparisonDependent: canRunNumericalComparisonDependent,
     independentVariableNames: independentVariableNames,
+    independentVariableNamesAndTypes: independentVariableNamesAndTypes,
     dependentVariableNames: dependentVariableNames,
     numericalComparisonResult: numericalComparisonResult,
     anovaResult: anovaResult
