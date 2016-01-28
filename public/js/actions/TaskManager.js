@@ -2,7 +2,7 @@ export default class TaskManager {
   constructor() {
     this.state = {
       currentTasks: []
-    };    
+    };
   }
 
   setState(newState) {
@@ -41,4 +41,3 @@ export default class TaskManager {
     this.setState({ currentTasks: tasks });
   }
 }
-
