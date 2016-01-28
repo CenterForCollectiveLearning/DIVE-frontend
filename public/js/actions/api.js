@@ -23,12 +23,6 @@ export function httpRequest(method, urlPath, formData, completeEvent, uploadEven
   request.send(formData);
 }
 
-export function pollForChainTaskResult(taskIds, taskType, dispatcherParams, dispatcher, progressDispatcher, interval=400, limit=300, counter=0) {
-  return dispatch => {
-    return dispatch(pollForTasks(taskIds, taskType, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter));
-  };
-}
-
 function revokeTasks(taskIds) {
   const completeUrl = API_URL + '/tasks/v1/revoke';
 
@@ -43,26 +37,16 @@ function revokeTasks(taskIds) {
   return isomorphicFetch(completeUrl, options).then(response => response.json());
 }
 
-function pollForTasks(taskIds, taskType, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter) {
-  const otherTasks = taskManager.addTasks(taskIds, taskType);
-  if (otherTasks.length) {
-    revokeTasks(otherTasks);
-  }
 
-  const completeUrl = API_URL + '/tasks/v1/result';
-
-  var options = {
-    headers: { 'Content-Type': 'application/json' },
-    method: 'post',
-    body: JSON.stringify({ 'task_ids': taskIds })
-  };
+export function pollForTaskResult(taskId, dispatcherParams, dispatcher, progressDispatcher, interval=400, limit=300, counter=0) {
+  const completeUrl = API_URL + `/tasks/v1/result/${ taskId }`;
 
   return dispatch => {
     return isomorphicFetch(completeUrl, options)
       .then(response => response.json())
       .then(function(data) {
         if (data.state == 'SUCCESS') {
-          taskManager.removeTasks(taskIds);
+          taskManager.removeTasks(taskId);
           dispatch(dispatcher(dispatcherParams, data.result));
         } else if (counter > limit) {
           revokeTasks(taskIds).then((revokeData) => {

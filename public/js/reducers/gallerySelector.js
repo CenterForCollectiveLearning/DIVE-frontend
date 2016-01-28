@@ -125,6 +125,7 @@ export default function gallerySelector(state = baseState, action) {
         return sortSpecsByFunction(selectedSortingFunction, specA, specB);
       };
 
+      console.log(action.specs)
       return { ...state, specs: action.specs.sort(defaultSortSpecs) };
 
     case SELECT_FIELD_PROPERTY:
