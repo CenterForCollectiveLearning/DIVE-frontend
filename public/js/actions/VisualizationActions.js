@@ -34,7 +34,6 @@ function progressSpecsDispatcher(data) {
 }
 
 function receiveSpecsDispatcher(params, json) {
-  console.log('Received specs', json)
   if (json && !json.error) {
     return {
       ...params,

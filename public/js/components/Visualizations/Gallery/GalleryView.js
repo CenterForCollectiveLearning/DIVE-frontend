@@ -50,7 +50,7 @@ export class GalleryView extends Component {
       .map((filter) => filter.type);
 
     const filteredSpecs = gallerySelector.specs.filter((spec) =>
-      (selectedVisualizationTypes.length == 0) || selectedVisualizationTypes.some((filter) => 
+      (selectedVisualizationTypes.length == 0) || selectedVisualizationTypes.some((filter) =>
         spec.vizTypes.indexOf(filter) >= 0
       )
     );
@@ -66,7 +66,7 @@ export class GalleryView extends Component {
                 { construct.string }
               </span>
             )}
-            actions={ filteredSpecs.length > 0 && 
+            actions={ filteredSpecs.length > 0 &&
               <div className={ styles.sortingControl }>
                 <span>Sort by </span>
                 <DropDownMenu
@@ -80,7 +80,7 @@ export class GalleryView extends Component {
             { specs.isFetching &&
               <div className={ styles.watermark }>
                 { specs.progress != null ? specs.progress : 'Fetching visualizations…' }
-              </div> 
+              </div>
             }
             { !specs.isFetching && filteredSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>
