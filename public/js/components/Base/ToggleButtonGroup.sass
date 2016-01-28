@@ -49,11 +49,6 @@
   .splitButton.textToggleButton
     display: flex
 
-    &.selected .splitButtonSelect
-      opacity: 1
-      cursor: pointer
-      pointer-events: auto
-
     &:first-child
       .raisedButton.toggleButton
         border-top-left-radius: 2px
@@ -72,14 +67,18 @@
       flex-grow: 1
       border-radius: 0
 
+    .defaultDropdown
+      > div > div:first-of-type > div
+        color: #888
+
     .splitButtonSelect
       width: 110px
       margin-top: -1px
       margin-left: -1px
-      opacity: 0.5
-      cursor: default
-      pointer-events: none
       flex-shrink: 0
+      opacity: 1
+      cursor: pointer
+      pointer-events: auto
 
       > div > div > div
         border-radius: 0

@@ -19,6 +19,7 @@ export class GallerySidebar extends Component {
     super(props);
 
     this.clickFieldProperty = this.clickFieldProperty.bind(this);
+    this.clickFieldPropertyValue = this.clickFieldPropertyValue.bind(this);
   }
 
   componentWillMount() {
@@ -65,6 +66,11 @@ export class GallerySidebar extends Component {
     }
 
     pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/gallery?${ selectedFieldPropertiesQueryString }`);
+  }
+
+  clickFieldPropertyValue(fieldPropertyId, fieldPropertyValueId) {
+    this.clickFieldProperty(fieldPropertyId);
+    this.props.selectFieldPropertyValue(fieldPropertyId, fieldPropertyValueId);
   }
 
   clickDataset(datasetId) {
@@ -117,7 +123,7 @@ export class GallerySidebar extends Component {
                   valueMember="id"
                   splitMenuItemsMember="values"
                   separated={ true }
-                  selectMenuItem={ selectFieldPropertyValue }
+                  selectMenuItem={ this.clickFieldPropertyValue }
                   onChange={ this.clickFieldProperty } />
               </div>
             }
