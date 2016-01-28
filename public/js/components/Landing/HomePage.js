@@ -62,7 +62,7 @@ export class HomePage extends Component {
                 <div className={ styles.watermark }>Fetching datasets...</div>
               }
               { this.props.projects.preloadedProjects.map((project) =>
-                <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/visualize` } className={ styles.projectButton }>{ project.title }</a>
+                <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
               )}
             </div>
           </div>

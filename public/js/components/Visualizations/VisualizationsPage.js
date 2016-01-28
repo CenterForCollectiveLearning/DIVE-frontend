@@ -6,20 +6,20 @@ import styles from './Visualizations.sass';
 export class VisualizationsPage extends Component {
   componentWillMount() {
     if (this.props.routes.length < 4) {
-      this.props.replaceState(null, `/projects/${this.props.params.projectId}/visualize/gallery`);
+      this.props.replaceState(null, `/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/visualize/gallery`);
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.routes.length < 4) {
-      this.props.replaceState(null, `/projects/${this.props.params.projectId}/visualize/gallery`);
+      this.props.replaceState(null, `/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/visualize/gallery`);
     }
   }
 
   render() {
     return (
       <div className={ styles.fillContainer + ' ' + styles.visualizationsPageContainer }>
-        {this.props.children}
+        { this.props.children }
       </div>
     );
   }
