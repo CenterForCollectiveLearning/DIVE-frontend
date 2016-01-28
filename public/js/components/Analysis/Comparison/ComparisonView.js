@@ -74,7 +74,7 @@ function mapStateToProps(state) {
 
   const independentVariableNamesAndTypes = fieldProperties.items
     .filter((property) => comparisonSelector.independentVariablesIds.indexOf(property.id) >= 0)
-    .map((field) => [field.generalType, field.name]);
+    .map((field) => [field.generalType, field.name, 0]);
 
   const dependentVariableNames = fieldProperties.items
     .filter((property) => comparisonSelector.dependentVariablesIds.indexOf(property.id) >= 0)
