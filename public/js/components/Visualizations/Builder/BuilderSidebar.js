@@ -32,7 +32,7 @@ export class BuilderSidebar extends Component {
   }
 
   onClickGallery() {
-    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/visualize/gallery${ this.props.gallerySelector.queryString }`);
+    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/visualize/gallery${ this.props.gallerySelector.queryString }`);
   }
 
   render() {

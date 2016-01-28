@@ -38,7 +38,7 @@ export class DatasetInspectPage extends Component {
     }
 
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      pushState(null, `/projects/${ this.props.params.projectId }/data/${ datasetSelector.datasetId }/inspect`);
+      pushState(null, `/projects/${ this.props.params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
     }
   }
 

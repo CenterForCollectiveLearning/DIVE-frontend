@@ -13,23 +13,24 @@ import ContributionToRSquaredCard from './ContributionToRSquaredCard';
 export class RegressionView extends Component {
 
   componentWillReceiveProps(nextProps) {
-    const { dependentVariableName, independentVariableNames, runRegression, getContributionToRSquared } = this.props;
+    const { dependentVariableName, independentVariableNames, regressionResult, runRegression, getContributionToRSquared } = this.props;
     const independentVariablesChanged = nextProps.independentVariableNames.length != independentVariableNames.length;
-    const dependentVariableChanged = nextProps.dependentVariableName != dependentVariableName;
+    const dependentVariableChanged = (nextProps.dependentVariableName != dependentVariableName);
+    const dependentVariableExists = (nextProps.dependentVariableName != null);
 
-    if (nextProps.projectId && nextProps.datasetId && (dependentVariableChanged || independentVariablesChanged)) {
+    if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && (dependentVariableChanged || independentVariablesChanged)) {
       runRegression(nextProps.projectId, nextProps.datasetId, nextProps.dependentVariableName, nextProps.independentVariableNames);
     }
 
-    if (nextProps.projectId && nextProps.regressionResult.id && (nextProps.regressionResult.id != this.props.regressionResult.id)) {
-      getContributionToRSquared(nextProps.projectId, nextProps.regressionResult.id);
+    if (nextProps.projectId && nextProps.regressionResult.data && nextProps.regressionResult.data.id && (this.props.regressionResult.data == null || (nextProps.regressionResult.data.id != this.props.regressionResult.data.id))) {
+      getContributionToRSquared(nextProps.projectId, nextProps.regressionResult.data.id);
     }
   }
 
   render() {
     const { regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames } = this.props;
 
-    if (!regressionResult.fields || regressionResult.fields.length == 0) {
+    if (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0) {
       return (
         <div className={ styles.regressionViewContainer }></div>
       );
@@ -40,11 +41,11 @@ export class RegressionView extends Component {
         <RegressionTableCard
           dependentVariableName={ dependentVariableName }
           independentVariableNames={ independentVariableNames }
-          regressionResult={ regressionResult }
+          regressionResult={ regressionResult.data || {} }
           contributionToRSquared={ contributionToRSquared }/>
 
-        { (contributionToRSquared.length > 0) &&
-          <ContributionToRSquaredCard id={ `${ regressionResult.id }` } contributionToRSquared={ contributionToRSquared } />
+        { (contributionToRSquared.length > 0 && regressionResult.data) &&
+          <ContributionToRSquaredCard id={ `${ regressionResult.data.id }` } contributionToRSquared={ contributionToRSquared } />
         }
       </div>
     );

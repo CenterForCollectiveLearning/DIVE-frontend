@@ -39,7 +39,7 @@ export class GalleryView extends Component {
   }
 
   handleClick(specId) {
-    this.props.pushState(null, `/projects/${this.props.project.properties.id}/visualize/builder/${ specId }`);
+    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/visualize/builder/${ specId }`);
   }
 
   render() {

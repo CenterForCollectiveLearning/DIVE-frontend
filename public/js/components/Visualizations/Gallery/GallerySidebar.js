@@ -27,7 +27,7 @@ export class GallerySidebar extends Component {
     if (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded)) {
       fetchDatasetsIfNeeded(project.properties.id);
     }
-    if (datasetSelector.datasetId && (gallerySelector.datasetId != datasetSelector.datasetId) && !gallerySelector.isFetching) {
+    if (project.properties.id && datasetSelector.datasetId && (gallerySelector.datasetId != datasetSelector.datasetId) && !gallerySelector.isFetching) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId, queryFields);
     }
   }
@@ -49,13 +49,13 @@ export class GallerySidebar extends Component {
     if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded))) {
       fetchDatasetsIfNeeded(project.properties.id);
     }
-    if (datasetChanged || (!gallerySelector.isFetching && (gallerySelector.datasetId != datasetSelector.datasetId))) {
+    if (project.properties.id && (datasetChanged || (!gallerySelector.isFetching && (gallerySelector.datasetId != datasetSelector.datasetId)))) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId, queryFields);
     }
   }
 
   clickFieldProperty(fieldPropertyId) {
-    const { gallerySelector, project, pushState } = this.props;
+    const { gallerySelector, project, datasetSelector, pushState } = this.props;
     var selectedFieldPropertiesQueryString = gallerySelector.fieldProperties
       .filter((property) => (!property.selected && property.id == fieldPropertyId) || (property.selected && property.id != fieldPropertyId))
       .map((property) => `fields%5B%5D=${ property.name }`);
@@ -64,7 +64,21 @@ export class GallerySidebar extends Component {
       selectedFieldPropertiesQueryString = selectedFieldPropertiesQueryString.reduce((a, b) => a + "&" + b);
     }
 
-    pushState(null, `/projects/${ project.properties.id }/visualize/gallery?${ selectedFieldPropertiesQueryString }`);
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/gallery?${ selectedFieldPropertiesQueryString }`);
+  }
+
+  clickDataset(datasetId) {
+    const { gallerySelector, project, pushState, selectDataset } = this.props;
+    var selectedFieldPropertiesQueryString = gallerySelector.fieldProperties
+      .filter((property) => property.selected)
+      .map((property) => `fields%5B%5D=${ property.name }`);
+
+    if (selectedFieldPropertiesQueryString.length) {
+      selectedFieldPropertiesQueryString = selectedFieldPropertiesQueryString.reduce((a, b) => a + "&" + b);
+    }
+
+    selectDataset(datasetId);
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/visualize/gallery?${ selectedFieldPropertiesQueryString }`);    
   }
 
   render() {
@@ -78,7 +92,7 @@ export class GallerySidebar extends Component {
               options={ datasets.items }
               valueMember="datasetId"
               displayTextMember="title"
-              onChange={ selectDataset } />
+              onChange={ this.clickDataset.bind(this) } />
           </SidebarGroup>
         }
         { datasets.items && datasets.items.length > 0 &&
