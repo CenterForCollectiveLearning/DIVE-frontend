@@ -62,6 +62,7 @@ function pollForTasks(taskIds, taskType, dispatcherParams, dispatcher, progressD
       .then(response => response.json())
       .then(function(data) {
         if (data.state == 'SUCCESS') {
+          taskManager.removeTasks(taskIds);
           dispatch(dispatcher(dispatcherParams, data.result));
         } else if (counter > limit) {
           revokeTasks(taskIds).then((revokeData) => {
