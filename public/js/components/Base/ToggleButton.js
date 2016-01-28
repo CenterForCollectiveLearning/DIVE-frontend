@@ -53,7 +53,7 @@ export default class ToggleButton extends Component {
         { this.props.splitMenu.length > 0 &&
           <div className={ styles.splitButtonSelect } title={ selectedMenuItem.label }>
             <DropDownMenu
-              className={ selectedMenuItemIsDefault ? styles.defaultDropdown : null }
+              className={ styles.dropDownMenu + (selectedMenuItemIsDefault ? ' ' + styles.defaultDropdown : '') }
               value={ selectedMenuItem.value }
               options={ this.props.splitMenu }
               onChange={ this.selectMenuItem } />

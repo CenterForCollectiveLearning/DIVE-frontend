@@ -69,7 +69,10 @@ export class GallerySidebar extends Component {
   }
 
   clickFieldPropertyValue(fieldPropertyId, fieldPropertyValueId) {
-    this.clickFieldProperty(fieldPropertyId);
+    const selectedProperty = this.props.gallerySelector.fieldProperties.find((property) => (property.id == fieldPropertyId));
+    if (!selectedProperty.selected) {
+      this.clickFieldProperty(fieldPropertyId);
+    }
     this.props.selectFieldPropertyValue(fieldPropertyId, fieldPropertyValueId);
   }
 
