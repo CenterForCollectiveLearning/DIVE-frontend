@@ -130,7 +130,11 @@ export default function gallerySelector(state = baseState, action) {
     case SELECT_FIELD_PROPERTY:
       const fieldProperties = state.fieldProperties.map((property) =>
         (property.id == action.selectedFieldPropertyId) ?
-          new Object({ ...property, selected: !property.selected })
+          new Object({
+            ...property,
+            selected: !property.selected,
+            values: !property.selected ? property.values : property.values.map((value, i) => new Object({...value, selected: i == 0 }))
+          })
           : property
       );
 
