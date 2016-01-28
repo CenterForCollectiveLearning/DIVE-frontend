@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
 import { selectDataset, fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
+import { clearAnalysis } from '../../actions/AnalysisActions';
 import styles from './Analysis.sass';
 
 import DropDownMenu from '../Base/DropDownMenu';
@@ -28,8 +29,15 @@ export class AnalysisSidebar extends Component {
     }
   }
 
-  _handleTabsChange(tab){
-    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/analyze/${ tab }`);
+  _handleTabsChange(tab) {
+    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/analyze/${ tab }`);
+  }
+
+  clickDataset(datasetId) {
+    const { project, selectedTab, clearAnalysis, selectDataset, pushState } = this.props;
+    clearAnalysis();
+    selectDataset(datasetId);
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/analyze/${ selectedTab }`);
   }
 
   render() {
@@ -63,7 +71,7 @@ export class AnalysisSidebar extends Component {
               options={ this.props.datasets.items }
               valueMember="datasetId"
               displayTextMember="title"
-              onChange={ this.props.selectDataset } />
+              onChange={ this.clickDataset.bind(this) } />
           </SidebarGroup>
         }
         { this.props.children }
@@ -92,5 +100,6 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   selectDataset,
   fetchDatasetsIfNeeded,
+  clearAnalysis,
   pushState
 })(AnalysisSidebar);

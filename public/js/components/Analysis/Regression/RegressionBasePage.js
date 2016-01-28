@@ -16,7 +16,7 @@ export class RegressionBasePage extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { fieldProperties, params, replaceState } = nextProps;
-    if (fieldProperties.items.length > 0 && !params.dependentVariable) {
+    if (fieldProperties.datasetId == params.datasetId && fieldProperties.items.length > 0 && !params.dependentVariable) {
       const newDependentVariableId = (fieldProperties.items.find((property) => property.name == 'salary' || property.name == 'Intensity') || fieldProperties.items.find((property) => property.generalType == 'q')).id
       replaceState(null, `/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression/${ newDependentVariableId }`);
     }

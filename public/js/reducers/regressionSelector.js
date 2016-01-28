@@ -2,16 +2,21 @@ import {
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
   RECEIVE_FIELD_PROPERTIES,
+  REQUEST_RUN_REGRESSION,
   RECEIVE_RUN_REGRESSION,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
-  WIPE_PROJECT_STATE
+  WIPE_PROJECT_STATE,
+  CLEAR_ANALYSIS
 } from '../constants/ActionTypes';
 
 const baseState = {
   fieldProperties: [],
   dependentVariableId: null,
   independentVariableIds: [],
-  regressionResult: {},
+  regressionResult: {
+    loading: false,
+    data: null
+  },
   contributionToRSquared: []
 }
 
@@ -42,13 +47,16 @@ export default function regressionSelector(state = baseState, action) {
 
       return { ...state, fieldProperties: action.fieldProperties, independentVariableIds: selectedIndependentVariables };
 
+    case REQUEST_RUN_REGRESSION:
+      return { ...state, regressionResult: { ...state.regressionResult, loading: true } };
+
     case RECEIVE_RUN_REGRESSION:
-      return { ...state, regressionResult: action.data };
+      return { ...state, regressionResult: { loading: false, data: action.data } };
 
     case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
       return { ...state, contributionToRSquared: (action.data.data || []) };
 
-    case WIPE_PROJECT_STATE:
+    case WIPE_PROJECT_STATE, CLEAR_ANALYSIS:
       return baseState;
 
     default:
