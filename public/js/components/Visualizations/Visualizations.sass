@@ -19,14 +19,19 @@
   &.operation, &.plain, &.transformation, &.tooMuchData
     color: #6A6A6A
 
-.fieldGroupLabel
-  margin-top: 17px
-  margin-bottom: 10px
+.fieldGroup
+  &:first-child
+    .fieldGroupLabel
+      margin-top: 0
 
-  font-size: 11px
-  font-weight: 500
-  color: #999
-  text-transform: uppercase
+  .fieldGroupLabel
+    margin-top: 17px
+    margin-bottom: 10px
+
+    font-size: 11px
+    font-weight: 500
+    color: #999
+    text-transform: uppercase
 
 .galleryContainer, .builderContainer
   display: flex
