@@ -38,7 +38,7 @@ function revokeTasks(taskIds) {
 }
 
 export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, interval=400, limit=300, counter=0) {
-  const otherTasks = taskManager.addTasks([taskId], taskType);
+  const otherTasks = taskManager.addTask(taskId, taskType);
   if (otherTasks.length) {
     revokeTasks(otherTasks);
   }
@@ -49,7 +49,7 @@ export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, prog
       .then(response => response.json())
       .then(function(data) {
         if (data.state == 'SUCCESS') {
-          taskManager.removeTasks([taskId]);
+          taskManager.removeTask(taskId);
           dispatch(dispatcher(dispatcherParams, data.result));
         } else if (counter > limit) {
           revokeTasks(taskId).then((revokeData) => {
