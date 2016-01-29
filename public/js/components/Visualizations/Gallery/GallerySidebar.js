@@ -118,7 +118,7 @@ export class GallerySidebar extends Component {
         { gallerySelector.fieldProperties.length > 0 &&
           <SidebarGroup heading="Fields">
             { gallerySelector.fieldProperties.filter((property) => property.generalType == 'c').length > 0 &&
-              <div>
+              <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Categorical</div>
                 <ToggleButtonGroup
                   toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 'c') }
@@ -131,7 +131,7 @@ export class GallerySidebar extends Component {
               </div>
             }
             { gallerySelector.fieldProperties.filter((property) => property.generalType == 't').length > 0 &&
-              <div>
+              <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Temporal</div>
                 <ToggleButtonGroup
                   toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 't') }
@@ -144,7 +144,7 @@ export class GallerySidebar extends Component {
               </div>
             }
             { gallerySelector.fieldProperties.filter((property) => property.generalType == 'q').length > 0 &&
-              <div>
+              <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Quantitative</div>
                 <ToggleButtonGroup
                   toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 'q') }
