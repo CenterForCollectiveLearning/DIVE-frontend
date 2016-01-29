@@ -17,7 +17,7 @@ import {
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
-import { fetch, pollForChainTaskResult } from './api.js';
+import { fetch, pollForTask } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
 function requestSpecsDispatcher() {
@@ -30,7 +30,7 @@ function progressSpecsDispatcher(data) {
   return {
     type: PROGRESS_SPECS,
     progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
-  };    
+  };
 }
 
 function receiveSpecsDispatcher(params, json) {
@@ -95,13 +95,8 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
     }).then(response => response.json())
       .then(function(json) {
         const dispatchParams = { project_id: projectId, dataset_id: datasetId };
-        if (json.taskIds) {
-          dispatch(pollForChainTaskResult(json.taskIds, REQUEST_SPECS, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher));
-        } else if (json.specs.length > 0) {
-          dispatch(receiveSpecsDispatcher(dispatchParams, json.specs));
-        }
+        dispatch(pollForTask(json.taskId, REQUEST_SPECS, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher));
       })
-
   };
 }
 

@@ -11,7 +11,7 @@ import {
   REQUEST_MERGE_DATASETS
 } from '../constants/ActionTypes';
 
-import { fetch, httpRequest, pollForChainTaskResult } from './api.js';
+import { fetch, httpRequest, pollForTask } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
 export function selectDataset(datasetId) {
@@ -121,8 +121,8 @@ export function uploadDataset(projectId, datasetFile) {
     ];
 
     const completeEvent = (request) => (evt) => {
-      const { taskIds } = JSON.parse(request.responseText);
-      dispatch(pollForChainTaskResult(taskIds, REQUEST_UPLOAD_DATASET, {}, receiveUploadDatasetDispatcher, progressTaskUploadDatasetDispatcher));
+      const { taskId } = JSON.parse(request.responseText);
+      dispatch(pollForTask(taskId, REQUEST_UPLOAD_DATASET, {}, receiveUploadDatasetDispatcher, progressTaskUploadDatasetDispatcher));
     };
 
     return httpRequest('POST', '/datasets/v1/upload', formData, completeEvent, uploadEvents);
