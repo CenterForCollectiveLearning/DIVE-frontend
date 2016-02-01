@@ -4,6 +4,7 @@ import createLogger from 'redux-logger';
 import rootReducer from '../reducers/index';
 
 import createHistory from 'history/lib/createBrowserHistory';
+import createEngine from 'redux-storage/engines/localStorage';
 import { reduxReactRouter } from 'redux-react-router';
 import routes from '../routes';
 import storage from 'redux-storage'
@@ -21,7 +22,6 @@ let createStoreWithMiddleware;
 
 if (storageEnabled) {
   const storageReducer = storage.reducer(rootReducer);
-  import createEngine from 'redux-storage/engines/localStorage';
 
   const engine = storage.decorators.debounce(createEngine('dive'), 1500)
   const storageMiddleware = storage.createMiddleware(engine, [], [SHOULD_SAVE]);
