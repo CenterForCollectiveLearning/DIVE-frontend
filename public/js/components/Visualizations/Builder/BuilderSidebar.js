@@ -41,7 +41,8 @@ export class BuilderSidebar extends Component {
   }
 
   onClickGallery() {
-    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/visualize/gallery${ this.props.gallerySelector.queryString }`);
+    const { project, datasetSelector, gallerySelector, pushState } = this.props;
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/gallery${ gallerySelector.queryString }`);
   }
 
   render() {
@@ -116,16 +117,18 @@ BuilderSidebar.propTypes = {
   datasetSelector: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
   visualization: PropTypes.object.isRequired,
+  gallerySelector: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, filters, visualization, fieldProperties } = state;
+  const { project, datasetSelector, filters, visualization, fieldProperties, gallerySelector } = state;
   return {
     project,
     datasetSelector,
     filters,
     visualization,
-    fieldProperties
+    fieldProperties,
+    gallerySelector
   };
 }
 
