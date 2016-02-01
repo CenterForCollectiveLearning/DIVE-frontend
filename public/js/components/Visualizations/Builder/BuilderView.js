@@ -27,9 +27,10 @@ export class BuilderView extends Component {
     const { visualization, project, fetchSpecVisualizationIfNeeded } = this.props;
 
     const exportingChanged = visualization.isExporting != nextProps.visualization.isExporting;
+    const visualizationSpecChanged = visualization.lastUpdated != nextProps.visualization.lastUpdated;
 
-    if (nextProps.project.properties.id && !nextProps.visualization.spec.id && !visualization.spec.isFetching) {
-      fetchSpecVisualizationIfNeeded(nextProps.project.properties.id, nextProps.specId);
+    if (nextProps.project.properties.id && (!nextProps.visualization.spec.id || visualizationSpecChanged) && !visualization.spec.isFetching) {
+      fetchSpecVisualizationIfNeeded(nextProps.project.properties.id, nextProps.specId, nextProps.visualization.conditionals);
     }
 
     if (exportingChanged && !nextProps.visualization.isExporting && nextProps.visualization.shareWindow) {
