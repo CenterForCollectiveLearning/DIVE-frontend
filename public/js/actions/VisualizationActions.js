@@ -95,7 +95,11 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
     }).then(response => response.json())
       .then(function(json) {
         const dispatchParams = { project_id: projectId, dataset_id: datasetId };
-        dispatch(pollForTask(json.taskId, REQUEST_SPECS, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher));
+        if (json.compute) {
+          dispatch(pollForTask(json.taskId, REQUEST_SPECS, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher));
+        } else {
+          dispatch(receiveSpecsDispatcher(dispatchParams, json.result));
+        }
       })
   };
 }
