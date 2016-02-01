@@ -157,7 +157,10 @@ function fetchSpecVisualization(projectId, specId, conditionals = []) {
     project_id: projectId
   }
 
-  const validConditionals = conditionals.filter((conditional) => conditional.conditionalIndex != null);
+  const validConditionals = conditionals.filter((conditional) =>
+    conditional.conditionalIndex != null && conditional.value != "ALL_VALUES"
+  );
+
   if (validConditionals.length) {
     params.conditionals = {
       'and': validConditionals.map((conditional) =>
