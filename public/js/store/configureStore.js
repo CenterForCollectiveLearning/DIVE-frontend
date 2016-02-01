@@ -8,38 +8,51 @@ import { reduxReactRouter } from 'redux-react-router';
 import routes from '../routes';
 import storage from 'redux-storage'
 
-import { AUTH_REMOVE_TOKEN } from '../constants/ActionTypes';
+import { SHOULD_SAVE } from '../constants/ActionTypes';
+
+const storageEnabled = false;
 
 const loggerMiddleware = createLogger({
   level: 'info',
   collapsed: false
 });
 
-const storageReducer = storage.reducer(rootReducer);
-import createEngine from 'redux-storage/engines/localStorage';
-
-const engine = storage.decorators.debounce(createEngine('dive'), 1500)
-const storageMiddleware = storage.createMiddleware(engine);
-
 let createStoreWithMiddleware;
 
+if (storageEnabled) {
+  const storageReducer = storage.reducer(rootReducer);
+  import createEngine from 'redux-storage/engines/localStorage';
 
-createStoreWithMiddleware = compose(
-  applyMiddleware(thunkMiddleware, loggerMiddleware, storageMiddleware),
-  reduxReactRouter({
-    routes,
-    createHistory
-  })
-)(createStore);
+  const engine = storage.decorators.debounce(createEngine('dive'), 1500)
+  const storageMiddleware = storage.createMiddleware(engine, [], [SHOULD_SAVE]);
 
+  createStoreWithMiddleware = compose(
+    applyMiddleware(thunkMiddleware, loggerMiddleware, storageMiddleware),
+    reduxReactRouter({
+      routes,
+      createHistory
+    })
+  )(createStore);
+
+} else {
+  createStoreWithMiddleware = compose(
+    applyMiddleware(thunkMiddleware, loggerMiddleware),
+    reduxReactRouter({
+      routes,
+      createHistory
+    })
+  )(createStore);
+}
 
 export default function configureStore(initialState) {
   const store = createStoreWithMiddleware(rootReducer, initialState);
 
   // Load previous state from local storage
-  const load = storage.createLoader(engine);
-  load(store)
-    .catch(() => console.log('Failed to load previous state'));
+  if (storageEnabled) {  
+    const load = storage.createLoader(engine);
+    load(store)
+      .catch(() => console.log('Failed to load previous state'));
+  }
 
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers

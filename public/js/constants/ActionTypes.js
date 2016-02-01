@@ -1,3 +1,5 @@
+export const SHOULD_SAVE = 'SHOULD_SAVE';
+
 export const CREATE_ANONYMOUS_USER = 'CREATE_ANONYMOUS_USER';
 export const SET_USER_EMAIL = 'SET_USER_EMAIL';
 export const SUBMIT_USER = 'SUBMIT_USER';

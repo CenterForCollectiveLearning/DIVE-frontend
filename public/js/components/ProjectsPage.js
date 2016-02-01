@@ -4,7 +4,6 @@ import { pushState } from 'redux-react-router';
 import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions.js';
 import styles from './App/App.sass';
 
-import EmailBlockingModal from './Base/EmailBlockingModal';
 import Tabs from './Base/Tabs';
 import Tab from './Base/Tab';
 
@@ -50,7 +49,6 @@ export class ProjectsPage extends Component {
   render() {
     return (
       <div className={ styles.fillContainer + ' ' + styles.projectContainer }>
-        <EmailBlockingModal />
         <div className={ styles.header }>
           <div className={ styles.logoContainer } onClick={ this._onClickLogo }>
             <Logo className={ styles.logo } />
