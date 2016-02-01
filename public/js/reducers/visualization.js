@@ -7,9 +7,17 @@ import {
   SELECT_BUILDER_VISUALIZATION_TYPE,
   SELECT_BUILDER_SORT_FIELD,
   SELECT_BUILDER_SORT_ORDER,
+  SELECT_VISUALIZATION_CONDITIONAL,
   SET_SHARE_WINDOW,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
+
+const baseConditional = {
+  conditionalIndex: null,
+  fieldId: null,
+  operator: null,
+  value: null
+};
 
 
 const baseState = {
@@ -22,7 +30,9 @@ const baseState = {
   exportedSpecId: null,
   shareWindow: null,
   isExporting: false,
-  isFetching: false
+  isFetching: false,
+  lastUpdated: null,
+  conditionals: [ baseConditional ]
 }
 
 export default function visualization(state = baseState, action) {
@@ -42,8 +52,10 @@ export default function visualization(state = baseState, action) {
   switch (action.type) {
     case CLEAR_VISUALIZATION:
       return baseState;
+
     case REQUEST_VISUALIZATION_DATA:
       return { ...state, isFetching: true };
+
     case RECEIVE_VISUALIZATION_DATA:
       const headers = action.visualizationData[0];
 
@@ -66,6 +78,7 @@ export default function visualization(state = baseState, action) {
         sortOrders: SORT_ORDERS,
         isFetching: false
       };
+
     case SELECT_BUILDER_SORT_ORDER:
       const sortOrders = state.sortOrders.map((order) =>
         new Object({
@@ -74,6 +87,7 @@ export default function visualization(state = baseState, action) {
         })
       );
       return { ...state, sortOrders: sortOrders };
+
     case SELECT_BUILDER_SORT_FIELD:
       const sortFields = state.sortFields.map((field) =>
         new Object({
@@ -82,16 +96,34 @@ export default function visualization(state = baseState, action) {
         })
       );
       return { ...state, sortFields: sortFields };
+
     case SELECT_BUILDER_VISUALIZATION_TYPE:
       return { ...state, visualizationType: action.selectedType };
+
+    case SELECT_VISUALIZATION_CONDITIONAL:
+      var visualizationConditionals = state.conditionals.slice();
+      const conditionalExists = visualizationConditionals.find((conditional) => conditional.conditionalIndex == action.conditional.conditionalIndex);
+      if (conditionalExists) {
+        visualizationConditionals = visualizationConditionals.map((conditional) =>
+          (conditional.conditionalIndex == action.conditional.conditionalIndex) ? action.conditional : conditional
+        );
+      } else {
+        visualizationConditionals.push(action.conditional);
+      }
+      return { ...state, conditionals: visualizationConditionals, lastUpdated: Date.now() };
+
     case REQUEST_CREATE_EXPORTED_SPEC:
       return { ...state, isExporting: true };
+
     case RECEIVE_CREATED_EXPORTED_SPEC:
       return { ...state, exportedSpecId: action.exportedSpecId, isExporting: false };
+
     case SET_SHARE_WINDOW:
       return { ...state, shareWindow: action.shareWindow };
+
     case WIPE_PROJECT_STATE:
       return baseState;
+
     default:
       return state;
   }

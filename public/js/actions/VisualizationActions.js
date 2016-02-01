@@ -14,6 +14,7 @@ import {
   SELECT_SORTING_FUNCTION,
   SELECT_BUILDER_SORT_ORDER,
   SELECT_BUILDER_SORT_FIELD,
+  SELECT_VISUALIZATION_CONDITIONAL,
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
@@ -151,11 +152,26 @@ function receiveSpecVisualizationDispatcher(json) {
   };
 }
 
-function fetchSpecVisualization(projectId, specId, conditionals) {
+function fetchSpecVisualization(projectId, specId, conditionals = []) {
   const params = {
-    project_id: projectId,
-    conditionals: conditionals,
+    project_id: projectId
   }
+
+  const validConditionals = conditionals.filter((conditional) =>
+    conditional.conditionalIndex != null && conditional.value != "ALL_VALUES"
+  );
+
+  if (validConditionals.length) {
+    params.conditionals = {
+      'and': validConditionals.map((conditional) =>
+        new Object({
+          'field_id': conditional.fieldId,
+          'operation': conditional.operator,
+          'criteria': conditional.value
+        }))
+    };
+  }
+
   return dispatch => {
     dispatch(requestSpecVisualizationDispatcher());
     return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`, {
@@ -183,6 +199,13 @@ export function fetchSpecVisualizationIfNeeded(projectId, specId, conditionals) 
       return dispatch(fetchSpecVisualization(projectId, specId, conditionals));
     }
   };
+}
+
+export function selectVisualizationConditional(conditional) {
+  return {
+    type: SELECT_VISUALIZATION_CONDITIONAL,
+    conditional: conditional
+  }
 }
 
 export function clearVisualization() {

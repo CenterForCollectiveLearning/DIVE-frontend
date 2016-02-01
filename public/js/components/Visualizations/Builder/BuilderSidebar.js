@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { selectBuilderVisualizationType, selectBuilderSortOrder, selectBuilderSortField } from '../../../actions/VisualizationActions';
+import { selectBuilderVisualizationType, selectBuilderSortOrder, selectBuilderSortField, selectVisualizationConditional } from '../../../actions/VisualizationActions';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import styles from '../Visualizations.sass';
 
@@ -12,6 +12,8 @@ import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 import RaisedButton from '../../Base/RaisedButton';
 
+import ConditionalSelector from './ConditionalSelector';
+
 export class BuilderSidebar extends Component {
   constructor(props) {
     super(props);
@@ -20,23 +22,31 @@ export class BuilderSidebar extends Component {
   }
 
   componentWillMount() {
-    const { project, datasetSelector } = this.props;
+    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
+    if (project.properties.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.isFetching) {
+      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId);
+    }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { project, datasetSelector, selectBuilderVisualizationType } = this.props;
+  componentDidUpdate(previousProps) {
+    const { project, visualization, datasetSelector, fieldProperties, selectBuilderVisualizationType, fetchFieldPropertiesIfNeeded } = this.props;
 
-    if (nextProps.visualization.spec.id && !nextProps.visualization.visualizationType) {
-      selectBuilderVisualizationType(nextProps.visualization.spec.vizTypes[0]);
+    if (visualization.spec.id && !visualization.visualizationType) {
+      selectBuilderVisualizationType(visualization.spec.vizTypes[0]);
+    }
+
+    if (project.properties.id && !fieldProperties.isFetching && fieldProperties.items.length == 0) {
+      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId);
     }
   }
 
   onClickGallery() {
-    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/visualize/gallery${ this.props.gallerySelector.queryString }`);
+    const { project, datasetSelector, gallerySelector, pushState } = this.props;
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/gallery${ gallerySelector.queryString }`);
   }
 
   render() {
-    const { selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, filters, visualization } = this.props;
+    const { fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectVisualizationConditional, filters, visualization } = this.props;
 
     var visualizationTypes = [];
 
@@ -86,6 +96,17 @@ export class BuilderSidebar extends Component {
               onChange={ selectBuilderSortOrder } />
           </SidebarGroup>
         }
+        { visualization.visualizationType &&
+          <SidebarGroup heading="Filter By Field">
+            { visualization.conditionals.map((conditional, i) =>
+              <ConditionalSelector
+                key={ `conditional-selector-${ i }` }
+                conditionalIndex={ i }
+                fieldProperties={ fieldProperties.items }
+                selectConditionalValue={ selectVisualizationConditional }/>
+            )}
+          </SidebarGroup>
+        }
       </Sidebar>
     );
   }
@@ -96,15 +117,17 @@ BuilderSidebar.propTypes = {
   datasetSelector: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
   visualization: PropTypes.object.isRequired,
+  gallerySelector: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, filters, visualization, gallerySelector } = state;
+  const { project, datasetSelector, filters, visualization, fieldProperties, gallerySelector } = state;
   return {
     project,
     datasetSelector,
     filters,
     visualization,
+    fieldProperties,
     gallerySelector
   };
 }
@@ -113,5 +136,7 @@ export default connect(mapStateToProps, {
   selectBuilderVisualizationType,
   selectBuilderSortOrder,
   selectBuilderSortField,
+  fetchFieldPropertiesIfNeeded,
+  selectVisualizationConditional,
   pushState
 })(BuilderSidebar);

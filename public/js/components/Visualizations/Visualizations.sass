@@ -24,6 +24,9 @@
     .fieldGroupLabel
       margin-top: 0
 
+  + .fieldGroup
+    margin-top: 7px
+
   .fieldGroupLabel
     margin-top: 17px
     margin-bottom: 10px
@@ -32,6 +35,28 @@
     font-weight: 500
     color: #999
     text-transform: uppercase
+
+.conditionalDropdown
+  width: 50%
+
+  > div > div:first-of-type > div:first-child
+    font-size: 12px
+
+  &:first-child
+    > div > div:first-of-type
+      border-top-right-radius: 0
+      border-bottom-right-radius: 0
+
+  &:last-child
+    > div > div:first-of-type
+      border-top-left-radius: 0
+      border-bottom-left-radius: 0
+      border-left-width: 0
+
+  &.disabledDropdown
+    opacity: 0.5
+    pointer-events: none
+    cursor: default
 
 .galleryContainer, .builderContainer
   display: flex
