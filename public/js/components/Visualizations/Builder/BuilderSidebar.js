@@ -95,15 +95,17 @@ export class BuilderSidebar extends Component {
               onChange={ selectBuilderSortOrder } />
           </SidebarGroup>
         }
-        <SidebarGroup heading="Filter By Field">
-          { visualization.conditionals.map((conditional, i) =>
-            <ConditionalSelector
-              key={ `conditional-selector-${ i }` }
-              conditionalIndex={ i }
-              fieldProperties={ fieldProperties.items }
-              selectConditionalValue={ selectVisualizationConditional }/>
-          )}
-        </SidebarGroup>
+        { visualization.visualizationType &&
+          <SidebarGroup heading="Filter By Field">
+            { visualization.conditionals.map((conditional, i) =>
+              <ConditionalSelector
+                key={ `conditional-selector-${ i }` }
+                conditionalIndex={ i }
+                fieldProperties={ fieldProperties.items }
+                selectConditionalValue={ selectVisualizationConditional }/>
+            )}
+          </SidebarGroup>
+        }
       </Sidebar>
     );
   }
