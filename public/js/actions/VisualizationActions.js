@@ -152,7 +152,7 @@ function receiveSpecVisualizationDispatcher(json) {
   };
 }
 
-function fetchSpecVisualization(projectId, specId, conditionals) {
+function fetchSpecVisualization(projectId, specId, conditionals = []) {
   const params = {
     project_id: projectId
   }
