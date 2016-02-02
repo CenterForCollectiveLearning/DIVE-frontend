@@ -206,6 +206,15 @@ export default class Visualization extends Component {
       finalDataArray = data.slice(0, 20);
     }
 
+    const noData = finalDataArray.length == 1;
+    if (noData) {
+      return (
+        <div className={ styles.watermark + (isMinimalView ? styles.watermarkNoSpacer : '') }>
+          No visualization.
+        </div>
+      );
+    }
+
     return (
       <div className={ styles[containerClassName] } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
