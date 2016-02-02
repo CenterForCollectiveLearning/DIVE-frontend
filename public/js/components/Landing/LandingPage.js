@@ -34,7 +34,7 @@ export class LandingPage extends Component {
             <div className={ styles.grid }></div>
           </div>
         </div>
-        <div className={ styles.fillContainer + ' ' + styles.landingPageContent }>
+        <div className={ styles.landingPageContent }>
           <div className={ styles.header }>
             <div className={ styles.logoContainer } onClick={ this._onClickLogo.bind(this) }>
               <Logo className={ styles.logo } />
