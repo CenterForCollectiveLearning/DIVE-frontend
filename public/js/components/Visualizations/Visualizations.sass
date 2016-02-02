@@ -89,20 +89,22 @@ div.conditionalCombinator
 
   background-color: #e9e7e8
 
-.galleryContainer
-  .watermark
-    +montserrat
-    display: flex
-    flex-grow: 1
+.watermark
+  +montserrat
+  display: flex
+  flex-grow: 1
+  justify-content: center
+  padding: 200px 0 260px
 
-    padding: 200px 0 260px
-    justify-content: center
+  text-transform: uppercase
+  font-weight: 500
+  letter-spacing: 1px
+  font-size: 16px
+  color: #999
 
-    text-transform: uppercase
-    font-weight: 500
-    letter-spacing: 1px
-    font-size: 16px
-    color: #999
+  &.watermarkNoSpacer
+    padding: 0
+
 
 .specsContainer, .visualizationViewContainer
   +fillContainer
