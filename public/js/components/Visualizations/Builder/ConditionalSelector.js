@@ -8,18 +8,24 @@ export default class ConditionalSelector extends Component {
   constructor(props) {
     super(props);
 
+    this.baseConditional = {
+      conditionalIndex: this.props.conditionalIndex,
+      fieldId: null,
+      operator: '==',
+      value: null
+    };
+
     this.state = {
-      conditional: {
-        conditionalIndex: this.props.conditionalIndex,
-        fieldId: null,
-        operator: '==',
-        value: null
-      }
-    }
+      conditional: this.baseConditional
+    };
   }
 
   onSelectField(fieldId) {
-    this.setState({ conditional: { ...this.state.conditional, fieldId: fieldId } });
+    const conditional = { ...this.state.conditional, fieldId: fieldId, value: "ALL_VALUES" };
+    this.setState({ conditional: conditional });
+    if (this.state.conditional.value) {
+      this.props.selectConditionalValue(conditional);
+    }
   }
 
   onSelectFieldValue(fieldValueId) {
