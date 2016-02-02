@@ -166,14 +166,19 @@ function fetchSpecVisualization(projectId, specId, conditionals = []) {
   );
 
   if (validConditionals.length) {
-    params.conditionals = {
-      'and': validConditionals.map((conditional) =>
-        new Object({
-          'field_id': conditional.fieldId,
-          'operation': conditional.operator,
-          'criteria': conditional.value
-        }))
-    };
+    params.conditionals = {};
+
+    validConditionals.forEach((conditional) => {
+      if (!params.conditionals[conditional.combinator]) {
+        params.conditionals[conditional.combinator] = [];
+      }
+
+      params.conditionals[conditional.combinator].push({
+        'field_id': conditional.fieldId,
+        'operation': conditional.operator,
+        'criteria': conditional.value
+      })
+    });
   }
 
   return dispatch => {

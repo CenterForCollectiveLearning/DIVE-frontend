@@ -100,11 +100,12 @@ export class BuilderSidebar extends Component {
         { visualization.visualizationType &&
           <SidebarGroup heading="Filter by field">
             { visualization.conditionals.map((conditional, i) =>
-              <ConditionalSelector
-                key={ `conditional-selector-${ i }` }
-                conditionalIndex={ i }
-                fieldProperties={ fieldProperties.items }
-                selectConditionalValue={ selectVisualizationConditional }/>
+              <div key={ `conditional-selector-${ i }` }>
+                <ConditionalSelector
+                  conditionalIndex={ i }
+                  fieldProperties={ fieldProperties.items }
+                  selectConditionalValue={ selectVisualizationConditional }/>
+              </div>
             )}
           </SidebarGroup>
         }
