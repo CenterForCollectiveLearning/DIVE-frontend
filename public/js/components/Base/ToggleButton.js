@@ -31,6 +31,7 @@ export default class ToggleButton extends Component {
     return (
       <div className={
         styles.toggleButtonContainer
+        + (this.props.className ? ' ' + this.props.className : '')
         + (!this.props.imageName ? ' ' + styles.textToggleButton : '')
         + (this.props.separated ? ' ' + styles.separatedToggleButton : '')
         + (this.props.isSelected ? ' ' + styles.selected : '')
@@ -65,6 +66,7 @@ export default class ToggleButton extends Component {
 }
 
 ToggleButton.propTypes = {
+  className: PropTypes.string,
   altText: PropTypes.string,
   content: PropTypes.any,
   imageName: PropTypes.string,

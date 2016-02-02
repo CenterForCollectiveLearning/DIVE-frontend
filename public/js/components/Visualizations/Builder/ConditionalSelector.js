@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Visualizations.sass';
 
 import DropDownMenu from '../../Base/DropDownMenu';
+import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 
 export default class ConditionalSelector extends Component {
   constructor(props) {
@@ -12,7 +13,8 @@ export default class ConditionalSelector extends Component {
       conditionalIndex: this.props.conditionalIndex,
       fieldId: null,
       operator: '==',
-      value: null
+      value: null,
+      combinator: 'and'
     };
 
     this.state = {
@@ -28,6 +30,14 @@ export default class ConditionalSelector extends Component {
     }
   }
 
+  onSelectCombinator(combinator) {
+    const conditional = { ...this.state.conditional, combinator: combinator };
+    this.setState({ conditional: conditional });
+    if (this.state.conditional.value) {
+      this.props.selectConditionalValue(conditional);
+    }
+  }
+
   onSelectFieldValue(fieldValueId) {
     const conditional = { ...this.state.conditional, value: fieldValueId };
     this.setState({ conditional: conditional });
@@ -36,12 +46,35 @@ export default class ConditionalSelector extends Component {
 
   render() {
     const { fieldProperties, selectConditionalValue } = this.props;
-    const { fieldId, value } = this.state.conditional;
+    const { fieldId, value, combinator } = this.state.conditional;
     const selectedField = fieldProperties.find((item) => item.id == fieldId);
     const fieldValues = selectedField ? selectedField.values : [];
 
+    const CONDITIONAL_COMBINATORS = [
+      {
+        id: 'and',
+        name: 'AND',
+        selected: combinator == 'and'
+      },
+      {
+        id: 'or',
+        name: 'OR',
+        selected: combinator == 'or'
+      }
+    ];
+
     return (
       <div className={ styles.fieldGroup }>
+        { this.state.conditional.conditionalIndex > 0 &&
+          <ToggleButtonGroup
+            className={ styles.conditionalCombinator }
+            buttonClassName={ styles.conditionalCombinatorButton }
+            toggleItems={ CONDITIONAL_COMBINATORS }
+            valueMember="id"
+            displayTextMember="name"
+            onChange={ this.onSelectCombinator.bind(this) } />
+        }
+
         <div style={{ display: 'flex' }}>
           <DropDownMenu
             className={ styles.conditionalDropdown }

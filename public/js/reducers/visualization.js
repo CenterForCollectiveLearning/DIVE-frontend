@@ -49,7 +49,7 @@ export default function visualization(state = baseState, action) {
       iconName: 'fa fa-rotate-270 fa-sort-amount-desc',
       selected: false
     }
-  ]
+  ];
 
   switch (action.type) {
     case CLEAR_VISUALIZATION:
