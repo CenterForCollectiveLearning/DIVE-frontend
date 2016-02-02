@@ -40,11 +40,13 @@ export default function visualization(state = baseState, action) {
     {
       id: 'asc',
       name: 'Ascending',
+      iconName: 'fa fa-rotate-270 fa-sort-amount-asc',
       selected: true
     },
     {
       id: 'desc',
       name: 'Descending',
+      iconName: 'fa fa-rotate-270 fa-sort-amount-desc',
       selected: false
     }
   ]

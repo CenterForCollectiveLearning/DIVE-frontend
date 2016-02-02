@@ -47,7 +47,7 @@ export default class ToggleButton extends Component {
             <img
               src={ this.props.imageName }
               alt={ this.props.altText } />
-            : this.props.altText
+            : this.props.content
           }
         </div>
         { this.props.splitMenu.length > 0 &&
@@ -66,6 +66,7 @@ export default class ToggleButton extends Component {
 
 ToggleButton.propTypes = {
   altText: PropTypes.string,
+  content: PropTypes.any,
   imageName: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,

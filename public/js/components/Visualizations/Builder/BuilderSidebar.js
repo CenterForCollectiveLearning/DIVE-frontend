@@ -79,25 +79,26 @@ export class BuilderSidebar extends Component {
           </SidebarGroup>
         }
         { (visualization.visualizationType == 'hist' || visualization.visualizationType == 'bar') &&
-          <SidebarGroup heading="Sort Field">
-            <ToggleButtonGroup
-              toggleItems={ visualization.sortFields }
-              valueMember="id"
-              displayTextMember="name"
-              onChange={ selectBuilderSortField } />
-          </SidebarGroup>
-        }
-        { (visualization.visualizationType == 'hist' || visualization.visualizationType == 'bar') &&
-          <SidebarGroup heading="Sort Order">
-            <ToggleButtonGroup
-              toggleItems={ visualization.sortOrders }
-              valueMember="id"
-              displayTextMember="name"
-              onChange={ selectBuilderSortOrder } />
+          <SidebarGroup heading="Sort by">
+            <div className={ styles.sortGroup }>
+              <ToggleButtonGroup
+                className={ styles.sortFields }
+                toggleItems={ visualization.sortFields }
+                valueMember="id"
+                displayTextMember="name"
+                onChange={ selectBuilderSortField } />
+              <ToggleButtonGroup
+                className={ styles.sortOrder }
+                toggleItems={ visualization.sortOrders.map((sortOrder) => new Object({...sortOrder, icon: <i className={ sortOrder.iconName }></i> })) }
+                valueMember="id"
+                displayTextMember="icon"
+                altTextMember="name"
+                onChange={ selectBuilderSortOrder } />
+            </div>
           </SidebarGroup>
         }
         { visualization.visualizationType &&
-          <SidebarGroup heading="Filter By Field">
+          <SidebarGroup heading="Filter by field">
             { visualization.conditionals.map((conditional, i) =>
               <ConditionalSelector
                 key={ `conditional-selector-${ i }` }
