@@ -7,6 +7,7 @@ import {
   REQUEST_UPLOAD_DATASET,
   PROGRESS_UPLOAD_DATASET,
   RECEIVE_UPLOAD_DATASET,
+  PROGRESS_TRANSFORM,
   REQUEST_REDUCE_DATASET_COLUMNS,
   REQUEST_MERGE_DATASETS
 } from '../constants/ActionTypes';
@@ -136,7 +137,7 @@ function requestDatasetDispatcher(datasetId) {
   };
 }
 
-function receiveDatasetDispatcher(json) {
+function receiveDatasetDispatcher(params, json) {
   return {
     type: RECEIVE_DATASET,
     datasetId: json.datasetId,
@@ -151,7 +152,7 @@ export function fetchDataset(projectId, datasetId) {
     dispatch(requestDatasetDispatcher(datasetId));
     return fetch(`/datasets/v1/datasets/${datasetId}?project_id=${projectId}`)
       .then(response => response.json())
-      .then(json => dispatch(receiveDatasetDispatcher(json)));
+      .then(json => dispatch(receiveDatasetDispatcher({}, json)));
   };
 }
 
@@ -162,6 +163,13 @@ export function deleteDataset(projectId, datasetId) {
       method: 'delete'
     }).then(response => response.json())
       .then(json => dispatch(deleteDatasetDispatcher(json)));
+  };
+}
+
+function progressTransformDispatcher(data) {
+  return {
+    type: PROGRESS_TRANSFORM,
+    progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
   };
 }
 
@@ -187,7 +195,10 @@ export function reduceDatasetColumns(projectId, datasetId, columnIds=[]) {
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
-      .then(json => dispatch(receiveDatasetDispatcher(json)));
+      .then(function(json) {
+        const dispatchParams = {};
+        dispatch(pollForTask(json.taskId, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher));
+      });
   };
 }
 
@@ -217,7 +228,10 @@ export function pivotDatasetColumns(projectId, datasetId, variableName, valueNam
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
-      .then(json => dispatch(receiveDatasetDispatcher(json)));
+      .then(function(json) {
+        const dispatchParams = {};
+        dispatch(pollForTask(json.taskId, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher));
+      });
   };
 }
 
@@ -247,6 +261,9 @@ export function mergeDatasets(projectId, leftDatasetId, rightDatasetId, onColumn
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
-      .then(json => dispatch(receiveDatasetDispatcher(json)));
+      .then(function(json) {
+        const dispatchParams = {};
+        dispatch(pollForTask(json.taskId, REQUEST_MERGE_DATASETS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher));
+      });
   };
 }
