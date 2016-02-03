@@ -180,7 +180,8 @@ export default class Visualization extends Component {
       options = {
         ...options,
         pointSize: 5,
-        height: 400
+        width: '100%',
+        height: '100%'
       }
     }
 

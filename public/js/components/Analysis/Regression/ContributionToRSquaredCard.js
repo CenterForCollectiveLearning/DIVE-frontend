@@ -28,11 +28,12 @@ export default class ContributionToRSquaredCard extends Component {
       textStyle: {
         color: "#333"
       },
-      height: 400,
+      height: '100%',
+      width: '100%',
       chartArea: {
-        width: '60%',
-        top: '0',
-        bottom: '0'
+        top: '5%',
+        width: '70%',
+        height: '80%'
       },
       hAxis: {
         textStyle: {
