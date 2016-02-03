@@ -4,26 +4,64 @@ import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
-import VariableSummaryTable from './VariableSummaryTable';
+import SummaryTable from './SummaryTable';
+import ColumnChart from '../../Visualizations/Charts/ColumnChart'
 
 export default class VariableSummaryCard extends Component {
   render() {
-    const { summaryResult } = this.props;
+    const { variable, columnHeaders } = this.props;
+
+    const options = {
+      backgroundColor: 'transparent',
+      headerColor: 'white',
+      headerHeight: 0,
+      fontName: 'RobotoDraft',
+      fontFamily: 'RobotoDraft',
+      fontColor: "#333",
+      textStyle: {
+        color: "#333"
+      },
+      chartArea: {
+        top: '5%',
+        bottom: '5%'
+      },
+      legend: {
+        textStyle: {
+          color: "#333"
+        }
+      },
+      hAxis: {
+        textStyle: {
+          color: "#333"
+        }
+      },
+      vAxis: {
+        textStyle: {
+          color: "#333"
+        }
+      },
+      vAxes: [
+        {
+          textStyle: {
+            color: "#333"
+          }
+        },
+        {
+          textStyle: {
+            color: "#333"
+          }
+        }
+      ]
+    };
 
     return (
       <Card>
-        <HeaderBar header={ <span>Variable Summary</span> } />
+        <HeaderBar header={ <span>Summary: <span className={ styles.titleField }>{ variable.field }</span></span> } />
         <div className={ styles.summaryVariableContainer }>
-          { summaryResult.items.map((item, i) => {
-            const columnHeaders = (item.type == 'c') ? summaryResult.categoricalHeaders : summaryResult.numericalHeaders;
-            return <VariableSummaryTable
-              key={ `variable-summary-table-${ i }` }
-              stats={ item.stats }
-              variableName={ item.field }
-              columnHeaders={ columnHeaders }
-              vizData={ item.vizData }/>;
-            })
-          }
+          <div className={ styles.summaryChartContainer }>
+            <ColumnChart data={ variable.vizData } chartId={ `summary-chart-${ variable.field }` } options={ options } />
+          </div>
+          <SummaryTable stats={ variable.stats } columnHeaders={ columnHeaders } />
         </div>
       </Card>
     );
@@ -31,5 +69,6 @@ export default class VariableSummaryCard extends Component {
 }
 
 VariableSummaryCard.propTypes = {
-  summaryResult: PropTypes.object.isRequired
+  variable: PropTypes.object.isRequired,
+  columnHeaders: PropTypes.array.isRequired
 }

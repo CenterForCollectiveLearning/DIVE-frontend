@@ -62,7 +62,17 @@ export class SummaryView extends Component {
     if (noComparisonVariablesSelected && summaryDictHasElements) {
       return (
         <div className={ styles.summaryViewContainer }>
-          <VariableSummaryCard summaryResult={summaryResult} />
+          { summaryResult.items.map((item, i) => {
+            const columnHeaders = (item.type == 'c') ? summaryResult.categoricalHeaders : summaryResult.numericalHeaders;
+            return (
+              <div className={ styles.summaryCardHolder }>
+                <VariableSummaryCard
+                  key={ `variable-summary-card-${ i }` }
+                  variable={ item }
+                  columnHeaders={ columnHeaders }/>
+              </div>
+            );
+          })}
         </div>
       )
     }
