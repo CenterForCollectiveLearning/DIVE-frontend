@@ -15,7 +15,10 @@ export default class ComparisonTableOneD extends Component {
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
-        items: [...comparisonResult.columnHeaders.map((e) => <div className={ styles.tableCell }>{ e }</div>) ]
+        items: [
+          <div className={ styles.tableCell + ' ' + styles.comparisonTableHeaderCell }>{ comparisonVariableNames[0] }</div>,
+          <div className={ styles.tableCell + ' ' + styles.comparisonTableHeaderCell }>{ "Total" }</div>
+        ]
       },
       ...comparisonResult.rows.map(function(row_object) {
         return new Object({
@@ -36,7 +39,6 @@ export default class ComparisonTableOneD extends Component {
 
     return (
       <div className={ styles.aggregationTable }>
-        <div className={ styles.columnFieldLabel }>{ comparisonVariableNames[0] }</div>
         <div className={ styles.gridWithRowFieldLabel }>
           <BareDataGrid data={ data }/>
         </div>

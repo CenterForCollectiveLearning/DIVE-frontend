@@ -11,7 +11,7 @@
 
   background-color: #e9e7e8
 
-.regressionViewContainer, .summaryViewContainer
+.regressionViewContainer, .summaryViewContainer, .aggregationViewContainer
   +fillContainer
   overflow-y: scroll
 
@@ -88,6 +88,9 @@
   background-color: #F6F6F6
   font-weight: 500
 
+.comparisonTableHeaderCell
+  text-transform: uppercase
+
 .standardError
   color: #999
 
@@ -99,6 +102,9 @@
   justify-content: center
 
 .dataColumn, .footerColumn
+  &:first-child
+    padding: 8px
+
   &:not(:first-child)
     font-size: 13px
 
@@ -112,11 +118,13 @@
     &:first-child
       background-color: #F6F6F6
       font-weight: 500
+
   .dataColumnOneD
     white-space: normal
     text-overflow: ellipsis
     overflow: hidden
     word-break: break-word
+
 .dataRow + .footerRow
   border-top-width: 2px
 
@@ -124,7 +132,7 @@
   background-color: #fbfbfb
 
 .aggregationTable
-  padding: 0 10px 20px
+  padding: 10px 10px 20px
 
   .columnFieldLabel, .rowFieldLabel
     font-size: 13px
@@ -152,4 +160,7 @@
   font-weight: 500
   color: #444444
   text-transform: lowercase
+
+  + .titleField:before
+    content: ', '
 

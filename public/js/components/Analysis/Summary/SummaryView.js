@@ -65,9 +65,8 @@ export class SummaryView extends Component {
           { summaryResult.items.map((item, i) => {
             const columnHeaders = (item.type == 'c') ? summaryResult.categoricalHeaders : summaryResult.numericalHeaders;
             return (
-              <div className={ styles.summaryCardHolder }>
+              <div className={ styles.summaryCardHolder } key={ `variable-summary-card-${ i }` }>
                 <VariableSummaryCard
-                  key={ `variable-summary-card-${ i }` }
                   variable={ item }
                   columnHeaders={ columnHeaders }/>
               </div>
@@ -79,9 +78,9 @@ export class SummaryView extends Component {
 
     else if (oneComparisonVariableSelected && oneDimensionDictHasElements) {
       return (
-        <div className={ styles.summaryViewContainer }>
+        <div className={ styles.aggregationViewContainer }>
           <Card>
-            <HeaderBar header={ <span>Comparison Table</span> } />
+            <HeaderBar header={ <span>Comparison Table: <span className={ styles.titleField }>{ aggregationIndependentVariableNames[0] }</span></span> } />
             <ComparisonTableOneD comparisonResult={ oneDimensionComparisonResult } comparisonVariableNames={ aggregationIndependentVariableNames }/>
           </Card>
         </div>
@@ -90,9 +89,20 @@ export class SummaryView extends Component {
 
     else if (twoComparisonVariablesSelected && aggregationDictHasElements) {
       return (
-        <div className={ styles.summaryViewContainer }>
+        <div className={ styles.aggregationViewContainer }>
           <Card>
-            <HeaderBar header={ <span>Aggregation Table</span> } />
+            <HeaderBar header={ 
+              <span>Aggregation Table: {
+                aggregationIndependentVariableNames.map((name, i) =>
+                  <span
+                    key={ `aggregation-title-${ name }-${ i }` }
+                    className={ `${ styles.titleField }` }>
+                    { name }
+                  </span>
+                )
+              }
+              </span>
+            } />
             <AggregationTable aggregationResult={ aggregationResult } aggregationIndependentVariableNames={ aggregationIndependentVariableNames }/>
           </Card>
         </div>
