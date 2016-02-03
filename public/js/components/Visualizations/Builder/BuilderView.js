@@ -13,6 +13,7 @@ export class BuilderView extends Component {
     super(props);
 
     this.onClickShare = this.onClickShare.bind(this);
+    this.onClickGallery = this.onClickGallery.bind(this);
   }
 
   componentWillMount() {
@@ -45,6 +46,11 @@ export class BuilderView extends Component {
     createExportedSpec(project.properties.id, visualization.spec.id, {}, {});
   }
 
+  onClickGallery() {
+    const { project, datasetSelector, gallerySelector, pushState } = this.props;
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/gallery${ gallerySelector.queryString }`);
+  }
+
   render() {
     const { visualization } = this.props;
     return (
@@ -53,6 +59,7 @@ export class BuilderView extends Component {
           { visualization.isExporting && "Exporting..." }
           { !visualization.isExporting && "Share" }
         </RaisedButton>
+        <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
       </VisualizationView>
     );
   }
@@ -61,14 +68,17 @@ export class BuilderView extends Component {
 BuilderView.propTypes = {
   project: PropTypes.object.isRequired,
   visualization: PropTypes.object.isRequired,
+  gallerySelector: PropTypes.object.isRequired,
   specId: PropTypes.string
 };
 
 function mapStateToProps(state) {
-  const { project, visualization } = state;
+  const { project, datasetSelector, visualization, gallerySelector } = state;
   return {
     project,
-    visualization
+    datasetSelector,
+    visualization,
+    gallerySelector
   }
 }
 
