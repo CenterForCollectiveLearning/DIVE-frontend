@@ -15,11 +15,6 @@ import RaisedButton from '../../Base/RaisedButton';
 import ConditionalSelector from './ConditionalSelector';
 
 export class BuilderSidebar extends Component {
-  constructor(props) {
-    super(props);
-
-    this.onClickGallery = this.onClickGallery.bind(this);
-  }
 
   componentWillMount() {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
@@ -38,11 +33,6 @@ export class BuilderSidebar extends Component {
     if (project.properties.id && !fieldProperties.isFetching && fieldProperties.items.length == 0) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId);
     }
-  }
-
-  onClickGallery() {
-    const { project, datasetSelector, gallerySelector, pushState } = this.props;
-    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/gallery${ gallerySelector.queryString }`);
   }
 
   render() {
@@ -64,9 +54,6 @@ export class BuilderSidebar extends Component {
 
     return (
       <Sidebar>
-        <SidebarGroup>
-          <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
-        </SidebarGroup>
         { visualization.visualizationType &&
           <SidebarGroup heading="Visualization type">
             <ToggleButtonGroup
@@ -118,19 +105,17 @@ BuilderSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
-  visualization: PropTypes.object.isRequired,
-  gallerySelector: PropTypes.object.isRequired
+  visualization: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, filters, visualization, fieldProperties, gallerySelector } = state;
+  const { project, datasetSelector, filters, visualization, fieldProperties } = state;
   return {
     project,
     datasetSelector,
     filters,
     visualization,
-    fieldProperties,
-    gallerySelector
+    fieldProperties
   };
 }
 
