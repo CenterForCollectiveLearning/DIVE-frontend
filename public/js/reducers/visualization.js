@@ -8,6 +8,7 @@ import {
   SELECT_BUILDER_SORT_FIELD,
   SELECT_BUILDER_SORT_ORDER,
   SELECT_VISUALIZATION_CONDITIONAL,
+  SELECT_VISUALIZATION_CONFIG,
   SET_SHARE_WINDOW,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
@@ -18,7 +19,6 @@ const baseConditional = {
   operator: null,
   value: null
 };
-
 
 const baseState = {
   tableData: [],
@@ -32,7 +32,8 @@ const baseState = {
   isExporting: false,
   isFetching: false,
   lastUpdated: null,
-  conditionals: [ baseConditional ]
+  conditionals: [ baseConditional ],
+  config: {}
 }
 
 export default function visualization(state = baseState, action) {
@@ -71,6 +72,7 @@ export default function visualization(state = baseState, action) {
           selected: selected
         })
       });
+
       return {
         ...state,
         spec: action.spec,
@@ -113,6 +115,9 @@ export default function visualization(state = baseState, action) {
         visualizationConditionals.push(action.conditional);
       }
       return { ...state, conditionals: visualizationConditionals, lastUpdated: Date.now() };
+
+    case SELECT_VISUALIZATION_CONFIG:
+      return { ...state, config: action.config, lastUpdated: Date.now() };
 
     case REQUEST_CREATE_EXPORTED_SPEC:
       return { ...state, isExporting: true };

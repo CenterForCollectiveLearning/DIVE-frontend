@@ -46,11 +46,17 @@
       margin-left: 8px
       margin-top: 1px
 
+.sidebarDropdown
+  margin-top: 1px
+
+  > div > div:first-of-type
+    margin-top: -1px
+
+    > div:first-child
+      font-size: 12px
+
 .conditionalDropdown
   width: 50%
-
-  > div > div:first-of-type > div:first-child
-    font-size: 12px
 
   &:first-child
     > div > div:first-of-type
@@ -81,6 +87,25 @@ div.conditionalCombinator
       color: #555
       height: 30px
       line-height: 30px
+
+// .binningTypesToggleButton
+//   max-width: 30%
+
+.binningConfigContainer
+  display: flex
+
+  .binningConfigBlock
+    margin-top: 0
+
+    &:first-child
+      width: 60%
+
+    &:last-child
+      padding-left: 7px
+      width: 40%
+
+    .fieldGroupLabel
+      margin-top: 0
 
 .galleryContainer, .builderContainer
   display: flex

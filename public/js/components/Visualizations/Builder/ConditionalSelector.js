@@ -77,14 +77,14 @@ export default class ConditionalSelector extends Component {
 
         <div style={{ display: 'flex' }}>
           <DropDownMenu
-            className={ styles.conditionalDropdown }
+            className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown }
             value={ fieldId }
             options={ fieldProperties.filter((item) => item.generalType == 'c') }
             valueMember="id"
             displayTextMember="name"
             onChange={ this.onSelectField.bind(this) }/>
           <DropDownMenu
-            className={ styles.conditionalDropdown + (fieldId == null ? ' ' + styles.disabledDropdown : '') }
+            className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown + (fieldId == null ? ' ' + styles.disabledDropdown : '') }
             value={ value }
             options={ fieldValues }
             valueMember="value"

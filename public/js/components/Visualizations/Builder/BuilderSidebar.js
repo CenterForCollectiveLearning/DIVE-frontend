@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { selectBuilderVisualizationType, selectBuilderSortOrder, selectBuilderSortField, selectVisualizationConditional } from '../../../actions/VisualizationActions';
+import { selectBuilderVisualizationType, selectBuilderSortOrder, selectBuilderSortField, selectVisualizationConditional, selectVisualizationConfig } from '../../../actions/VisualizationActions';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import styles from '../Visualizations.sass';
 
@@ -14,6 +14,7 @@ import DropDownMenu from '../../Base/DropDownMenu';
 import RaisedButton from '../../Base/RaisedButton';
 
 import ConditionalSelector from './ConditionalSelector';
+import BinningSelector from './BinningSelector';
 
 export class BuilderSidebar extends Component {
 
@@ -37,7 +38,7 @@ export class BuilderSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectVisualizationConditional, filters, visualization } = this.props;
+    const { fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectVisualizationConditional, selectVisualizationConfig, filters, visualization } = this.props;
 
     var visualizationTypes = [];
 
@@ -98,49 +99,9 @@ export class BuilderSidebar extends Component {
           </SidebarGroup>
         }
         { visualization.visualizationType == 'hist' &&
-          <SidebarGroup heading="Number of Bins">
-            <ToggleButtonGroup
-              toggleItems={[
-                { name: 'Procedural', id: 'procedural', values: [
-                  { label: 'Freedman', selected: true, value: 'freedman'},
-                  { label: 'Square Root', selected: true, value: 'square_root'},
-                  { label: 'Doane', selected: true, value: 'doane'},
-                  { label: 'Rice', selected: true, value: 'rice'},
-                  { label: 'Sturges', selected: true, value: 'sturges'},
-                ]},
-                { name: 'Manual',
-                  id: 'manual',
-                  values: _.range(1, 26).map((value) =>
-                    new Object({
-                      label: value.toString(),
-                      selected: true,
-                      value: value.toString()
-                    })
-                  )
-                }
-              ]}
-              displayTextMember="name"
-              valueMember="id"
-              splitMenuItemsMember="values"
-              separated={ true }
-              selectMenuItem={ selectBuilderSortField }
-              onChange={ selectBuilderSortField } />
-          </SidebarGroup>
-        }
-        { visualization.visualizationType == 'hist' &&
-          <SidebarGroup heading="Number of Bins">
-            <div className={ styles.sortGroup }>
-              <ToggleButtonGroup
-                className={ styles.sortFields }
-                toggleItems={[
-                  { name: 'Procedural', id: 'procedural' },
-                  { name: 'Manual', id: 'manual' }
-                ]}
-                valueMember="id"
-                displayTextMember="name"
-                onChange={ selectBuilderSortField } />
-            </div>
-          </SidebarGroup>
+          <BinningSelector
+            config={ visualization.spec.config }
+            selectBinningConfig={ selectVisualizationConfig } />
         }
       </Sidebar>
     );
@@ -171,5 +132,6 @@ export default connect(mapStateToProps, {
   selectBuilderSortField,
   fetchFieldPropertiesIfNeeded,
   selectVisualizationConditional,
+  selectVisualizationConfig,
   pushState
 })(BuilderSidebar);
