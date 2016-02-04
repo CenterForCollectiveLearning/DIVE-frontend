@@ -23,8 +23,7 @@ module.exports = {
     hot: true
   },
   externals: {
-    "plottable": "Plottable",
-    "_": "underscore"
+    plottable: "Plottable"
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),

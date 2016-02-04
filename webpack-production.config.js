@@ -18,8 +18,7 @@ module.exports = {
     filename: 'bundle.js'
   },
   externals: {
-    "plottable": "Plottable",
-    "_": "underscore"
+    plottable: "Plottable"
   },
   plugins: [
     devFlagPlugin,

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import styles from '../Visualizations.sass';
+import _ from 'underscore';
 
 import SidebarGroup from '../../Base/SidebarGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
