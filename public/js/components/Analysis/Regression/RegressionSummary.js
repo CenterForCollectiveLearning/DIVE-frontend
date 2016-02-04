@@ -80,7 +80,9 @@ export default class RegressionSummary extends Component {
   }
 }
 
-// ContributionToRSquaredCard.propTypes = {
-//   id: PropTypes.string,
-//   contributionToRSquared: PropTypes.object.isRequired
-// }
+RegressionSummary.propTypes = {
+  dependentVariableName: PropTypes.string.isRequired,
+  independentVariableNames: PropTypes.array.isRequired,
+  regressionResult: PropTypes.object.isRequired,
+  contributionToRSquared: PropTypes.object.isRequired
+}
