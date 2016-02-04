@@ -1,8 +1,9 @@
+import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { selectBuilderVisualizationType, selectBuilderSortOrder, selectBuilderSortField, selectVisualizationConditional } from '../../../actions/VisualizationActions';
+import { selectBuilderVisualizationType, selectBuilderSortOrder, selectBuilderSortField, selectVisualizationConditional, selectVisualizationConfig } from '../../../actions/VisualizationActions';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import styles from '../Visualizations.sass';
 
@@ -13,6 +14,7 @@ import DropDownMenu from '../../Base/DropDownMenu';
 import RaisedButton from '../../Base/RaisedButton';
 
 import ConditionalSelector from './ConditionalSelector';
+import BinningSelector from './BinningSelector';
 
 export class BuilderSidebar extends Component {
 
@@ -36,7 +38,7 @@ export class BuilderSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectVisualizationConditional, filters, visualization } = this.props;
+    const { fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectVisualizationConditional, selectVisualizationConfig, filters, visualization } = this.props;
 
     var visualizationTypes = [];
 
@@ -96,6 +98,11 @@ export class BuilderSidebar extends Component {
             )}
           </SidebarGroup>
         }
+        { visualization.visualizationType == 'hist' &&
+          <BinningSelector
+            config={ visualization.spec.config }
+            selectBinningConfig={ selectVisualizationConfig } />
+        }
       </Sidebar>
     );
   }
@@ -125,5 +132,6 @@ export default connect(mapStateToProps, {
   selectBuilderSortField,
   fetchFieldPropertiesIfNeeded,
   selectVisualizationConditional,
+  selectVisualizationConfig,
   pushState
 })(BuilderSidebar);

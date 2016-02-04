@@ -15,6 +15,7 @@ import {
   SELECT_BUILDER_SORT_ORDER,
   SELECT_BUILDER_SORT_FIELD,
   SELECT_VISUALIZATION_CONDITIONAL,
+  SELECT_VISUALIZATION_CONFIG,
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
@@ -156,7 +157,7 @@ function receiveSpecVisualizationDispatcher(json) {
   };
 }
 
-function fetchSpecVisualization(projectId, specId, conditionals = []) {
+function fetchSpecVisualization(projectId, specId, conditionals = [], config = null) {
   const params = {
     project_id: projectId
   }
@@ -181,6 +182,10 @@ function fetchSpecVisualization(projectId, specId, conditionals = []) {
     });
   }
 
+  if (config) {
+    params.config = config;
+  }
+
   return dispatch => {
     dispatch(requestSpecVisualizationDispatcher());
     return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`, {
@@ -202,10 +207,10 @@ function shouldFetchSpecVisualization(state) {
   return true;
 }
 
-export function fetchSpecVisualizationIfNeeded(projectId, specId, conditionals) {
+export function fetchSpecVisualizationIfNeeded(projectId, specId, conditionals, config) {
   return (dispatch, getState) => {
     if (shouldFetchSpecVisualization(getState())) {
-      return dispatch(fetchSpecVisualization(projectId, specId, conditionals));
+      return dispatch(fetchSpecVisualization(projectId, specId, conditionals, config));
     }
   };
 }
@@ -214,6 +219,13 @@ export function selectVisualizationConditional(conditional) {
   return {
     type: SELECT_VISUALIZATION_CONDITIONAL,
     conditional: conditional
+  }
+}
+
+export function selectVisualizationConfig(config) {
+  return {
+    type: SELECT_VISUALIZATION_CONFIG,
+    config: config
   }
 }
 
