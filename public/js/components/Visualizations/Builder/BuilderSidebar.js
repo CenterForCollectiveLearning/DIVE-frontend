@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
@@ -94,6 +95,51 @@ export class BuilderSidebar extends Component {
                   selectConditionalValue={ selectVisualizationConditional }/>
               </div>
             )}
+          </SidebarGroup>
+        }
+        { visualization.visualizationType == 'hist' &&
+          <SidebarGroup heading="Number of Bins">
+            <ToggleButtonGroup
+              toggleItems={[
+                { name: 'Procedural', id: 'procedural', values: [
+                  { label: 'Freedman', selected: true, value: 'freedman'},
+                  { label: 'Square Root', selected: true, value: 'square_root'},
+                  { label: 'Doane', selected: true, value: 'doane'},
+                  { label: 'Rice', selected: true, value: 'rice'},
+                  { label: 'Sturges', selected: true, value: 'sturges'},
+                ]},
+                { name: 'Manual',
+                  id: 'manual',
+                  values: _.range(1, 26).map((value) =>
+                    new Object({
+                      label: value.toString(),
+                      selected: true,
+                      value: value.toString()
+                    })
+                  )
+                }
+              ]}
+              displayTextMember="name"
+              valueMember="id"
+              splitMenuItemsMember="values"
+              separated={ true }
+              selectMenuItem={ selectBuilderSortField }
+              onChange={ selectBuilderSortField } />
+          </SidebarGroup>
+        }
+        { visualization.visualizationType == 'hist' &&
+          <SidebarGroup heading="Number of Bins">
+            <div className={ styles.sortGroup }>
+              <ToggleButtonGroup
+                className={ styles.sortFields }
+                toggleItems={[
+                  { name: 'Procedural', id: 'procedural' },
+                  { name: 'Manual', id: 'manual' }
+                ]}
+                valueMember="id"
+                displayTextMember="name"
+                onChange={ selectBuilderSortField } />
+            </div>
           </SidebarGroup>
         }
       </Sidebar>
