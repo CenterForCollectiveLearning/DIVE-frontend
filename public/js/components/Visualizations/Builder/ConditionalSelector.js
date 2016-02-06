@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from '../Visualizations.sass';
 
+import Input from '../../Base/Input';
 import DropDownMenu from '../../Base/DropDownMenu';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 
@@ -9,88 +10,156 @@ export default class ConditionalSelector extends Component {
   constructor(props) {
     super(props);
 
-    this.baseConditional = {
+    this.updateConditional = this.updateConditional.bind(this);
+
+    this.combinators = [
+      {
+        value: 'and',
+        label: 'AND'
+      },
+      {
+        value: 'or',
+        label: 'OR'
+      }
+    ];
+
+    this.operators = [
+      {
+        value: '==',
+        label: '=',
+        validTypes: ['c', 'q']
+      },
+      {
+        value: '!=',
+        label: '≠',
+        validTypes: ['c', 'q']
+      },
+      {
+        value: '<',
+        label: '<',
+        validTypes: ['q']
+      },
+      {
+        value: '>',
+        label: '>',
+        validTypes: ['q']
+      },
+      {
+        value: '<=',
+        label: '≤',
+        validTypes: ['q']
+      },
+      {
+        value: '>=',
+        label: '≥',
+        validTypes: ['q']
+      },
+    ];
+
+    this.state = {
       conditionalIndex: this.props.conditionalIndex,
       fieldId: null,
       operator: '==',
       value: null,
       combinator: 'and'
     };
+  }
 
-    this.state = {
-      conditional: this.baseConditional
-    };
+  updateConditional(newProps) {
+    const conditional = { ...this.state, ...newProps };
+    this.setState(conditional);
+    if (conditional.value) {
+      this.props.selectConditionalValue(conditional);
+    }
   }
 
   onSelectField(fieldId) {
-    const conditional = { ...this.state.conditional, fieldId: fieldId, value: "ALL_VALUES" };
-    this.setState({ conditional: conditional });
-    if (this.state.conditional.value) {
-      this.props.selectConditionalValue(conditional);
-    }
+    const selectedField = this.props.fieldProperties.find((item) => item.id == fieldId);
+    this.updateConditional({ fieldId: fieldId, value: selectedField.generalType == 'c' ? "ALL_VALUES" : "" });
+  }
+
+  onSelectOperator(operator) {
+    this.updateConditional({ operator: operator });
   }
 
   onSelectCombinator(combinator) {
-    const conditional = { ...this.state.conditional, combinator: combinator };
-    this.setState({ conditional: conditional });
-    if (this.state.conditional.value) {
-      this.props.selectConditionalValue(conditional);
+    this.updateConditional({ combinator: combinator });
+  }
+
+  onSelectFieldValue(fieldValue) {
+    if (fieldValue != ""){
+      this.updateConditional({ value: fieldValue });
     }
   }
 
-  onSelectFieldValue(fieldValueId) {
-    const conditional = { ...this.state.conditional, value: fieldValueId };
-    this.setState({ conditional: conditional });
-    this.props.selectConditionalValue(conditional);
+  onTypeFieldValue(e) {
+    if (e.target.value != ""){
+      this.updateConditional({ value: Number.parseInt(e.target.value) });
+    }
   }
 
   render() {
     const { fieldProperties, selectConditionalValue } = this.props;
-    const { fieldId, value, combinator } = this.state.conditional;
+    const { fieldId, operator, value, combinator, conditionalIndex } = this.state;
     const selectedField = fieldProperties.find((item) => item.id == fieldId);
     const fieldValues = selectedField ? selectedField.values : [];
 
-    const CONDITIONAL_COMBINATORS = [
-      {
-        id: 'and',
-        name: 'AND',
-        selected: combinator == 'and'
-      },
-      {
-        id: 'or',
-        name: 'OR',
-        selected: combinator == 'or'
-      }
-    ];
+    const combinators = this.combinators
+      .map((combinatorFromList) => new Object({ ...combinatorFromList, selected: combinator == combinatorFromList.value }));
+
+    const operators = this.operators
+      .filter((operatorFromList) => (!selectedField || operatorFromList.validTypes.indexOf(selectedField.generalType) != -1))
+      .map((operatorFromList) => new Object({ ...operatorFromList, selected: operator == operatorFromList.value }));
 
     return (
       <div className={ styles.fieldGroup }>
-        { this.state.conditional.conditionalIndex > 0 &&
+        { conditionalIndex > 0 &&
           <ToggleButtonGroup
             className={ styles.conditionalCombinator }
             buttonClassName={ styles.conditionalCombinatorButton }
-            toggleItems={ CONDITIONAL_COMBINATORS }
-            valueMember="id"
-            displayTextMember="name"
+            toggleItems={ combinators }
+            valueMember="value"
+            displayTextMember="label"
             onChange={ this.onSelectCombinator.bind(this) } />
         }
 
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           <DropDownMenu
-            className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown }
+            className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown + ' ' + styles.fieldDropdown }
             value={ fieldId }
-            options={ fieldProperties.filter((item) => item.generalType == 'c') }
+            options={ fieldProperties }
             valueMember="id"
             displayTextMember="name"
             onChange={ this.onSelectField.bind(this) }/>
-          <DropDownMenu
-            className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown + (fieldId == null ? ' ' + styles.disabledDropdown : '') }
-            value={ value }
-            options={ fieldValues }
-            valueMember="value"
-            displayTextMember="label"
-            onChange={ this.onSelectFieldValue.bind(this) }/>
+
+          <div style={{ display: 'flex' }}>
+            <DropDownMenu
+              className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown + ' ' + styles.operatorDropdown + (fieldId == null ? ' ' + styles.disabledDropdown : '') }
+              value={ operator }
+              options={ operators }
+              valueMember="value"
+              displayTextMember="label"
+              onChange={ this.onSelectOperator.bind(this) }/>
+
+            { (!selectedField || selectedField.generalType == 'c') &&
+              <DropDownMenu
+                className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown + ' ' + styles.fieldValueDropdown + (fieldId == null ? ' ' + styles.disabledDropdown : '') }
+                value={ value }
+                options={ fieldValues }
+                valueMember="value"
+                displayTextMember="label"
+                onChange={ this.onSelectFieldValue.bind(this) }/>
+            }
+            { selectedField && selectedField.generalType == 'q' &&
+              <Input
+                className={ styles.conditionalInput + (fieldId == null ? ' ' + styles.disabledInput : '') }
+                placeholder={ `${ value }` }
+                type="text"
+                onChange={ this.onTypeFieldValue.bind(this) }/>
+            }
+          </div>
         </div>
+
       </div>
     );
   }

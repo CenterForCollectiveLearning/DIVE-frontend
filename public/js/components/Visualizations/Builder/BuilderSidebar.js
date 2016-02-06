@@ -86,6 +86,11 @@ export class BuilderSidebar extends Component {
             </div>
           </SidebarGroup>
         }
+        { visualization.visualizationType == 'hist' &&
+          <BinningSelector
+            config={ visualization.spec.config }
+            selectBinningConfig={ selectVisualizationConfig } />
+        }
         { visualization.visualizationType &&
           <SidebarGroup heading="Filter by field">
             { visualization.conditionals.map((conditional, i) =>
@@ -97,11 +102,6 @@ export class BuilderSidebar extends Component {
               </div>
             )}
           </SidebarGroup>
-        }
-        { visualization.visualizationType == 'hist' &&
-          <BinningSelector
-            config={ visualization.spec.config }
-            selectBinningConfig={ selectVisualizationConfig } />
         }
       </Sidebar>
     );
