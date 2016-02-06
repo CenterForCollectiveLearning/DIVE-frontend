@@ -163,7 +163,7 @@ function fetchSpecVisualization(projectId, specId, conditionals = [], config = n
   }
 
   const validConditionals = conditionals.filter((conditional) =>
-    conditional.conditionalIndex != null && conditional.value != "ALL_VALUES"
+    conditional.conditionalIndex != null && conditional.value != "ALL_VALUES" && conditional.value != ""
   );
 
   if (validConditionals.length) {
