@@ -65,17 +65,21 @@ export default class ConditionalSelector extends Component {
     };
   }
 
-  updateConditional(newProps) {
+  updateConditional(newProps, isDefaultValue = false) {
     const conditional = { ...this.state, ...newProps };
+
     this.setState(conditional);
-    if (conditional.value) {
+
+    if (!isDefaultValue || (isDefaultValue && this.state.value)) {
       this.props.selectConditionalValue(conditional);
     }
   }
 
   onSelectField(fieldId) {
     const selectedField = this.props.fieldProperties.find((item) => item.id == fieldId);
-    this.updateConditional({ fieldId: fieldId, value: selectedField.generalType == 'c' ? "ALL_VALUES" : "" });
+    const value = selectedField.generalType == 'c' ? "ALL_VALUES" : "";
+    const operator = "==";
+    this.updateConditional({ fieldId: fieldId, value: value, operator: operator }, true);
   }
 
   onSelectOperator(operator) {
