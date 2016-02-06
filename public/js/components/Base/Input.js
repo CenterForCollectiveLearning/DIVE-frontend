@@ -12,7 +12,9 @@ export default class Input extends Component {
   render() {
     return (
       <input
-        className={ styles.input + (this.props.large ? ' ' + styles.large : '') }
+        className={ styles.input
+          + (this.props.large ? ' ' + styles.large : '')
+          + (this.props.className ? ' ' + this.props.className : '') }
         type={ this.props.type }
         placeholder={ this.props.placeholder }
         onChange={ this.props.onChange }
@@ -22,6 +24,7 @@ export default class Input extends Component {
 }
 
 Input.propTypes = {
+  className: PropTypes.string,
   placeholder: PropTypes.string,
   type: PropTypes.string,
   large: PropTypes.bool,

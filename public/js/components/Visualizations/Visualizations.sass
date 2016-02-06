@@ -55,24 +55,45 @@
     > div:first-child
       font-size: 12px
 
+.conditionalInput
+  width: 80%
+  border-left-width: 0
+  border-radius: 0
+  border-bottom-right-radius: 2px
+  border-top-width: 0
+  text-align: right
+
 .conditionalDropdown
-  width: 50%
+  &.fieldDropdown
+    width: 100%
 
-  &:first-child
     > div > div:first-of-type
-      border-top-right-radius: 0
-      border-bottom-right-radius: 0
+      border-top-left-radius: 2px
+      border-top-right-radius: 2px
 
-  &:last-child
+  &.operatorDropdown
+    width: 20%
+
     > div > div:first-of-type
-      border-top-left-radius: 0
-      border-bottom-left-radius: 0
+      padding-right: 20px
+      border-bottom-left-radius: 2px
+      border-top-width: 0
+
+  &.fieldValueDropdown
+    width: 80%
+
+    > div > div:first-of-type
+      border-bottom-right-radius: 2px
+      border-top-width: 0
       border-left-width: 0
 
   &.disabledDropdown
     opacity: 0.5
     pointer-events: none
     cursor: default
+
+  > div > div:first-of-type
+    border-radius: 0
 
 div.conditionalCombinator
   margin: 9px 0 8px
@@ -88,9 +109,6 @@ div.conditionalCombinator
       height: 30px
       line-height: 30px
 
-// .binningTypesToggleButton
-//   max-width: 30%
-
 .binningConfigContainer
   display: flex
 
@@ -105,7 +123,7 @@ div.conditionalCombinator
       width: 40%
 
     .fieldGroupLabel
-      margin-top: 0
+      margin-top: -6px
 
 .galleryContainer, .builderContainer
   display: flex
