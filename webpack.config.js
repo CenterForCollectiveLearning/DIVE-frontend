@@ -6,10 +6,8 @@ var devFlagPlugin = new webpack.DefinePlugin({
 });
 
 function getEntrySources(sources) {
-  if (process.env.NODE_ENV !== 'production') {
-    sources.push('webpack-dev-server/client?http://localhost:3009')
-    sources.push('webpack/hot/only-dev-server')
-  }
+  sources.push('webpack-dev-server/client?http://localhost:3009')
+  sources.push('webpack/hot/only-dev-server')
   return sources;
 }
 
@@ -19,7 +17,7 @@ module.exports = {
       './public/css/app.css'
   ]),
   output: {
-    path: __dirname + '/',
+    path: __dirname + '/public',
     publicPath: '/',
     filename: 'bundle.js',
     hot: true

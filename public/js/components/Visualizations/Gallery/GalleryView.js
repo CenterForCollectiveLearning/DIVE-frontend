@@ -18,7 +18,7 @@ export class GalleryView extends Component {
 
   componentWillMount() {
     const { datasetSelector, project, specs, fetchSpecs, clearVisualization, gallerySelector } = this.props;
-    const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching);
+    const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching && !specs.error);
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && noSpecsAndNotFetching) {
       fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
@@ -30,7 +30,7 @@ export class GalleryView extends Component {
   componentDidUpdate(previousProps) {
     const { datasetSelector, project, specs, gallerySelector, fetchSpecs } = this.props;
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
-    const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching);
+    const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching && !specs.error);
     const gallerySelectorChanged = (gallerySelector.updatedAt !== previousProps.gallerySelector.updatedAt);
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && (datasetChanged || gallerySelectorChanged || noSpecsAndNotFetching)) {
@@ -39,7 +39,7 @@ export class GalleryView extends Component {
   }
 
   handleClick(specId) {
-    this.props.pushState(null, `/projects/${this.props.project.properties.id}/visualize/builder/${ specId }`);
+    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/visualize/builder/${ specId }`);
   }
 
   render() {
@@ -50,7 +50,7 @@ export class GalleryView extends Component {
       .map((filter) => filter.type);
 
     const filteredSpecs = gallerySelector.specs.filter((spec) =>
-      (selectedVisualizationTypes.length == 0) || selectedVisualizationTypes.some((filter) => 
+      (selectedVisualizationTypes.length == 0) || selectedVisualizationTypes.some((filter) =>
         spec.vizTypes.indexOf(filter) >= 0
       )
     );
@@ -66,7 +66,7 @@ export class GalleryView extends Component {
                 { construct.string }
               </span>
             )}
-            actions={ filteredSpecs.length > 0 && 
+            actions={ filteredSpecs.length > 0 &&
               <div className={ styles.sortingControl }>
                 <span>Sort by </span>
                 <DropDownMenu
@@ -78,7 +78,9 @@ export class GalleryView extends Component {
             }/>
           <div className={ styles.specBlocksContainer }>
             { specs.isFetching &&
-              <div className={ styles.watermark }>Fetching visualizations...</div> 
+              <div className={ styles.watermark }>
+                { specs.progress != null ? specs.progress : 'Fetching visualizations…' }
+              </div>
             }
             { !specs.isFetching && filteredSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>

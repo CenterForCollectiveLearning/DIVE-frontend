@@ -19,6 +19,112 @@
   &.operation, &.plain, &.transformation, &.tooMuchData
     color: #6A6A6A
 
+.fieldGroup
+  &:first-child
+    .fieldGroupLabel
+      margin-top: 0
+
+  + .fieldGroup
+    margin-top: 7px
+
+  .fieldGroupLabel
+    margin-top: 17px
+    margin-bottom: 10px
+
+    font-size: 11px
+    font-weight: 500
+    color: #999
+    text-transform: uppercase
+
+.sortGroup
+  display: flex
+
+  .sortFields
+    flex-grow: 1
+
+    + .sortOrder
+      margin-left: 8px
+      margin-top: 1px
+
+.sidebarDropdown
+  margin-top: 1px
+
+  > div > div:first-of-type
+    margin-top: -1px
+
+    > div:first-child
+      font-size: 12px
+
+.conditionalInput
+  width: 80%
+  border-radius: 0
+  border-bottom-right-radius: 2px
+  border-top-width: 0
+  border-left-width: 0
+  text-align: right
+
+.conditionalDropdown
+  &.fieldDropdown
+    width: 100%
+
+    > div > div:first-of-type
+      border-top-left-radius: 2px
+      border-top-right-radius: 2px
+
+  &.operatorDropdown
+    width: 20%
+
+    > div > div:first-of-type
+      padding-right: 20px
+      border-bottom-left-radius: 2px
+      border-top-width: 0
+
+  &.fieldValueDropdown
+    width: 80%
+
+    > div > div:first-of-type
+      border-bottom-right-radius: 2px
+      border-top-width: 0
+      border-left-width: 0
+
+  &.disabledDropdown
+    opacity: 0.5
+    pointer-events: none
+    cursor: default
+
+  > div > div:first-of-type
+    border-radius: 0
+
+div.conditionalCombinator
+  margin: 9px 0 8px
+  justify-content: center
+
+  div.conditionalCombinatorButton
+    flex-grow: 0
+    width: 50px
+
+    > div
+      font-size: 11px
+      color: #555
+      height: 30px
+      line-height: 30px
+
+.binningConfigContainer
+  display: flex
+
+  .binningConfigBlock
+    margin-top: 0
+
+    &:first-child
+      width: 60%
+
+    &:last-child
+      padding-left: 7px
+      width: 40%
+
+    .fieldGroupLabel
+      margin-top: -6px
+
 .galleryContainer, .builderContainer
   display: flex
   flex-direction: row
@@ -26,20 +132,22 @@
 
   background-color: #e9e7e8
 
-.galleryContainer
-  .watermark
-    +montserrat
-    display: flex
-    flex-grow: 1
+.watermark
+  +montserrat
+  display: flex
+  flex-grow: 1
+  justify-content: center
+  padding: 200px 0 260px
 
-    padding-top: 200px
-    justify-content: center
+  text-transform: uppercase
+  font-weight: 500
+  letter-spacing: 1px
+  font-size: 16px
+  color: #999
 
-    text-transform: uppercase
-    font-weight: 500
-    letter-spacing: 1px
-    font-size: 16px
-    color: #999
+  &.watermarkNoSpacer
+    padding: 0
+
 
 .specsContainer, .visualizationViewContainer
   +fillContainer
@@ -65,6 +173,7 @@
   .visualizationContainer
     display: flex
     flex-direction: column
+    flex-grow: 1
 
     min-height: 400px
     padding-top: 10px
@@ -76,6 +185,12 @@
 
     .visualization
       +fillContainer
+      position: relative
+
+      > div:first-child
+        position: absolute
+        height: 100%
+        width: 100%
 
       svg
         flex-grow: 1
@@ -94,7 +209,7 @@
 
 .specsContainer
   .innerSpecsContainer
-    +fillContainer
+    display: block
 
   .specBlocksContainer
     display: flex
@@ -198,14 +313,6 @@
       g
         outline: none
         pointer-events: none
-
-      > g:first-of-type
-        text
-          font-size: 20px
-
-      > g:last-of-type
-        text
-          font-size: 12px
 
       text
         fill: rgba(0, 0, 0, 0.4)

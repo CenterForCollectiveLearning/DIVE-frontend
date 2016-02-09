@@ -22,14 +22,15 @@ export class RegressionSidebar extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = nextProps;
+    const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
 
-    if (project.properties.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
+    if (project.properties.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId)
     }
   }
 
   onSelectDependentVariable(dependentVariable) {
-    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/analyze/regression/${ dependentVariable }`);
+    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/analyze/regression/${ dependentVariable }`);
   }
 
   render() {
@@ -38,7 +39,7 @@ export class RegressionSidebar extends Component {
     return (
       <AnalysisSidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Dependent Variable">
+          <SidebarGroup heading="Dependent Variable (Y)">
             <DropDownMenu
               value={ regressionSelector.dependentVariableId }
               options={ fieldProperties.items.filter((item) => item.generalType == 'q') }
@@ -48,7 +49,7 @@ export class RegressionSidebar extends Component {
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Independent Variables">
+          <SidebarGroup heading="Explanatory Factors (X)">
             <ToggleButtonGroup
               toggleItems={ fieldProperties.items.map((item) =>
                 new Object({

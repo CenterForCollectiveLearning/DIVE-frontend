@@ -17,7 +17,7 @@ import BuilderPage from './components/Visualizations/Builder/BuilderPage';
 import AnalysisPage from './components/Analysis/AnalysisPage';
 import RegressionBasePage from './components/Analysis/Regression/RegressionBasePage';
 import RegressionPage from './components/Analysis/Regression/RegressionPage';
-import ComparisonPage from './components/Analysis/Comparison/ComparisonPage';
+import SummaryPage from './components/Analysis/Summary/SummaryPage';
 import ExportedVisualizationPage from './components/Visualizations/ExportedVisualization/ExportedVisualizationPage';
 import ComposePage from './components/Compose/ComposePage';
 
@@ -30,21 +30,24 @@ export default (
       <Route path="/features" component={ FeaturesPage }/>
     </Route>
     <Route path="/projects/:projectId" component={ ProjectsPage }>
-      <Route path="data" component={ DatasetsPage }>
+      <Route path="datasets" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>
         <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>
       </Route>
-      <Route path="visualize" component={ VisualizationsPage }>
-        <Route path="gallery" component={ GalleryPage }/>
-        <Route path="builder/:specId" component={ BuilderPage }/>
-      </Route>
-      <Route path="analyze" component={ AnalysisPage }>
-        <Route path="regression" component={ RegressionBasePage }>
-          <Route path=":dependentVariable" component={ RegressionPage }/>
+
+      <Route path="datasets/:datasetId" component={ DatasetsPage }>
+        <Route path="visualize" component={ VisualizationsPage }>
+          <Route path="gallery" component={ GalleryPage }/>
+          <Route path="builder/:specId" component={ BuilderPage }/>
         </Route>
-        <Route path="comparison" component={ ComparisonPage }/>
+        <Route path="analyze" component={ AnalysisPage }>
+          <Route path="regression" component={ RegressionBasePage }>
+            <Route path=":dependentVariable" component={ RegressionPage }/>
+          </Route>
+          <Route path="summary" component={ SummaryPage }/>
+        </Route>
+        <Route path="compose" component={ ComposePage }/>
       </Route>
-      <Route path="compose" component={ ComposePage }/>
     </Route>
     <Route path="/share/projects/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>
   </Route>

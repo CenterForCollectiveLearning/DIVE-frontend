@@ -44,13 +44,13 @@ export default class DatasetDataGrid extends Component {
 
       const createHeaderCell = ((key, i) => createCell(key, i, key, createHeaderCellContent));
 
-      const headerRow = Object.keys(dataset.data[0]).map(createHeaderCell);
+      const headerRow = [...dataset.data[0].keys()].map(createHeaderCell);
 
       dataRows = dataset.data.map(function(row, i) {
-        const createDataCell = ((key, j) => createCell(key, j, row[key], createDataCellContent));
+        const createDataCell = ((key, j) => createCell(key, j, row.get(key), createDataCellContent));
         return {
           rowType: 'data',
-          items: Object.keys(row).map(createDataCell)
+          items: [...row.keys()].map(createDataCell)
         };
       });
 

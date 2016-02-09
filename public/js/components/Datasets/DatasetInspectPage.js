@@ -38,7 +38,7 @@ export class DatasetInspectPage extends Component {
     }
 
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      pushState(null, `/projects/${ this.props.params.projectId }/data/${ datasetSelector.datasetId }/inspect`);
+      pushState(null, `/projects/${ this.props.params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
     }
   }
 
@@ -76,6 +76,7 @@ export class DatasetInspectPage extends Component {
       <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
         { datasets.items.length > 0 &&
           <DatasetToolbar
+            uploadMode={ false }
             openMergeModalAction={ this.openMergeDatasetsModal.bind(this) }
             openPivotModalAction={ this.openPivotModal.bind(this) }
             openColumnReductionModalAction={ this.openColumnReductionModal.bind(this) }/>

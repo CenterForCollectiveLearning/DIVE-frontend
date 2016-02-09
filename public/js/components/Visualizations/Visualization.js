@@ -7,6 +7,7 @@ import PieChart from './Charts/PieChart';
 import ColumnChart from './Charts/ColumnChart';
 import StackedColumnChart from './Charts/StackedColumnChart';
 import ScatterChart from './Charts/ScatterChart';
+import LineChart from './Charts/LineChart';
 
 export default class Visualization extends Component {
   constructor(props) {
@@ -179,7 +180,8 @@ export default class Visualization extends Component {
       options = {
         ...options,
         pointSize: 5,
-        height: 400
+        width: '100%',
+        height: '100%'
       }
     }
 
@@ -203,6 +205,15 @@ export default class Visualization extends Component {
     if (tooMuchDataToPreview || tooMuchDataToShowFull) {
       tooMuchDataString = 'Top 20';
       finalDataArray = data.slice(0, 20);
+    }
+
+    const noData = finalDataArray.length == 1;
+    if (noData) {
+      return (
+        <div className={ styles.watermark + (isMinimalView ? styles.watermarkNoSpacer : '') }>
+          No visualization.
+        </div>
+      );
     }
 
     return (
@@ -236,6 +247,13 @@ export default class Visualization extends Component {
             }
             { (validVisualizationTypes[0] == 'scatter' ) &&
               <ScatterChart
+                chartId={ `spec-bar-${spec.id}` }
+                data={ finalDataArray }
+                options={ options }
+                isMinimalView={ isMinimalView }/>
+            }
+            { (validVisualizationTypes[0] == 'line' ) &&
+              <LineChart
                 chartId={ `spec-bar-${spec.id}` }
                 data={ finalDataArray }
                 options={ options }

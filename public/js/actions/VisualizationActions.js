@@ -1,5 +1,6 @@
 import {
   REQUEST_SPECS,
+  PROGRESS_SPECS,
   RECEIVE_SPECS,
   FAILED_RECEIVE_SPECS,
   SELECT_VISUALIZATION_TYPE,
@@ -13,10 +14,12 @@ import {
   SELECT_SORTING_FUNCTION,
   SELECT_BUILDER_SORT_ORDER,
   SELECT_BUILDER_SORT_FIELD,
+  SELECT_VISUALIZATION_CONDITIONAL,
+  SELECT_VISUALIZATION_CONFIG,
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
-import { fetch, pollForTaskResult } from './api.js';
+import { fetch, pollForTask } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
 function requestSpecsDispatcher() {
@@ -25,8 +28,22 @@ function requestSpecsDispatcher() {
   };
 }
 
+function progressSpecsDispatcher(data) {
+  return {
+    type: PROGRESS_SPECS,
+    progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
+  };
+}
+
+function errorSpecsDispatcher(data) {
+  return {
+    type: PROGRESS_SPECS,
+    progress: 'Error processing visualizations, please check console.'
+  };
+}
+
 function receiveSpecsDispatcher(params, json) {
-  if (json) {
+  if (json && !json.error) {
     return {
       ...params,
       type: RECEIVE_SPECS,
@@ -39,7 +56,8 @@ function receiveSpecsDispatcher(params, json) {
     ...params,
     type: FAILED_RECEIVE_SPECS,
     specs: [],
-    receivedAt: Date.now()
+    receivedAt: Date.now(),
+    error: json.error || "Error retrieving visualizations."
   };
 }
 
@@ -86,16 +104,12 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
     }).then(response => response.json())
       .then(function(json) {
         const dispatchParams = { project_id: projectId, dataset_id: datasetId };
-        // TODO Do this more consistently with status flags
-        // console.log(json, (json.specs.length > 0))
-        if (json.taskId) {
-          dispatch(pollForTaskResult(json.taskId, dispatchParams, receiveSpecsDispatcher));
-        }
-        else if (json.specs.length > 0) {
-          dispatch(receiveSpecsDispatcher(dispatchParams, json.specs));
+        if (json.compute) {
+          dispatch(pollForTask(json.taskId, REQUEST_SPECS, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher, errorSpecsDispatcher));
+        } else {
+          dispatch(receiveSpecsDispatcher(dispatchParams, json.result));
         }
       })
-
   };
 }
 
@@ -150,11 +164,35 @@ function receiveSpecVisualizationDispatcher(json) {
   };
 }
 
-function fetchSpecVisualization(projectId, specId, conditionals) {
+function fetchSpecVisualization(projectId, specId, conditionals = [], config = null) {
   const params = {
-    project_id: projectId,
-    conditionals: conditionals,
+    project_id: projectId
   }
+
+  const validConditionals = conditionals.filter((conditional) =>
+    conditional.conditionalIndex != null && conditional.value != "ALL_VALUES" && conditional.value != ""
+  );
+
+  if (validConditionals.length) {
+    params.conditionals = {};
+
+    validConditionals.forEach((conditional) => {
+      if (!params.conditionals[conditional.combinator]) {
+        params.conditionals[conditional.combinator] = [];
+      }
+
+      params.conditionals[conditional.combinator].push({
+        'field_id': conditional.fieldId,
+        'operation': conditional.operator,
+        'criteria': conditional.value
+      })
+    });
+  }
+
+  if (config) {
+    params.config = config;
+  }
+
   return dispatch => {
     dispatch(requestSpecVisualizationDispatcher());
     return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`, {
@@ -176,12 +214,26 @@ function shouldFetchSpecVisualization(state) {
   return true;
 }
 
-export function fetchSpecVisualizationIfNeeded(projectId, specId, conditionals) {
+export function fetchSpecVisualizationIfNeeded(projectId, specId, conditionals, config) {
   return (dispatch, getState) => {
     if (shouldFetchSpecVisualization(getState())) {
-      return dispatch(fetchSpecVisualization(projectId, specId, conditionals));
+      return dispatch(fetchSpecVisualization(projectId, specId, conditionals, config));
     }
   };
+}
+
+export function selectVisualizationConditional(conditional) {
+  return {
+    type: SELECT_VISUALIZATION_CONDITIONAL,
+    conditional: conditional
+  }
+}
+
+export function selectVisualizationConfig(config) {
+  return {
+    type: SELECT_VISUALIZATION_CONFIG,
+    config: config
+  }
 }
 
 export function clearVisualization() {

@@ -21,7 +21,7 @@ export class HomePage extends Component {
     const nextProjectId = nextProps.project.properties.id
     if (this.props.project.properties.id != nextProjectId) {
       this.props.wipeProjectState();
-      this.props.pushState(null, `/projects/${ nextProjectId }/data/upload`);
+      this.props.pushState(null, `/projects/${ nextProjectId }/datasets/upload`);
     }
   }
 
@@ -53,21 +53,6 @@ export class HomePage extends Component {
         </div>
         <div className={ styles.separater }></div>
         <div className={ styles.projectsContainer }>
-          { this.props.projects.userProjects.length &&
-            <div className={ styles.projectTypeContainer }>
-              <div className={ styles.flexbox }>
-                <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Dive into one of your projects:</div>
-              </div>
-              <div className={ styles.projectListContainer }>
-                { this.props.projects.userProjects.map((project) =>
-                  <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/visualize` } className={ styles.projectButton }>{ project.title == 'Project Title' ? `Project ${ project.id }` : project.title  }</a>
-                )}
-              </div>
-            </div>
-          }
-        </div>
-        <div className={ styles.separater }></div>
-        <div className={ styles.projectsContainer }>
           <div className={ styles.projectTypeContainer }>
             <div className={ styles.flexbox }>
               <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Or explore our preloaded projects:</div>
@@ -77,7 +62,7 @@ export class HomePage extends Component {
                 <div className={ styles.watermark }>Fetching datasets...</div>
               }
               { this.props.projects.preloadedProjects.map((project) =>
-                <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/visualize` } className={ styles.projectButton }>{ project.title }</a>
+                <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
               )}
             </div>
           </div>
