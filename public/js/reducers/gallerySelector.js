@@ -133,7 +133,8 @@ export default function gallerySelector(state = baseState, action) {
           new Object({
             ...property,
             selected: !property.selected,
-            values: !property.selected ? property.values : property.values.map((value, i) => new Object({...value, selected: i == 0 }))
+            values: (!property.selected || property.generalType == 'q') ? property.values : property.values.map((value, i) => new Object({...value, selected: i == 0 })),
+            aggregations: (!property.selected || property.generalType == 'c') ? property.aggregations : property.aggregations.map((aggregation, i) => new Object({...aggregation, selected: i == 0 }))
           })
           : property
       );
