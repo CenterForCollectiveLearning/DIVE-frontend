@@ -89,6 +89,13 @@ function progressTaskUploadDatasetDispatcher(data) {
   }
 }
 
+function errorTaskUploadDatasetDispatcher(event) {
+  return {
+    type: PROGRESS_UPLOAD_DATASET,
+    progress: 'Error uploading dataset, please check console.'
+  }
+}
+
 function receiveUploadDatasetDispatcher(params, json) {
   if (json) {
     return {
@@ -123,7 +130,7 @@ export function uploadDataset(projectId, datasetFile) {
 
     const completeEvent = (request) => (evt) => {
       const { taskId } = JSON.parse(request.responseText);
-      dispatch(pollForTask(taskId, REQUEST_UPLOAD_DATASET, {}, receiveUploadDatasetDispatcher, progressTaskUploadDatasetDispatcher));
+      dispatch(pollForTask(taskId, REQUEST_UPLOAD_DATASET, {}, receiveUploadDatasetDispatcher, progressTaskUploadDatasetDispatcher, errorTaskUploadDatasetDispatcher));
     };
 
     return httpRequest('POST', '/datasets/v1/upload', formData, completeEvent, uploadEvents);
@@ -173,6 +180,13 @@ function progressTransformDispatcher(data) {
   };
 }
 
+function errorTransformDispatcher(data) {
+  return {
+    type: ERROR_TRANSFORM,
+    progress: 'Error transforming dataset, please check console.'
+  };
+}
+
 export function requestReduceDatasetColumnsDispatcher(datasetId, columnIds) {
   return {
     type: REQUEST_REDUCE_DATASET_COLUMNS,
@@ -197,7 +211,7 @@ export function reduceDatasetColumns(projectId, datasetId, columnIds=[]) {
     }).then(response => response.json())
       .then(function(json) {
         const dispatchParams = {};
-        dispatch(pollForTask(json.taskId, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher));
+        dispatch(pollForTask(json.taskId, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher, errorTransformDispatcher));
       });
   };
 }
@@ -230,7 +244,7 @@ export function pivotDatasetColumns(projectId, datasetId, variableName, valueNam
     }).then(response => response.json())
       .then(function(json) {
         const dispatchParams = {};
-        dispatch(pollForTask(json.taskId, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher));
+        dispatch(pollForTask(json.taskId, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher, errorTransformDispatcher));
       });
   };
 }

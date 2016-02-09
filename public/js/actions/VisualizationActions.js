@@ -35,6 +35,13 @@ function progressSpecsDispatcher(data) {
   };
 }
 
+function errorSpecsDispatcher(data) {
+  return {
+    type: PROGRESS_SPECS,
+    progress: 'Error processing visualizations, please check console.'
+  };
+}
+
 function receiveSpecsDispatcher(params, json) {
   if (json && !json.error) {
     return {
@@ -98,7 +105,7 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
       .then(function(json) {
         const dispatchParams = { project_id: projectId, dataset_id: datasetId };
         if (json.compute) {
-          dispatch(pollForTask(json.taskId, REQUEST_SPECS, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher));
+          dispatch(pollForTask(json.taskId, REQUEST_SPECS, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher, errorSpecsDispatcher));
         } else {
           dispatch(receiveSpecsDispatcher(dispatchParams, json.result));
         }

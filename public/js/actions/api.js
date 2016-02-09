@@ -37,7 +37,7 @@ function revokeTasks(taskIds) {
   return isomorphicFetch(completeUrl, options).then(response => response.json());
 }
 
-export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, interval=400, limit=300, counter=0) {
+export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval=400, limit=300, counter=0) {
   const otherTasks = taskManager.addTask(taskId, taskType);
   if (otherTasks.length) {
     revokeTasks(otherTasks);
@@ -51,6 +51,10 @@ export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, prog
         if (data.state == 'SUCCESS') {
           taskManager.removeTask(taskId);
           dispatch(dispatcher(dispatcherParams, data.result));
+        } else if (data.state == 'FAILURE') {
+          taskManager.removeTask(taskId);
+          console.error(data.error);
+          dispatch(errorDispatcher(data));
         } else if (counter > limit) {
           revokeTasks(taskId).then((revokeData) => {
             dispatch(dispatcher(dispatcherParams, { ...data.result, error: 'Took too long to get visualizations.' }));
@@ -60,7 +64,7 @@ export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, prog
             dispatch(progressDispatcher(data));
           }
           if (taskManager.getTasks(taskId).length > 0) {
-            setTimeout(function() { dispatch(pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, interval, limit, counter + 1)) }, interval);
+            setTimeout(function() { dispatch(pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval, limit, counter + 1)) }, interval);
           }
         }
       });
