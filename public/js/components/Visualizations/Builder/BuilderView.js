@@ -13,6 +13,7 @@ export class BuilderView extends Component {
     super(props);
 
     this.onClickShare = this.onClickShare.bind(this);
+    this.onClickSave = this.onClickSave.bind(this);
     this.onClickGallery = this.onClickGallery.bind(this);
   }
 
@@ -46,6 +47,12 @@ export class BuilderView extends Component {
     createExportedSpec(project.properties.id, visualization.spec.id, {}, {});
   }
 
+  onClickSave() {
+    const { project, visualization, createExportedSpec, setShareWindow } = this.props;
+
+    createExportedSpec(project.properties.id, visualization.spec.id, {}, {});
+  }
+
   onClickGallery() {
     const { project, datasetSelector, gallerySelector, pushState } = this.props;
     pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/gallery${ gallerySelector.queryString }`);
@@ -58,6 +65,10 @@ export class BuilderView extends Component {
         <RaisedButton onClick={ this.onClickShare }>
           { visualization.isExporting && "Exporting..." }
           { !visualization.isExporting && "Share" }
+        </RaisedButton>
+        <RaisedButton onClick={ this.onClickSave }>
+          { visualization.isExporting && "Saving..." }
+          { !visualization.isExporting && "Save" }
         </RaisedButton>
         <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
       </VisualizationView>

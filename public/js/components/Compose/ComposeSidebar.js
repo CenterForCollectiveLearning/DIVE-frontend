@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
+import { fetchExportedVisualizationSpecsIfNeeded } from '../../actions/ComposeActions';
+
 import styles from './Compose.sass';
 
 import Sidebar from '../Base/Sidebar';
@@ -13,6 +15,8 @@ export class ComposeSidebar extends Component {
   }
 
   componentWillMount() {
+    const { project } = this.props;
+    fetchExportedVisualizationSpecsIfNeeded(project.properties.id);
   }
 
   componentWillReceiveProps(nextProps) {
