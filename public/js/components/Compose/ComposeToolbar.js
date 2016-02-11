@@ -18,7 +18,7 @@ export class ComposeToolbar extends Component {
   render() {
 
     return (
-      <Toolbar className={ styles.composeToolbar }>
+      <Toolbar className={ styles.composeToolbar } foreground={ true }>
         <div className={ styles.leftActions }>
           <span>Document: </span>
           <div className={ styles.documentSelectorContainer }>

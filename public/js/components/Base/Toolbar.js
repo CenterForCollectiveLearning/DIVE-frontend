@@ -11,7 +11,10 @@ export default class Toolbar extends Component {
 
   render() {
     return (
-      <div className={ styles.toolbar + ' ' + this.props.className }>
+      <div className={ styles.toolbar
+          + (this.props.className ? ' ' + this.props.className : '')
+          + (this.props.foreground ? ' ' + styles.foreground : '')
+        }>
         <div className={ styles.leftActions }>
           { this.props.children }
         </div>
@@ -26,10 +29,12 @@ export default class Toolbar extends Component {
 Toolbar.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
-  rightActions: PropTypes.node
+  rightActions: PropTypes.node,
+  foreground: PropTypes.bool
 };
 
 Toolbar.defaultProps = {
-  className: ''
+  className: '',
+  foreground: false
 }
 
