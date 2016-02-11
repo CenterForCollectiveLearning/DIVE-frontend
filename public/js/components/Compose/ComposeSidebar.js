@@ -37,9 +37,17 @@ export class ComposeSidebar extends Component {
     return (
       <Sidebar>
         { !exportedSpecs.isFetching && exportedSpecs.items.length > 0 && exportedSpecs.items.map((spec) =>
-          <div>
-            <div>{ spec.id }</div>
-            <div>{ spec.specId }</div>
+          <div className={ styles.visualizationPreview } key={ spec.id }>
+            <Visualization
+              containerClassName="block"
+              visualizationClassName="visualization"
+              overflowTextClassName="overflowText"
+              visualizationTypes={ spec.vizTypes }
+              spec={ spec }
+              data={ spec.data }
+              onClick={ this.handleClick }
+              isMinimalView={ true }
+              showHeader={ true } />
           </div>
           )
         }
