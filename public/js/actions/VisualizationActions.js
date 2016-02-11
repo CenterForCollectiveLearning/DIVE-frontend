@@ -271,7 +271,7 @@ function receiveCreatedExportedSpecDispatcher(action, json) {
   };
 }
 
-export function createExportedSpec(projectId, specId, conditionals, config, saveAction = false) {
+export function createExportedSpec(projectId, specId, data, conditionals, config, saveAction = false) {
   const requestAction = saveAction ? REQUEST_CREATE_SAVED_SPEC : REQUEST_CREATE_EXPORTED_SPEC;
   const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_SPEC : RECEIVE_CREATED_EXPORTED_SPEC;
 
@@ -280,6 +280,7 @@ export function createExportedSpec(projectId, specId, conditionals, config, save
   const params = {
     project_id: projectId,
     spec_id: specId,
+    data: data,
     conditionals: filteredConditionals,
     config: config
   }

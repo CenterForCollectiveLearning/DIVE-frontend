@@ -42,7 +42,7 @@ export class BuilderView extends Component {
 
   saveVisualization(saveAction = true) {
     const { project, visualization, createExportedSpec } = this.props;
-    createExportedSpec(project.properties.id, visualization.spec.id, visualization.conditionals, visualization.config, saveAction);
+    createExportedSpec(project.properties.id, visualization.spec.id, visualization.visualizationData, visualization.conditionals, visualization.config, saveAction);
   }
 
   onClickShare() {
