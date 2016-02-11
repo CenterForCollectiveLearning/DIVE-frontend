@@ -166,29 +166,41 @@ function receiveSpecVisualizationDispatcher(json) {
   };
 }
 
-function fetchSpecVisualization(projectId, specId, conditionals = [], config = null) {
-  const params = {
-    project_id: projectId
-  }
-
+function getFilteredConditionals(conditionals) {
   const validConditionals = conditionals.filter((conditional) =>
     conditional.conditionalIndex != null && conditional.value != "ALL_VALUES" && conditional.value != ""
   );
 
+  conditionals = null;
+
   if (validConditionals.length) {
-    params.conditionals = {};
+    conditionals = {};
 
     validConditionals.forEach((conditional) => {
-      if (!params.conditionals[conditional.combinator]) {
-        params.conditionals[conditional.combinator] = [];
+      if (!conditionals[conditional.combinator]) {
+        conditionals[conditional.combinator] = [];
       }
 
-      params.conditionals[conditional.combinator].push({
+      conditionals[conditional.combinator].push({
         'field_id': conditional.fieldId,
         'operation': conditional.operator,
         'criteria': conditional.value
       })
     });
+  }
+  return conditionals
+}
+
+
+function fetchSpecVisualization(projectId, specId, conditionals = [], config = null) {
+  const params = {
+    project_id: projectId
+  }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
   }
 
   if (config) {
@@ -263,10 +275,12 @@ export function createExportedSpec(projectId, specId, conditionals, config, save
   const requestAction = saveAction ? REQUEST_CREATE_SAVED_SPEC : REQUEST_CREATE_EXPORTED_SPEC;
   const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_SPEC : RECEIVE_CREATED_EXPORTED_SPEC;
 
+  const filteredConditionals = getFilteredConditionals(conditionals);
+
   const params = {
     project_id: projectId,
     spec_id: specId,
-    conditionals: conditionals,
+    conditionals: filteredConditionals,
     config: config
   }
 
