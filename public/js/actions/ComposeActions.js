@@ -3,18 +3,23 @@ import {
   RECEIVE_EXPORTED_VISUALIZATION_SPECS
 } from '../constants/ActionTypes';
 
-export function requestExportedVisualizationSpecsDispatcher() {
+import { fetch, pollForTask } from './api.js';
+
+function requestExportedVisualizationSpecsDispatcher() {
   return {
     type: REQUEST_EXPORTED_VISUALIZATION_SPECS
   };
 }
 
-export function receiveExportedVisualizationSpecsDispatcher(params, json) {
-  return {
-    type: RECEIVE_EXPORTED_VISUALIZATION_SPECS,
-    specs: json,
-    receivedAt: Date.now()
-  };
+function receiveExportedVisualizationSpecsDispatcher(params, json) {
+  if (json && !json.error) {
+    return {
+      ...params,
+      type: RECEIVE_EXPORTED_VISUALIZATION_SPECS,
+      specs: json,
+      receivedAt: Date.now()
+    };
+  }
 }
 
 function shouldFetchExportedVisualizationSpecs(state) {
@@ -28,18 +33,19 @@ function shouldFetchExportedVisualizationSpecs(state) {
 export function fetchExportedVisualizationSpecs(projectId) {
   return dispatch => {
     dispatch(requestExportedVisualizationSpecsDispatcher());
-    return fetch('/exported_specs/v1/exported_specs', {
-      method: 'post',
-      body: JSON.stringify(params),
-      headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveExportedVisualizationSpecsDispatcher(json)));
+    return fetch(`/exported_specs/v1/exported_specs?project_id=${projectId}`)
+      .then(response => response.json())
+      .then(function(json) {
+        const dispatchParams = {};
+        dispatch(receiveExportedVisualizationSpecsDispatcher(dispatchParams, json.result))
+      });
   };
 }
 
 export function fetchExportedVisualizationSpecsIfNeeded(projectId) {
   return (dispatch, getState) => {
-    if (shouldFetchExported(getState())) {
+    if (shouldFetchExportedVisualizationSpecs(getState())) {
+      console.log('fetching');
       return dispatch(fetchExportedVisualizationSpecs(projectId));
     }
   };

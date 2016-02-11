@@ -1,6 +1,7 @@
 import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
-  RECEIVE_EXPORTED_VISUALIZATION_SPECS
+  RECEIVE_EXPORTED_VISUALIZATION_SPECS,
+  WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
 const baseState = {
@@ -12,7 +13,8 @@ const baseState = {
   error: null
 }
 
-export default function specs(state=baseState, action) {
+export default function exportedSpecs(state=baseState, action) {
+  console.log('action:', action)
   switch (action.type) {
     case REQUEST_EXPORTED_VISUALIZATION_SPECS:
       return { ...state, isFetching: true, progress: null, error: null };
