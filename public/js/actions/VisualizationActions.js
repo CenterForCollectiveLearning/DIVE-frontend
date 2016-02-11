@@ -8,6 +8,8 @@ import {
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
   CLEAR_VISUALIZATION,
+  REQUEST_CREATE_SAVED_SPEC,
+  RECEIVE_CREATED_SAVED_SPEC,
   REQUEST_CREATE_EXPORTED_SPEC,
   RECEIVE_CREATED_EXPORTED_SPEC,
   SET_SHARE_WINDOW,
@@ -242,22 +244,25 @@ export function clearVisualization() {
   };
 }
 
-function requestCreateExportedSpecDispatcher() {
+function requestCreateExportedSpecDispatcher(action) {
   return {
-    type: REQUEST_CREATE_EXPORTED_SPEC
+    type: action
   };
 }
 
-function receiveCreatedExportedSpecDispatcher(json) {
+function receiveCreatedExportedSpecDispatcher(action, json) {
   return {
-    type: RECEIVE_CREATED_EXPORTED_SPEC,
+    type: action,
     exportedSpecId: json.id,
     specId: json.specId,
     receivedAt: Date.now()
   };
 }
 
-export function createExportedSpec(projectId, specId, conditionals, config) {
+export function createExportedSpec(projectId, specId, conditionals, config, saveAction = false) {
+  const requestAction = saveAction ? REQUEST_CREATE_SAVED_SPEC : REQUEST_CREATE_EXPORTED_SPEC;
+  const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_SPEC : RECEIVE_CREATED_EXPORTED_SPEC;
+
   const params = {
     project_id: projectId,
     spec_id: specId,
@@ -266,13 +271,13 @@ export function createExportedSpec(projectId, specId, conditionals, config) {
   }
 
   return dispatch => {
-    dispatch(requestCreateExportedSpecDispatcher());
+    dispatch(requestCreateExportedSpecDispatcher(requestAction));
     return fetch('/exported_specs/v1/exported_specs', {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
-      .then(json => dispatch(receiveCreatedExportedSpecDispatcher(json)))
+      .then(json => dispatch(receiveCreatedExportedSpecDispatcher(receiveAction, json)))
       .catch(err => console.error("Error creating exported spec: ", err));
   };
 }

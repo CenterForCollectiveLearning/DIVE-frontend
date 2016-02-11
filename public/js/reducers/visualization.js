@@ -4,6 +4,8 @@ import {
   RECEIVE_VISUALIZATION_DATA,
   REQUEST_CREATE_EXPORTED_SPEC,
   RECEIVE_CREATED_EXPORTED_SPEC,
+  REQUEST_CREATE_SAVED_SPEC,
+  RECEIVE_CREATED_SAVED_SPEC,
   SELECT_BUILDER_VISUALIZATION_TYPE,
   SELECT_BUILDER_SORT_FIELD,
   SELECT_BUILDER_SORT_ORDER,
@@ -30,6 +32,7 @@ const baseState = {
   exportedSpecId: null,
   shareWindow: null,
   isExporting: false,
+  isSaving: false,
   isFetching: false,
   lastUpdated: null,
   conditionals: [ baseConditional ],
@@ -124,6 +127,12 @@ export default function visualization(state = baseState, action) {
 
     case RECEIVE_CREATED_EXPORTED_SPEC:
       return { ...state, exportedSpecId: action.exportedSpecId, isExporting: false };
+
+    case REQUEST_CREATE_SAVED_SPEC:
+      return { ...state, isSaving: true };
+
+    case RECEIVE_CREATED_SAVED_SPEC:
+      return { ...state, exportedSpecId: action.exportedSpecId, isSaving: false };
 
     case SET_SHARE_WINDOW:
       return { ...state, shareWindow: action.shareWindow };
