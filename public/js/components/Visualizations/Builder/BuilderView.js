@@ -12,6 +12,7 @@ export class BuilderView extends Component {
   constructor(props) {
     super(props);
 
+    this.saveVisualization = this.saveVisualization.bind(this);
     this.onClickShare = this.onClickShare.bind(this);
     this.onClickGallery = this.onClickGallery.bind(this);
   }
@@ -39,11 +40,14 @@ export class BuilderView extends Component {
     }
   }
 
-  onClickShare() {
-    const { project, visualization, createExportedSpec, setShareWindow } = this.props;
+  saveVisualization(saveAction = true) {
+    const { project, visualization, createExportedSpec } = this.props;
+    createExportedSpec(project.properties.id, visualization.spec.id, visualization.visualizationData, visualization.conditionals, visualization.config, saveAction);
+  }
 
+  onClickShare() {
     setShareWindow(window.open('about:blank'));
-    createExportedSpec(project.properties.id, visualization.spec.id, {}, {});
+    this.saveVisualization(false);
   }
 
   onClickGallery() {
@@ -55,11 +59,15 @@ export class BuilderView extends Component {
     const { visualization } = this.props;
     return (
       <VisualizationView visualization={ visualization }>
+        <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
         <RaisedButton onClick={ this.onClickShare }>
           { visualization.isExporting && "Exporting..." }
           { !visualization.isExporting && "Share" }
         </RaisedButton>
-        <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
+        <RaisedButton onClick={ this.saveVisualization } disabled={ (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId)) ? true : false }>
+          { !visualization.isSaving && visualization.exportedSpecId && <i className="fa fa-star"></i> }
+          { !visualization.exportedSpecId && <i className="fa fa-star-o"></i> }
+        </RaisedButton>
       </VisualizationView>
     );
   }
