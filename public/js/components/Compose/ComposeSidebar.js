@@ -8,6 +8,7 @@ import styles from './Compose.sass';
 
 import Sidebar from '../Base/Sidebar';
 import SidebarGroup from '../Base/SidebarGroup';
+import Visualization from '../Visualizations/Visualization';
 
 export class ComposeSidebar extends Component {
   constructor(props) {
@@ -30,8 +31,18 @@ export class ComposeSidebar extends Component {
   }
 
   render() {
+    const { exportedSpecs } = this.props;
+    console.log('Exported Specs:', exportedSpecs, exportedSpecs.items);
+
     return (
       <Sidebar>
+        { !exportedSpecs.isFetching && exportedSpecs.items.length > 0 && exportedSpecs.items.map((spec) =>
+          <div>
+            <div>{ spec.id }</div>
+            <div>{ spec.specId }</div>
+          </div>
+          )
+        }
       </Sidebar>
     );
   }
