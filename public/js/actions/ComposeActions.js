@@ -69,7 +69,7 @@ export function requestDocument(projectId, documentId) {
   }
 }
 
-function requestCreateDocumentDispatcher(projectId) {
+export function requestCreateDocumentDispatcher(projectId) {
   return {
     type: REQUEST_CREATE_DOCUMENT,
     projectId: projectId
@@ -85,19 +85,20 @@ function receiveCreateDocumentDispatcher(projectId, json) {
   };
 }
 
-export function createNewDocument(projectId, content) {
+export function createNewDocument(projectId, content={}) {
   const params = {
     project_id: projectId,
     content: content
   }
+  console.log('in createNewDocument');
   return (dispatch) => {
     dispatch(requestCreateDocumentDispatcher(projectId));
-    return fetch('/compose/v1/document', {
-      method: 'post',
-      body: JSON.stringify(params),
-      headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveCreateDocumentDispatcher(projectId, json)))
+    // return fetch('/compose/v1/document', {
+    //   method: 'post',
+    //   body: JSON.stringify(params),
+    //   headers: { 'Content-Type': 'application/json' }
+    // }).then(response => response.json())
+    //   .then(json => dispatch(receiveCreateDocumentDispatcher(projectId, json)))
   }
 }
 

@@ -32,7 +32,6 @@ export class ComposeSidebar extends Component {
 
   render() {
     const { exportedSpecs } = this.props;
-    console.log('Exported Specs:', exportedSpecs, exportedSpecs.items);
 
     return (
       <Sidebar>
