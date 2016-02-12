@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
 
 import { fetchExportedVisualizationSpecs } from '../../actions/ComposeActions';
 
@@ -25,32 +24,28 @@ export class ComposeSidebar extends Component {
   componentDidUpdate(previousProps) {
     const { project, exportedSpecs, fetchExportedVisualizationSpecs } = this.props;
     if (project.properties.id && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching) {
-      console.log('Fetching because update');
       fetchExportedVisualizationSpecs(project.properties.id);
     }
   }
 
   render() {
     const { exportedSpecs } = this.props;
-    console.log('Exported Specs:', exportedSpecs, exportedSpecs.items);
 
     return (
       <Sidebar>
-        { !exportedSpecs.isFetching && exportedSpecs.items.length > 0 && exportedSpecs.items.map((spec) =>
-          <div className={ styles.visualizationPreview } key={ spec.id }>
-            <Visualization
-              containerClassName="block"
-              visualizationClassName="visualization"
-              overflowTextClassName="overflowText"
-              visualizationTypes={ spec.vizTypes }
-              spec={ spec }
-              data={ spec.data }
-              onClick={ this.handleClick }
-              isMinimalView={ true }
-              showHeader={ true } />
-          </div>
-          )
-        }
+        <SidebarGroup heading="Starred visualizations">
+          { !exportedSpecs.isFetching && exportedSpecs.items.length > 0 && exportedSpecs.items.map((spec) =>
+            <div className={ styles.visualizationPreviewBlockContainer } key={ spec.id }>
+              <Visualization
+                visualizationTypes={ spec.vizTypes }
+                spec={ spec }
+                data={ spec.data }
+                onClick={ this.handleClick }
+                isMinimalView={ true }
+                showHeader={ true } />
+            </div>
+          )}
+        </SidebarGroup>
       </Sidebar>
     );
   }
@@ -70,6 +65,5 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  fetchExportedVisualizationSpecs,
-  pushState
+  fetchExportedVisualizationSpecs
 })(ComposeSidebar);

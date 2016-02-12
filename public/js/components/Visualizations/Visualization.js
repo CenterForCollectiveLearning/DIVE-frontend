@@ -217,9 +217,9 @@ export default class Visualization extends Component {
     }
 
     return (
-      <div className={ styles[containerClassName] } onClick={ this.handleClick }>
+      <div className={ containerClassName } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
-          <div className={ styles[headerClassName] }>
+          <div className={ headerClassName }>
             { spec.meta.construction.map((construct, i) =>
               <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>
             )}
@@ -230,7 +230,7 @@ export default class Visualization extends Component {
             }
           </div>
         }
-        <div className={ styles[visualizationClassName] + ' ' + styles[validVisualizationTypes[0]]}>
+        <div className={ visualizationClassName + ' ' + styles[validVisualizationTypes[0]]}>
             { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
               <ColumnChart
                 chartId={ `spec-bar-${spec.id}` }
@@ -296,10 +296,10 @@ Visualization.propTypes = {
 };
 
 Visualization.defaultProps = {
-  visualizationClassName: "visualization",
-  containerClassName: "block",
-  headerClassName: "header",
-  overflowTextClassName: "overflowText",
+  visualizationClassName: styles.visualization,
+  containerClassName: styles.visualizationBlock,
+  headerClassName: styles.header,
+  overflowTextClassName: styles.overflowText,
   isMinimalView: false,
   showHeader: false,
   visualizationTypes: [],

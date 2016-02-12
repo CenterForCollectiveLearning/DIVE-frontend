@@ -86,11 +86,8 @@ export class GalleryView extends Component {
               <div className={ styles.watermark }>No visualizations</div>
             }
             { !specs.isFetching && filteredSpecs.length > 0 && filteredSpecs.map((spec) =>
-                <div className={ styles.blockContainer } key={ spec.id }>
+                <div className={ styles.visualizationBlocksContainer } key={ spec.id }>
                   <Visualization
-                    containerClassName="block"
-                    visualizationClassName="visualization"
-                    overflowTextClassName="overflowText"
                     visualizationTypes={ selectedVisualizationTypes }
                     spec={ spec }
                     data={ spec.data.visualize }
