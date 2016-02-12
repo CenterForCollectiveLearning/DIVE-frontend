@@ -14,6 +14,7 @@ export class BuilderView extends Component {
 
     this.saveVisualization = this.saveVisualization.bind(this);
     this.onClickShare = this.onClickShare.bind(this);
+    this.onClickSave = this.onClickSave.bind(this);
     this.onClickGallery = this.onClickGallery.bind(this);
   }
 
@@ -48,6 +49,12 @@ export class BuilderView extends Component {
   onClickShare() {
     setShareWindow(window.open('about:blank'));
     this.saveVisualization(false);
+  }
+
+  onClickSave() {
+    const { project, visualization, createExportedSpec, setShareWindow } = this.props;
+
+    createExportedSpec(project.properties.id, visualization.spec.id, {}, {});
   }
 
   onClickGallery() {

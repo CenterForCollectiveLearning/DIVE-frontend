@@ -13,6 +13,7 @@ const baseState = {
 }
 
 export default function exportedSpec(state = baseState, action) {
+  console.log(action)
   switch (action.type) {
     case REQUEST_EXPORTED_SPEC:
       return { ...state, isFetching: true }
