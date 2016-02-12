@@ -7,6 +7,74 @@
 .composeContentContainer
   flex-direction: row
 
+.composeViewContainer
+  display: flex
+  flex-direction: column
+  flex-grow: 1
+  background-color: #e9e7e8
+  overflow-y: scroll
+
+.composeEditor
+  display: flex
+  flex-direction: column
+  flex-grow: 1
+
+  .composeBlock
+    display: flex
+    flex-direction: column
+    padding: 8px
+    margin: 7px
+    border: 1px dashed rgba(0, 0, 0, 0.1)
+
+  .composeBlockHeader
+    display: flex
+
+    .composeBlockHeaderText
+      font-size: 24px
+      line-height: 1.15
+      letter-spacing: -.02em
+      color: rgba(0,0,0,.8)
+      font-weight: 500
+      padding-top: 10px
+      padding-bottom: 9px
+      height: auto
+      margin-bottom: 7px
+
+  .composeBlockContent
+    display: flex
+    flex-direction: column
+
+  .composeBlockVisualization
+    min-height: 400px
+
+  .composeBlockText
+    display: flex
+    min-height: 200px
+    border: 1px solid #ccc
+    border-radius: 2px
+
+    > div
+      display: flex
+      flex-direction: column
+      flex-grow: 1
+
+      > div:first-child
+        display: none
+
+      .quillContents
+        font-family: 'Crimson Text', serif
+        font-weight: 400
+        font-style: normal
+        font-size: 21px
+        line-height: 1.58
+        letter-spacing: -.003em
+        flex-grow: 1
+        display: flex
+        flex-direction: column
+
+        > div:first-child
+          flex-grow: 1
+
 .visualizationPreview
   background-color: white
   padding: 15px
