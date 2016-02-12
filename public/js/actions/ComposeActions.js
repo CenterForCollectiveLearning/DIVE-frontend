@@ -31,7 +31,7 @@ function receiveExportedVisualizationSpecsDispatcher(params, json) {
 }
 
 export function fetchExportedVisualizationSpecs(projectId) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(requestExportedVisualizationSpecsDispatcher());
     return fetch(`/exported_specs/v1/exported_specs?project_id=${projectId}`)
       .then(response => response.json())
@@ -69,11 +69,7 @@ export function requestDocument(projectId, documentId) {
   }
 }
 
-<<<<<<< HEAD
-export function requestCreateDocumentDispatcher(projectId) {
-=======
 function requestCreateDocumentDispatcher(projectId) {
->>>>>>> 23e717f60f7e69013529d421b5ecf7f36e2452d0
   return {
     type: REQUEST_CREATE_DOCUMENT,
     projectId: projectId
@@ -89,27 +85,14 @@ function receiveCreateDocumentDispatcher(projectId, json) {
   };
 }
 
-<<<<<<< HEAD
 export function createNewDocument(projectId, content={}) {
-=======
-export function createNewDocument(projectId, content) {
->>>>>>> 23e717f60f7e69013529d421b5ecf7f36e2452d0
   const params = {
     project_id: projectId,
     content: content
   }
-<<<<<<< HEAD
   console.log('in createNewDocument');
   return (dispatch) => {
-    dispatch(requestCreateDocumentDispatcher(projectId));
-    // return fetch('/compose/v1/document', {
-    //   method: 'post',
-    //   body: JSON.stringify(params),
-    //   headers: { 'Content-Type': 'application/json' }
-    // }).then(response => response.json())
-    //   .then(json => dispatch(receiveCreateDocumentDispatcher(projectId, json)))
-=======
-  return (dispatch) => {
+    console.log('in dispatch');
     dispatch(requestCreateDocumentDispatcher(projectId));
     return fetch('/compose/v1/document', {
       method: 'post',
@@ -117,7 +100,6 @@ export function createNewDocument(projectId, content) {
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
       .then(json => dispatch(receiveCreateDocumentDispatcher(projectId, json)))
->>>>>>> 23e717f60f7e69013529d421b5ecf7f36e2452d0
   }
 }
 
