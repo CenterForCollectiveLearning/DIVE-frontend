@@ -38,11 +38,11 @@ export class ComposeSidebar extends Component {
     return (
       <Sidebar>
         <SidebarGroup heading="Documents">
-          { !documents.isFetching && documents.items.length > 0 && documents.items.map((document) =>
-            <div key={ document.id }>
-              Document: { document.id }
-            </div>
-          )}
+          <div className={ styles.documents }>
+            { !documents.isFetching && documents.items.length > 0 && documents.items.map((document) =>
+              <div className={ styles.document } key={ document.id }>Document: { document.id }</div>
+            )}
+          </div>
         </SidebarGroup>
         <SidebarGroup heading="Visualizations">
           { !exportedSpecs.isFetching && exportedSpecs.items.length > 0 && exportedSpecs.items.map((spec) =>
