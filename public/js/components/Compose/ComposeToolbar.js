@@ -18,7 +18,7 @@ export class ComposeToolbar extends Component {
   }
 
   onClickNewDocument() {
-    const { projectId } = this.props;
+    const { projectId, createNewDocument } = this.props;
     createNewDocument(projectId);
   }
 

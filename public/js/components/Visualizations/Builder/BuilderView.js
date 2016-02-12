@@ -64,7 +64,6 @@ export class BuilderView extends Component {
 
   render() {
     const { visualization } = this.props;
-    console.log('Visualization: ', visualization);
     const disabled = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
     return (
       <VisualizationView visualization={ visualization }>

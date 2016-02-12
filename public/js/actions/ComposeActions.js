@@ -90,9 +90,7 @@ export function createNewDocument(projectId, content={}) {
     project_id: projectId,
     content: content
   }
-  console.log('in createNewDocument');
   return (dispatch) => {
-    console.log('in dispatch');
     dispatch(requestCreateDocumentDispatcher(projectId));
     return fetch('/compose/v1/document', {
       method: 'post',
