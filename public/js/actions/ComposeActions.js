@@ -1,6 +1,8 @@
 import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
+  REQUEST_DOCUMENTS,
+  RECEIVE_DOCUMENTS,
   REQUEST_DOCUMENT,
   RECEIVE_DOCUMENT,
   REQUEST_CREATE_DOCUMENT,
@@ -38,6 +40,34 @@ export function fetchExportedVisualizationSpecs(projectId) {
       .then(function(json) {
         const dispatchParams = {};
         dispatch(receiveExportedVisualizationSpecsDispatcher(dispatchParams, json.result))
+      });
+  };
+}
+
+function requestDocumentsDispatcher(projectId) {
+  return {
+    type: REQUEST_DOCUMENTS,
+    projectId: projectId
+  };
+}
+
+function receiveDocumentsDispatcher(projectId, json) {
+  return {
+    type: RECEIVE_DOCUMENTS,
+    projectId: projectId,
+    documents: json.documents,
+    receivedAt: Date.now(),
+  };
+}
+
+export function fetchDocuments(projectId) {
+  return (dispatch) => {
+    dispatch(requestDocumentsDispatcher(projectId));
+    return fetch(`/compose/v1/documents?project_id=${projectId}`)
+      .then(response => response.json())
+      .then(function(json) {
+        const dispatchParams = {};
+        dispatch(receiveDocumentsDispatcher(dispatchParams, json))
       });
   };
 }
