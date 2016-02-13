@@ -230,7 +230,10 @@ export default class Visualization extends Component {
             }
           </div>
         }
-        <div className={ visualizationClassName + ' ' + styles[validVisualizationTypes[0]]}>
+        <div className={ styles.visualization
+            + ' ' + styles[validVisualizationTypes[0]]
+            + (visualizationClassName ? ' ' + visualizationClassName : '')
+          }>
             { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
               <ColumnChart
                 chartId={ `spec-bar-${spec.id}` }
@@ -296,7 +299,7 @@ Visualization.propTypes = {
 };
 
 Visualization.defaultProps = {
-  visualizationClassName: styles.visualization,
+  visualizationClassName: null,
   containerClassName: styles.visualizationBlock,
   headerClassName: styles.header,
   overflowTextClassName: styles.overflowText,

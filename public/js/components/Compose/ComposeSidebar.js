@@ -37,6 +37,8 @@ export class ComposeSidebar extends Component {
           { !exportedSpecs.isFetching && exportedSpecs.items.length > 0 && exportedSpecs.items.map((spec) =>
             <div className={ styles.visualizationPreviewBlockContainer } key={ spec.id }>
               <Visualization
+                headerClassName={ styles.sidebarVisualizationHeader }
+                containerClassName={ styles.sidebarVisualizationContainer }
                 visualizationTypes={ spec.vizTypes }
                 spec={ spec }
                 data={ spec.data }
