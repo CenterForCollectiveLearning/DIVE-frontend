@@ -56,7 +56,13 @@
     flex-direction: column
     padding: 8px
     margin: 7px
-    border: 1px dashed rgba(0, 0, 0, 0.1)
+    border: 1px dashed transparent
+
+    &:hover
+      border-color: rgba(0, 0, 0, 0.1)
+
+      .composeBlockText, .composeBlockHeader .composeBlockHeaderText
+        border-color: #eee
 
   .composeBlockHeader
     display: flex
@@ -71,7 +77,7 @@
       padding-bottom: 9px
       height: auto
       margin-bottom: 7px
-      border-color: #eee
+      border-color: transparent
   
       &:focus, &:hover
         border-color: #CDCDCD
@@ -107,7 +113,7 @@
   .composeBlockText
     display: flex
     min-height: 200px
-    border: 1px solid #eee
+    border: 1px solid transparent
     border-radius: 2px
     margin-bottom: 7px
     flex-grow: 1
