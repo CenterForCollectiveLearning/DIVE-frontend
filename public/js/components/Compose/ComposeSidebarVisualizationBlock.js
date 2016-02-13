@@ -8,16 +8,27 @@ import styles from './Compose.sass';
 import Visualization from '../Visualizations/Visualization';
 
 export class ComposeSidebarVisualizationBlock extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      selected: this.props.composeSelector.blocks.find((block) => block.exportedSpecId == this.props.spec.id) != undefined
+    }
+  }
+
   handleClick() {
     const { spec, selectComposeVisualization } = this.props;
     selectComposeVisualization(spec.id, spec.meta.desc);
+    this.setState({ selected: !this.state.selected });
   }
 
   render() {
     const { spec } = this.props;
 
     return (
-      <div onClick={ this.handleClick.bind(this) } className={ styles.visualizationPreviewBlockContainer }>
+      <div className={ styles.visualizationPreviewBlockContainer
+                       + (this.state.selected ? ' ' + styles.selectedVisualizationPreviewBlockContainer : '')}
+           onClick={ this.handleClick.bind(this) }>
         <Visualization
           headerClassName={ styles.sidebarVisualizationHeader }
           containerClassName={ styles.sidebarVisualizationContainer }
@@ -36,7 +47,8 @@ ComposeSidebarVisualizationBlock.propTypes = {
 };
 
 function mapStateToProps(state) {
-  return {};
+  const { composeSelector } = state;
+  return { composeSelector };
 }
 
 export default connect(mapStateToProps, {
