@@ -1,13 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { fetchExportedVisualizationSpecs } from '../../actions/ComposeActions';
+import { fetchExportedVisualizationSpecs, selectComposeVisualization } from '../../actions/ComposeActions';
 
 import styles from './Compose.sass';
 
 import Sidebar from '../Base/Sidebar';
 import SidebarGroup from '../Base/SidebarGroup';
 import Visualization from '../Visualizations/Visualization';
+import ComposeSidebarVisualizationBlock from './ComposeSidebarVisualizationBlock';
 
 export class ComposeSidebar extends Component {
   constructor(props) {
@@ -28,6 +29,12 @@ export class ComposeSidebar extends Component {
     }
   }
 
+  handleClick() {
+    console.log(this.context.props);
+    console.log(this.context.props.selectComposeVisualization);
+    this.context.props.selectComposeVisualization(this.id, this.heading);
+  }
+
   render() {
     const { exportedSpecs } = this.props;
 
@@ -35,17 +42,7 @@ export class ComposeSidebar extends Component {
       <Sidebar>
         <SidebarGroup heading="Starred visualizations">
           { !exportedSpecs.isFetching && exportedSpecs.items.length > 0 && exportedSpecs.items.map((spec) =>
-            <div className={ styles.visualizationPreviewBlockContainer } key={ spec.id }>
-              <Visualization
-                headerClassName={ styles.sidebarVisualizationHeader }
-                containerClassName={ styles.sidebarVisualizationContainer }
-                visualizationTypes={ spec.vizTypes }
-                spec={ spec }
-                data={ spec.data }
-                onClick={ this.handleClick }
-                isMinimalView={ true }
-                showHeader={ true } />
-            </div>
+            <ComposeSidebarVisualizationBlock spec={ spec } key={ spec.id }/>
           )}
         </SidebarGroup>
       </Sidebar>
@@ -67,5 +64,6 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  fetchExportedVisualizationSpecs
+  fetchExportedVisualizationSpecs,
+  selectComposeVisualization
 })(ComposeSidebar);

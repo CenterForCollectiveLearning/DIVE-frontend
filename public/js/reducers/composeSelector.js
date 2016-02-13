@@ -29,7 +29,7 @@ export default function composeSelector(state = baseState, action) {
       var blocks = state.blocks.slice()
       const filteredBlocks = blocks.filter((block) => block.exportedSpecId != action.exportedSpecId);
 
-      if (filteredBlocks.length == blocks.length) {
+      if (filteredBlocks.length == blocks.length && blocks.length != 0) {
         blocks = filteredBlocks;
       } else {
         blocks.push({

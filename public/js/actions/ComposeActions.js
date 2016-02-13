@@ -1,9 +1,18 @@
 import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
-  RECEIVE_EXPORTED_VISUALIZATION_SPECS
+  RECEIVE_EXPORTED_VISUALIZATION_SPECS,
+  SELECT_COMPOSE_VISUALIZATION
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
+
+export function selectComposeVisualization(exportedSpecId, exportedSpecHeading) {
+  return {
+    type: SELECT_COMPOSE_VISUALIZATION,
+    exportedSpecId: exportedSpecId,
+    heading: exportedSpecHeading
+  }
+}
 
 function requestExportedVisualizationSpecsDispatcher() {
   return {
