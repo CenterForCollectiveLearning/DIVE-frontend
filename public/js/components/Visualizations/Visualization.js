@@ -216,6 +216,8 @@ export default class Visualization extends Component {
       );
     }
 
+    const chartId = this.props.chartId || spec.id;
+
     return (
       <div className={ containerClassName } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
@@ -236,42 +238,42 @@ export default class Visualization extends Component {
           }>
             { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
               <ColumnChart
-                chartId={ `spec-bar-${spec.id}` }
+                chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { (validVisualizationTypes[0] == 'stackedbar' ) &&
               <StackedColumnChart
-                chartId={ `spec-stackedbar-${spec.id}` }
+                chartId={ `spec-stackedbar-${ chartId }` }
                 data={ finalDataArray }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { (validVisualizationTypes[0] == 'scatter' ) &&
               <ScatterChart
-                chartId={ `spec-bar-${spec.id}` }
+                chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { (validVisualizationTypes[0] == 'line' ) &&
               <LineChart
-                chartId={ `spec-bar-${spec.id}` }
+                chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { validVisualizationTypes[0] == 'pie' &&
               <PieChart
-                chartId={ `spec-pie-${spec.id}` }
+                chartId={ `spec-pie-${ chartId }` }
                 data={ finalDataArray }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { validVisualizationTypes[0] == 'tree' &&
               <TreeMap
-                chartId={ `spec-tree-${spec.id}` }
+                chartId={ `spec-tree-${ chartId }` }
                 parent={ spec.meta.desc }
                 data={ finalDataArray }
                 options={ options }
@@ -284,6 +286,7 @@ export default class Visualization extends Component {
 }
 
 Visualization.propTypes = {
+  chartId: PropTypes.string,
   spec: PropTypes.object.isRequired,
   data: PropTypes.array.isRequired,
   visualizationClassName: PropTypes.string,
@@ -299,6 +302,7 @@ Visualization.propTypes = {
 };
 
 Visualization.defaultProps = {
+  chartId: null,
   visualizationClassName: null,
   containerClassName: styles.visualizationBlock,
   headerClassName: styles.header,

@@ -1,6 +1,7 @@
 import {
   WIPE_PROJECT_STATE,
-  SELECT_COMPOSE_VISUALIZATION
+  SELECT_COMPOSE_VISUALIZATION,
+  NEXT_BLOCK_FORMAT
 } from '../constants/ActionTypes';
 
 const BLOCK_FORMATS = {
@@ -12,6 +13,7 @@ const BLOCK_FORMATS = {
 
 const baseState = {
   blocks: [],
+  updatedAt: Date.now()
 }
 
 // blocks: [
@@ -25,18 +27,38 @@ const baseState = {
 
 export default function composeSelector(state = baseState, action) {
   switch (action.type) {
+    case NEXT_BLOCK_FORMAT:
+      const getBlockWithNextFormat = ((block) => {
+        switch(block.format){
+          case BLOCK_FORMATS.TEXT_TOP:
+            return { ...block, format: BLOCK_FORMATS.TEXT_RIGHT };
+          case BLOCK_FORMATS.TEXT_RIGHT:
+            return { ...block, format: BLOCK_FORMATS.TEXT_BOTTOM };
+          case BLOCK_FORMATS.TEXT_BOTTOM:
+            return { ...block, format: BLOCK_FORMATS.TEXT_LEFT };
+          default:
+            return { ...block, format: BLOCK_FORMATS.TEXT_TOP };
+        }
+      });
+
+      const swappedBlocks = state.blocks.slice().map((block) =>
+        block.exportedSpecId == action.id ? getBlockWithNextFormat(block) : block
+      );
+
+      return { ...state, blocks: swappedBlocks, updatedAt: Date.now() };
+
     case SELECT_COMPOSE_VISUALIZATION:
       var blocks = state.blocks.slice()
       const filteredBlocks = blocks.filter((block) => block.exportedSpecId != action.exportedSpecId);
 
-      if (filteredBlocks.length == blocks.length && blocks.length != 0) {
+      if (filteredBlocks.length != blocks.length) {
         blocks = filteredBlocks;
       } else {
         blocks.push({
           heading: action.heading,
           body: '',
           exportedSpecId: action.exportedSpecId,
-          format: BLOCK_FORMATS.TEXT_TOP
+          format: BLOCK_FORMATS.TEXT_LEFT
         })
       }
 

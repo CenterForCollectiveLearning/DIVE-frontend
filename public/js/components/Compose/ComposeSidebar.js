@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { fetchExportedVisualizationSpecs, selectComposeVisualization } from '../../actions/ComposeActions';
+import { fetchExportedVisualizationSpecs } from '../../actions/ComposeActions';
 
 import styles from './Compose.sass';
 
@@ -27,12 +27,6 @@ export class ComposeSidebar extends Component {
     if (project.properties.id && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching) {
       fetchExportedVisualizationSpecs(project.properties.id);
     }
-  }
-
-  handleClick() {
-    console.log(this.context.props);
-    console.log(this.context.props.selectComposeVisualization);
-    this.context.props.selectComposeVisualization(this.id, this.heading);
   }
 
   render() {
@@ -64,6 +58,5 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  fetchExportedVisualizationSpecs,
-  selectComposeVisualization
+  fetchExportedVisualizationSpecs
 })(ComposeSidebar);

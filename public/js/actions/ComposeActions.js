@@ -1,7 +1,8 @@
 import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
-  SELECT_COMPOSE_VISUALIZATION
+  SELECT_COMPOSE_VISUALIZATION,
+  NEXT_BLOCK_FORMAT
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
@@ -11,6 +12,13 @@ export function selectComposeVisualization(exportedSpecId, exportedSpecHeading) 
     type: SELECT_COMPOSE_VISUALIZATION,
     exportedSpecId: exportedSpecId,
     heading: exportedSpecHeading
+  }
+}
+
+export function nextVisualizationFormat(exportedSpecId) {
+  return {
+    type: NEXT_BLOCK_FORMAT,
+    id: exportedSpecId
   }
 }
 
