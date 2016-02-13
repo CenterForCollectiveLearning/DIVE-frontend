@@ -6,8 +6,10 @@ import Input from '../Base/Input';
 export default class ComposeBlockHeader extends Component {
   constructor(props) {
     super(props);
+    const { heading } = this.props;
+
     this.state = {
-      heading: this.props.heading
+      heading: heading ? heading.charAt(0).toUpperCase() + heading.slice(1) : ''
     }
   }
 
