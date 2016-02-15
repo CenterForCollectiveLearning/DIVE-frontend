@@ -17,7 +17,6 @@ export class ComposePage extends Component {
   render() {
     return (
       <div className={ `${ styles.fillContainer } ${ styles.composePageContainer }` }>
-        <ComposeToolbar />
         <div className={ `${ styles.fillContainer } ${ styles.composeContentContainer }` }>
           <ComposeSidebar />
           <ComposeView />

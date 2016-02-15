@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
+import { createNewDocument } from '../../actions/ComposeActions';
 
 import { fetchDocuments, fetchExportedVisualizationSpecs } from '../../actions/ComposeActions';
 
@@ -9,10 +10,12 @@ import styles from './Compose.sass';
 import Sidebar from '../Base/Sidebar';
 import SidebarGroup from '../Base/SidebarGroup';
 import Visualization from '../Visualizations/Visualization';
+import RaisedButton from '../Base/RaisedButton';
 
 export class ComposeSidebar extends Component {
   constructor(props) {
     super(props);
+    this.onClickNewDocument = this.onClickNewDocument.bind(this);
   }
 
   componentWillMount() {
@@ -21,6 +24,11 @@ export class ComposeSidebar extends Component {
       fetchDocuments(projectId)
       fetchExportedVisualizationSpecs(projectId);
     }
+  }
+
+  onClickNewDocument() {
+    const { projectId, createNewDocument } = this.props;
+    createNewDocument(projectId);
   }
 
   componentDidUpdate(previousProps) {
@@ -38,6 +46,7 @@ export class ComposeSidebar extends Component {
     return (
       <Sidebar>
         <SidebarGroup heading="Documents">
+          <RaisedButton label="New document" onClick={ this.onClickNewDocument } />
           <div className={ styles.documents }>
             { !documents.isFetching && documents.items.length > 0 && documents.items.map((document) =>
               <div className={ styles.document } key={ document.id }>Document: { document.id }</div>
@@ -84,5 +93,6 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   fetchDocuments,
   fetchExportedVisualizationSpecs,
+  createNewDocument,
   pushState
 })(ComposeSidebar);
