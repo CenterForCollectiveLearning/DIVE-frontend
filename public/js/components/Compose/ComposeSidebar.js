@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
-import { createNewDocument } from '../../actions/ComposeActions';
+import { createNewDocument, deleteDocument } from '../../actions/ComposeActions';
 
 import { fetchDocuments, fetchExportedVisualizationSpecs } from '../../actions/ComposeActions';
 
@@ -16,6 +16,7 @@ export class ComposeSidebar extends Component {
   constructor(props) {
     super(props);
     this.onClickNewDocument = this.onClickNewDocument.bind(this);
+    this.onClickDeleteDocument = this.onClickDeleteDocument.bind(this);    
   }
 
   componentWillMount() {
@@ -29,6 +30,11 @@ export class ComposeSidebar extends Component {
   onClickNewDocument() {
     const { projectId, createNewDocument } = this.props;
     createNewDocument(projectId);
+  }
+
+  onClickDeleteDocument() {
+    const { projectId, deleteDocument } = this.props;
+    deleteNewDocument(projectId, documentId);
   }
 
   componentDidUpdate(previousProps) {
@@ -46,10 +52,17 @@ export class ComposeSidebar extends Component {
     return (
       <Sidebar>
         <SidebarGroup heading="Documents">
-          <RaisedButton label="New document" onClick={ this.onClickNewDocument } />
+          <span className={ styles.create } onClick={ this.onClickNewDocument }>
+            New Document
+          </span>
           <div className={ styles.documents }>
             { !documents.isFetching && documents.items.length > 0 && documents.items.map((document) =>
-              <div className={ styles.document } key={ document.id }>Document: { document.id }</div>
+              <div className={ styles.document } key={ document.id }>
+                Document: { document.id }
+                <span className={ styles.delete } onClick={ this.onClickDeleteDocuemnt }>
+                  Delete
+                </span>
+              </div>
             )}
           </div>
         </SidebarGroup>
@@ -94,5 +107,6 @@ export default connect(mapStateToProps, {
   fetchDocuments,
   fetchExportedVisualizationSpecs,
   createNewDocument,
+  deleteDocument,
   pushState
 })(ComposeSidebar);
