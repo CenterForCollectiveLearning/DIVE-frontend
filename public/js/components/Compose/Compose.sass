@@ -103,12 +103,32 @@
       .composeBlockVisualization
         max-width: 50%
 
+  .resizableContainer
+    margin-left: 7px
+    display: flex
+    flex-direction: column
+    justify-content: center
+
   .composeBlockVisualization
     margin-bottom: 7px
-    padding: 20px
 
     .fullComposeVisualization
       background-color: white
+      max-width: 100%
+      flex-grow: 1
+      display: flex
+      flex-direction: column
+
+      > div
+        max-width: 100%
+        flex-grow: 1
+        display: flex
+        flex-direction: column
+
+        > div
+          flex-grow: 1
+          display: flex
+          flex-direction: column
 
   .composeBlockText
     display: flex
