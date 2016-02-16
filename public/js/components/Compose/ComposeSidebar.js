@@ -1,9 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
-import { createNewDocument, deleteDocument } from '../../actions/ComposeActions';
-
-import { fetchDocuments, fetchExportedVisualizationSpecs } from '../../actions/ComposeActions';
+import {
+  selectDocument,
+  createNewDocument,
+  deleteDocument,
+  requestDocument,
+  fetchDocuments,
+  fetchExportedVisualizationSpecs
+} from '../../actions/ComposeActions';
 
 import styles from './Compose.sass';
 
@@ -11,12 +16,14 @@ import Sidebar from '../Base/Sidebar';
 import SidebarGroup from '../Base/SidebarGroup';
 import Visualization from '../Visualizations/Visualization';
 import RaisedButton from '../Base/RaisedButton';
+import DropDownMenu from '../Base/DropDownMenu';
 
 export class ComposeSidebar extends Component {
   constructor(props) {
     super(props);
     this.onClickNewDocument = this.onClickNewDocument.bind(this);
     this.onClickDeleteDocument = this.onClickDeleteDocument.bind(this);
+    this.onSelectDocument = this.onSelectDocument.bind(this);
   }
 
   componentWillMount() {
@@ -27,6 +34,18 @@ export class ComposeSidebar extends Component {
     }
   }
 
+  onSelectDocument(documentId) {
+    if (documentId) {
+      this.props.pushState(null, `/projects/${ this.props.projectId }/compose/${ documentId }`);
+    }
+    // const { projectId, documentSelector, selectDocument } = this.props;
+    // console.log('THIS', this);
+    // const documentIdAsString = documentId.toString();
+    // if (documentSelector.documentId != documentIdAsString) {
+    //   selectDocument(projectId, documentIdAsString);
+    // }
+  }
+
   onClickNewDocument() {
     const { projectId, createNewDocument } = this.props;
     createNewDocument(projectId);
@@ -34,7 +53,7 @@ export class ComposeSidebar extends Component {
 
   onClickDeleteDocument() {
     const { projectId, deleteDocument } = this.props;
-    deleteNewDocument(projectId, documentId);
+    deleteDocument(projectId, documentId);
   }
 
   componentDidUpdate(previousProps) {
@@ -46,24 +65,23 @@ export class ComposeSidebar extends Component {
   }
 
   render() {
-    const { exportedSpecs, documents } = this.props;
+    const { exportedSpecs, documents, documentSelector } = this.props;
     console.log('Documents:', documents)
 
     return (
       <Sidebar>
         <SidebarGroup heading="Documents">
-          <span className={ styles.create } onClick={ this.onClickNewDocument }>
-            New Document
-          </span>
+          <RaisedButton label="New document" onClick={ this.onClickNewDocument } />
+          <RaisedButton label="Delete document" onClick={ this.onClickDeleteDocument } />
           <div className={ styles.documents }>
-            { !documents.isFetching && documents.items.length > 0 && documents.items.map((document) =>
-              <div className={ styles.document } key={ document.id }>
-                Document: { document.id }
-                <span className={ styles.delete } onClick={ this.onClickDeleteDocument }>
-                  Delete
-                </span>
-              </div>
-            )}
+            { !documents.isFetching && documents.items.length > 0 &&
+              <DropDownMenu
+                value={ `${ documentSelector.documentId }` }
+                options={ documents.items }
+                valueMember="id"
+                displayTextMember="title"
+                onChange={ this.onSelectDocument } />
+            }
           </div>
         </SidebarGroup>
         <SidebarGroup heading="Visualizations">
@@ -96,21 +114,25 @@ export class ComposeSidebar extends Component {
 ComposeSidebar.propTypes = {
   projectId: PropTypes.string.isRequired,
   documents: PropTypes.object.isRequired,
+  documentSelector: PropTypes.object.isRequired,
   exportedSpecs: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { project, documents, exportedSpecs } = state;
+  const { project, documents, documentSelector, exportedSpecs } = state;
   return {
     projectId: (project.properties.id ? `${ project.properties.id }` : null),
     documents,
+    documentSelector,
     exportedSpecs
   };
 }
 
 export default connect(mapStateToProps, {
-  fetchDocuments,
   fetchExportedVisualizationSpecs,
+  fetchDocuments,
+  selectDocument,
+  requestDocument,
   createNewDocument,
   deleteDocument,
   pushState

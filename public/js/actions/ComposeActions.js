@@ -1,6 +1,7 @@
 import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
+  SELECT_DOCUMENT,
   REQUEST_DOCUMENTS,
   RECEIVE_DOCUMENTS,
   REQUEST_DOCUMENT,
@@ -44,6 +45,20 @@ export function fetchExportedVisualizationSpecs(projectId) {
   };
 }
 
+function selectDocumentDispatcher(documentId) {
+  return {
+    type: SELECT_DOCUMENT,
+    documentId: documentId
+  };
+}
+
+export function selectDocument(documentId) {
+  console.log('select document', documentId);
+  return (dispatch) => {
+    dispatch(selectDocumentDispatcher(documentId));
+  }
+}
+
 function requestDocumentsDispatcher(projectId) {
   return {
     type: REQUEST_DOCUMENTS,
@@ -84,8 +99,7 @@ function receiveDocumentDispatcher(projectId, documentId, json) {
   return {
     type: RECEIVE_DOCUMENT,
     projectId: projectId,
-    datasetId: datasetId,
-    'document': json.document,
+    'document': json,
     receivedAt: Date.now(),
   };
 }
@@ -118,6 +132,7 @@ function receiveCreateDocumentDispatcher(projectId, json) {
 export function createNewDocument(projectId, content={}) {
   const params = {
     project_id: projectId,
+    title: 'New Project',
     content: content
   }
   return (dispatch) => {

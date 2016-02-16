@@ -19,6 +19,7 @@ import RegressionBasePage from './components/Analysis/Regression/RegressionBaseP
 import RegressionPage from './components/Analysis/Regression/RegressionPage';
 import SummaryPage from './components/Analysis/Summary/SummaryPage';
 import ExportedVisualizationPage from './components/Visualizations/ExportedVisualization/ExportedVisualizationPage';
+import ComposeBasePage from './components/Compose/ComposeBasePage';
 import ComposePage from './components/Compose/ComposePage';
 
 export default (
@@ -44,10 +45,12 @@ export default (
           <Route path="regression" component={ RegressionBasePage }>
             <Route path=":dependentVariable" component={ RegressionPage }/>
           </Route>
-          <Route path="summary" component={ SummaryPage }/>
+          <Route path="/summary" component={ SummaryPage }/>
         </Route>
-        <Route path="compose" component={ ComposePage }/>
       </Route>
+      <Route path="compose" component={ ComposeBasePage }>
+      </Route>
+      <Route path="compose/:documentId" component={ ComposeBasePage }/>
     </Route>
     <Route path="/share/projects/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>
   </Route>

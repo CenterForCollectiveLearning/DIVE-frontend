@@ -10,6 +10,8 @@ import {
 
 const baseState = {
   datasetId: null,
+  title: null,
+  content: {},
   loaded: false,
   isUploading: false,
   uploadError: null,

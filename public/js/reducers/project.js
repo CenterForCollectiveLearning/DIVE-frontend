@@ -1,5 +1,3 @@
-import { LOAD } from 'redux-storage';
-
 import {
   REQUEST_PROJECT,
   RECEIVE_PROJECT,
@@ -13,9 +11,6 @@ export default function project(state = {
   properties: {}
 }, action) {
   switch (action.type) {
-    case LOAD:
-      // return { ...action.payload.project, loaded: true };
-      return state;
     case REQUEST_PROJECT:
       return { ...state, isFetching: true, properties: { id: action.projectId } };
     case RECEIVE_PROJECT:

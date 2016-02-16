@@ -4,10 +4,8 @@ import createLogger from 'redux-logger';
 import rootReducer from '../reducers/index';
 
 import createHistory from 'history/lib/createBrowserHistory';
-import createEngine from 'redux-storage/engines/localStorage';
 import { reduxReactRouter } from 'redux-react-router';
 import routes from '../routes';
-import storage from 'redux-storage'
 
 import { SHOULD_SAVE } from '../constants/ActionTypes';
 
@@ -48,7 +46,7 @@ export default function configureStore(initialState) {
   const store = createStoreWithMiddleware(rootReducer, initialState);
 
   // Load previous state from local storage
-  if (storageEnabled) {  
+  if (storageEnabled) {
     const load = storage.createLoader(engine);
     load(store)
       .catch(() => console.log('Failed to load previous state'));

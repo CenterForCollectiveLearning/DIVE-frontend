@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import { routerStateReducer as router } from 'redux-react-router';
-import { LOAD, SAVE } from 'redux-storage';
 
 import datasets from './datasets';
 import datasetSelector from './datasetSelector';
 import documents from './documents'
+import documentSelector from './documentSelector'
 import exportedSpec from './exportedSpec';
 import exportedSpecs from './exportedSpecs';
 import fieldProperties from './fieldProperties';
@@ -23,6 +23,7 @@ const rootReducer = combineReducers({
   datasets,
   datasetSelector,
   documents,
+  documentSelector,
   exportedSpec,
   exportedSpecs,
   fieldProperties,
