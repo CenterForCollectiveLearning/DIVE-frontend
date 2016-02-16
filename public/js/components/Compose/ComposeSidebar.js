@@ -59,7 +59,7 @@ export class ComposeSidebar extends Component {
             { !documents.isFetching && documents.items.length > 0 && documents.items.map((document) =>
               <div className={ styles.document } key={ document.id }>
                 Document: { document.id }
-                <span className={ styles.delete } onClick={ this.onClickDeleteDocuemnt }>
+                <span className={ styles.delete } onClick={ this.onClickDeleteDocument }>
                   Delete
                 </span>
               </div>

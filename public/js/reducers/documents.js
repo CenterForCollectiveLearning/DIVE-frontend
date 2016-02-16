@@ -21,7 +21,6 @@ const baseState = {
 }
 
 export default function documents(state=baseState, action) {
-  console.log(action)
   switch(action.type) {
     case REQUEST_DOCUMENTS:
       return { ...state, isFetching: true, error: null };
