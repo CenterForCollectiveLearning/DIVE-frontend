@@ -52,8 +52,8 @@ export class ComposeSidebar extends Component {
   }
 
   onClickDeleteDocument() {
-    const { projectId, deleteDocument } = this.props;
-    deleteDocument(projectId, documentId);
+    const { projectId, documentSelector, deleteDocument } = this.props;
+    deleteDocument(projectId, documentSelector.documentId);
   }
 
   componentDidUpdate(previousProps) {
@@ -66,7 +66,6 @@ export class ComposeSidebar extends Component {
 
   render() {
     const { exportedSpecs, documents, documentSelector } = this.props;
-    console.log('Documents:', documents)
 
     return (
       <Sidebar>

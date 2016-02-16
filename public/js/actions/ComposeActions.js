@@ -188,9 +188,9 @@ function requestDeleteDocumentDispatcher(projectId, documentId) {
 
 function receiveDeleteDocumentDispatcher(projectId, json) {
   return {
-    type: REQUEST_DELETE_DOCUMENT,
+    type: RECEIVE_DELETE_DOCUMENT,
     projectId: projectId,
-    doucmentid: json.id
+    documentid: json.id
   };
 }
 

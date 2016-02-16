@@ -20,6 +20,15 @@ const baseState = {
   error: null
 }
 
+function removeDocumentFromList(originalList, documentId) {
+  console.log('In removeDocumentFromList', originalList, documentId);
+  var removeIndex = array.map(function(item) {
+    return item.id;
+  }).indexOf(documentId);
+
+  removeIndex > -1 && array.splice(removeIndex, 1);
+}
+
 export default function documents(state=baseState, action) {
   switch(action.type) {
     case REQUEST_DOCUMENTS:
@@ -29,6 +38,9 @@ export default function documents(state=baseState, action) {
     case RECEIVE_CREATE_DOCUMENT:
       const documents = state.items;
       documents.push(action.document);
+      return { ...state, items: documents};
+    case RECEIVE_DELETE_DOCUMENT:
+      var documents = removeDocumentFromList(state.items, action.documentId);
       return { ...state, items: documents};
     default:
       return state;
