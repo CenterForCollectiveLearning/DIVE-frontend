@@ -5,7 +5,6 @@ import styles from './Compose.sass';
 
 import { fetchDocuments } from '../../actions/ComposeActions';
 import ComposePage from './ComposePage';
-import ComposeToolbar from './ComposeToolbar';
 import ComposeSidebar from './ComposeSidebar';
 import ComposeView from './ComposeView';
 
