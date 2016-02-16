@@ -124,7 +124,7 @@ function receiveCreateDocumentDispatcher(projectId, json) {
   return {
     type: RECEIVE_CREATE_DOCUMENT,
     projectId: projectId,
-    documentId: json.id,
+    'document': json,
     receivedAt: Date.now()
   };
 }

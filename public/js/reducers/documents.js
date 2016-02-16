@@ -25,9 +25,11 @@ export default function documents(state=baseState, action) {
     case REQUEST_DOCUMENTS:
       return { ...state, isFetching: true, error: null };
     case RECEIVE_DOCUMENTS:
-      return { ...state, items: action.documents, isFetching: false, loaded: true, error: null }
+      return { ...state, items: action.documents, isFetching: false, loaded: true, error: null };
     case RECEIVE_CREATE_DOCUMENT:
-      return { ...state, items: action.documents }
+      const documents = state.items;
+      documents.push(action.document);
+      return { ...state, items: documents};
     default:
       return state;
   }
