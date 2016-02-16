@@ -1,33 +1,15 @@
 @import '../../../css/flexbox.sass'
 @import '../../../css/mixins.sass'
 
-.create
-  margin-right: 20px
-  font-size: 10px
-  float: right
-  text-transform: uppercase
+.documentControls
+  display: flex
 
-.documents
-  background-color: #FFF
-  margin-left: -20px
-  margin-right: -20px
+  .documentSelector
+    width: 80%
+    margin-right: 7px
 
-  .document
-    padding-top: 3px
-    padding-bottom: 3px
-    padding-left: 20px
-    border-top: 1px solid #D0D0D0
-
-    &:last-child
-      border-bottom: 1px solid #D0D0D0
-
-    font-size: 12px
-
-    .delete
-      margin-right: 20px
-      font-size: 10px
-      float: right
-      text-transform: uppercase
+  > div:last-child
+    margin-left: 7px
 
 .composeContentContainer
   flex-direction: row

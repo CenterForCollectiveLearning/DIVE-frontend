@@ -71,9 +71,7 @@ export class ComposeSidebar extends Component {
     return (
       <Sidebar>
         <SidebarGroup heading="Documents">
-          <RaisedButton label="New document" onClick={ this.onClickNewDocument } />
-          <RaisedButton label="Delete document" onClick={ this.onClickDeleteDocument } />
-          <div className={ styles.documents }>
+          <div className={ styles.documentControls }>
             { !documents.isFetching && documents.items.length > 0 &&
               <DropDownMenu
                 className={ styles.documentSelector }
@@ -83,6 +81,8 @@ export class ComposeSidebar extends Component {
                 displayTextMember="title"
                 onChange={ this.onSelectDocument } />
             }
+            <RaisedButton icon altText="New document" onClick={ this.onClickNewDocument }><i className="fa fa-file-o"></i></RaisedButton>
+            <RaisedButton icon altText="Delete document" onClick={ this.onClickDeleteDocument }><i className="fa fa-trash"></i></RaisedButton>
           </div>
         </SidebarGroup>
         <SidebarGroup heading="Starred visualizations">

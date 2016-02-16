@@ -9,6 +9,7 @@ export default class RaisedButton extends Component {
 
     return (
       <div
+        title={ this.props.altText }
         style={ style }
         className={
           styles.raisedButton
@@ -39,11 +40,13 @@ RaisedButton.propTypes = {
   className: PropTypes.string,
   fullWidth: PropTypes.bool,
   disabled: PropTypes.bool,
-  minWidth: PropTypes.number
+  minWidth: PropTypes.number,
+  altText: PropTypes.any
 }
 
 RaisedButton.defaultProps = {
   label: "",
+  altText: null,
   primary: false,
   icon: false,
   className: "",
