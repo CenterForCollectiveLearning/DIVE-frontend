@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { routerStateReducer as router } from 'redux-react-router';
 
+import composeSelector from './composeSelector';
 import datasets from './datasets';
 import datasetSelector from './datasetSelector';
 import documents from './documents'
@@ -20,6 +21,7 @@ import user from './user';
 import visualization from './visualization';
 
 const rootReducer = combineReducers({
+  composeSelector,
   datasets,
   datasetSelector,
   documents,

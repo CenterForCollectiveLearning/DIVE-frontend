@@ -22,8 +22,7 @@ export default class VisualizationView extends Component {
               actions={ this.props.children } />
             <div className={ styles.chartsContainer }>
               <Visualization
-                containerClassName="visualizationContainer"
-                visualizationClassName="visualization"
+                containerClassName={ styles.visualizationContainer }
                 visualizationTypes={ visualizationTypes }
                 spec={ visualization.spec }
                 data={ visualization.visualizationData }

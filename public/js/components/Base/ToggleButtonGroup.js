@@ -5,11 +5,11 @@ import styles from './ToggleButtonGroup.sass';
 
 export default class ToggleButtonGroup extends Component {
   render() {
-    const { className, buttonClassName, toggleItems, altTextMember, valueMember, displayTextMember, imageNameMember, imageNameSuffix, externalSelectedItems, separated, splitMenuItemsMember, selectMenuItem, onChange } = this.props;
+    const { className, buttonClassName, toggleItems, altTextMember, valueMember, displayTextMember, imageNameMember, imageNameSuffix, externalSelectedItems, separated, column, splitMenuItemsMember, selectMenuItem, onChange } = this.props;
 
     const stringifiedExternalSelectedItems = externalSelectedItems ? externalSelectedItems.map((item) => `${item}`) : null;
     return (
-      <div className={ styles.toggleButtonGroup + (className ? ' ' + className : '') }>
+      <div className={ styles.toggleButtonGroup + (column ? ' ' + styles.column : '') + (className ? ' ' + className : '') }>
         { toggleItems.map((item) =>
           <ToggleButton
             key={ `toggle-${item[valueMember]}` }
@@ -43,5 +43,10 @@ ToggleButtonGroup.propTypes = {
   imageNameSuffix: PropTypes.string,
   selectMenuItem: PropTypes.func,
   separated: PropTypes.bool,
+  column: PropTypes.bool,
   externalSelectedItems: PropTypes.array
 };
+
+ToggleButtonGroup.defaultProps = {
+  column: false
+}

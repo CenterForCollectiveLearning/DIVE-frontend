@@ -12,9 +12,27 @@ import {
   RECEIVE_UPDATE_DOCUMENT,
   REQUEST_DELETE_DOCUMENT,
   RECEIVE_DELETE_DOCUMENT
+  SELECT_COMPOSE_VISUALIZATION,
+  SET_BLOCK_FORMAT
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
+
+export function selectComposeVisualization(exportedSpecId, exportedSpecHeading) {
+  return {
+    type: SELECT_COMPOSE_VISUALIZATION,
+    exportedSpecId: exportedSpecId,
+    heading: exportedSpecHeading
+  }
+}
+
+export function setVisualizationFormat(exportedSpecId, format) {
+  return {
+    type: SET_BLOCK_FORMAT,
+    id: exportedSpecId,
+    format: format
+  }
+}
 
 function requestExportedVisualizationSpecsDispatcher() {
   return {
@@ -72,6 +90,14 @@ function receiveDocumentsDispatcher(projectId, json) {
     projectId: projectId,
     documents: json.documents,
     receivedAt: Date.now(),
+  };
+}
+
+export function fetchExportedVisualizationSpecsIfNeeded(projectId) {
+  return (dispatch, getState) => {
+    if (shouldFetchExportedVisualizationSpecs(getState())) {
+      return dispatch(fetchExportedVisualizationSpecs(projectId));
+    }
   };
 }
 

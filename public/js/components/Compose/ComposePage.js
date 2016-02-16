@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { replaceState } from 'redux-react-router';
 import styles from './Compose.sass';
 
-import ComposeToolbar from './ComposeToolbar';
 import ComposeSidebar from './ComposeSidebar';
 import ComposeView from './ComposeView';
 import { selectDocument } from '../../actions/ComposeActions';

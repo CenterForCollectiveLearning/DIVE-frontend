@@ -7,6 +7,18 @@
   margin-left: 1px
   margin-top: 1px
 
+  &.column
+    flex-direction: column
+
+    .toggleButtonContainer
+      &:first-child .raisedButton.toggleButton
+        border-top-right-radius: 2px
+        border-bottom-left-radius: 0
+
+      &:last-child .raisedButton.toggleButton
+        border-top-right-radius: 0px
+        border-bottom-left-radius: 2px
+
   + .toggleButtonGroup
     margin-top: 10px
 

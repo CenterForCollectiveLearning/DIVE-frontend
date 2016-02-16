@@ -32,6 +32,7 @@ module.exports = {
     new ExtractTextPlugin('app.css')
   ],
   module: {
+    noParse: /node_modules\/quill\/dist/,
     loaders: [
       { test: /\.js$/, loaders: ['react-hot', 'babel'], exclude: /node_modules/ },
       { test: /\.css$/, loader: ExtractTextPlugin.extract('css-loader?module!cssnext-loader') },
