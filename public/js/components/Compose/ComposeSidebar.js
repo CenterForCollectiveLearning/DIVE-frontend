@@ -59,7 +59,7 @@ export class ComposeSidebar extends Component {
 
   componentDidUpdate(previousProps) {
     const { projectId, exportedSpecs, fetchDocuments, fetchExportedVisualizationSpecs } = this.props;
-    if (project.properties.id && exportedSpecs.items.length == 0 && !exportedSpecs.loaded && !exportedSpecs.isFetching) {
+    if (projectId && exportedSpecs.items.length == 0 && !exportedSpecs.loaded && !exportedSpecs.isFetching) {
       fetchDocuments(projectId)
       fetchExportedVisualizationSpecs(projectId);
     }
@@ -96,7 +96,7 @@ export class ComposeSidebar extends Component {
 }
 
 ComposeSidebar.propTypes = {
-  projectId: PropTypes.string.isRequired,
+  projectId: PropTypes.string,
   documents: PropTypes.object.isRequired,
   documentSelector: PropTypes.object.isRequired,
   exportedSpecs: PropTypes.object.isRequired,
