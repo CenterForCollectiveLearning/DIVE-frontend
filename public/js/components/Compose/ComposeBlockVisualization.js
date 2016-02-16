@@ -12,6 +12,8 @@ import Visualization from '../Visualizations/Visualization';
 
 import { BLOCK_FORMATS } from '../../constants/BlockFormats';
 
+import { changeDocument } from '../../actions/ComposeActions';
+
 export default class ComposeBlockVisualization extends Component {
   constructor(props) {
     super(props);
@@ -59,19 +61,31 @@ export default class ComposeBlockVisualization extends Component {
     }
   }
   onResize(event, { element, size }) {
+    const { changeDocument } = this.props;
+
     this.setState({ resizeCounter: this.state.resizeCounter + 1 });
+
+    changeDocument();
   }
 
   setStateBlockFormat(blockFormat) {
-    const formats = this.state.formatTypes.map((formatType) => 
+    const { changeDocument } = this.props;
+
+    const formats = this.state.formatTypes.map((formatType) =>
       new Object({ ...formatType, selected: formatType.value == blockFormat })
     );
     this.setState({ formatTypes: formats });
+
+    changeDocument();
   }
 
   selectBlockFormat(blockFormat) {
+    const { changeDocument } = this.props;
+    
     this.props.setVisualizationFormat(this.props.spec.id, blockFormat);
     this.setStateBlockFormat(blockFormat);
+
+    changeDocument();
   }
 
   render() {
@@ -131,5 +145,6 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  setVisualizationFormat
+  setVisualizationFormat,
+  changeDocument
 })(ComposeBlockVisualization);

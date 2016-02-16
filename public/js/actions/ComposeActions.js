@@ -2,8 +2,14 @@ import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
   SELECT_COMPOSE_VISUALIZATION,
-  SET_BLOCK_FORMAT
+  SET_BLOCK_FORMAT,
+  SAVE_BLOCK_TEXT,
+  SAVE_BLOCK_HEADER,
+  REQUEST_SAVE_DOCUMENT,
+  RECEIVE_SAVE_DOCUMENT,
 } from '../constants/ActionTypes';
+
+import _ from 'underscore'
 
 import { fetch, pollForTask } from './api.js';
 
@@ -66,4 +72,53 @@ export function fetchExportedVisualizationSpecsIfNeeded(projectId) {
       return dispatch(fetchExportedVisualizationSpecs(projectId));
     }
   };
+}
+
+function requestSaveDocumentDispatcher() {
+  return {
+    type: REQUEST_SAVE_DOCUMENT
+  };
+}
+
+function receiveSaveDocumentDispatcher() {
+  return {
+    type: RECEIVE_SAVE_DOCUMENT
+  };
+}
+
+function undebouncedChangeDocument(dispatch, getState) {
+  dispatch(requestSaveDocumentDispatcher());
+  console.log(getState().composeSelector.blocks);
+}
+
+const debouncedChangeDocument = _.debounce(undebouncedChangeDocument, 250);
+
+export function changeDocument() {
+  return debouncedChangeDocument;
+}
+
+function saveBlockTextDispatcher() {
+  return {
+    type: SAVE_BLOCK_TEXT
+  };
+}
+
+function saveBlockHeaderDispatcher() {
+  return {
+    type: SAVE_BLOCK_HEADER
+  };
+}
+
+export function saveBlockText(id, text) {
+  console.log('in saveBlockText');
+  return dispatch => {
+    dispatch(saveBlockTextDispatcher());
+  }
+}
+
+export function saveBlockHeader(id, header) {
+  console.log('in saveBlockHeader');
+  return dispatch => {
+    dispatch(saveBlockHeaderDispatcher());
+  }
 }
