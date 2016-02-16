@@ -2,7 +2,7 @@ import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
   SELECT_COMPOSE_VISUALIZATION,
-  NEXT_BLOCK_FORMAT
+  SET_BLOCK_FORMAT
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
@@ -15,10 +15,11 @@ export function selectComposeVisualization(exportedSpecId, exportedSpecHeading) 
   }
 }
 
-export function nextVisualizationFormat(exportedSpecId) {
+export function setVisualizationFormat(exportedSpecId, format) {
   return {
-    type: NEXT_BLOCK_FORMAT,
-    id: exportedSpecId
+    type: SET_BLOCK_FORMAT,
+    id: exportedSpecId,
+    format: format
   }
 }
 
@@ -62,7 +63,6 @@ export function fetchExportedVisualizationSpecs(projectId) {
 export function fetchExportedVisualizationSpecsIfNeeded(projectId) {
   return (dispatch, getState) => {
     if (shouldFetchExportedVisualizationSpecs(getState())) {
-      console.log('fetching');
       return dispatch(fetchExportedVisualizationSpecs(projectId));
     }
   };

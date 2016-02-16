@@ -31,10 +31,10 @@ export class ComposeBlock extends Component {
     const { exportedSpec, updatedAt } = this.state;
     const { block } = this.props;
     return (
-      <div className={ styles.composeBlock }>
+      <div ref="composeBlock" className={ styles.composeBlock }>
         <ComposeBlockHeader heading={ block.heading } />
         <div className={ styles.composeBlockContent + ' ' + styles[block.format] }>
-          <ComposeBlockVisualization spec={ exportedSpec } updatedAt={ this.props.updatedAt }/>
+          <ComposeBlockVisualization format={ block.format } parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null } spec={ exportedSpec } updatedAt={ this.props.updatedAt }/>
           <ComposeBlockText text={ block.body } />
         </div>
       </div>
