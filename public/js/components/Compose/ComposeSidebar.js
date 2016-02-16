@@ -16,12 +16,12 @@ export class ComposeSidebar extends Component {
   constructor(props) {
     super(props);
     this.onClickNewDocument = this.onClickNewDocument.bind(this);
-    this.onClickDeleteDocument = this.onClickDeleteDocument.bind(this);    
+    this.onClickDeleteDocument = this.onClickDeleteDocument.bind(this);
   }
 
   componentWillMount() {
     const { projectId, exportedSpecs, fetchDocuments, fetchExportedVisualizationSpecs } = this.props;
-    if (projectId && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching) {
+    if (projectId && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {
       fetchDocuments(projectId)
       fetchExportedVisualizationSpecs(projectId);
     }
@@ -39,7 +39,7 @@ export class ComposeSidebar extends Component {
 
   componentDidUpdate(previousProps) {
     const { projectId, exportedSpecs, fetchDocuments, fetchExportedVisualizationSpecs } = this.props;
-    if (projectId && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching) {
+    if (projectId && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {
       fetchDocuments(projectId)
       fetchExportedVisualizationSpecs(projectId);
     }
@@ -67,7 +67,7 @@ export class ComposeSidebar extends Component {
           </div>
         </SidebarGroup>
         <SidebarGroup heading="Visualizations">
-          { !exportedSpecs.isFetching && exportedSpecs.items.length > 0 && exportedSpecs.items.map((spec) =>
+          { exportedSpecs.loaded && !exportedSpecs.isFetching && exportedSpecs.items.length > 0 && exportedSpecs.items.map((spec) =>
             <div className={ styles.visualizationPreview } key={ spec.id }>
               <Visualization
                 containerClassName="block"
@@ -81,6 +81,11 @@ export class ComposeSidebar extends Component {
                 showHeader={ true } />
             </div>
             )
+          }
+          { exportedSpecs.loaded && !exportedSpecs.isFetching && exportedSpecs.items.length == 0 &&
+            <div>
+              No visualizations saved.
+            </div>
           }
         </SidebarGroup>
       </Sidebar>

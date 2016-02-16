@@ -16,7 +16,7 @@ const baseState = {
 export default function exportedSpecs(state=baseState, action) {
   switch (action.type) {
     case REQUEST_EXPORTED_VISUALIZATION_SPECS:
-      return { ...state, isFetching: true, progress: null, error: null };
+      return { ...state, isFetching: true, progress: null, error: null, loaded: false };
 
     case RECEIVE_EXPORTED_VISUALIZATION_SPECS:
       return { ...state, isFetching: false, items: action.specs, updatedAt: action.receivedAt, loaded: true, progress: null, error: null };
