@@ -29,6 +29,7 @@ const baseState = {
   sortOrders: [],
   spec: {},
   visualizationType: null,
+  exported: false,
   exportedSpecId: null,
   shareWindow: null,
   isExporting: false,
@@ -78,6 +79,8 @@ export default function visualization(state = baseState, action) {
 
       return {
         ...state,
+        exported: action.exported,
+        exportedSpecId: action.exportedSpecId,
         spec: action.spec,
         tableData: action.tableData,
         visualizationData: action.visualizationData,

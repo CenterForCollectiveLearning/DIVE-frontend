@@ -21,7 +21,7 @@ export class DatasetToolbar extends Component {
     const { projectId, datasets, fetchDatasetsIfNeeded } = this.props;
 
     if (projectId && !datasets.fetchedAll && !datasets.isFetching) {
-      fetchDatasetsIfNeeded(projectId, false);        
+      fetchDatasetsIfNeeded(projectId, false);
     }
   }
 

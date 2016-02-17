@@ -160,6 +160,8 @@ function receiveSpecVisualizationDispatcher(json) {
   return {
     type: RECEIVE_VISUALIZATION_DATA,
     spec: json.spec,
+    exported: json.exported,
+    exportedSpecId: json.exportedSpecId,
     tableData: formatTableData(json.visualization.table.columns, json.visualization.table.data),
     visualizationData: json.visualization.visualize,
     receivedAt: Date.now()
@@ -281,7 +283,7 @@ export function createExportedSpec(projectId, specId, data, conditionals, config
     project_id: projectId,
     spec_id: specId,
     data: data,
-    conditionals: filteredConditionals,
+    conditionals: filteredConditionals ? filteredConditionals : {},
     config: config
   }
 

@@ -1,8 +1,10 @@
 import {
   WIPE_PROJECT_STATE,
   SELECT_COMPOSE_VISUALIZATION,
-  REQUEST_SAVE_DOCUMENT,
-  RECEIVE_SAVE_DOCUMENT,
+  SELECT_DOCUMENT,
+  RECEIVE_DOCUMENTS,
+  RECEIVE_CREATE_DOCUMENT,
+  SAVE_DOCUMENT,
   SAVE_BLOCK
 } from '../constants/ActionTypes';
 
@@ -10,6 +12,7 @@ import { BLOCK_FORMATS } from '../constants/BlockFormats';
 
 const baseState = {
   blocks: [],
+  documentId: null,
   saving: false,
   updatedAt: Date.now()
 }
@@ -45,6 +48,12 @@ export default function composeSelector(state = baseState, action) {
 
       return { ...state, blocks: blocks };
 
+    case SELECT_DOCUMENT:
+      return { ...state, documentId: action.documentId };
+
+    case RECEIVE_CREATE_DOCUMENT:
+      return { ...state, documentId: action.document.id };
+
     case SAVE_BLOCK:
       const newBlocks = state.blocks.slice().map(function(block) {
         var newBlock = block;
@@ -53,12 +62,9 @@ export default function composeSelector(state = baseState, action) {
         }
         return newBlock;
       });
-      return { ...state, blocks: newBlocks, updatedAt: Date.now() };
+      return { ...state, blocks: newBlocks, updatedAt: Date.now(), saving: true };
 
-    case REQUEST_SAVE_DOCUMENT:
-      return { ...state, saving: true };
-
-    case RECEIVE_SAVE_DOCUMENT:
+    case SAVE_DOCUMENT:
       return { ...state, saving: false };
 
     case WIPE_PROJECT_STATE:

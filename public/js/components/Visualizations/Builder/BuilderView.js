@@ -64,6 +64,7 @@ export class BuilderView extends Component {
 
   render() {
     const { visualization } = this.props;
+    const disabled = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
     return (
       <VisualizationView visualization={ visualization }>
         <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
@@ -71,7 +72,7 @@ export class BuilderView extends Component {
           { visualization.isExporting && "Exporting..." }
           { !visualization.isExporting && "Share" }
         </RaisedButton>
-        <RaisedButton onClick={ this.saveVisualization } disabled={ (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId)) ? true : false }>
+        <RaisedButton onClick={ this.saveVisualization } disabled={ disabled }>
           { !visualization.isSaving && visualization.exportedSpecId && <i className="fa fa-star"></i> }
           { !visualization.exportedSpecId && <i className="fa fa-star-o"></i> }
         </RaisedButton>
