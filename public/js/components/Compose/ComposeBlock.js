@@ -35,13 +35,15 @@ export class ComposeBlock extends Component {
       <div ref="composeBlock" className={ styles.composeBlock }>
         <ComposeBlockHeader id={ block.exportedSpecId } onSave={ this.props.saveBlock } heading={ block.heading } />
         <div className={ styles.composeBlockContent + ' ' + styles[block.format] }>
-          <ComposeBlockVisualization
-            id={ block.exportedSpecId }
-            onSave={ this.props.saveBlock }
-            format={ block.format }
-            parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
-            spec={ exportedSpec }
-            updatedAt={ this.props.updatedAt } />
+          { exportedSpec &&
+            <ComposeBlockVisualization
+                      id={ block.exportedSpecId }
+                      onSave={ this.props.saveBlock }
+                      format={ block.format }
+                      parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
+                      spec={ exportedSpec }
+                      updatedAt={ this.props.updatedAt } />
+          }
           <ComposeBlockText
             id={ block.exportedSpecId }
             onSave={ this.props.saveBlock }
