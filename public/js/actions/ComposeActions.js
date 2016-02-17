@@ -65,19 +65,23 @@ export function fetchExportedVisualizationSpecs(projectId) {
   };
 }
 
-function selectDocumentDispatcher(documentId, content) {
+function selectDocumentDispatcher(documentId, blocks=[]) {
   return {
     type: SELECT_DOCUMENT,
-    documentId: documentId,
-    blocks: content.blocks
+    blocks: blocks,
+    documentId: documentId
   };
 }
 
 export function selectDocument(documentId) {
   return (dispatch, getState) => {
-    const { documents } = getState();
-    const content = _.findWhere(documents.items, { id: parseInt(documentId) }).content;
-    dispatch(selectDocumentDispatcher(documentId, content));
+    const { documents } = getState()
+    const foundDocument = documents.items.find((doc) => doc.id == documentId);
+    if (foundDocument) {
+      dispatch(selectDocumentDispatcher(documentId, foundDocument.content.blocks));
+    } else {
+      dispatch(selectDocumentDispatcher(documentId));
+    }
   }
 }
 
@@ -211,7 +215,7 @@ function saveDocument(dispatch, getState) {
     .then(json => dispatch(receiveSaveDocumentDispatcher(projectId, documentId, json)))
 }
 
-const debouncedChangeDocument = _.debounce(saveDocument, 500);
+const debouncedChangeDocument = _.debounce(saveDocument, 800);
 
 function saveBlockDispatcher(id, key, value) {
   var action = {
@@ -220,7 +224,7 @@ function saveBlockDispatcher(id, key, value) {
     key: key,
     meta: {
       debounce: {
-        time: 500
+        time: 800
       }
     }
   };

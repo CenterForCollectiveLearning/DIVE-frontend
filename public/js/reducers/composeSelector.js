@@ -49,6 +49,15 @@ export default function composeSelector(state = baseState, action) {
 
       return { ...state, blocks: blocks };
 
+    case RECEIVE_DOCUMENTS:
+      const documentId = parseInt(state.documentId);
+      var selectedDocumentContent = action.documents.find((doc) => doc.id == documentId).content;
+      var selectedDocumentBlocks = (selectedDocumentContent != {}) ? selectedDocumentContent.blocks : [];
+      return {
+        ...state,
+        blocks: selectedDocumentBlocks
+      }
+
     case SELECT_DOCUMENT:
       return {
         ...state,
@@ -70,10 +79,10 @@ export default function composeSelector(state = baseState, action) {
       return { ...state, blocks: newBlocks, updatedAt: Date.now() };
 
     case REQUEST_SAVE_DOCUMENT:
-      return { ...state, saving: false };
-
-    case REQUEST_SAVE_DOCUMENT:
       return { ...state, saving: true };
+
+    case RECEIVE_SAVE_DOCUMENT:
+      return { ...state, saving: false };
 
     case WIPE_PROJECT_STATE:
       return baseState;

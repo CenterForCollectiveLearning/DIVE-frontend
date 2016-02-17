@@ -9,14 +9,14 @@ export class ComposeEditor extends Component {
     const { composeSelector } = this.props;
     return (
       <div className={ styles.composeEditor }>
-        { composeSelector.blocks.length == 0 && 
+        { composeSelector.blocks.length == 0 &&
           <div className={ styles.composeEditorNewDocumentPlaceholder }>
             select a visualization from the sidebar
           </div>
         }
-        { composeSelector.blocks.map((block, i) =>
+        { composeSelector.blocks.map((block) =>
           <ComposeBlock
-            key={ `compose-block-${ i }` }
+            key={ `compose-block-${ composeSelector.documentId }-${ block.exportedSpecId }` }
             block={ block }
             updatedAt={ composeSelector.updatedAt } />
         )}

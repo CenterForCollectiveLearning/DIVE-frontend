@@ -21,7 +21,7 @@ export default function documents(state=baseState, action) {
     case RECEIVE_DOCUMENTS:
       return { ...state, items: action.documents, isFetching: false, loaded: true, error: null };
     case RECEIVE_CREATE_DOCUMENT:
-      const documents = state.items;
+      const documents = state.items.slice();
       documents.push(action.document);
       return { ...state, items: documents};
     case RECEIVE_DELETE_DOCUMENT:

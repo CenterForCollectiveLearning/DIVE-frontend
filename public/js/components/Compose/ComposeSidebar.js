@@ -35,6 +35,7 @@ export class ComposeSidebar extends Component {
   }
 
   onSelectDocument(documentId) {
+    const { documents } = this.props;
     if (documentId) {
       this.props.pushState(null, `/projects/${ this.props.projectId }/compose/${ documentId }`);
     }
