@@ -5,7 +5,6 @@ import {
   selectDocument,
   createNewDocument,
   deleteDocument,
-  requestDocument,
   fetchDocuments,
   fetchExportedVisualizationSpecs
 } from '../../actions/ComposeActions';
@@ -111,7 +110,6 @@ export default connect(mapStateToProps, {
   fetchExportedVisualizationSpecs,
   fetchDocuments,
   selectDocument,
-  requestDocument,
   createNewDocument,
   deleteDocument,
   pushState

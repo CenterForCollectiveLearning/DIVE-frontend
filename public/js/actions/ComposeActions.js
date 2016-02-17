@@ -4,8 +4,6 @@ import {
   SELECT_DOCUMENT,
   REQUEST_DOCUMENTS,
   RECEIVE_DOCUMENTS,
-  REQUEST_DOCUMENT,
-  RECEIVE_DOCUMENT,
   REQUEST_CREATE_DOCUMENT,
   RECEIVE_CREATE_DOCUMENT,
   REQUEST_UPDATE_DOCUMENT,
@@ -110,32 +108,6 @@ export function fetchDocuments(projectId) {
         dispatch(receiveDocumentsDispatcher(dispatchParams, json))
       });
   };
-}
-
-function requestDocumentDispatcher(projectId, documentId) {
-  return {
-    type: REQUEST_DOCUMENT,
-    projectId: projectId,
-    documentId: documentId
-  };
-}
-
-function receiveDocumentDispatcher(projectId, documentId, json) {
-  return {
-    type: RECEIVE_DOCUMENT,
-    projectId: projectId,
-    'document': json,
-    receivedAt: Date.now(),
-  };
-}
-
-export function requestDocument(projectId, documentId) {
-  return (dispatch) => {
-    dispatch(requestDocumentDispatcher(projectId, documentId));
-    return fetch(`/compose/v1/document/${documentId}?project_id=${projectId}`)
-      .then(response => response.json())
-      .then(json => dispatch(receiveDocumentDispatcher(projectId, documentId, json)))
-  }
 }
 
 function requestCreateDocumentDispatcher(projectId) {
