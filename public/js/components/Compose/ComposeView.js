@@ -6,8 +6,23 @@ import styles from './Compose.sass';
 import Card from '../Base/Card';
 import HeaderBar from '../Base/HeaderBar';
 import ComposeEditor from './ComposeEditor';
+import Input from '../Base/Input';
 
 export class ComposeView extends Component {
+  constructor(props) {
+    super(props);
+    
+    const heading = this.props.selectedDocument ? this.props.selectedDocument.title : 'New Document';
+
+    this.state = {
+      documentHeading: heading
+    }
+  }
+
+  onTitleChange(event) {
+    this.setState({ documentHeading: event.target.value });
+  }
+
   render() {
     const { composeSelector } = this.props;
     const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
@@ -17,7 +32,13 @@ export class ComposeView extends Component {
           <HeaderBar
             className={ styles.editorHeader }
             textClassName={ styles.editorHeaderText }
-            header={ <span>New Document</span> }
+            header={
+              <Input
+                className={ styles.documentTitle }
+                type="text"
+                value={ this.state.documentHeading }
+                onChange={ this.onTitleChange.bind(this) }/>
+            }
             actions={
               <span className={ styles.saveStatus }>{ saveStatus }</span>
             }
@@ -30,8 +51,9 @@ export class ComposeView extends Component {
 }
 
 function mapStateToProps(state) {
-  const { composeSelector } = state;
-  return { composeSelector };
+  const { composeSelector, documents } = state;
+  const selectedDocument = documents.items.find((doc) => doc.id == composeSelector.documentId);
+  return { composeSelector, selectedDocument: selectedDocument };
 }
 
 export default connect(mapStateToProps, {})(ComposeView);

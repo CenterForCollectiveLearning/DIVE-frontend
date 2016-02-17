@@ -11,7 +11,8 @@ import {
   REQUEST_DELETE_DOCUMENT,
   RECEIVE_DELETE_DOCUMENT,
   SELECT_COMPOSE_VISUALIZATION,
-  SAVE_DOCUMENT,
+  REQUEST_SAVE_DOCUMENT,
+  RECEIVE_SAVE_DOCUMENT,
   SAVE_BLOCK
 } from '../constants/ActionTypes';
 
@@ -64,16 +65,23 @@ export function fetchExportedVisualizationSpecs(projectId) {
   };
 }
 
-function selectDocumentDispatcher(documentId) {
+function selectDocumentDispatcher(documentId, blocks=[]) {
   return {
     type: SELECT_DOCUMENT,
+    blocks: blocks,
     documentId: documentId
   };
 }
 
 export function selectDocument(documentId) {
-  return (dispatch) => {
-    dispatch(selectDocumentDispatcher(documentId));
+  return (dispatch, getState) => {
+    const { documents } = getState()
+    const foundDocument = documents.items.find((doc) => doc.id == documentId);
+    if (foundDocument) {
+      dispatch(selectDocumentDispatcher(documentId, foundDocument.content.blocks));
+    } else {
+      dispatch(selectDocumentDispatcher(documentId));
+    }
   }
 }
 
@@ -146,38 +154,6 @@ export function createNewDocument(projectId, content={}) {
   }
 }
 
-function requestUpdateDocumentDispatcher(projectId, documentId) {
-  return {
-    type: REQUEST_UPDATE_DOCUMENT,
-    projectId: projectId,
-    documentId: documentId
-  };
-}
-
-function receiveUpdateDocumentDispatcher(projectId, documentId) {
-  return {
-    type: RECEIVE_UPDATE_DOCUMENT,
-    projectId: projectId,
-    documentId: documentId
-  };
-}
-
-export function updateDocument(projectId, documentId, content) {
-  const params = {
-    project_id: projectId,
-    content: content
-  }
-  return (dispatch) => {
-    dispatch(requestUpdateDocumentDispatcher(projectId, documentId));
-    return fetch(`/compose/v1/document/${ documentId }`, {
-      method: 'put',
-      body: JSON.stringify(params),
-      headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveUpdateDocumentDispatcher(projectId, json)))
-  }
-}
-
 function requestDeleteDocumentDispatcher(projectId, documentId) {
   return {
     type: REQUEST_DELETE_DOCUMENT,
@@ -204,15 +180,44 @@ export function deleteDocument(projectId, documentId) {
   }
 }
 
-function saveDocumentDispatcher(dispatch, getState) {
-  dispatch(
-    {
-      type: SAVE_DOCUMENT
-    }
-  );
+function requestSaveDocumentDispatcher(projectId, documentId, content) {
+  return {
+      type: REQUEST_SAVE_DOCUMENT,
+      projectId: projectId,
+      documentId: documentId,
+      content: content
+  };
 }
 
-const debouncedChangeDocument = _.debounce(saveDocumentDispatcher, 1000);
+function receiveSaveDocumentDispatcher(projectId, documentId, json) {
+  return {
+      type: RECEIVE_SAVE_DOCUMENT,
+      projectId: projectId,
+      documentId: documentId
+  };
+}
+
+function saveDocument(dispatch, getState) {
+  const { project, composeSelector } = getState();
+  const projectId = project.properties.id;
+  const documentId = composeSelector.documentId;
+  const blocks = composeSelector.blocks;
+  const content = { 'blocks': blocks };
+  const params = {
+    project_id: projectId,
+    content: content
+  }
+
+  dispatch(requestSaveDocumentDispatcher(projectId, documentId, content));
+  return fetch(`/compose/v1/document/${ documentId }`, {
+    method: 'put',
+    body: JSON.stringify(params),
+    headers: { 'Content-Type': 'application/json' }
+  }).then(response => response.json())
+    .then(json => dispatch(receiveSaveDocumentDispatcher(projectId, documentId, json)))
+}
+
+const debouncedChangeDocument = _.debounce(saveDocument, 800);
 
 function saveBlockDispatcher(id, key, value) {
   var action = {
@@ -221,7 +226,7 @@ function saveBlockDispatcher(id, key, value) {
     key: key,
     meta: {
       debounce: {
-        time: 500
+        time: 800
       }
     }
   };
