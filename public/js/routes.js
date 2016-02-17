@@ -45,7 +45,7 @@ export default (
           <Route path="regression" component={ RegressionBasePage }>
             <Route path=":dependentVariable" component={ RegressionPage }/>
           </Route>
-          <Route path="/summary" component={ SummaryPage }/>
+          <Route path="summary" component={ SummaryPage }/>
         </Route>
       </Route>
       <Route path="compose" component={ ComposeBasePage }>

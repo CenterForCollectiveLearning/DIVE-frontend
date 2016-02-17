@@ -31,8 +31,8 @@ export default function documents(state=baseState, action) {
       documents.push(action.document);
       return { ...state, items: documents};
     case RECEIVE_DELETE_DOCUMENT:
-      const reducedDocuments = state.items.filter((doc) => doc.id != action.documentId);
-      return { ...state, items: documents};
+      const reducedDocuments = state.items.filter((doc) => doc.id != parseInt(action.documentId));
+      return { ...state, items: reducedDocuments};
     default:
       return state;
   }

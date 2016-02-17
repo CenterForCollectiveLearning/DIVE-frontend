@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { replaceState } from 'redux-react-router';
+import { pushState, replaceState } from 'redux-react-router';
 import styles from './Compose.sass';
 
 import { fetchDocuments } from '../../actions/ComposeActions';
@@ -22,11 +22,16 @@ export class ComposeBasePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, documents, replaceState, fetchDocuments } = nextProps;
+    const { params, documents, replaceState, pushState, fetchDocuments, composeSelector } = nextProps;
 
     if (!params.documentId && documents.items.length > 0) {
       replaceState(null, `/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
     }
+
+    if (composeSelector.documentId != this.props.composeSelector.documentId && composeSelector.documentId != params.documentId) {
+      pushState(null, `/projects/${ params.projectId }/compose/${ composeSelector.documentId }`);
+    }
+
   }
 
   render() {
@@ -43,8 +48,8 @@ export class ComposeBasePage extends Component {
 }
 
 function mapStateToProps(state) {
-  const { documents } = state;
-  return { documents };
+  const { documents, composeSelector } = state;
+  return { documents, composeSelector };
 }
 
-export default connect(mapStateToProps, { fetchDocuments, replaceState })(ComposeBasePage);
+export default connect(mapStateToProps, { fetchDocuments, pushState, replaceState })(ComposeBasePage);

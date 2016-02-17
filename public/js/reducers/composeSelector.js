@@ -3,7 +3,8 @@ import {
   SELECT_COMPOSE_VISUALIZATION,
   SET_BLOCK_FORMAT,
   SELECT_DOCUMENT,
-  RECEIVE_DOCUMENTS
+  RECEIVE_DOCUMENTS,
+  RECEIVE_CREATE_DOCUMENT
 } from '../constants/ActionTypes';
 
 import { BLOCK_FORMATS } from '../constants/BlockFormats';
@@ -51,6 +52,9 @@ export default function composeSelector(state = baseState, action) {
 
     case SELECT_DOCUMENT:
       return { ...state, documentId: action.documentId };
+
+    case RECEIVE_CREATE_DOCUMENT:
+      return { ...state, documentId: action.document.id };
 
     case WIPE_PROJECT_STATE:
       return baseState;

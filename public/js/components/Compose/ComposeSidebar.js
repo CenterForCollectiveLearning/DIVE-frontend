@@ -39,12 +39,6 @@ export class ComposeSidebar extends Component {
     if (documentId) {
       this.props.pushState(null, `/projects/${ this.props.projectId }/compose/${ documentId }`);
     }
-    // const { projectId, composeSelector, selectDocument } = this.props;
-    // console.log('THIS', this);
-    // const documentIdAsString = documentId.toString();
-    // if (composeSelector.documentId != documentIdAsString) {
-    //   selectDocument(projectId, documentIdAsString);
-    // }
   }
 
   onClickNewDocument() {
@@ -53,8 +47,10 @@ export class ComposeSidebar extends Component {
   }
 
   onClickDeleteDocument() {
-    const { projectId, composeSelector, deleteDocument } = this.props;
+    const { projectId, documents, composeSelector, deleteDocument, pushState } = this.props;
     deleteDocument(projectId, composeSelector.documentId);
+    const nextDocId = documents.items.find((doc) => doc.id != composeSelector.documentId).id;
+    pushState(null, `/projects/${ projectId }/compose/${ nextDocId }`);
   }
 
   componentDidUpdate(previousProps) {
@@ -67,7 +63,6 @@ export class ComposeSidebar extends Component {
 
   render() {
     const { exportedSpecs, documents, composeSelector } = this.props;
-    console.log(composeSelector);
     return (
       <Sidebar>
         <SidebarGroup heading="Documents">
@@ -82,7 +77,7 @@ export class ComposeSidebar extends Component {
                 onChange={ this.onSelectDocument } />
             }
             <RaisedButton icon altText="New document" onClick={ this.onClickNewDocument }><i className="fa fa-file-o"></i></RaisedButton>
-            <RaisedButton icon altText="Delete document" onClick={ this.onClickDeleteDocument }><i className="fa fa-trash"></i></RaisedButton>
+            <RaisedButton icon altText="Delete document" onClick={ this.onClickDeleteDocument } disabled={ documents.items.length <= 1 }><i className="fa fa-trash"></i></RaisedButton>
           </div>
         </SidebarGroup>
         <SidebarGroup heading="Starred visualizations">
