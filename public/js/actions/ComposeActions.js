@@ -11,8 +11,11 @@ import {
   REQUEST_DELETE_DOCUMENT,
   RECEIVE_DELETE_DOCUMENT,
   SELECT_COMPOSE_VISUALIZATION,
-  SET_BLOCK_FORMAT
+  SAVE_DOCUMENT,
+  SAVE_BLOCK
 } from '../constants/ActionTypes';
+
+import _ from 'underscore'
 
 import { fetch, pollForTask } from './api.js';
 
@@ -27,7 +30,7 @@ export function selectComposeVisualization(exportedSpecId, exportedSpecHeading) 
 export function setVisualizationFormat(exportedSpecId, format) {
   return {
     type: SET_BLOCK_FORMAT,
-    id: exportedSpecId,
+    exportedSpecId: exportedSpecId,
     format: format
   }
 }
@@ -198,5 +201,37 @@ export function deleteDocument(projectId, documentId) {
       method: 'delete'
     }).then(response => response.json())
       .then(json => dispatch(receiveDeleteDocumentDispatcher(projectId, json)))
+  }
+}
+
+function saveDocumentDispatcher(dispatch, getState) {
+  dispatch(
+    {
+      type: SAVE_DOCUMENT
+    }
+  );
+}
+
+const debouncedChangeDocument = _.debounce(saveDocumentDispatcher, 1000);
+
+function saveBlockDispatcher(id, key, value) {
+  var action = {
+    type: SAVE_BLOCK,
+    exportedSpecId: id,
+    key: key,
+    meta: {
+      debounce: {
+        time: 500
+      }
+    }
+  };
+  action[key] = value;
+  return action;
+}
+
+export function saveBlock(id, key, value) {
+  return (dispatch, getState) => {
+    dispatch(saveBlockDispatcher(id, key, value));
+    debouncedChangeDocument(dispatch, getState);
   }
 }

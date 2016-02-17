@@ -1,13 +1,12 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
+import debounce from 'redux-debounced';
 import rootReducer from '../reducers/index';
 
 import createHistory from 'history/lib/createBrowserHistory';
 import { reduxReactRouter } from 'redux-react-router';
 import routes from '../routes';
-
-import { SHOULD_SAVE } from '../constants/ActionTypes';
 
 const storageEnabled = false;
 
@@ -20,12 +19,11 @@ let createStoreWithMiddleware;
 
 if (storageEnabled) {
   const storageReducer = storage.reducer(rootReducer);
-
   const engine = storage.decorators.debounce(createEngine('dive'), 1500)
   const storageMiddleware = storage.createMiddleware(engine, [], [SHOULD_SAVE]);
 
   createStoreWithMiddleware = compose(
-    applyMiddleware(thunkMiddleware, loggerMiddleware, storageMiddleware),
+    applyMiddleware(debounce, thunkMiddleware, loggerMiddleware, storageMiddleware),
     reduxReactRouter({
       routes,
       createHistory
@@ -34,7 +32,7 @@ if (storageEnabled) {
 
 } else {
   createStoreWithMiddleware = compose(
-    applyMiddleware(thunkMiddleware, loggerMiddleware),
+    applyMiddleware(debounce, thunkMiddleware, loggerMiddleware),
     reduxReactRouter({
       routes,
       createHistory

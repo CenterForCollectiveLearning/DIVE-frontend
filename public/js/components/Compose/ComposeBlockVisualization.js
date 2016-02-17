@@ -1,8 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setVisualizationFormat } from '../../actions/ComposeActions';
-
 import styles from './Compose.sass';
 
 import _ from 'underscore';
@@ -58,24 +56,28 @@ export default class ComposeBlockVisualization extends Component {
       this.setStateBlockFormat(nextProps.format);
     }
   }
+
   onResize(event, { element, size }) {
+    const { id, onSave } = this.props;
     this.setState({ resizeCounter: this.state.resizeCounter + 1 });
+    onSave(id, 'dimensions', size);
   }
 
   setStateBlockFormat(blockFormat) {
-    const formats = this.state.formatTypes.map((formatType) => 
+    const formats = this.state.formatTypes.map((formatType) =>
       new Object({ ...formatType, selected: formatType.value == blockFormat })
     );
     this.setState({ formatTypes: formats });
   }
 
   selectBlockFormat(blockFormat) {
-    this.props.setVisualizationFormat(this.props.spec.id, blockFormat);
+    const { id, onSave } = this.props;
+    onSave(id, 'format', blockFormat);
     this.setStateBlockFormat(blockFormat);
   }
 
   render() {
-    const { spec, updatedAt, parentSize, format, setVisualizationFormat } = this.props;
+    const { spec, updatedAt, parentSize, format } = this.props;
 
     const absoluteMaxWidth = parentSize ? parentSize[0] - 18 : 700;
     const isHalfWidthFormat = (format == BLOCK_FORMATS.TEXT_LEFT || format == BLOCK_FORMATS.TEXT_RIGHT);
@@ -123,13 +125,13 @@ ComposeBlockVisualization.propTypes = {
   spec: PropTypes.object.isRequired,
   updatedAt: PropTypes.number,
   parentSize: PropTypes.any,
-  format: PropTypes.string
+  format: PropTypes.string,
+  id: PropTypes.number.isRequired,
+  onSave: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, {
-  setVisualizationFormat
-})(ComposeBlockVisualization);
+export default connect(mapStateToProps, {})(ComposeBlockVisualization);
