@@ -11,7 +11,8 @@ import {
   REQUEST_DELETE_DOCUMENT,
   RECEIVE_DELETE_DOCUMENT,
   SELECT_COMPOSE_VISUALIZATION,
-  SAVE_DOCUMENT,
+  REQUEST_SAVE_DOCUMENT,
+  RECEIVE_SAVE_DOCUMENT,
   SAVE_BLOCK
 } from '../constants/ActionTypes';
 
@@ -204,15 +205,42 @@ export function deleteDocument(projectId, documentId) {
   }
 }
 
-function saveDocumentDispatcher(dispatch, getState) {
-  dispatch(
-    {
-      type: SAVE_DOCUMENT
-    }
-  );
+function requestSaveDocumentDispatcher(projectId, documentId) {
+  return {
+      type: REQUEST_SAVE_DOCUMENT,
+      projectId: projectId,
+      documentId: documentId
+  };
 }
 
-const debouncedChangeDocument = _.debounce(saveDocumentDispatcher, 1000);
+function receiveSaveDocumentDispatcher(projectId, documentId, json) {
+  return {
+      type: RECEIVE_SAVE_DOCUMENT,
+      projectId: projectId,
+      documentId: documentId
+  };
+}
+
+function saveDocument(dispatch, getState) {
+  const { project, composeSelector } = getState();
+  const projectId = project.properties.id;
+  const documentId = composeSelector.documentId;
+  const blocks = composeSelector.blocks;
+
+  const params = {
+    project_id: projectId,
+    content: { 'blocks': blocks }
+  }
+  dispatch(requestSaveDocumentDispatcher());
+  return fetch(`/compose/v1/document/${ documentId }`, {
+    method: 'put',
+    body: JSON.stringify(params),
+    headers: { 'Content-Type': 'application/json' }
+  }).then(response => response.json())
+    .then(json => dispatch(receiveUpdateDocumentDispatcher(projectId, documentId)))
+}
+
+const debouncedChangeDocument = _.debounce(saveDocument, 500);
 
 function saveBlockDispatcher(id, key, value) {
   var action = {
