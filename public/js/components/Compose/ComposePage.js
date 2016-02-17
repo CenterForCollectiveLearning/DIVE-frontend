@@ -1,10 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { replaceState } from 'redux-react-router';
-import styles from './Compose.sass';
 
-import ComposeSidebar from './ComposeSidebar';
-import ComposeView from './ComposeView';
 import { selectDocument } from '../../actions/ComposeActions';
 
 export class ComposePage extends Component {
@@ -18,17 +14,8 @@ export class ComposePage extends Component {
     }
   }
 
-  render() {
-    return (
-      <div className={ `${ styles.fillContainer } ${ styles.composePageContainer }` }>
-        <div className={ `${ styles.fillContainer } ${ styles.composeContentContainer }` }>
-          <ComposeSidebar />
-          <ComposeView />
-        </div>
-        { this.props.children }
-      </div>
-    );
-  }
+
+  render() { return (<div></div>) }
 }
 
 function mapStateToProps(state) {

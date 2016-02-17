@@ -71,7 +71,6 @@ function selectDocumentDispatcher(documentId) {
 }
 
 export function selectDocument(documentId) {
-  console.log('select document', documentId);
   return (dispatch) => {
     dispatch(selectDocumentDispatcher(documentId));
   }
@@ -158,7 +157,7 @@ function receiveCreateDocumentDispatcher(projectId, json) {
 export function createNewDocument(projectId, content={}) {
   const params = {
     project_id: projectId,
-    title: 'New Project',
+    title: 'New Document',
     content: content
   }
   return (dispatch) => {

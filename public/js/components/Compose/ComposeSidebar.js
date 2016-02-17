@@ -39,10 +39,10 @@ export class ComposeSidebar extends Component {
     if (documentId) {
       this.props.pushState(null, `/projects/${ this.props.projectId }/compose/${ documentId }`);
     }
-    // const { projectId, documentSelector, selectDocument } = this.props;
+    // const { projectId, composeSelector, selectDocument } = this.props;
     // console.log('THIS', this);
     // const documentIdAsString = documentId.toString();
-    // if (documentSelector.documentId != documentIdAsString) {
+    // if (composeSelector.documentId != documentIdAsString) {
     //   selectDocument(projectId, documentIdAsString);
     // }
   }
@@ -53,8 +53,8 @@ export class ComposeSidebar extends Component {
   }
 
   onClickDeleteDocument() {
-    const { projectId, documentSelector, deleteDocument } = this.props;
-    deleteDocument(projectId, documentSelector.documentId);
+    const { projectId, composeSelector, deleteDocument } = this.props;
+    deleteDocument(projectId, composeSelector.documentId);
   }
 
   componentDidUpdate(previousProps) {
@@ -66,8 +66,8 @@ export class ComposeSidebar extends Component {
   }
 
   render() {
-    const { exportedSpecs, documents, documentSelector } = this.props;
-
+    const { exportedSpecs, documents, composeSelector } = this.props;
+    console.log(composeSelector);
     return (
       <Sidebar>
         <SidebarGroup heading="Documents">
@@ -75,7 +75,7 @@ export class ComposeSidebar extends Component {
             { !documents.isFetching && documents.items.length > 0 &&
               <DropDownMenu
                 className={ styles.documentSelector }
-                value={ `${ documentSelector.documentId }` }
+                value={ `${ composeSelector.documentId }` }
                 options={ documents.items.length > 0 ? documents.items : [] }
                 valueMember="id"
                 displayTextMember="title"
@@ -98,16 +98,16 @@ export class ComposeSidebar extends Component {
 ComposeSidebar.propTypes = {
   projectId: PropTypes.string,
   documents: PropTypes.object.isRequired,
-  documentSelector: PropTypes.object.isRequired,
+  composeSelector: PropTypes.object.isRequired,
   exportedSpecs: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { project, documents, documentSelector, exportedSpecs } = state;
+  const { project, documents, composeSelector, exportedSpecs } = state;
   return {
     projectId: (project.properties.id ? `${ project.properties.id }` : null),
     documents,
-    documentSelector,
+    composeSelector,
     exportedSpecs
   };
 }

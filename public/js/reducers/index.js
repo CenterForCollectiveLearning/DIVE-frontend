@@ -5,7 +5,6 @@ import composeSelector from './composeSelector';
 import datasets from './datasets';
 import datasetSelector from './datasetSelector';
 import documents from './documents'
-import documentSelector from './documentSelector'
 import exportedSpec from './exportedSpec';
 import exportedSpecs from './exportedSpecs';
 import fieldProperties from './fieldProperties';
@@ -25,7 +24,6 @@ const rootReducer = combineReducers({
   datasets,
   datasetSelector,
   documents,
-  documentSelector,
   exportedSpec,
   exportedSpecs,
   fieldProperties,

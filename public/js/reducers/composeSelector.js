@@ -1,13 +1,16 @@
 import {
   WIPE_PROJECT_STATE,
   SELECT_COMPOSE_VISUALIZATION,
-  SET_BLOCK_FORMAT
+  SET_BLOCK_FORMAT,
+  SELECT_DOCUMENT,
+  RECEIVE_DOCUMENTS
 } from '../constants/ActionTypes';
 
 import { BLOCK_FORMATS } from '../constants/BlockFormats';
 
 const baseState = {
   blocks: [],
+  documentId: null,
   updatedAt: Date.now()
 }
 
@@ -45,6 +48,9 @@ export default function composeSelector(state = baseState, action) {
       }
 
       return { ...state, blocks: blocks };
+
+    case SELECT_DOCUMENT:
+      return { ...state, documentId: action.documentId };
 
     case WIPE_PROJECT_STATE:
       return baseState;

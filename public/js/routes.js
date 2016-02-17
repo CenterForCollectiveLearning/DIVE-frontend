@@ -49,8 +49,8 @@ export default (
         </Route>
       </Route>
       <Route path="compose" component={ ComposeBasePage }>
+        <Route path=":documentId" component={ ComposePage }/>
       </Route>
-      <Route path="compose/:documentId" component={ ComposeBasePage }/>
     </Route>
     <Route path="/share/projects/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>
   </Route>

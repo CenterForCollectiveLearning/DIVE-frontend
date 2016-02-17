@@ -277,13 +277,13 @@ export function createExportedSpec(projectId, specId, data, conditionals, config
   const requestAction = saveAction ? REQUEST_CREATE_SAVED_SPEC : REQUEST_CREATE_EXPORTED_SPEC;
   const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_SPEC : RECEIVE_CREATED_EXPORTED_SPEC;
 
-  const filteredConditionals = getFilteredConditionals(conditionals) ? getFilteredConditionals(conditionals) : {};
+  const filteredConditionals = getFilteredConditionals(conditionals);
 
   const params = {
     project_id: projectId,
     spec_id: specId,
     data: data,
-    conditionals: filteredConditionals,
+    conditionals: filteredConditionals ? filteredConditionals : {},
     config: config
   }
 
