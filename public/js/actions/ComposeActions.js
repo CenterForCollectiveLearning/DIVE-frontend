@@ -88,37 +88,47 @@ function receiveSaveDocumentDispatcher() {
 
 function undebouncedChangeDocument(dispatch, getState) {
   dispatch(requestSaveDocumentDispatcher());
-  console.log(getState().composeSelector.blocks);
+  dispatch(receiveSaveDocumentDispatcher());
 }
 
-const debouncedChangeDocument = _.debounce(undebouncedChangeDocument, 250);
+const debouncedChangeDocument = _.debounce(undebouncedChangeDocument, 500);
 
-export function changeDocument() {
-  return debouncedChangeDocument;
-}
-
-function saveBlockTextDispatcher() {
+function saveBlockTextDispatcher(id, text) {
   return {
-    type: SAVE_BLOCK_TEXT
+    type: SAVE_BLOCK_TEXT,
+    exportedSpecId: id,
+    text: text,
+    meta: {
+      debounce: {
+        time: 500
+      }
+    }
   };
 }
 
-function saveBlockHeaderDispatcher() {
+function saveBlockHeaderDispatcher(id, header) {
   return {
-    type: SAVE_BLOCK_HEADER
+    type: SAVE_BLOCK_HEADER,
+    exportedSpecId: id,
+    header: header,
+    meta: {
+      debounce: {
+        time: 500
+      }
+    }
   };
 }
 
 export function saveBlockText(id, text) {
-  console.log('in saveBlockText');
-  return dispatch => {
-    dispatch(saveBlockTextDispatcher());
+  return (dispatch, getState) => {
+    dispatch(saveBlockTextDispatcher(id, text));
+    debouncedChangeDocument(dispatch, getState);
   }
 }
 
 export function saveBlockHeader(id, header) {
-  console.log('in saveBlockHeader');
-  return dispatch => {
-    dispatch(saveBlockHeaderDispatcher());
+  return (dispatch, getState) => {
+    dispatch(saveBlockHeaderDispatcher(id, header));
+    debouncedChangeDocument(dispatch, getState);
   }
 }

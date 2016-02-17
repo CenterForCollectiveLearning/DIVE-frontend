@@ -9,10 +9,17 @@ import ComposeEditor from './ComposeEditor';
 
 export class ComposeView extends Component {
   render() {
+    const { composeSelector } = this.props;
+    const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
     return (
       <div className={ styles.composeViewContainer }>
         <Card>
-          <HeaderBar header={ <span>New Document</span> } />
+          <HeaderBar
+            header={ <span>New Document</span> }
+            actions={
+              <span className={ styles.saveStatus }>{ saveStatus }</span>
+            }
+          />
           <ComposeEditor />
         </Card>
       </div>
@@ -21,7 +28,8 @@ export class ComposeView extends Component {
 }
 
 function mapStateToProps(state) {
-  return { };
+  const { composeSelector } = state;
+  return { composeSelector };
 }
 
-export default connect(mapStateToProps, { })(ComposeView);
+export default connect(mapStateToProps, {})(ComposeView);
