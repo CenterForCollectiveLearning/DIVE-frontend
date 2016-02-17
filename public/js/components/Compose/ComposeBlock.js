@@ -31,17 +31,23 @@ export class ComposeBlock extends Component {
   render() {
     const { exportedSpec, updatedAt } = this.state;
     const { block } = this.props;
+    if (exportedSpec) {
+      var spec = exportedSpec;
+    } else {
+      var spec = block.spec;
+    }
+    console.log('Spec:', spec);
     return (
       <div ref="composeBlock" className={ styles.composeBlock }>
         <ComposeBlockHeader id={ block.exportedSpecId } onSave={ this.props.saveBlock } heading={ block.heading } />
         <div className={ styles.composeBlockContent + ' ' + styles[block.format] }>
-          { exportedSpec &&
+          { spec &&
             <ComposeBlockVisualization
                       id={ block.exportedSpecId }
                       onSave={ this.props.saveBlock }
                       format={ block.format }
                       parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
-                      spec={ exportedSpec }
+                      spec={ spec }
                       updatedAt={ this.props.updatedAt } />
           }
           <ComposeBlockText

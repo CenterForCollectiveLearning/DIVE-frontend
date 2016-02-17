@@ -6,7 +6,8 @@ import {
   RECEIVE_CREATE_DOCUMENT,
   REQUEST_SAVE_DOCUMENT,
   RECEIVE_SAVE_DOCUMENT,
-  SAVE_BLOCK
+  SAVE_BLOCK,
+  RECEIVE_PUBLISHED_DOCUMENT
 } from '../constants/ActionTypes';
 
 import { BLOCK_FORMATS } from '../constants/BlockFormats';
@@ -89,6 +90,13 @@ export default function composeSelector(state = baseState, action) {
 
     case RECEIVE_SAVE_DOCUMENT:
       return { ...state, saving: false };
+
+    case RECEIVE_PUBLISHED_DOCUMENT:
+      return {
+        ...state,
+        documentId: action.documentId ,
+        blocks: action.document.content.blocks
+      }
 
     case WIPE_PROJECT_STATE:
       return baseState;
