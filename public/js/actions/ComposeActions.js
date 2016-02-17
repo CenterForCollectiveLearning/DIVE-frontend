@@ -153,9 +153,9 @@ function requestUpdateDocumentDispatcher(projectId, documentId) {
 
 function receiveUpdateDocumentDispatcher(projectId, documentId) {
   return {
-    type: REQUEST_UPDATE_DOCUMENT,
+    type: RECEIVE_UPDATE_DOCUMENT,
     projectId: projectId,
-    datasetId: datasetId
+    documentId: documentId
   };
 }
 
@@ -166,7 +166,7 @@ export function updateDocument(projectId, documentId, content) {
   }
   return (dispatch) => {
     dispatch(requestUpdateDocumentDispatcher(projectId, documentId));
-    return fetch(`/compose/v1/document/${documentId}`, {
+    return fetch(`/compose/v1/document/${ documentId }`, {
       method: 'put',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
@@ -194,7 +194,7 @@ function receiveDeleteDocumentDispatcher(projectId, json) {
 export function deleteDocument(projectId, documentId) {
   return (dispatch) => {
     dispatch(requestDeleteDocumentDispatcher(projectId, documentId));
-    return fetch(`/compose/v1/document/${documentId}?project_id=${projectId}`, {
+    return fetch(`/compose/v1/document/${ documentId }?project_id=${projectId}`, {
       method: 'delete'
     }).then(response => response.json())
       .then(json => dispatch(receiveDeleteDocumentDispatcher(projectId, json)))
