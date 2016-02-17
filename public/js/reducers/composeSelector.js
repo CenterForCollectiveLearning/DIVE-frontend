@@ -1,15 +1,10 @@
 import {
   WIPE_PROJECT_STATE,
   SELECT_COMPOSE_VISUALIZATION,
-<<<<<<< HEAD
   SELECT_DOCUMENT,
   RECEIVE_DOCUMENTS,
   RECEIVE_CREATE_DOCUMENT,
   SAVE_DOCUMENT,
-=======
-  REQUEST_SAVE_DOCUMENT,
-  RECEIVE_SAVE_DOCUMENT,
->>>>>>> 8e092d5d53da02cfab5b44e656b270fe080d9898
   SAVE_BLOCK
 } from '../constants/ActionTypes';
 
@@ -17,10 +12,7 @@ import { BLOCK_FORMATS } from '../constants/BlockFormats';
 
 const baseState = {
   blocks: [],
-<<<<<<< HEAD
   documentId: null,
-=======
->>>>>>> 8e092d5d53da02cfab5b44e656b270fe080d9898
   saving: false,
   updatedAt: Date.now()
 }
@@ -73,7 +65,6 @@ export default function composeSelector(state = baseState, action) {
       return { ...state, blocks: newBlocks, updatedAt: Date.now(), saving: true };
 
     case SAVE_DOCUMENT:
-
       return { ...state, saving: false };
 
     case WIPE_PROJECT_STATE:
