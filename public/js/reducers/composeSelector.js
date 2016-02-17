@@ -4,7 +4,8 @@ import {
   SELECT_DOCUMENT,
   RECEIVE_DOCUMENTS,
   RECEIVE_CREATE_DOCUMENT,
-  SAVE_DOCUMENT,
+  REQUEST_SAVE_DOCUMENT,
+  RECEIVE_SAVE_DOCUMENT,
   SAVE_BLOCK
 } from '../constants/ActionTypes';
 
@@ -49,7 +50,11 @@ export default function composeSelector(state = baseState, action) {
       return { ...state, blocks: blocks };
 
     case SELECT_DOCUMENT:
-      return { ...state, documentId: action.documentId };
+      return {
+        ...state,
+        blocks: action.blocks,
+        documentId: action.documentId
+      };
 
     case RECEIVE_CREATE_DOCUMENT:
       return { ...state, documentId: action.document.id };
@@ -62,10 +67,13 @@ export default function composeSelector(state = baseState, action) {
         }
         return newBlock;
       });
-      return { ...state, blocks: newBlocks, updatedAt: Date.now(), saving: true };
+      return { ...state, blocks: newBlocks, updatedAt: Date.now() };
 
-    case SAVE_DOCUMENT:
+    case REQUEST_SAVE_DOCUMENT:
       return { ...state, saving: false };
+
+    case REQUEST_SAVE_DOCUMENT:
+      return { ...state, saving: true };
 
     case WIPE_PROJECT_STATE:
       return baseState;

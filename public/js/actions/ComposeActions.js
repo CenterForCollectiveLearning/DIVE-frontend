@@ -65,16 +65,19 @@ export function fetchExportedVisualizationSpecs(projectId) {
   };
 }
 
-function selectDocumentDispatcher(documentId) {
+function selectDocumentDispatcher(documentId, content) {
   return {
     type: SELECT_DOCUMENT,
-    documentId: documentId
+    documentId: documentId,
+    blocks: content.blocks
   };
 }
 
 export function selectDocument(documentId) {
-  return (dispatch) => {
-    dispatch(selectDocumentDispatcher(documentId));
+  return (dispatch, getState) => {
+    const { documents } = getState();
+    const content = _.findWhere(documents.items, { id: parseInt(documentId) }).content;
+    dispatch(selectDocumentDispatcher(documentId, content));
   }
 }
 
@@ -147,38 +150,6 @@ export function createNewDocument(projectId, content={}) {
   }
 }
 
-function requestUpdateDocumentDispatcher(projectId, documentId) {
-  return {
-    type: REQUEST_UPDATE_DOCUMENT,
-    projectId: projectId,
-    documentId: documentId
-  };
-}
-
-function receiveUpdateDocumentDispatcher(projectId, documentId) {
-  return {
-    type: RECEIVE_UPDATE_DOCUMENT,
-    projectId: projectId,
-    documentId: documentId
-  };
-}
-
-export function updateDocument(projectId, documentId, content) {
-  const params = {
-    project_id: projectId,
-    content: content
-  }
-  return (dispatch) => {
-    dispatch(requestUpdateDocumentDispatcher(projectId, documentId));
-    return fetch(`/compose/v1/document/${ documentId }`, {
-      method: 'put',
-      body: JSON.stringify(params),
-      headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveUpdateDocumentDispatcher(projectId, json)))
-  }
-}
-
 function requestDeleteDocumentDispatcher(projectId, documentId) {
   return {
     type: REQUEST_DELETE_DOCUMENT,
@@ -226,18 +197,18 @@ function saveDocument(dispatch, getState) {
   const projectId = project.properties.id;
   const documentId = composeSelector.documentId;
   const blocks = composeSelector.blocks;
-
   const params = {
     project_id: projectId,
     content: { 'blocks': blocks }
   }
-  dispatch(requestSaveDocumentDispatcher());
+
+  dispatch(requestSaveDocumentDispatcher(projectId, documentId));
   return fetch(`/compose/v1/document/${ documentId }`, {
     method: 'put',
     body: JSON.stringify(params),
     headers: { 'Content-Type': 'application/json' }
   }).then(response => response.json())
-    .then(json => dispatch(receiveUpdateDocumentDispatcher(projectId, documentId)))
+    .then(json => dispatch(receiveSaveDocumentDispatcher(projectId, documentId, json)))
 }
 
 const debouncedChangeDocument = _.debounce(saveDocument, 500);
