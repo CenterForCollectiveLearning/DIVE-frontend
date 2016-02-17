@@ -10,12 +10,6 @@ import { reduxReactRouter } from 'redux-react-router';
 import routes from '../routes';
 import storage from 'redux-storage'
 
-import {
-  SAVE_BLOCK_TEXT,
-  SAVE_BLOCK_HEADER,
-  SHOULD_SAVE
-} from '../constants/ActionTypes';
-
 const storageEnabled = false;
 
 const loggerMiddleware = createLogger({
