@@ -5,8 +5,8 @@ import styles from './HeaderBar.sass';
 export default class HeaderBar extends Component {
   render() {
     return (
-      <div className={ styles.headerBar } >
-        <div className={ styles.headerText } >
+      <div className={ styles.headerBar + (this.props.className ? ' ' + this.props.className : '') } >
+        <div className={ styles.headerText + (this.props.textClassName ? ' ' + this.props.textClassName : '') } >
           { this.props.header }           
         </div>
         <div className={ styles.rightActions } >
@@ -19,5 +19,7 @@ export default class HeaderBar extends Component {
 
 HeaderBar.propTypes = {
   header: PropTypes.any,
-  actions: PropTypes.node
+  actions: PropTypes.node,
+  className: PropTypes.string,
+  textClassName: PropTypes.string
 };

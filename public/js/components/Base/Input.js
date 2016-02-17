@@ -18,7 +18,8 @@ export default class Input extends Component {
         type={ this.props.type }
         placeholder={ this.props.placeholder }
         onChange={ this.props.onChange }
-        onKeyUp={ this.onInputKeyUp.bind(this) }/>
+        onKeyUp={ this.onInputKeyUp.bind(this) }
+        value={ this.props.value }/>
     );
   }
 }
@@ -29,7 +30,8 @@ Input.propTypes = {
   type: PropTypes.string,
   large: PropTypes.bool,
   onChange: PropTypes.func,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  value: PropTypes.string
 }
 
 Input.defaultProps = {

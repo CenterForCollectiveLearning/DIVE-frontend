@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 import { routerStateReducer as router } from 'redux-react-router';
-import { LOAD, SAVE } from 'redux-storage';
 
+import composeSelector from './composeSelector';
 import datasets from './datasets';
 import datasetSelector from './datasetSelector';
+import documents from './documents'
 import exportedSpec from './exportedSpec';
+import exportedSpecs from './exportedSpecs';
 import fieldProperties from './fieldProperties';
 import filters from './filters';
 import gallerySelector from './gallerySelector';
@@ -18,9 +20,12 @@ import user from './user';
 import visualization from './visualization';
 
 const rootReducer = combineReducers({
+  composeSelector,
   datasets,
   datasetSelector,
+  documents,
   exportedSpec,
+  exportedSpecs,
   fieldProperties,
   filters,
   gallerySelector,

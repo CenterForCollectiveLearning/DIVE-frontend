@@ -1,5 +1,3 @@
-import { LOAD } from 'redux-storage';
-
 import {
   CREATE_ANONYMOUS_USER,
   SET_USER_EMAIL,
@@ -12,11 +10,6 @@ export default function user(state = {
   properties: {}
 }, action) {
   switch (action.type) {
-    case LOAD:
-      if (action.payload.user) {
-        return { ...action.payload.user, loaded: true };
-      }
-      return { ...state, loaded: true };
     case CREATE_ANONYMOUS_USER:
       return { ...state, properties: action.userProperties };
     case SET_USER_EMAIL:

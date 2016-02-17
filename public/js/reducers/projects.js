@@ -1,5 +1,3 @@
-import { LOAD } from 'redux-storage';
-
 import {
   REQUEST_PRELOADED_PROJECTS,
   RECEIVE_PRELOADED_PROJECTS,
@@ -13,10 +11,6 @@ export default function projects(state = {
   userProjects: []
 }, action) {
   switch (action.type) {
-    case LOAD:
-      // return { ...action.payload.projects, loaded: true };
-      return state;
-
     case REQUEST_PRELOADED_PROJECTS:
       return { ...state, isFetching: true };
 
