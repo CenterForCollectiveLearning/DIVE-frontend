@@ -6,7 +6,7 @@ import ComposeBlockHeader from './ComposeBlockHeader';
 import ComposeBlockText from './ComposeBlockText';
 import ComposeBlockVisualization from './ComposeBlockVisualization';
 
-import { saveBlockText, saveBlockHeader, saveVizSize, saveBlockFormat } from '../../actions/ComposeActions'
+import { saveBlock } from '../../actions/ComposeActions'
 
 export class ComposeBlock extends Component {
   constructor(props) {
@@ -33,10 +33,19 @@ export class ComposeBlock extends Component {
     const { block } = this.props;
     return (
       <div ref="composeBlock" className={ styles.composeBlock }>
-        <ComposeBlockHeader id={ block.exportedSpecId } onSave={ this.props.saveBlockHeader } heading={ block.heading } />
+        <ComposeBlockHeader id={ block.exportedSpecId } onSave={ this.props.saveBlock } heading={ block.heading } />
         <div className={ styles.composeBlockContent + ' ' + styles[block.format] }>
-          <ComposeBlockVisualization id={ block.exportedSpecId } onFormatSave={ this.props.saveBlockFormat } onResizeSave={ this.props.saveVizSize } format={ block.format } parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null } spec={ exportedSpec } updatedAt={ this.props.updatedAt }/>
-          <ComposeBlockText id={ block.exportedSpecId } onSave={ this.props.saveBlockText } text={ block.body } />
+          <ComposeBlockVisualization
+            id={ block.exportedSpecId }
+            onSave={ this.props.saveBlock }
+            format={ block.format }
+            parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
+            spec={ exportedSpec }
+            updatedAt={ this.props.updatedAt } />
+          <ComposeBlockText
+            id={ block.exportedSpecId }
+            onSave={ this.props.saveBlock }
+            text={ block.body } />
         </div>
       </div>
     );
@@ -55,8 +64,5 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  saveBlockText,
-  saveBlockHeader,
-  saveBlockFormat,
-  saveVizSize
+  saveBlock
 })(ComposeBlock);

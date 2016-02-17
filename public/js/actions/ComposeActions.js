@@ -2,12 +2,9 @@ import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
   SELECT_COMPOSE_VISUALIZATION,
-  SAVE_BLOCK_FORMAT,
-  SAVE_BLOCK_TEXT,
-  SAVE_BLOCK_HEADER,
-  SAVE_VIZ_SIZE,
   REQUEST_SAVE_DOCUMENT,
   RECEIVE_SAVE_DOCUMENT,
+  SAVE_BLOCK
 } from '../constants/ActionTypes';
 
 import _ from 'underscore'
@@ -94,77 +91,24 @@ function undebouncedChangeDocument(dispatch, getState) {
 
 const debouncedChangeDocument = _.debounce(undebouncedChangeDocument, 500);
 
-function saveBlockFormatDispatcher(id, format) {
-  return {
-    type: SAVE_BLOCK_FORMAT,
+function saveBlockDispatcher(id, key, value) {
+  var action = {
+    type: SAVE_BLOCK,
     exportedSpecId: id,
-    format: format
-  };
-}
-
-function saveBlockTextDispatcher(id, text) {
-  return {
-    type: SAVE_BLOCK_TEXT,
-    exportedSpecId: id,
-    text: text,
+    key: key,
     meta: {
       debounce: {
         time: 500
       }
     }
   };
+  action[key] = value;
+  return action;
 }
 
-function saveBlockHeaderDispatcher(id, header) {
-  return {
-    type: SAVE_BLOCK_HEADER,
-    exportedSpecId: id,
-    header: header,
-    meta: {
-      debounce: {
-        time: 500
-      }
-    }
-  };
-}
-
-function saveVizSizeDispatcher(id, dimensions) {
-  return {
-    type: SAVE_VIZ_SIZE,
-    exportedSpecId: id,
-    dimensions: dimensions,
-    meta: {
-      debounce: {
-        time: 500
-      }
-    }
-  };
-}
-
-export function saveBlockText(id, text) {
+export function saveBlock(id, key, value) {
   return (dispatch, getState) => {
-    dispatch(saveBlockTextDispatcher(id, text));
-    debouncedChangeDocument(dispatch, getState);
-  }
-}
-
-export function saveBlockHeader(id, header) {
-  return (dispatch, getState) => {
-    dispatch(saveBlockHeaderDispatcher(id, header));
-    debouncedChangeDocument(dispatch, getState);
-  }
-}
-
-export function saveBlockFormat(id, format) {
-  return (dispatch, getState) => {
-    dispatch(saveBlockFormatDispatcher(id, format));
-    debouncedChangeDocument(dispatch, getState);
-  }
-}
-
-export function saveVizSize(id, dimensions) {
-  return (dispatch, getState) => {
-    dispatch(saveVizSizeDispatcher(id, dimensions));
+    dispatch(saveBlockDispatcher(id, key, value));
     debouncedChangeDocument(dispatch, getState);
   }
 }

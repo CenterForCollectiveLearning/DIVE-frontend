@@ -58,9 +58,9 @@ export default class ComposeBlockVisualization extends Component {
   }
 
   onResize(event, { element, size }) {
-    const { id, onResizeSave } = this.props;
+    const { id, onSave } = this.props;
     this.setState({ resizeCounter: this.state.resizeCounter + 1 });
-    onResizeSave(id, size);
+    onSave(id, 'dimensions', size);
   }
 
   setStateBlockFormat(blockFormat) {
@@ -71,8 +71,8 @@ export default class ComposeBlockVisualization extends Component {
   }
 
   selectBlockFormat(blockFormat) {
-    const { id, onFormatSave } = this.props;
-    onFormatSave(id, blockFormat);
+    const { id, onSave } = this.props;
+    onSave(id, 'format', blockFormat);
     this.setStateBlockFormat(blockFormat);
   }
 
@@ -127,8 +127,7 @@ ComposeBlockVisualization.propTypes = {
   parentSize: PropTypes.any,
   format: PropTypes.string,
   id: PropTypes.number.isRequired,
-  onResizeSave: PropTypes.func.isRequired,
-  onFormatSave: PropTypes.func.isRequired
+  onSave: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {

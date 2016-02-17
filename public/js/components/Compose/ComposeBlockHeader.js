@@ -20,7 +20,7 @@ export default class ComposeBlockHeader extends Component {
     const { id, onSave } = this.props;
     const value = event.target.value
     this.setState({ heading: value });
-    onSave(id, value);
+    onSave(id, 'heading', value);
   }
 
   render() {
@@ -39,5 +39,5 @@ export default class ComposeBlockHeader extends Component {
 ComposeBlockHeader.propTypes = {
   heading: PropTypes.string,
   id: PropTypes.number.isRequired,
-  onSave: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired
 };

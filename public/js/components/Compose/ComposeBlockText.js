@@ -16,7 +16,7 @@ export default class ComposeBlockText extends Component {
   onChange(value) {
     const { id, onSave } = this.props;
     this.setState({ text: value });
-    onSave(id, value);
+    onSave(id, 'body', value);
   }
 
   render() {
