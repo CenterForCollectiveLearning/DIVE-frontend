@@ -180,11 +180,12 @@ export function deleteDocument(projectId, documentId) {
   }
 }
 
-function requestSaveDocumentDispatcher(projectId, documentId) {
+function requestSaveDocumentDispatcher(projectId, documentId, content) {
   return {
       type: REQUEST_SAVE_DOCUMENT,
       projectId: projectId,
-      documentId: documentId
+      documentId: documentId,
+      content: content
   };
 }
 
@@ -201,12 +202,13 @@ function saveDocument(dispatch, getState) {
   const projectId = project.properties.id;
   const documentId = composeSelector.documentId;
   const blocks = composeSelector.blocks;
+  const content = { 'blocks': blocks };
   const params = {
     project_id: projectId,
-    content: { 'blocks': blocks }
+    content: content
   }
 
-  dispatch(requestSaveDocumentDispatcher(projectId, documentId));
+  dispatch(requestSaveDocumentDispatcher(projectId, documentId, content));
   return fetch(`/compose/v1/document/${ documentId }`, {
     method: 'put',
     body: JSON.stringify(params),

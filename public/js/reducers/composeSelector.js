@@ -51,12 +51,18 @@ export default function composeSelector(state = baseState, action) {
 
     case RECEIVE_DOCUMENTS:
       const documentId = parseInt(state.documentId);
-      var selectedDocumentContent = action.documents.find((doc) => doc.id == documentId).content;
-      var selectedDocumentBlocks = (selectedDocumentContent != {}) ? selectedDocumentContent.blocks : [];
-      return {
-        ...state,
-        blocks: selectedDocumentBlocks
+      const selecedDocument = action.documents.find((doc) => doc.id == documentId);
+
+      if (selecedDocument) {
+        var selectedDocumentContent = selecedDocument.content;
+        var selectedDocumentBlocks = selectedDocumentContent.blocks ? selectedDocumentContent.blocks : [];
+        return {
+          ...state,
+          blocks: selectedDocumentBlocks
+        }
       }
+
+      return state;
 
     case SELECT_DOCUMENT:
       return {

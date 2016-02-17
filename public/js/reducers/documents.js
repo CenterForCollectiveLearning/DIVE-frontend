@@ -2,7 +2,8 @@ import {
   REQUEST_DOCUMENTS,
   RECEIVE_DOCUMENTS,
   RECEIVE_CREATE_DOCUMENT,
-  RECEIVE_DELETE_DOCUMENT
+  RECEIVE_DELETE_DOCUMENT,
+  REQUEST_SAVE_DOCUMENT
 } from '../constants/ActionTypes';
 
 const baseState = {
@@ -18,15 +19,24 @@ export default function documents(state=baseState, action) {
   switch(action.type) {
     case REQUEST_DOCUMENTS:
       return { ...state, isFetching: true, error: null };
+
     case RECEIVE_DOCUMENTS:
-      return { ...state, items: action.documents, isFetching: false, loaded: true, error: null };
+      const docs = action.documents.map((doc) => doc.content.blocks ? doc : new Object({ ...doc, content: { blocks : [] } }));
+      return { ...state, items: docs, isFetching: false, loaded: true, error: null };
+
+    case REQUEST_SAVE_DOCUMENT:
+      const savedDocs = state.items.map((doc) => doc.id == action.documentId ? { ...doc, content: action.content } : doc);
+      return { ...state, items: savedDocs };
+
     case RECEIVE_CREATE_DOCUMENT:
       const documents = state.items.slice();
       documents.push(action.document);
-      return { ...state, items: documents};
+      return { ...state, items: documents };
+
     case RECEIVE_DELETE_DOCUMENT:
       const reducedDocuments = state.items.filter((doc) => doc.id != parseInt(action.documentId));
-      return { ...state, items: reducedDocuments};
+      return { ...state, items: reducedDocuments };
+
     default:
       return state;
   }

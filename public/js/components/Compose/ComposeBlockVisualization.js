@@ -87,10 +87,6 @@ export default class ComposeBlockVisualization extends Component {
     const width = isHalfWidthFormat ? 400 : absoluteMaxWidth;
     const height = isHalfWidthFormat ? 200 : 400;
 
-    if (!spec) {
-      return <div></div>;
-    }
-
     return (
       <div ref="composeBlockVisualization" className={ styles.composeBlockVisualization }>
         <div className={ styles.composeVisualizationControls }>
