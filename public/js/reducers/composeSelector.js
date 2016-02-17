@@ -1,36 +1,34 @@
 import {
   WIPE_PROJECT_STATE,
   SELECT_COMPOSE_VISUALIZATION,
-  SET_BLOCK_FORMAT
+  REQUEST_SAVE_DOCUMENT,
+  RECEIVE_SAVE_DOCUMENT,
+  SAVE_BLOCK
 } from '../constants/ActionTypes';
 
 import { BLOCK_FORMATS } from '../constants/BlockFormats';
 
 const baseState = {
   blocks: [],
+  saving: false,
   updatedAt: Date.now()
 }
 
 // blocks: [
 //   {
-//     heading: 
-//     body: 
+//     heading:
+//     body:
 //     exportedSpecId:
-//     format: 
+//     format:
+//     dimensions:
 //   } ,...
 // ]
 
 export default function composeSelector(state = baseState, action) {
   switch (action.type) {
-    case SET_BLOCK_FORMAT:
-      const swappedBlocks = state.blocks.slice().map((block) =>
-        block.exportedSpecId == action.id ? { ...block, format: action.format } : block
-      );
-
-      return { ...state, blocks: swappedBlocks, updatedAt: Date.now() };
 
     case SELECT_COMPOSE_VISUALIZATION:
-      var blocks = state.blocks.slice()
+      var blocks = state.blocks.slice();
       const filteredBlocks = blocks.filter((block) => block.exportedSpecId != action.exportedSpecId);
 
       if (filteredBlocks.length != blocks.length) {
@@ -40,11 +38,28 @@ export default function composeSelector(state = baseState, action) {
           heading: action.heading,
           body: '',
           exportedSpecId: action.exportedSpecId,
-          format: BLOCK_FORMATS.TEXT_LEFT
+          format: BLOCK_FORMATS.TEXT_LEFT,
+          dimensions: {}
         })
       }
 
       return { ...state, blocks: blocks };
+
+    case SAVE_BLOCK:
+      const newBlocks = state.blocks.slice().map(function(block) {
+        var newBlock = block;
+        if (block.exportedSpecId == action.exportedSpecId) {
+          newBlock[action.key] = action[action.key];
+        }
+        return newBlock;
+      });
+      return { ...state, blocks: newBlocks, updatedAt: Date.now() };
+
+    case REQUEST_SAVE_DOCUMENT:
+      return { ...state, saving: true };
+
+    case RECEIVE_SAVE_DOCUMENT:
+      return { ...state, saving: false };
 
     case WIPE_PROJECT_STATE:
       return baseState;

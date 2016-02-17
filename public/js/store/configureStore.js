@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
+import debounce from 'redux-debounced';
 import rootReducer from '../reducers/index';
 
 import createHistory from 'history/lib/createBrowserHistory';
@@ -8,8 +9,6 @@ import createEngine from 'redux-storage/engines/localStorage';
 import { reduxReactRouter } from 'redux-react-router';
 import routes from '../routes';
 import storage from 'redux-storage'
-
-import { SHOULD_SAVE } from '../constants/ActionTypes';
 
 const storageEnabled = false;
 
@@ -22,12 +21,11 @@ let createStoreWithMiddleware;
 
 if (storageEnabled) {
   const storageReducer = storage.reducer(rootReducer);
-
   const engine = storage.decorators.debounce(createEngine('dive'), 1500)
   const storageMiddleware = storage.createMiddleware(engine, [], [SHOULD_SAVE]);
 
   createStoreWithMiddleware = compose(
-    applyMiddleware(thunkMiddleware, loggerMiddleware, storageMiddleware),
+    applyMiddleware(debounce, thunkMiddleware, loggerMiddleware, storageMiddleware),
     reduxReactRouter({
       routes,
       createHistory
@@ -36,7 +34,7 @@ if (storageEnabled) {
 
 } else {
   createStoreWithMiddleware = compose(
-    applyMiddleware(thunkMiddleware, loggerMiddleware),
+    applyMiddleware(debounce, thunkMiddleware, loggerMiddleware),
     reduxReactRouter({
       routes,
       createHistory
@@ -48,7 +46,7 @@ export default function configureStore(initialState) {
   const store = createStoreWithMiddleware(rootReducer, initialState);
 
   // Load previous state from local storage
-  if (storageEnabled) {  
+  if (storageEnabled) {
     const load = storage.createLoader(engine);
     load(store)
       .catch(() => console.log('Failed to load previous state'));

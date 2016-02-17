@@ -9,12 +9,23 @@ export default class ComposeBlockText extends Component {
     this.state = {
       text: this.props.text || "Enter a description for this visualization here."
     }
+
+    this.onChange = this.onChange.bind(this);
+  }
+
+  onChange(value) {
+    const { id, onSave } = this.props;
+    this.setState({ text: value });
+    onSave(id, 'body', value);
   }
 
   render() {
     return (
       <div className={ styles.composeBlockText }>
-        <ReactQuill value={ this.state.text }>
+        <ReactQuill
+          value={ this.state.text }
+          onChange={ this.onChange }
+        >
           <ReactQuill.Toolbar key="toolbar"
                               ref="toolbar"
                               items={ ReactQuill.Toolbar.defaultItems } />
@@ -29,5 +40,7 @@ export default class ComposeBlockText extends Component {
 }
 
 ComposeBlockText.propTypes = {
-  text: PropTypes.string
+  text: PropTypes.string,
+  id: PropTypes.number.isRequired,
+  onSave: PropTypes.func.isRequired,
 };

@@ -2,8 +2,12 @@ import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
   SELECT_COMPOSE_VISUALIZATION,
-  SET_BLOCK_FORMAT
+  REQUEST_SAVE_DOCUMENT,
+  RECEIVE_SAVE_DOCUMENT,
+  SAVE_BLOCK
 } from '../constants/ActionTypes';
+
+import _ from 'underscore'
 
 import { fetch, pollForTask } from './api.js';
 
@@ -18,7 +22,7 @@ export function selectComposeVisualization(exportedSpecId, exportedSpecHeading) 
 export function setVisualizationFormat(exportedSpecId, format) {
   return {
     type: SET_BLOCK_FORMAT,
-    id: exportedSpecId,
+    exportedSpecId: exportedSpecId,
     format: format
   }
 }
@@ -66,4 +70,45 @@ export function fetchExportedVisualizationSpecsIfNeeded(projectId) {
       return dispatch(fetchExportedVisualizationSpecs(projectId));
     }
   };
+}
+
+function requestSaveDocumentDispatcher() {
+  return {
+    type: REQUEST_SAVE_DOCUMENT
+  };
+}
+
+function receiveSaveDocumentDispatcher() {
+  return {
+    type: RECEIVE_SAVE_DOCUMENT
+  };
+}
+
+function undebouncedChangeDocument(dispatch, getState) {
+  dispatch(requestSaveDocumentDispatcher());
+  dispatch(receiveSaveDocumentDispatcher());
+}
+
+const debouncedChangeDocument = _.debounce(undebouncedChangeDocument, 500);
+
+function saveBlockDispatcher(id, key, value) {
+  var action = {
+    type: SAVE_BLOCK,
+    exportedSpecId: id,
+    key: key,
+    meta: {
+      debounce: {
+        time: 500
+      }
+    }
+  };
+  action[key] = value;
+  return action;
+}
+
+export function saveBlock(id, key, value) {
+  return (dispatch, getState) => {
+    dispatch(saveBlockDispatcher(id, key, value));
+    debouncedChangeDocument(dispatch, getState);
+  }
 }
