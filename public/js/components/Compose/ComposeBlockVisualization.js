@@ -82,10 +82,10 @@ export default class ComposeBlockVisualization extends Component {
     const absoluteMaxWidth = parentSize ? parentSize[0] - 18 : 700;
     const isHalfWidthFormat = (format == BLOCK_FORMATS.TEXT_LEFT || format == BLOCK_FORMATS.TEXT_RIGHT);
     const maxWidth = parentSize && isHalfWidthFormat ?
-      (parentSize[0])/2 - 15 : absoluteMaxWidth;
+      ((parentSize[0])*2/3) - 15 : absoluteMaxWidth;
 
-    const width = isHalfWidthFormat ? 400 : absoluteMaxWidth;
-    const height = isHalfWidthFormat ? 200 : 400;
+    const width = isHalfWidthFormat ? 600 : absoluteMaxWidth;
+    const height = isHalfWidthFormat ? 300 : 400;
 
     return (
       <div ref="composeBlockVisualization" className={ styles.composeBlockVisualization }>

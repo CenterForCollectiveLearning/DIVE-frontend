@@ -15,6 +15,8 @@ export class ComposeView extends Component {
       <div className={ styles.composeViewContainer }>
         <Card>
           <HeaderBar
+            className={ styles.editorHeader }
+            textClassName={ styles.editorHeaderText }
             header={ <span>New Document</span> }
             actions={
               <span className={ styles.saveStatus }>{ saveStatus }</span>
