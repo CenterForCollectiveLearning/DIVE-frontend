@@ -2,9 +2,10 @@ import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
   SELECT_COMPOSE_VISUALIZATION,
-  SET_BLOCK_FORMAT,
+  SAVE_BLOCK_FORMAT,
   SAVE_BLOCK_TEXT,
   SAVE_BLOCK_HEADER,
+  SAVE_VIZ_SIZE,
   REQUEST_SAVE_DOCUMENT,
   RECEIVE_SAVE_DOCUMENT,
 } from '../constants/ActionTypes';
@@ -24,7 +25,7 @@ export function selectComposeVisualization(exportedSpecId, exportedSpecHeading) 
 export function setVisualizationFormat(exportedSpecId, format) {
   return {
     type: SET_BLOCK_FORMAT,
-    id: exportedSpecId,
+    exportedSpecId: exportedSpecId,
     format: format
   }
 }
@@ -93,6 +94,14 @@ function undebouncedChangeDocument(dispatch, getState) {
 
 const debouncedChangeDocument = _.debounce(undebouncedChangeDocument, 500);
 
+function saveBlockFormatDispatcher(id, format) {
+  return {
+    type: SAVE_BLOCK_FORMAT,
+    exportedSpecId: id,
+    format: format
+  };
+}
+
 function saveBlockTextDispatcher(id, text) {
   return {
     type: SAVE_BLOCK_TEXT,
@@ -119,6 +128,19 @@ function saveBlockHeaderDispatcher(id, header) {
   };
 }
 
+function saveVizSizeDispatcher(id, dimensions) {
+  return {
+    type: SAVE_VIZ_SIZE,
+    exportedSpecId: id,
+    dimensions: dimensions,
+    meta: {
+      debounce: {
+        time: 500
+      }
+    }
+  };
+}
+
 export function saveBlockText(id, text) {
   return (dispatch, getState) => {
     dispatch(saveBlockTextDispatcher(id, text));
@@ -129,6 +151,20 @@ export function saveBlockText(id, text) {
 export function saveBlockHeader(id, header) {
   return (dispatch, getState) => {
     dispatch(saveBlockHeaderDispatcher(id, header));
+    debouncedChangeDocument(dispatch, getState);
+  }
+}
+
+export function saveBlockFormat(id, format) {
+  return (dispatch, getState) => {
+    dispatch(saveBlockFormatDispatcher(id, format));
+    debouncedChangeDocument(dispatch, getState);
+  }
+}
+
+export function saveVizSize(id, dimensions) {
+  return (dispatch, getState) => {
+    dispatch(saveVizSizeDispatcher(id, dimensions));
     debouncedChangeDocument(dispatch, getState);
   }
 }

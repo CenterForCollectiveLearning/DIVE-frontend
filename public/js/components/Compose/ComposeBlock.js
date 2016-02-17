@@ -6,7 +6,7 @@ import ComposeBlockHeader from './ComposeBlockHeader';
 import ComposeBlockText from './ComposeBlockText';
 import ComposeBlockVisualization from './ComposeBlockVisualization';
 
-import { saveBlockText, saveBlockHeader } from '../../actions/ComposeActions'
+import { saveBlockText, saveBlockHeader, saveVizSize, saveBlockFormat } from '../../actions/ComposeActions'
 
 export class ComposeBlock extends Component {
   constructor(props) {
@@ -35,7 +35,7 @@ export class ComposeBlock extends Component {
       <div ref="composeBlock" className={ styles.composeBlock }>
         <ComposeBlockHeader id={ block.exportedSpecId } onSave={ this.props.saveBlockHeader } heading={ block.heading } />
         <div className={ styles.composeBlockContent + ' ' + styles[block.format] }>
-          <ComposeBlockVisualization format={ block.format } parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null } spec={ exportedSpec } updatedAt={ this.props.updatedAt }/>
+          <ComposeBlockVisualization id={ block.exportedSpecId } onFormatSave={ this.props.saveBlockFormat } onResizeSave={ this.props.saveVizSize } format={ block.format } parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null } spec={ exportedSpec } updatedAt={ this.props.updatedAt }/>
           <ComposeBlockText id={ block.exportedSpecId } onSave={ this.props.saveBlockText } text={ block.body } />
         </div>
       </div>
@@ -56,5 +56,7 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   saveBlockText,
-  saveBlockHeader
+  saveBlockHeader,
+  saveBlockFormat,
+  saveVizSize
 })(ComposeBlock);

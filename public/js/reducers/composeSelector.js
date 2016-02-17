@@ -1,9 +1,10 @@
 import {
   WIPE_PROJECT_STATE,
   SELECT_COMPOSE_VISUALIZATION,
-  SET_BLOCK_FORMAT,
+  SAVE_BLOCK_FORMAT,
   SAVE_BLOCK_TEXT,
   SAVE_BLOCK_HEADER,
+  SAVE_VIZ_SIZE,
   REQUEST_SAVE_DOCUMENT,
   RECEIVE_SAVE_DOCUMENT
 } from '../constants/ActionTypes';
@@ -22,17 +23,12 @@ const baseState = {
 //     body:
 //     exportedSpecId:
 //     format:
+//     dimensions:
 //   } ,...
 // ]
 
 export default function composeSelector(state = baseState, action) {
   switch (action.type) {
-    case SET_BLOCK_FORMAT:
-      const swappedBlocks = state.blocks.slice().map((block) =>
-        block.exportedSpecId == action.id ? { ...block, format: action.format } : block
-      );
-
-      return { ...state, blocks: swappedBlocks, updatedAt: Date.now() };
 
     case SELECT_COMPOSE_VISUALIZATION:
       var blocks = state.blocks.slice()
@@ -45,23 +41,40 @@ export default function composeSelector(state = baseState, action) {
           heading: action.heading,
           body: '',
           exportedSpecId: action.exportedSpecId,
-          format: BLOCK_FORMATS.TEXT_LEFT
+          format: BLOCK_FORMATS.TEXT_LEFT,
+          dimensions: {}
         })
       }
 
       return { ...state, blocks: blocks };
 
+    case SAVE_BLOCK_FORMAT:
+      var newBlocks = state.blocks.slice().map((block) =>
+        block.exportedSpecId == action.exportedSpecId ? { ...block, format: action.format } : block
+      );
+
+      return { ...state, blocks: newBlocks, updatedAt: Date.now() };
+
+    case SAVE_VIZ_SIZE:
+      var newBlocks = state.blocks.slice().map((block) =>
+        block.exportedSpecId == action.exportedSpecId ? { ...block, dimensions: action.dimensions } : block
+      );
+
+      return { ...state, blocks: newBlocks, updatedAt: Date.now() };
+
     case SAVE_BLOCK_TEXT:
-      var blocks = state.blocks.slice();
-      var matchingBlockIndex = blocks.findIndex(b => (b.exportedSpecId == action.exportedSpecId));
-      blocks[matchingBlockIndex].body = action.text;
-      return { ...state, blocks: blocks, updatedAt: Date.now() };
+      var newBlocks = state.blocks.slice().map((block) =>
+        block.exportedSpecId == action.exportedSpecId ? { ...block, body: action.text } : block
+      );
+
+      return { ...state, blocks: newBlocks, updatedAt: Date.now() };
 
     case SAVE_BLOCK_HEADER:
-      var blocks = state.blocks.slice();
-      var matchingBlockIndex = blocks.findIndex(b => (b.exportedSpecId == action.exportedSpecId));
-      blocks[matchingBlockIndex].heading = action.header;
-      return { ...state, blocks: blocks, updatedAt: Date.now() };
+      var newBlocks = state.blocks.slice().map((block) =>
+        block.exportedSpecId == action.exportedSpecId ? { ...block, heading: action.header } : block
+      );
+
+      return { ...state, blocks: newBlocks, updatedAt: Date.now() };
 
     case REQUEST_SAVE_DOCUMENT:
       return { ...state, saving: true };
