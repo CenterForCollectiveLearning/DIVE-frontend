@@ -157,19 +157,25 @@
       border: none
       box-shadow: none
       text-align: right
+      position: relative
 
       > div:first-child
         height: 20px
         line-height: 20px
-        font-weight: 400
-        font-size: 12px
-        color: #888
         padding-right: 12px
 
+        > span:first-child
+          font-weight: 400
+          font-size: 12px
+          color: #888
+
       > span:last-child
-        top: 8px
-        border-width: 4px 3px 0
-        right: 1px
+        position: absolute
+        right: -9px
+        top: -1px
+
+        > span:first-child
+          border-width: 4px 3px 0
 
     > div:nth-of-type(2)
       width: auto

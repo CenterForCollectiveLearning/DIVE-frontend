@@ -69,7 +69,7 @@ export class ComposeSidebar extends Component {
             { !documents.isFetching && documents.items.length > 0 &&
               <DropDownMenu
                 className={ styles.documentSelector }
-                value={ `${ composeSelector.documentId }` }
+                value={ parseInt(composeSelector.documentId) }
                 options={ documents.items.length > 0 ? documents.items : [] }
                 valueMember="id"
                 displayTextMember="title"

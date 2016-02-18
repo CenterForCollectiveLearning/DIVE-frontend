@@ -41,16 +41,18 @@ export class AnalysisSidebar extends Component {
   }
 
   render() {
+    const { selectedTab, datasets, datasetSelector, children } = this.props;
+
     const tabItems = [
       {
         label: "Regression",
         type: "regression",
-        selected: this.props.selectedTab == "regression"
+        selected: selectedTab == "regression"
       },
       {
         label: "Summary",
         type: "summary",
-        selected: this.props.selectedTab == "summary"
+        selected: selectedTab == "summary"
       }
     ];
 
@@ -64,17 +66,17 @@ export class AnalysisSidebar extends Component {
             onChange={ this._handleTabsChange.bind(this) } />
         </SidebarGroup>
 
-        { this.props.datasets.items && this.props.datasets.items.length > 0 &&
+        { datasets.items && datasets.items.length > 0 &&
           <SidebarGroup heading="Dataset">
             <DropDownMenu
-              value={ `${this.props.datasetSelector.datasetId}` }
-              options={ this.props.datasets.items }
+              value={ parseInt(datasetSelector.datasetId) }
+              options={ datasets.items }
               valueMember="datasetId"
               displayTextMember="title"
               onChange={ this.clickDataset.bind(this) } />
           </SidebarGroup>
         }
-        { this.props.children }
+        { children }
       </Sidebar>
     );
   }
