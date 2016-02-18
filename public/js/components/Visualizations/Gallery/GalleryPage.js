@@ -19,9 +19,18 @@ class GalleryPage extends Component {
   }
 
   render() {
+    var queryFields = [];
+    if (this.props.location.query['fields[]']) {
+      if (Array.isArray(this.props.location.query['fields[]'])) {
+        queryFields = this.props.location.query['fields[]'];
+      } else {
+        queryFields = [this.props.location.query['fields[]']];
+      }
+    }
+
     return (
       <div className={ `${styles.fillContainer} ${styles.galleryContainer}` }>
-        <GallerySidebar queryFields={ this.props.location.query.fields || [] }/>
+        <GallerySidebar queryFields={ queryFields }/>
         <GalleryView />
         {this.props.children}
       </div>
