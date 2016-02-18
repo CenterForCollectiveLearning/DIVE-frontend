@@ -7,6 +7,8 @@ import ComposeBlockText from './ComposeBlockText';
 import ComposeBlockVisualization from './ComposeBlockVisualization';
 
 import { saveBlock } from '../../actions/ComposeActions'
+import { BLOCK_FORMATS } from '../../constants/BlockFormats';
+
 
 export class ComposeBlock extends Component {
   constructor(props) {
@@ -28,27 +30,77 @@ export class ComposeBlock extends Component {
     }
   }
 
+
   render() {
     const { exportedSpec, updatedAt } = this.state;
     const { block } = this.props;
-    return (
-      <div ref="composeBlock" className={ styles.composeBlock }>
-        <ComposeBlockHeader id={ block.exportedSpecId } onSave={ this.props.saveBlock } heading={ block.heading } />
-        <div className={ styles.composeBlockContent + ' ' + styles[block.format] }>
-          { exportedSpec &&
-            <ComposeBlockVisualization
-                      id={ block.exportedSpecId }
-                      onSave={ this.props.saveBlock }
-                      format={ block.format }
-                      parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
-                      spec={ exportedSpec }
-                      updatedAt={ this.props.updatedAt } />
-          }
-          <ComposeBlockText
+
+    const composeHeader = 
+      <ComposeBlockHeader id={ block.exportedSpecId } onSave={ this.props.saveBlock } heading={ block.heading } />;
+
+    const composeVisualization = exportedSpec &&
+      <ComposeBlockVisualization
+                id={ block.exportedSpecId }
+                onSave={ this.props.saveBlock }
+                format={ block.format }
+                parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
+                spec={ exportedSpec }
+                updatedAt={ this.props.updatedAt } />;
+
+    const composeText =
+      <ComposeBlockText
             id={ block.exportedSpecId }
             onSave={ this.props.saveBlock }
-            text={ block.body } />
-        </div>
+            text={ block.body } />;
+
+
+    var formatBlock = <div></div>;
+    switch (block.format) {
+      case BLOCK_FORMATS.TEXT_LEFT:
+        formatBlock =
+          <div className={ styles.flexrow }>
+            <div className={ styles.flexcolumn }>
+              { composeHeader }
+              { composeText }
+            </div>
+            { composeVisualization }
+          </div>;
+        break;
+
+      case BLOCK_FORMATS.TEXT_RIGHT:
+        formatBlock =
+          <div className={ styles.flexrow }>
+            { composeVisualization }
+            <div className={ styles.flexcolumn }>
+              { composeHeader }
+              { composeText }
+            </div>
+          </div>;
+        break;
+
+      case BLOCK_FORMATS.TEXT_TOP:
+        formatBlock =
+          <div className={ styles.flexcolumn }>
+            { composeHeader }
+            { composeText }
+            { composeVisualization }
+          </div>;
+        break;
+
+      default:
+        formatBlock =
+          <div className={ styles.flexcolumn }>
+            { composeHeader }
+            { composeVisualization }
+            { composeText }
+          </div>;
+        break;
+    }
+
+
+    return (
+      <div ref="composeBlock" className={ styles.composeBlock + ' ' + styles[block.format] }>
+        { formatBlock }
       </div>
     );
   }

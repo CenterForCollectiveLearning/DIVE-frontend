@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import styles from './Compose.sass';
 
+import ContentEditable from 'react-contenteditable';
 import Input from '../Base/Input';
 
 export default class ComposeBlockHeader extends Component {
@@ -26,10 +27,9 @@ export default class ComposeBlockHeader extends Component {
   render() {
     return (
       <div className={ styles.composeBlockHeader }>
-        <Input
+        <ContentEditable
           className={ styles.composeBlockHeaderText }
-          type="text"
-          value={ this.state.heading }
+          html={ this.state.heading }
           onChange={ this.onChange.bind(this) }/>
       </div>
     );
