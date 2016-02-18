@@ -4,6 +4,10 @@ import styles from './DropDownMenu.sass';
 import Select from 'react-select';
 
 export default class DropDownMenu extends Component {
+  onChange(item) {
+    this.props.onChange(item.value);
+  }
+
   render() {
     const { value, options, valueMember, displayTextMember, onChange, multi, clearable, searchable, className } = this.props;
 
@@ -21,7 +25,7 @@ export default class DropDownMenu extends Component {
               label: option[ displayTextMember ]
             })
           )}
-          onChange={ onChange }
+          onChange={ this.onChange.bind(this) }
           multi={ multi }
           clearable={ clearable }
           searchable={ searchable } />

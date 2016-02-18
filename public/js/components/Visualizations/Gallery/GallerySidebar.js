@@ -92,12 +92,13 @@ export class GallerySidebar extends Component {
 
   render() {
     const { datasets, datasetSelector, gallerySelector, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectDataset, selectAggregationFunction } = this.props;
+
     return (
       <Sidebar>
         { datasets.items && datasets.items.length > 0 &&
           <SidebarGroup heading="Dataset">
             <DropDownMenu
-              value={ `${ datasetSelector.datasetId }` }
+              value={ parseInt(datasetSelector.datasetId) }
               options={ datasets.items }
               valueMember="datasetId"
               displayTextMember="title"
