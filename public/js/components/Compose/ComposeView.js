@@ -7,6 +7,9 @@ import Card from '../Base/Card';
 import HeaderBar from '../Base/HeaderBar';
 import ComposeEditor from './ComposeEditor';
 import Input from '../Base/Input';
+import _ from 'underscore';
+
+import { saveDocumentTitle } from '../../actions/ComposeActions';
 
 export class ComposeView extends Component {
   constructor(props) {
@@ -14,13 +17,23 @@ export class ComposeView extends Component {
     
     const heading = this.props.selectedDocument ? this.props.selectedDocument.title : 'New Document';
 
+    this.saveDocumentTitle = _.debounce(this.props.saveDocumentTitle, 800);
+
     this.state = {
       documentHeading: heading
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { selectedDocument } = nextProps;
+    if (selectedDocument && (!this.props.selectedDocument || (selectedDocument.title != this.props.selectedDocument.title))) {
+      this.setState({ documentHeading: selectedDocument.title });
+    }
+  }
+
   onTitleChange(event) {
     this.setState({ documentHeading: event.target.value });
+    this.saveDocumentTitle(this.props.selectedDocument.id, this.state.documentHeading);
   }
 
   render() {
@@ -56,4 +69,4 @@ function mapStateToProps(state) {
   return { composeSelector, selectedDocument: selectedDocument };
 }
 
-export default connect(mapStateToProps, {})(ComposeView);
+export default connect(mapStateToProps, { saveDocumentTitle })(ComposeView);
