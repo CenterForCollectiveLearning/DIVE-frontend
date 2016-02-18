@@ -14,6 +14,8 @@
     "component-file-picker": "^0.2.1",
     "css-loader": "^0.18.0",
     "cssnext-loader": "^1.0.1",
+    "es6-promise": "^3.1.2",
+    "es6-shim": "^0.34.4",
     "express": "4.13.3",
     "extract-text-webpack-plugin": "^0.8.2",
     "file-loader": "^0.8.4",
@@ -54,7 +56,8 @@
     "uuid": "^2.0.1",
     "webpack": "^1.12.1",
     "webpack-dev-server": "^1.11.0",
-    "webpack-isomorphic-tools": "^0.8.8"
+    "webpack-isomorphic-tools": "^0.8.8",
+    "whatwg-fetch": "^0.11.0"
   },
   "scripts": {
     "postinstall": "webpack --config ./webpack-production.config.js --progress --colors",
