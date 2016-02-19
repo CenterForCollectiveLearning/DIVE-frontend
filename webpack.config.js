@@ -6,7 +6,7 @@ var devFlagPlugin = new webpack.DefinePlugin({
 });
 
 function getEntrySources(sources) {
-  sources.push('webpack-dev-server/client?http://localhost:3009')
+  sources.push('webpack-dev-server/client?http://0.0.0.0:3009')
   sources.push('webpack/hot/only-dev-server')
   return sources;
 }
