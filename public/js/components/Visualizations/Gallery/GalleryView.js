@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
 import { clearVisualization, fetchSpecs, selectSortingFunction } from '../../../actions/VisualizationActions';
+import { fetchExportedVisualizationSpecs } from '../../../actions/ComposeActions';
+
 import styles from '../Visualizations.sass';
 
 import HeaderBar from '../../Base/HeaderBar';
@@ -28,13 +30,17 @@ export class GalleryView extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { datasetSelector, project, specs, gallerySelector, fetchSpecs } = this.props;
+    const { datasetSelector, project, specs, gallerySelector, exportedSpecs, fetchExportedVisualizationSpecs, fetchSpecs } = this.props;
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
     const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching && !specs.error);
     const gallerySelectorChanged = (gallerySelector.updatedAt !== previousProps.gallerySelector.updatedAt);
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && (datasetChanged || gallerySelectorChanged || noSpecsAndNotFetching)) {
       fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
+    }
+
+    if (project.properties.id && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {
+      fetchExportedVisualizationSpecs(project.properties.id);
     }
   }
 
@@ -43,7 +49,7 @@ export class GalleryView extends Component {
   }
 
   render() {
-    const { specs, filters, gallerySelector, selectSortingFunction } = this.props;
+    const { specs, filters, gallerySelector, exportedSpecs, selectSortingFunction } = this.props;
 
     const selectedVisualizationTypes = filters.visualizationTypes
       .filter((filter) => filter.selected)
@@ -94,6 +100,9 @@ export class GalleryView extends Component {
                     onClick={ this.handleClick }
                     isMinimalView={ true }
                     showHeader={ true } />
+                  <div className={ styles.starContainer }>
+                    <i className={ exportedSpecs.items.find((exportedSpec) => exportedSpec.specId == spec.id) ? 'fa fa-star ' + styles.starred : 'fa fa-star-o' }></i>
+                  </div>
                 </div>
               )
             }
@@ -108,18 +117,20 @@ GalleryView.propTypes = {
   project: PropTypes.object.isRequired,
   specs: PropTypes.object.isRequired,
   gallerySelector: PropTypes.object.isRequired,
-  datasetSelector: PropTypes.object.isRequired
+  datasetSelector: PropTypes.object.isRequired,
+  exportedSpecs: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, filters, specs, gallerySelector, datasetSelector } = state;
+  const { project, filters, specs, gallerySelector, datasetSelector, exportedSpecs } = state;
   return {
     project,
     filters,
     specs,
     gallerySelector,
-    datasetSelector
+    datasetSelector,
+    exportedSpecs
   }
 }
 
-export default connect(mapStateToProps, { pushState, fetchSpecs, clearVisualization, selectSortingFunction })(GalleryView);
+export default connect(mapStateToProps, { pushState, fetchSpecs, fetchExportedVisualizationSpecs, clearVisualization, selectSortingFunction })(GalleryView);

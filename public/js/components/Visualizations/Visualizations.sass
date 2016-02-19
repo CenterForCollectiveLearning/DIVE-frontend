@@ -209,20 +209,41 @@ div.conditionalCombinator
     align-content: flex-start
     flex-grow: 1
 
-  .visualizationBlock .visualization
-    padding: 20px
-
 .visualizationBlocksContainer
   display: flex
   flex-direction: column
+  position: relative
 
   width: 33.33%
   padding: 15px
 
+  &:hover .starContainer i
+    opacity: 0.5
+
+  .starContainer
+    position: absolute
+    top: 27px
+    right: 27px
+    font-size: 13px
+    color: #666
+    cursor: pointer
+
+    i
+      opacity: 0
+
+      &.starred
+        opacity: 0.6
+
+    &:hover i
+      opacity: 1
+
+    &.starred:hover i
+      opacity: 0.8
+
 .visualizationBlock
   display: flex
   flex-direction: column
-  padding: 15px 19px
+  padding: 11px
   margin: 0
   overflow: hidden
 
@@ -237,7 +258,8 @@ div.conditionalCombinator
   outline: none
 
   .header
-    font-size: 16px
+    margin-top: 1px
+    font-size: 13px
     overflow: hidden
     text-overflow: ellipsis
 
@@ -251,8 +273,7 @@ div.conditionalCombinator
     min-height: 150px
 
   .visualization
-    min-height: 170px
-    padding: 20px 0 10px
+    padding: 11px 0 4px
 
     &.tree
       svg
