@@ -310,14 +310,15 @@ export function setGalleryQueryString(query) {
   var queryString = '';
 
   Object.keys(query).forEach(
-    function (currentValue, index, array) {
+    function (fullKey, index, array) {
+      const key = fullKey.slice(0, -2);
       var fieldString = '';
-      if (Array.isArray(query[currentValue])) {
-        query[currentValue].forEach((c, i, a) =>
-          fieldString = fieldString + `&${ currentValue }[]=${ c }`
+      if (Array.isArray(query[fullKey])) {
+        query[fullKey].forEach((c, i, a) =>
+          fieldString = fieldString + `&${ key }[]=${ c }`
         )
       } else {
-        fieldString = `&${ currentValue }=${ query[currentValue] }`;
+        fieldString = `&${ key }[]=${ query[fullKey] }`;
       }
       queryString = queryString + fieldString;
     }
