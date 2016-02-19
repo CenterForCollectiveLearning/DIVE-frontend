@@ -65,7 +65,13 @@ export default class Visualization extends Component {
     const dataPoints = data.slice(1);
     const sortedDataPoints = dataPoints.sort((a, b) => {
       var aValue = a[sortField];
+      if (Array.isArray(aValue)) {
+        aValue = (aValue[0] + aValue[1]) / 2
+      }
       var bValue = b[sortField];
+      if (Array.isArray(bValue)) {
+        bValue = (bValue[0] + bValue[1]) / 2
+      }
       if (aValue < bValue) {
         return sortIndex * -1;
       }
