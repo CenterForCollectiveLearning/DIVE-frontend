@@ -15,6 +15,7 @@ export default class ComposeBlockVisualization extends Component {
     super(props);
 
     this.state = {
+      editable: this.props.editable,
       resizeCounter: 0,
       formatTypes: [
         {
@@ -90,33 +91,47 @@ export default class ComposeBlockVisualization extends Component {
 
     return (
       <div ref="composeBlockVisualization" className={ styles.composeBlockVisualization }>
-        <div className={ styles.composeVisualizationControls }>
-          <ToggleButtonGroup
-            toggleItems={ this.state.formatTypes }
-            buttonClassName={ styles.visualizationOverlayButton }
-            altTextMember="label"
-            displayTextMember="content"
-            valueMember="value"
-            column={ true }
-            onChange={ this.selectBlockFormat.bind(this) } />
+        { this.state.editable &&
+          <div>
+          <div className={ styles.composeVisualizationControls }>
+            <ToggleButtonGroup
+              toggleItems={ this.state.formatTypes }
+              buttonClassName={ styles.visualizationOverlayButton }
+              altTextMember="label"
+              displayTextMember="content"
+              valueMember="value"
+              column={ true }
+              onChange={ this.selectBlockFormat.bind(this) } />
+          </div>
+          <ResizableBox
+            key={ `resize-${ spec.id }-${ format }` }
+            className={ styles.resizableContainer }
+            onResize={ _.debounce(this.onResize, 500) }
+            width={ width }
+            height={ height }
+            minConstraints={ [200, 200] }
+            maxConstraints={ [maxWidth, 600] }>
+            <Visualization
+              chartId={ `full-compose-visualization-${ spec.id }-${ updatedAt }-${ this.state.resizeCounter }` }
+              containerClassName={ styles.fullComposeVisualization }
+              visualizationTypes={ spec.vizTypes }
+              spec={ spec }
+              data={ spec.data }
+              isMinimalView={ false }
+              showHeader={ false }/>
+          </ResizableBox>
         </div>
-        <ResizableBox
-          key={ `resize-${ spec.id }-${ format }` }
-          className={ styles.resizableContainer }
-          onResize={ _.debounce(this.onResize, 500) }
-          width={ width }
-          height={ height }
-          minConstraints={ [200, 200] }
-          maxConstraints={ [maxWidth, 600] }>
-          <Visualization
-            chartId={ `full-compose-visualization-${ spec.id }-${ updatedAt }-${ this.state.resizeCounter }` }
-            containerClassName={ styles.fullComposeVisualization }
-            visualizationTypes={ spec.vizTypes }
-            spec={ spec }
-            data={ spec.data }
-            isMinimalView={ false }
-            showHeader={ false }/>
-        </ResizableBox>
+      }
+      { !this.state.editable &&
+        <Visualization
+          chartId={ `full-compose-visualization-${ spec.id }-${ updatedAt }-${ this.state.resizeCounter }` }
+          containerClassName={ styles.fullComposeVisualization }
+          visualizationTypes={ spec.vizTypes }
+          spec={ spec }
+          data={ spec.data }
+          isMinimalView={ false }
+          showHeader={ false }/>
+      }
       </div>
     );
   }
@@ -128,7 +143,8 @@ ComposeBlockVisualization.propTypes = {
   parentSize: PropTypes.any,
   format: PropTypes.string,
   id: PropTypes.number.isRequired,
-  onSave: PropTypes.func.isRequired
+  onSave: PropTypes.func.isRequired,
+  editable: PropTypes.bool.isRequired
 };
 
 function mapStateToProps(state) {

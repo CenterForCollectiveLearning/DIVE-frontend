@@ -8,7 +8,7 @@ export class ComposeEditor extends Component {
   render() {
     const { composeSelector } = this.props;
     return (
-      <div className={ styles.composeEditor }>
+      <div className={ styles.composeEditor + ' ' + (composeSelector.editable ? styles.editable : '') }>
         { composeSelector.blocks.length == 0 &&
           <div className={ styles.composeEditorNewDocumentPlaceholder }>
             select a visualization from the sidebar
@@ -18,6 +18,7 @@ export class ComposeEditor extends Component {
           <ComposeBlock
             key={ `compose-block-${ composeSelector.documentId }-${ block.exportedSpecId }` }
             block={ block }
+            editable={ composeSelector.editable }
             updatedAt={ composeSelector.updatedAt } />
         )}
       </div>

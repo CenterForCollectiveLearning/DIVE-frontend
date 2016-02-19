@@ -6,8 +6,11 @@ export default class ComposeBlockText extends Component {
   constructor(props) {
     super(props);
 
+    const { text, editable } = this.props;
+
     this.state = {
-      text: this.props.text || "Enter a description for this visualization here."
+      text: text || "Enter a description for this visualization here.",
+      editable: editable
     }
 
     this.onChange = this.onChange.bind(this);
@@ -22,18 +25,23 @@ export default class ComposeBlockText extends Component {
   render() {
     return (
       <div className={ styles.composeBlockText }>
-        <ReactQuill
-          value={ this.state.text }
-          onChange={ this.onChange }
-        >
-          <ReactQuill.Toolbar key="toolbar"
-                              ref="toolbar"
-                              items={ ReactQuill.Toolbar.defaultItems } />
-          <div key="editor"
-               ref="editor"
-               className={ styles.quillContents }
-               />
-        </ReactQuill>
+        { this.state.editable &&
+          <ReactQuill
+            value={ this.state.text }
+            onChange={ this.onChange }
+          >
+            <ReactQuill.Toolbar key="toolbar"
+                                ref="toolbar"
+                                items={ ReactQuill.Toolbar.defaultItems } />
+            <div key="editor"
+                 ref="editor"
+                 className={ styles.quillContents }
+                 />
+          </ReactQuill>
+        }
+        { !this.state.editable &&
+          <div>{ this.state.text }</div>
+        }
       </div>
     );
   }
@@ -43,4 +51,5 @@ ComposeBlockText.propTypes = {
   text: PropTypes.string,
   id: PropTypes.number.isRequired,
   onSave: PropTypes.func.isRequired,
+  editable: PropTypes.bool.isRequired
 };

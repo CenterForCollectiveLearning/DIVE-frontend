@@ -55,7 +55,7 @@
         fill: rgba(0, 0, 0, 0)
 
       g
-        cursor: pointer!important // override google's default
+        cursor: pointer!important
 
 .editorHeader
   background-color: white
@@ -76,8 +76,9 @@
       height: auto
       border-color: transparent
 
-      &:hover
-        border-color: #eee
+  &.editable
+    .documentTitle:hover
+      border-color: #eee
 
 .composeEditor
   display: flex
@@ -96,11 +97,15 @@
     margin: 7px
     border: 1px dashed transparent
 
-    &:hover
+  &.editable
+    .composeBlock:hover
       border-color: rgba(0, 0, 0, 0.1)
 
       .composeBlockText, .composeBlockHeader .composeBlockHeaderText
         border-color: #eee
+
+    .composeBlockText:focus, .composeBlockText:hover
+      border-color: #CDCDCD
 
   .composeBlockHeader
     display: flex
@@ -119,8 +124,11 @@
       margin-bottom: 5px
       border-color: transparent
 
-      &:focus, &:hover
-        border-color: #CDCDCD
+    &.editable
+      .composeBlockHeaderText
+        &:focus, &:hover
+          border-color: #CDCDCD
+
 
   .composeBlockContent
     display: flex
@@ -210,9 +218,6 @@
     border-radius: 2px
     margin-bottom: 7px
     flex-grow: 1
-
-    &:focus, &:hover
-      border-color: #CDCDCD
 
     > div
       display: flex

@@ -16,7 +16,8 @@ const baseState = {
   blocks: [],
   documentId: null,
   saving: false,
-  updatedAt: Date.now()
+  updatedAt: Date.now(),
+  editable: true
 }
 
 // blocks: [
@@ -94,6 +95,7 @@ export default function composeSelector(state = baseState, action) {
     case RECEIVE_PUBLISHED_DOCUMENT:
       return {
         ...state,
+        editable: false,
         documentId: action.documentId ,
         blocks: action.document.content.blocks
       }

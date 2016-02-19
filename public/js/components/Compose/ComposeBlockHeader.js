@@ -6,10 +6,11 @@ import Input from '../Base/Input';
 export default class ComposeBlockHeader extends Component {
   constructor(props) {
     super(props);
-    const { heading } = this.props;
+    const { heading, editable } = this.props;
 
     this.state = {
-      heading: heading ? heading.charAt(0).toUpperCase() + heading.slice(1) : ''
+      heading: heading ? heading.charAt(0).toUpperCase() + heading.slice(1) : '',
+      editable: editable
     }
   }
 
@@ -24,13 +25,21 @@ export default class ComposeBlockHeader extends Component {
   }
 
   render() {
+    console.log('header editable:', this.state.editable);
     return (
       <div className={ styles.composeBlockHeader }>
-        <Input
-          className={ styles.composeBlockHeaderText }
-          type="text"
-          value={ this.state.heading }
-          onChange={ this.onChange.bind(this) }/>
+        { this.state.editable &&
+          <Input
+            className={ styles.composeBlockHeaderText }
+            type="text"
+            value={ this.state.heading }
+            onChange={ this.onChange.bind(this) }/>
+        }
+        { !this.state.editable &&
+          <div className={ styles.composeBlockHeaderText }>
+            { this.state.heading }
+          </div>
+        }
       </div>
     );
   }
@@ -39,5 +48,6 @@ export default class ComposeBlockHeader extends Component {
 ComposeBlockHeader.propTypes = {
   heading: PropTypes.string,
   id: PropTypes.number.isRequired,
-  onSave: PropTypes.func.isRequired
+  onSave: PropTypes.func.isRequired,
+  editable: PropTypes.bool.isRequired
 };

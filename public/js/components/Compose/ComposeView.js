@@ -11,7 +11,7 @@ import Input from '../Base/Input';
 export class ComposeView extends Component {
   constructor(props) {
     super(props);
-    
+
     const heading = this.props.selectedDocument ? this.props.selectedDocument.title : 'New Document';
 
     this.state = {
@@ -25,12 +25,14 @@ export class ComposeView extends Component {
 
   render() {
     const { composeSelector } = this.props;
+    const editable = composeSelector.editable;
     const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
     return (
       <div className={ styles.composeViewContainer }>
         <Card>
+        { editable &&
           <HeaderBar
-            className={ styles.editorHeader }
+            className={ styles.editorHeader + ' ' + styles.editable}
             textClassName={ styles.editorHeaderText }
             header={
               <Input
@@ -38,13 +40,26 @@ export class ComposeView extends Component {
                 type="text"
                 value={ this.state.documentHeading }
                 onChange={ this.onTitleChange.bind(this) }/>
-            }
-            actions={
-              <span className={ styles.saveStatus }>{ saveStatus }</span>
-            }
-          />
-          <ComposeEditor />
-        </Card>
+              }
+              actions={
+                <span className={ styles.saveStatus }>{ saveStatus }</span>
+              }
+            />
+          }
+          { !editable &&
+            <HeaderBar
+              className={ styles.editorHeader}
+              textClassName={ styles.editorHeaderText }
+              header={
+                <div className={ styles.documentTitle }>
+                  { this.state.documentHeading }
+                </div>
+              }
+            />
+          }
+          <ComposeEditor/>
+          </Card>
+
       </div>
     );
   }
