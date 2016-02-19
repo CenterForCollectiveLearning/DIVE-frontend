@@ -27,7 +27,7 @@ export class ComposeBasePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, composeSelector, project, datasetSelector, datasets, documents, replaceState, pushState, fetchDatasetsIfNeeded, fetchDocuments } = this.props;
+    const { params, composeSelector, project, datasetSelector, datasets, documents, replaceState, pushState, fetchDatasetsIfNeeded, fetchDocuments } = nextProps;
 
     if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
       fetchDatasetsIfNeeded(project.properties.id);
