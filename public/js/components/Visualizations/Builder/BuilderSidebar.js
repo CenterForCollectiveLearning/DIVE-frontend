@@ -40,23 +40,13 @@ export class BuilderSidebar extends Component {
   render() {
     const { fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectVisualizationConditional, selectVisualizationConfig, filters, visualization } = this.props;
 
-    var visualizationTypes = [];
-
-    if (visualization.spec.vizTypes) {
-      visualizationTypes = filters.visualizationTypes.map((filter) =>
-        new Object({
-          type: filter.type,
-          imageName: filter.imageName,
-          label: filter.label,
-          disabled: visualization.spec.vizTypes.indexOf(filter.type) < 0,
-          selected: filter.type == visualization.visualizationType
-        })
-      );
-    }
+    const visualizationTypes = filters.currentVisualizationTypes.map((filter) =>
+      new Object({ ...filter, selected: filter.type == visualization.visualizationType })
+    ).filter((f) => (!f.disabled));
 
     return (
       <Sidebar>
-        { visualization.visualizationType &&
+        { visualization.visualizationType && visualizationTypes.length > 1 &&
           <SidebarGroup heading="Visualization type">
             <ToggleButtonGroup
               toggleItems={ visualizationTypes }

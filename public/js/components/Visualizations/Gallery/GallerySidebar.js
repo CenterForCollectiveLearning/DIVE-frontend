@@ -87,7 +87,7 @@ export class GallerySidebar extends Component {
     }
 
     selectDataset(datasetId);
-    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/visualize/gallery?${ selectedFieldPropertiesQueryString }`);    
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/visualize/gallery?${ selectedFieldPropertiesQueryString }`);
   }
 
   render() {
@@ -105,10 +105,10 @@ export class GallerySidebar extends Component {
               onChange={ this.clickDataset.bind(this) } />
           </SidebarGroup>
         }
-        { datasets.items && datasets.items.length > 0 &&
+        { datasets.items && datasets.items.length > 0 && filters.galleryVisualizationTypes.length > 1 &&
           <SidebarGroup heading="Visualization type">
             <ToggleButtonGroup
-              toggleItems={ filters.visualizationTypes }
+              toggleItems={ filters.galleryVisualizationTypes }
               displayTextMember="label"
               valueMember="type"
               imageNameMember="imageName"

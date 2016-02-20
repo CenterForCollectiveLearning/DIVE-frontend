@@ -45,7 +45,7 @@ export class GalleryView extends Component {
   render() {
     const { specs, filters, gallerySelector, selectSortingFunction } = this.props;
 
-    const selectedVisualizationTypes = filters.visualizationTypes
+    const selectedVisualizationTypes = filters.galleryVisualizationTypes
       .filter((filter) => filter.selected)
       .map((filter) => filter.type);
 
