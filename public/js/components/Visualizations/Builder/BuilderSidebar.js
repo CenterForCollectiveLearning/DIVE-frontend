@@ -40,9 +40,11 @@ export class BuilderSidebar extends Component {
   render() {
     const { fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectVisualizationConditional, selectVisualizationConfig, filters, visualization } = this.props;
 
-    const visualizationTypes = filters.currentVisualizationTypes.map((filter) =>
+    const visualizationTypes = filters.currentVisualizationTypes.filter((f) =>
+      (!f.disabled)
+    ).map((filter) =>
       new Object({ ...filter, selected: filter.type == visualization.visualizationType })
-    ).filter((f) => (!f.disabled));
+    );
 
     return (
       <Sidebar>
