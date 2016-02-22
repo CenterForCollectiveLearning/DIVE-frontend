@@ -2,6 +2,7 @@ import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_CREATED_EXPORTED_SPEC,
+  RECEIVE_CREATED_SAVED_SPEC,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -20,7 +21,7 @@ export default function exportedSpecs(state=baseState, action) {
     case RECEIVE_EXPORTED_VISUALIZATION_SPECS:
       return { ...state, isFetching: false, items: action.specs, updatedAt: action.receivedAt, loaded: true };
 
-    case RECEIVE_CREATED_EXPORTED_SPEC:
+    case RECEIVE_CREATED_EXPORTED_SPEC, RECEIVE_CREATED_SAVED_SPEC:
       var updatedSpecs = state.items.slice();
 
       if (!updatedSpecs.find((spec) => spec.id == action.specId)) {
