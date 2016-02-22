@@ -269,11 +269,12 @@ function receiveCreatedExportedSpecDispatcher(action, json) {
     type: action,
     exportedSpecId: json.id,
     specId: json.specId,
+    exportedSpec: json,
     receivedAt: Date.now()
   };
 }
 
-export function createExportedSpec(projectId, specId, data, conditionals, config, saveAction = false) {
+export function createExportedSpec(projectId, specId, data, conditionals=[], config={}, saveAction = false) {
   const requestAction = saveAction ? REQUEST_CREATE_SAVED_SPEC : REQUEST_CREATE_EXPORTED_SPEC;
   const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_SPEC : RECEIVE_CREATED_EXPORTED_SPEC;
 

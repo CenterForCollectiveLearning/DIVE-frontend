@@ -2,19 +2,17 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { clearVisualization, fetchSpecs, selectSortingFunction } from '../../../actions/VisualizationActions';
+import { clearVisualization, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
+import { fetchExportedVisualizationSpecs } from '../../../actions/ComposeActions';
+
 import styles from '../Visualizations.sass';
 
 import HeaderBar from '../../Base/HeaderBar';
 import DropDownMenu from '../../Base/DropDownMenu';
 import Visualization from '../Visualization';
+import VisualizationBlock from './VisualizationBlock';
 
 export class GalleryView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleClick = this.handleClick.bind(this);
-  }
 
   componentWillMount() {
     const { datasetSelector, project, specs, fetchSpecs, clearVisualization, gallerySelector } = this.props;
@@ -28,7 +26,7 @@ export class GalleryView extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { datasetSelector, project, specs, gallerySelector, fetchSpecs } = this.props;
+    const { datasetSelector, project, specs, gallerySelector, exportedSpecs, fetchExportedVisualizationSpecs, fetchSpecs } = this.props;
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
     const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching && !specs.error);
     const gallerySelectorChanged = (gallerySelector.updatedAt !== previousProps.gallerySelector.updatedAt);
@@ -36,14 +34,24 @@ export class GalleryView extends Component {
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && (datasetChanged || gallerySelectorChanged || noSpecsAndNotFetching)) {
       fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
     }
+
+    if (project.properties.id && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {
+      fetchExportedVisualizationSpecs(project.properties.id);
+    }
   }
 
-  handleClick(specId) {
-    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/visualize/builder/${ specId }`);
+  onClickVisualization(specId) {
+    const { project, datasetSelector, pushState } = this.props;
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/builder/${ specId }`);
+  }
+
+  saveVisualization(specId, specData) {
+    const { project, createExportedSpec } = this.props;
+    createExportedSpec(project.properties.id, specId, specData, [], {}, true);
   }
 
   render() {
-    const { specs, filters, gallerySelector, selectSortingFunction } = this.props;
+    const { specs, filters, gallerySelector, exportedSpecs, selectSortingFunction } = this.props;
 
     const selectedVisualizationTypes = filters.visualizationTypes
       .filter((filter) => filter.selected)
@@ -86,15 +94,14 @@ export class GalleryView extends Component {
               <div className={ styles.watermark }>No visualizations</div>
             }
             { !specs.isFetching && filteredSpecs.length > 0 && filteredSpecs.map((spec) =>
-                <div className={ styles.visualizationBlocksContainer } key={ spec.id }>
-                  <Visualization
-                    visualizationTypes={ selectedVisualizationTypes }
-                    spec={ spec }
-                    data={ spec.data.visualize }
-                    onClick={ this.handleClick }
-                    isMinimalView={ true }
-                    showHeader={ true } />
-                </div>
+                <VisualizationBlock
+                  key={ spec.id }
+                  spec={ spec }
+                  selectedVisualizationTypes={ selectedVisualizationTypes }
+                  exportedSpecs={ exportedSpecs }
+                  onClick={ this.onClickVisualization.bind(this) }
+                  saveVisualization={ this.saveVisualization.bind(this) }
+                  />
               )
             }
           </div>
@@ -108,18 +115,20 @@ GalleryView.propTypes = {
   project: PropTypes.object.isRequired,
   specs: PropTypes.object.isRequired,
   gallerySelector: PropTypes.object.isRequired,
-  datasetSelector: PropTypes.object.isRequired
+  datasetSelector: PropTypes.object.isRequired,
+  exportedSpecs: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, filters, specs, gallerySelector, datasetSelector } = state;
+  const { project, filters, specs, gallerySelector, datasetSelector, exportedSpecs } = state;
   return {
     project,
     filters,
     specs,
     gallerySelector,
-    datasetSelector
+    datasetSelector,
+    exportedSpecs
   }
 }
 
-export default connect(mapStateToProps, { pushState, fetchSpecs, clearVisualization, selectSortingFunction })(GalleryView);
+export default connect(mapStateToProps, { pushState, fetchSpecs, fetchExportedVisualizationSpecs, clearVisualization, selectSortingFunction, createExportedSpec })(GalleryView);
