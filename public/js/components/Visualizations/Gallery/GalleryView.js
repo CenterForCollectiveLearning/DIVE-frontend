@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { clearVisualization, fetchSpecs, selectSortingFunction } from '../../../actions/VisualizationActions';
+import { clearVisualization, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
 import { fetchExportedVisualizationSpecs } from '../../../actions/ComposeActions';
 
 import styles from '../Visualizations.sass';
@@ -10,13 +10,9 @@ import styles from '../Visualizations.sass';
 import HeaderBar from '../../Base/HeaderBar';
 import DropDownMenu from '../../Base/DropDownMenu';
 import Visualization from '../Visualization';
+import VisualizationBlock from './VisualizationBlock';
 
 export class GalleryView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleClick = this.handleClick.bind(this);
-  }
 
   componentWillMount() {
     const { datasetSelector, project, specs, fetchSpecs, clearVisualization, gallerySelector } = this.props;
@@ -44,8 +40,14 @@ export class GalleryView extends Component {
     }
   }
 
-  handleClick(specId) {
-    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/visualize/builder/${ specId }`);
+  onClickVisualization(specId) {
+    const { project, datasetSelector, pushState } = this.props;
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/builder/${ specId }`);
+  }
+
+  saveVisualization(specId, specData) {
+    const { project, createExportedSpec } = this.props;
+    createExportedSpec(project.properties.id, specId, specData, [], {}, true);
   }
 
   render() {
@@ -92,18 +94,14 @@ export class GalleryView extends Component {
               <div className={ styles.watermark }>No visualizations</div>
             }
             { !specs.isFetching && filteredSpecs.length > 0 && filteredSpecs.map((spec) =>
-                <div className={ styles.visualizationBlocksContainer } key={ spec.id }>
-                  <Visualization
-                    visualizationTypes={ selectedVisualizationTypes }
-                    spec={ spec }
-                    data={ spec.data.visualize }
-                    onClick={ this.handleClick }
-                    isMinimalView={ true }
-                    showHeader={ true } />
-                  <div className={ styles.starContainer }>
-                    <i className={ exportedSpecs.items.find((exportedSpec) => exportedSpec.specId == spec.id) ? 'fa fa-star ' + styles.starred : 'fa fa-star-o' }></i>
-                  </div>
-                </div>
+                <VisualizationBlock
+                  key={ spec.id }
+                  spec={ spec }
+                  selectedVisualizationTypes={ selectedVisualizationTypes }
+                  exportedSpecs={ exportedSpecs }
+                  onClick={ this.onClickVisualization.bind(this) }
+                  saveVisualization={ this.saveVisualization.bind(this) }
+                  />
               )
             }
           </div>
@@ -133,4 +131,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { pushState, fetchSpecs, fetchExportedVisualizationSpecs, clearVisualization, selectSortingFunction })(GalleryView);
+export default connect(mapStateToProps, { pushState, fetchSpecs, fetchExportedVisualizationSpecs, clearVisualization, selectSortingFunction, createExportedSpec })(GalleryView);
