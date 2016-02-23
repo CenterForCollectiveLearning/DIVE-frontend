@@ -16,12 +16,12 @@ export default class VisualizationBlock extends Component {
   }
 
   render() {
-    const { spec, exportedSpecs, selectedVisualizationTypes } = this.props;
+    const { spec, exportedSpecs, filteredVisualizationTypes } = this.props;
 
     return (
       <div className={ styles.visualizationBlocksContainer }>
         <Visualization
-          visualizationTypes={ selectedVisualizationTypes }
+          visualizationTypes={ filteredVisualizationTypes }
           spec={ spec }
           data={ spec.data.visualize }
           onClick={ this.onClick.bind(this) }
@@ -37,7 +37,7 @@ export default class VisualizationBlock extends Component {
 
 VisualizationBlock.propTypes = {
   spec: PropTypes.object.isRequired,
-  selectedVisualizationTypes: PropTypes.array.isRequired,
+  filteredVisualizationTypes: PropTypes.array.isRequired,
   exportedSpecs: PropTypes.object.isRequired,
   saveVisualization: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired

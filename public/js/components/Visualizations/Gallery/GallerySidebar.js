@@ -87,11 +87,11 @@ export class GallerySidebar extends Component {
     }
 
     selectDataset(datasetId);
-    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/visualize/gallery?${ selectedFieldPropertiesQueryString }`);    
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/visualize/gallery?${ selectedFieldPropertiesQueryString }`);
   }
 
   render() {
-    const { datasets, datasetSelector, gallerySelector, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectDataset, selectAggregationFunction } = this.props;
+    const { datasets, visualizationTypes, datasetSelector, gallerySelector, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectDataset, selectAggregationFunction } = this.props;
 
     return (
       <Sidebar>
@@ -105,10 +105,10 @@ export class GallerySidebar extends Component {
               onChange={ this.clickDataset.bind(this) } />
           </SidebarGroup>
         }
-        { datasets.items && datasets.items.length > 0 &&
+        { datasets.items && datasets.items.length > 0 && visualizationTypes.length > 1 &&
           <SidebarGroup heading="Visualization type">
             <ToggleButtonGroup
-              toggleItems={ filters.visualizationTypes }
+              toggleItems={ visualizationTypes }
               displayTextMember="label"
               valueMember="type"
               imageNameMember="imageName"
@@ -170,7 +170,8 @@ GallerySidebar.propTypes = {
   datasetSelector: PropTypes.object.isRequired,
   gallerySelector: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
-  queryFields: PropTypes.array.isRequired
+  queryFields: PropTypes.array.isRequired,
+  visualizationTypes: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state) {

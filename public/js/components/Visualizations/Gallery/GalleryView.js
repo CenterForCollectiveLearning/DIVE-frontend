@@ -51,14 +51,10 @@ export class GalleryView extends Component {
   }
 
   render() {
-    const { specs, filters, gallerySelector, exportedSpecs, selectSortingFunction } = this.props;
-
-    const selectedVisualizationTypes = filters.visualizationTypes
-      .filter((filter) => filter.selected)
-      .map((filter) => filter.type);
+    const { specs, filters, filteredVisualizationTypes, gallerySelector, exportedSpecs, selectSortingFunction } = this.props;
 
     const filteredSpecs = gallerySelector.specs.filter((spec) =>
-      (selectedVisualizationTypes.length == 0) || selectedVisualizationTypes.some((filter) =>
+      (filteredVisualizationTypes.length == 0) || filteredVisualizationTypes.some((filter) =>
         spec.vizTypes.indexOf(filter) >= 0
       )
     );
@@ -97,7 +93,7 @@ export class GalleryView extends Component {
                 <VisualizationBlock
                   key={ spec.id }
                   spec={ spec }
-                  selectedVisualizationTypes={ selectedVisualizationTypes }
+                  filteredVisualizationTypes={ filteredVisualizationTypes }
                   exportedSpecs={ exportedSpecs }
                   onClick={ this.onClickVisualization.bind(this) }
                   saveVisualization={ this.saveVisualization.bind(this) }
@@ -116,6 +112,7 @@ GalleryView.propTypes = {
   specs: PropTypes.object.isRequired,
   gallerySelector: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
+  filteredVisualizationTypes: PropTypes.array.isRequired,
   exportedSpecs: PropTypes.object.isRequired
 };
 
