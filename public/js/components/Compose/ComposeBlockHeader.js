@@ -20,23 +20,23 @@ export default class ComposeBlockHeader extends Component {
 
   onChange(event) {
     const { id, onSave } = this.props;
-    const value = event.target.value
+    const value = event.target.value;
     this.setState({ heading: value });
     onSave(id, 'heading', value);
   }
 
   render() {
-    console.log('header editable:', this.state.editable);
+    const editable = this.state.editable;
     return (
       <div className={ styles.composeBlockHeader }>
-        { this.state.editable &&
+        { editable &&
           <Input
             className={ styles.composeBlockHeaderText }
             type="text"
             value={ this.state.heading }
             onChange={ this.onChange.bind(this) }/>
         }
-        { !this.state.editable &&
+        { !editable &&
           <div className={ styles.composeBlockHeaderText }>
             { this.state.heading }
           </div>

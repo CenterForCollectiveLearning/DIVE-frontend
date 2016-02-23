@@ -17,7 +17,7 @@ export class ComposeView extends Component {
 
     const heading = this.props.selectedDocument ? this.props.selectedDocument.title : 'New Document';
 
-    this.saveDocumentTitle = _.debounce(this.props.saveDocumentTitle, 800);
+    this.saveDocumentTitle = _.debounce(this.props.saveDocumentTitle, 500);
 
     this.state = {
       documentHeading: heading
@@ -32,8 +32,9 @@ export class ComposeView extends Component {
   }
 
   onTitleChange(event) {
-    this.setState({ documentHeading: event.target.value });
-    this.saveDocumentTitle(this.props.selectedDocument.id, this.state.documentHeading);
+    const heading = event.target.value;
+    this.setState({ documentHeading: heading });
+    this.saveDocumentTitle(this.props.selectedDocument.id, heading);
   }
 
   render() {
@@ -80,7 +81,8 @@ export class ComposeView extends Component {
 
 function mapStateToProps(state) {
   const { composeSelector, documents } = state;
-  const selectedDocument = documents.items.find((doc) => doc.id == composeSelector.documentId);
+  const selectedDocument = composeSelector.editable ? documents.items.find((doc) => doc.id == composeSelector.documentId) : composeSelector;
+
   return { composeSelector, selectedDocument: selectedDocument };
 }
 

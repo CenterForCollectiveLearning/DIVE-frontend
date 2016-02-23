@@ -16,9 +16,8 @@ export default class ComposeBlockText extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  onChange(rawValue) {
+  onChange(value) {
     const { id, onSave } = this.props;
-    const value = rawValue.replace(/^<div[^>]*>|<\/div>$/g, '');
     this.setState({ text: value });
     onSave(id, 'body', value);
   }
@@ -26,25 +25,19 @@ export default class ComposeBlockText extends Component {
   render() {
     return (
       <div className={ styles.composeBlockText }>
-        { this.state.editable &&
-          <ReactQuill
-            value={ this.state.text }
-            onChange={ this.onChange }
-          >
-            <ReactQuill.Toolbar key="toolbar"
-                                ref="toolbar"
-                                items={ ReactQuill.Toolbar.defaultItems } />
-            <div key="editor"
-                 ref="editor"
-                 className={ styles.quillContents }
-                 />
-          </ReactQuill>
-        }
-        { !this.state.editable &&
-          <div className={ styles.noneditableText }>
-            { this.state.text }
-          </div>
-        }
+        <ReactQuill
+          readOnly={ !this.state.editable }
+          value={ this.state.text }
+          onChange={ this.onChange }
+        >
+          <ReactQuill.Toolbar key="toolbar"
+                              ref="toolbar"
+                              items={ ReactQuill.Toolbar.defaultItems } />
+          <div key="editor"
+               ref="editor"
+               className={ styles.quillContents }
+               />
+        </ReactQuill>
       </div>
     );
   }

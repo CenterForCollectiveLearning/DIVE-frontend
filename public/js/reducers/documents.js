@@ -25,7 +25,7 @@ export default function documents(state=baseState, action) {
       return { ...state, items: docs, isFetching: false, loaded: true, error: null };
 
     case REQUEST_SAVE_DOCUMENT:
-      const savedDocs = state.items.map((doc) => doc.id == action.documentId ? { ...doc, content: action.content, title: action.title } : doc);
+      const savedDocs = state.items.map((doc) => doc.id == action.documentId ? { ...doc, content: action.content } : doc);
       return { ...state, items: savedDocs };
 
     case RECEIVE_CREATE_DOCUMENT:

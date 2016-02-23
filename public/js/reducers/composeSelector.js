@@ -82,7 +82,7 @@ export default function composeSelector(state = baseState, action) {
         ...state,
         title: action.title,
         updatedAt: Date.now()
-      };    
+      };
 
     case RECEIVE_CREATE_DOCUMENT:
       return { ...state, documentId: action.document.id };
@@ -107,8 +107,9 @@ export default function composeSelector(state = baseState, action) {
       return {
         ...state,
         editable: false,
-        documentId: action.documentId ,
-        blocks: action.document.content.blocks
+        documentId: action.documentId,
+        blocks: action.document.content.blocks,
+        title: action.document.title,
       }
 
     case WIPE_PROJECT_STATE:

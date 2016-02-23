@@ -78,7 +78,6 @@ export default class ComposeBlockVisualization extends Component {
   }
 
   render() {
-    console.log('rendering composeBlockVisualization');
     const { spec, updatedAt, parentSize, format } = this.props;
 
     const absoluteMaxWidth = parentSize ? parentSize[0] - 18 : 700;
