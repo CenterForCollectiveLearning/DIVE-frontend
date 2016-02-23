@@ -6,7 +6,6 @@ import { fetchPublishedDocument } from '../../actions/ComposeActions';
 export class NarrativePage extends Component {
   componentWillMount() {
     const { params, fetchPublishedDocument, replaceState } = this.props;
-    console.log('will mount', params.documentId)
     fetchPublishedDocument(params.documentId);
   }
 
