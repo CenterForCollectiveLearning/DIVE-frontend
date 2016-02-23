@@ -40,10 +40,14 @@ export class BuilderSidebar extends Component {
   render() {
     const { fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectVisualizationConditional, selectVisualizationConfig, filters, visualization } = this.props;
 
-    const visualizationTypes = filters.currentVisualizationTypes.filter((f) =>
-      (!f.disabled)
-    ).map((filter) =>
-      new Object({ ...filter, selected: filter.type == visualization.visualizationType })
+    if (!visualization.lastUpdated) {
+      return (<div></div>);
+    }
+
+    const visualizationTypes = filters.visualizationTypes.filter((visualizationType) =>
+      (visualization.spec.vizTypes.indexOf(visualizationType.type) > -1)
+    ).map((visualizationType) =>
+      new Object({ ...visualizationType, selected: visualizationType.type == visualization.visualizationType })
     );
 
     return (

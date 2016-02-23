@@ -43,14 +43,10 @@ export class GalleryView extends Component {
   }
 
   render() {
-    const { specs, filters, gallerySelector, selectSortingFunction } = this.props;
-
-    const selectedVisualizationTypes = filters.galleryVisualizationTypes
-      .filter((filter) => filter.selected)
-      .map((filter) => filter.type);
+    const { specs, filters, filteredVisualizationTypes, gallerySelector, selectSortingFunction } = this.props;
 
     const filteredSpecs = gallerySelector.specs.filter((spec) =>
-      (selectedVisualizationTypes.length == 0) || selectedVisualizationTypes.some((filter) =>
+      (filteredVisualizationTypes.length == 0) || filteredVisualizationTypes.some((filter) =>
         spec.vizTypes.indexOf(filter) >= 0
       )
     );
@@ -88,7 +84,7 @@ export class GalleryView extends Component {
             { !specs.isFetching && filteredSpecs.length > 0 && filteredSpecs.map((spec) =>
                 <div className={ styles.visualizationBlocksContainer } key={ spec.id }>
                   <Visualization
-                    visualizationTypes={ selectedVisualizationTypes }
+                    visualizationTypes={ filteredVisualizationTypes }
                     spec={ spec }
                     data={ spec.data.visualize }
                     onClick={ this.handleClick }
@@ -108,7 +104,8 @@ GalleryView.propTypes = {
   project: PropTypes.object.isRequired,
   specs: PropTypes.object.isRequired,
   gallerySelector: PropTypes.object.isRequired,
-  datasetSelector: PropTypes.object.isRequired
+  datasetSelector: PropTypes.object.isRequired,
+  filteredVisualizationTypes: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state) {

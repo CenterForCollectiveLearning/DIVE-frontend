@@ -6,7 +6,7 @@ import {
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
-const allVisualizationTypes = [
+const visualizationTypes = [
   {
     type: "tree",
     imageName: "treemap",
@@ -45,44 +45,22 @@ const allVisualizationTypes = [
 ]
 
 const baseState = {
-  currentVisualizationTypes: [],
-  galleryVisualizationTypes: [],
-  builderVisualizationTypes: []
+  visualizationTypes: visualizationTypes,
+  updatedAt: 0
 }
 
 export default function filters(state=baseState, action) {
   switch(action.type){
-
-    case RECEIVE_SPECS:
-      var allVizTypesInSpecs = action.specs
-        .map((s) => s.vizTypes)
-        .reduce((previousVizTypes, currentVizTypes) => [ ...previousVizTypes, ...currentVizTypes ]);
-      var uniqueVizTypesInSpecs = [ ...new Set(allVizTypesInSpecs) ];
-      var relevantVizTypes = allVisualizationTypes.map((f) => new Object({ ...f, disabled: (uniqueVizTypesInSpecs.indexOf(f.type) == -1) }));
-      return { ...state, currentVisualizationTypes: relevantVizTypes, galleryVisualizationTypes: relevantVizTypes };
-
-    case RECEIVE_VISUALIZATION_DATA:
-      var vizTypesInSpec = action.spec.vizTypes;
-      var relevantVizTypes = allVisualizationTypes.map((f) => new Object({ ...f, disabled: (vizTypesInSpec.indexOf(f.type) == -1) }));
-      return { ...state, currentVisualizationTypes: relevantVizTypes, builderVisualizationTypes: relevantVizTypes };
-
-    case CLEAR_VISUALIZATION:
-     return { ...state, currentVisualizationTypes: state.galleryVisualizationTypes };
-
     case SELECT_VISUALIZATION_TYPE:
-      var visualizationTypes = state.currentVisualizationTypes;
-
-      var selectedIndex = state.currentVisualizationTypes.findIndex((typeObject, i, types) =>
-        typeObject.type == action.selectedType
+      const reselectedVisualizationTypes = state.visualizationTypes.map((typeObject) =>
+        new Object({ ...typeObject, selected: (typeObject.type == action.selectedType && !typeObject.selected) })
       );
-      if (selectedIndex >= 0) {
-        visualizationTypes[selectedIndex].selected = !visualizationTypes[selectedIndex].selected;
-      }
 
-      return { ...state, currentVisualizationTypes: visualizationTypes }
+      return { ...state, visualizationTypes: reselectedVisualizationTypes, updatedAt: Date.now() }
 
     case WIPE_PROJECT_STATE:
       return baseState;
+
     default:
       return state;
   }
