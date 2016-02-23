@@ -2,6 +2,7 @@ import {
   WIPE_PROJECT_STATE,
   SELECT_COMPOSE_VISUALIZATION,
   SELECT_DOCUMENT,
+  SET_DOCUMENT_TITLE,
   RECEIVE_DOCUMENTS,
   RECEIVE_CREATE_DOCUMENT,
   REQUEST_SAVE_DOCUMENT,
@@ -13,6 +14,7 @@ import {
 import { BLOCK_FORMATS } from '../constants/BlockFormats';
 
 const baseState = {
+  title: null,
   blocks: [],
   documentId: null,
   saving: false,
@@ -53,14 +55,15 @@ export default function composeSelector(state = baseState, action) {
 
     case RECEIVE_DOCUMENTS:
       const documentId = parseInt(state.documentId);
-      const selecedDocument = action.documents.find((doc) => doc.id == documentId);
+      const selectedDocument = action.documents.find((doc) => doc.id == documentId);
 
-      if (selecedDocument) {
-        var selectedDocumentContent = selecedDocument.content;
+      if (selectedDocument) {
+        var selectedDocumentContent = selectedDocument.content;
         var selectedDocumentBlocks = selectedDocumentContent.blocks ? selectedDocumentContent.blocks : [];
         return {
           ...state,
-          blocks: selectedDocumentBlocks
+          blocks: selectedDocumentBlocks,
+          title: selectedDocument.title
         }
       }
 
@@ -70,8 +73,16 @@ export default function composeSelector(state = baseState, action) {
       return {
         ...state,
         blocks: action.blocks,
-        documentId: action.documentId
+        documentId: action.documentId,
+        title: action.title
       };
+
+    case SET_DOCUMENT_TITLE:
+      return {
+        ...state,
+        title: action.title,
+        updatedAt: Date.now()
+      };    
 
     case RECEIVE_CREATE_DOCUMENT:
       return { ...state, documentId: action.document.id };

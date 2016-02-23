@@ -62,6 +62,7 @@
 
   .editorHeaderText
     margin-left: 6px
+    width: 80%
 
     .documentTitle
       color: #333
@@ -152,6 +153,30 @@
       .composeBlockVisualization
         max-width: 70%
         margin-right: 7px
+
+  .composeBlockHeader
+    display: flex
+
+    .composeBlockHeaderText
+      font-family: 'Source Sans Pro', sans-serif
+      font-size: 30px
+      line-height: 1.1
+      letter-spacing: -.02em
+      color: rgba(0,0,0,.8)
+      font-weight: 300
+
+      height: auto
+      width: 100%
+      padding: 6px 10px 5px 14px
+      margin-bottom: 5px
+      border-color: transparent
+
+      border: 1px solid transparent
+      border-radius: 2px
+      outline: none
+
+      &:focus, &:hover
+        border-color: #CDCDCD
 
   .resizableContainer
     display: flex

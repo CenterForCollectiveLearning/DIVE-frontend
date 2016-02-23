@@ -15,6 +15,7 @@ import {
   SELECT_COMPOSE_VISUALIZATION,
   REQUEST_SAVE_DOCUMENT,
   RECEIVE_SAVE_DOCUMENT,
+  SET_DOCUMENT_TITLE,
   SAVE_BLOCK
 } from '../constants/ActionTypes';
 
@@ -67,11 +68,12 @@ export function fetchExportedVisualizationSpecs(projectId) {
   };
 }
 
-function selectDocumentDispatcher(documentId, blocks=[]) {
+function selectDocumentDispatcher(documentId, blocks=[], title=null) {
   return {
     type: SELECT_DOCUMENT,
     blocks: blocks,
-    documentId: documentId
+    documentId: documentId,
+    title: title
   };
 }
 
@@ -80,7 +82,7 @@ export function selectDocument(documentId) {
     const { documents } = getState()
     const foundDocument = documents.items.find((doc) => doc.id == documentId);
     if (foundDocument) {
-      dispatch(selectDocumentDispatcher(documentId, foundDocument.content.blocks));
+      dispatch(selectDocumentDispatcher(documentId, foundDocument.content.blocks, foundDocument.title));
     } else {
       dispatch(selectDocumentDispatcher(documentId));
     }
@@ -210,12 +212,13 @@ export function deleteDocument(projectId, documentId) {
   }
 }
 
-function requestSaveDocumentDispatcher(projectId, documentId, content) {
+function requestSaveDocumentDispatcher(projectId, documentId, title, content) {
   return {
       type: REQUEST_SAVE_DOCUMENT,
       projectId: projectId,
       documentId: documentId,
-      content: content
+      content: content,
+      title: title
   };
 }
 
@@ -230,15 +233,16 @@ function receiveSaveDocumentDispatcher(projectId, documentId, json) {
 function saveDocument(dispatch, getState) {
   const { project, composeSelector } = getState();
   const projectId = project.properties.id;
-  const documentId = composeSelector.documentId;
-  const blocks = composeSelector.blocks;
+  const { documentId, blocks, title } = composeSelector;
+
   const content = { 'blocks': blocks };
   const params = {
     project_id: projectId,
-    content: content
+    content: content,
+    title: title
   }
 
-  dispatch(requestSaveDocumentDispatcher(projectId, documentId, content));
+  dispatch(requestSaveDocumentDispatcher(projectId, documentId, title, content));
   return fetch(`/compose/v1/document/${ documentId }`, {
     method: 'put',
     body: JSON.stringify(params),
@@ -267,6 +271,20 @@ function saveBlockDispatcher(id, key, value) {
 export function saveBlock(id, key, value) {
   return (dispatch, getState) => {
     dispatch(saveBlockDispatcher(id, key, value));
+    debouncedChangeDocument(dispatch, getState);
+  }
+}
+
+function setDocumentTitleDispatcher(title) {
+  return {
+    type: SET_DOCUMENT_TITLE,
+    title: title
+  };
+}
+
+export function saveDocumentTitle(documentId, title) {
+  return (dispatch, getState) => {
+    dispatch(setDocumentTitleDispatcher(title));
     debouncedChangeDocument(dispatch, getState);
   }
 }

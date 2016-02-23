@@ -47,6 +47,10 @@ export class ProjectsPage extends Component {
   }
 
   render() {
+    const { params, datasetSelector } = this.props;
+
+    const datasetId = params.datasetId || datasetSelector.datasetId;
+
     return (
       <div className={ styles.fillContainer + ' ' + styles.projectContainer }>
         <div className={ styles.header }>
@@ -57,9 +61,9 @@ export class ProjectsPage extends Component {
             </div>
           </div>
           <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
-            <Tab label="DATA" value="datasets" route={ `datasets${ this.props.params.datasetId ? `/${ this.props.params.datasetId }/inspect` : '' }` } />
-            <Tab label="VISUALIZE" value="visualize" route={ `datasets/${ this.props.params.datasetId }/visualize/gallery` } disabled={ this.props.datasetSelector.datasetId == null }/>
-            <Tab label="ANALYZE" value="analyze" route={ `datasets/${ this.props.params.datasetId }/analyze/regression` } disabled={ this.props.datasetSelector.datasetId == null }/>
+            <Tab label="DATA" value="datasets" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '' }` } />
+            <Tab label="VISUALIZE" value="visualize" route={ `datasets/${ datasetId }/visualize/gallery` } disabled={ !datasetId }/>
+            <Tab label="ANALYZE" value="analyze" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
             <Tab label="COMPOSE" value="compose" route={ `compose` }/>
           </Tabs>
         </div>

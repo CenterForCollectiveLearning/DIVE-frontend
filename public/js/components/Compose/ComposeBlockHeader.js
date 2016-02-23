@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import styles from './Compose.sass';
 
+import ContentEditable from 'react-contenteditable';
 import Input from '../Base/Input';
 
 export default class ComposeBlockHeader extends Component {

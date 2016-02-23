@@ -154,7 +154,7 @@ class MergeDatasetsModal extends Component {
         scrollable={ phase != 1 }
         closeAction={ this.props.closeAction }
         heading={ <span>{ heading }</span> }
-        footer={{ footer }}>
+        footer={ footer }>
         <div style={{ display: "flex", width: "100%" }}>
           { phase == 1 &&
             <div style={{ display: "flex", width: "100%" }}>

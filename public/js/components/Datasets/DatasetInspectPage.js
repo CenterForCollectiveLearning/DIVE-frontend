@@ -84,14 +84,14 @@ export class DatasetInspectPage extends Component {
         { dataset && dataset.details &&
           <DatasetDataGrid dataset={ dataset } fieldProperties={ fieldProperties }/>
         }
-        { this.state.reduceColumnsModalOpen &&
+        { dataset && dataset.details && this.state.reduceColumnsModalOpen &&
           <ReduceColumnsModal
             projectId={ params.projectId }
             datasetId={ params.datasetId }
             closeAction={ this.closeColumnReductionModal.bind(this) }
             columnNames={ dataset.details.fieldNames }/>
         }
-        { this.state.mergeDatasetsModalOpen &&
+        { dataset && dataset.details && this.state.mergeDatasetsModalOpen &&
           <MergeDatasetsModal
             projectId={ params.projectId }
             datasetId={ params.datasetId }
@@ -99,7 +99,7 @@ export class DatasetInspectPage extends Component {
             closeAction={ this.closeMergeDatasetsModal.bind(this) }
             columnNames={ dataset.details.fieldNames }/>
         }
-        { this.state.pivotModalOpen &&
+        { dataset && dataset.details && this.state.pivotModalOpen &&
           <PivotModal
             projectId={ params.projectId }
             datasetId={ params.datasetId }
