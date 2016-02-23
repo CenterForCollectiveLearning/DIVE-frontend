@@ -33,17 +33,17 @@ export class ComposeBlock extends Component {
 
   render() {
     const { exportedSpec, updatedAt } = this.state;
-    const { block } = this.props;
+    const { block, editable } = this.props;
 
     const spec = exportedSpec ? exportedSpec : block.spec;
 
     const composeHeader =
-      <ComposeBlockHeader id={ block.exportedSpecId } onSave={ this.props.saveBlock } heading={ block.heading } editable={ this.props.editable} />;
+      <ComposeBlockHeader id={ block.exportedSpecId } onSave={ this.props.saveBlock } heading={ block.heading } editable={ this.props.editable } />;
 
     const composeVisualization = spec &&
       <ComposeBlockVisualization
                 id={ block.exportedSpecId }
-                editable={ this.props.editable}
+                editable={ editable }
                 onSave={ this.props.saveBlock }
                 format={ block.format }
                 parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
@@ -53,7 +53,7 @@ export class ComposeBlock extends Component {
     const composeText =
       <ComposeBlockText
             id={ block.exportedSpecId }
-            editable={ this.props.editable}
+            editable={ editable }
             onSave={ this.props.saveBlock }
             text={ block.body } />;
 

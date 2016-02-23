@@ -19,6 +19,7 @@ export default class Input extends Component {
         placeholder={ this.props.placeholder }
         onChange={ this.props.onChange }
         onKeyUp={ this.onInputKeyUp.bind(this) }
+        readOnly={ this.props.readonly }
         value={ this.props.value }/>
     );
   }
@@ -31,7 +32,8 @@ Input.propTypes = {
   large: PropTypes.bool,
   onChange: PropTypes.func,
   onSubmit: PropTypes.func,
-  value: PropTypes.string
+  value: PropTypes.string,
+  readonly: PropTypes.bool
 }
 
 Input.defaultProps = {

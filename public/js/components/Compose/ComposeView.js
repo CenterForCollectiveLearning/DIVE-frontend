@@ -15,11 +15,16 @@ export class ComposeView extends Component {
   constructor(props) {
     super(props);
 
-    const heading = this.props.selectedDocument ? this.props.selectedDocument.title : 'New Document';
+    const { composeSelector, documents, editable } = this.props;
+    const selectedDocument = editable ? documents.items.find((doc) => doc.id == composeSelector.documentId) : composeSelector;
+
+    console.log('Selected document', selectedDocument);
+    const heading = selectedDocument ? selectedDocument.title : 'New Document';
 
     this.saveDocumentTitle = _.debounce(this.props.saveDocumentTitle, 500);
 
     this.state = {
+      selectedDocument: selectedDocument,
       documentHeading: heading
     }
   }
@@ -38,52 +43,40 @@ export class ComposeView extends Component {
   }
 
   render() {
-    const { composeSelector } = this.props;
-    const editable = composeSelector.editable;
+    const { composeSelector, editable } = this.props;
     const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
     return (
       <div className={ styles.composeViewContainer }>
         <Card>
-        { editable &&
           <HeaderBar
-            className={ styles.editorHeader + ' ' + styles.editable}
+            className={ styles.editorHeader + ' ' + ( editable ? styles.editable : ' ' ) }
             textClassName={ styles.editorHeaderText }
             header={
               <Input
                 className={ styles.documentTitle }
+                readonly={ !editable }
                 type="text"
                 value={ this.state.documentHeading }
                 onChange={ this.onTitleChange.bind(this) }/>
               }
-              actions={
+              actions={ editable &&
                 <span className={ styles.saveStatus }>{ saveStatus }</span>
               }
             />
-          }
-          { !editable &&
-            <HeaderBar
-              className={ styles.editorHeader}
-              textClassName={ styles.editorHeaderText }
-              header={
-                <div className={ styles.documentTitle }>
-                  { this.state.documentHeading }
-                </div>
-              }
-            />
-          }
-          <ComposeEditor/>
-          </Card>
-
+          <ComposeEditor editable={ editable }/>
+        </Card>
       </div>
     );
   }
 }
 
+ComposeView.propTypes = {
+  editable: PropTypes.bool
+}
+
 function mapStateToProps(state) {
   const { composeSelector, documents } = state;
-  const selectedDocument = composeSelector.editable ? documents.items.find((doc) => doc.id == composeSelector.documentId) : composeSelector;
-
-  return { composeSelector, selectedDocument: selectedDocument };
+  return { composeSelector, documents };
 }
 
 export default connect(mapStateToProps, { saveDocumentTitle })(ComposeView);

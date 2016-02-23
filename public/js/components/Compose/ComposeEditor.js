@@ -6,9 +6,9 @@ import ComposeBlock from './ComposeBlock';
 
 export class ComposeEditor extends Component {
   render() {
-    const { composeSelector } = this.props;
+    const { composeSelector, editable } = this.props;
     return (
-      <div className={ styles.composeEditor + ' ' + (composeSelector.editable ? styles.editable : '') }>
+      <div className={ styles.composeEditor + ' ' + (editable ? styles.editable : '') }>
         { composeSelector.blocks.length == 0 &&
           <div className={ styles.composeEditorNewDocumentPlaceholder }>
             select a visualization from the sidebar
@@ -18,7 +18,7 @@ export class ComposeEditor extends Component {
           <ComposeBlock
             key={ `compose-block-${ composeSelector.documentId }-${ block.exportedSpecId }` }
             block={ block }
-            editable={ composeSelector.editable }
+            editable={ editable }
             updatedAt={ composeSelector.updatedAt } />
         )}
       </div>
@@ -27,7 +27,8 @@ export class ComposeEditor extends Component {
 }
 
 ComposeEditor.propTypes = {
-  composeSelector: PropTypes.object.isRequired
+  composeSelector: PropTypes.object.isRequired,
+  editable: PropTypes.bool.isRequired
 };
 
 function mapStateToProps(state) {

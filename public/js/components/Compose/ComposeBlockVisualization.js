@@ -15,7 +15,6 @@ export default class ComposeBlockVisualization extends Component {
     super(props);
 
     this.state = {
-      editable: this.props.editable,
       resizeCounter: 0,
       formatTypes: [
         {
@@ -78,7 +77,7 @@ export default class ComposeBlockVisualization extends Component {
   }
 
   render() {
-    const { spec, updatedAt, parentSize, format } = this.props;
+    const { spec, updatedAt, parentSize, format, editable } = this.props;
 
     const absoluteMaxWidth = parentSize ? parentSize[0] - 18 : 700;
     const isHalfWidthFormat = (format == BLOCK_FORMATS.TEXT_LEFT || format == BLOCK_FORMATS.TEXT_RIGHT);
@@ -88,9 +87,18 @@ export default class ComposeBlockVisualization extends Component {
     const width = isHalfWidthFormat ? 600 : absoluteMaxWidth;
     const height = isHalfWidthFormat ? 300 : 400;
 
+    const visualizationComponent = <Visualization
+      chartId={ `full-compose-visualization-${ spec.id }-${ updatedAt }-${ this.state.resizeCounter }` }
+      containerClassName={ styles.fullComposeVisualization }
+      visualizationTypes={ spec.vizTypes }
+      spec={ spec }
+      data={ spec.data }
+      isMinimalView={ false }
+      showHeader={ false }/>
+
     return (
       <div ref="composeBlockVisualization" className={ styles.composeBlockVisualization }>
-        { this.state.editable &&
+        { editable &&
           <div>
             <div className={ styles.composeVisualizationControls }>
               <ToggleButtonGroup
@@ -110,27 +118,13 @@ export default class ComposeBlockVisualization extends Component {
               height={ height }
               minConstraints={ [200, 200] }
               maxConstraints={ [maxWidth, 600] }>
-              <Visualization
-                chartId={ `full-compose-visualization-${ spec.id }-${ updatedAt }-${ this.state.resizeCounter }` }
-                containerClassName={ styles.fullComposeVisualization }
-                visualizationTypes={ spec.vizTypes }
-                spec={ spec }
-                data={ spec.data }
-                isMinimalView={ false }
-                showHeader={ false }/>
+              { visualizationComponent }
             </ResizableBox>
         </div>
       }
-      { !this.state.editable &&
+      { !editable &&
         <div style={{width: width, height: height }} className={ styles.resizableContainer }>
-          <Visualization
-            chartId={ `full-compose-visualization-${ spec.id }-${ updatedAt }-${ this.state.resizeCounter }` }
-            containerClassName={ styles.fullComposeVisualization }
-            visualizationTypes={ spec.vizTypes }
-            spec={ spec }
-            data={ spec.data }
-            isMinimalView={ false }
-            showHeader={ false }/>
+          { visualizationComponent }
         </div>
       }
       </div>

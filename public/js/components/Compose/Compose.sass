@@ -105,32 +105,6 @@
       .composeBlockText, .composeBlockHeader .composeBlockHeaderText
         border-color: #eee
 
-    .composeBlockText:focus, .composeBlockText:hover
-      border-color: #CDCDCD
-
-  .composeBlockHeader
-    display: flex
-
-    .composeBlockHeaderText
-      font-family: 'Source Sans Pro', sans-serif
-      font-size: 30px
-      line-height: 1.1
-      letter-spacing: -.02em
-      color: rgba(0,0,0,.8)
-      font-weight: 300
-
-      height: auto
-      padding-top: 6px
-      padding-bottom: 5px
-      margin-bottom: 5px
-      border-color: transparent
-
-    &.editable
-      .composeBlockHeaderText
-        &:focus, &:hover
-          border-color: #CDCDCD
-
-
   .composeBlockContent
     display: flex
 
@@ -174,6 +148,11 @@
       border: 1px solid transparent
       border-radius: 2px
       outline: none
+
+  &.editable
+    .composeBlockHeaderText
+      &:hover
+        border-color: #CDCDCD
 
   .resizableContainer
     display: flex

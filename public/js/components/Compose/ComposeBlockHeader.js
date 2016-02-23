@@ -30,10 +30,9 @@ export default class ComposeBlockHeader extends Component {
     return (
       <div className={ styles.composeBlockHeader }>
         { editable &&
-          <Input
+          <ContentEditable
             className={ styles.composeBlockHeaderText }
-            type="text"
-            value={ this.state.heading }
+            html={ this.state.heading }
             onChange={ this.onChange.bind(this) }/>
         }
         { !editable &&
