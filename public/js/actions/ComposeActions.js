@@ -105,14 +105,6 @@ function receiveDocumentsDispatcher(projectId, json) {
   };
 }
 
-export function fetchExportedVisualizationSpecsIfNeeded(projectId) {
-  return (dispatch, getState) => {
-    if (shouldFetchExportedVisualizationSpecs(getState())) {
-      return dispatch(fetchExportedVisualizationSpecs(projectId));
-    }
-  };
-}
-
 function requestPublishedDocumentDispatcher(documentId) {
   return {
     type: REQUEST_PUBLISHED_DOCUMENT,
