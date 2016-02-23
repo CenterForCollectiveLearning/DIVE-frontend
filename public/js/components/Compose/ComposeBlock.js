@@ -35,31 +35,23 @@ export class ComposeBlock extends Component {
     const { exportedSpec, updatedAt } = this.state;
     const { block } = this.props;
 
-    if (exportedSpec) {
-      var spec = exportedSpec;
-    } else {
-      var spec = block.spec;
-    }
-    console.log('Spec:', spec);
-    return (
-      <div ref="composeBlock" className={ styles.composeBlock }>
-        <ComposeBlockHeader
-          id={ block.exportedSpecId }
-          onSave={ this.props.saveBlock }
-          heading={ block.heading }
-          editable={ this.props.editable} />
-        <div className={ styles.composeBlockContent + ' ' + styles[block.format] }>
-          { spec &&
-            <ComposeBlockVisualization
-                      id={ block.exportedSpecId }
-                      editable={ this.props.editable}
-                      onSave={ this.props.saveBlock }
-                      format={ block.format }
-                      parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
-                      spec={ spec }
-                      updatedAt={ this.props.updatedAt } />
-          }
-          <ComposeBlockText
+    const spec = exportedSpec ? exportedSpec : block.spec;
+
+    const composeHeader =
+      <ComposeBlockHeader id={ block.exportedSpecId } onSave={ this.props.saveBlock } heading={ block.heading } editable={ this.props.editable} />;
+
+    const composeVisualization = spec &&
+      <ComposeBlockVisualization
+                id={ block.exportedSpecId }
+                editable={ this.props.editable}
+                onSave={ this.props.saveBlock }
+                format={ block.format }
+                parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
+                spec={ spec }
+                updatedAt={ this.props.updatedAt } />;
+
+    const composeText =
+      <ComposeBlockText
             id={ block.exportedSpecId }
             editable={ this.props.editable}
             onSave={ this.props.saveBlock }
