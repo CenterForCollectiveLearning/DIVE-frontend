@@ -59,8 +59,7 @@ export class ComposeBasePage extends Component {
 
 function mapStateToProps(state) {
   const { documents, composeSelector, project, datasetSelector, datasets } = state;
-  const documentMatchingComposeSelector = documents.items.find((doc) => doc.id == composeSelector.documentId);
-  const selectedDocument = documentMatchingComposeSelector ? documentMatchingComposeSelector : {};
+  const selectedDocument = documents.items.find((doc) => doc.id == composeSelector.documentId) || {};
   return { documents, composeSelector, project, datasetSelector, datasets, selectedDocument: selectedDocument };
 }
 
