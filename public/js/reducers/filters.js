@@ -15,7 +15,7 @@ const visualizationTypes = [
     disabled: false
   },
   {
-    type: "hist",
+    type: "bar",
     imageName: "bar",
     label: "Bar",
     selected: false,
