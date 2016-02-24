@@ -5,6 +5,7 @@ import { getCorrelations } from '../../../actions/CorrelationActions';
 
 import styles from '../Analysis.sass';
 
+import CorrelationTable from './CorrelationTable';
 import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
 
@@ -14,7 +15,6 @@ export class CorrelationView extends Component {
     const correlationVariableChanged = nextProps.correlationVariableNames.length != correlationVariableNames.length;
     const twoVariablesSelected = nextProps.correlationVariableNames.length >= 2;
     if (nextProps.projectId && nextProps.datasetId && correlationVariableChanged && twoVariablesSelected) {
-      console.log("asdfasdf")
       getCorrelations(nextProps.projectId, nextProps.datasetId, nextProps.correlationVariableNames)
     }
 
@@ -24,11 +24,25 @@ export class CorrelationView extends Component {
     const twoCorrelationVariablesSelected = correlationVariableNames.length >= 2;
     const correlationResultHasElements = correlationResult && correlationResult.rows &&  correlationResult.rows.length > 0;
 
-    console.log(twoCorrelationVariablesSelected);
-    console.log(correlationResultHasElements);
     if (twoCorrelationVariablesSelected && correlationResultHasElements) {
       return (
-        <div> { correlationResult.rows } </div>
+        <div className={ styles.aggregationViewContainer }>
+          <Card>
+            <HeaderBar header={
+              <span>Correlation Matrix: {
+                correlationVariableNames.map((name, i) =>
+                  <span
+                    key={ `correlation-title-${ name }-${ i }` }
+                    className={ `${ styles.titleField }` }>
+                    { name }
+                  </span>
+                )
+              }
+              </span>
+            } />
+            <CorrelationTable correlationResult={ correlationResult } />
+          </Card>
+        </div>
       );
     }
 
