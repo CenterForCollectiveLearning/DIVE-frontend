@@ -33,23 +33,27 @@ export class ComposeBlock extends Component {
 
   render() {
     const { exportedSpec, updatedAt } = this.state;
-    const { block } = this.props;
+    const { block, editable } = this.props;
 
-    const composeHeader = 
-      <ComposeBlockHeader id={ block.exportedSpecId } onSave={ this.props.saveBlock } heading={ block.heading } />;
+    const spec = exportedSpec ? exportedSpec : block.spec;
 
-    const composeVisualization = exportedSpec &&
+    const composeHeader =
+      <ComposeBlockHeader id={ block.exportedSpecId } onSave={ this.props.saveBlock } heading={ block.heading } editable={ this.props.editable } />;
+
+    const composeVisualization = spec &&
       <ComposeBlockVisualization
                 id={ block.exportedSpecId }
+                editable={ editable }
                 onSave={ this.props.saveBlock }
                 format={ block.format }
                 parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
-                spec={ exportedSpec }
+                spec={ spec }
                 updatedAt={ this.props.updatedAt } />;
 
     const composeText =
       <ComposeBlockText
             id={ block.exportedSpecId }
+            editable={ editable }
             onSave={ this.props.saveBlock }
             text={ block.body } />;
 
@@ -109,7 +113,8 @@ export class ComposeBlock extends Component {
 ComposeBlock.propTypes = {
   block: PropTypes.object.isRequired,
   exportedSpecs: PropTypes.object.isRequired,
-  updatedAt: PropTypes.number
+  updatedAt: PropTypes.number,
+  editable: PropTypes.bool.isRequired
 };
 
 function mapStateToProps(state) {

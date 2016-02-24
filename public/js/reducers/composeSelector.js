@@ -7,7 +7,8 @@ import {
   RECEIVE_CREATE_DOCUMENT,
   REQUEST_SAVE_DOCUMENT,
   RECEIVE_SAVE_DOCUMENT,
-  SAVE_BLOCK
+  SAVE_BLOCK,
+  RECEIVE_PUBLISHED_DOCUMENT
 } from '../constants/ActionTypes';
 
 import { BLOCK_FORMATS } from '../constants/BlockFormats';
@@ -17,7 +18,8 @@ const baseState = {
   blocks: [],
   documentId: null,
   saving: false,
-  updatedAt: Date.now()
+  loaded: false,
+  updatedAt: Date.now(),
 }
 
 // blocks: [
@@ -61,7 +63,8 @@ export default function composeSelector(state = baseState, action) {
         return {
           ...state,
           blocks: selectedDocumentBlocks,
-          title: selectedDocument.title
+          title: selectedDocument.title,
+          loaded: true
         }
       }
 
@@ -72,7 +75,8 @@ export default function composeSelector(state = baseState, action) {
         ...state,
         blocks: action.blocks,
         documentId: action.documentId,
-        title: action.title
+        title: action.title,
+        loaded: true
       };
 
     case SET_DOCUMENT_TITLE:
@@ -80,7 +84,7 @@ export default function composeSelector(state = baseState, action) {
         ...state,
         title: action.title,
         updatedAt: Date.now()
-      };    
+      };
 
     case RECEIVE_CREATE_DOCUMENT:
       return { ...state, documentId: action.document.id };
@@ -100,6 +104,15 @@ export default function composeSelector(state = baseState, action) {
 
     case RECEIVE_SAVE_DOCUMENT:
       return { ...state, saving: false };
+
+    case RECEIVE_PUBLISHED_DOCUMENT:
+      return {
+        ...state,
+        documentId: action.documentId,
+        blocks: action.document.content.blocks,
+        title: action.document.title,
+        loaded: true
+      }
 
     case WIPE_PROJECT_STATE:
       return baseState;

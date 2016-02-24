@@ -14,12 +14,14 @@ import { saveDocumentTitle } from '../../actions/ComposeActions';
 export class ComposeView extends Component {
   constructor(props) {
     super(props);
-    
-    const heading = this.props.selectedDocument ? this.props.selectedDocument.title : 'New Document';
+
+    const { selectedDocument } = this.props;
+    const heading = selectedDocument ? selectedDocument.title : 'New Document';
 
     this.saveDocumentTitle = _.debounce(this.props.saveDocumentTitle, 800);
 
     this.state = {
+      selectedDocument: selectedDocument,
       documentHeading: heading
     }
   }
@@ -32,41 +34,48 @@ export class ComposeView extends Component {
   }
 
   onTitleChange(event) {
-    this.setState({ documentHeading: event.target.value });
-    this.saveDocumentTitle(this.props.selectedDocument.id, this.state.documentHeading);
+    const heading = event.target.value;
+    this.setState({ documentHeading: heading });
+    this.saveDocumentTitle(this.state.selectedDocument.id, heading);
   }
 
   render() {
-    const { composeSelector } = this.props;
+    const { composeSelector, selectedDocument, editable } = this.props;
     const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
     return (
       <div className={ styles.composeViewContainer }>
         <Card>
           <HeaderBar
-            className={ styles.editorHeader }
+            className={ styles.editorHeader + ' ' + ( editable ? styles.editable : ' ' ) }
             textClassName={ styles.editorHeaderText }
             header={
               <Input
                 className={ styles.documentTitle }
+                readonly={ !editable }
                 type="text"
                 value={ this.state.documentHeading }
                 onChange={ this.onTitleChange.bind(this) }/>
-            }
-            actions={
-              <span className={ styles.saveStatus }>{ saveStatus }</span>
-            }
-          />
-          <ComposeEditor />
+              }
+              actions={ editable &&
+                <span className={ styles.saveStatus }>{ saveStatus }</span>
+              }
+            />
+          <ComposeEditor editable={ editable }/>
         </Card>
       </div>
     );
   }
 }
 
+ComposeView.propTypes = {
+  editable: PropTypes.bool,
+  selectedDocument: PropTypes.object.isRequired
+}
+
 function mapStateToProps(state) {
-  const { composeSelector, documents } = state;
-  const selectedDocument = documents.items.find((doc) => doc.id == composeSelector.documentId);
-  return { composeSelector, selectedDocument: selectedDocument };
+  const { composeSelector } = state;
+
+  return { composeSelector };
 }
 
 export default connect(mapStateToProps, { saveDocumentTitle })(ComposeView);

@@ -44,11 +44,12 @@ export class ComposeBasePage extends Component {
   }
 
   render() {
+    const { selectedDocument } = this.props;
     return (
       <div className={ `${ styles.fillContainer } ${ styles.composePageContainer }` }>
         <div className={ `${ styles.fillContainer } ${ styles.composeContentContainer }` }>
           <ComposeSidebar />
-          <ComposeView />
+          <ComposeView editable={ true } selectedDocument={ selectedDocument } />
         </div>
         { this.props.children }
       </div>
@@ -58,7 +59,8 @@ export class ComposeBasePage extends Component {
 
 function mapStateToProps(state) {
   const { documents, composeSelector, project, datasetSelector, datasets } = state;
-  return { documents, composeSelector, project, datasetSelector, datasets };
+  const selectedDocument = documents.items.find((doc) => doc.id == composeSelector.documentId) || {};
+  return { documents, composeSelector, project, datasetSelector, datasets, selectedDocument: selectedDocument };
 }
 
 export default connect(mapStateToProps, { fetchDocuments, fetchDatasetsIfNeeded, pushState, replaceState })(ComposeBasePage);

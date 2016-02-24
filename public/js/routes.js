@@ -21,6 +21,8 @@ import SummaryPage from './components/Analysis/Summary/SummaryPage';
 import ExportedVisualizationPage from './components/Visualizations/ExportedVisualization/ExportedVisualizationPage';
 import ComposeBasePage from './components/Compose/ComposeBasePage';
 import ComposePage from './components/Compose/ComposePage';
+import NarrativeBasePage from './components/Compose/NarrativeBasePage';
+import NarrativePage from './components/Compose/NarrativePage';
 
 export default (
   <Route path="/" component={ App }>
@@ -30,6 +32,11 @@ export default (
       <Route path="/about" component={ AboutPage }/>
       <Route path="/features" component={ FeaturesPage }/>
     </Route>
+
+    <Route path="narrative" component={ NarrativeBasePage }>
+      <Route path=":documentId" component={ NarrativePage }/>
+    </Route>
+
     <Route path="/projects/:projectId" component={ ProjectsPage }>
       <Route path="datasets" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>

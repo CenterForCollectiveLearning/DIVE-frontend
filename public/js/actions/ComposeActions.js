@@ -2,6 +2,8 @@ import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
   SELECT_DOCUMENT,
+  REQUEST_PUBLISHED_DOCUMENT,
+  RECEIVE_PUBLISHED_DOCUMENT,
   REQUEST_DOCUMENTS,
   RECEIVE_DOCUMENTS,
   REQUEST_CREATE_DOCUMENT,
@@ -100,6 +102,34 @@ function receiveDocumentsDispatcher(projectId, json) {
     projectId: projectId,
     documents: json.documents,
     receivedAt: Date.now(),
+  };
+}
+
+function requestPublishedDocumentDispatcher(documentId) {
+  return {
+    type: REQUEST_PUBLISHED_DOCUMENT,
+    documentId: documentId
+  };
+}
+
+function receivePublishedDocumentDispatcher(documentId, json) {
+  return {
+    type: RECEIVE_PUBLISHED_DOCUMENT,
+    documentId: documentId,
+    document: json,
+    receivedAt: Date.now(),
+  };
+}
+
+export function fetchPublishedDocument(documentId) {
+  return (dispatch) => {
+    dispatch(requestPublishedDocumentDispatcher(documentId));
+    return fetch(`/compose/v1/document/${ documentId }?include_data=true`)
+      .then(response => response.json())
+      .then(function(json) {
+        const dispatchParams = {};
+        dispatch(receivePublishedDocumentDispatcher(documentId, json))
+      });
   };
 }
 
