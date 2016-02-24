@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
+import { selectCorrelationVariable } from '../../../actions/CorrelationActions';
 import styles from '../Analysis.sass';
 
 import AnalysisSidebar from '../AnalysisSidebar';
@@ -28,19 +29,22 @@ export class CorrelationSidebar extends Component {
   }
 
   render() {
+    const quantitativeVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q')
     return (
       <AnalysisSidebar selectedTab="correlation">
         { this.props.fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Correlation Variables">
             <ToggleButtonGroup
-              toggleItems={ this.props.fieldProperties.items.map((item) =>
+              toggleItems={ quantitativeVariables.map((item) =>
                 new Object({
                   id: item.id,
                   name: item.name
                 })
               )}
               valueMember="id"
-              displayTextMember="name" />
+              displayTextMember="name"
+              externalSelectedItems={ this.props.correlationSelector.correlationVariableIds }
+              onChange={ this.props.selectCorrelationVariable } />
           </SidebarGroup>
         }
       </AnalysisSidebar>
@@ -51,16 +55,18 @@ export class CorrelationSidebar extends Component {
 CorrelationSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
-  fieldProperties: PropTypes.object.isRequired
+  fieldProperties: PropTypes.object.isRequired,
+  correlationSelector: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, fieldProperties } = state;
+  const { project, datasetSelector, fieldProperties, correlationSelector } = state;
   return {
     project,
     datasetSelector,
-    fieldProperties
+    fieldProperties,
+    correlationSelector
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded })(CorrelationSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectCorrelationVariable })(CorrelationSidebar);
