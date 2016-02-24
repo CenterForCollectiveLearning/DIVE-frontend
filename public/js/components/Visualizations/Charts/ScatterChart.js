@@ -7,12 +7,12 @@ var Chart = require('react-google-charts').Chart;
 export default class ScatterChart extends Component {
 
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options } = this.props;
+    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options, labels } = this.props;
 
     const scatterChartOptions = {
       ...options,
-      hAxis: { title: data[0][0]},
-      vAxis: { title: data[0][1]},
+      hAxis: { title: labels ? labels.x : data[0][0]},
+      vAxis: { title: labels ? labels.y : data[0][1]},
       legend: {
         position: 'none'
       }
@@ -33,5 +33,6 @@ ScatterChart.propTypes = {
 
 ScatterChart.defaultProps = {
   isMinimalView: false,
-  options: {}
+  options: {},
+  labels: {}
 };
