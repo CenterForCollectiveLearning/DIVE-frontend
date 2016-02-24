@@ -10,9 +10,19 @@ import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
 
 export class CorrelationView extends Component {
+  componentWillMount() {
+    const {projectId, datasetId, correlationVariableNames, getCorrelations } = this.props
+
+    if (projectId && datasetId && correlationVariableNames.length) {
+      getCorrelations(projectId, datasetId, correlationVariableNames)
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     const { correlationVariableNames, getCorrelations } = this.props
+
     const correlationVariableChanged = nextProps.correlationVariableNames.length != correlationVariableNames.length;
+    console.log(correlationVariableChanged)
     const twoVariablesSelected = nextProps.correlationVariableNames.length >= 2;
     if (nextProps.projectId && nextProps.datasetId && correlationVariableChanged && twoVariablesSelected) {
       getCorrelations(nextProps.projectId, nextProps.datasetId, nextProps.correlationVariableNames)

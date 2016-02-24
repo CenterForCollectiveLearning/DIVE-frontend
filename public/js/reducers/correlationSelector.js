@@ -2,7 +2,8 @@ import {
   WIPE_PROJECT_STATE,
   SELECT_DATASET,
   SELECT_CORRELATION_VARIABLE,
-  RECEIVE_CORRELATION
+  RECEIVE_CORRELATION,
+  RECEIVE_FIELD_PROPERTIES
 } from '../constants/ActionTypes';
 
 const baseState = {
@@ -25,6 +26,10 @@ export default function correlationSelector(state = baseState, action) {
 
     case RECEIVE_CORRELATION:
       return { ...state, correlationResult: action.data };
+
+    case RECEIVE_FIELD_PROPERTIES:
+      var allQuantitativeItemIds = action.fieldProperties.filter((item) => item.generalType == 'q').map((item) => item.id)
+      return { ...state, correlationVariableIds: allQuantitativeItemIds}
 
     case WIPE_PROJECT_STATE:
       return baseState;
