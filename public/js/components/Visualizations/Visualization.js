@@ -193,6 +193,8 @@ export default class Visualization extends Component {
 
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
 
+    const labels = spec.meta.labels ? spec.meta.labels : {}
+
     const tooMuchDataToPreview =
       (isMinimalView &&
         (data.length > MAX_ELEMENTS.preview.all ||
@@ -246,6 +248,7 @@ export default class Visualization extends Component {
               <ColumnChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
+                labels={ labels }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
@@ -253,6 +256,7 @@ export default class Visualization extends Component {
               <StackedColumnChart
                 chartId={ `spec-stackedbar-${ chartId }` }
                 data={ finalDataArray }
+                labels={ labels }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
@@ -260,6 +264,7 @@ export default class Visualization extends Component {
               <ScatterChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
+                labels={ labels }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
@@ -267,6 +272,7 @@ export default class Visualization extends Component {
               <LineChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
+                labels={ labels }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
@@ -274,6 +280,7 @@ export default class Visualization extends Component {
               <PieChart
                 chartId={ `spec-pie-${ chartId }` }
                 data={ finalDataArray }
+                labels={ labels }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
@@ -282,6 +289,7 @@ export default class Visualization extends Component {
                 chartId={ `spec-tree-${ chartId }` }
                 parent={ spec.meta.desc }
                 data={ finalDataArray }
+                labels={ labels }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }

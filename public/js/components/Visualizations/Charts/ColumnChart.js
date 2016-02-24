@@ -7,7 +7,7 @@ var Chart = require('react-google-charts').Chart;
 export default class ColumnChart extends Component {
 
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options } = this.props;
+    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options, labels } = this.props;
 
     const firstElement = data[1][0];
     var finalData = data;
@@ -25,7 +25,7 @@ export default class ColumnChart extends Component {
     const columnChartOptions = {
       ...options,
       hAxis: {
-        title: finalData[0][0],
+        title: labels ? labels.x : finalData[0][0],
         titleTextStyle: {
           color: '#333',
           bold: true,
@@ -34,7 +34,7 @@ export default class ColumnChart extends Component {
       },
       vAxis: {
         minValue: 0,
-        title: finalData[0][1],
+        title: labels ? labels.y : finalData[0][1],
         titleTextStyle: {
           color: '#333',
           bold: true,
@@ -56,10 +56,12 @@ ColumnChart.propTypes = {
   chartId: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   isMinimalView: PropTypes.bool,
-  options: PropTypes.object
+  options: PropTypes.object,
+  labels: PropTypes.object
 };
 
 ColumnChart.defaultProps = {
   isMinimalView: false,
-  options: {}
+  options: {},
+  labels: {}
 };
