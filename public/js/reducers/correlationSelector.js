@@ -1,7 +1,8 @@
 import {
   WIPE_PROJECT_STATE,
   SELECT_DATASET,
-  SELECT_CORRELATION_VARIABLE
+  SELECT_CORRELATION_VARIABLE,
+  RECEIVE_CORRELATION
 } from '../constants/ActionTypes';
 
 const baseState = {
@@ -21,6 +22,9 @@ export default function correlationSelector(state = baseState, action) {
         correlationVariableIds.push(selectedId);
       }
       return { ...state, correlationVariableIds: correlationVariableIds };
+
+    case RECEIVE_CORRELATION:
+      return { ...state, correlationResult: action.data };
 
     case WIPE_PROJECT_STATE:
       return baseState;

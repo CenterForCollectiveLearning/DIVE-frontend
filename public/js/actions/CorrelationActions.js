@@ -1,5 +1,7 @@
 import {
-  SELECT_CORRELATION_VARIABLE
+  SELECT_CORRELATION_VARIABLE,
+  REQUEST_CORRELATION,
+  RECEIVE_CORRELATION
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
@@ -10,4 +12,39 @@ export function selectCorrelationVariable(selectedCorrelationVariable) {
     correlationVariableId: selectedCorrelationVariable,
     selectedAt: Date.now()
   }
+}
+
+function requestCorrelationDispactcher(datasetId) {
+  return {
+    type: REQUEST_CORRELATION
+  };
+}
+
+function receiveCorrelationDispatcher(json) {
+  return {
+    type: RECEIVE_CORRELATION,
+    data: json,
+    receivedAt: Date.now()
+  };
+}
+
+export function getCorrelations(projectId, datasetId, correlationVariables) {
+  const params = {
+    projectId: projectId,
+    spec: {
+      datasetId: datasetId,
+      correlationVariables: correlationVariables
+    }
+  }
+
+  return (dispatch) => {
+    dispatch(requestCorrelationDispactcher());
+    return fetch('/statistics/v1/correlations', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+      .then(json => dispatch(receiveCorrelationDispatcher(json)))
+      .catch(err => console.error("Error creating correlation matrix: ", err));
+  };
 }
