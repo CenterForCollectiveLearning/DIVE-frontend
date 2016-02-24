@@ -15,13 +15,10 @@ export class ComposeView extends Component {
   constructor(props) {
     super(props);
 
-    const { composeSelector, documents, editable } = this.props;
-    const selectedDocument = editable ? documents.items.find((doc) => doc.id == composeSelector.documentId) : composeSelector;
-
-    console.log('Selected document', selectedDocument);
+    const { selectedDocument } = this.props;
     const heading = selectedDocument ? selectedDocument.title : 'New Document';
 
-    this.saveDocumentTitle = _.debounce(this.props.saveDocumentTitle, 500);
+    this.saveDocumentTitle = _.debounce(this.props.saveDocumentTitle, 800);
 
     this.state = {
       selectedDocument: selectedDocument,
@@ -39,11 +36,11 @@ export class ComposeView extends Component {
   onTitleChange(event) {
     const heading = event.target.value;
     this.setState({ documentHeading: heading });
-    this.saveDocumentTitle(this.props.selectedDocument.id, heading);
+    this.saveDocumentTitle(this.state.selectedDocument.id, heading);
   }
 
   render() {
-    const { composeSelector, editable } = this.props;
+    const { composeSelector, selectedDocument, editable } = this.props;
     const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
     return (
       <div className={ styles.composeViewContainer }>
@@ -71,12 +68,14 @@ export class ComposeView extends Component {
 }
 
 ComposeView.propTypes = {
-  editable: PropTypes.bool
+  editable: PropTypes.bool,
+  selectedDocument: PropTypes.object.isRequired
 }
 
 function mapStateToProps(state) {
-  const { composeSelector, documents } = state;
-  return { composeSelector, documents };
+  const { composeSelector } = state;
+
+  return { composeSelector };
 }
 
 export default connect(mapStateToProps, { saveDocumentTitle })(ComposeView);

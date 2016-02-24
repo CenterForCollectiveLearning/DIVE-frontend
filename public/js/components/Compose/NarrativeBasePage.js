@@ -10,10 +10,11 @@ import ComposeView from './ComposeView';
 
 export class NarrativeBasePage extends Component {
   render() {
+    const { selectedDocument } = this.props;
     return (
       <div className={ `${ styles.fillContainer } ${ styles.composePageContainer }` }>
         <div className={ `${ styles.fillContainer } ${ styles.composeContentContainer }` }>
-          <ComposeView editable={ false } />
+          <ComposeView editable={ false } selectedDocument={ selectedDocument }/>
         </div>
         { this.props.children }
       </div>
@@ -22,8 +23,15 @@ export class NarrativeBasePage extends Component {
 }
 
 function mapStateToProps(state) {
-  const { documents, composeSelector } = state;
-  return { documents, composeSelector };
+  const { composeSelector } = state;
+
+  const selectedDocument = {
+    blocks: composeSelector.blocks,
+    title: composeSelector.title,
+    id: composeSelector.documentId
+  };
+
+  return { composeSelector, selectedDocument: selectedDocument };
 }
 
 export default connect(mapStateToProps, { fetchDocuments, pushState, replaceState })(NarrativeBasePage);
