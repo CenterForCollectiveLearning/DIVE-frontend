@@ -59,7 +59,7 @@ function receiveSpecsDispatcher(params, json) {
     type: FAILED_RECEIVE_SPECS,
     specs: [],
     receivedAt: Date.now(),
-    error: json.error || "Error retrieving visualizations."
+    error: (json && json.error) ? json.error : "Error retrieving visualizations."
   };
 }
 
