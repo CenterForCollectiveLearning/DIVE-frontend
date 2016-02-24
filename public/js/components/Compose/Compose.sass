@@ -87,6 +87,13 @@
   flex-grow: 1
   min-height: 400px
 
+  &.editable
+    .composeBlock:hover
+      border-color: rgba(0, 0, 0, 0.1)
+
+      .composeBlockText, .composeBlockHeader .composeBlockHeaderText
+        border-color: #eee
+
   .composeEditorNewDocumentPlaceholder
     +watermark
     padding-top: 180px
@@ -97,15 +104,6 @@
     padding: 8px
     margin: 7px
     border: 1px dashed transparent
-
-  &.editable
-    .composeBlock:hover
-      border-color: rgba(0, 0, 0, 0.1)
-
-      .composeBlockText, .composeBlockHeader .composeBlockHeaderText
-        border-color: #eee
-
-  .composeBlockContent
 
     &.TEXT_TOP
       flex-direction: column-reverse
