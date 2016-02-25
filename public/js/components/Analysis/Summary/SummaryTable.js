@@ -19,7 +19,11 @@ export default class SummaryTable extends Component {
       {
         rowClass: styles.dataRow,
         columnClass: styles.dataColumn,
-        items: [ ...stats.map((value) => <div className={ styles.dataCell }>{ getRoundedString(value, 2, true) }</div>) ]
+        items: [ ...stats.map((value) =>
+          <div className={ styles.dataCell }>
+            <div>{ getRoundedString(value, 2, true) }</div>
+          </div>
+        ) ]
       }
     ];
 

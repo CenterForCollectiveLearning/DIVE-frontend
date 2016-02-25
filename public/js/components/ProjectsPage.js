@@ -63,7 +63,7 @@ export class ProjectsPage extends Component {
           <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
             <Tab label="DATA" value="datasets" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '' }` } />
             <Tab label="VISUALIZE" value="visualize" route={ `datasets/${ datasetId }/visualize/gallery` } disabled={ !datasetId }/>
-            <Tab label="ANALYZE" value="analyze" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
+            <Tab label="ANALYZE" value="analyze" route={ `datasets/${ datasetId }/analyze/summary` } disabled={ !datasetId }/>
             <Tab label="COMPOSE" value="compose" route={ `compose` }/>
           </Tabs>
         </div>

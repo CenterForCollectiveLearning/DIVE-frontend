@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { routerStateReducer as router } from 'redux-react-router';
 
 import composeSelector from './composeSelector';
+import correlationSelector from './correlationSelector'
 import datasets from './datasets';
 import datasetSelector from './datasetSelector';
 import documents from './documents'
@@ -21,6 +22,7 @@ import visualization from './visualization';
 
 const rootReducer = combineReducers({
   composeSelector,
+  correlationSelector,
   datasets,
   datasetSelector,
   documents,

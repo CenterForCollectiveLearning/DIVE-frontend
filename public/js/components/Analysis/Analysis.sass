@@ -115,6 +115,7 @@
 .tableHeaderColumn
   background-color: #F6F6F6
   font-weight: 500
+  padding: 8px
 
 .comparisonTableHeaderCell
   text-transform: uppercase
@@ -122,12 +123,14 @@
 .standardError
   color: #999
 
-.dataCell
-  display: flex
-
-.dataCell, .tableCell, .footerCell
+.dataCell, .textCell
+  width: 100%
   padding: 4px
-  justify-content: center
+
+  > div
+    display: flex
+    padding: 4px
+    justify-content: center
 
 .dataColumn, .footerColumn
   &:first-child
@@ -152,6 +155,7 @@
     text-overflow: ellipsis
     overflow: hidden
     word-break: break-word
+    padding: 8px
 
 .dataRow + .footerRow
   border-top-width: 2px
@@ -192,3 +196,20 @@
   + .titleField:before
     content: ', '
 
+.correlationScatterplots
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  align-content: flex-start
+  flex-grow: 1
+
+  .correlationScatterplot
+    width: 33.33%
+    display: flex
+    flex-direction: column
+    position: relative
+    padding: 15px
+
+    .header
+      text-align: center
+      font-size: 14px

@@ -45,15 +45,20 @@ export class AnalysisSidebar extends Component {
 
     const tabItems = [
       {
+        label: "Summary",
+        type: "summary",
+        selected: selectedTab == "summary"
+      },
+      {
+        label: "Correlation",
+        type: "correlation",
+        selected: selectedTab == "correlation"
+      },
+      {
         label: "Regression",
         type: "regression",
         selected: selectedTab == "regression"
       },
-      {
-        label: "Summary",
-        type: "summary",
-        selected: selectedTab == "summary"
-      }
     ];
 
     return (

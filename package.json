@@ -14,6 +14,7 @@
     "component-file-picker": "^0.2.1",
     "css-loader": "^0.18.0",
     "cssnext-loader": "^1.0.1",
+    "d3-scale": "^0.6.2",
     "express": "4.13.3",
     "extract-text-webpack-plugin": "^0.8.2",
     "file-loader": "^0.8.4",
