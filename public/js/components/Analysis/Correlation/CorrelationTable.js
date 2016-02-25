@@ -12,10 +12,11 @@ export default class CorrelationTable extends Component {
   render() {
     const { correlationResult } = this.props;
 
-    const backgroundColorScale = d3Scale.scaleLinear().domain([-1, 1]).range(['red', 'green']);
-    const fontColorScale = function(v) { return '#FFF'; }
+    const backgroundColorScale = d3Scale.scaleLinear().domain([-1, 0, 1]).range(['red', 'white', 'green']);
+    const fontColorScale = d3Scale.scaleThreshold().domain([-1, 0, 1]).range(['white', 'black', 'white']);
 
     const renderDataColumn = function(property, customStyles={}) {
+      console.log('CustomStyles', customStyles);
       return (
         <div style={ customStyles } className={ styles.dataCell }>
           <div className={ styles.coefficient }>
