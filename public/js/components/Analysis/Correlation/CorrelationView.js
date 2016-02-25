@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { getCorrelations } from '../../../actions/CorrelationActions';
+import { getCorrelations, getCorrelationScatterplot } from '../../../actions/CorrelationActions';
 
 import styles from '../Analysis.sass';
 
 import CorrelationTable from './CorrelationTable';
+import CorrelationScatterplotCard from './CorrelationScatterplotCard';
 import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
 
@@ -19,7 +20,7 @@ export class CorrelationView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { correlationVariableNames, getCorrelations } = this.props
+    const { correlationVariableNames, getCorrelations, getCorrelationScatterplot, correlationResult } = this.props
 
     const correlationVariableChanged = nextProps.correlationVariableNames.length != correlationVariableNames.length;
     const twoVariablesSelected = nextProps.correlationVariableNames.length >= 2;
@@ -27,13 +28,15 @@ export class CorrelationView extends Component {
       getCorrelations(nextProps.projectId, nextProps.datasetId, nextProps.correlationVariableNames)
     }
 
+    if (nextProps.projectId && nextProps.correlationResult && nextProps.correlationResult.id && (nextProps.correlationResult.id != this.props.correlationResult.id)) {
+      getCorrelationScatterplot(nextProps.projectId, nextProps.correlationResult.id);
+    }
+
   }
   render() {
-    const { correlationResult, correlationVariableNames } = this.props;
+    const { correlationResult, correlationVariableNames, correlationScatterplots } = this.props;
     const twoCorrelationVariablesSelected = correlationVariableNames.length >= 2;
     const correlationResultHasElements = correlationResult && correlationResult.rows &&  correlationResult.rows.length > 0;
-
-
 
     if (twoCorrelationVariablesSelected && correlationResultHasElements) {
       return (
@@ -53,6 +56,11 @@ export class CorrelationView extends Component {
             } />
             <CorrelationTable correlationResult={ correlationResult } />
           </Card>
+          { (correlationResultHasElements && correlationScatterplots.length > 0) &&
+            <CorrelationScatterplotCard
+              data={ correlationScatterplots }
+            />
+          }
         </div>
       );
     }
@@ -67,6 +75,8 @@ export class CorrelationView extends Component {
 
 function mapStateToProps(state) {
   const { project, correlationSelector, datasetSelector, fieldProperties } = state;
+  const { correlationScatterplots } = correlationSelector;
+
   const correlationVariableNames = fieldProperties.items
     .filter((property) => correlationSelector.correlationVariableIds.indexOf(property.id) >= 0)
     .map((field) => field.name);
@@ -76,7 +86,8 @@ function mapStateToProps(state) {
     datasetId: datasetSelector.datasetId,
     correlationResult: correlationSelector.correlationResult,
     correlationVariableNames: correlationVariableNames,
+    correlationScatterplots: correlationScatterplots
   }
 }
 
-export default connect(mapStateToProps, { getCorrelations })(CorrelationView);
+export default connect(mapStateToProps, { getCorrelations, getCorrelationScatterplot })(CorrelationView);

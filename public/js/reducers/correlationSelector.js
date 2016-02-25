@@ -1,14 +1,17 @@
 import {
-  WIPE_PROJECT_STATE,
   SELECT_DATASET,
   SELECT_CORRELATION_VARIABLE,
   RECEIVE_CORRELATION,
-  RECEIVE_FIELD_PROPERTIES
+  RECEIVE_FIELD_PROPERTIES,
+  RECEIVE_CORRELATION_SCATTERPLOT,
+  WIPE_PROJECT_STATE,
+  CLEAR_ANALYSIS
 } from '../constants/ActionTypes';
 
 const baseState = {
   correlationVariableIds: [],
-  correlationResult: {}
+  correlationResult: {},
+  correlationScatterplots: []
 }
 
 export default function correlationSelector(state = baseState, action) {
@@ -36,6 +39,12 @@ export default function correlationSelector(state = baseState, action) {
 
     case SELECT_DATASET:
       return baseState;
+
+    case WIPE_PROJECT_STATE, CLEAR_ANALYSIS:
+      return baseState;
+
+    case RECEIVE_CORRELATION_SCATTERPLOT:
+      return { ...state, correlationScatterplots: (action.data.data || []) };
 
     default:
       return state;

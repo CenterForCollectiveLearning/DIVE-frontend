@@ -16,7 +16,6 @@ export default class CorrelationTable extends Component {
     const fontColorScale = d3Scale.scaleThreshold().domain([-1, 0, 1]).range(['white', 'black', 'white']);
 
     const renderDataColumn = function(property, customStyles={}) {
-      console.log('CustomStyles', customStyles);
       return (
         <div style={ customStyles } className={ styles.dataCell }>
           <div className={ styles.coefficient }>
