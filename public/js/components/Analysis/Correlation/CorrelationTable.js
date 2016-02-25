@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from '../Analysis.sass';
 
+import * as d3Scale from 'd3-scale';
+
 import BareDataGrid from '../../Base/BareDataGrid';
 import { getRoundedString } from '../../../helpers/helpers';
 
@@ -10,13 +12,16 @@ export default class CorrelationTable extends Component {
   render() {
     const { correlationResult } = this.props;
 
-    const renderDataColumn = function(property) {
+    const backgroundColorScale = d3Scale.scaleLinear().domain([-1, 1]).range(['red', 'green']);
+    const fontColorScale = function(v) { return '#FFF'; }
+
+    const renderDataColumn = function(property, customStyles={}) {
       return (
-        <div>
-          <div className={ styles.dataCell + ' ' + styles.coefficient }>
+        <div style={ customStyles } className={ styles.dataCell }>
+          <div className={ styles.coefficient }>
             { getRoundedString(property[0], 2, true) }
           </div>
-          <div className={ styles.dataCell + ' ' + styles.standardError }>
+          <div className={ styles.standardError }>
             ({ getRoundedString(property[1], 2, true) })
           </div>
         </div>
@@ -35,7 +40,12 @@ export default class CorrelationTable extends Component {
           columnClass: styles.dataColumn,
           items: [ row.field, ...row.data.map(function(column){
             if (column[0] == null) { return "";}
-            return (renderDataColumn(column));
+            return (renderDataColumn(
+              column,
+              { backgroundColor: backgroundColorScale(column[0]),
+                color: fontColorScale(column[0])
+              }
+            ));
           })]
         })
       })
@@ -44,7 +54,7 @@ export default class CorrelationTable extends Component {
     return (
       <div className={ styles.aggregationTable }>
         <div className={ styles.gridWithRowFieldLabel }>
-          <BareDataGrid data={ data }/>
+          <BareDataGrid data={ data } />
         </div>
       </div>
     );

@@ -55,7 +55,7 @@ export class AnalysisSidebar extends Component {
         selected: selectedTab == "summary"
       },
       {
-        label: "Correlations",
+        label: "Correlation",
         type: "correlation",
         selected: selectedTab == "correlation"
       }

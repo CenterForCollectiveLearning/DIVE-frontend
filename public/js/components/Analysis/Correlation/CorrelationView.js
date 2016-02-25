@@ -22,7 +22,6 @@ export class CorrelationView extends Component {
     const { correlationVariableNames, getCorrelations } = this.props
 
     const correlationVariableChanged = nextProps.correlationVariableNames.length != correlationVariableNames.length;
-    console.log(correlationVariableChanged)
     const twoVariablesSelected = nextProps.correlationVariableNames.length >= 2;
     if (nextProps.projectId && nextProps.datasetId && correlationVariableChanged && twoVariablesSelected) {
       getCorrelations(nextProps.projectId, nextProps.datasetId, nextProps.correlationVariableNames)
@@ -34,12 +33,14 @@ export class CorrelationView extends Component {
     const twoCorrelationVariablesSelected = correlationVariableNames.length >= 2;
     const correlationResultHasElements = correlationResult && correlationResult.rows &&  correlationResult.rows.length > 0;
 
+
+
     if (twoCorrelationVariablesSelected && correlationResultHasElements) {
       return (
         <div className={ styles.aggregationViewContainer }>
           <Card>
             <HeaderBar header={
-              <span>Correlation Matrix: {
+              <span>Correlating {
                 correlationVariableNames.map((name, i) =>
                   <span
                     key={ `correlation-title-${ name }-${ i }` }

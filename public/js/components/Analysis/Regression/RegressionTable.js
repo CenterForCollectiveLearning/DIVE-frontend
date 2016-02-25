@@ -55,12 +55,12 @@ export default class RegressionTable extends Component {
 
     const renderDataColumn = function(property, enabled) {
       return (
-        <div>
-          <div className={ styles.dataCell + ' ' + styles.coefficient }>
+        <div className={ styles.dataCell }>
+          <div className={ styles.coefficient }>
             { context.getCoefficientString(property.coefficient, property.pValue, enabled) }
           </div>
           { enabled &&
-            <div className={ styles.dataCell + ' ' + styles.standardError }>
+            <div className={ styles.standardError }>
               ({ getRoundedString(property.standardError) })
             </div>
           }
