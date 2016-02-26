@@ -14,7 +14,7 @@ export default class PieChart extends Component {
     );
 
     return (
-      <Chart chartType="PieChart" options={ options } data={ pieData } graph_id={ chartId }/>
+      <Chart chartType="PieChart" chartVersion="43" options={ options } data={ pieData } graph_id={ chartId }/>
     );
   }
 }

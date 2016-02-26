@@ -19,7 +19,7 @@ export default class ScatterChart extends Component {
     }
 
     return (
-      <Chart chartType="ScatterChart" options={ scatterChartOptions } data = { data } graph_id={ chartId }/>
+      <Chart chartType="ScatterChart" chartVersion="43" options={ scatterChartOptions } data = { data } graph_id={ chartId }/>
     );
   }
 }

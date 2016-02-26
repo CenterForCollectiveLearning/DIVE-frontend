@@ -20,7 +20,7 @@ export default class LineChart extends Component {
     }
 
     return (
-      <Chart chartType="LineChart" options={ lineChartOptions } data = { data } graph_id={ chartId }/>
+      <Chart chartType="LineChart" chartVersion="43" options={ lineChartOptions } data = { data } graph_id={ chartId }/>
     );
   }
 }
