@@ -19,6 +19,7 @@ import RegressionBasePage from './components/Analysis/Regression/RegressionBaseP
 import RegressionPage from './components/Analysis/Regression/RegressionPage';
 import SummaryPage from './components/Analysis/Summary/SummaryPage';
 import CorrelationPage from './components/Analysis/Correlation/CorrelationPage';
+import ComparisonPage from './components/Analysis/Comparison/ComparisonPage';
 import ExportedVisualizationPage from './components/Visualizations/ExportedVisualization/ExportedVisualizationPage';
 import ComposeBasePage from './components/Compose/ComposeBasePage';
 import ComposePage from './components/Compose/ComposePage';
@@ -55,6 +56,7 @@ export default (
           </Route>
           <Route path="summary" component={ SummaryPage }/>
           <Route path="correlation" component={ CorrelationPage }/>
+          <Route path="comparison" component={ ComparisonPage }/>
         </Route>
       </Route>
       <Route path="compose" component={ ComposeBasePage }>

@@ -91,7 +91,7 @@ export class SummaryView extends Component {
       return (
         <div className={ styles.aggregationViewContainer }>
           <Card>
-            <HeaderBar header={ 
+            <HeaderBar header={
               <span>Aggregation Table: {
                 aggregationIndependentVariableNames.map((name, i) =>
                   <span

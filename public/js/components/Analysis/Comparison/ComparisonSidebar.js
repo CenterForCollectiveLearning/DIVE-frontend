@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectCorrelationVariable } from '../../../actions/CorrelationActions';
+import { selectIndependentVariable, selectDependentVariable } from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
 
 import AnalysisSidebar from '../AnalysisSidebar';
@@ -10,11 +10,9 @@ import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 
-export class CorrelationSidebar extends Component {
+export class ComparisonSidebar extends Component {
   componentWillMount(props) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
-
-    console.log((project.properties.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching));
     if (project.properties.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId)
     }
@@ -30,22 +28,39 @@ export class CorrelationSidebar extends Component {
   }
 
   render() {
-    const quantitativeVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q')
     return (
-      <AnalysisSidebar selectedTab="correlation">
+      <AnalysisSidebar selectedTab="comparison">
         { this.props.fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Correlation Variables">
+          <SidebarGroup heading="Independent Variables">
             <ToggleButtonGroup
-              toggleItems={ quantitativeVariables.map((item) =>
+              toggleItems={ this.props.fieldProperties.items.map((item) =>
                 new Object({
                   id: item.id,
-                  name: item.name
+                  name: item.name,
+                  disabled: (this.props.comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0)
+
                 })
               )}
               valueMember="id"
               displayTextMember="name"
-              externalSelectedItems={ this.props.correlationSelector.correlationVariableIds }
-              onChange={ this.props.selectCorrelationVariable } />
+              externalSelectedItems={ this.props.comparisonSelector.independentVariablesIds }
+              onChange={ this.props.selectIndependentVariable } />
+          </SidebarGroup>
+        }
+        { this.props.fieldProperties.items.length != 0 &&
+          <SidebarGroup heading="Dependent Variables">
+            <ToggleButtonGroup
+              toggleItems={ this.props.fieldProperties.items.map((item) =>
+                new Object({
+                  id: item.id,
+                  name: item.name,
+                  disabled: (this.props.comparisonSelector.independentVariablesIds.indexOf(item.id) >= 0 || item.generalType == 'c')
+                })
+              )}
+              valueMember="id"
+              displayTextMember="name"
+              externalSelectedItems={ this.props.comparisonSelector.dependentVariablesIds }
+              onChange={ this.props.selectDependentVariable } />
           </SidebarGroup>
         }
       </AnalysisSidebar>
@@ -53,21 +68,21 @@ export class CorrelationSidebar extends Component {
   }
 }
 
-CorrelationSidebar.propTypes = {
+ComparisonSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  correlationSelector: PropTypes.object.isRequired
+  comparisonSelector: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, fieldProperties, correlationSelector } = state;
+  const { project, datasetSelector, fieldProperties, comparisonSelector } = state;
   return {
     project,
     datasetSelector,
     fieldProperties,
-    correlationSelector
+    comparisonSelector
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectCorrelationVariable })(CorrelationSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, selectDependentVariable })(ComparisonSidebar);

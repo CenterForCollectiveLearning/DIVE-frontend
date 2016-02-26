@@ -59,6 +59,11 @@ export class AnalysisSidebar extends Component {
         type: "regression",
         selected: selectedTab == "regression"
       },
+      {
+        label: "Comparison",
+        type: "comparison",
+        selected: selectedTab == "comparison"
+      }
     ];
 
     return (
