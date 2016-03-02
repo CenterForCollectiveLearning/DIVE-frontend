@@ -66,7 +66,7 @@ export default class Visualization extends Component {
 
       const header = data[0];
       const dataPoints = data.slice(1);
-      sortedDataPoints = dataPoints.sort((a, b) => {
+      const sortedDataPoints = dataPoints.sort((a, b) => {
         var aValue = a[sortField];
         if (Array.isArray(aValue)) {
           aValue = (aValue[0] + aValue[1]) / 2
