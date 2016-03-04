@@ -34,13 +34,14 @@ const requireAuthentication = UserAuthWrapper({
   failureRedirectPath: '/auth',
   // convert history location descriptor from 2.0 to 1.0
   redirectAction: ({ pathname, query }) => {
+    console.log(query, query.redirect);
     if (query.redirect) {
       return pushState(null, `${pathname}?next=${query.redirect}`)
     } else {
       return pushState(null, pathname)
     }
   },
-  wrapperDisplayName: 'UserIsJWTAuthenticated'
+  wrapperDisplayName: 'UserIsAuthenticated'
 })
 
 export default (

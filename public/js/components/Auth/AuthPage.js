@@ -4,6 +4,7 @@ import { loginUser } from '../../actions/AuthActions';
 
 import styles from './Auth.sass';
 
+import Input from '../Base/Input'
 import BlockingModal from '../Base/BlockingModal';
 import RaisedButton from '../Base/RaisedButton';
 
@@ -63,9 +64,9 @@ class AuthPage extends Component {
           </div>
         }>
         <form>
-          <input type="text" name="email" placeholder="Email" onChange={this.handleEmailChange.bind(this)} />
-          <input type="text" name="username" placeholder="Username" onChange={this.handleUsernameChange.bind(this)} />
-          <input type="password" name="password" placeholder="Password" onChange={this.handlePasswordChange.bind(this)}/>
+          <Input type="text" placeholder="Email" onChange={this.handleEmailChange.bind(this)} />
+          <Input type="text" placeholder="Username" onChange={this.handleUsernameChange.bind(this)} />
+          <Input type="password" placeholder="Password" onChange={this.handlePasswordChange.bind(this)}/>
           <RaisedButton primary minWidth={ 100 } onClick={ this.submit.bind(this) }>Done</RaisedButton>
         </form>
       </BlockingModal>

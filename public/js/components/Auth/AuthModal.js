@@ -4,6 +4,7 @@ import { loginUser } from '../../actions/AuthActions';
 
 import styles from './Auth.sass';
 
+import Input from '../Base/Input'
 import BlockingModal from '../Base/BlockingModal';
 import RaisedButton from '../Base/RaisedButton';
 
