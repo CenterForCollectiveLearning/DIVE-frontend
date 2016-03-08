@@ -8,7 +8,9 @@ import {
   REQUEST_ONE_D_COMPARISON,
   RECEIVE_ONE_D_COMPARISON,
   REQUEST_SUMMARY_STATISTICS,
-  RECEIVE_SUMMARY_STATISTICS
+  RECEIVE_SUMMARY_STATISTICS,
+  SELECT_SUMMARY_CONFIG_X,
+  SELECT_SUMMARY_CONFIG_Y
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
@@ -42,6 +44,20 @@ export function selectAggregationFunction(selectedAggregationFunction) {
     type: SELECT_SUMMARY_AGGREGATION_FUNCTION,
     aggregationFunction: selectedAggregationFunction,
     selectedAt: Date.now()
+  }
+}
+
+export function selectBinningConfigX(config) {
+  return {
+    type: SELECT_SUMMARY_CONFIG_X,
+    config: config
+  }
+}
+
+export function selectBinningConfigY(config) {
+  return {
+    type: SELECT_SUMMARY_CONFIG_Y,
+    config: config
   }
 }
 

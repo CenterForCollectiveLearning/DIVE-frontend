@@ -2,13 +2,14 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectSummaryIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable } from '../../../actions/SummaryActions';
+import { selectBinningConfigX, selectBinningConfigY, selectSummaryIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable } from '../../../actions/SummaryActions';
 import styles from '../Analysis.sass';
 
 import AnalysisSidebar from '../AnalysisSidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
+import BinningSelector from '../../Visualizations/Builder/BinningSelector';
 
 export class SummarySidebar extends Component {
   componentWillMount(props) {
@@ -31,6 +32,9 @@ export class SummarySidebar extends Component {
   render() {
     const nonComparisonVariables = this.props.fieldProperties.items.filter((item) => this.props.summarySelector.comparisonVariablesIds.indexOf(item.id) < 0)
     const aggregationOptions = [{'id': 'count', 'name' : 'count'}, ...nonComparisonVariables.filter((item) => item.generalType == 'q')]
+    const numComparisonVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q' && this.props.summarySelector.comparisonVariablesIds.indexOf(item.id) >= 0 )
+    const numQuantitative = numComparisonVariables.length;
+    const { selectBinningConfigX, selectBinningConfigY } = this.props;
     return (
       <AnalysisSidebar selectedTab="summary">
         { this.props.fieldProperties.items.length != 0 &&
@@ -79,6 +83,18 @@ export class SummarySidebar extends Component {
               onChange={ this.props.selectAggregationWeightVariable }/>
           </SidebarGroup>
         }
+        { numQuantitative >= 1 &&
+          <BinningSelector
+            config={ this.props.summarySelector.binningConfigX }
+            selectBinningConfig={ selectBinningConfigX }
+            name={ numComparisonVariables[0].name }/>
+        }
+        { numQuantitative == 2 &&
+          <BinningSelector
+            config={ this.props.summarySelector.binningConfigY }
+            selectBinningConfig={ selectBinningConfigY }
+            name={ numComparisonVariables[1].name }/>
+        }
 
       </AnalysisSidebar>
     );
@@ -102,4 +118,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectSummaryIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable })(SummarySidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectBinningConfigX, selectBinningConfigY, selectSummaryIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable })(SummarySidebar);
