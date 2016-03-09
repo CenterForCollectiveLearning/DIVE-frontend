@@ -37,6 +37,6 @@ export default function user(state = baseState, action) {
     case USER_LOGGED_OUT:
       return baseState;
     default:
-      return baseState;
+      return state;
   }
 }

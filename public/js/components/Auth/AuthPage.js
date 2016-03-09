@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react';
+
+import { pushState} from 'redux-react-router';
 import { connect } from 'react-redux';
 import { loginUser } from '../../actions/AuthActions';
 
@@ -20,17 +22,37 @@ class AuthPage extends Component {
     };
   }
 
+  componentWillMount() {
+    this.ensureNotLoggedIn(this.props)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('nextProps', nextProps);
+    this.ensureNotLoggedIn(nextProps)
+  }
+
   handleEmailChange(e) {
-     this.setState({email: e.target.value});
+     this.setState({ email: e.target.value });
   }
 
   handleUsernameChange(e) {
-     this.setState({username: e.target.value});
+     this.setState({ username: e.target.value });
   }
 
   handlePasswordChange(e) {
-     this.setState({password: e.target.value});
+     this.setState({ password: e.target.value });
   }
+
+
+  ensureNotLoggedIn(props) {
+    console.log('in ensureNotLoggedIn', props);
+    const { isAuthenticated, pushState } = props;
+
+    console.log('is authenticated', isAuthenticated, props.location.query.next);
+    if (isAuthenticated){
+      pushState(null, props.location.query.next || '/home');
+    }
+  };
 
   submit() {
     const { loginUser } = this.props;
@@ -79,7 +101,8 @@ AuthPage.propTypes = {
 };
 
 function mapStateToProps(state) {
-  return {};
+  const { user } = state;
+  return { isAuthenticated: user.isAuthenticated };
 }
 
-export default connect(mapStateToProps, { loginUser })(AuthPage);
+export default connect(mapStateToProps, { loginUser, pushState})(AuthPage);

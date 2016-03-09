@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { Route, IndexRoute } from 'react-router';
-import { requireAuthentication } from './AuthWrapper';
-
+import { pushState } from 'redux-react-router';
+import { UserAuthWrapper } from 'redux-auth-wrapper';
 
 import AboutPage from './components/Landing/AboutPage';
 import AuthPage from './components/Auth/AuthPage';
@@ -28,9 +28,23 @@ import ComposePage from './components/Compose/ComposePage';
 import NarrativeBasePage from './components/Compose/NarrativeBasePage';
 import NarrativePage from './components/Compose/NarrativePage';
 
+const requireAuthentication = UserAuthWrapper({
+  authSelector: state => state.user,
+  predicate: user => user.isAuthenticated,
+  redirectAction: ({ pathname, query }) => {
+    if (query.redirect) {
+      return pushState(null, `${pathname}?next=${query.redirect}`)
+    } else {
+      return pushState(null, pathname)
+    }
+  },
+  wrapperDisplayName: 'UserIsJWTAuthenticated'
+})
 
 export default (
   <Route path="/" component={ App }>
+    <Route path="/login" component={ AuthPage } />
+
     <IndexRoute component={ LandingPage }/>
     <Route path="/landing" component={ requireAuthentication(LandingPage) }>
       <Route path="/home" component={ HomePage }/>
@@ -38,13 +52,11 @@ export default (
       <Route path="/features" component={ FeaturesPage }/>
     </Route>
 
-    <Route path="/auth" component={ AuthPage } />
-
     <Route path="narrative" component={ NarrativeBasePage }>
       <Route path=":documentId" component={ NarrativePage }/>
     </Route>
 
-    <Route path="/projects/:projectId" component={ ProjectsPage }>
+    <Route path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }>
       <Route path="datasets" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>
         <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>
