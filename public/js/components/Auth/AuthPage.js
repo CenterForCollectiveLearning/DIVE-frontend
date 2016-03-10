@@ -16,9 +16,9 @@ class AuthPage extends Component {
 
     this.state = {
       error: null,
-      email: '',
+      email: 'usedive@gmail.com',
       username: '',
-      password: ''
+      password: 'dive'
     };
   }
 

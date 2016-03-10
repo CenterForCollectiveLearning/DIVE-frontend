@@ -38,7 +38,7 @@ const requireAuthentication = UserAuthWrapper({
       return pushState(null, pathname)
     }
   },
-  wrapperDisplayName: 'UserIsJWTAuthenticated'
+  wrapperDisplayName: 'UserIsAuthenticated'
 })
 
 export default (
@@ -46,7 +46,7 @@ export default (
     <Route path="/login" component={ AuthPage } />
 
     <IndexRoute component={ LandingPage }/>
-    <Route path="/landing" component={ requireAuthentication(LandingPage) }>
+    <Route path="/landing" component={ LandingPage }>
       <Route path="/home" component={ HomePage }/>
       <Route path="/about" component={ AboutPage }/>
       <Route path="/features" component={ FeaturesPage }/>

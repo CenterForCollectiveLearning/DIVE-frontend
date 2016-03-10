@@ -18,6 +18,12 @@ export class ProjectsPage extends Component {
     this._onClickLogo = this._onClickLogo.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.user.isAuthenticated) {
+      pushState(null, '/home')
+    }
+  }
+
   componentDidMount() {
     if (this.props.params.projectId) {
       this.props.fetchProjectIfNeeded(this.props.params.projectId);
@@ -49,7 +55,6 @@ export class ProjectsPage extends Component {
 
   _logout() {
     const { logoutUser } = this.props;
-    console.log('Click logout');
     logoutUser();
   }
 
