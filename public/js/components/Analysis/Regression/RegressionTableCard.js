@@ -25,8 +25,3 @@ export default class RegressionTableCard extends Component {
     );
   }
 }
-
-// RegressionTableCard.propTypes = {
-//   dependentVariableName: PropTypes.string,
-//   independentVariableNames: PropTypes.object.isRequired
-// }

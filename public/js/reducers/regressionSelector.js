@@ -4,6 +4,8 @@ import {
   RECEIVE_FIELD_PROPERTIES,
   REQUEST_RUN_REGRESSION,
   RECEIVE_RUN_REGRESSION,
+  PROGRESS_RUN_REGRESSION,
+  ERROR_RUN_REGRESSION,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
   WIPE_PROJECT_STATE,
   CLEAR_ANALYSIS
@@ -15,6 +17,8 @@ const baseState = {
   independentVariableIds: [],
   regressionResult: {
     loading: false,
+    progress: null,
+    error: null,
     data: null
   },
   contributionToRSquared: []
@@ -51,7 +55,19 @@ export default function regressionSelector(state = baseState, action) {
       return { ...state, regressionResult: { ...state.regressionResult, loading: true } };
 
     case RECEIVE_RUN_REGRESSION:
-      return { ...state, regressionResult: { loading: false, data: action.data } };
+      return { ...state, regressionResult: { loading: false, data: action.data }};
+
+    case ERROR_RUN_REGRESSION:
+      return { ...state, regressionResult: { ...state.regressionResult, error: action.error } };
+
+    case PROGRESS_RUN_REGRESSION:
+      if (action.progress && action.progress.length){
+        return { ...state, regressionResult: { ...state.regressionResult, progress: action.progress} };
+      }
+      return state;
+
+    case ERROR_RUN_REGRESSION:
+      return { ...state, isFetching: false, loaded: true, error: action.error };
 
     case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
       return { ...state, contributionToRSquared: (action.data.data || []) };

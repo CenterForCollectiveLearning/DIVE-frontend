@@ -3,11 +3,13 @@ import {
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
   REQUEST_RUN_REGRESSION,
   RECEIVE_RUN_REGRESSION,
+  PROGRESS_RUN_REGRESSION,
+  ERROR_RUN_REGRESSION,
   REQUEST_CONTRIBUTION_TO_R_SQUARED,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED
 } from '../constants/ActionTypes';
 
-import { fetch } from './api.js';
+import { fetch, pollForTask } from './api.js';
 
 export function selectIndependentVariable(selectedIndependentVariableId) {
   return {
@@ -31,11 +33,25 @@ function requestRunRegressionDispatcher(datasetId) {
   };
 }
 
-function receiveRunRegressionDispatcher(json) {
+function receiveRunRegressionDispatcher(params, json) {
   return {
     type: RECEIVE_RUN_REGRESSION,
     data: json,
     receivedAt: Date.now()
+  };
+}
+
+function progressRunRegressionDispatcher(data) {
+  return {
+    type: PROGRESS_RUN_REGRESSION,
+    progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
+  };
+}
+
+function errorRunRegressionDispatcher(data) {
+  return {
+    type: PROGRESS_RUN_REGRESSION,
+    progress: 'Error running regressions, please check console.'
   };
 }
 
@@ -70,7 +86,13 @@ export function runRegression(projectId, datasetId, dependentVariableName, indep
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
-      .then(json => dispatch(receiveRunRegressionDispatcher(json)));
+      .then(function(json) {
+        if (json.compute) {
+          dispatch(pollForTask(json.taskId, REQUEST_RUN_REGRESSION, params, receiveRunRegressionDispatcher, progressRunRegressionDispatcher, errorRunRegressionDispatcher));
+        } else {
+          dispatch(receiveRunRegressionDispatcher(dispatchParams, json));
+        }
+      })
   };
 }
 
