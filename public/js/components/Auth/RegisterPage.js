@@ -42,6 +42,10 @@ class AuthPage extends Component {
      this.setState({ password: e.target.value });
   }
 
+  _clickLogin() {
+    const { pushState } = this.props;
+    pushState(null, '/login')
+  }
 
   ensureNotLoggedIn(props) {
     const { isAuthenticated, pushState } = props;
@@ -70,16 +74,12 @@ class AuthPage extends Component {
         closeAction={ this.props.closeAction }
         className={ styles.loginModal }
         heading={
-          <span>Login or Register to Proceed</span>
+          <span>Account Registration</span>
         }
         footer={
           <div className={ styles.footerContent }>
-            <div className={ styles.footerLabel }>
-              { this.state.error &&
-                <label className={ styles.error }>{ this.state.error }</label>
-              }
-            </div>
-            <div className={ styles.rightActions }>
+            <div className={ styles.loginText }>
+              Already registered? <span className={ styles.loginLink } onClick={ this._clickLogin.bind(this) }>Click here to login</span>.
             </div>
           </div>
         }>
@@ -112,11 +112,21 @@ class AuthPage extends Component {
               onChange={this.handlePasswordChange.bind(this)}
             />
           </div>
+
+          <div className={ styles.authInputGroup }>
+            <div className={ styles.authInputLabel }>Confirm Password</div>
+            <Input
+              type="password"
+              placeholder="Password"
+              onChange={this.handlePasswordChange.bind(this)}
+            />
+          </div>
+
           <div className={ styles.authInputGroup }>
             <div className={ styles.authInputLabel + ' ' + styles.remember}>Remember Me</div>
             <input type="checkbox" />
           </div>
-          <RaisedButton primary className={ styles.submit } minWidth={ 100 } onClick={ this.submit.bind(this) }>Login</RaisedButton>
+          <RaisedButton primary className={ styles.submit } minWidth={ 100 } onClick={ this.submit.bind(this) }>Create your account</RaisedButton>
         </form>
       </BlockingModal>
     );

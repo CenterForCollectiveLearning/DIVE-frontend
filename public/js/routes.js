@@ -5,7 +5,8 @@ import { pushState } from 'redux-react-router';
 import { UserAuthWrapper } from 'redux-auth-wrapper';
 
 import AboutPage from './components/Landing/AboutPage';
-import AuthPage from './components/Auth/AuthPage';
+import LoginPage from './components/Auth/LoginPage';
+import RegisterPage from './components/Auth/RegisterPage';
 import LandingPage from './components/Landing/LandingPage';
 import HomePage from './components/Landing/HomePage';
 import FeaturesPage from './components/Landing/FeaturesPage';
@@ -31,7 +32,8 @@ import NarrativePage from './components/Compose/NarrativePage';
 const requireAuthentication = UserAuthWrapper({
   authSelector: state => state.user,
   predicate: user => user.isAuthenticated,
-  redirectAction: ({ pathname, query }) => {
+  redirectAction: function({ pathname, query }){
+    console.log('in redirect action', pathname, query);
     if (query.redirect) {
       return pushState(null, `${pathname}?next=${query.redirect}`)
     } else {
@@ -43,7 +45,8 @@ const requireAuthentication = UserAuthWrapper({
 
 export default (
   <Route path="/" component={ App }>
-    <Route path="/login" component={ AuthPage } />
+    <Route path="/login" component={ LoginPage } />
+    <Route path="/register" component={ RegisterPage } />
 
     <IndexRoute component={ LandingPage }/>
     <Route path="/landing" component={ LandingPage }>
