@@ -121,11 +121,7 @@ class AuthPage extends Component {
               onChange={this.handlePasswordChange.bind(this)}
             />
           </div>
-
-          <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabel + ' ' + styles.remember}>Remember Me</div>
-            <input type="checkbox" />
-          </div>
+          
           <RaisedButton primary className={ styles.submit } minWidth={ 100 } onClick={ this.submit.bind(this) }>Create your account</RaisedButton>
         </form>
       </BlockingModal>

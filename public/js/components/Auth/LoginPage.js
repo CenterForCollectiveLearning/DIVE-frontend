@@ -113,8 +113,10 @@ class AuthPage extends Component {
             />
           </div>
           <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabel + ' ' + styles.remember}>Remember Me</div>
-            <input type="checkbox" />
+            <div className={ styles.checkbox }>
+              <div className={ styles.authInputLabel }>Remember Me</div>
+              <input type="checkbox" />
+            </div>
           </div>
           <RaisedButton primary className={ styles.submit } minWidth={ 100 } onClick={ this.submit.bind(this) }>Login</RaisedButton>
         </form>
