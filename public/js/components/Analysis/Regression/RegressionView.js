@@ -30,9 +30,6 @@ export class RegressionView extends Component {
   render() {
     const { regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames } = this.props;
 
-    console.log('REGRESSIONRESULT', regressionResult);
-
-
     if ( !regressionResult.loading && (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0)) {
       return (
         <div className={ styles.regressionViewContainer }></div>
@@ -42,9 +39,12 @@ export class RegressionView extends Component {
     return (
       <div className={ styles.regressionViewContainer }>
         { regressionResult.loading &&
-          <div className={ styles.watermark }>
-            { regressionResult.progress != null ? regressionResult.progress : 'Running regression…' }
-          </div>
+          <Card>
+            <HeaderBar header={ <span>Explaining <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> } />
+            <div className={ styles.watermark }>
+              { regressionResult.progress != null ? regressionResult.progress : 'Running regression…' }
+            </div>
+          </Card>
         }
         { (!regressionResult.loading) &&
           <RegressionTableCard
