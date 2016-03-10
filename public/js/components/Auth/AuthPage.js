@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import { pushState} from 'redux-react-router';
+import { pushState } from 'redux-react-router';
 import { connect } from 'react-redux';
 import { loginUser } from '../../actions/AuthActions';
 
@@ -27,7 +27,6 @@ class AuthPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('nextProps', nextProps);
     this.ensureNotLoggedIn(nextProps)
   }
 
@@ -45,10 +44,8 @@ class AuthPage extends Component {
 
 
   ensureNotLoggedIn(props) {
-    console.log('in ensureNotLoggedIn', props);
     const { isAuthenticated, pushState } = props;
 
-    console.log('is authenticated', isAuthenticated, props.location.query.next);
     if (isAuthenticated){
       pushState(null, props.location.query.next || '/home');
     }
@@ -71,6 +68,7 @@ class AuthPage extends Component {
       <BlockingModal
         scrollable
         closeAction={ this.props.closeAction }
+        className={ styles.loginModal }
         heading={
           <span>Login or Register to Proceed</span>
         }
@@ -85,11 +83,40 @@ class AuthPage extends Component {
             </div>
           </div>
         }>
-        <form>
-          <Input type="text" placeholder="Email" onChange={this.handleEmailChange.bind(this)} />
-          <Input type="text" placeholder="Username" onChange={this.handleUsernameChange.bind(this)} />
-          <Input type="password" placeholder="Password" onChange={this.handlePasswordChange.bind(this)}/>
-          <RaisedButton primary minWidth={ 100 } onClick={ this.submit.bind(this) }>Done</RaisedButton>
+        <form className={ styles.authForm }>
+          <div className={ styles.authInputGroup }>
+            <div className={ styles.authInputLabel }>E-mail</div>
+            <Input
+              type="text"
+              placeholder="jane@gmail.com"
+              autocomplete="on"
+              onChange={this.handleEmailChange.bind(this)}
+            />
+          </div>
+
+          <div className={ styles.authInputGroup }>
+            <div className={ styles.authInputLabel }>Username</div>
+            <Input
+              type="text"
+              placeholder="diveuser"
+              autocomplete="on"
+              onChange={this.handleUsernameChange.bind(this)}
+            />
+          </div>
+
+          <div className={ styles.authInputGroup }>
+            <div className={ styles.authInputLabel }>Password</div>
+            <Input
+              type="password"
+              placeholder="Password"
+              onChange={this.handlePasswordChange.bind(this)}
+            />
+          </div>
+          <div className={ styles.authInputGroup }>
+            <div className={ styles.authInputLabel + ' ' + styles.remember}>Remember Me</div>
+            <input type="checkbox" />
+          </div>
+          <RaisedButton primary className={ styles.submit } minWidth={ 100 } onClick={ this.submit.bind(this) }>Login</RaisedButton>
         </form>
       </BlockingModal>
     );

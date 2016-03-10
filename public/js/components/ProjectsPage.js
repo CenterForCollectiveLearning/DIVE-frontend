@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
+import { logoutUser } from '../actions/AuthActions'
 import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions.js';
 import styles from './App/App.sass';
 
@@ -46,8 +47,14 @@ export class ProjectsPage extends Component {
     this.props.pushState(null, `/`);
   }
 
+  _logout() {
+    const { logoutUser } = this.props;
+    console.log('Click logout');
+    logoutUser();
+  }
+
   render() {
-    const { params, datasetSelector } = this.props;
+    const { params, user, datasetSelector } = this.props;
 
     const datasetId = params.datasetId || datasetSelector.datasetId;
 
@@ -66,8 +73,14 @@ export class ProjectsPage extends Component {
             <Tab label="ANALYZE" value="analyze" route={ `datasets/${ datasetId }/analyze/summary` } disabled={ !datasetId }/>
             <Tab label="COMPOSE" value="compose" route={ `compose` }/>
           </Tabs>
+          <div className={ styles.userStatus }>
+            Logged in as { user.username }
+          </div>
+          <div className={ styles.logout } onClick={ this._logout.bind(this) }>
+            Logout
+          </div>
         </div>
-        {this.props.children}
+        { this.props.children }
       </div>
     );
   }
@@ -89,4 +102,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { pushState, fetchProjectIfNeeded })(ProjectsPage);
+export default connect(mapStateToProps, { pushState, fetchProjectIfNeeded, logoutUser })(ProjectsPage);

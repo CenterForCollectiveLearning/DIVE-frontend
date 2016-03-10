@@ -12,6 +12,7 @@ export default class Input extends Component {
   render() {
     return (
       <input
+        autoComplete={ this.props.autocomplete }
         className={ styles.input
           + (this.props.large ? ' ' + styles.large : '')
           + (this.props.className ? ' ' + this.props.className : '') }
@@ -26,6 +27,7 @@ export default class Input extends Component {
 }
 
 Input.propTypes = {
+  autocomplete: PropTypes.string,
   className: PropTypes.string,
   placeholder: PropTypes.string,
   type: PropTypes.string,
@@ -37,6 +39,7 @@ Input.propTypes = {
 }
 
 Input.defaultProps = {
+  autocomplete: "off",
   large: false,
   type: "text",
   placeholder: ""

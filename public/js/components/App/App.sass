@@ -1,4 +1,5 @@
 @import '../../../css/flexbox.sass'
+@import '../../../css/mixins.sass'
 
 .header
   display: flex
@@ -25,6 +26,17 @@
     font-weight: 600
     margin-top: 11px
     color: #FFFFFF
+
+.userStatus
+  +montserrat
+  margin-left: auto
+  padding: 12px 24px
+  transition: background-color 0.35s cubic-bezier(0.35, 0, 0.25, 1)
+  line-height: 24px
+
+  font-size: 14px
+  text-align: center
+  color: #CFD8DC
 
 .appContainer, .projectContainer
   +maxHeight100NoOverflow
