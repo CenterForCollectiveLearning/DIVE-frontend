@@ -57,7 +57,7 @@ function requestAggregationDispatcher(datasetId) {
   };
 }
 
-function receiveAggregationDispatcher(json) {
+function receiveAggregationDispatcher(params, json) {
   return {
     type: RECEIVE_AGGREGATION,
     data: json,

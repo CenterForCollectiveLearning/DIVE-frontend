@@ -52,7 +52,6 @@ export class SummaryView extends Component {
   render() {
     const { aggregationResult, summaryResult, oneDimensionComparisonResult, aggregationIndependentVariableNames } = this.props;
 
-    console.log(aggregationResult.data, summaryResult.data, oneDimensionComparisonResult.data);
     const noComparisonVariablesSelected = aggregationIndependentVariableNames.length ==0;
     const oneComparisonVariableSelected = aggregationIndependentVariableNames.length == 1;
     const twoComparisonVariablesSelected = aggregationIndependentVariableNames.length == 2;
@@ -68,8 +67,8 @@ export class SummaryView extends Component {
               { summaryResult.progress != null ? summaryResult.progress : 'Calculating summary…' }
             </div>
           }
-          { !summaryResult.loading && summaryDictHasElements && summaryResult.data.items.map((item, i) => {
-            const columnHeaders = (item.type == 'c') ? summaryResult.categoricalHeaders : summaryResult.numericalHeaders;
+          { (!summaryResult.loading && summaryDictHasElements) && summaryResult.data.items.map((item, i) => {
+            const columnHeaders = (item.type == 'c') ? summaryResult.data.categoricalHeaders : summaryResult.data.numericalHeaders;
             return (
               <div className={ styles.summaryCardHolder } key={ `variable-summary-card-${ i }` }>
               <VariableSummaryCard

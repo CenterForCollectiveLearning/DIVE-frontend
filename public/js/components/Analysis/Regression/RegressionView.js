@@ -46,7 +46,7 @@ export class RegressionView extends Component {
             </div>
           </Card>
         }
-        { (!regressionResult.loading) &&
+        { (!regressionResult.loading && regressionResult.data) &&
           <RegressionTableCard
             dependentVariableName={ dependentVariableName }
             independentVariableNames={ independentVariableNames }
