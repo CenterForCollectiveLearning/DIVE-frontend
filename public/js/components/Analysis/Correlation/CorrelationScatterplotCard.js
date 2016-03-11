@@ -61,12 +61,11 @@ export default class CorrelationScatterplotCard extends Component {
         <HeaderBar header={ <span>Correlation Scatterplots</span> } />
         <div className={ styles.correlationScatterplots }>
           { data.map((scatterplotData, i) =>
-            <div className={ styles.correlationScatterplot } >
+            <div className={ styles.correlationScatterplot } key={ `scatterplot-${ scatterplotData.x }-${ scatterplotData.y }` }>
               <div className={ styles.header }>
                 { scatterplotData.x + ' vs. ' + scatterplotData.y }
               </div>
               <ScatterChart
-                key={ `scatterplot-${ i }` }
                 chartId={ `scatterplot-${ i }` }
                 data={ scatterplotData.data }
                 options={ options }
