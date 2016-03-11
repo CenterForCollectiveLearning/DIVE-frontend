@@ -51,47 +51,60 @@ export class SummaryView extends Component {
   }
   render() {
     const { aggregationResult, summaryResult, oneDimensionComparisonResult, aggregationIndependentVariableNames } = this.props;
-    const noComparisonVariablesSelected =aggregationIndependentVariableNames.length ==0;
-    const oneComparisonVariableSelected =aggregationIndependentVariableNames.length == 1;
+
+    const noComparisonVariablesSelected = aggregationIndependentVariableNames.length ==0;
+    const oneComparisonVariableSelected = aggregationIndependentVariableNames.length == 1;
     const twoComparisonVariablesSelected = aggregationIndependentVariableNames.length == 2;
-    const oneDimensionDictHasElements = oneDimensionComparisonResult && oneDimensionComparisonResult.rows && oneDimensionComparisonResult.rows.length > 0;
-    const aggregationDictHasElements = aggregationResult && aggregationResult.rows && aggregationResult.rows.length > 0;
-    const summaryDictHasElements = summaryResult && summaryResult.items &&  summaryResult.items.length > 0;
+    const oneDimensionDictHasElements = oneDimensionComparisonResult.data && oneDimensionComparisonResult.data.rows && oneDimensionComparisonResult.data.rows.length > 0;
+    const aggregationDictHasElements = aggregationResult.data && aggregationResult.data.rows && aggregationResult.data.rows.length > 0;
+    const summaryDictHasElements = summaryResult.data && summaryResult.data.items && summaryResult.data.items.length > 0;
 
-
-    if (noComparisonVariablesSelected && summaryDictHasElements) {
+    if (noComparisonVariablesSelected ) {
       return (
         <div className={ styles.summaryViewContainer }>
-          { summaryResult.items.map((item, i) => {
-            const columnHeaders = (item.type == 'c') ? summaryResult.categoricalHeaders : summaryResult.numericalHeaders;
+          { summaryResult.loading &&
+            <div className={ styles.watermark }>
+              { summaryResult.progress != null ? summaryResult.progress : 'Calculating summary…' }
+            </div>
+          }
+          { (!summaryResult.loading && summaryDictHasElements) && summaryResult.data.items.map((item, i) => {
+            const columnHeaders = (item.type == 'c') ? summaryResult.data.categoricalHeaders : summaryResult.data.numericalHeaders;
             return (
               <div className={ styles.summaryCardHolder } key={ `variable-summary-card-${ i }` }>
-                <VariableSummaryCard
-                  variable={ item }
-                  columnHeaders={ columnHeaders }/>
+              <VariableSummaryCard
+                variable={ item }
+                columnHeaders={ columnHeaders }/>
               </div>
             );
           })}
+
         </div>
       )
     }
 
-    else if (oneComparisonVariableSelected && oneDimensionDictHasElements) {
+    else if (oneComparisonVariableSelected) {
       return (
         <div className={ styles.aggregationViewContainer }>
           <Card>
             <HeaderBar header={ <span>Comparison Table: <span className={ styles.titleField }>{ aggregationIndependentVariableNames[0] }</span></span> } />
-            <ComparisonTableOneD comparisonResult={ oneDimensionComparisonResult } comparisonVariableNames={ aggregationIndependentVariableNames }/>
+            { oneDimensionComparisonResult.loading &&
+              <div className={ styles.watermark }>
+                { oneDimensionComparisonResult.progress != null ? oneDimensionComparisonResult.progress : 'Calculating oneDimensionComparisonResult…' }
+              </div>
+            }
+            { (!oneDimensionComparisonResult.loading && oneDimensionDictHasElements) &&
+              <ComparisonTableOneD comparisonResult={ oneDimensionComparisonResult.data } comparisonVariableNames={ aggregationIndependentVariableNames }/>
+            }
           </Card>
         </div>
       );
     }
 
-    else if (twoComparisonVariablesSelected && aggregationDictHasElements) {
+    else if (twoComparisonVariablesSelected) {
       return (
         <div className={ styles.aggregationViewContainer }>
           <Card>
-            <HeaderBar header={ 
+            <HeaderBar header={
               <span>Aggregation Table: {
                 aggregationIndependentVariableNames.map((name, i) =>
                   <span
@@ -103,7 +116,14 @@ export class SummaryView extends Component {
               }
               </span>
             } />
-            <AggregationTable aggregationResult={ aggregationResult } aggregationIndependentVariableNames={ aggregationIndependentVariableNames }/>
+            { aggregationResult.loading &&
+              <div className={ styles.watermark }>
+                { aggregationResult.progress != null ? aggregationResult.progress : 'Calculating aggregationResult…' }
+              </div>
+            }
+            { (!aggregationResult.loading && aggregationDictHasElements) &&
+              <AggregationTable aggregationResult={ aggregationResult.data } aggregationIndependentVariableNames={ aggregationIndependentVariableNames }/>
+            }
           </Card>
         </div>
       );
