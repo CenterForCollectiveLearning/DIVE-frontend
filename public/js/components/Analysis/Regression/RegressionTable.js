@@ -99,6 +99,16 @@ export default class RegressionTable extends Component {
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
         items: [
+          <em className="cmu">DOF</em>,
+          ...regressionResult.regressionsByColumn.map((column) =>
+            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.dof) }</div>
+          )
+        ]
+      },
+      {
+        rowClass: styles.footerRow,
+        columnClass: styles.footerColumn,
+        items: [
           <em className="cmu">F</em>,
           ...regressionResult.regressionsByColumn.map((column) =>
             <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.fTest) }</div>

@@ -47,7 +47,7 @@ export default class BinningSelector extends Component {
       new Object({ ...binningType, selected: binningType.value == this.state['binning_type'] })
     );
 
-    const numBins = _.range(1, 26).map((num) => 
+    const numBins = _.range(1, 26).map((num) =>
       new Object({
         label: `${ num }`,
         value: num,
@@ -65,8 +65,10 @@ export default class BinningSelector extends Component {
       new Object({ ...binningProcedure, selected: binningProcedure.value == this.state['binning_procedure'] })
     );
 
+    const headerName = this.props.name ? "Binning of " + this.props.name : "Binning Configuration"
+
     return (
-      <SidebarGroup heading="Binning Configuration">
+      <SidebarGroup heading={headerName}>
         <div className={ styles.binningConfigContainer }>
           <div className={ styles.fieldGroup + ' ' + styles.binningConfigBlock }>
             <div className={ styles.fieldGroupLabel }>Type</div>

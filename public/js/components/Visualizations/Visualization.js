@@ -49,40 +49,45 @@ export default class Visualization extends Component {
     }
     const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
 
-    var sortField, sortOrder;
+    var finalDataArray = data;
 
-    sortFields.forEach(function(s) {
-      if (s.selected)
-        sortField = s.id;
-    });
-    sortOrders.forEach(function(s) {
-      if (s.selected)
-        sortOrder = s.id;
-    });
-    const sortIndex = (sortOrder == 'asc') ? 1 : -1;
+    if (sortFields.length && sortOrders.length) {
+      var sortField, sortOrder;
 
-    const header = data[0];
-    const dataPoints = data.slice(1);
-    const sortedDataPoints = dataPoints.sort((a, b) => {
-      var aValue = a[sortField];
-      if (Array.isArray(aValue)) {
-        aValue = (aValue[0] + aValue[1]) / 2
-      }
-      var bValue = b[sortField];
-      if (Array.isArray(bValue)) {
-        bValue = (bValue[0] + bValue[1]) / 2
-      }
-      if (aValue < bValue) {
-        return sortIndex * -1;
-      }
-      else if (aValue > bValue) {
-        return sortIndex;
-      }
-      else {
-        return 0;
-      }
-    });
-    var finalDataArray = [ header, ...sortedDataPoints ]
+      sortFields.forEach(function(s) {
+        if (s.selected)
+          sortField = s.id;
+      });
+      sortOrders.forEach(function(s) {
+        if (s.selected)
+          sortOrder = s.id;
+      });
+      const sortIndex = (sortOrder == 'asc') ? 1 : -1;
+
+      const header = data[0];
+      const dataPoints = data.slice(1);
+      const sortedDataPoints = dataPoints.sort((a, b) => {
+        var aValue = a[sortField];
+        if (Array.isArray(aValue)) {
+          aValue = (aValue[0] + aValue[1]) / 2
+        }
+        var bValue = b[sortField];
+        if (Array.isArray(bValue)) {
+          bValue = (bValue[0] + bValue[1]) / 2
+        }
+        if (aValue < bValue) {
+          return sortIndex * -1;
+        }
+        else if (aValue > bValue) {
+          return sortIndex;
+        }
+        else {
+          return 0;
+        }
+      });
+
+      finalDataArray = [ header, ...sortedDataPoints ];
+    }
 
     var options = {
       backgroundColor: 'transparent',

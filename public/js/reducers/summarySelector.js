@@ -3,6 +3,8 @@ import {
   SELECT_SUMMARY_INDEPENDENT_VARIABLE,
   SELECT_SUMMARY_AGGREGATION_FUNCTION,
   SELECT_SUMMARY_AGGREGATION_WEIGHT_VARIABLE,
+  SELECT_SUMMARY_CONFIG_X,
+  SELECT_SUMMARY_CONFIG_Y,
   RECEIVE_AGGREGATION,
   RECEIVE_ONE_D_COMPARISON,
   RECEIVE_SUMMARY_STATISTICS,
@@ -19,6 +21,8 @@ const baseState = {
   aggregationFunction: 'SUM',
   weightVariableId: 'UNIFORM',
   summaryResult: {},
+  binningConfigX: {},
+  binningConfigY: {},
   loadSummary: false
 }
 
@@ -53,6 +57,12 @@ export default function summarySelector(state = baseState, action) {
 
     case SELECT_SUMMARY_AGGREGATION_WEIGHT_VARIABLE:
       return { ...state, weightVariableId: action.aggregationWeightVariableId }
+
+    case SELECT_SUMMARY_CONFIG_X:
+      return { ...state, binningConfigX: action.config }
+
+    case SELECT_SUMMARY_CONFIG_Y:
+      return { ...state, binningConfigY: action.config }
 
     case WIPE_PROJECT_STATE:
       return baseState;

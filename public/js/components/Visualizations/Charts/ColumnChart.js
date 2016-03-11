@@ -47,7 +47,7 @@ export default class ColumnChart extends Component {
     };
 
     return (
-      <Chart chartType="ColumnChart" options={ columnChartOptions } data={ finalData } graph_id={ chartId }/>
+      <Chart chartType="ColumnChart" chartVersion="43" options={ columnChartOptions } data={ finalData } graph_id={ chartId }/>
     );
   }
 }
