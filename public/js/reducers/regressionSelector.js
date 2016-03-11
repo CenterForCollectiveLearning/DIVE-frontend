@@ -67,7 +67,7 @@ export default function regressionSelector(state = baseState, action) {
       return state;
 
     case ERROR_RUN_REGRESSION:
-      return { ...state, isFetching: false, loaded: true, error: action.error };
+      return { ...state, regressionResult: { loading: false, error: action.error } };
 
     case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
       return { ...state, contributionToRSquared: (action.data.data || []) };

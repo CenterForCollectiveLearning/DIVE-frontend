@@ -5,13 +5,19 @@ import {
   SELECT_SUMMARY_AGGREGATION_WEIGHT_VARIABLE,
   REQUEST_AGGREGATION,
   RECEIVE_AGGREGATION,
+  PROGRESS_AGGREGATION,
+  ERROR_AGGREGATION,
   REQUEST_ONE_D_COMPARISON,
   RECEIVE_ONE_D_COMPARISON,
+  PROGRESS_ONE_D_COMPARISON,
+  ERROR_ONE_D_COMPARISON,
   REQUEST_SUMMARY_STATISTICS,
-  RECEIVE_SUMMARY_STATISTICS
+  RECEIVE_SUMMARY_STATISTICS,
+  PROGRESS_SUMMARY_STATISTICS,
+  ERROR_SUMMARY_STATISTICS
 } from '../constants/ActionTypes';
 
-import { fetch } from './api.js';
+import { fetch, pollForTask } from './api.js';
 
 export function selectSummaryIndependentVariable(selectedIndependentVariableId) {
   return {
@@ -59,6 +65,20 @@ function receiveAggregationDispatcher(json) {
   };
 }
 
+function progressAggregationDispatcher(data) {
+  return {
+    type: PROGRESS_AGGREGATION,
+    progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
+  };
+}
+
+function errorAggregationDispatcher(json) {
+  return {
+    type: PROGRESS_AGGREGATION,
+    progress: 'Error calculating aggregation table, please check console.'
+  };
+}
+
 export function runAggregation(projectId, datasetId, aggregationVariable, comparisonVariables) {
   const params = {
     projectId: projectId,
@@ -76,7 +96,13 @@ export function runAggregation(projectId, datasetId, aggregationVariable, compar
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
-      .then(json => dispatch(receiveAggregationDispatcher(json)))
+      .then(function(json) {
+        if (json.compute) {
+          dispatch(pollForTask(json.taskId, REQUEST_AGGREGATION, params, receiveAggregationDispatcher, progressAggregationDispatcher, errorAggregationDispatcher));
+        } else {
+          dispatch(receiveAggregationDispatcher(dispatchParams, json));
+        }
+      })
       .catch(err => console.error("Error creating contingency table: ", err));
   };
 }
@@ -87,11 +113,25 @@ function requestOneDComparisonDispatcher(datasetId) {
   };
 }
 
-function receiveOneDComparisonDispatcher(json) {
+function receiveOneDComparisonDispatcher(params, json) {
   return {
     type: RECEIVE_ONE_D_COMPARISON,
     data: json,
     receivedAt: Date.now()
+  };
+}
+
+function progressOneDComparisonDispatcher(data) {
+  return {
+    type: PROGRESS_ONE_D_COMPARISON,
+    progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
+  };
+}
+
+function errorOneDComparisonDispatcher(json) {
+  return {
+    type: PROGRESS_ONE_D_COMPARISON,
+    progress: 'Error calculating one-dimension aggregation table, please check console.'
   };
 }
 
@@ -112,7 +152,13 @@ export function runComparisonOneDimensional(projectId, datasetId, aggregationVar
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
-      .then(json => dispatch(receiveOneDComparisonDispatcher(json)))
+      .then(function(json) {
+        if (json.compute) {
+          dispatch(pollForTask(json.taskId, REQUEST_ONE_D_COMPARISON, params, receiveOneDComparisonDispatcher, progressOneDComparisonDispatcher, errorOneDComparisonDispatcher));
+        } else {
+          dispatch(receiveOneDComparisonDispatcher(dispatchParams, json));
+        }
+      })
       .catch(err => console.error("Error creating contingency table: ", err));
   };
 }
@@ -123,11 +169,25 @@ function requestSummaryStatisticsDispatcher(datasetId) {
   };
 }
 
-function receiveSummaryStatisticsDispatcher(json) {
+function receiveSummaryStatisticsDispatcher(params, json) {
   return {
     type: RECEIVE_SUMMARY_STATISTICS,
     data: json,
     receivedAt: Date.now()
+  };
+}
+
+function progressSummaryStatisticsDispatcher(data) {
+  return {
+    type: PROGRESS_SUMMARY_STATISTICS,
+    progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
+  };
+}
+
+function errorSummaryStatisticsDispatcher(json) {
+  return {
+    type: PROGRESS_SUMMARY_STATISTICS,
+    progress: 'Error calculating summary statistics, please check console.'
   };
 }
 
@@ -147,7 +207,13 @@ export function getVariableSummaryStatistics(projectId, datasetId, aggregationVa
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
-      .then(json => dispatch(receiveSummaryStatisticsDispatcher(json)))
-      .catch(err => console.error("Error creating summary table: ", err));
+      .then(function(json) {
+        if (json.compute) {
+          dispatch(pollForTask(json.taskId, REQUEST_SUMMARY_STATISTICS, params, receiveSummaryStatisticsDispatcher, progressSummaryStatisticsDispatcher, errorSummaryStatisticsDispatcher));
+        } else {
+          dispatch(receiveSummaryStatisticsDispatcher(dispatchParams, json));
+        }
+      })
+      .catch(err => console.error('Error creating summary table: ', err));
   };
 }
