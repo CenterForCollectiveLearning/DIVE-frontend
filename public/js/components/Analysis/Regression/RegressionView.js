@@ -42,7 +42,7 @@ export class RegressionView extends Component {
           <Card>
             <HeaderBar header={ <span>Explaining <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> } />
             <div className={ styles.watermark }>
-              { regressionResult.progress != null ? regressionResult.progress : 'Running regression…' }
+              { regressionResult.progress != null ? regressionResult.progress : 'Running regressions…' }
             </div>
           </Card>
         }

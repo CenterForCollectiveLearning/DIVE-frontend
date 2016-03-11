@@ -36,9 +36,10 @@ export class CorrelationView extends Component {
   render() {
     const { correlationResult, correlationVariableNames, correlationScatterplots } = this.props;
     const twoCorrelationVariablesSelected = correlationVariableNames.length >= 2;
-    const correlationResultHasElements = correlationResult && correlationResult.rows &&  correlationResult.rows.length > 0;
+    const correlationResultHasElements = correlationResult.data && correlationResult.data.rows && correlationResult.data.rows.length > 0;
 
-    if (twoCorrelationVariablesSelected && correlationResultHasElements) {
+    console.log(correlationResult);
+    if (twoCorrelationVariablesSelected ) {
       return (
         <div className={ styles.aggregationViewContainer }>
           <Card>
@@ -54,7 +55,14 @@ export class CorrelationView extends Component {
               }
               </span>
             } />
-            <CorrelationTable correlationResult={ correlationResult } />
+            { correlationResult.loading &&
+              <div className={ styles.watermark }>
+                { correlationResult.progress != null ? correlationResult.progress : 'Running correlations…' }
+              </div>
+            }
+            { (!correlationResult.loading && correlationResultHasElements) &&
+              <CorrelationTable correlationResult={ correlationResult.data || {} } />
+            }
           </Card>
           { (correlationResultHasElements && correlationScatterplots.length > 0) &&
             <CorrelationScatterplotCard
