@@ -66,7 +66,7 @@ export function getCorrelations(projectId, datasetId, correlationVariables) {
       if (json.compute) {
         dispatch(pollForTask(json.taskId, REQUEST_CORRELATION, params, receiveCorrelationDispatcher, progressCorrelationDispatcher, errorCorrelationDispatcher));
       } else {
-        dispatch(receiveCorrelationDispatcher(dispatchParams, json));
+        dispatch(receiveCorrelationDispatcher(params, json));
       }
     })
     .catch(err => console.error("Error creating correlation matrix: ", err));

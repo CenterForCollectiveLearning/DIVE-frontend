@@ -90,7 +90,7 @@ export function runRegression(projectId, datasetId, dependentVariableName, indep
         if (json.compute) {
           dispatch(pollForTask(json.taskId, REQUEST_RUN_REGRESSION, params, receiveRunRegressionDispatcher, progressRunRegressionDispatcher, errorRunRegressionDispatcher));
         } else {
-          dispatch(receiveRunRegressionDispatcher(dispatchParams, json));
+          dispatch(receiveRunRegressionDispatcher(params, json));
         }
       })
   };

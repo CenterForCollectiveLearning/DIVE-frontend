@@ -38,7 +38,6 @@ export class CorrelationView extends Component {
     const twoCorrelationVariablesSelected = correlationVariableNames.length >= 2;
     const correlationResultHasElements = correlationResult.data && correlationResult.data.rows && correlationResult.data.rows.length > 0;
 
-    console.log(correlationResult);
     if (twoCorrelationVariablesSelected ) {
       return (
         <div className={ styles.aggregationViewContainer }>

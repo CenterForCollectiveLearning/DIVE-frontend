@@ -100,7 +100,7 @@ export function runAggregation(projectId, datasetId, aggregationVariable, compar
         if (json.compute) {
           dispatch(pollForTask(json.taskId, REQUEST_AGGREGATION, params, receiveAggregationDispatcher, progressAggregationDispatcher, errorAggregationDispatcher));
         } else {
-          dispatch(receiveAggregationDispatcher(dispatchParams, json));
+          dispatch(receiveAggregationDispatcher(params, json));
         }
       })
       .catch(err => console.error("Error creating contingency table: ", err));
@@ -156,7 +156,7 @@ export function runComparisonOneDimensional(projectId, datasetId, aggregationVar
         if (json.compute) {
           dispatch(pollForTask(json.taskId, REQUEST_ONE_D_COMPARISON, params, receiveOneDComparisonDispatcher, progressOneDComparisonDispatcher, errorOneDComparisonDispatcher));
         } else {
-          dispatch(receiveOneDComparisonDispatcher(dispatchParams, json));
+          dispatch(receiveOneDComparisonDispatcher(params, json));
         }
       })
       .catch(err => console.error("Error creating contingency table: ", err));
@@ -211,7 +211,7 @@ export function getVariableSummaryStatistics(projectId, datasetId, aggregationVa
         if (json.compute) {
           dispatch(pollForTask(json.taskId, REQUEST_SUMMARY_STATISTICS, params, receiveSummaryStatisticsDispatcher, progressSummaryStatisticsDispatcher, errorSummaryStatisticsDispatcher));
         } else {
-          dispatch(receiveSummaryStatisticsDispatcher(dispatchParams, json));
+          dispatch(receiveSummaryStatisticsDispatcher(params, json));
         }
       })
       .catch(err => console.error('Error creating summary table: ', err));
