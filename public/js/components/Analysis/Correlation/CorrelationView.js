@@ -28,8 +28,8 @@ export class CorrelationView extends Component {
       getCorrelations(nextProps.projectId, nextProps.datasetId, nextProps.correlationVariableNames)
     }
 
-    if (nextProps.projectId && nextProps.correlationResult && nextProps.correlationResult.id && (nextProps.correlationResult.id != this.props.correlationResult.id)) {
-      getCorrelationScatterplot(nextProps.projectId, nextProps.correlationResult.id);
+    if (nextProps.projectId && nextProps.correlationResult.data && nextProps.correlationResult.data.id && (this.props.correlationResult.data == null || (nextProps.correlationResult.data.id != this.props.correlationResult.data.id))) {
+      getCorrelationScatterplot(nextProps.projectId, nextProps.correlationResult.data.id);
     }
 
   }
@@ -40,7 +40,7 @@ export class CorrelationView extends Component {
 
     if (twoCorrelationVariablesSelected ) {
       return (
-        <div className={ styles.aggregationViewContainer }>
+        <div className={ styles.correlationViewContainer }>
           <Card>
             <HeaderBar header={
               <span>Correlating {
