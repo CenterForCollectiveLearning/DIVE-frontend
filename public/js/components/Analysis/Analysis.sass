@@ -9,27 +9,18 @@
   flex-direction: row
   overflow: hidden
 
-  background-color: #e9e7e8
-
 .regressionViewContainer, .summaryViewContainer, .aggregationViewContainer
   +fillContainer
   overflow-y: scroll
 
-.summaryViewContainer
-  flex-direction: row
-  flex-wrap: wrap
+  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
 
+.summaryViewContainer
   .summaryCardHolder
-    width: 50%
+    flex-grow: 1
 
     &:last-child > div
       margin-bottom: 8px
-
-    &:nth-child(odd) > div
-      margin-right: 4px
-
-    &:nth-child(even) > div
-      margin-left: 4px
 
     > div
       margin-bottom: 0
@@ -213,3 +204,19 @@
     .header
       text-align: center
       font-size: 14px
+
+.headerControl
+  display: flex
+  flex-direction: row
+  min-width: 160px
+  align-items: center
+
+  &.datasetSelectorControl
+    min-width: 240px
+
+  > span
+    margin-right: 10px
+
+    white-space: nowrap
+    font-size: 13px
+    font-weight: 300

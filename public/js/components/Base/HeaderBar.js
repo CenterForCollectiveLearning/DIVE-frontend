@@ -7,7 +7,12 @@ export default class HeaderBar extends Component {
     return (
       <div className={ styles.headerBar + (this.props.className ? ' ' + this.props.className : '') } >
         <div className={ styles.headerText + (this.props.textClassName ? ' ' + this.props.textClassName : '') } >
-          { this.props.header }           
+          { this.props.header }
+          { this.props.subheader &&
+            <div className={ styles.subheaderText }>
+              { this.props.subheader }
+            </div>
+          }
         </div>
         <div className={ styles.rightActions } >
           { this.props.actions }
@@ -19,6 +24,7 @@ export default class HeaderBar extends Component {
 
 HeaderBar.propTypes = {
   header: PropTypes.any,
+  subheader: PropTypes.any,
   actions: PropTypes.node,
   className: PropTypes.string,
   textClassName: PropTypes.string

@@ -5,7 +5,7 @@ import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesAc
 import { selectCorrelationVariable } from '../../../actions/CorrelationActions';
 import styles from '../Analysis.sass';
 
-import AnalysisSidebar from '../AnalysisSidebar';
+import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -31,7 +31,7 @@ export class CorrelationSidebar extends Component {
   render() {
     const quantitativeVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q')
     return (
-      <AnalysisSidebar selectedTab="correlation">
+      <Sidebar selectedTab="correlation">
         { this.props.fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Correlation Variables">
             <ToggleButtonGroup
@@ -47,7 +47,7 @@ export class CorrelationSidebar extends Component {
               onChange={ this.props.selectCorrelationVariable } />
           </SidebarGroup>
         }
-      </AnalysisSidebar>
+      </Sidebar>
     );
   }
 }

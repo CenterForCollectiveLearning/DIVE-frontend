@@ -6,7 +6,6 @@ import { runRegression, getContributionToRSquared } from '../../../actions/Regre
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
-import HeaderBar from '../../Base/HeaderBar';
 import RegressionTableCard from './RegressionTableCard';
 import ContributionToRSquaredCard from './ContributionToRSquaredCard';
 

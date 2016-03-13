@@ -56,7 +56,7 @@ export default class VariableSummaryCard extends Component {
 
     return (
       <Card>
-        <HeaderBar header={ <span>Summary: <span className={ styles.titleField }>{ variable.field }</span></span> } />
+        <HeaderBar subheader={ <span className={ styles.titleField }>{ variable.field }</span>} />
         <div className={ styles.summaryVariableContainer }>
           <div className={ styles.summaryChartContainer }>
             <ColumnChart data={ variable.vizData } chartId={ `summary-chart-${ variable.field }` } options={ options } />
