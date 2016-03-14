@@ -1,6 +1,9 @@
 @import '../../../css/mixins.sass'
 @import '../../../css/flexbox.sass'
 
+.datasetContainer
+  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
+
 .datasetPageContainer, .datasetContainer
   overflow: hidden
 
@@ -185,3 +188,27 @@
         > div
           text-align: right
           padding-right: 10px
+
+.headerControlRow
+  display: flex
+  flex-direction: row-reverse
+  flex-grow: 1
+
+  > div
+    margin-left: 10px
+
+.headerControl
+  display: flex
+  flex-direction: row
+  align-items: center
+
+  &.datasetSelectorControl
+    min-width: 240px
+
+  > span
+    margin-right: 10px
+
+    white-space: nowrap
+    font-size: 13px
+    font-weight: 300
+
