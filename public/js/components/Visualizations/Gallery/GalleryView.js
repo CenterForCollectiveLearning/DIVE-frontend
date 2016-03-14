@@ -100,7 +100,7 @@ export class GalleryView extends Component {
             actions={
               <div className={ styles.headerControlRow }>
                 { filteredSpecs.length > 0 &&
-                  <div className={ styles.headerControl }>
+                  <div className={ styles.headerControl + ' ' + styles.headerControlLong }>
                     <span>Sort by </span>
                     <DropDownMenu
                       options={ gallerySelector.sortingFunctions }
