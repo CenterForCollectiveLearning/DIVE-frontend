@@ -36,7 +36,7 @@ export class DatasetInspectPage extends Component {
     fetchFieldPropertiesIfNeeded(params.projectId, params.datasetId);
 
     if (project.properties.id && !datasets.fetchedAll && !datasets.isFetching) {
-      fetchDatasetsIfNeeded(projectId, false);
+      fetchDatasetsIfNeeded(params.projectId, false);
     }
   }
 
@@ -52,7 +52,7 @@ export class DatasetInspectPage extends Component {
     }
 
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      pushState(null, `/projects/${ this.props.params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+      pushState(null, `/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
     }
   }
 
@@ -82,19 +82,18 @@ export class DatasetInspectPage extends Component {
 
   onSelectDataset(selectedValue) {
     if (selectedValue) {
-      this.props.pushState(null, `/projects/${ this.props.projectId }/datasets/${ selectedValue }/inspect`);
+      this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/${ selectedValue }/inspect`);
     }
   }
 
   onClickDeleteDataset() {
-    const { deleteDataset, datasetSelector, projectId } = this.props;
+    const { deleteDataset, datasetSelector, project } = this.props;
 
-    deleteDataset(projectId, datasetSelector.datasetId);
+    deleteDataset(project.properties.id, datasetSelector.datasetId);
   }
 
   onClickUploadDataset() {
-    const projectId = this.props.projectId;
-    this.props.pushState(null, `/projects/${ projectId }/datasets/upload`);
+    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/upload`);
   }
 
   render() {

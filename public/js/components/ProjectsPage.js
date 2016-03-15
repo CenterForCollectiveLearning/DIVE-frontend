@@ -60,7 +60,6 @@ export class ProjectsPage extends Component {
   }
 
   _handleTabsChange(tab){
-    console.log(tab);
     this.props.pushState(null, `/projects/${ this.props.params.projectId }/${ tab.props.route }`);
   }
 
