@@ -10,6 +10,7 @@ import {
   ERROR_REGISTER_USER,
 } from '../constants/ActionTypes';
 
+
 import { fetch } from './api.js';
 
 function requestLoginUserDispatcher() {
@@ -30,6 +31,29 @@ function receiveLoginUserDispatcher(json) {
 function errorLoginUserDispatcher(error) {
   return {
     type: ERROR_LOGIN_USER,
+    message: error.message
+  }
+}
+
+
+function requestRegisterUserDispatcher() {
+  return {
+    type: REQUEST_REGISTER_USER
+  }
+}
+
+function receiveRegisterUserDispatcher(json) {
+  return {
+    type: RECEIVE_REGISTER_USER,
+    username: json.user.username,
+    email: json.user.email,
+    message: json.message
+  }
+}
+
+function errorRegisterUserDispatcher(error) {
+  return {
+    type: ERROR_REGISTER_USER,
     message: error.message
   }
 }
@@ -67,6 +91,40 @@ export function loginUser(email, username, password) {
     .catch( error => { console.log('Login failed', error); });
   };
 }
+
+export function registerUser(email, username, password) {
+  const params = {
+    'email': email,
+    'username': username,
+    'password': password
+  };
+
+  return (dispatch) => {
+    dispatch(requestRegisterUserDispatcher());
+    return fetch('/auth/v1/register', {
+      method: 'post',
+      credentials: 'include',
+      body: JSON.stringify(params),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(function(response) {
+      if (response.status >= 400) {
+        response.json().then( json =>
+          dispatch(errorRegisterUserDispatcher(json))
+        );
+      } else {
+        response.json().then( json =>
+          dispatch(receiveRegisterUserDispatcher(json))
+        );
+      }
+    })
+    .catch( error => { console.log('Login failed', error); });
+  };
+}
+
 
 function requestLogoutUserDispatcher() {
   return {

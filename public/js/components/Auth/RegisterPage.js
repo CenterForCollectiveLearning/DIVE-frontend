@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import { pushState } from 'redux-react-router';
 import { connect } from 'react-redux';
-import { loginUser } from '../../actions/AuthActions';
+import { registerUser } from '../../actions/AuthActions';
 
 import styles from './Auth.sass';
 
@@ -56,9 +56,9 @@ class AuthPage extends Component {
   };
 
   submit() {
-    const { loginUser } = this.props;
+    const { registerUser } = this.props;
     const { email, username, password } = this.state;
-    loginUser(email, username, password);
+    registerUser(email, username, password);
   }
 
   render() {
@@ -121,7 +121,7 @@ class AuthPage extends Component {
               onChange={this.handlePasswordChange.bind(this)}
             />
           </div>
-          
+
           <RaisedButton primary className={ styles.submit } minWidth={ 100 } onClick={ this.submit.bind(this) }>Create your account</RaisedButton>
         </form>
       </BlockingModal>
@@ -138,4 +138,4 @@ function mapStateToProps(state) {
   return { isAuthenticated: user.isAuthenticated };
 }
 
-export default connect(mapStateToProps, { loginUser, pushState})(AuthPage);
+export default connect(mapStateToProps, { registerUser, pushState})(AuthPage);
