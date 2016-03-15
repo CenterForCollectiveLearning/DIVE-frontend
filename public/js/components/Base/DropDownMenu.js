@@ -9,26 +9,36 @@ export default class DropDownMenu extends Component {
   }
 
   render() {
-    const { value, options, valueMember, displayTextMember, onChange, multi, clearable, searchable, className } = this.props;
+    const { value, options, valueMember, displayTextMember, onChange, multi, clearable, searchable, className, valueClassName, prefix } = this.props;
 
     const selectedValueObject = options.find((option) => option.selected);
     const selectedValue = (value == null && selectedValueObject) ? 
       selectedValueObject.value : value;
 
+    const valueRenderer = (option) => {
+      return (
+        <div className={ styles.valueContainer }>
+          { prefix && 
+            <span className={ styles.prefix }>{ prefix }: </span>
+          }
+          <span className={ styles.value + (valueClassName ? ' ' + valueClassName : '') }>{ option[displayTextMember] }</span>
+        </div>
+      );
+    } 
+
+
     return (
       <div className={ styles.dropDownMenu + (className ? ' ' + className : '') }>
         <Select
           value={ selectedValue }
-          options={ options.map((option, i) =>
-            new Object({
-              value: option[ valueMember ],
-              label: option[ displayTextMember ]
-            })
-          )}
+          labelKey={ displayTextMember }
+          valueKey={ valueMember }
+          options={ options }
           onChange={ this.onChange.bind(this) }
           multi={ multi }
           clearable={ clearable }
-          searchable={ searchable } />
+          searchable={ searchable }
+          valueRenderer={ valueRenderer.bind(this) }/>
       </div>
     );
   }
@@ -43,11 +53,15 @@ DropDownMenu.propTypes = {
   multi: PropTypes.bool,
   clearable: PropTypes.bool,
   searchable: PropTypes.bool,
-  className: PropTypes.string
+  className: PropTypes.string,
+  valueClassName: PropTypes.string,
+  prefix: PropTypes.string
 };
 
 DropDownMenu.defaultProps = {
   className: null,
+  valueClassName: null,
+  prefix: null,
   value: null,
   multi: false,
   clearable: false,
