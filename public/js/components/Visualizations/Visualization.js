@@ -40,10 +40,12 @@ export default class Visualization extends Component {
     const MAX_ELEMENTS = {
       preview: {
         all: 2000,
+        scatter: 500,
         treemap: 200
       },
       full: {
         all: 3000,
+        scatter: 1000,
         treemap: 400
       }
     }

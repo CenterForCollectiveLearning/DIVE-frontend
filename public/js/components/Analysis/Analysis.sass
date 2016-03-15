@@ -1,6 +1,13 @@
 @import '../../../css/flexbox.sass'
 @import '../../../css/mixins.sass'
 
+.watermark
+  +watermark
+  padding: 200px 0 260px
+
+  &.watermarkNoSpacer
+    padding: 0
+
 .analysisContainer
   overflow: hidden
 
@@ -11,7 +18,7 @@
 
   background-color: #e9e7e8
 
-.regressionViewContainer, .summaryViewContainer, .aggregationViewContainer
+.regressionViewContainer, .summaryViewContainer, .aggregationViewContainer, .correlationViewContainer
   +fillContainer
   overflow-y: scroll
 

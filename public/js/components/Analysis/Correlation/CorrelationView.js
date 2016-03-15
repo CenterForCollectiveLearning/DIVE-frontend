@@ -28,19 +28,19 @@ export class CorrelationView extends Component {
       getCorrelations(nextProps.projectId, nextProps.datasetId, nextProps.correlationVariableNames)
     }
 
-    if (nextProps.projectId && nextProps.correlationResult && nextProps.correlationResult.id && (nextProps.correlationResult.id != this.props.correlationResult.id)) {
-      getCorrelationScatterplot(nextProps.projectId, nextProps.correlationResult.id);
+    if (nextProps.projectId && nextProps.correlationResult.data && nextProps.correlationResult.data.id && (this.props.correlationResult.data == null || (nextProps.correlationResult.data.id != this.props.correlationResult.data.id))) {
+      getCorrelationScatterplot(nextProps.projectId, nextProps.correlationResult.data.id);
     }
 
   }
   render() {
     const { correlationResult, correlationVariableNames, correlationScatterplots } = this.props;
     const twoCorrelationVariablesSelected = correlationVariableNames.length >= 2;
-    const correlationResultHasElements = correlationResult && correlationResult.rows &&  correlationResult.rows.length > 0;
+    const correlationResultHasElements = correlationResult.data && correlationResult.data.rows && correlationResult.data.rows.length > 0;
 
-    if (twoCorrelationVariablesSelected && correlationResultHasElements) {
+    if (twoCorrelationVariablesSelected ) {
       return (
-        <div className={ styles.aggregationViewContainer }>
+        <div className={ styles.correlationViewContainer }>
           <Card>
             <HeaderBar header={
               <span>Correlating {
@@ -54,7 +54,14 @@ export class CorrelationView extends Component {
               }
               </span>
             } />
-            <CorrelationTable correlationResult={ correlationResult } />
+            { correlationResult.loading &&
+              <div className={ styles.watermark }>
+                { correlationResult.progress != null ? correlationResult.progress : 'Running correlations…' }
+              </div>
+            }
+            { (!correlationResult.loading && correlationResultHasElements) &&
+              <CorrelationTable correlationResult={ correlationResult.data || {} } />
+            }
           </Card>
           { (correlationResultHasElements && correlationScatterplots.length > 0) &&
             <CorrelationScatterplotCard
