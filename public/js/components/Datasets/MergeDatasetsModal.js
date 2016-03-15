@@ -104,7 +104,7 @@ class MergeDatasetsModal extends Component {
   }
 
   onSelectRightDataset(datasetId) {
-    this.setState({ rightDatasetId: `${ datasetId }`, error: null });
+    this.setState({ rightDatasetId: datasetId, error: null });
   }
 
   onSelectMergeMethod(mergeMethodValue) {
