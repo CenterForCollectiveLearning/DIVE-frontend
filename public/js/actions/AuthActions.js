@@ -10,8 +10,12 @@ import {
   ERROR_REGISTER_USER,
 } from '../constants/ActionTypes';
 
+import { default } from 'cryptojs';
+// import CryptoJs from 'cryptojs';
 
 import { fetch } from './api.js';
+
+console.log(Crypto.MD5('test'))
 
 function requestLoginUserDispatcher() {
   return {
@@ -60,10 +64,11 @@ function errorRegisterUserDispatcher(error) {
 
 
 export function loginUser(email, username, password) {
+  const encryptedPassword = Crypto.MD5(password);
   const params = {
     'email': email,
     'username': username,
-    'password': password
+    'password': encryptedPassword
   };
 
   return (dispatch) => {
@@ -93,10 +98,11 @@ export function loginUser(email, username, password) {
 }
 
 export function registerUser(email, username, password) {
+  const encryptedPassword = Crypto.MD5(password);
   const params = {
     'email': email,
     'username': username,
-    'password': password
+    'password': encryptedPassword
   };
 
   return (dispatch) => {
