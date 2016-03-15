@@ -10,6 +10,7 @@ import {
   ERROR_REGISTER_USER,
 } from '../constants/ActionTypes';
 
+import cookie from 'react-cookie';
 import { default } from 'cryptojs';
 import { fetch } from './api.js';
 

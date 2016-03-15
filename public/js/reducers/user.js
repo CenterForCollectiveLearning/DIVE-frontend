@@ -12,33 +12,15 @@ import {
 
 import cookie from 'react-cookie';
 
-console.log('Cookie load:', cookie.load('remember_token'));
-
-// Rehydrated state
-const rehydratedState = {
-  rememberToken: cookie.load('remember_token') || null,
-  isAuthenticated: cookie.load('remember_token') ? true : false,
-  loggedOut: false,
-  error: {
-    login: '',
-    logout: '',
-    register: ''
-  },
-  success: {
-    login: '',
-    logout: '',
-    register: ''
-  },
-  username: '',
-  email: '',
-  properties: {},
-  id: null,
-}
+console.log('Remember Token:', cookie.load('remember_token'));
+console.log('Username:', cookie.load('username'));
+console.log('Email:', cookie.load('email'));
 
 const baseState = {
-  rememberToken: null,
-  isAuthenticated: false,
-  loggedOut: false,
+  rememberToken: cookie.load('remember_token') || null,
+  isAuthenticated: cookie.load('remember_token') ? true : false,
+  username: cookie.load('username') || '',
+  email: cookie.load('email') || '',
   error: {
     login: '',
     logout: '',
@@ -49,8 +31,6 @@ const baseState = {
     logout: '',
     register: ''
   },
-  username: '',
-  email: '',
   properties: {},
   id: null,
 }
@@ -59,7 +39,6 @@ export default function user(state = baseState, action) {
   switch (action.type) {
     case RECEIVE_LOGIN_USER:
       return { ...state,
-        loggedOut: false,
         success: { login: action.message, register: '' },
         isAuthenticated: true,
         username: action.username,
@@ -69,7 +48,6 @@ export default function user(state = baseState, action) {
       return { ...state, error: { login: action.message }};
     case RECEIVE_REGISTER_USER:
       return { ...state,
-        loggedOut: false,
         success: { register: action.message, login: ''},
         isAuthenticated: true,
         username: action.username,
@@ -78,9 +56,13 @@ export default function user(state = baseState, action) {
     case ERROR_REGISTER_USER:
       return { ...state, error: { register: action.message }};
     case RECEIVE_LOGOUT_USER:
-      return { ...baseState, loggedOut: true };
-    case RECEIVE_LOGOUT_USER:
-      return { ...baseState, loggedOut: true };
+      return {
+        ...baseState,
+        rememberToken: null,
+        username: '',
+        email: '',
+        isAuthenticated: false
+      };
     default:
       return state;
   }
