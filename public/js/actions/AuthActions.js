@@ -11,11 +11,8 @@ import {
 } from '../constants/ActionTypes';
 
 import { default } from 'cryptojs';
-// import CryptoJs from 'cryptojs';
-
 import { fetch } from './api.js';
 
-console.log(Crypto.MD5('test'))
 
 function requestLoginUserDispatcher() {
   return {
