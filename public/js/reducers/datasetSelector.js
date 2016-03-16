@@ -11,7 +11,6 @@ import {
 const baseState = {
   datasetId: null,
   title: null,
-  content: {},
   loaded: false,
   isUploading: false,
   uploadError: null,
@@ -33,14 +32,14 @@ export default function datasetSelector(state = baseState, action) {
       if (action.error) {
         return { ...state, loaded: true, isUploading: false, uploadError: action.error };
       }
-      return { ...state, datasetId: action.datasets[0].datasetId, loaded: true, isUploading: false, uploadError: null };
+      return { ...state, datasetId: action.datasets[0].datasetId, title: action.datasets[0].title, loaded: true, isUploading: false, uploadError: null };
 
     case RECEIVE_DATASET:
-      return { ...state, datasetId: action.datasetId, loaded: true, progress: null };
+      return { ...state, datasetId: action.datasetId, title: action.title, loaded: true, progress: null };
 
     case RECEIVE_DATASETS:
       if (action.datasets.length > 0 && action.setSelector) {
-        return { ...state, datasetId: state.datasetId || action.datasets[0].datasetId, loaded: true };
+        return { ...state, datasetId: state.datasetId || action.datasets[0].datasetId, title: state.title || action.datasets[0].title, loaded: true };
       }
       return { ...state, loaded: true };
 
