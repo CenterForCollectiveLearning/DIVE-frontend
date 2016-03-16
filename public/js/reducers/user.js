@@ -43,7 +43,8 @@ export default function user(state = baseState, action) {
         success: { login: action.message, register: '' },
         isAuthenticated: true,
         username: action.username,
-        email: action.email
+        email: action.email,
+        id: action.id
       };
     case ERROR_LOGIN_USER:
       return { ...state, error: { login: action.message }};
@@ -52,7 +53,8 @@ export default function user(state = baseState, action) {
         success: { register: action.message, login: ''},
         isAuthenticated: true,
         username: action.username,
-        email: action.email
+        email: action.email,
+        id: action.id
       };
     case ERROR_REGISTER_USER:
       return { ...state, error: { register: action.message }};

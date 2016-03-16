@@ -24,6 +24,7 @@ function requestLoginUserDispatcher() {
 function receiveLoginUserDispatcher(json) {
   return {
     type: RECEIVE_LOGIN_USER,
+    id: json.user.id,
     username: json.user.username,
     email: json.user.email,
     message: json.message
@@ -47,6 +48,7 @@ function requestRegisterUserDispatcher() {
 function receiveRegisterUserDispatcher(json) {
   return {
     type: RECEIVE_REGISTER_USER,
+    id: json.user.id,
     username: json.user.username,
     email: json.user.email,
     message: json.message

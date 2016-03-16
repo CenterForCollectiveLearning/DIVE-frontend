@@ -91,16 +91,18 @@ export function createProjectIfNeeded(user_id, title, description) {
 }
 
 export function createProject(user_id, title, description) {
-  var formData = new FormData();
-  formData.append('user_id', user_id);
-  formData.append('title', title);
-  formData.append('description', description);
+  const params = {
+    'user_id': user_id,
+    'title': title,
+    'description': description
+  }
 
   return dispatch => {
     dispatch(createProjectDispatcher());
     return fetch('/projects/v1/projects', {
       method: 'post',
-      body: formData
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
       .then(json => dispatch(createdProjectDispatcher(json)));
   }
