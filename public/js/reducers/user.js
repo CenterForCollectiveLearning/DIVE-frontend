@@ -21,6 +21,7 @@ const baseState = {
   isAuthenticated: cookie.load('remember_token') ? true : false,
   username: cookie.load('username') || '',
   email: cookie.load('email') || '',
+  id: cookie.load('user_id') || '',
   error: {
     login: '',
     logout: '',
@@ -61,6 +62,7 @@ export default function user(state = baseState, action) {
         rememberToken: null,
         username: '',
         email: '',
+        id: '',
         isAuthenticated: false
       };
     default:
