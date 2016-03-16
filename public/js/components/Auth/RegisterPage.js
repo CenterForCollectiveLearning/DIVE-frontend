@@ -10,15 +10,25 @@ import Input from '../Base/Input'
 import BlockingModal from '../Base/BlockingModal';
 import RaisedButton from '../Base/RaisedButton';
 
+function validateEmail(email)
+{
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+}
+
 class AuthPage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      error: null,
       email: 'usedive@gmail.com',
       username: '',
-      password: 'dive'
+      password: 'dive',
+      confirmPassword: '',
+      emailValid: null,
+      emailTaken: null,
+      usernameTaken: null,
+      passwordMatching: null,
     };
   }
 
@@ -36,7 +46,12 @@ class AuthPage extends Component {
   }
 
   handleEmailChange(e) {
-     this.setState({ email: e.target.value });
+    const email = e.target.value;
+    const emailValid = validateEmail(email)
+     this.setState({
+       email: e.target.value,
+       emailValid: emailValid
+     });
   }
 
   handleUsernameChange(e) {
@@ -44,7 +59,14 @@ class AuthPage extends Component {
   }
 
   handlePasswordChange(e) {
-     this.setState({ password: e.target.value });
+    const password = e.target.value;
+    this.setState({ password: e.target.value });
+  }
+
+  handleConfirmPasswordChange(e) {
+    const confirmPassword = e.target.value;
+    const passwordMatching = (confirmPassword == this.state.password)
+    this.setState({ passwordMatching: passwordMatching, confirmPassword: confirmPassword});
   }
 
   _clickLogin() {
@@ -68,6 +90,7 @@ class AuthPage extends Component {
 
   render() {
     const { authRequired } = this.props;
+    const { email, emailValid, password, confirmPassword, passwordMatching } = this.state;
 
     if (authRequired) {
       openModal();
@@ -88,9 +111,21 @@ class AuthPage extends Component {
             </div>
           </div>
         }>
+        <div>
+          <div>email: { email }</div>
+          <div>emailValid: { emailValid }</div>
+          <div>password: { password }</div>
+          <div>confirmPassword: { confirmPassword }</div>
+          <div>passwordMatching: { passwordMatching }</div>
+        </div>
         <form className={ styles.authForm }>
           <div className={ styles.authInputGroup }>
             <div className={ styles.authInputLabel }>E-mail</div>
+            { (email && emailValid != null && !emailValid) &&
+              <div className={ styles.error }>
+                Please enter a valid e-mail
+              </div>
+            }
             <Input
               type="text"
               placeholder="jane@gmail.com"
@@ -113,17 +148,22 @@ class AuthPage extends Component {
             <div className={ styles.authInputLabel }>Password</div>
             <Input
               type="password"
-              placeholder="Password"
+              placeholder="P4ssword1?"
               onChange={this.handlePasswordChange.bind(this)}
             />
           </div>
 
           <div className={ styles.authInputGroup }>
             <div className={ styles.authInputLabel }>Confirm Password</div>
+            { (confirmPassword && passwordMatching != null && !passwordMatching) &&
+              <div className={ styles.error }>
+                Passwords do not match
+              </div>
+            }
             <Input
               type="password"
-              placeholder="Password"
-              onChange={this.handlePasswordChange.bind(this)}
+              placeholder="P4ssword1?"
+              onChange={this.handleConfirmPasswordChange.bind(this)}
             />
           </div>
 
