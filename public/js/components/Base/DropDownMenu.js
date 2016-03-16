@@ -5,7 +5,8 @@ import Select from 'react-select';
 
 export default class DropDownMenu extends Component {
   onChange(item) {
-    this.props.onChange(item.value);
+    const { onChange, valueMember } = this.props;
+    this.props.onChange(item[valueMember]);
   }
 
   render() {
@@ -13,7 +14,7 @@ export default class DropDownMenu extends Component {
 
     const selectedValueObject = options.find((option) => option.selected);
     const selectedValue = (value == null && selectedValueObject) ? 
-      selectedValueObject.value : value;
+      selectedValueObject[valueMember] : value;
 
     const valueRenderer = (option) => {
       return (
