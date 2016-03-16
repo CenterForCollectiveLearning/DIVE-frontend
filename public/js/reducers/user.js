@@ -12,10 +12,6 @@ import {
 
 import cookie from 'react-cookie';
 
-console.log('Remember Token:', cookie.load('remember_token'));
-console.log('Username:', cookie.load('username'));
-console.log('Email:', cookie.load('email'));
-
 const baseState = {
   rememberToken: cookie.load('remember_token') || null,
   isAuthenticated: cookie.load('remember_token') ? true : false,
@@ -32,8 +28,7 @@ const baseState = {
     logout: '',
     register: ''
   },
-  properties: {},
-  id: null,
+  properties: {}
 }
 
 export default function user(state = baseState, action) {

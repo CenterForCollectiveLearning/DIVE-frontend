@@ -2,18 +2,19 @@ import React, { Component, PropTypes } from 'react';
 import styles from './Landing.sass';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
-import { createProject, fetchPreloadedProjects, fetchProjects, wipeProjectState } from '../../actions/ProjectActions';
+import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
 import RaisedButton from '../Base/RaisedButton';
 
 export class HomePage extends Component {
   componentWillMount() {
-    if (this.props.projects.preloadedProjects.length == 0) {
+    const { projects, userId } = this.props;
+    if (projects.preloadedProjects.length == 0) {
       this.props.fetchPreloadedProjects();
     }
-    
-    if (this.props.projects.userProjects.length == 0) {
-      this.props.fetchProjects();
+
+    if (projects.userProjects.length == 0 && userId) {
+      this.props.fetchUserProjects(userId);
     }
   }
 
@@ -26,13 +27,16 @@ export class HomePage extends Component {
   }
 
   _onUploadClick() {
-    const userId = this.props.user.id;
+    const userId = this.props.userId;
+    console.log('THIS PROPS', this.props)
     const projectTitle = 'Project Title';
     const projectDescription = 'Project Description'
     this.props.createProject(userId, projectTitle, projectDescription);
   }
 
   render() {
+    const { projects, userId } = this.props;
+    const { userProjects, preloadedProjects } = projects;
     return (
       <div className={ styles.centeredFill }>
         <div className={ styles.ctaBox }>
@@ -51,6 +55,26 @@ export class HomePage extends Component {
               className={ styles.uploadButton } />
           </div>
         </div>
+        { userId && userProjects.length > 0 &&
+          <div>
+            <div className={ styles.separater }></div>
+            <div className={ styles.projectsContainer }>
+              <div className={ styles.projectTypeContainer }>
+                <div className={ styles.flexbox }>
+                  <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Your projects:</div>
+                </div>
+                <div className={ styles.projectListContainer }>
+                  { projects.isFetching &&
+                    <div className={ styles.watermark }>Fetching projects...</div>
+                  }
+                  { userProjects.map((project) =>
+                    <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        }
         <div className={ styles.separater }></div>
         <div className={ styles.projectsContainer }>
           <div className={ styles.projectTypeContainer }>
@@ -58,10 +82,10 @@ export class HomePage extends Component {
               <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Or explore our preloaded projects:</div>
             </div>
             <div className={ styles.projectListContainer }>
-              { this.props.projects.isFetching &&
-                <div className={ styles.watermark }>Fetching datasets...</div>
+              { projects.isFetching &&
+                <div className={ styles.watermark }>Fetching projects...</div>
               }
-              { this.props.projects.preloadedProjects.map((project) =>
+              { preloadedProjects.map((project) =>
                 <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
               )}
             </div>
@@ -75,7 +99,7 @@ export class HomePage extends Component {
 
 function mapStateToProps(state) {
   const { project, projects, user } = state;
-  return { project, projects, user };
+  return { project, projects, userId: user.id };
 }
 
-export default connect(mapStateToProps, { fetchPreloadedProjects, fetchProjects, createProject, wipeProjectState, pushState })(HomePage);
+export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, pushState })(HomePage);

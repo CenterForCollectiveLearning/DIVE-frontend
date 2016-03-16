@@ -3,8 +3,8 @@ import {
   RECEIVE_PROJECT,
   CREATE_PROJECT,
   CREATED_PROJECT,
-  REQUEST_PROJECTS,
-  RECEIVE_PROJECTS,
+  REQUEST_USER_PROJECTS,
+  RECEIVE_USER_PROJECTS,
   REQUEST_PRELOADED_PROJECTS,
   RECEIVE_PRELOADED_PROJECTS,
   WIPE_PROJECT_STATE
@@ -41,15 +41,15 @@ function receivePreloadedProjectsDispatcher(json) {
   };
 }
 
-function requestProjectsDispatcher() {
+function requestUserProjectsDispatcher() {
   return {
-    type: REQUEST_PROJECTS
+    type: REQUEST_USER_PROJECTS
   };
 }
 
-function receiveProjectsDispatcher(json) {
+function receiveUserProjectsDispatcher(json) {
   return {
-    type: RECEIVE_PROJECTS,
+    type: RECEIVE_USER_PROJECTS,
     projects: json.projects,
     receivedAt: Date.now()
   };
@@ -117,12 +117,12 @@ export function fetchPreloadedProjects() {
   };
 }
 
-export function fetchProjects() {
+export function fetchUserProjects(user_id) {
   return dispatch => {
-    dispatch(requestProjectsDispatcher());
-    return fetch('/projects/v1/projects')
+    dispatch(requestUserProjectsDispatcher());
+    return fetch(`/projects/v1/projects?user_id=${ user_id }`)
       .then(response => response.json())
-      .then(json => dispatch(receiveProjectsDispatcher(json)));
+      .then(json => dispatch(receiveUserProjectsDispatcher(json)));
   };
 }
 
