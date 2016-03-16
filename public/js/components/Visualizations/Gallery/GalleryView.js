@@ -101,8 +101,8 @@ export class GalleryView extends Component {
               <div className={ styles.headerControlRow }>
                 { filteredSpecs.length > 0 &&
                   <div className={ styles.headerControl + ' ' + styles.headerControlLong }>
-                    <span>Sort by </span>
                     <DropDownMenu
+                      prefix="Sort by"
                       options={ gallerySelector.sortingFunctions }
                       valueMember="value"
                       displayTextMember="label"
@@ -111,8 +111,8 @@ export class GalleryView extends Component {
                 }
                 { datasets.items && datasets.items.length > 0 &&
                   <div className={ styles.headerControl + ' ' + styles.datasetSelectorControl }>
-                    <span>Dataset </span>
                     <DropDownMenu
+                      prefix="Dataset"
                       value={ parseInt(datasetSelector.datasetId) }
                       options={ datasets.items }
                       valueMember="datasetId"
@@ -133,14 +133,14 @@ export class GalleryView extends Component {
               <div className={ styles.watermark }>No visualizations</div>
             }
             { !specs.isFetching && filteredSpecs.length > 0 && filteredSpecs.map((spec) =>
-                <VisualizationBlock
-                  key={ spec.id }
-                  spec={ spec }
-                  filteredVisualizationTypes={ filteredVisualizationTypes }
-                  exportedSpecs={ exportedSpecs }
-                  onClick={ this.onClickVisualization.bind(this) }
-                  saveVisualization={ this.saveVisualization.bind(this) }
-                  />
+              <VisualizationBlock
+                key={ spec.id }
+                spec={ spec }
+                filteredVisualizationTypes={ filteredVisualizationTypes }
+                exportedSpecs={ exportedSpecs }
+                onClick={ this.onClickVisualization.bind(this) }
+                saveVisualization={ this.saveVisualization.bind(this) }
+                />
               )
             }
           </div>
