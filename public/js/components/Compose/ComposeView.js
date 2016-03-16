@@ -86,7 +86,7 @@ export class ComposeView extends Component {
   render() {
     const { documents, composeSelector, selectedDocument, editable } = this.props;
     const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
-    
+
     return (
       <div className={ styles.composeViewContainer }>
         <HeaderBar
@@ -108,6 +108,7 @@ export class ComposeView extends Component {
                 <div className={ styles.headerControl + ' ' + styles.headerControlLong }>
                   <DropDownMenu
                     prefix="Document"
+                    width={ 250 }
                     className={ styles.documentSelector }
                     value={ parseInt(composeSelector.documentId) }
                     options={ documents.items.length > 0 ? documents.items : [] }
@@ -120,18 +121,19 @@ export class ComposeView extends Component {
           }/>
 
         <Card>
-          <HeaderBar
-            className={ styles.editorHeader + ' ' + ( editable ? styles.editable : ' ' ) }
-            textClassName={ styles.editorHeaderText }
-            header={
+          <div className={
+              styles.editorHeader
+              + ( editable ? ' ' + styles.editable : '' )
+            }>
+            <div className={ styles.editorHeaderText }>
               <Input
                 className={ styles.documentTitle }
                 readonly={ !editable }
                 type="text"
                 value={ this.state.documentHeading }
                 onChange={ this.onTitleChange.bind(this) }/>
-              }
-            />
+            </div>
+          </div>
           <ComposeEditor editable={ editable }/>
         </Card>
       </div>

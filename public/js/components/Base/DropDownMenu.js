@@ -29,7 +29,7 @@ export default class DropDownMenu extends Component {
 
 
     return (
-      <div className={ styles.dropDownMenu + (className ? ' ' + className : '') }>
+      <div style={{ width: this.props.width || '100%' }} className={ styles.dropDownMenu + (className ? ' ' + className : '') }>
         <Select
           value={ selectedValue }
           labelKey={ displayTextMember }
@@ -56,7 +56,8 @@ DropDownMenu.propTypes = {
   searchable: PropTypes.bool,
   className: PropTypes.string,
   valueClassName: PropTypes.string,
-  prefix: PropTypes.string
+  prefix: PropTypes.string,
+  width: PropTypes.number
 };
 
 DropDownMenu.defaultProps = {
@@ -69,5 +70,6 @@ DropDownMenu.defaultProps = {
   searchable: false,
   valueMember: "value",
   displayTextMember: "label",
-  options: []
+  options: [],
+  width: null
 }
