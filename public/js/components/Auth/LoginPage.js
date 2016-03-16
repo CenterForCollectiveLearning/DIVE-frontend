@@ -22,6 +22,11 @@ class AuthPage extends Component {
     };
   }
 
+  closeLoginPage() {
+    const { pushState } = this.props;
+    pushState(null, '/home')
+  }
+
   componentWillMount() {
     this.ensureNotLoggedIn(this.props)
   }
@@ -71,7 +76,7 @@ class AuthPage extends Component {
     return (
       <BlockingModal
         scrollable
-        closeAction={ this.props.closeAction }
+        closeAction={ this.closeLoginPage.bind(this) }
         className={ styles.loginModal }
         heading={
           <span>Login or Register to Proceed</span>
