@@ -10,7 +10,7 @@ export class HomePage extends Component {
   componentWillMount() {
     const { projects, userId } = this.props;
     if (projects.preloadedProjects.length == 0) {
-      this.props.fetchPreloadedProjects();
+      this.props.fetchPreloadedProjects(userId);
     }
 
     if (projects.userProjects.length == 0 && userId) {
@@ -19,10 +19,18 @@ export class HomePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const nextProjectId = nextProps.project.properties.id
+    const nextProjectId = nextProps.project.properties.id;
+    const nextUserId = nextProps.userId;
     if (this.props.project.properties.id != nextProjectId) {
       this.props.wipeProjectState();
       this.props.pushState(null, `/projects/${ nextProjectId }/datasets/upload`);
+    }
+
+    if (this.props.userId != nextUserId) {
+      this.props.fetchPreloadedProjects(nextUserId);
+      if (nextUserId) {
+        this.props.fetchUserProjects(nextUserId);
+      }
     }
   }
 

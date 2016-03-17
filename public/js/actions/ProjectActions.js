@@ -108,10 +108,10 @@ export function createProject(user_id, title, description) {
   }
 }
 
-export function fetchPreloadedProjects() {
+export function fetchPreloadedProjects(user_id) {
   return dispatch => {
     dispatch(requestPreloadedProjectsDispatcher());
-    return fetch(`/projects/v1/projects?preloaded=true${ (window.__env.NODE_ENV != 'PRODUCTION') ? '&private=true' : '' }`)
+    return fetch(`/projects/v1/projects?preloaded` + (user_id ? `&user_id=${ user_id }` : ''))
       .then(response => response.json())
       .then(json => dispatch(receivePreloadedProjectsDispatcher(json)));
   };
@@ -120,7 +120,7 @@ export function fetchPreloadedProjects() {
 export function fetchUserProjects(user_id) {
   return dispatch => {
     dispatch(requestUserProjectsDispatcher());
-    return fetch(`/projects/v1/projects?user_id=${ user_id }`)
+    return fetch(`/projects/v1/projects?private&user_id=${ user_id }`)
       .then(response => response.json())
       .then(json => dispatch(receiveUserProjectsDispatcher(json)));
   };
