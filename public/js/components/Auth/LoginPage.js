@@ -95,7 +95,9 @@ class AuthPage extends Component {
         }>
         <form className={ styles.authForm }>
           <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabel }>E-mail</div>
+            <div className={ styles.authInputLabelAndError}>
+              <div className={ styles.authInputLabel }>E-mail</div>
+            </div>
             <Input
               type="text"
               placeholder="jane@gmail.com"
@@ -105,7 +107,9 @@ class AuthPage extends Component {
           </div>
 
           <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabel }>Username</div>
+            <div className={ styles.authInputLabelAndError}>
+              <div className={ styles.authInputLabel }>Username</div>
+            </div>
             <Input
               type="text"
               placeholder="diveuser"
@@ -115,7 +119,9 @@ class AuthPage extends Component {
           </div>
 
           <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabel }>Password</div>
+            <div className={ styles.authInputLabelAndError}>
+              <div className={ styles.authInputLabel }>Password</div>
+            </div>
             <Input
               type="password"
               placeholder="Password"
@@ -124,12 +130,14 @@ class AuthPage extends Component {
           </div>
           <div className={ styles.authInputGroup }>
             <div className={ styles.checkbox }>
-              <div className={ styles.authInputLabel }>Remember Me</div>
-              <input
-                type="checkbox"
-                onChange={ this._handleRememberMeChange.bind(this) }
-                checked={ this.state.rememberMe }
-              />
+              <div className={ styles.authInputLabelAndError}>
+                <div className={ styles.authInputLabel }>Remember Me</div>
+                <input
+                  type="checkbox"
+                  onChange={ this._handleRememberMeChange.bind(this) }
+                  checked={ this.state.rememberMe }
+                />
+              </div>
             </div>
           </div>
           <RaisedButton primary className={ styles.submit } minWidth={ 100 } onClick={ this.submit.bind(this) }>Login</RaisedButton>
