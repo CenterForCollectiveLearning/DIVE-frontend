@@ -115,7 +115,9 @@ export class ProjectsPage extends Component {
               <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
             </TabGroup>
           </Tabs>
-          <UserDropdown user={ user } />
+          <div className={ styles.logoutUser } onClick={ this._logout.bind(this) }>
+            Log out of <span className={ styles.username }>{ user.username }</span>
+          </div>
         </div>
         { this.props.children }
       </div>

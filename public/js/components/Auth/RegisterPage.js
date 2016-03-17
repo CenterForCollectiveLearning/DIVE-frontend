@@ -133,7 +133,7 @@ class AuthPage extends Component {
           </div>
         }>
 
-        <form className={ styles.authForm }>
+        <form className={ styles.authForm } onSubmit={ this.submit.bind(this) }>
           <div className={ styles.authInputGroup }>
             <div className={ styles.authInputLabelAndError}>
               <div className={ styles.authInputLabel }>E-mail</div>
