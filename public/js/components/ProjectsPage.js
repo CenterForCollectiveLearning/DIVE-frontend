@@ -85,12 +85,12 @@ export class ProjectsPage extends Component {
             <TabGroup heading="DATASETS">
               <Tab label="Upload" value="upload" route={ `datasets/upload` } />
               <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/inspect' }` } />
-              <Tab label="Combine" value="combine" route={ `datasets${ datasetId ? `/${ datasetId }/combine` : '/combine' }` } />
+              <Tab label="Combine" value="combine" route={ `datasets${ datasetId ? `/${ datasetId }/combine` : '/combine' }` } disabled={ true }/>
             </TabGroup>
             <TabGroup heading="VISUALIZATIONS">
               <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/gallery` } disabled={ !datasetId }/>
               <Tab label="Build" value="build" route={ `datasets/${ datasetId }/visualize/builder` } disabled={ !datasetId }/>
-              <Tab label="Starred" value="starred" route={ `datasets/${ datasetId }/visualize/starred` } disabled={ !datasetId }/>
+              <Tab label="Starred" value="starred" route={ `datasets/${ datasetId }/visualize/starred` } disabled={ true }/>
             </TabGroup>
             <TabGroup heading="ANALYSIS">
               <Tab label="Summary" value="summary" route={ `datasets/${ datasetId }/analyze/summary` } disabled={ !datasetId }/>
@@ -99,7 +99,7 @@ export class ProjectsPage extends Component {
             </TabGroup>
             <TabGroup heading="STORIES">
               <Tab label="Compose" value="compose" route={ `compose` }/>
-              <Tab label="Saved" value="saved" route={ `compose/saved` }/>
+              <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
             </TabGroup>
           </Tabs>
         </div>
