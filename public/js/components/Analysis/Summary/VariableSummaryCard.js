@@ -3,7 +3,6 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
-import HeaderBar from '../../Base/HeaderBar';
 import SummaryTable from './SummaryTable';
 import ColumnChart from '../../Visualizations/Charts/ColumnChart'
 
@@ -55,8 +54,7 @@ export default class VariableSummaryCard extends Component {
     };
 
     return (
-      <Card>
-        <HeaderBar subheader={ variable.field } />
+      <Card header={ variable.field }>
         <div className={ styles.summaryVariableContainer }>
           <div className={ styles.summaryChartContainer }>
             <ColumnChart data={ variable.vizData } chartId={ `summary-chart-${ variable.field }` } options={ options } />
