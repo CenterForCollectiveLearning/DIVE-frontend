@@ -4,13 +4,27 @@ import styles from './HeaderBar.sass';
 
 export default class HeaderBar extends Component {
   render() {
+    const { className, textClassName, header, subheader, actions } = this.props;
+
     return (
-      <div className={ styles.headerBar + (this.props.className ? ' ' + this.props.className : '') } >
-        <div className={ styles.headerText + (this.props.textClassName ? ' ' + this.props.textClassName : '') } >
-          { this.props.header }           
+      <div className={
+        styles.headerBar
+        + (className ? ' ' + className : '')
+      }>
+        <div className={
+          styles.headerText
+          + (textClassName ? ' ' + textClassName : '')
+          + (subheader ? '' : ' ' + styles.singleLine)
+        }>
+          { header }
+          { subheader &&
+            <div className={ styles.subheaderText }>
+              { subheader }
+            </div>
+          }
         </div>
         <div className={ styles.rightActions } >
-          { this.props.actions }
+          { actions }
         </div>
       </div>
     );
@@ -19,6 +33,7 @@ export default class HeaderBar extends Component {
 
 HeaderBar.propTypes = {
   header: PropTypes.any,
+  subheader: PropTypes.any,
   actions: PropTypes.node,
   className: PropTypes.string,
   textClassName: PropTypes.string

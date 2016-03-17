@@ -31,18 +31,18 @@ export class CorrelationView extends Component {
     if (nextProps.projectId && nextProps.correlationResult.data && nextProps.correlationResult.data.id && (this.props.correlationResult.data == null || (nextProps.correlationResult.data.id != this.props.correlationResult.data.id))) {
       getCorrelationScatterplot(nextProps.projectId, nextProps.correlationResult.data.id);
     }
-
   }
+
   render() {
     const { correlationResult, correlationVariableNames, correlationScatterplots } = this.props;
     const twoCorrelationVariablesSelected = correlationVariableNames.length >= 2;
     const correlationResultHasElements = correlationResult.data && correlationResult.data.rows && correlationResult.data.rows.length > 0;
 
+    var correlationContent;
     if (twoCorrelationVariablesSelected ) {
-      return (
-        <div className={ styles.correlationViewContainer }>
-          <Card>
-            <HeaderBar header={
+      correlationContent =
+        <div>
+          <Card header={
               <span>Correlating {
                 correlationVariableNames.map((name, i) =>
                   <span
@@ -50,10 +50,9 @@ export class CorrelationView extends Component {
                     className={ `${ styles.titleField }` }>
                     { name }
                   </span>
-                )
-              }
+                )}
               </span>
-            } />
+            }>
             { correlationResult.loading &&
               <div className={ styles.watermark }>
                 { correlationResult.progress != null ? correlationResult.progress : 'Running correlations…' }
@@ -69,14 +68,17 @@ export class CorrelationView extends Component {
             />
           }
         </div>
-      );
+      ;
     }
 
-    else {
-      return (
-        <div> </div>
-      );
-    }
+    return (
+      <div className={ styles.aggregationViewContainer }>
+        <HeaderBar
+          header="Correlation Analysis"
+        />        
+        { correlationContent }
+      </div>
+    );
   }
 }
 

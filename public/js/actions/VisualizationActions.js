@@ -217,8 +217,7 @@ function fetchSpecVisualization(projectId, specId, conditionals = [], config = n
       headers: { 'Content-Type': 'application/json' }
     })
       .then(response => response.json())
-      .then(json => dispatch(receiveSpecVisualizationDispatcher(json)))
-      .catch(err => console.error("Error fetching visualization: ", err));
+      .then(json => dispatch(receiveSpecVisualizationDispatcher(json)));
   };
 }
 

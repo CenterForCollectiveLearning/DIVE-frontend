@@ -119,6 +119,7 @@ export class DatasetHeaderCell extends Component {
     return (
       <DropDownMenu
         className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
+        valueClassName={ styles.fieldTypeValue }
         value={ fieldProperty.type }
         options={ this.state.fieldTypes }
         onChange={ this.onSelectFieldType.bind(this) } />

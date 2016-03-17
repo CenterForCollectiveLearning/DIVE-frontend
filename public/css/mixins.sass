@@ -21,3 +21,26 @@
   letter-spacing: 1px
   font-size: 16px
   color: #999
+
+.headerControlRow
+  display: flex
+  flex-direction: row-reverse
+  flex-grow: 1
+
+  > div
+    margin-left: 10px
+
+.headerControl
+  display: flex
+  flex-direction: row
+  align-items: center
+
+  &.headerControlLong
+    min-width: 160px
+
+  > span
+    margin-right: 10px
+
+    white-space: nowrap
+    font-size: 13px
+    font-weight: 300
