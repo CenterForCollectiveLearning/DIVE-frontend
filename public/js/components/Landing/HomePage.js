@@ -28,7 +28,6 @@ export class HomePage extends Component {
 
   _onUploadClick() {
     const userId = this.props.userId;
-    console.log('THIS PROPS', this.props)
     const projectTitle = 'Project Title';
     const projectDescription = 'Project Description'
     this.props.createProject(userId, projectTitle, projectDescription);

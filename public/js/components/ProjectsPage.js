@@ -50,7 +50,7 @@ export class ProjectsPage extends Component {
   }
 
   _onClickLogo(){
-    this.props.pushState(null, `/`);
+    this.props.pushState(null, `/home`);
   }
 
   _logout() {
