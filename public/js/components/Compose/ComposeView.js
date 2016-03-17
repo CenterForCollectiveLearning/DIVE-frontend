@@ -119,8 +119,7 @@ export class ComposeView extends Component {
               }
             </div>
           }/>
-
-        <Card>
+        <div className={ styles.composeEditorContainer }>
           <div className={
               styles.editorHeader
               + ( editable ? ' ' + styles.editable : '' )
@@ -135,7 +134,7 @@ export class ComposeView extends Component {
             </div>
           </div>
           <ComposeEditor editable={ editable }/>
-        </Card>
+        </div>
       </div>
     );
   }

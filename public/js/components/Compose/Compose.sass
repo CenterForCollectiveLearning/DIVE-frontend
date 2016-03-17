@@ -14,12 +14,16 @@
 .composeContentContainer
   flex-direction: row
 
-.composeViewContainer
-  display: flex
-  flex-direction: column
-  flex-grow: 1
-  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
-  overflow-y: scroll
+  .composeViewContainer
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+    background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
+    overflow-y: scroll
+
+    .composeEditorContainer
+      flex-grow: 1
+      background-color: rgba(255, 255, 255, 0.7)
 
 .sidebarVisualizationHeader
   font-size: 13px
@@ -51,7 +55,6 @@
         cursor: pointer!important
 
 .editorHeader
-  background-color: white
   padding: 10px
 
   .editorHeaderText
@@ -61,6 +64,7 @@
 
     .documentTitle
       color: #333
+      background-color: transparent
       font-family: 'Source Sans Pro', sans-serif
       font-size: 55px
       font-weight: 300
