@@ -10,6 +10,12 @@ import Input from '../Base/Input'
 import BlockingModal from '../Base/BlockingModal';
 import RaisedButton from '../Base/RaisedButton';
 
+function validateEmail(email)
+{
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+}
+
 class AuthPage extends Component {
   constructor(props) {
     super(props);
@@ -72,7 +78,11 @@ class AuthPage extends Component {
   }
 
   render() {
-    const { authRequired } = this.props;
+    const { authRequired, loginError } = this.props;
+    const { email, username, password } = this.state;
+    const loginDisabled = ( !email && !username ) || (!password || password == null)
+
+    console.log()
 
     if (authRequired) {
       openModal();
@@ -96,6 +106,25 @@ class AuthPage extends Component {
         <form className={ styles.authForm }>
           <div className={ styles.authInputGroup }>
             <div className={ styles.authInputLabelAndError}>
+              <div className={ styles.authInputLabel }>Username</div>
+              { loginError &&
+                <div className={ styles.error }>
+                  { loginError }
+                </div>
+              }
+            </div>
+            <Input
+              type="text"
+              placeholder="diveuser"
+              autocomplete="on"
+              onChange={ this.handleUsernameChange.bind(this) }
+            />
+          </div>
+          <div className={ styles.orSeparator }>
+            <div className={ styles.or }>OR</div>
+          </div>
+          <div className={ styles.authInputGroup }>
+            <div className={ styles.authInputLabelAndError}>
               <div className={ styles.authInputLabel }>E-mail</div>
             </div>
             <Input
@@ -105,18 +134,7 @@ class AuthPage extends Component {
               onChange={ this.handleEmailChange.bind(this) }
             />
           </div>
-
-          <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabelAndError}>
-              <div className={ styles.authInputLabel }>Username</div>
-            </div>
-            <Input
-              type="text"
-              placeholder="diveuser"
-              autocomplete="on"
-              onChange={ this.handleUsernameChange.bind(this) }
-            />
-          </div>
+          <div className={ styles.separator } />
 
           <div className={ styles.authInputGroup }>
             <div className={ styles.authInputLabelAndError}>
@@ -140,7 +158,15 @@ class AuthPage extends Component {
               </div>
             </div>
           </div>
-          <RaisedButton primary className={ styles.submit } minWidth={ 100 } onClick={ this.submit.bind(this) }>Login</RaisedButton>
+          <RaisedButton
+            primary
+            disabled={ loginDisabled }
+            className={ styles.submit }
+            minWidth={ 100 }
+            onClick={ this.submit.bind(this) }
+          >
+            Login
+          </RaisedButton>
         </form>
 
       </BlockingModal>
@@ -154,7 +180,7 @@ AuthPage.propTypes = {
 
 function mapStateToProps(state) {
   const { user } = state;
-  return { isAuthenticated: user.isAuthenticated };
+  return { isAuthenticated: user.isAuthenticated, loginError: user.error.login };
 }
 
 export default connect(mapStateToProps, { loginUser, pushState})(AuthPage);

@@ -52,7 +52,7 @@ export class HomePage extends Component {
           </div>
           <div className={ styles.ctaContainer }>
             <RaisedButton
-              label="Upload Dataset"
+              label="Create Project"
               primary={ true }
               onClick={ this._onUploadClick.bind(this) }
               className={ styles.uploadButton } />
@@ -82,7 +82,7 @@ export class HomePage extends Component {
         <div className={ styles.projectsContainer }>
           <div className={ styles.projectTypeContainer }>
             <div className={ styles.flexbox }>
-              <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Or explore our preloaded projects:</div>
+              <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Or explore preloaded projects:</div>
             </div>
             <div className={ styles.projectListContainer }>
               { projects.isFetching &&

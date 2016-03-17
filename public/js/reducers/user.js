@@ -45,7 +45,7 @@ export default function user(state = baseState, action) {
         id: action.id
       };
     case ERROR_LOGIN_USER:
-      return { ...state, error: { login: action.message }};
+      return { ...state, error: { ...state.error, login: action.error }};
     case RECEIVE_REGISTER_USER:
       return { ...state,
         success: { register: action.message, login: ''},

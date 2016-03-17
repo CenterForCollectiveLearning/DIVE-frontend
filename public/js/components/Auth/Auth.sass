@@ -2,15 +2,38 @@
   padding-bottom: 0px
   width: 500px
 
-
 .authForm
   width: 100%
 
   .submit
     margin-top: 15px
 
-  .authInputGroup
+  .orSeparator
+    font-size: 11px
+    font-weight: 500
+    color: #999
+    text-transform: uppercase
+    display: flex
+    flex-direction: row
+    margin-top: 15px
+    margin-bottom: -20px
+    .or
+      display: flex
+      flex-grow: 1
+      line-height: 20px
+      align-items: center
+      justify-content: center
 
+  .separator
+    &:after
+      content: ''
+      display: block
+      border-bottom: 1px solid #999
+      width: 100px
+      margin: 0 auto
+    margin-top: 30px
+
+  .authInputGroup
     .authInputLabel, .error
       display: flex
       margin-top: 17px

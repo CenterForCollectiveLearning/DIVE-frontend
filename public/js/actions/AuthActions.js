@@ -34,7 +34,7 @@ function receiveLoginUserDispatcher(json) {
 function errorLoginUserDispatcher(error) {
   return {
     type: ERROR_LOGIN_USER,
-    message: error.message
+    error: error.message.login
   }
 }
 
