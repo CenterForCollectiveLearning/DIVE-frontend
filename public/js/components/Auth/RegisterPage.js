@@ -99,9 +99,17 @@ class AuthPage extends Component {
     registerUser(email, username, password);
   }
 
+  // <div>
+  //   <div>email: { email }</div>
+  //   <div>emailValid: { emailValid }</div>
+  //   <div>password: { password }</div>
+  //   <div>confirmPassword: { confirmPassword }</div>
+  //   <div>passwordMatching: { passwordMatching }</div>
+  // </div>
   render() {
     const { authRequired } = this.props;
     const { email, emailValid, username, usernameTooLong, usernameTooShort, password, confirmPassword, passwordMatching } = this.state;
+    const disabledRegister = !email || !username || !password || !emailValid || usernameTooShort || usernameTooLong || !passwordMatching;
 
     if (authRequired) {
       openModal();
@@ -111,7 +119,7 @@ class AuthPage extends Component {
       <BlockingModal
         scrollable
         closeAction={ this.closeRegistrationPage.bind(this) }
-        className={ styles.loginModal }
+        className={ styles.registerModal }
         heading={
           <span>Account Registration</span>
         }
@@ -122,21 +130,17 @@ class AuthPage extends Component {
             </div>
           </div>
         }>
-        <div>
-          <div>email: { email }</div>
-          <div>emailValid: { emailValid }</div>
-          <div>password: { password }</div>
-          <div>confirmPassword: { confirmPassword }</div>
-          <div>passwordMatching: { passwordMatching }</div>
-        </div>
+
         <form className={ styles.authForm }>
           <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabel }>E-mail</div>
-            { (email && emailValid != null && !emailValid) &&
-              <div className={ styles.error }>
-                Please enter a valid e-mail
-              </div>
-            }
+            <div className={ styles.authInputLabelAndError}>
+              <div className={ styles.authInputLabel }>E-mail</div>
+              { (email && emailValid != null && !emailValid) &&
+                <div className={ styles.error }>
+                  Please enter a valid e-mail
+                </div>
+              }
+            </div>
             <Input
               type="text"
               placeholder="jane@gmail.com"
@@ -146,17 +150,19 @@ class AuthPage extends Component {
           </div>
 
           <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabel }>Username</div>
-            { (username && username != null && usernameTooShort) &&
-              <div className={ styles.error }>
-                Username too short
-              </div>
-            }
-            { (username && username != null && usernameTooLong) &&
-              <div className={ styles.error }>
-                Username too long
-              </div>
-            }
+            <div className={ styles.authInputLabelAndError}>
+              <div className={ styles.authInputLabel }>Username</div>
+              { (username && username != null && usernameTooShort) &&
+                <div className={ styles.error }>
+                  Username too short
+                </div>
+              }
+              { (username && username != null && usernameTooLong) &&
+                <div className={ styles.error }>
+                  Username too long
+                </div>
+              }
+            </div>
             <Input
               type="text"
               placeholder="diveuser"
@@ -166,7 +172,9 @@ class AuthPage extends Component {
           </div>
 
           <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabel }>Password</div>
+            <div className={ styles.authInputLabelAndError}>
+              <div className={ styles.authInputLabel }>Password</div>
+            </div>
             <Input
               type="password"
               placeholder="P4ssword1?"
@@ -175,12 +183,14 @@ class AuthPage extends Component {
           </div>
 
           <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabel }>Confirm Password</div>
-            { (confirmPassword && passwordMatching != null && !passwordMatching) &&
-              <div className={ styles.error }>
-                Passwords do not match
-              </div>
-            }
+            <div className={ styles.authInputLabelAndError}>
+              <div className={ styles.authInputLabel }>Confirm Password</div>
+              { (confirmPassword && passwordMatching != null && !passwordMatching) &&
+                <div className={ styles.error }>
+                  Passwords do not match
+                </div>
+              }
+            </div>
             <Input
               type="password"
               placeholder="P4ssword1?"
@@ -188,7 +198,14 @@ class AuthPage extends Component {
             />
           </div>
 
-          <RaisedButton primary className={ styles.submit } minWidth={ 100 } onClick={ this.submit.bind(this) }>Create your account</RaisedButton>
+          <RaisedButton
+            primary
+            className={ styles.submit }
+            minWidth={ 100 }
+            disabled={ disabledRegister }
+            onClick={ this.submit.bind(this) }>
+            Create your account
+          </RaisedButton>
         </form>
       </BlockingModal>
     );
