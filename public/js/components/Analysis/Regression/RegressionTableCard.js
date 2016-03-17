@@ -3,7 +3,6 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
-import HeaderBar from '../../Base/HeaderBar';
 import RegressionTable from './RegressionTable';
 import RegressionSummary from './RegressionSummary';
 

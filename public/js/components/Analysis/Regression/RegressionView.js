@@ -6,6 +6,7 @@ import { runRegression, getContributionToRSquared } from '../../../actions/Regre
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
+import HeaderBar from '../../Base/HeaderBar';
 import RegressionTableCard from './RegressionTableCard';
 import ContributionToRSquaredCard from './ContributionToRSquaredCard';
 
@@ -37,9 +38,11 @@ export class RegressionView extends Component {
 
     return (
       <div className={ styles.regressionViewContainer }>
+        <HeaderBar
+          header="Regression Analysis"
+        />
         { regressionResult.loading &&
-          <Card>
-            <HeaderBar header={ <span>Explaining <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> } />
+          <Card header={ <span>Explaining <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> }>
             <div className={ styles.watermark }>
               { regressionResult.progress != null ? regressionResult.progress : 'Running regressions…' }
             </div>

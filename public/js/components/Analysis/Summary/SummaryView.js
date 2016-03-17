@@ -70,7 +70,7 @@ export class SummaryView extends Component {
   }
 
   render() {
-    const { aggregationResult, summaryResult, oneDimensionComparisonResult, aggregationIndependentVariableNames } = this.props;
+    const { aggregationResult, summaryResult, oneDimensionComparisonResult, aggregationIndependentVariableNames, datasets, datasetId } = this.props;
 
     const noComparisonVariablesSelected = aggregationIndependentVariableNames.length ==0;
     const oneComparisonVariableSelected = aggregationIndependentVariableNames.length == 1;
@@ -83,7 +83,7 @@ export class SummaryView extends Component {
 
     if (noComparisonVariablesSelected ) {
       summaryContent =
-        <div className={ styles.summaryViewContainer }>
+        <div>
           { summaryResult.loading &&
             <div className={ styles.watermark }>
               { summaryResult.progress != null ? summaryResult.progress : 'Calculating summary…' }
@@ -105,10 +105,11 @@ export class SummaryView extends Component {
     }
 
     else if (oneComparisonVariableSelected) {
-      return (
+      summaryContent =
         <div className={ styles.aggregationViewContainer }>
-          <Card>
-            <HeaderBar header={ <span>Comparison Table: <span className={ styles.titleField }>{ aggregationIndependentVariableNames[0] }</span></span> } />
+          <Card header={
+            <span>Comparison Table: <span className={ styles.titleField }>{ aggregationIndependentVariableNames[0] }</span></span>
+          }>
             { oneDimensionComparisonResult.loading &&
               <div className={ styles.watermark }>
                 { oneDimensionComparisonResult.progress != null ? oneDimensionComparisonResult.progress : 'Calculating oneDimensionComparisonResult…' }
@@ -119,25 +120,24 @@ export class SummaryView extends Component {
             }
           </Card>
         </div>
-      );
+      ;
     }
 
     else if (twoComparisonVariablesSelected) {
-      return (
+      summaryContent =
         <div className={ styles.aggregationViewContainer }>
-          <Card>
-            <HeaderBar header={
-              <span>Aggregation Table: {
-                aggregationIndependentVariableNames.map((name, i) =>
-                  <span
-                    key={ `aggregation-title-${ name }-${ i }` }
-                    className={ `${ styles.titleField }` }>
-                    { name }
-                  </span>
-                )
-              }
-              </span>
-            } />
+          <Card header={
+            <span>Aggregation Table: {
+              aggregationIndependentVariableNames.map((name, i) =>
+                <span
+                  key={ `aggregation-title-${ name }-${ i }` }
+                  className={ `${ styles.titleField }` }>
+                  { name }
+                </span>
+              )
+            }
+            </span>
+          }>
             { aggregationResult.loading &&
               <div className={ styles.watermark }>
                 { aggregationResult.progress != null ? aggregationResult.progress : 'Calculating aggregationResult…' }
@@ -148,13 +148,13 @@ export class SummaryView extends Component {
             }
           </Card>
         </div>
-      );
+      ;
     }
 
     return (
       <div className={ styles.summaryViewContainer }>
         <HeaderBar
-          header="Summary"
+          header="Summary Statistics"
           actions={
             datasets.items && datasets.items.length > 0 ?
               <div className={ styles.headerControl }>
