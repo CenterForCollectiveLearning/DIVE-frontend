@@ -1,10 +1,8 @@
 @import '../../../css/mixins.sass'
 @import '../../../css/flexbox.sass'
 
-.datasetContainer
-  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
-
 .datasetPageContainer, .datasetContainer
+  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
   overflow: hidden
 
 .uploadingZone
@@ -44,13 +42,13 @@
 
 .datasetUploadBox
   flex-grow: 1
-
-  .datasetUploadBoxContent
-    flex-grow: 1
+  display: flex
+  flex-direction: column
+  margin: 5px 10px 10px
 
   .dropzone
-    background-color: #FDFDFD
-    border: 2px dashed #DDD
+    background-color: rgba(255, 255, 255, 0.8)
+    border: 2px dashed #BBB
     justify-content: center
 
     span
