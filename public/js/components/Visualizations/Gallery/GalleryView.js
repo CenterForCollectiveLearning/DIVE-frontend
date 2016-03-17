@@ -110,9 +110,10 @@ export class GalleryView extends Component {
                   </div>
                 }
                 { datasets.items && datasets.items.length > 0 &&
-                  <div className={ styles.headerControl + ' ' + styles.datasetSelectorControl }>
+                  <div className={ styles.headerControl }>
                     <DropDownMenu
                       prefix="Dataset"
+                      width={ 240 }
                       value={ parseInt(datasetSelector.datasetId) }
                       options={ datasets.items }
                       valueMember="datasetId"

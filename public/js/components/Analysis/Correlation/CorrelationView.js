@@ -67,7 +67,7 @@ export class CorrelationView extends Component {
 
     else {
       return (
-        <div> </div>
+        <div className={ styles.aggregationViewContainer }></div>
       );
     }
   }
