@@ -25,6 +25,8 @@ class AuthPage extends Component {
       username: '',
       password: 'dive',
       confirmPassword: '',
+      usernameTooShort: null,
+      usernameTooLong: null,
       emailValid: null,
       emailTaken: null,
       usernameTaken: null,
@@ -55,7 +57,16 @@ class AuthPage extends Component {
   }
 
   handleUsernameChange(e) {
-     this.setState({ username: e.target.value });
+    const username = e.target.value;
+    this.setState({ username: username });
+    if (username.length < 3) {
+      this.setState({ usernameTooShort: true });
+    } else if (username.length > 65 ){
+      this.setState({ usernameTooLong: true });
+    } else {
+      this.setState({ usernameTooShort: false });
+      this.setState({ usernameTooLong: false });
+    }
   }
 
   handlePasswordChange(e) {
@@ -90,7 +101,7 @@ class AuthPage extends Component {
 
   render() {
     const { authRequired } = this.props;
-    const { email, emailValid, password, confirmPassword, passwordMatching } = this.state;
+    const { email, emailValid, username, usernameTooLong, usernameTooShort, password, confirmPassword, passwordMatching } = this.state;
 
     if (authRequired) {
       openModal();
@@ -130,17 +141,27 @@ class AuthPage extends Component {
               type="text"
               placeholder="jane@gmail.com"
               autocomplete="on"
-              onChange={this.handleEmailChange.bind(this)}
+              onChange={ this.handleEmailChange.bind(this) }
             />
           </div>
 
           <div className={ styles.authInputGroup }>
             <div className={ styles.authInputLabel }>Username</div>
+            { (username && username != null && usernameTooShort) &&
+              <div className={ styles.error }>
+                Username too short
+              </div>
+            }
+            { (username && username != null && usernameTooLong) &&
+              <div className={ styles.error }>
+                Username too long
+              </div>
+            }
             <Input
               type="text"
               placeholder="diveuser"
               autocomplete="on"
-              onChange={this.handleUsernameChange.bind(this)}
+              onChange={ this.handleUsernameChange.bind(this) }
             />
           </div>
 
@@ -149,7 +170,7 @@ class AuthPage extends Component {
             <Input
               type="password"
               placeholder="P4ssword1?"
-              onChange={this.handlePasswordChange.bind(this)}
+              onChange={ this.handlePasswordChange.bind(this) }
             />
           </div>
 
@@ -163,7 +184,7 @@ class AuthPage extends Component {
             <Input
               type="password"
               placeholder="P4ssword1?"
-              onChange={this.handleConfirmPasswordChange.bind(this)}
+              onChange={ this.handleConfirmPasswordChange.bind(this) }
             />
           </div>
 

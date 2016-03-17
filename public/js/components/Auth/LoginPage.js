@@ -18,7 +18,8 @@ class AuthPage extends Component {
       error: null,
       email: 'usedive@gmail.com',
       username: '',
-      password: 'dive'
+      password: 'dive',
+      rememberMe: true
     };
   }
 
@@ -52,6 +53,10 @@ class AuthPage extends Component {
     pushState(null, '/register')
   }
 
+  _handleRememberMeChange(e) {
+    this.setState({ rememberMe: !this.state.rememberMe });
+  }
+
   ensureNotLoggedIn(props) {
     const { isAuthenticated, pushState } = props;
 
@@ -62,8 +67,8 @@ class AuthPage extends Component {
 
   submit() {
     const { loginUser } = this.props;
-    const { email, username, password } = this.state;
-    loginUser(email, username, password);
+    const { email, username, password, rememberMe } = this.state;
+    loginUser(email, username, password, rememberMe);
   }
 
   render() {
@@ -95,7 +100,7 @@ class AuthPage extends Component {
               type="text"
               placeholder="jane@gmail.com"
               autocomplete="on"
-              onChange={this.handleEmailChange.bind(this)}
+              onChange={ this.handleEmailChange.bind(this) }
             />
           </div>
 
@@ -105,7 +110,7 @@ class AuthPage extends Component {
               type="text"
               placeholder="diveuser"
               autocomplete="on"
-              onChange={this.handleUsernameChange.bind(this)}
+              onChange={ this.handleUsernameChange.bind(this) }
             />
           </div>
 
@@ -114,13 +119,17 @@ class AuthPage extends Component {
             <Input
               type="password"
               placeholder="Password"
-              onChange={this.handlePasswordChange.bind(this)}
+              onChange={ this.handlePasswordChange.bind(this) }
             />
           </div>
           <div className={ styles.authInputGroup }>
             <div className={ styles.checkbox }>
               <div className={ styles.authInputLabel }>Remember Me</div>
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                onChange={ this._handleRememberMeChange.bind(this) }
+                checked={ this.state.rememberMe }
+              />
             </div>
           </div>
           <RaisedButton primary className={ styles.submit } minWidth={ 100 } onClick={ this.submit.bind(this) }>Login</RaisedButton>
