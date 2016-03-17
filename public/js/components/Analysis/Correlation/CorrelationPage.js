@@ -10,8 +10,8 @@ export class CorrelationPage extends Component {
   render() {
     return (
       <div className={ `${ styles.fillContainer } ${ styles.summaryContainer }` }>
-        <CorrelationSidebar />
         <CorrelationView />
+        <CorrelationSidebar />
       </div>
     );
   }

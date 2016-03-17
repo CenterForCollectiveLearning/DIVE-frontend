@@ -6,7 +6,7 @@ import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesAc
 import { selectIndependentVariable } from '../../../actions/RegressionActions';
 import styles from '../Analysis.sass';
 
-import AnalysisSidebar from '../AnalysisSidebar';
+import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -37,7 +37,7 @@ export class RegressionSidebar extends Component {
     const { fieldProperties, regressionSelector, selectIndependentVariable } = this.props;
 
     return (
-      <AnalysisSidebar selectedTab="regression">
+      <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Dependent Variable (Y)">
             <DropDownMenu
@@ -65,7 +65,7 @@ export class RegressionSidebar extends Component {
           </SidebarGroup>
         }
 
-      </AnalysisSidebar>
+      </Sidebar>
     );
   }
 }

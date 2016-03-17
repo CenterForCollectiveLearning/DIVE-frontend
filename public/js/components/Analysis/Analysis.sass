@@ -16,30 +16,15 @@
   flex-direction: row
   overflow: hidden
 
-  background-color: #e9e7e8
-
 .regressionViewContainer, .summaryViewContainer, .aggregationViewContainer, .correlationViewContainer
   +fillContainer
   overflow-y: scroll
 
+  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
+
 .summaryViewContainer
-  flex-direction: row
-  flex-wrap: wrap
-
   .summaryCardHolder
-    width: 50%
-
-    &:last-child > div
-      margin-bottom: 8px
-
-    &:nth-child(odd) > div
-      margin-right: 4px
-
-    &:nth-child(even) > div
-      margin-left: 4px
-
-    > div
-      margin-bottom: 0
+    flex-grow: 1
 
 .summaryVariableContainer
   display: flex
@@ -72,7 +57,7 @@
     bottom: 0
 
 .regressionTable, .summaryTable
-  margin: 10px
+  margin: 0 20px 10px
 
 .regressionSummary
   display: flex
@@ -171,7 +156,7 @@
   background-color: #fbfbfb
 
 .aggregationTable
-  padding: 10px 10px 20px
+  padding: 0 20px 20px
 
   .columnFieldLabel, .rowFieldLabel
     font-size: 13px
@@ -220,3 +205,4 @@
     .header
       text-align: center
       font-size: 14px
+

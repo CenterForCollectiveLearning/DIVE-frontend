@@ -25,8 +25,8 @@ export class RegressionBasePage extends Component {
   render() {
     return (
       <div className={ `${ styles.fillContainer } ${ styles.regressionContainer }` }>
-        <RegressionSidebar />
         <RegressionView />
+        <RegressionSidebar />
         { this.props.children }
       </div>
     );

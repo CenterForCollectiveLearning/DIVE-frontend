@@ -48,8 +48,8 @@ export class ComposeBasePage extends Component {
     return (
       <div className={ `${ styles.fillContainer } ${ styles.composePageContainer }` }>
         <div className={ `${ styles.fillContainer } ${ styles.composeContentContainer }` }>
-          <ComposeSidebar />
           <ComposeView editable={ true } selectedDocument={ selectedDocument } />
+          <ComposeSidebar />
         </div>
         { this.props.children }
       </div>
