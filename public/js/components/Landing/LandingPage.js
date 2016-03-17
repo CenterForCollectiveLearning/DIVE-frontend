@@ -5,6 +5,7 @@ import { pushState } from 'redux-react-router';
 
 import Tabs from '../Base/Tabs';
 import Tab from '../Base/Tab';
+import UserDropdown from '../Base/UserDropdown';
 import FeaturesPage from './FeaturesPage';
 
 var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
@@ -26,7 +27,13 @@ export class LandingPage extends Component {
     return "";
   }
 
+  _logout() {
+    const { logoutUser } = this.props;
+    logoutUser();
+  }
+
   render() {
+    const { user } = this.props;
     return (
       <div className={ styles.fillContainer + ' ' + styles.landingPage }>
         <div className={ styles.background }>
@@ -43,9 +50,12 @@ export class LandingPage extends Component {
               </div>
             </div>
             <Tabs value={ this._getSelectedTab() } className={ styles.landingTabs } selectedClassName={ styles.selectedTab }>
-              <Tab label="TRY IT" value="/home" route="/home" className={ styles.landingTab } />
+              <Tab label="PROJECTS" value="/home" route="/home" className={ styles.landingTab } />
+              <Tab label="LOG IN" active={ !user.id } value="/login" route="/login" className={ styles.landingTab } />
+              <Tab label="REGISTER" active={ !user.id } value="/register" route="/register" className={ styles.landingTab } />
               <Tab label="ABOUT" value="/about" route="/about" className={ styles.landingTab } />
             </Tabs>
+            <UserDropdown user={ user }/>
           </div>
           <div className={ styles.centeredFill }>
             { this.props.children ||
@@ -63,7 +73,8 @@ LandingPage.propTypes = {
 };
 
 function mapStateToProps(state) {
-  return { };
+  const { user } = state;
+  return { user };
 }
 
 export default connect(mapStateToProps, { pushState })(LandingPage);

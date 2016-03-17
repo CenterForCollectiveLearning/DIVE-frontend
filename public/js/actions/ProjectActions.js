@@ -3,8 +3,8 @@ import {
   RECEIVE_PROJECT,
   CREATE_PROJECT,
   CREATED_PROJECT,
-  REQUEST_PROJECTS,
-  RECEIVE_PROJECTS,
+  REQUEST_USER_PROJECTS,
+  RECEIVE_USER_PROJECTS,
   REQUEST_PRELOADED_PROJECTS,
   RECEIVE_PRELOADED_PROJECTS,
   WIPE_PROJECT_STATE
@@ -41,15 +41,15 @@ function receivePreloadedProjectsDispatcher(json) {
   };
 }
 
-function requestProjectsDispatcher() {
+function requestUserProjectsDispatcher() {
   return {
-    type: REQUEST_PROJECTS
+    type: REQUEST_USER_PROJECTS
   };
 }
 
-function receiveProjectsDispatcher(json) {
+function receiveUserProjectsDispatcher(json) {
   return {
-    type: RECEIVE_PROJECTS,
+    type: RECEIVE_USER_PROJECTS,
     projects: json.projects,
     receivedAt: Date.now()
   };
@@ -91,36 +91,39 @@ export function createProjectIfNeeded(user_id, title, description) {
 }
 
 export function createProject(user_id, title, description) {
-  var formData = new FormData();
-  formData.append('user_id', user_id);
-  formData.append('title', title);
-  formData.append('description', description);
+  const params = {
+    'user_id': user_id || null,
+    'anonymous': user_id ? false : true,
+    'title': title,
+    'description': description
+  }
 
   return dispatch => {
     dispatch(createProjectDispatcher());
     return fetch('/projects/v1/projects', {
       method: 'post',
-      body: formData
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
       .then(json => dispatch(createdProjectDispatcher(json)));
   }
 }
 
-export function fetchPreloadedProjects() {
+export function fetchPreloadedProjects(user_id) {
   return dispatch => {
     dispatch(requestPreloadedProjectsDispatcher());
-    return fetch(`/projects/v1/projects?preloaded=true${ (window.__env.NODE_ENV != 'PRODUCTION') ? '&private=true' : '' }`)
+    return fetch(`/projects/v1/projects?preloaded=True` + (user_id ? `&user_id=${ user_id }` : ''))
       .then(response => response.json())
       .then(json => dispatch(receivePreloadedProjectsDispatcher(json)));
   };
 }
 
-export function fetchProjects() {
+export function fetchUserProjects(user_id) {
   return dispatch => {
-    dispatch(requestProjectsDispatcher());
-    return fetch('/projects/v1/projects')
+    dispatch(requestUserProjectsDispatcher());
+    return fetch(`/projects/v1/projects?private=True` + (user_id ? `&user_id=${ user_id }` : ''))
       .then(response => response.json())
-      .then(json => dispatch(receiveProjectsDispatcher(json)));
+      .then(json => dispatch(receiveUserProjectsDispatcher(json)));
   };
 }
 

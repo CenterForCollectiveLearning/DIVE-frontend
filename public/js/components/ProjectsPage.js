@@ -1,11 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
+import { logoutUser } from '../actions/AuthActions'
 import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions.js';
 import styles from './App/App.sass';
 
 import Tabs from './Base/Tabs';
 import Tab from './Base/Tab';
+import UserDropdown from './Base/UserDropdown';
 import TabGroup from './Base/TabGroup';
 
 var Logo = require('babel!svg-react!../../assets/DIVE_logo_white.svg?name=Logo');
@@ -16,6 +18,12 @@ export class ProjectsPage extends Component {
 
     this._handleTabsChange = this._handleTabsChange.bind(this);
     this._onClickLogo = this._onClickLogo.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.user.isAuthenticated) {
+      pushState(null, '/home')
+    }
   }
 
   componentDidMount() {
@@ -36,7 +44,7 @@ export class ProjectsPage extends Component {
       "regression",
       "correlation",
       "compose",
-      "saved" 
+      "saved"
     ];
 
     const _validTab = ((tabValue) =>
@@ -64,11 +72,16 @@ export class ProjectsPage extends Component {
   }
 
   _onClickLogo(){
-    this.props.pushState(null, `/`);
+    this.props.pushState(null, `/home`);
+  }
+
+  _logout() {
+    const { logoutUser } = this.props;
+    logoutUser();
   }
 
   render() {
-    const { params, datasetSelector } = this.props;
+    const { params, user, datasetSelector } = this.props;
 
     const datasetId = params.datasetId || datasetSelector.datasetId;
 
@@ -102,8 +115,11 @@ export class ProjectsPage extends Component {
               <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
             </TabGroup>
           </Tabs>
+          <div className={ styles.logoutUser } onClick={ this._logout.bind(this) }>
+            Log out of <span className={ styles.username }>{ user.username }</span>
+          </div>
         </div>
-        {this.props.children}
+        { this.props.children }
       </div>
     );
   }
@@ -125,4 +141,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { pushState, fetchProjectIfNeeded })(ProjectsPage);
+export default connect(mapStateToProps, { pushState, fetchProjectIfNeeded, logoutUser })(ProjectsPage);

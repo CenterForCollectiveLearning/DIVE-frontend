@@ -1,7 +1,7 @@
 import {
   REQUEST_PRELOADED_PROJECTS,
   RECEIVE_PRELOADED_PROJECTS,
-  RECEIVE_PROJECTS
+  RECEIVE_USER_PROJECTS
 } from '../constants/ActionTypes';
 
 export default function projects(state = {
@@ -17,7 +17,7 @@ export default function projects(state = {
     case RECEIVE_PRELOADED_PROJECTS:
       return { ...state, isFetching: false, preloadedProjects: action.projects };
 
-    case RECEIVE_PROJECTS:
+    case RECEIVE_USER_PROJECTS:
       return { ...state, isFetching: false, userProjects: action.projects.filter((project) => !project.preloaded) };
 
     default:

@@ -43,7 +43,7 @@ export class DatasetUploadPage extends Component {
           heading="Upload Dataset">
           { datasetSelector.isUploading &&
             <div className={ styles.uploadingZone + ' ' + styles.centeredFill }>
-              { datasetSelector.progress && 
+              { datasetSelector.progress &&
                 <div className={ styles.watermark }>{ datasetSelector.progress }</div>
               }
             </div>
