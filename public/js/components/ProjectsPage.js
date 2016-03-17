@@ -7,6 +7,7 @@ import styles from './App/App.sass';
 
 import Tabs from './Base/Tabs';
 import Tab from './Base/Tab';
+import UserDropdown from './Base/UserDropdown';
 
 var Logo = require('babel!svg-react!../../assets/DIVE_logo_white.svg?name=Logo');
 
@@ -78,12 +79,7 @@ export class ProjectsPage extends Component {
             <Tab label="ANALYZE" value="analyze" route={ `datasets/${ datasetId }/analyze/summary` } disabled={ !datasetId }/>
             <Tab label="COMPOSE" value="compose" route={ `compose` }/>
           </Tabs>
-          <div className={ styles.userStatus }>
-            Logged in as { user.username }
-          </div>
-          <div className={ styles.logout } onClick={ this._logout.bind(this) }>
-            Logout
-          </div>
+          <UserDropdown user={ user } />
         </div>
         { this.props.children }
       </div>
