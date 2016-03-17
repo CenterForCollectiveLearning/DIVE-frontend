@@ -133,8 +133,8 @@ export class SummaryView extends Component {
           actions={
             datasets.items && datasets.items.length > 0 ?
               <div className={ styles.headerControl + ' ' + styles.datasetSelectorControl }>
-                <span>Dataset </span>
                 <DropDownMenu
+                  prefix="Dataset"
                   value={ parseInt(datasetId) }
                   options={ datasets.items }
                   valueMember="datasetId"
