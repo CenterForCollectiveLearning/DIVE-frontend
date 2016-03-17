@@ -25,6 +25,8 @@ class AuthPage extends Component {
       username: '',
       password: 'dive',
       confirmPassword: '',
+      emailAlreadyTaken: null,
+      usernameAlreadyTaken: null,
       usernameTooShort: null,
       usernameTooLong: null,
       emailValid: null,
@@ -107,7 +109,7 @@ class AuthPage extends Component {
   //   <div>passwordMatching: { passwordMatching }</div>
   // </div>
   render() {
-    const { authRequired } = this.props;
+    const { authRequired, registrationErrors } = this.props;
     const { email, emailValid, username, usernameTooLong, usernameTooShort, password, confirmPassword, passwordMatching } = this.state;
     const disabledRegister = !email || !username || !password || !emailValid || usernameTooShort || usernameTooLong || !passwordMatching;
 
@@ -135,6 +137,11 @@ class AuthPage extends Component {
           <div className={ styles.authInputGroup }>
             <div className={ styles.authInputLabelAndError}>
               <div className={ styles.authInputLabel }>E-mail</div>
+              { (registrationErrors.email) &&
+                <div className={ styles.error }>
+                  { registrationErrors.email }
+                </div>
+              }
               { (email && emailValid != null && !emailValid) &&
                 <div className={ styles.error }>
                   Please enter a valid e-mail
@@ -152,6 +159,11 @@ class AuthPage extends Component {
           <div className={ styles.authInputGroup }>
             <div className={ styles.authInputLabelAndError}>
               <div className={ styles.authInputLabel }>Username</div>
+              { (registrationErrors.username) &&
+                <div className={ styles.error }>
+                  { registrationErrors.username }
+                </div>
+              }
               { (username && username != null && usernameTooShort) &&
                 <div className={ styles.error }>
                   Username too short
@@ -197,7 +209,6 @@ class AuthPage extends Component {
               onChange={ this.handleConfirmPasswordChange.bind(this) }
             />
           </div>
-
           <RaisedButton
             primary
             className={ styles.submit }
@@ -218,7 +229,8 @@ AuthPage.propTypes = {
 
 function mapStateToProps(state) {
   const { user } = state;
-  return { isAuthenticated: user.isAuthenticated };
+  console.log(user.error.register);
+  return { registrationErrors: user.error.register, isAuthenticated: user.isAuthenticated };
 }
 
 export default connect(mapStateToProps, { registerUser, pushState})(AuthPage);

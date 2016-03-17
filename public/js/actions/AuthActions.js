@@ -58,7 +58,8 @@ function receiveRegisterUserDispatcher(json) {
 function errorRegisterUserDispatcher(error) {
   return {
     type: ERROR_REGISTER_USER,
-    message: error.message
+    emailError: error.message.email,
+    usernameError: error.message.username
   }
 }
 
@@ -128,7 +129,7 @@ export function registerUser(email, username, password) {
         );
       }
     })
-    .catch( error => { console.log('Login failed', error); });
+    .catch( error => { console.log('Registration failed', error); });
   };
 }
 

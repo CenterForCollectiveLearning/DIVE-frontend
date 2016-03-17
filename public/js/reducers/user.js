@@ -21,7 +21,10 @@ const baseState = {
   error: {
     login: '',
     logout: '',
-    register: ''
+    register: {
+      email: null,
+      username: null
+    }
   },
   success: {
     login: '',
@@ -52,7 +55,15 @@ export default function user(state = baseState, action) {
         id: action.id
       };
     case ERROR_REGISTER_USER:
-      return { ...state, error: { register: action.message }};
+      return { ...state,
+        error: {
+          ...state.error,
+          register: {
+            ...state.error.register,
+            email: action.emailError,
+            username: action.usernameError,
+          }
+      }};
     case RECEIVE_LOGOUT_USER:
       return {
         ...baseState,
