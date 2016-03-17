@@ -6,9 +6,8 @@ import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
 import Dropzone from 'react-dropzone';
+import HeaderBar from '../Base/HeaderBar';
 import RaisedButton from '../Base/RaisedButton';
-import ActionBox from '../Base/ActionBox';
-import DatasetToolbar from './DatasetToolbar';
 
 export class DatasetUploadPage extends Component {
   constructor(props) {
@@ -36,11 +35,11 @@ export class DatasetUploadPage extends Component {
     const { datasetSelector } = this.props;
     return (
       <div className={ styles.fillContainer }>
-        <DatasetToolbar uploadMode={ true }/>
-        <ActionBox
-          className={ styles.datasetUploadBox }
-          contentClassName={ styles.datasetUploadBoxContent }
-          heading="Upload Dataset">
+        <HeaderBar
+          header="Upload Dataset"
+        />
+        <div
+          className={ styles.datasetUploadBox }>
           { datasetSelector.isUploading &&
             <div className={ styles.uploadingZone + ' ' + styles.centeredFill }>
               { datasetSelector.progress &&
@@ -60,7 +59,7 @@ export class DatasetUploadPage extends Component {
               <span>or drop files here to upload</span>
             </Dropzone>
           }
-        </ActionBox>
+        </div>
       </div>
     );
   }

@@ -97,12 +97,12 @@ export class ProjectsPage extends Component {
           <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
             <TabGroup heading="DATASETS">
               <Tab label="Upload" value="upload" route={ `datasets/upload` } />
-              <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/inspect' }` } />
+              <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } />
               <Tab label="Combine" value="combine" route={ `datasets${ datasetId ? `/${ datasetId }/combine` : '/combine' }` } disabled={ true }/>
             </TabGroup>
             <TabGroup heading="VISUALIZATIONS">
               <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/gallery` } disabled={ !datasetId }/>
-              <Tab label="Build" value="build" route={ `datasets/${ datasetId }/visualize/builder` } disabled={ !datasetId }/>
+              <Tab label="Build" value="build" route={ `datasets/${ datasetId }/visualize/builder` } disabled={ true }/>
               <Tab label="Starred" value="starred" route={ `datasets/${ datasetId }/visualize/starred` } disabled={ true }/>
             </TabGroup>
             <TabGroup heading="ANALYSIS">
