@@ -2,11 +2,13 @@ import {
   SELECT_CORRELATION_VARIABLE,
   REQUEST_CORRELATION,
   RECEIVE_CORRELATION,
+  PROGRESS_CORRELATION,
+  ERROR_CORRELATION,
   REQUEST_CORRELATION_SCATTERPLOT,
   RECEIVE_CORRELATION_SCATTERPLOT
 } from '../constants/ActionTypes';
 
-import { fetch } from './api.js';
+import { fetch, pollForTask } from './api.js';
 
 export function selectCorrelationVariable(selectedCorrelationVariable) {
   return {
@@ -22,11 +24,25 @@ function requestCorrelationDispactcher(datasetId) {
   };
 }
 
-function receiveCorrelationDispatcher(json) {
+function progressCorrelationDispatcher(data) {
+  return {
+    type: PROGRESS_CORRELATION,
+    progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
+  };
+}
+
+function receiveCorrelationDispatcher(params, json) {
   return {
     type: RECEIVE_CORRELATION,
     data: json,
     receivedAt: Date.now()
+  };
+}
+
+function errorCorrelationDispatcher(json) {
+  return {
+    type: ERROR_CORRELATION,
+    progress: 'Error running correlations, please check console.'
   };
 }
 
@@ -46,8 +62,14 @@ export function getCorrelations(projectId, datasetId, correlationVariables) {
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
-      .then(json => dispatch(receiveCorrelationDispatcher(json)))
-      .catch(err => console.error("Error creating correlation matrix: ", err));
+    .then(function(json) {
+      if (json.compute) {
+        dispatch(pollForTask(json.taskId, REQUEST_CORRELATION, params, receiveCorrelationDispatcher, progressCorrelationDispatcher, errorCorrelationDispatcher));
+      } else {
+        dispatch(receiveCorrelationDispatcher(params, json));
+      }
+    })
+    .catch(err => console.error("Error creating correlation matrix: ", err));
   };
 }
 
