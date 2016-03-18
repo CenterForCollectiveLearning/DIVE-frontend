@@ -45,7 +45,6 @@ class UserDropdown extends Component {
           </div>
           { dropdownOpen &&
             <div className={ styles.dropdown }>
-              <div className={ styles.dropdownItem }>Settings</div>
               <div className={ styles.dropdownItem } onClick={ this._logout.bind(this) } >Logout</div>
             </div>
           }
