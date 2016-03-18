@@ -1,20 +1,19 @@
 @import '../../../css/mixins.sass'
 
 .userDropdown
+  display: flex
+  align-items: center
   margin-left: auto
 
   .username
     +montserrat
-    background-color: transparent
     display: flex
-    flex-direction: row
-    padding: 12px 24px 12px 48px
-    transition: background-color 0.35s cubic-bezier(0.35, 0, 0.25, 1)
+    background-color: transparent
     line-height: 24px
+    height: 24px
 
     font-size: 11px
     font-weight: 600
-    color: rgba(255, 255, 255, 0.3)
     text-align: center
     color: #CFD8DC
 
@@ -29,48 +28,18 @@
     +montserrat
     position: absolute
     right: 35px
-    border: 1px solid #819DCC
-    width: 150px
-    border-radius: 3px
+    top: 72px
+    width: auto
+    border-radius: 2px
     z-index: 1000
 
     .dropdownItem
       padding: 8px 12px
       background-color: #0F2762
       font-size: 14px
-      text-transform: uppercase
-      letter-spacing: 1px
+      font-weight: 300
       cursor: pointer
-
-      &:first-child
-        border-bottom: 1px solid #819DCC
 
       &:hover
         background-color: rgba(15, 39, 98, 0.58)
 
-    // .tabx
-    //
-    //   padding: 12px 24px
-    //   transition: background-color 0.35s cubic-bezier(0.35, 0, 0.25, 1)
-    //   line-height: 24px
-    //
-    //   font-size: 14px
-    //   font-weight: 500
-    //   text-align: center
-    //   color: #CFD8DC
-    //
-    //   cursor: pointer
-    //
-    //   text-transform: uppercase
-    //
-    //   &:hover
-    //     color: #dee4e7
-    //
-    //   &.selected
-    //     color: #FFFFFF
-    //     background-color: #456B7D
-    //     border-bottom: 2px solid #2D5365
-    //
-    //   &.disabled
-    //     opacity: 0.5
-    //     pointer-events: none

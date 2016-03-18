@@ -7,7 +7,6 @@ import styles from './App/App.sass';
 
 import Tabs from './Base/Tabs';
 import Tab from './Base/Tab';
-import UserDropdown from './Base/UserDropdown';
 import TabGroup from './Base/TabGroup';
 
 var Logo = require('babel!svg-react!../../assets/DIVE_logo_white.svg?name=Logo');
