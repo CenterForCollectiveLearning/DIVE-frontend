@@ -51,7 +51,7 @@ export default function composeSelector(state = baseState, action) {
         })
       }
 
-      return { ...state, blocks: blocks };
+      return { ...state, blocks: blocks, updatedAt: Date.now() };
 
     case RECEIVE_DOCUMENTS:
       const documentId = parseInt(state.documentId);
