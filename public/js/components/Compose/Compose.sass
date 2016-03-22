@@ -165,6 +165,20 @@
     &:hover
       opacity: 0.8
 
+    .visualizationOverlayControl
+      &.visualizationOverlayButton
+        height: 30px
+        line-height: 29px
+        padding: 0 7px
+        border-color: #D0D0D0
+
+        i
+          font-weight: 600
+          font-size: 12px
+
+      + .visualizationOverlayControl
+        margin-left: 5px
+
     .visualizationOverlayButton
       max-width: none
       background-color: white
@@ -175,6 +189,9 @@
         line-height: 29px
         box-shadow: none
         opacity: 0.9
+
+        &[data-selected]
+          background-color: #D0D0D0
 
         &:hover
           opacity: 1
@@ -242,5 +259,5 @@
 .visualizationPreviewBlockContainer
   &.selectedVisualizationPreviewBlockContainer
     .sidebarVisualizationContainer
-      background-color: #F1F1F1
-      box-shadow: none
+      background-color: #E2E2E2
+      border-color: #BBB

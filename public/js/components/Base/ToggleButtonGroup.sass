@@ -27,11 +27,11 @@
     flex-grow: 1
     max-width: 50%
 
-    &:first-child .raisedButton.toggleButton
+    &:first-child, &:first-child .raisedButton.toggleButton
       border-top-left-radius: 2px
       border-bottom-left-radius: 2px
 
-    &:last-child .raisedButton.toggleButton
+    &:last-child, &:last-child .raisedButton.toggleButton
       border-top-right-radius: 2px
       border-bottom-right-radius: 2px
 
@@ -57,7 +57,7 @@
     flex-grow: 1
     background-color: rgba(255, 255, 255, 0.4)
 
-    &.selected
+    &[data-selected]
       background-color: rgba(86, 42, 110, 0.1)
 
     img
@@ -81,7 +81,7 @@
       .splitButtonSelect > div > div > div
         border-bottom-right-radius: 2px
 
-    &.selected
+    &[data-selected]
       background-color: #E9E9E9
       box-shadow: inset 1px 1px 2px 0 rgba(0, 0, 0, 0.08)
 

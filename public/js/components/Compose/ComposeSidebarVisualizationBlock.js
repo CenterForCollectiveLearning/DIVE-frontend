@@ -18,7 +18,11 @@ export class ComposeSidebarVisualizationBlock extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { composeSelector, spec } = nextProps;
-    if (composeSelector.documentId != this.props.composeSelector.documentId || spec.id != this.props.spec.id ) {
+    const documentChanged = composeSelector.documentId != this.props.composeSelector.documentId;
+    const specChanged = spec.id != this.props.spec.id;
+    const composeSelectorChanged = composeSelector.updatedAt != this.props.composeSelector.updatedAt;
+
+    if (documentChanged || specChanged || composeSelectorChanged) {
       this.setState({ selected: composeSelector.blocks.find((block) => block.exportedSpecId == spec.id) != undefined });
     }
   }

@@ -29,7 +29,7 @@ export default class ToggleButton extends Component {
     const selectedMenuItemIsDefault = selectedMenuItemIndex == 0;
 
     return (
-      <div className={
+      <div data-selected={ this.props.isSelected ? true : undefined } className={
         styles.toggleButtonContainer
         + (this.props.className ? ' ' + this.props.className : '')
         + (!this.props.imageName ? ' ' + styles.textToggleButton : '')
@@ -37,6 +37,7 @@ export default class ToggleButton extends Component {
         + (this.props.isSelected ? ' ' + styles.selected : '')
         + (this.props.splitMenu.length > 0 ? ' ' + styles.splitButton : '')}>
         <div
+          data-selected={ this.props.isSelected ? true : undefined }
           className={
             styles.toggleButton + ' ' + styles.raisedButton
             + (this.props.isSelected ? ' ' + styles.selected : '')
