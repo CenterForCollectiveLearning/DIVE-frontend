@@ -36,7 +36,7 @@ export class LandingPage extends Component {
   render() {
     const { user } = this.props;
     return (
-      <DocumentTitle title='DIVE / Landing'>
+      <DocumentTitle title='DIVE | Landing'>
         <div className={ styles.fillContainer + ' ' + styles.landingPage }>
           <div className={ styles.background }>
             <div className={ styles.innerBackground }>

@@ -42,7 +42,7 @@ export class HomePage extends Component {
     const { projects, userId } = this.props;
     const { userProjects, preloadedProjects } = projects;
     return (
-      <DocumentTitle title='DIVE / Projects'>
+      <DocumentTitle title='DIVE | Projects'>
         <div className={ styles.centeredFill }>
           <div className={ styles.ctaBox }>
             <div className={ styles.primaryCopy }>

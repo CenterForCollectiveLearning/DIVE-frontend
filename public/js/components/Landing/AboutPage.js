@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 export class AboutPage extends Component {
   render() {
     return (
-      <DocumentTitle title='DIVE / About'>
+      <DocumentTitle title='DIVE | About'>
         <div className={ styles.centeredFill }>
           <div className={ styles.aboutContainer }>
             <div className={ styles.textBox }>

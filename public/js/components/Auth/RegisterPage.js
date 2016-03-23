@@ -119,7 +119,7 @@ class AuthPage extends Component {
     }
 
     return (
-      <DocumentTitle title='DIVE / Register'>
+      <DocumentTitle title='DIVE | Register'>
         <BlockingModal
           scrollable
           closeAction={ this.closeRegistrationPage.bind(this) }
