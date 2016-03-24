@@ -1,5 +1,6 @@
 @import '../../../css/flexbox.sass'
 @import '../../../css/mixins.sass'
+@import '../Base/BlockingModal.sass'
 
 .header
   display: flex
@@ -63,12 +64,18 @@
       background-color: rgba(28, 32, 40, 0.5)
 
   .projectSelectorAction
-    color: rgba(255, 255, 255, 0.7)
+    padding-left: 11px
+    height: 33px
+
     border: none
+    border-left: 1px solid rgba(255, 255, 255, 0.2)
     border-radius: 0
     line-height: 37px
-    border-left: 1px solid rgba(255, 255, 255, 0.2)
-    height: 33px
+
+    color: rgba(255, 255, 255, 0.7)
+
+    &:hover
+      color: rgba(255, 255, 255, 0.5)
 
   .projectSelector
     margin-bottom: 20px

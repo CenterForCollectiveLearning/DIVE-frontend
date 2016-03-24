@@ -10,6 +10,7 @@ import RaisedButton from './Base/RaisedButton';
 import Tabs from './Base/Tabs';
 import Tab from './Base/Tab';
 import TabGroup from './Base/TabGroup';
+import ProjectSettingsModal from './ProjectSettingsModal';
 
 var Logo = require('babel!svg-react!../../assets/DIVE_logo_white.svg?name=Logo');
 
@@ -19,6 +20,12 @@ export class ProjectNav extends Component {
 
     this._handleTabsChange = this._handleTabsChange.bind(this);
     this._onClickLogo = this._onClickLogo.bind(this);
+    this.onSelectProject = this.onSelectProject.bind(this);
+    this.onClickProjectSettings = this.onClickProjectSettings.bind(this);
+
+    this.state = {
+      projectSettingsModalOpen: false
+    };
   }
 
   _getSelectedTab(){
@@ -69,6 +76,18 @@ export class ProjectNav extends Component {
     logoutUser();
   }
 
+  onSelectProject(projectId) {
+    window.location.href = `/projects/${ projectId }/datasets`;
+  }
+
+  onClickProjectSettings() {
+    this.setState({ projectSettingsModalOpen: true });
+  }
+
+  closeProjectSettingsModal() {
+    this.setState({ projectSettingsModalOpen: false });
+  }
+
   render() {
     const { paramDatasetId, user, projects, project, datasetSelector } = this.props;
 
@@ -90,13 +109,13 @@ export class ProjectNav extends Component {
             options={ projects.userProjects.length > 0 ? projects.userProjects : [] }
             valueMember="id"
             displayTextMember="title"
-            onChange={ this.onSelectDocument } />
+            onChange={ this.onSelectProject } />
           <RaisedButton
             className={ styles.projectSelectorAction }
             icon
-            altText="Rename project"
-            onClick={ this.onClickRenameProject }>
-            <i className="fa fa-edit"></i>
+            altText="Project settings"
+            onClick={ this.onClickProjectSettings }>
+            <i className="fa fa-cog"></i>
           </RaisedButton>
         </div>
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
@@ -123,6 +142,12 @@ export class ProjectNav extends Component {
         <div className={ styles.logoutUser } onClick={ this._logout.bind(this) }>
           Log out of <span className={ styles.username }>{ user.username }</span>
         </div>
+        { this.state.projectSettingsModalOpen &&
+          <ProjectSettingsModal
+            projectName={ project.properties.title }
+            projectId={ project.properties.id }
+            closeAction={ this.closeProjectSettingsModal.bind(this) }/>
+        }
       </div>
     );
   }

@@ -27,7 +27,6 @@ export default class DropDownMenu extends Component {
       );
     } 
 
-
     return (
       <div style={{ width: this.props.width || '100%' }} className={ styles.dropDownMenu + (className ? ' ' + className : '') }>
         <Select
