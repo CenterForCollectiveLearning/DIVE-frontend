@@ -64,7 +64,7 @@ export class ProjectNav extends Component {
   }
 
   _handleTabsChange(tab){
-    this.props.pushState(null, `/projects/${ this.props.params.projectId }/${ tab.props.route }`);
+    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/${ tab.props.route }`);
   }
 
   _onClickLogo(){
