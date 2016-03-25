@@ -47,14 +47,13 @@ class ProjectSettingsModal extends Component {
         closeAction={ this.props.closeAction }
         heading="Project Settings"
         footer={ footer }>
-        <div style={{ display: "flex" }}>
-          <div className={ styles.controlSection }>
-            <div className={ styles.label }>Project Name</div>
-            <Input
-              type="text"
-              placeholder={ projectName }
-              onChange={ this.enteredProjectNameInput.bind(this) }/>
-          </div>
+        <div className={ styles.controlSection }>
+          <div className={ styles.label }>Project Name</div>
+          <Input
+            type="text"
+            placeholder={ projectName }
+            value={ projectName }
+            onChange={ this.enteredProjectNameInput.bind(this) }/>
         </div>
       </BlockingModal>
     );

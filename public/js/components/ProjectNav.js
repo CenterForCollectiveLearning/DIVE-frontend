@@ -101,23 +101,25 @@ export class ProjectNav extends Component {
           </div>
           <Logo className={ styles.logo } />
         </div>
-        <div className={ styles.projectSelectorContainer }>
-          <DropDownMenu
-            className={ styles.projectSelector }
-            valueClassName={ styles.projectSelectorValue }
-            value={ parseInt(project.properties.id) }
-            options={ projects.userProjects.length > 0 ? projects.userProjects : [] }
-            valueMember="id"
-            displayTextMember="title"
-            onChange={ this.onSelectProject } />
-          <RaisedButton
-            className={ styles.projectSelectorAction }
-            icon
-            altText="Project settings"
-            onClick={ this.onClickProjectSettings }>
-            <i className="fa fa-cog"></i>
-          </RaisedButton>
-        </div>
+        { !project.properties.preloaded &&
+          <div className={ styles.projectSelectorContainer }>
+            <DropDownMenu
+              className={ styles.projectSelector }
+              valueClassName={ styles.projectSelectorValue }
+              value={ parseInt(project.properties.id) }
+              options={ projects.userProjects.length > 0 ? projects.userProjects : [] }
+              valueMember="id"
+              displayTextMember="title"
+              onChange={ this.onSelectProject } />
+            <RaisedButton
+              className={ styles.projectSelectorAction }
+              icon
+              altText="Project settings"
+              onClick={ this.onClickProjectSettings }>
+              <i className="fa fa-cog"></i>
+            </RaisedButton>
+          </div>
+        }
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
           <TabGroup heading="DATASETS">
             <Tab label="Upload" value="upload" route={ `datasets/upload` } />
