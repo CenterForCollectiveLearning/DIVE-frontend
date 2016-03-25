@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import BaseComponent from './BaseComponent';
 import styles from './App.sass';
 
 import { createAnonymousUserIfNeeded } from '../../actions/UserActions';
@@ -12,7 +11,7 @@ require('react-select/less/select.less');
 require('../../../css/app.less');
 require('../../../css/griddle.less');
 
-export class App extends BaseComponent {
+export class App extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.user.loaded && !this.props.user.loaded) {
       this.props.createAnonymousUserIfNeeded();

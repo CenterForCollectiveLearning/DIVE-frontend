@@ -1,5 +1,6 @@
 @import '../../../css/flexbox.sass'
 @import '../../../css/mixins.sass'
+@import '../Base/BlockingModal.sass'
 
 .header
   display: flex
@@ -51,3 +52,40 @@
 
 .projectContainer
   flex-direction: row
+
+.projectSelectorContainer
+  display: flex
+  flex-direction: row
+
+  .projectSelector, .projectSelectorAction
+    background-color: rgba(28, 32, 40, 0.7)
+
+    &:hover
+      background-color: rgba(28, 32, 40, 0.5)
+
+  .projectSelectorAction
+    padding-left: 11px
+    height: 33px
+
+    border: none
+    border-left: 1px solid rgba(255, 255, 255, 0.2)
+    border-radius: 0
+    line-height: 37px
+
+    color: rgba(255, 255, 255, 0.7)
+
+    &:hover
+      color: rgba(255, 255, 255, 0.5)
+
+  .projectSelector
+    margin-bottom: 20px
+
+    > div > div:first-of-type
+      border: none
+      border-radius: 0
+
+      > div:first-child
+        padding-left: 24px
+
+    span.projectSelectorValue
+      color: rgba(255, 255, 255, 0.8)

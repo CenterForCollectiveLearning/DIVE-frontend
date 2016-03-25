@@ -3,6 +3,7 @@ import {
   RECEIVE_PROJECT,
   CREATE_PROJECT,
   CREATED_PROJECT,
+  SUBMIT_PROJECT,
   REQUEST_USER_PROJECTS,
   RECEIVE_USER_PROJECTS,
   REQUEST_PRELOADED_PROJECTS,
@@ -131,6 +132,26 @@ function fetchProject(projectId) {
   return dispatch => {
     dispatch(requestProjectDispatcher(projectId));
     return fetch('/projects/v1/projects/' + projectId)
+      .then(response => response.json())
+      .then(json => dispatch(receiveProjectDispatcher(json)));
+  };
+}
+
+function submitProjectDispatcher(projectId) {
+  return {
+    type: SUBMIT_PROJECT,
+    projectId: projectId
+  };
+}
+
+export function submitProject(projectId, params) {
+  return dispatch => {
+    dispatch(submitProjectDispatcher(projectId));
+    return fetch('/projects/v1/projects/' + projectId, {
+      method: 'put',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    })
       .then(response => response.json())
       .then(json => dispatch(receiveProjectDispatcher(json)));
   };

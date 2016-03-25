@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { selectDataset, fetchDatasetsIfNeeded } from '../../../actions/DatasetActions';
+import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { clearVisualization, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
 import { fetchExportedVisualizationSpecs } from '../../../actions/ComposeActions';
 
@@ -16,11 +16,11 @@ import VisualizationBlock from './VisualizationBlock';
 export class GalleryView extends Component {
 
   componentWillMount() {
-    const { datasetSelector, datasets, project, specs, gallerySelector, clearVisualization, fetchSpecs, fetchDatasetsIfNeeded } = this.props;
+    const { datasetSelector, datasets, project, specs, gallerySelector, clearVisualization, fetchSpecs, fetchDatasets } = this.props;
     const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching && !specs.error);
 
     if (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded)) {
-      fetchDatasetsIfNeeded(project.properties.id);
+      fetchDatasets(project.properties.id);
     }
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && noSpecsAndNotFetching) {
@@ -31,14 +31,14 @@ export class GalleryView extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { datasetSelector, datasets, project, specs, gallerySelector, exportedSpecs, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasetsIfNeeded } = this.props;
+    const { datasetSelector, datasets, project, specs, gallerySelector, exportedSpecs, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = this.props;
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
     const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching && !specs.error);
     const gallerySelectorChanged = (gallerySelector.updatedAt !== previousProps.gallerySelector.updatedAt);
     const projectChanged = (previousProps.project.properties.id !== project.properties.id);
 
     if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded))) {
-      fetchDatasetsIfNeeded(project.properties.id);
+      fetchDatasets(project.properties.id);
     }
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && (datasetChanged || gallerySelectorChanged || noSpecsAndNotFetching)) {
@@ -70,7 +70,7 @@ export class GalleryView extends Component {
       selectedFieldPropertiesQueryString = selectedFieldPropertiesQueryString.reduce((a, b) => a + "&" + b);
     }
 
-    selectDataset(datasetId);
+    selectDataset(project.properties.id, datasetId);
     pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/visualize/gallery?${ selectedFieldPropertiesQueryString }`);
   }
 
@@ -178,7 +178,7 @@ export default connect(mapStateToProps, {
   pushState,
   fetchSpecs,
   fetchExportedVisualizationSpecs,
-  fetchDatasetsIfNeeded,
+  fetchDatasets,
   selectDataset,
   clearVisualization,
   selectSortingFunction,

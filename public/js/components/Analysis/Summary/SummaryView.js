@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { selectDataset, fetchDatasetsIfNeeded } from '../../../actions/DatasetActions';
+import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { runAggregation, runComparisonOneDimensional, getVariableSummaryStatistics } from '../../../actions/SummaryActions';
 import { clearAnalysis } from '../../../actions/AnalysisActions';
 
@@ -25,7 +25,7 @@ export class SummaryView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, loadSummary, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runComparisonOneDimensional, allComparisonVariableIds, getVariableSummaryStatistics, fetchDatasetsIfNeeded } = this.props;
+    const { projectId, datasetId, loadSummary, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runComparisonOneDimensional, allComparisonVariableIds, getVariableSummaryStatistics, fetchDatasets } = this.props;
     const aggregationIndependentVariablesChanged = nextProps.aggregationIndependentVariableNamesAndTypes.length != aggregationIndependentVariableNamesAndTypes.length;
     const aggregationVariableChanged = nextProps.aggregationVariableName != aggregationVariableName;
     const aggregationFunctionChanged = nextProps.aggregationFunction != aggregationFunction;
@@ -43,7 +43,7 @@ export class SummaryView extends Component {
 
     if (nextProps.projectId && nextProps.datasetId) {
       if (projectChanged || nextProps.projectId) {
-        fetchDatasetsIfNeeded(nextProps.projectId);
+        fetchDatasets(nextProps.projectId);
       }
 
       if (sideBarChanged) {
@@ -65,7 +65,7 @@ export class SummaryView extends Component {
   clickDataset(datasetId) {
     const { projectId, clearAnalysis, selectDataset, pushState } = this.props;
     clearAnalysis();
-    selectDataset(datasetId);
+    selectDataset(projectId, datasetId);
     pushState(null, `/projects/${ projectId }/datasets/${ datasetId }/analyze/summary`);
   }
 
@@ -227,6 +227,6 @@ export default connect(mapStateToProps, {
   runComparisonOneDimensional,
   getVariableSummaryStatistics,
   selectDataset,
-  fetchDatasetsIfNeeded,
+  fetchDatasets,
   clearAnalysis
 })(SummaryView);
