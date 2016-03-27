@@ -109,7 +109,7 @@ export class DatasetInspectPage extends Component {
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
-                <RaisedButton icon={ true } onClick={ this.onClickDeleteDataset }>
+                <RaisedButton icon onClick={ this.onClickDeleteDataset }>
                   <i className="fa fa-trash"></i>
                 </RaisedButton>
               </div>

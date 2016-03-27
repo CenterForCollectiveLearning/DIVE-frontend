@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { submitProject } from '../actions/ProjectActions.js';
+import { submitProject, deleteProject } from '../actions/ProjectActions.js';
 import styles from './App/App.sass';
 
 import BlockingModal from './Base/BlockingModal';
@@ -29,12 +29,21 @@ class ProjectSettingsModal extends Component {
     this.setState({ projectName: event.target.value });
   }
 
+  onClickDeleteProject() {
+    const { projectId, deleteProject } = this.props;
+    deleteProject(projectId);
+  }
+
   render() {
     const { closeAction } = this.props;
     const { projectName } = this.state;
 
     var footer = 
       <div className={ styles.footerContent }>
+        <RaisedButton icon altText="Delete project" onClick={ this.onClickDeleteProject.bind(this) }>
+          <i className="fa fa-trash"></i>
+        </RaisedButton>
+
         <div className={ styles.rightActions }>
           <RaisedButton primary minWidth={ 100 } onClick={ this.submit.bind(this) }>Save</RaisedButton>
           <RaisedButton onClick={ closeAction }>Cancel</RaisedButton>
@@ -70,4 +79,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { submitProject })(ProjectSettingsModal);
+export default connect(mapStateToProps, { submitProject, deleteProject })(ProjectSettingsModal);
