@@ -16,9 +16,10 @@ import {
 import { fetch, httpRequest, pollForTask } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
-export function selectDataset(datasetId) {
+export function selectDataset(projectId, datasetId) {
   return {
     type: SELECT_DATASET,
+    projectId: projectId,
     datasetId: datasetId
   };
 }
