@@ -32,7 +32,7 @@ export class BuilderView extends Component {
     const conditionalsChanged = nextProps.visualization.conditionals != visualization.conditionals;
     const configChanged = nextProps.visualization.config != visualization.config;
 
-    if (nextProps.project.properties.id && (!visualization.spec.id || (!visualization.spec.isFetching && (conditionalsChanged || configChanged)))) {
+    if (nextProps.project.properties.id && !visualization.isFetching && (!visualization.spec.id || conditionalsChanged || configChanged)) {
       fetchSpecVisualizationIfNeeded(nextProps.project.properties.id, nextProps.specId, nextProps.visualization.conditionals, nextProps.visualization.config);
     }
 
