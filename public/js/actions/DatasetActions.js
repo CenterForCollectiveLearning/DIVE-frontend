@@ -4,7 +4,7 @@ import {
   RECEIVE_DATASET,
   REQUEST_DATASETS,
   RECEIVE_DATASETS,
-  DELETE_DATASET,
+  DELETED_DATASET,
   REQUEST_UPLOAD_DATASET,
   PROGRESS_UPLOAD_DATASET,
   RECEIVE_UPLOAD_DATASET,
@@ -147,9 +147,9 @@ export function fetchDataset(projectId, datasetId) {
   };
 }
 
-function deleteDatasetDispatcher(datasetId, json) {
+function deletedDatasetDispatcher(datasetId, json) {
   return {
-    type: DELETE_DATASET,
+    type: DELETED_DATASET,
     datasetId: datasetId
   };
 }
@@ -159,7 +159,7 @@ export function deleteDataset(projectId, datasetId) {
     return fetch(`/datasets/v1/datasets/${ datasetId }?project_id=${ projectId }`, {
       method: 'delete'
     }).then(response => response.json())
-      .then(json => dispatch(deleteDatasetDispatcher(datasetId, json)));
+      .then(json => dispatch(deletedDatasetDispatcher(datasetId, json)));
   };
 }
 
