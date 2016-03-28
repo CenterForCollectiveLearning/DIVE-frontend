@@ -1,5 +1,6 @@
 import {
   SELECT_DATASET,
+  DELETED_DATASET,
   REQUEST_UPLOAD_DATASET,
   PROGRESS_UPLOAD_DATASET,
   RECEIVE_UPLOAD_DATASET,
@@ -22,6 +23,9 @@ export default function datasetSelector(state = baseState, action) {
   switch (action.type) {
     case SELECT_DATASET:
       return { ...state, datasetId: action.datasetId, projectId: action.projectId };
+
+    case DELETED_DATASET:    
+      return { ...state, datasetId: null };
 
     case REQUEST_UPLOAD_DATASET:
       return { ...state, isUploading: true };
