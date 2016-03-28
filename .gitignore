@@ -12,5 +12,4 @@ __/
 *.map
 
 public/bundle.js
-
 public/app.css
