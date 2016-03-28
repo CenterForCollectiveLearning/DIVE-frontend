@@ -39,6 +39,7 @@ function mergeDatasetLists(originalList, newList) {
 }
 
 const baseState = {
+  projectId: null,
   isFetching: false,
   loaded: false,
   fetchedAll: false,
@@ -48,17 +49,17 @@ const baseState = {
 export default function datasets(state = baseState, action) {
   switch (action.type) {
     case REQUEST_DATASETS:
-      return { ...state, isFetching: true };
+      return { ...state, isFetching: true, projectId: action.projectId };
 
     case RECEIVE_DATASETS:
       var mergedDatasetLists = mergeDatasetLists(state.items, action.datasets);
-      return { ...state, isFetching: false, items: mergedDatasetLists, loaded: true, fetchedAll: true };        
+      return { ...state, isFetching: false, items: mergedDatasetLists, loaded: true, fetchedAll: true, projectId: action.projectId };        
 
     case RECEIVE_UPLOAD_DATASET:
       if (action.error) {
         return { ...state, isFetching: false, loaded: true };
       }
-      return { ...state, isFetching: false, items: [...state.items, ...action.datasets], loaded: true };
+      return { ...state, isFetching: false, items: [...state.items, ...action.datasets], loaded: true, projectId: action.projectId };
 
     case RECEIVE_DATASET:
       const newDataset = [{
@@ -67,7 +68,7 @@ export default function datasets(state = baseState, action) {
           data: action.data,
           details: action.details
       }];
-      return { ...state, items: mergeDatasetLists(state.items, newDataset) };
+      return { ...state, items: mergeDatasetLists(state.items, newDataset), projectId: action.projectId };
 
     case WIPE_PROJECT_STATE:
       return baseState;

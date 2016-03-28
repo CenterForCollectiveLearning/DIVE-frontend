@@ -3,10 +3,13 @@ import {
   RECEIVE_PROJECT,
   CREATE_PROJECT,
   CREATED_PROJECT,
+  SUBMIT_PROJECT,
   REQUEST_USER_PROJECTS,
   RECEIVE_USER_PROJECTS,
   REQUEST_PRELOADED_PROJECTS,
   RECEIVE_PRELOADED_PROJECTS,
+  DELETE_PROJECT,
+  DELETED_PROJECT,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -109,19 +112,48 @@ export function createProject(user_id, title, description) {
   }
 }
 
-export function fetchPreloadedProjects(user_id) {
+function deleteProjectDispatcher(projectId) {
+  return {
+    type: DELETE_PROJECT,
+    projectId
+  };
+}
+
+function deletedProjectDispatcher(projectId) {
+  return {
+    type: DELETED_PROJECT,
+    projectId
+  };
+}
+
+function goHome() {
+  window.location.href = '/';
+}
+
+export function deleteProject(projectId) {
+  return dispatch => {
+    dispatch(deleteProjectDispatcher());
+    return fetch(`/projects/v1/projects/${ projectId }`, {
+      method: 'delete'
+    }).then(response => response.json())
+      .then(json => dispatch(deletedProjectDispatcher(json)))
+      .then(goHome);
+  }  
+}
+
+export function fetchPreloadedProjects(userId) {
   return dispatch => {
     dispatch(requestPreloadedProjectsDispatcher());
-    return fetch(`/projects/v1/projects?preloaded=True` + (user_id ? `&user_id=${ user_id }` : ''))
+    return fetch(`/projects/v1/projects?preloaded=True` + (userId ? `&user_id=${ userId }` : ''))
       .then(response => response.json())
       .then(json => dispatch(receivePreloadedProjectsDispatcher(json)));
   };
 }
 
-export function fetchUserProjects(user_id) {
+export function fetchUserProjects(userId) {
   return dispatch => {
     dispatch(requestUserProjectsDispatcher());
-    return fetch(`/projects/v1/projects?private=True` + (user_id ? `&user_id=${ user_id }` : ''))
+    return fetch(`/projects/v1/projects?private=True` + (userId ? `&user_id=${ userId }` : ''))
       .then(response => response.json())
       .then(json => dispatch(receiveUserProjectsDispatcher(json)));
   };
@@ -131,6 +163,26 @@ function fetchProject(projectId) {
   return dispatch => {
     dispatch(requestProjectDispatcher(projectId));
     return fetch('/projects/v1/projects/' + projectId)
+      .then(response => response.json())
+      .then(json => dispatch(receiveProjectDispatcher(json)));
+  };
+}
+
+function submitProjectDispatcher(projectId) {
+  return {
+    type: SUBMIT_PROJECT,
+    projectId: projectId
+  };
+}
+
+export function submitProject(projectId, params) {
+  return dispatch => {
+    dispatch(submitProjectDispatcher(projectId));
+    return fetch('/projects/v1/projects/' + projectId, {
+      method: 'put',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    })
       .then(response => response.json())
       .then(json => dispatch(receiveProjectDispatcher(json)));
   };

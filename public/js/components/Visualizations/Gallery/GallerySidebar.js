@@ -70,7 +70,7 @@ export class GallerySidebar extends Component {
   }
 
   render() {
-    const { visualizationTypes, datasetSelector, gallerySelector, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectDataset, selectAggregationFunction } = this.props;
+    const { visualizationTypes, datasetSelector, gallerySelector, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectAggregationFunction } = this.props;
 
     return (
       <Sidebar>

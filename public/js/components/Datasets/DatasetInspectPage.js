@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
-import { fetchDataset, fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
+import { fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 
 import styles from './Datasets.sass';
@@ -31,19 +31,19 @@ export class DatasetInspectPage extends Component {
   }
 
   componentWillMount() {
-    const { project, datasets, params, fetchDataset, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded } = this.props;
+    const { project, datasets, params, fetchDataset, fetchDatasets, fetchFieldPropertiesIfNeeded } = this.props;
     fetchDataset(params.projectId, params.datasetId);
     fetchFieldPropertiesIfNeeded(params.projectId, params.datasetId);
 
     if (project.properties.id && !datasets.fetchedAll && !datasets.isFetching) {
-      fetchDatasetsIfNeeded(params.projectId, false);
+      fetchDatasets(params.projectId, false);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, params, datasetSelector, datasets, fetchDataset, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, pushState } = nextProps;
+    const { project, params, datasetSelector, datasets, fetchDataset, fetchDatasets, fetchFieldPropertiesIfNeeded, pushState } = nextProps;
     if (project.properties.id !== this.props.project.properties.id || (!datasets.fetchedAll && !datasets.isFetching)) {
-      fetchDatasetsIfNeeded(project.properties.id, false);
+      fetchDatasets(project.properties.id, false);
     }
 
     if (params.projectId !== this.props.params.projectId || params.datasetId !== this.props.params.datasetId) {
@@ -52,7 +52,11 @@ export class DatasetInspectPage extends Component {
     }
 
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      pushState(null, `/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+      if (datasetSelector.datasetId) {
+        pushState(null, `/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+      } else {
+        pushState(null, `/projects/${ params.projectId }/datasets/upload`);        
+      }
     }
   }
 
@@ -109,7 +113,7 @@ export class DatasetInspectPage extends Component {
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
-                <RaisedButton icon={ true } onClick={ this.onClickDeleteDataset }>
+                <RaisedButton icon onClick={ this.onClickDeleteDataset }>
                   <i className="fa fa-trash"></i>
                 </RaisedButton>
               </div>
@@ -185,8 +189,9 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
+  deleteDataset,
   fetchDataset,
-  fetchDatasetsIfNeeded,
+  fetchDatasets,
   fetchFieldPropertiesIfNeeded,
   pushState
 })(DatasetInspectPage);
