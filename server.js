@@ -13,7 +13,7 @@ if (useExpress) {
       });
     }).listen(process.env.PORT || 8080, function (err) {
       if (err) { console.log(err) };
-      console.log('Listening at localhost:8080');
+      console.log('Listening at 0.0.0.0:8080');
     });
 
 } else {
@@ -30,9 +30,8 @@ if (useExpress) {
       index: 'index.html'
     },
     stats: { colors: true }
-  }).listen(3009, 'localhost', function (err, result) {
+  }).listen(3009, '0.0.0.0', function (err, result) {
     if (err) { console.log(err) }
-    console.log('Listening at localhost:3009');
+    console.log('Listening at 0.0.0.0:3009');
   });
 }
-
