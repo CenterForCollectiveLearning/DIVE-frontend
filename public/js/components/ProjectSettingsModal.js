@@ -7,26 +7,32 @@ import styles from './App/App.sass';
 import BlockingModal from './Base/BlockingModal';
 import RaisedButton from './Base/RaisedButton';
 import Input from './Base/Input';
+import TextArea from './Base/TextArea';
 
 class ProjectSettingsModal extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      projectName: this.props.projectName
+      projectName: this.props.projectName,
+      projectDescription: this.props.projectDescription
     };
   }
 
   submit() {
     const { projectId, submitProject, closeAction } = this.props;
-    const { projectName } = this.state;
+    const { projectName, projectDescription } = this.state;
 
-    submitProject(projectId, { title: projectName });
+    submitProject(projectId, { title: projectName, description: projectDescription });
     closeAction();
   }
 
   enteredProjectNameInput(event) {
     this.setState({ projectName: event.target.value });
+  }
+
+  enteredProjectDescriptionInput(event) {
+    this.setState({ projectDescription: event.target.value });
   }
 
   onClickDeleteProject() {
@@ -36,7 +42,7 @@ class ProjectSettingsModal extends Component {
 
   render() {
     const { closeAction } = this.props;
-    const { projectName } = this.state;
+    const { projectName, projectDescription } = this.state;
 
     var footer = 
       <div className={ styles.footerContent }>
@@ -56,13 +62,23 @@ class ProjectSettingsModal extends Component {
         closeAction={ this.props.closeAction }
         heading="Project Settings"
         footer={ footer }>
-        <div className={ styles.controlSection }>
-          <div className={ styles.label }>Project Name</div>
-          <Input
-            type="text"
-            placeholder={ projectName }
-            value={ projectName }
-            onChange={ this.enteredProjectNameInput.bind(this) }/>
+        <div className={ styles.fillContainer }>
+          <div className={ styles.controlSection }>
+            <div className={ styles.label }>Project Name</div>
+            <Input
+              type="text"
+              placeholder={ projectName }
+              value={ projectName }
+              onChange={ this.enteredProjectNameInput.bind(this) }/>
+          </div>
+          <div className={ styles.controlSection }>
+            <div className={ styles.label }>Project Description</div>
+            <TextArea
+              type="textarea"
+              placeholder={ projectDescription }
+              value={ projectDescription }
+              onChange={ this.enteredProjectDescriptionInput.bind(this) }/>
+          </div>
         </div>
       </BlockingModal>
     );
@@ -72,6 +88,7 @@ class ProjectSettingsModal extends Component {
 ProjectSettingsModal.propTypes = {
   projectId: PropTypes.number.isRequired,
   projectName: PropTypes.string.isRequired,
+  projectDescription: PropTypes.string.isRequired,
   closeAction: PropTypes.func
 };
 

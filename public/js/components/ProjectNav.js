@@ -147,6 +147,7 @@ export class ProjectNav extends Component {
         { this.state.projectSettingsModalOpen &&
           <ProjectSettingsModal
             projectName={ project.properties.title }
+            projectDescription={ project.properties.description }
             projectId={ project.properties.id }
             closeAction={ this.closeProjectSettingsModal.bind(this) }/>
         }
