@@ -2,6 +2,7 @@ import {
   REQUEST_PRELOADED_PROJECTS,
   REQUEST_USER_PROJECTS,
   RECEIVE_PROJECT,
+  CREATED_PROJECT,
   RECEIVE_PRELOADED_PROJECTS,
   RECEIVE_USER_PROJECTS
 } from '../constants/ActionTypes';
@@ -15,7 +16,7 @@ export default function projects(state = {
   userProjects: []
 }, action) {
   switch (action.type) {
-    case RECEIVE_PROJECT:
+    case RECEIVE_PROJECT, CREATED_PROJECT:
       if (action.projectProperties.preloaded) {
         const { preloadedProjects } = state;
         var preloadedProjectsUpdated = preloadedProjects.filter((project) => project.id != action.projectProperties.id);
