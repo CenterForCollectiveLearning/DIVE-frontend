@@ -53,7 +53,7 @@ export class BuilderView extends Component {
 
   onClickGallery() {
     const { project, datasetSelector, gallerySelector, pushState } = this.props;
-    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/gallery${ gallerySelector.queryString }`);
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ gallerySelector.queryString }`);
   }
 
   render() {

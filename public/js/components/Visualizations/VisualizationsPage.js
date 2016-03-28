@@ -7,13 +7,13 @@ import styles from './Visualizations.sass';
 export class VisualizationsPage extends Component {
   componentWillMount() {
     if (this.props.routes.length < 4) {
-      this.props.replaceState(null, `/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/visualize/gallery`);
+      this.props.replaceState(null, `/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/visualize/explore`);
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.routes.length < 4) {
-      this.props.replaceState(null, `/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/visualize/gallery`);
+      this.props.replaceState(null, `/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/visualize/explore`);
     }
   }
 

@@ -19,7 +19,7 @@ export class GalleryView extends Component {
     const { datasetSelector, datasets, project, specs, gallerySelector, clearVisualization, fetchSpecs, fetchDatasets } = this.props;
     const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching && !specs.error);
 
-    if (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded)) {
+    if (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(project.properties.id);
     }
 
@@ -37,7 +37,7 @@ export class GalleryView extends Component {
     const gallerySelectorChanged = (gallerySelector.updatedAt !== previousProps.gallerySelector.updatedAt);
     const projectChanged = (previousProps.project.properties.id !== project.properties.id);
 
-    if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded))) {
+    if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
       fetchDatasets(project.properties.id);
     }
 
@@ -71,7 +71,7 @@ export class GalleryView extends Component {
     }
 
     selectDataset(project.properties.id, datasetId);
-    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/visualize/gallery?${ selectedFieldPropertiesQueryString }`);
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
   }
 
   render() {

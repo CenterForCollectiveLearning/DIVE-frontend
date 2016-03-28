@@ -58,7 +58,7 @@ export class GallerySidebar extends Component {
       selectedFieldPropertiesQueryString = selectedFieldPropertiesQueryString.reduce((a, b) => a + "&" + b);
     }
 
-    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/gallery?${ selectedFieldPropertiesQueryString }`);
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
   }
 
   clickFieldPropertyValue(fieldPropertyId, fieldPropertyValueId) {
