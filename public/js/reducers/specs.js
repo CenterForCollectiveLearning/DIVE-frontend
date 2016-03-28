@@ -18,11 +18,11 @@ const baseState = {
 export default function specs(state=baseState, action) {
   switch (action.type) {
     case REQUEST_SPECS:
-      return { ...state, isFetching: true, progress: null, error: null };
+      return { ...state, loaded: false, isFetching: true, progress: null, error: null };
 
     case PROGRESS_SPECS:
       if (action.progress && action.progress.length){
-        return { ...state, progress: action.progress };
+        return { ...state, loaded: false, progress: action.progress };
       }
       return state;
 

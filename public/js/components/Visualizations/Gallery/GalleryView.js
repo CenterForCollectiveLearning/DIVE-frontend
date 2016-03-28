@@ -17,13 +17,13 @@ export class GalleryView extends Component {
 
   componentWillMount() {
     const { datasetSelector, datasets, project, specs, gallerySelector, clearVisualization, fetchSpecs, fetchDatasets } = this.props;
-    const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching && !specs.error);
+    const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
 
     if (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(project.properties.id);
     }
 
-    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && noSpecsAndNotFetching) {
+    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && notLoadedAndNotFetching) {
       fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
     }
 
@@ -33,7 +33,7 @@ export class GalleryView extends Component {
   componentDidUpdate(previousProps) {
     const { datasetSelector, datasets, project, specs, gallerySelector, exportedSpecs, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = this.props;
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
-    const noSpecsAndNotFetching = (gallerySelector.specs.length == 0 && !specs.isFetching && !specs.error);
+    const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
     const gallerySelectorChanged = (gallerySelector.updatedAt !== previousProps.gallerySelector.updatedAt);
     const projectChanged = (previousProps.project.properties.id !== project.properties.id);
 
@@ -41,7 +41,7 @@ export class GalleryView extends Component {
       fetchDatasets(project.properties.id);
     }
 
-    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && (datasetChanged || gallerySelectorChanged || noSpecsAndNotFetching)) {
+    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && (datasetChanged || gallerySelectorChanged || notLoadedAndNotFetching)) {
       fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
     }
 
