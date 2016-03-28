@@ -42,10 +42,6 @@ export class SummaryView extends Component {
 
 
     if (nextProps.projectId && nextProps.datasetId) {
-      if (projectChanged || nextProps.projectId) {
-        fetchDatasets(nextProps.projectId);
-      }
-
       if (sideBarChanged) {
         if (oneIndependentVariableSelected) {
           const aggregationList = nextProps.aggregationVariableName? ['q', nextProps.aggregationVariableName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null;
@@ -79,7 +75,7 @@ export class SummaryView extends Component {
     const aggregationDictHasElements = aggregationResult.data && aggregationResult.data.rows && aggregationResult.data.rows.length > 0;
     const summaryDictHasElements = summaryResult.data && summaryResult.data.items && summaryResult.data.items.length > 0;
 
-    var summaryContent = <div></div>; 
+    var summaryContent = <div></div>;
 
     if (noComparisonVariablesSelected ) {
       summaryContent =
