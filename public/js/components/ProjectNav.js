@@ -89,7 +89,7 @@ export class ProjectNav extends Component {
   }
 
   render() {
-    const { paramDatasetId, user, projects, project, datasetSelector } = this.props;
+    const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 
     const datasetId = paramDatasetId || datasetSelector.datasetId;
 
@@ -123,7 +123,7 @@ export class ProjectNav extends Component {
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
           <TabGroup heading="DATASETS">
             <Tab label="Upload" value="upload" route={ `datasets/upload` } />
-            <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } />
+            <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
             <Tab label="Combine" value="combine" route={ `datasets${ datasetId ? `/${ datasetId }/combine` : '/combine' }` } disabled={ true }/>
           </TabGroup>
           <TabGroup heading="VISUALIZATIONS">
@@ -137,7 +137,7 @@ export class ProjectNav extends Component {
             <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
           </TabGroup>
           <TabGroup heading="STORIES">
-            <Tab label="Compose" value="compose" route={ `compose` }/>
+            <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>
             <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
           </TabGroup>
         </Tabs>
@@ -166,11 +166,12 @@ ProjectNav.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, projects, user, datasetSelector } = state;
+  const { project, projects, user, datasets, datasetSelector } = state;
   return {
     project,
     projects,
     user,
+    datasets,
     datasetSelector
   };
 }
