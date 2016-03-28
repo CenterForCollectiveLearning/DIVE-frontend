@@ -79,7 +79,7 @@ export class SummaryView extends Component {
     const aggregationDictHasElements = aggregationResult.data && aggregationResult.data.rows && aggregationResult.data.rows.length > 0;
     const summaryDictHasElements = summaryResult.data && summaryResult.data.items && summaryResult.data.items.length > 0;
 
-    var summaryContent = <div></div>; 
+    var summaryContent = <div></div>;
 
     if (noComparisonVariablesSelected ) {
       summaryContent =
