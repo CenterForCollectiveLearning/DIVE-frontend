@@ -66,7 +66,7 @@ export default (
 
       <Route path="datasets/:datasetId" component={ DatasetsPage }>
         <Route path="visualize" component={ VisualizationsPage }>
-          <Route path="gallery" component={ GalleryPage }/>
+          <Route path="explore" component={ GalleryPage }/>
           <Route path="builder/:specId" component={ BuilderPage }/>
         </Route>
         <Route path="analyze" component={ AnalysisPage }>

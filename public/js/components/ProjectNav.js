@@ -34,7 +34,7 @@ export class ProjectNav extends Component {
       "inspect",
       "combine",
       "explore",
-      "build",
+      "builder",
       "starred",
       "summary",
       "regression",
@@ -49,15 +49,15 @@ export class ProjectNav extends Component {
 
     const _tabValue = ((tabValue) => {
       const splitTabValue = tabValue.split('/');
-      return splitTabValue.length > 1 ? splitTabValue[1] : splitTabValue[0];
+      return splitTabValue.length > 1 && _validTab(splitTabValue[1]) ? splitTabValue[1] : splitTabValue[0];
     });
 
-    if ((this.props.routes.length > 3) && _validTab(_tabValue(this.props.routes[3].path))) {
-      return _tabValue(this.props.routes[3].path);
-    }
+    const _lastPath = this.props.routes.slice().reverse().find((route) =>{
+      return _validTab(_tabValue(route.path));
+    });
 
-    if ((this.props.routes.length > 2) && _validTab(_tabValue(this.props.routes[2].path))) {
-      return _tabValue(this.props.routes[2].path);
+    if (_lastPath) {
+      return _tabValue(_lastPath.path);
     }
 
     return "datasets";
@@ -92,7 +92,7 @@ export class ProjectNav extends Component {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 
     const datasetId = paramDatasetId || datasetSelector.datasetId;
-
+    console.log(this._getSelectedTab());
     return (
       <div className={ styles.header }>
         <div className={ styles.logoContainer } onClick={ this._onClickLogo }>
@@ -127,8 +127,8 @@ export class ProjectNav extends Component {
             <Tab label="Combine" value="combine" route={ `datasets${ datasetId ? `/${ datasetId }/combine` : '/combine' }` } disabled={ true }/>
           </TabGroup>
           <TabGroup heading="VISUALIZATIONS">
-            <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/gallery` } disabled={ !datasetId }/>
-            <Tab label="Build" value="build" route={ `datasets/${ datasetId }/visualize/builder` } disabled={ true }/>
+            <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
+            <Tab label="Build" value="builder" route={ `datasets/${ datasetId }/visualize/builder` } disabled={ true }/>
             <Tab label="Starred" value="starred" route={ `datasets/${ datasetId }/visualize/starred` } disabled={ true }/>
           </TabGroup>
           <TabGroup heading="ANALYSIS">
