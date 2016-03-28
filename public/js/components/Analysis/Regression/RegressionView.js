@@ -30,7 +30,7 @@ export class RegressionView extends Component {
   render() {
     const { regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames } = this.props;
 
-    if (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0) {
+    if ( !regressionResult.loading && (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0)) {
       return (
         <div className={ styles.regressionViewContainer }></div>
       );
@@ -38,11 +38,23 @@ export class RegressionView extends Component {
 
     return (
       <div className={ styles.regressionViewContainer }>
-        <RegressionTableCard
-          dependentVariableName={ dependentVariableName }
-          independentVariableNames={ independentVariableNames }
-          regressionResult={ regressionResult.data || {} }
-          contributionToRSquared={ contributionToRSquared }/>
+        <HeaderBar
+          header="Regression Analysis"
+        />
+        { regressionResult.loading &&
+          <Card header={ <span>Explaining <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> }>
+            <div className={ styles.watermark }>
+              { regressionResult.progress != null ? regressionResult.progress : 'Running regressions…' }
+            </div>
+          </Card>
+        }
+        { (!regressionResult.loading && regressionResult.data) &&
+          <RegressionTableCard
+            dependentVariableName={ dependentVariableName }
+            independentVariableNames={ independentVariableNames }
+            regressionResult={ regressionResult.data || {} }
+            contributionToRSquared={ contributionToRSquared }/>
+        }
 
         { (contributionToRSquared.length > 0 && regressionResult.data) &&
           <ContributionToRSquaredCard id={ `${ regressionResult.data.id }` } contributionToRSquared={ contributionToRSquared } />
@@ -54,7 +66,7 @@ export class RegressionView extends Component {
 
 function mapStateToProps(state) {
   const { project, regressionSelector, datasetSelector, fieldProperties } = state;
-  const { regressionResult, contributionToRSquared } = regressionSelector;
+  const { progress, error, regressionResult, contributionToRSquared } = regressionSelector;
 
   const dependentVariable = fieldProperties.items.find((property) => property.id == regressionSelector.dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;

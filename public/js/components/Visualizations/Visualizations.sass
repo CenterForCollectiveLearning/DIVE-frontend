@@ -130,7 +130,7 @@ div.conditionalCombinator
   flex-direction: row
   overflow: hidden
 
-  background-color: #e9e7e8
+  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
 
 .watermark
   +watermark
@@ -143,13 +143,8 @@ div.conditionalCombinator
 .specsContainer, .visualizationViewContainer
   +fillContainer
   max-width: 100%
-  padding: 8px
   max-height: 100%
   overflow-y: scroll
-
-  .innerSpecsContainer, .innerVisualizationViewContainer
-    box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.16)
-    background-color: white
 
 .visualizationViewContainer
   .chartsContainer
@@ -209,27 +204,47 @@ div.conditionalCombinator
     align-content: flex-start
     flex-grow: 1
 
-  .visualizationBlock .visualization
-    padding: 20px
-
 .visualizationBlocksContainer
   display: flex
   flex-direction: column
+  position: relative
 
   width: 33.33%
   padding: 15px
 
+  &:hover .starContainer i
+    opacity: 0.5
+
+  .starContainer
+    position: absolute
+    top: 27px
+    right: 27px
+    font-size: 13px
+    color: #666
+    cursor: pointer
+
+    i
+      opacity: 0
+
+      &.starred
+        opacity: 0.6
+
+    &:hover i
+      opacity: 1
+
+    &.starred:hover i
+      opacity: 0.8
+
 .visualizationBlock
   display: flex
   flex-direction: column
-  padding: 15px 19px
+  padding: 11px
   margin: 0
   overflow: hidden
 
   background-color: #FAFAFA
-  border: 1px solid #D0D0D0
-  border-radius: 2px
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.01), 0px 2px 2px 0px rgba(0, 0, 0, 0.058), 0px 1px 5px 0px rgba(0, 0, 0, 0.034)
+  border: 1px solid #CFCFCF
+  box-shadow: 0px 1px 4px 0 rgba(0, 0, 0, 0.1)
 
   font-size: 14px
   text-align: center
@@ -237,7 +252,10 @@ div.conditionalCombinator
   outline: none
 
   .header
-    font-size: 16px
+    margin-top: 1px
+    font-size: 13px
+    overflow: hidden
+    text-overflow: ellipsis
 
   .overflowText
     display: flex
@@ -249,8 +267,7 @@ div.conditionalCombinator
     min-height: 150px
 
   .visualization
-    min-height: 170px
-    padding: 20px 0 10px
+    padding: 11px 0 4px
 
     &.tree
       svg
@@ -319,16 +336,3 @@ div.conditionalCombinator
     g:last-child
       rect[stroke-width="5"], rect[stroke-width="4"], rect[stroke-width="3"]
         display: none
-
-.sortingControl
-  display: flex
-  flex-direction: row
-  min-width: 160px
-  align-items: center
-
-  > span
-    margin-right: 10px
-
-    white-space: nowrap
-    font-size: 13px
-    font-weight: 300

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { selectDataset, fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
+import { selectDataset, fetchDatasets } from '../../actions/DatasetActions';
 import { clearAnalysis } from '../../actions/AnalysisActions';
 import styles from './Analysis.sass';
 
@@ -19,13 +19,13 @@ export class AnalysisSidebar extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, datasets, datasetSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded } = this.props;
+    const { project, datasets, datasetSelector, fieldProperties, fetchDatasets, fetchFieldPropertiesIfNeeded } = this.props;
 
     const projectChanged = (nextProps.project.properties.id !== project.properties.id);
     const datasetChanged = (nextProps.datasetSelector.datasetId !== datasetSelector.datasetId);
 
     if (projectChanged || nextProps.project.properties.id) {
-      fetchDatasetsIfNeeded(nextProps.project.properties.id);
+      fetchDatasets(nextProps.project.properties.id);
     }
   }
 
@@ -36,22 +36,29 @@ export class AnalysisSidebar extends Component {
   clickDataset(datasetId) {
     const { project, selectedTab, clearAnalysis, selectDataset, pushState } = this.props;
     clearAnalysis();
-    selectDataset(datasetId);
+    selectDataset(project.properties.id, datasetId);
     pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/analyze/${ selectedTab }`);
   }
 
   render() {
+    const { selectedTab, datasets, datasetSelector, children } = this.props;
+
     const tabItems = [
-      {
-        label: "Regression",
-        type: "regression",
-        selected: this.props.selectedTab == "regression"
-      },
       {
         label: "Summary",
         type: "summary",
-        selected: this.props.selectedTab == "summary"
-      }
+        selected: selectedTab == "summary"
+      },
+      {
+        label: "Correlation",
+        type: "correlation",
+        selected: selectedTab == "correlation"
+      },
+      {
+        label: "Regression",
+        type: "regression",
+        selected: selectedTab == "regression"
+      },
     ];
 
     return (
@@ -64,17 +71,17 @@ export class AnalysisSidebar extends Component {
             onChange={ this._handleTabsChange.bind(this) } />
         </SidebarGroup>
 
-        { this.props.datasets.items && this.props.datasets.items.length > 0 &&
+        { datasets.items && datasets.items.length > 0 &&
           <SidebarGroup heading="Dataset">
             <DropDownMenu
-              value={ `${this.props.datasetSelector.datasetId}` }
-              options={ this.props.datasets.items }
+              value={ parseInt(datasetSelector.datasetId) }
+              options={ datasets.items }
               valueMember="datasetId"
               displayTextMember="title"
               onChange={ this.clickDataset.bind(this) } />
           </SidebarGroup>
         }
-        { this.props.children }
+        { children }
       </Sidebar>
     );
   }
@@ -99,7 +106,7 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   selectDataset,
-  fetchDatasetsIfNeeded,
+  fetchDatasets,
   clearAnalysis,
   pushState
 })(AnalysisSidebar);

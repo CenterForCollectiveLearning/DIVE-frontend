@@ -1,12 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 
+import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { runAggregation, runComparisonOneDimensional, getVariableSummaryStatistics } from '../../../actions/SummaryActions';
+import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
+import DropDownMenu from '../../Base/DropDownMenu';
 import AggregationTable from './AggregationTable';
 import ComparisonTableOneD from './ComparisonTableOneD';
 import VariableSummaryCard from './VariableSummaryCard';
@@ -21,7 +25,7 @@ export class SummaryView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { loadSummary, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runComparisonOneDimensional, allComparisonVariableIds, getVariableSummaryStatistics } = this.props;
+    const { projectId, datasetId, loadSummary, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runComparisonOneDimensional, allComparisonVariableIds, getVariableSummaryStatistics, fetchDatasets } = this.props;
     const aggregationIndependentVariablesChanged = nextProps.aggregationIndependentVariableNamesAndTypes.length != aggregationIndependentVariableNamesAndTypes.length;
     const aggregationVariableChanged = nextProps.aggregationVariableName != aggregationVariableName;
     const aggregationFunctionChanged = nextProps.aggregationFunction != aggregationFunction;
@@ -33,7 +37,15 @@ export class SummaryView extends Component {
     const oneIndependentVariableSelected = nextProps.aggregationIndependentVariableNamesAndTypes.length == 1;
     const twoIndependentVariablesSelected = nextProps.aggregationIndependentVariableNamesAndTypes.length == 2;
 
+    const projectChanged = (nextProps.projectId !== projectId);
+    const datasetChanged = (nextProps.datasetId !== datasetId);
+
+
     if (nextProps.projectId && nextProps.datasetId) {
+      if (projectChanged && nextProps.projectId) {
+        fetchDatasets(nextProps.projectId);
+      }
+
       if (sideBarChanged) {
         if (oneIndependentVariableSelected) {
           const aggregationList = nextProps.aggregationVariableName? ['q', nextProps.aggregationVariableName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null;
@@ -49,74 +61,122 @@ export class SummaryView extends Component {
       }
     }
   }
+
+  clickDataset(datasetId) {
+    const { projectId, clearAnalysis, selectDataset, pushState } = this.props;
+    clearAnalysis();
+    selectDataset(projectId, datasetId);
+    pushState(null, `/projects/${ projectId }/datasets/${ datasetId }/analyze/summary`);
+  }
+
   render() {
-    const { aggregationResult, summaryResult, oneDimensionComparisonResult, aggregationIndependentVariableNames } = this.props;
-    const noComparisonVariablesSelected =aggregationIndependentVariableNames.length ==0;
-    const oneComparisonVariableSelected =aggregationIndependentVariableNames.length == 1;
+    const { aggregationResult, summaryResult, oneDimensionComparisonResult, aggregationIndependentVariableNames, datasets, datasetId } = this.props;
+
+    const noComparisonVariablesSelected = aggregationIndependentVariableNames.length ==0;
+    const oneComparisonVariableSelected = aggregationIndependentVariableNames.length == 1;
     const twoComparisonVariablesSelected = aggregationIndependentVariableNames.length == 2;
-    const oneDimensionDictHasElements = oneDimensionComparisonResult && oneDimensionComparisonResult.rows && oneDimensionComparisonResult.rows.length > 0;
-    const aggregationDictHasElements = aggregationResult && aggregationResult.rows && aggregationResult.rows.length > 0;
-    const summaryDictHasElements = summaryResult && summaryResult.items &&  summaryResult.items.length > 0;
+    const oneDimensionDictHasElements = oneDimensionComparisonResult.data && oneDimensionComparisonResult.data.rows && oneDimensionComparisonResult.data.rows.length > 0;
+    const aggregationDictHasElements = aggregationResult.data && aggregationResult.data.rows && aggregationResult.data.rows.length > 0;
+    const summaryDictHasElements = summaryResult.data && summaryResult.data.items && summaryResult.data.items.length > 0;
 
+    var summaryContent = <div></div>;
 
-    if (noComparisonVariablesSelected && summaryDictHasElements) {
-      return (
-        <div className={ styles.summaryViewContainer }>
-          { summaryResult.items.map((item, i) => {
-            const columnHeaders = (item.type == 'c') ? summaryResult.categoricalHeaders : summaryResult.numericalHeaders;
+    if (noComparisonVariablesSelected ) {
+      summaryContent =
+        <div>
+          { summaryResult.loading &&
+            <div className={ styles.watermark }>
+              { summaryResult.progress != null ? summaryResult.progress : 'Calculating summary…' }
+            </div>
+          }
+          { (!summaryResult.loading && summaryDictHasElements) && summaryResult.data.items.map((item, i) => {
+            const columnHeaders = (item.type == 'c') ? summaryResult.data.categoricalHeaders : summaryResult.data.numericalHeaders;
             return (
               <div className={ styles.summaryCardHolder } key={ `variable-summary-card-${ i }` }>
-                <VariableSummaryCard
-                  variable={ item }
-                  columnHeaders={ columnHeaders }/>
+              <VariableSummaryCard
+                variable={ item }
+                columnHeaders={ columnHeaders }/>
               </div>
             );
           })}
+
         </div>
-      )
+      ;
     }
 
-    else if (oneComparisonVariableSelected && oneDimensionDictHasElements) {
-      return (
+    else if (oneComparisonVariableSelected) {
+      summaryContent =
         <div className={ styles.aggregationViewContainer }>
-          <Card>
-            <HeaderBar header={ <span>Comparison Table: <span className={ styles.titleField }>{ aggregationIndependentVariableNames[0] }</span></span> } />
-            <ComparisonTableOneD comparisonResult={ oneDimensionComparisonResult } comparisonVariableNames={ aggregationIndependentVariableNames }/>
+          <Card header={
+            <span>Comparison Table: <span className={ styles.titleField }>{ aggregationIndependentVariableNames[0] }</span></span>
+          }>
+            { oneDimensionComparisonResult.loading &&
+              <div className={ styles.watermark }>
+                { oneDimensionComparisonResult.progress != null ? oneDimensionComparisonResult.progress : 'Calculating oneDimensionComparisonResult…' }
+              </div>
+            }
+            { (!oneDimensionComparisonResult.loading && oneDimensionDictHasElements) &&
+              <ComparisonTableOneD comparisonResult={ oneDimensionComparisonResult.data } comparisonVariableNames={ aggregationIndependentVariableNames }/>
+            }
           </Card>
         </div>
-      );
+      ;
     }
 
-    else if (twoComparisonVariablesSelected && aggregationDictHasElements) {
-      return (
+    else if (twoComparisonVariablesSelected) {
+      summaryContent =
         <div className={ styles.aggregationViewContainer }>
-          <Card>
-            <HeaderBar header={ 
-              <span>Aggregation Table: {
-                aggregationIndependentVariableNames.map((name, i) =>
-                  <span
-                    key={ `aggregation-title-${ name }-${ i }` }
-                    className={ `${ styles.titleField }` }>
-                    { name }
-                  </span>
-                )
-              }
-              </span>
-            } />
-            <AggregationTable aggregationResult={ aggregationResult } aggregationIndependentVariableNames={ aggregationIndependentVariableNames }/>
+          <Card header={
+            <span>Aggregation Table: {
+              aggregationIndependentVariableNames.map((name, i) =>
+                <span
+                  key={ `aggregation-title-${ name }-${ i }` }
+                  className={ `${ styles.titleField }` }>
+                  { name }
+                </span>
+              )
+            }
+            </span>
+          }>
+            { aggregationResult.loading &&
+              <div className={ styles.watermark }>
+                { aggregationResult.progress != null ? aggregationResult.progress : 'Calculating aggregationResult…' }
+              </div>
+            }
+            { (!aggregationResult.loading && aggregationDictHasElements) &&
+              <AggregationTable aggregationResult={ aggregationResult.data } aggregationIndependentVariableNames={ aggregationIndependentVariableNames }/>
+            }
           </Card>
         </div>
-      );
+      ;
     }
 
     return (
-      <div></div>
+      <div className={ styles.summaryViewContainer }>
+        <HeaderBar
+          header="Summary Statistics"
+          actions={
+            datasets.items && datasets.items.length > 0 ?
+              <div className={ styles.headerControl }>
+                <DropDownMenu
+                  prefix="Dataset"
+                  width={ 240 }
+                  value={ parseInt(datasetId) }
+                  options={ datasets.items }
+                  valueMember="datasetId"
+                  displayTextMember="title"
+                  onChange={ this.clickDataset.bind(this) } />
+              </div>
+            : ''
+          }/>
+        { summaryContent }
+      </div>
     );
   }
 }
 
 function mapStateToProps(state) {
-  const { project, summarySelector, datasetSelector, fieldProperties } = state;
+  const { project, datasets, summarySelector, datasetSelector, fieldProperties } = state;
   const { aggregationResult, oneDimensionComparisonResult } = summarySelector;
 
   const allComparisonVariableIds = fieldProperties.items.map((field) => field.id);
@@ -144,6 +204,8 @@ function mapStateToProps(state) {
   const weightVariableName = weightVariable ? weightVariable.name : 'UNIFORM';
 
   return {
+    datasets: datasets,
+    datasetSelector: datasetSelector,
     projectId: project.properties.id,
     datasetId: datasetSelector.datasetId,
     aggregationResult: aggregationResult,
@@ -159,4 +221,12 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { runAggregation, runComparisonOneDimensional, getVariableSummaryStatistics })(SummaryView);
+export default connect(mapStateToProps, {
+  pushState,
+  runAggregation,
+  runComparisonOneDimensional,
+  getVariableSummaryStatistics,
+  selectDataset,
+  fetchDatasets,
+  clearAnalysis
+})(SummaryView);

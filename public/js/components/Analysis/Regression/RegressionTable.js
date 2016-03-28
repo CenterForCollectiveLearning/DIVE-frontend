@@ -55,12 +55,12 @@ export default class RegressionTable extends Component {
 
     const renderDataColumn = function(property, enabled) {
       return (
-        <div>
-          <div className={ styles.dataCell + ' ' + styles.coefficient }>
+        <div className={ styles.dataCell }>
+          <div className={ styles.coefficient }>
             { context.getCoefficientString(property.coefficient, property.pValue, enabled) }
           </div>
           { enabled &&
-            <div className={ styles.dataCell + ' ' + styles.standardError }>
+            <div className={ styles.standardError }>
               ({ getRoundedString(property.standardError) })
             </div>
           }
@@ -92,6 +92,16 @@ export default class RegressionTable extends Component {
           <div className={ styles.rSquaredAdjust }><div className={ styles.r }>R</div><sup className="cmu">2</sup></div>,
           ...regressionResult.regressionsByColumn.map((column) =>
             <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.rSquaredAdj) }</div>
+          )
+        ]
+      },
+      {
+        rowClass: styles.footerRow,
+        columnClass: styles.footerColumn,
+        items: [
+          <em className="cmu">DOF</em>,
+          ...regressionResult.regressionsByColumn.map((column) =>
+            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.dof) }</div>
           )
         ]
       },

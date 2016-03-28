@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
-import { selectDataset, fetchDatasetsIfNeeded } from '../../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectFieldPropertyValue, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
 import { selectVisualizationType } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
@@ -23,18 +22,15 @@ export class GallerySidebar extends Component {
   }
 
   componentWillMount() {
-    const { project, datasetSelector, gallerySelector, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, datasets, queryFields } = this.props;
+    const { project, datasetSelector, gallerySelector, fetchFieldPropertiesIfNeeded, queryFields } = this.props;
 
-    if (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded)) {
-      fetchDatasetsIfNeeded(project.properties.id);
-    }
     if (project.properties.id && datasetSelector.datasetId && (gallerySelector.datasetId != datasetSelector.datasetId) && !gallerySelector.isFetching) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId, queryFields);
     }
   }
 
   componentDidUpdate(previousProps) {
-    const { project, datasetSelector, gallerySelector, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded, datasets, queryFields, selectFieldProperty } = this.props;
+    const { project, datasetSelector, gallerySelector, fetchFieldPropertiesIfNeeded, queryFields, selectFieldProperty } = this.props;
 
     const projectChanged = (previousProps.project.properties.id !== project.properties.id);
     const datasetChanged = (previousProps.datasetSelector.datasetId !== datasetSelector.datasetId);
@@ -47,9 +43,6 @@ export class GallerySidebar extends Component {
       );
     }
 
-    if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || !datasets.loaded))) {
-      fetchDatasetsIfNeeded(project.properties.id);
-    }
     if (project.properties.id && (datasetChanged || (!gallerySelector.isFetching && (gallerySelector.datasetId != datasetSelector.datasetId)))) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId, queryFields);
     }
@@ -76,38 +69,15 @@ export class GallerySidebar extends Component {
     this.props.selectFieldPropertyValue(fieldPropertyId, fieldPropertyValueId);
   }
 
-  clickDataset(datasetId) {
-    const { gallerySelector, project, pushState, selectDataset } = this.props;
-    var selectedFieldPropertiesQueryString = gallerySelector.fieldProperties
-      .filter((property) => property.selected)
-      .map((property) => `fields%5B%5D=${ property.name }`);
-
-    if (selectedFieldPropertiesQueryString.length) {
-      selectedFieldPropertiesQueryString = selectedFieldPropertiesQueryString.reduce((a, b) => a + "&" + b);
-    }
-
-    selectDataset(datasetId);
-    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/visualize/gallery?${ selectedFieldPropertiesQueryString }`);    
-  }
-
   render() {
-    const { datasets, datasetSelector, gallerySelector, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectDataset, selectAggregationFunction } = this.props;
+    const { visualizationTypes, datasetSelector, gallerySelector, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectAggregationFunction } = this.props;
+
     return (
       <Sidebar>
-        { datasets.items && datasets.items.length > 0 &&
-          <SidebarGroup heading="Dataset">
-            <DropDownMenu
-              value={ `${ datasetSelector.datasetId }` }
-              options={ datasets.items }
-              valueMember="datasetId"
-              displayTextMember="title"
-              onChange={ this.clickDataset.bind(this) } />
-          </SidebarGroup>
-        }
-        { datasets.items && datasets.items.length > 0 &&
-          <SidebarGroup heading="Visualization type">
+        { visualizationTypes.length > 1 &&
+          <SidebarGroup heading="Filter Visualization type">
             <ToggleButtonGroup
-              toggleItems={ filters.visualizationTypes }
+              toggleItems={ visualizationTypes }
               displayTextMember="label"
               valueMember="type"
               imageNameMember="imageName"
@@ -116,10 +86,9 @@ export class GallerySidebar extends Component {
           </SidebarGroup>
         }
         { gallerySelector.fieldProperties.length > 0 &&
-          <SidebarGroup heading="Fields">
+          <SidebarGroup heading="Find Visualizations by Field">
             { gallerySelector.fieldProperties.filter((property) => property.generalType == 'c').length > 0 &&
               <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Categorical</div>
                 <ToggleButtonGroup
                   toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 'c') }
                   displayTextMember="name"
@@ -132,7 +101,6 @@ export class GallerySidebar extends Component {
             }
             { gallerySelector.fieldProperties.filter((property) => property.generalType == 't').length > 0 &&
               <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Temporal</div>
                 <ToggleButtonGroup
                   toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 't') }
                   displayTextMember="name"
@@ -145,7 +113,6 @@ export class GallerySidebar extends Component {
             }
             { gallerySelector.fieldProperties.filter((property) => property.generalType == 'q').length > 0 &&
               <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Quantitative</div>
                 <ToggleButtonGroup
                   toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 'q') }
                   displayTextMember="name"
@@ -165,18 +132,17 @@ export class GallerySidebar extends Component {
 
 GallerySidebar.propTypes = {
   project: PropTypes.object.isRequired,
-  datasets: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   gallerySelector: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
-  queryFields: PropTypes.array.isRequired
+  queryFields: PropTypes.array.isRequired,
+  visualizationTypes: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, datasets, datasetSelector, gallerySelector, filters } = state;
+  const { project, datasetSelector, gallerySelector, filters } = state;
   return {
     project,
-    datasets,
     datasetSelector,
     gallerySelector,
     filters
@@ -184,9 +150,7 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  fetchDatasetsIfNeeded,
   fetchFieldPropertiesIfNeeded,
-  selectDataset,
   selectVisualizationType,
   selectFieldProperty,
   selectFieldPropertyValue,

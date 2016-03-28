@@ -14,7 +14,6 @@ export class BuilderView extends Component {
 
     this.saveVisualization = this.saveVisualization.bind(this);
     this.onClickShare = this.onClickShare.bind(this);
-    this.onClickSave = this.onClickSave.bind(this);
     this.onClickGallery = this.onClickGallery.bind(this);
   }
 
@@ -30,9 +29,10 @@ export class BuilderView extends Component {
     const { visualization, project, fetchSpecVisualizationIfNeeded } = this.props;
 
     const exportingChanged = visualization.isExporting != nextProps.visualization.isExporting;
-    const visualizationSpecChanged = visualization.lastUpdated != nextProps.visualization.lastUpdated;
+    const conditionalsChanged = nextProps.visualization.conditionals != visualization.conditionals;
+    const configChanged = nextProps.visualization.config != visualization.config;
 
-    if (nextProps.project.properties.id && (!nextProps.visualization.spec.id || visualizationSpecChanged) && !visualization.spec.isFetching) {
+    if (nextProps.project.properties.id && (!visualization.spec.id || (!visualization.spec.isFetching && (conditionalsChanged || configChanged)))) {
       fetchSpecVisualizationIfNeeded(nextProps.project.properties.id, nextProps.specId, nextProps.visualization.conditionals, nextProps.visualization.config);
     }
 
@@ -51,12 +51,6 @@ export class BuilderView extends Component {
     this.saveVisualization(false);
   }
 
-  onClickSave() {
-    const { project, visualization, createExportedSpec, setShareWindow } = this.props;
-
-    createExportedSpec(project.properties.id, visualization.spec.id, {}, {});
-  }
-
   onClickGallery() {
     const { project, datasetSelector, gallerySelector, pushState } = this.props;
     pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/gallery${ gallerySelector.queryString }`);
@@ -67,15 +61,23 @@ export class BuilderView extends Component {
     const disabled = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
     return (
       <VisualizationView visualization={ visualization }>
-        <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
-        <RaisedButton onClick={ this.onClickShare }>
-          { visualization.isExporting && "Exporting..." }
-          { !visualization.isExporting && "Share" }
-        </RaisedButton>
-        <RaisedButton onClick={ this.saveVisualization } disabled={ disabled }>
-          { !visualization.isSaving && visualization.exportedSpecId && <i className="fa fa-star"></i> }
-          { !visualization.exportedSpecId && <i className="fa fa-star-o"></i> }
-        </RaisedButton>
+        <div className={ styles.headerControlRow }>
+          <div className={ styles.headerControl }>
+            <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
+          </div>
+          <div className={ styles.headerControl }>
+            <RaisedButton onClick={ this.onClickShare }>
+              { visualization.isExporting && "Exporting..." }
+              { !visualization.isExporting && "Share" }
+            </RaisedButton>
+          </div>
+          <div className={ styles.headerControl }>
+            <RaisedButton onClick={ this.saveVisualization } disabled={ disabled }>
+              { !visualization.isSaving && visualization.exportedSpecId && <i className="fa fa-star"></i> }
+              { !visualization.exportedSpecId && <i className="fa fa-star-o"></i> }
+            </RaisedButton>
+          </div>
+        </div>
       </VisualizationView>
     );
   }

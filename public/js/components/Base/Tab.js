@@ -13,18 +13,24 @@ class Tab extends Component {
   }
   render() {
     const selectedClassName = this.props.selectedClassName ? this.props.selectedClassName : styles.selected;
-    return (
-      <div
-        className={
-          styles.tab
-          + ' ' + this.props.className
-          + (this.props.selected ? ' ' + selectedClassName : '')
-          + (this.props.disabled ? ' ' + styles.disabled : '')
-        }
-        onClick={ this.handleClick.bind(this) }>
-        { this.props.label }
-      </div>
-    );
+    if (this.props.active) {
+      return (
+        <div
+          className={
+            styles.tab
+            + ' ' + this.props.className
+            + (this.props.selected ? ' ' + selectedClassName : '')
+            + (this.props.disabled ? ' ' + styles.disabled : '')
+          }
+          onClick={ this.handleClick.bind(this) }>
+          { this.props.label }
+        </div>
+      );
+    } else {
+      return (
+        <div></div>
+      );
+    }
   }
 }
 
@@ -32,6 +38,7 @@ Tab.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   route: PropTypes.string,
+  active: PropTypes.bool,
   selected: PropTypes.bool,
   onClick: PropTypes.func,
   className: PropTypes.string,
@@ -41,6 +48,7 @@ Tab.propTypes = {
 
 Tab.defaultProps = {
   selected: false,
+  active: true,
   route: null,
   className: "",
   disabled: false,

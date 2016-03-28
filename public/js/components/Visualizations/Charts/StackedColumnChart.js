@@ -11,7 +11,7 @@ export default class StackedColumnChart extends Component {
 
     const stackedColumnChartOptions = {
       ...options,
-      hAxis: { 
+      hAxis: {
         title: data[0][0],
         titleTextStyle: {
           color: '#333',
@@ -26,12 +26,12 @@ export default class StackedColumnChart extends Component {
           color: '#333',
           bold: true,
           italic: false
-        }        
+        }
       }
     }
 
     return (
-      <Chart chartType="ColumnChart" options={ stackedColumnChartOptions } data = { data } graph_id={ chartId }/>
+      <Chart chartType="ColumnChart" chartVersion="43" options={ stackedColumnChartOptions } data = { data } graph_id={ chartId }/>
     );
   }
 }

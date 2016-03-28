@@ -86,6 +86,7 @@ export default function visualization(state = baseState, action) {
         visualizationData: action.visualizationData,
         sortFields: SORT_FIELDS,
         sortOrders: SORT_ORDERS,
+        lastUpdated: Date.now(),
         isFetching: false
       };
 

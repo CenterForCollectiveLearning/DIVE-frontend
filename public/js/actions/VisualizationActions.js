@@ -59,7 +59,7 @@ function receiveSpecsDispatcher(params, json) {
     type: FAILED_RECEIVE_SPECS,
     specs: [],
     receivedAt: Date.now(),
-    error: json.error || "Error retrieving visualizations."
+    error: (json && json.error) ? json.error : "Error retrieving visualizations."
   };
 }
 
@@ -217,8 +217,7 @@ function fetchSpecVisualization(projectId, specId, conditionals = [], config = n
       headers: { 'Content-Type': 'application/json' }
     })
       .then(response => response.json())
-      .then(json => dispatch(receiveSpecVisualizationDispatcher(json)))
-      .catch(err => console.error("Error fetching visualization: ", err));
+      .then(json => dispatch(receiveSpecVisualizationDispatcher(json)));
   };
 }
 
@@ -269,11 +268,12 @@ function receiveCreatedExportedSpecDispatcher(action, json) {
     type: action,
     exportedSpecId: json.id,
     specId: json.specId,
+    exportedSpec: json,
     receivedAt: Date.now()
   };
 }
 
-export function createExportedSpec(projectId, specId, data, conditionals, config, saveAction = false) {
+export function createExportedSpec(projectId, specId, data, conditionals=[], config={}, saveAction = false) {
   const requestAction = saveAction ? REQUEST_CREATE_SAVED_SPEC : REQUEST_CREATE_EXPORTED_SPEC;
   const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_SPEC : RECEIVE_CREATED_EXPORTED_SPEC;
 
@@ -310,14 +310,15 @@ export function setGalleryQueryString(query) {
   var queryString = '';
 
   Object.keys(query).forEach(
-    function (currentValue, index, array) {
+    function (fullKey, index, array) {
+      const key = fullKey.slice(0, -2);
       var fieldString = '';
-      if (Array.isArray(query[currentValue])) {
-        query[currentValue].forEach((c, i, a) =>
-          fieldString = fieldString + `&${ currentValue }[]=${ c }`
+      if (Array.isArray(query[fullKey])) {
+        query[fullKey].forEach((c, i, a) =>
+          fieldString = fieldString + `&${ key }[]=${ c }`
         )
       } else {
-        fieldString = `&${ currentValue }=${ query[currentValue] }`;
+        fieldString = `&${ key }[]=${ query[fullKey] }`;
       }
       queryString = queryString + fieldString;
     }

@@ -1,6 +1,13 @@
 @import '../../../css/flexbox.sass'
 @import '../../../css/mixins.sass'
 
+.watermark
+  +watermark
+  padding: 200px 0 260px
+
+  &.watermarkNoSpacer
+    padding: 0
+
 .analysisContainer
   overflow: hidden
 
@@ -9,30 +16,15 @@
   flex-direction: row
   overflow: hidden
 
-  background-color: #e9e7e8
-
-.regressionViewContainer, .summaryViewContainer, .aggregationViewContainer
+.regressionViewContainer, .summaryViewContainer, .aggregationViewContainer, .correlationViewContainer
   +fillContainer
   overflow-y: scroll
 
+  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
+
 .summaryViewContainer
-  flex-direction: row
-  flex-wrap: wrap
-
   .summaryCardHolder
-    width: 50%
-
-    &:last-child > div
-      margin-bottom: 8px
-
-    &:nth-child(odd) > div
-      margin-right: 4px
-
-    &:nth-child(even) > div
-      margin-left: 4px
-
-    > div
-      margin-bottom: 0
+    flex-grow: 1
 
 .summaryVariableContainer
   display: flex
@@ -65,7 +57,7 @@
     bottom: 0
 
 .regressionTable, .summaryTable
-  margin: 10px
+  margin: 0 20px 10px
 
 .regressionSummary
   display: flex
@@ -115,6 +107,7 @@
 .tableHeaderColumn
   background-color: #F6F6F6
   font-weight: 500
+  padding: 8px
 
 .comparisonTableHeaderCell
   text-transform: uppercase
@@ -122,12 +115,14 @@
 .standardError
   color: #999
 
-.dataCell
-  display: flex
-
-.dataCell, .tableCell, .footerCell
+.dataCell, .textCell
+  width: 100%
   padding: 4px
-  justify-content: center
+
+  > div
+    display: flex
+    padding: 4px
+    justify-content: center
 
 .dataColumn, .footerColumn
   &:first-child
@@ -152,6 +147,7 @@
     text-overflow: ellipsis
     overflow: hidden
     word-break: break-word
+    padding: 8px
 
 .dataRow + .footerRow
   border-top-width: 2px
@@ -160,7 +156,7 @@
   background-color: #fbfbfb
 
 .aggregationTable
-  padding: 10px 10px 20px
+  padding: 0 20px 20px
 
   .columnFieldLabel, .rowFieldLabel
     font-size: 13px
@@ -191,4 +187,22 @@
 
   + .titleField:before
     content: ', '
+
+.correlationScatterplots
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  align-content: flex-start
+  flex-grow: 1
+
+  .correlationScatterplot
+    width: 33.33%
+    display: flex
+    flex-direction: column
+    position: relative
+    padding: 15px
+
+    .header
+      text-align: center
+      font-size: 14px
 

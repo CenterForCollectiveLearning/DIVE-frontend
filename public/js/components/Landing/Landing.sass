@@ -39,16 +39,23 @@
   flex-direction: row
   position: relative
   width: 100%
-  padding: 40px 30px 0px 40px
+  padding: 40px 40px 0
 
   .landingTabs
     display: flex
+    flex-direction: row
+    align-items: center
 
     .landingTab
       +montserrat
       font-weight: 300
       padding-left: 16px
       padding-right: 16px
+      margin-top: 7px
+
+      &:hover
+        background-color: transparent
+        border-bottom: 1px solid rgba(15, 39, 98, 0.4)
 
       &.selectedTab
         border: none
@@ -59,7 +66,6 @@
   .logoContainer
     display: flex
     flex-direction: row
-    flex-grow: 1
     padding-right: 30px
     cursor: pointer
 
@@ -155,8 +161,8 @@
   text-align: center
 
   border: 1px solid #819DCC
-  background-color: rgba(15,39,98,0.5)
-  border-radius: 6px
+  background-color: rgba(15, 39, 98, 0.5)
+  border-radius: 3px
   font-size: 15px
   text-transform: uppercase
   letter-spacing: 1px
@@ -164,6 +170,9 @@
   cursor: pointer
   color: white
   text-decoration: none
+
+  &:hover
+    background-color: rgba(15, 39, 98, 0.8)
 
 .projectsContainer
   display: flex
@@ -316,7 +325,7 @@
         flex-direction: column
         max-width: 600px
 
-      .featureCopyHeader        
+      .featureCopyHeader
         height: 80px
         padding-left: 20px
         padding-right: 20px

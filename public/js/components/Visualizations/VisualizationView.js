@@ -10,13 +10,14 @@ export default class VisualizationView extends Component {
   render() {
     const { visualization } = this.props;
 
-    const visualizationTypes = visualization.visualizationType ? [ visualization.visualizationType ] : null;
+    const visualizationTypes = visualization.visualizationType ? [ visualization.visualizationType ] : [];
     return (
       <div className={ styles.visualizationViewContainer }>
         { visualization.spec.id && !visualization.isFetching &&
           <div className={ styles.innerVisualizationViewContainer } >
             <HeaderBar
-              header={ visualization.spec.meta.construction.map((construct, i) =>
+              header="Visualization"
+              subheader={ visualization.spec.meta.construction.map((construct, i) =>
                 <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>
               )}
               actions={ this.props.children } />

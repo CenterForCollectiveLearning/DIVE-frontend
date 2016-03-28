@@ -14,18 +14,16 @@
 .composeContentContainer
   flex-direction: row
 
-.composeViewContainer
-  display: flex
-  flex-direction: column
-  flex-grow: 1
-  background-color: #e9e7e8
-  overflow-y: scroll
+  .composeViewContainer
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+    background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
+    overflow-y: scroll
 
-  .saveStatus
-    font-size: 12px
-    color: #6A6A6A
-    margin-top: 10px
-    margin-right: 8px
+    .composeEditorContainer
+      flex-grow: 1
+      background-color: rgba(255, 255, 255, 0.7)
 
 .sidebarVisualizationHeader
   font-size: 13px
@@ -40,7 +38,6 @@
   background-color: #FAFAFA
   border: 1px solid #D0D0D0
   border-radius: 2px
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.01), 0px 2px 2px 0px rgba(0, 0, 0, 0.058), 0px 1px 5px 0px rgba(0, 0, 0, 0.034)
 
   text-align: center
   cursor: pointer
@@ -55,35 +52,44 @@
         fill: rgba(0, 0, 0, 0)
 
       g
-        cursor: pointer!important // override google's default
+        cursor: pointer!important
 
 .editorHeader
-  background-color: white
+  padding: 10px
 
   .editorHeaderText
-    margin-left: 6px
+    width: 100%
+    padding-left: 6px
+    padding-right: 6px
 
     .documentTitle
       color: #333
+      background-color: transparent
       font-family: 'Source Sans Pro', sans-serif
       font-size: 55px
       font-weight: 300
       line-height: 1
-      margin-left: 0px
-      margin-top: 20px
       padding-left: 11px
       letter-spacing: -.003em
       height: auto
       border-color: transparent
 
-      &:hover
-        border-color: #eee
+  &.editable
+    .documentTitle:hover
+      border-color: #eee
 
 .composeEditor
   display: flex
   flex-direction: column
   flex-grow: 1
   min-height: 400px
+
+  &.editable
+    .composeBlock:hover
+      border-color: rgba(0, 0, 0, 0.1)
+
+      .composeBlockText, .composeBlockHeader .composeBlockHeaderText
+        border-color: #eee
 
   .composeEditorNewDocumentPlaceholder
     +watermark
@@ -96,34 +102,8 @@
     margin: 7px
     border: 1px dashed transparent
 
-    &:hover
-      border-color: rgba(0, 0, 0, 0.1)
-
-      .composeBlockText, .composeBlockHeader .composeBlockHeaderText
-        border-color: #eee
-
-  .composeBlockHeader
-    display: flex
-
-    .composeBlockHeaderText
-      font-family: 'Source Sans Pro', sans-serif
-      font-size: 30px
-      line-height: 1.1
-      letter-spacing: -.02em
-      color: rgba(0,0,0,.8)
-      font-weight: 300
-
-      height: auto
-      padding-top: 6px
-      padding-bottom: 5px
-      margin-bottom: 5px
-      border-color: transparent
-
-      &:focus, &:hover
-        border-color: #CDCDCD
-
-  .composeBlockContent
-    display: flex
+    &:hover .composeVisualizationControls
+      display: flex
 
     &.TEXT_TOP
       flex-direction: column-reverse
@@ -145,6 +125,32 @@
         max-width: 70%
         margin-right: 7px
 
+  .composeBlockHeader
+    display: flex
+
+    .composeBlockHeaderText
+      font-family: 'Source Sans Pro', sans-serif
+      font-size: 30px
+      line-height: 1.1
+      letter-spacing: -.02em
+      color: rgba(0,0,0,.8)
+      font-weight: 300
+
+      height: auto
+      width: 100%
+      padding: 6px 10px 5px 14px
+      margin-bottom: 5px
+      border-color: transparent
+
+      border: 1px solid transparent
+      border-radius: 2px
+      outline: none
+
+  &.editable
+    .composeBlockHeaderText
+      &:hover
+        border-color: #CDCDCD
+
   .resizableContainer
     display: flex
     flex-direction: column
@@ -162,8 +168,23 @@
     &:hover
       opacity: 0.8
 
+    .visualizationOverlayControl
+      &.visualizationOverlayButton
+        height: 30px
+        line-height: 29px
+        padding: 0 7px
+        border-color: #D0D0D0
+
+        i
+          font-weight: 600
+          font-size: 12px
+
+      + .visualizationOverlayControl
+        margin-left: 5px
+
     .visualizationOverlayButton
       max-width: none
+      background-color: white
 
       > div
         padding: 0 8px
@@ -171,6 +192,9 @@
         line-height: 29px
         box-shadow: none
         opacity: 0.9
+
+        &[data-selected]
+          background-color: #D0D0D0
 
         &:hover
           opacity: 1
@@ -181,9 +205,6 @@
     display: flex
     justify-content: center
     align-items: center
-
-    &:hover .composeVisualizationControls
-      display: flex
 
     .fullComposeVisualization
       background-color: white
@@ -210,9 +231,6 @@
     border-radius: 2px
     margin-bottom: 7px
     flex-grow: 1
-
-    &:focus, &:hover
-      border-color: #CDCDCD
 
     > div
       display: flex
@@ -241,5 +259,5 @@
 .visualizationPreviewBlockContainer
   &.selectedVisualizationPreviewBlockContainer
     .sidebarVisualizationContainer
-      background-color: #F1F1F1
-      box-shadow: none
+      background-color: #E2E2E2
+      border-color: #BBB

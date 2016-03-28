@@ -10,8 +10,8 @@ export class SummaryPage extends Component {
   render() {
     return (
       <div className={ `${ styles.fillContainer } ${ styles.summaryContainer }` }>
-        <SummarySidebar />
         <SummaryView />
+        <SummarySidebar />
       </div>
     );
   }

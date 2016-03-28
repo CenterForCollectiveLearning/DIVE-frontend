@@ -12,6 +12,7 @@ export default class Input extends Component {
   render() {
     return (
       <input
+        autoComplete={ this.props.autocomplete }
         className={ styles.input
           + (this.props.large ? ' ' + styles.large : '')
           + (this.props.className ? ' ' + this.props.className : '') }
@@ -19,22 +20,26 @@ export default class Input extends Component {
         placeholder={ this.props.placeholder }
         onChange={ this.props.onChange }
         onKeyUp={ this.onInputKeyUp.bind(this) }
+        readOnly={ this.props.readonly }
         value={ this.props.value }/>
     );
   }
 }
 
 Input.propTypes = {
+  autocomplete: PropTypes.string,
   className: PropTypes.string,
   placeholder: PropTypes.string,
   type: PropTypes.string,
   large: PropTypes.bool,
   onChange: PropTypes.func,
   onSubmit: PropTypes.func,
-  value: PropTypes.string
+  value: PropTypes.string,
+  readonly: PropTypes.bool
 }
 
 Input.defaultProps = {
+  autocomplete: "off",
   large: false,
   type: "text",
   placeholder: ""

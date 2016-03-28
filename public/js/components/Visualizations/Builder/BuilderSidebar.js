@@ -40,23 +40,19 @@ export class BuilderSidebar extends Component {
   render() {
     const { fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectVisualizationConditional, selectVisualizationConfig, filters, visualization } = this.props;
 
-    var visualizationTypes = [];
-
-    if (visualization.spec.vizTypes) {
-      visualizationTypes = filters.visualizationTypes.map((filter) =>
-        new Object({
-          type: filter.type,
-          imageName: filter.imageName,
-          label: filter.label,
-          disabled: visualization.spec.vizTypes.indexOf(filter.type) < 0,
-          selected: filter.type == visualization.visualizationType
-        })
-      );
+    if (!visualization.lastUpdated) {
+      return (<div></div>);
     }
+
+    const visualizationTypes = filters.visualizationTypes.filter((visualizationType) =>
+      (visualization.spec.vizTypes.indexOf(visualizationType.type) > -1)
+    ).map((visualizationType) =>
+      new Object({ ...visualizationType, selected: visualizationType.type == visualization.visualizationType })
+    );
 
     return (
       <Sidebar>
-        { visualization.visualizationType &&
+        { visualization.visualizationType && visualizationTypes.length > 1 &&
           <SidebarGroup heading="Visualization type">
             <ToggleButtonGroup
               toggleItems={ visualizationTypes }
@@ -86,7 +82,7 @@ export class BuilderSidebar extends Component {
             </div>
           </SidebarGroup>
         }
-        { visualization.visualizationType == 'hist' &&
+        { visualization.visualizationType == 'bar' &&
           <BinningSelector
             config={ visualization.spec.config }
             selectBinningConfig={ selectVisualizationConfig } />

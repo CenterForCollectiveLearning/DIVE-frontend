@@ -2,20 +2,24 @@ import {
   WIPE_PROJECT_STATE,
   SELECT_COMPOSE_VISUALIZATION,
   SELECT_DOCUMENT,
+  SET_DOCUMENT_TITLE,
   RECEIVE_DOCUMENTS,
   RECEIVE_CREATE_DOCUMENT,
   REQUEST_SAVE_DOCUMENT,
   RECEIVE_SAVE_DOCUMENT,
-  SAVE_BLOCK
+  SAVE_BLOCK,
+  RECEIVE_PUBLISHED_DOCUMENT
 } from '../constants/ActionTypes';
 
 import { BLOCK_FORMATS } from '../constants/BlockFormats';
 
 const baseState = {
+  title: null,
   blocks: [],
   documentId: null,
   saving: false,
-  updatedAt: Date.now()
+  loaded: false,
+  updatedAt: Date.now(),
 }
 
 // blocks: [
@@ -47,18 +51,20 @@ export default function composeSelector(state = baseState, action) {
         })
       }
 
-      return { ...state, blocks: blocks };
+      return { ...state, blocks: blocks, updatedAt: Date.now() };
 
     case RECEIVE_DOCUMENTS:
       const documentId = parseInt(state.documentId);
-      const selecedDocument = action.documents.find((doc) => doc.id == documentId);
+      const selectedDocument = action.documents.find((doc) => doc.id == documentId);
 
-      if (selecedDocument) {
-        var selectedDocumentContent = selecedDocument.content;
+      if (selectedDocument) {
+        var selectedDocumentContent = selectedDocument.content;
         var selectedDocumentBlocks = selectedDocumentContent.blocks ? selectedDocumentContent.blocks : [];
         return {
           ...state,
-          blocks: selectedDocumentBlocks
+          blocks: selectedDocumentBlocks,
+          title: selectedDocument.title,
+          loaded: true
         }
       }
 
@@ -68,7 +74,16 @@ export default function composeSelector(state = baseState, action) {
       return {
         ...state,
         blocks: action.blocks,
-        documentId: action.documentId
+        documentId: action.documentId,
+        title: action.title,
+        loaded: true
+      };
+
+    case SET_DOCUMENT_TITLE:
+      return {
+        ...state,
+        title: action.title,
+        updatedAt: Date.now()
       };
 
     case RECEIVE_CREATE_DOCUMENT:
@@ -89,6 +104,15 @@ export default function composeSelector(state = baseState, action) {
 
     case RECEIVE_SAVE_DOCUMENT:
       return { ...state, saving: false };
+
+    case RECEIVE_PUBLISHED_DOCUMENT:
+      return {
+        ...state,
+        documentId: action.documentId,
+        blocks: action.document.content.blocks,
+        title: action.document.title,
+        loaded: true
+      }
 
     case WIPE_PROJECT_STATE:
       return baseState;

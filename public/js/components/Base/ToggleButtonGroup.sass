@@ -27,11 +27,11 @@
     flex-grow: 1
     max-width: 50%
 
-    &:first-child .raisedButton.toggleButton
+    &:first-child, &:first-child .raisedButton.toggleButton
       border-top-left-radius: 2px
       border-bottom-left-radius: 2px
 
-    &:last-child .raisedButton.toggleButton
+    &:last-child, &:last-child .raisedButton.toggleButton
       border-top-right-radius: 2px
       border-bottom-right-radius: 2px
 
@@ -50,10 +50,15 @@
 
   .raisedButton.toggleButton
     padding: 0
+    border-color: #D0D0D0
     border-radius: 0
     margin-left: -1px
     margin-top: -1px
     flex-grow: 1
+    background-color: rgba(255, 255, 255, 0.4)
+
+    &[data-selected]
+      background-color: rgba(86, 42, 110, 0.1)
 
     img
       padding: 3px
@@ -61,7 +66,6 @@
   .splitButton.textToggleButton
     display: flex
     background-color: #FAFAFA
-    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.01), 0px 2px 2px 0px rgba(0, 0, 0, 0.058), 0px 1px 5px 0px rgba(0, 0, 0, 0.034)
 
     &:first-child
       .raisedButton.toggleButton
@@ -77,24 +81,24 @@
       .splitButtonSelect > div > div > div
         border-bottom-right-radius: 2px
 
-    &.selected
+    &[data-selected]
       background-color: #E9E9E9
       box-shadow: inset 1px 1px 2px 0 rgba(0, 0, 0, 0.08)
 
     .raisedButton.toggleButton
       flex-grow: 1
       border-radius: 0
-      box-shadow: none
       background-color: transparent
 
     .dropDownMenu
       &.defaultDropdown
-        > div > div:first-of-type > div
+        > div > div:first-of-type > div > span:first-child
           color: #888
 
       > div > div:first-of-type
         box-shadow: none
         background-color: transparent
+        border-color: #D0D0D0
 
     .splitButtonSelect
       width: 110px
@@ -108,6 +112,6 @@
       > div > div > div
         border-radius: 0
 
-        > div
+        > div > span:first-child
           font-weight: 400
           font-size: 11px

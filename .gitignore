@@ -8,3 +8,9 @@ static/
 .divshot-cache/
 .env.json
 __/
+
+*.map
+
+public/bundle.js
+
+public/app.css

@@ -70,7 +70,7 @@ export class DatasetToolbar extends Component {
           <div className={ styles.datasetSelectorContainer }>
             <DropDownMenu
               className={ styles.datasetSelector }
-              value={ uploadMode ? null : selectedDatasetId }
+              value={ uploadMode ? null : parseInt(selectedDatasetId) }
               options={ datasets.items.length > 0 ? datasets.items : [] }
               valueMember="datasetId"
               displayTextMember="title"

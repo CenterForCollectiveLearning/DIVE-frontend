@@ -8,9 +8,9 @@ import BuilderSidebar from './BuilderSidebar';
 class BuilderPage extends Component {
   render() {
     return (
-      <div className={ `${styles.fillContainer} ${styles.builderContainer}` }>
-        <BuilderSidebar />
+      <div className={ `${ styles.fillContainer } ${ styles.builderContainer }` }>
         <BuilderView specId={ this.props.params.specId }/>
+        <BuilderSidebar />
         { this.props.children }
       </div>
     );

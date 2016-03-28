@@ -8,7 +8,7 @@ const taskManager = new TaskManager();
 
 export function fetch(urlPath, options) {
   const completeUrl = API_URL + urlPath;
-  return isomorphicFetch(completeUrl, options);
+  return isomorphicFetch(completeUrl, { ...options, credentials: 'include' });
 }
 
 export function httpRequest(method, urlPath, formData, completeEvent, uploadEvents) {

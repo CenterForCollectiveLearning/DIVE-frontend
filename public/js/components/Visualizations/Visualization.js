@@ -40,43 +40,56 @@ export default class Visualization extends Component {
     const MAX_ELEMENTS = {
       preview: {
         all: 2000,
+        scatter: 500,
         treemap: 200
       },
       full: {
         all: 3000,
+        scatter: 1000,
         treemap: 400
       }
     }
     const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
 
-    var sortField, sortOrder;
+    var finalDataArray = data;
 
-    sortFields.forEach(function(s) {
-      if (s.selected)
-        sortField = s.id;
-    });
-    sortOrders.forEach(function(s) {
-      if (s.selected)
-        sortOrder = s.id;
-    });
-    const sortIndex = (sortOrder == 'asc') ? 1 : -1;
+    if (sortFields.length && sortOrders.length) {
+      var sortField, sortOrder;
 
-    const header = data[0];
-    const dataPoints = data.slice(1);
-    const sortedDataPoints = dataPoints.sort((a, b) => {
-      var aValue = a[sortField];
-      var bValue = b[sortField];
-      if (aValue < bValue) {
-        return sortIndex * -1;
-      }
-      else if (aValue > bValue) {
-        return sortIndex;
-      }
-      else {
-        return 0;
-      }
-    });
-    var finalDataArray = [ header, ...sortedDataPoints ]
+      sortFields.forEach(function(s) {
+        if (s.selected)
+          sortField = s.id;
+      });
+      sortOrders.forEach(function(s) {
+        if (s.selected)
+          sortOrder = s.id;
+      });
+      const sortIndex = (sortOrder == 'asc') ? 1 : -1;
+
+      const header = data[0];
+      const dataPoints = data.slice(1);
+      const sortedDataPoints = dataPoints.sort((a, b) => {
+        var aValue = a[sortField];
+        if (Array.isArray(aValue)) {
+          aValue = (aValue[0] + aValue[1]) / 2
+        }
+        var bValue = b[sortField];
+        if (Array.isArray(bValue)) {
+          bValue = (bValue[0] + bValue[1]) / 2
+        }
+        if (aValue < bValue) {
+          return sortIndex * -1;
+        }
+        else if (aValue > bValue) {
+          return sortIndex;
+        }
+        else {
+          return 0;
+        }
+      });
+
+      finalDataArray = [ header, ...sortedDataPoints ];
+    }
 
     var options = {
       backgroundColor: 'transparent',
@@ -187,6 +200,8 @@ export default class Visualization extends Component {
 
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
 
+    const labels = spec.meta.labels ? spec.meta.labels : {}
+
     const tooMuchDataToPreview =
       (isMinimalView &&
         (data.length > MAX_ELEMENTS.preview.all ||
@@ -240,6 +255,7 @@ export default class Visualization extends Component {
               <ColumnChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
+                labels={ labels }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
@@ -247,6 +263,7 @@ export default class Visualization extends Component {
               <StackedColumnChart
                 chartId={ `spec-stackedbar-${ chartId }` }
                 data={ finalDataArray }
+                labels={ labels }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
@@ -254,6 +271,7 @@ export default class Visualization extends Component {
               <ScatterChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
+                labels={ labels }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
@@ -261,6 +279,7 @@ export default class Visualization extends Component {
               <LineChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
+                labels={ labels }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
@@ -268,6 +287,7 @@ export default class Visualization extends Component {
               <PieChart
                 chartId={ `spec-pie-${ chartId }` }
                 data={ finalDataArray }
+                labels={ labels }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }
@@ -276,6 +296,7 @@ export default class Visualization extends Component {
                 chartId={ `spec-tree-${ chartId }` }
                 parent={ spec.meta.desc }
                 data={ finalDataArray }
+                labels={ labels }
                 options={ options }
                 isMinimalView={ isMinimalView }/>
             }

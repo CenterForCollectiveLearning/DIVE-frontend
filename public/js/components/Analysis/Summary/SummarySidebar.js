@@ -5,7 +5,7 @@ import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesAc
 import { selectSummaryIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable } from '../../../actions/SummaryActions';
 import styles from '../Analysis.sass';
 
-import AnalysisSidebar from '../AnalysisSidebar';
+import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -23,7 +23,7 @@ export class SummarySidebar extends Component {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = nextProps;
     const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
 
-    if (project.properties.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
+    if (project.properties.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.loaded) && !fieldProperties.fetching) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId)
     }
   }
@@ -32,7 +32,7 @@ export class SummarySidebar extends Component {
     const nonComparisonVariables = this.props.fieldProperties.items.filter((item) => this.props.summarySelector.comparisonVariablesIds.indexOf(item.id) < 0)
     const aggregationOptions = [{'id': 'count', 'name' : 'count'}, ...nonComparisonVariables.filter((item) => item.generalType == 'q')]
     return (
-      <AnalysisSidebar selectedTab="summary">
+      <Sidebar>
         { this.props.fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Comparison Variables">
             <ToggleButtonGroup
@@ -80,7 +80,7 @@ export class SummarySidebar extends Component {
           </SidebarGroup>
         }
 
-      </AnalysisSidebar>
+      </Sidebar>
     );
   }
 }
