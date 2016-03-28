@@ -33,7 +33,6 @@ const requireAuthentication = UserAuthWrapper({
   authSelector: state => state.user,
   predicate: user => user.isAuthenticated,
   redirectAction: function({ pathname, query }){
-    console.log('in redirect action', pathname, query);
     if (query.redirect) {
       return pushState(null, `${pathname}?next=${query.redirect}`)
     } else {

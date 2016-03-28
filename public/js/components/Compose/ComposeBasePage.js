@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-react-router';
+import DocumentTitle from 'react-document-title';
 import styles from './Compose.sass';
 
 import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
@@ -44,15 +45,19 @@ export class ComposeBasePage extends Component {
   }
 
   render() {
-    const { selectedDocument } = this.props;
+    const { selectedDocument, projectTitle } = this.props;
+    const composeTitle = 'COMPOSE' + ( projectTitle ? ` | ${ projectTitle }` : '' )
+
     return (
-      <div className={ `${ styles.fillContainer } ${ styles.composePageContainer }` }>
-        <div className={ `${ styles.fillContainer } ${ styles.composeContentContainer }` }>
-          <ComposeView editable={ true } selectedDocument={ selectedDocument } />
-          <ComposeSidebar />
+      <DocumentTitle title={ composeTitle }>
+        <div className={ `${ styles.fillContainer } ${ styles.composePageContainer }` }>
+          <div className={ `${ styles.fillContainer } ${ styles.composeContentContainer }` }>
+            <ComposeView editable={ true } selectedDocument={ selectedDocument } />
+            <ComposeSidebar />
+          </div>
+          { this.props.children }
         </div>
-        { this.props.children }
-      </div>
+      </DocumentTitle>
     );
   }
 }
@@ -60,7 +65,7 @@ export class ComposeBasePage extends Component {
 function mapStateToProps(state) {
   const { documents, composeSelector, project, datasetSelector, datasets } = state;
   const selectedDocument = documents.items.find((doc) => doc.id == composeSelector.documentId) || {};
-  return { documents, composeSelector, project, datasetSelector, datasets, selectedDocument: selectedDocument };
+  return { documents, composeSelector, project, datasetSelector, datasets, selectedDocument: selectedDocument, projectTitle: project.properties.title };
 }
 
 export default connect(mapStateToProps, { fetchDocuments, fetchDatasetsIfNeeded, pushState, replaceState })(ComposeBasePage);

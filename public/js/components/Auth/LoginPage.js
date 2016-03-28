@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import { pushState } from 'redux-react-router';
+import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { loginUser } from '../../actions/AuthActions';
 
@@ -89,87 +90,89 @@ class AuthPage extends Component {
     }
 
     return (
-      <BlockingModal
-        scrollable
-        closeAction={ this.closeLoginPage.bind(this) }
-        className={ styles.loginModal }
-        heading={
-          <span>Login or Register to Proceed</span>
-        }
-        footer={
-          <div className={ styles.footerContent }>
-            <div className={ styles.registerText }>
-              Dont have an account? <span className={ styles.registerLink } onClick={ this._clickRegister.bind(this) }>Click here to create one</span>.
-            </div>
-          </div>
-        }>
-        <form className={ styles.authForm } onSubmit={ this.submit.bind(this) } >
-          <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabelAndError}>
-              <div className={ styles.authInputLabel }>Username</div>
-              { loginError &&
-                <div className={ styles.error }>
-                  { loginError }
-                </div>
-              }
-            </div>
-            <Input
-              type="text"
-              placeholder="diveuser"
-              autocomplete="on"
-              onChange={ this.handleUsernameChange.bind(this) }
-            />
-          </div>
-          <div className={ styles.orSeparator }>
-            <div className={ styles.or }>OR</div>
-          </div>
-          <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabelAndError}>
-              <div className={ styles.authInputLabel }>E-mail</div>
-            </div>
-            <Input
-              type="text"
-              placeholder="jane@gmail.com"
-              autocomplete="on"
-              onChange={ this.handleEmailChange.bind(this) }
-            />
-          </div>
-          <div className={ styles.separator } />
-
-          <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabelAndError}>
-              <div className={ styles.authInputLabel }>Password</div>
-            </div>
-            <Input
-              type="password"
-              placeholder="Password"
-              onChange={ this.handlePasswordChange.bind(this) }
-            />
-          </div>
-          <div className={ styles.authInputGroup }>
-            <div className={ styles.checkbox }>
-              <div className={ styles.authInputLabelAndError}>
-                <div className={ styles.authInputLabel }>Remember Me</div>
-                <input
-                  type="checkbox"
-                  onChange={ this._handleRememberMeChange.bind(this) }
-                  checked={ this.state.rememberMe }
-                />
+      <DocumentTitle title='DIVE | Login'>
+        <BlockingModal
+          scrollable
+          closeAction={ this.closeLoginPage.bind(this) }
+          className={ styles.loginModal }
+          heading={
+            <span>Login or Register to Proceed</span>
+          }
+          footer={
+            <div className={ styles.footerContent }>
+              <div className={ styles.registerText }>
+                Dont have an account? <span className={ styles.registerLink } onClick={ this._clickRegister.bind(this) }>Click here to create one</span>.
               </div>
             </div>
-          </div>
-          <RaisedButton
-            primary
-            disabled={ loginDisabled }
-            className={ styles.submit }
-            minWidth={ 100 }
-            onClick={ this.submit.bind(this) }
-          >
-            Login
-          </RaisedButton>
-        </form>
+          }>
+          <form className={ styles.authForm } onSubmit={ this.submit.bind(this) } >
+            <div className={ styles.authInputGroup }>
+              <div className={ styles.authInputLabelAndError}>
+                <div className={ styles.authInputLabel }>Username</div>
+                { loginError &&
+                  <div className={ styles.error }>
+                    { loginError }
+                  </div>
+                }
+              </div>
+              <Input
+                type="text"
+                placeholder="diveuser"
+                autocomplete="on"
+                onChange={ this.handleUsernameChange.bind(this) }
+              />
+            </div>
+            <div className={ styles.orSeparator }>
+              <div className={ styles.or }>OR</div>
+            </div>
+            <div className={ styles.authInputGroup }>
+              <div className={ styles.authInputLabelAndError}>
+                <div className={ styles.authInputLabel }>E-mail</div>
+              </div>
+              <Input
+                type="text"
+                placeholder="jane@gmail.com"
+                autocomplete="on"
+                onChange={ this.handleEmailChange.bind(this) }
+              />
+            </div>
+            <div className={ styles.separator } />
 
-      </BlockingModal>
+            <div className={ styles.authInputGroup }>
+              <div className={ styles.authInputLabelAndError}>
+                <div className={ styles.authInputLabel }>Password</div>
+              </div>
+              <Input
+                type="password"
+                placeholder="Password"
+                onChange={ this.handlePasswordChange.bind(this) }
+              />
+            </div>
+            <div className={ styles.authInputGroup }>
+              <div className={ styles.checkbox }>
+                <div className={ styles.authInputLabelAndError}>
+                  <div className={ styles.authInputLabel }>Remember Me</div>
+                  <input
+                    type="checkbox"
+                    onChange={ this._handleRememberMeChange.bind(this) }
+                    checked={ this.state.rememberMe }
+                  />
+                </div>
+              </div>
+            </div>
+            <RaisedButton
+              primary
+              disabled={ loginDisabled }
+              className={ styles.submit }
+              minWidth={ 100 }
+              onClick={ this.submit.bind(this) }
+            >
+              Login
+            </RaisedButton>
+          </form>
+
+        </BlockingModal>
+      </DocumentTitle>
     );
   }
 }

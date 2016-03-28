@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { replaceState } from 'redux-react-router';
+import DocumentTitle from 'react-document-title';
 
 import { fetchDatasets, selectDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
@@ -48,10 +49,15 @@ export class DatasetsPage extends Component {
   }
 
   render() {
+    const { projectTitle } = this.props;
+    const datasetsTitle = 'DATA' + ( projectTitle ? ` | ${ projectTitle }` : '' )
+
     return (
-      <div className={ styles.fillContainer + ' ' + styles.datasetPageContainer }>
-        { this.props.children }
-      </div>
+      <DocumentTitle title={ datasetsTitle }>
+        <div className={ styles.fillContainer + ' ' + styles.datasetPageContainer }>
+          { this.props.children }
+        </div>
+      </DocumentTitle>
     );
   }
 }
@@ -69,7 +75,8 @@ function mapStateToProps(state) {
     project,
     datasets,
     datasetSelector,
-    datasetId
+    datasetId,
+    projectTitle: project.properties.title
   }
 }
 

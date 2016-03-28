@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import DocumentTitle from 'react-document-title';
 import { fetchProjectIfNeeded, fetchUserProjects } from '../actions/ProjectActions.js';
 
 import styles from './App/App.sass';
@@ -27,11 +28,15 @@ export class ProjectsPage extends Component {
   }
 
   render() {
+    const { project } = this.props;
+    const documentTitle = project.properties.title ? `DIVE / ${ project.properties.title }`: 'DIVE';
     return (
-      <div className={ styles.fillContainer + ' ' + styles.projectContainer }>
-        <ProjectNav paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
-        { this.props.children }
-      </div>
+      <DocumentTitle title={ documentTitle }>
+        <div className={ styles.fillContainer + ' ' + styles.projectContainer }>
+          <ProjectNav paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
+          { this.props.children }
+        </div>
+      </DocumentTitle>
     );
   }
 }

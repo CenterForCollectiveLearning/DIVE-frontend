@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import { pushState } from 'redux-react-router';
+import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/AuthActions';
 
@@ -118,107 +119,109 @@ class AuthPage extends Component {
     }
 
     return (
-      <BlockingModal
-        scrollable
-        closeAction={ this.closeRegistrationPage.bind(this) }
-        className={ styles.registerModal }
-        heading={
-          <span>Account Registration</span>
-        }
-        footer={
-          <div className={ styles.footerContent }>
-            <div className={ styles.loginText }>
-              Already registered? <span className={ styles.loginLink } onClick={ this._clickLogin.bind(this) }>Click here to login</span>.
+      <DocumentTitle title='DIVE | Register'>
+        <BlockingModal
+          scrollable
+          closeAction={ this.closeRegistrationPage.bind(this) }
+          className={ styles.registerModal }
+          heading={
+            <span>Account Registration</span>
+          }
+          footer={
+            <div className={ styles.footerContent }>
+              <div className={ styles.loginText }>
+                Already registered? <span className={ styles.loginLink } onClick={ this._clickLogin.bind(this) }>Click here to login</span>.
+              </div>
             </div>
-          </div>
-        }>
+          }>
 
-        <form className={ styles.authForm } onSubmit={ this.submit.bind(this) }>
-          <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabelAndError}>
-              <div className={ styles.authInputLabel }>E-mail</div>
-              { (registrationErrors.email) &&
-                <div className={ styles.error }>
-                  { registrationErrors.email }
-                </div>
-              }
-              { (email && emailValid != null && !emailValid) &&
-                <div className={ styles.error }>
-                  Please enter a valid e-mail
-                </div>
-              }
+          <form className={ styles.authForm } onSubmit={ this.submit.bind(this) }>
+            <div className={ styles.authInputGroup }>
+              <div className={ styles.authInputLabelAndError}>
+                <div className={ styles.authInputLabel }>E-mail</div>
+                { (registrationErrors.email) &&
+                  <div className={ styles.error }>
+                    { registrationErrors.email }
+                  </div>
+                }
+                { (email && emailValid != null && !emailValid) &&
+                  <div className={ styles.error }>
+                    Please enter a valid e-mail
+                  </div>
+                }
+              </div>
+              <Input
+                type="text"
+                placeholder="jane@gmail.com"
+                autocomplete="on"
+                onChange={ this.handleEmailChange.bind(this) }
+              />
             </div>
-            <Input
-              type="text"
-              placeholder="jane@gmail.com"
-              autocomplete="on"
-              onChange={ this.handleEmailChange.bind(this) }
-            />
-          </div>
 
-          <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabelAndError}>
-              <div className={ styles.authInputLabel }>Username</div>
-              { (registrationErrors.username) &&
-                <div className={ styles.error }>
-                  { registrationErrors.username }
-                </div>
-              }
-              { (username && username != null && usernameTooShort) &&
-                <div className={ styles.error }>
-                  Username too short
-                </div>
-              }
-              { (username && username != null && usernameTooLong) &&
-                <div className={ styles.error }>
-                  Username too long
-                </div>
-              }
+            <div className={ styles.authInputGroup }>
+              <div className={ styles.authInputLabelAndError}>
+                <div className={ styles.authInputLabel }>Username</div>
+                { (registrationErrors.username) &&
+                  <div className={ styles.error }>
+                    { registrationErrors.username }
+                  </div>
+                }
+                { (username && username != null && usernameTooShort) &&
+                  <div className={ styles.error }>
+                    Username too short
+                  </div>
+                }
+                { (username && username != null && usernameTooLong) &&
+                  <div className={ styles.error }>
+                    Username too long
+                  </div>
+                }
+              </div>
+              <Input
+                type="text"
+                placeholder="diveuser"
+                autocomplete="on"
+                onChange={ this.handleUsernameChange.bind(this) }
+              />
             </div>
-            <Input
-              type="text"
-              placeholder="diveuser"
-              autocomplete="on"
-              onChange={ this.handleUsernameChange.bind(this) }
-            />
-          </div>
 
-          <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabelAndError}>
-              <div className={ styles.authInputLabel }>Password</div>
+            <div className={ styles.authInputGroup }>
+              <div className={ styles.authInputLabelAndError}>
+                <div className={ styles.authInputLabel }>Password</div>
+              </div>
+              <Input
+                type="password"
+                placeholder="P4ssword1?"
+                onChange={ this.handlePasswordChange.bind(this) }
+              />
             </div>
-            <Input
-              type="password"
-              placeholder="P4ssword1?"
-              onChange={ this.handlePasswordChange.bind(this) }
-            />
-          </div>
 
-          <div className={ styles.authInputGroup }>
-            <div className={ styles.authInputLabelAndError}>
-              <div className={ styles.authInputLabel }>Confirm Password</div>
-              { (confirmPassword && passwordMatching != null && !passwordMatching) &&
-                <div className={ styles.error }>
-                  Passwords do not match
-                </div>
-              }
+            <div className={ styles.authInputGroup }>
+              <div className={ styles.authInputLabelAndError}>
+                <div className={ styles.authInputLabel }>Confirm Password</div>
+                { (confirmPassword && passwordMatching != null && !passwordMatching) &&
+                  <div className={ styles.error }>
+                    Passwords do not match
+                  </div>
+                }
+              </div>
+              <Input
+                type="password"
+                placeholder="P4ssword1?"
+                onChange={ this.handleConfirmPasswordChange.bind(this) }
+              />
             </div>
-            <Input
-              type="password"
-              placeholder="P4ssword1?"
-              onChange={ this.handleConfirmPasswordChange.bind(this) }
-            />
-          </div>
-          <RaisedButton
-            primary
-            className={ styles.submit }
-            minWidth={ 100 }
-            disabled={ disabledRegister }
-            onClick={ this.submit.bind(this) }>
-            Create your account
-          </RaisedButton>
-        </form>
-      </BlockingModal>
+            <RaisedButton
+              primary
+              className={ styles.submit }
+              minWidth={ 100 }
+              disabled={ disabledRegister }
+              onClick={ this.submit.bind(this) }>
+              Create your account
+            </RaisedButton>
+          </form>
+        </BlockingModal>
+      </DocumentTitle>
     );
   }
 }
