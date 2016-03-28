@@ -42,7 +42,7 @@ export class SummaryView extends Component {
 
 
     if (nextProps.projectId && nextProps.datasetId) {
-      if (projectChanged || nextProps.projectId) {
+      if (projectChanged && nextProps.projectId) {
         fetchDatasets(nextProps.projectId);
       }
 
