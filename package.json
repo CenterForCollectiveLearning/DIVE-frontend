@@ -18,6 +18,7 @@
     "d3-scale": "^0.6.2",
     "es6-promise": "^3.1.2",
     "es6-shim": "^0.34.4",
+    "exports-loader": "^0.6.3",
     "express": "4.13.3",
     "extract-text-webpack-plugin": "^0.8.2",
     "file-loader": "^0.8.4",
