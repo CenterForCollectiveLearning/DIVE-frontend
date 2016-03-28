@@ -19,7 +19,7 @@ export default function fieldProperties(state=baseState, action) {
       return { ...state, isFetching: true };
 
     case RECEIVE_FIELD_PROPERTIES:
-      return { ...state, isFetching: false, items: action.fieldProperties, datasetId: action.datasetId, updatedAt: action.receivedAt };
+      return { ...state, loaded: true, isFetching: false, items: action.fieldProperties, datasetId: action.datasetId, updatedAt: action.receivedAt };
 
     case RECEIVE_SET_FIELD_TYPE:
       const fieldProperties = state.items.slice().map((fieldProperty) =>
