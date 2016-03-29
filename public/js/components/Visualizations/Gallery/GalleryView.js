@@ -23,8 +23,8 @@ export class GalleryView extends Component {
       fetchDatasets(project.properties.id);
     }
 
-    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && notLoadedAndNotFetching) {
-      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
+    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && gallerySelector.recommendationTypes.length && notLoadedAndNotFetching) {
+      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendationTypes);
     }
 
     clearVisualization();
@@ -42,7 +42,7 @@ export class GalleryView extends Component {
     }
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && (datasetChanged || gallerySelectorChanged || notLoadedAndNotFetching)) {
-      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
+      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendationTypes);
     }
 
     if (project.properties.id && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {

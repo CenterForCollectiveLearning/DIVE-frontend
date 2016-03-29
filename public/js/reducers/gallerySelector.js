@@ -6,13 +6,38 @@ import {
   SELECT_FIELD_PROPERTY_VALUE,
   SELECT_AGGREGATION_FUNCTION,
   SELECT_SORTING_FUNCTION,
+  SELECT_RECOMMENDATION_TYPE,
   WIPE_PROJECT_STATE,
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
+const recommendationTypes = [
+  {
+    id: 'baseline',
+    label: 'Baseline',
+    selected: false
+  },
+  {
+    id: 'subset',
+    label: 'Subset',
+    selected: false
+  },
+  {
+    id: 'exact',
+    label: 'Exact',
+    selected: true
+  },
+  {
+    id: 'expanded',
+    label: 'Expanded',
+    selected: false
+  },
+]
+
 const baseState = {
   title: [],
   datasetId: null,
+  recommendationTypes: recommendationTypes,
   fieldProperties: [],
   originalFieldProperties: [],
   specs: [],
@@ -191,6 +216,17 @@ export default function gallerySelector(state = baseState, action) {
       const sortedSpecs = state.specs.sort(sortSpecs);
 
       return { ...state, sortingFunctions: sortingFunctions, specs: sortedSpecs };
+
+    case SELECT_RECOMMENDATION_TYPE:
+      const recommendationTypes = state.recommendationTypes.map((typeObject) =>
+        (typeObject.id == action.selectedRecommendationType) ?
+          new Object({
+            ...typeObject,
+            selected: (typeObject.id == action.selectedRecommendationType && !typeObject.selected)
+          })
+        : typeObject
+      );
+      return { ...state, recommendationTypes: recommendationTypes, updatedAt: Date.now() };
 
     case WIPE_PROJECT_STATE:
       return baseState;

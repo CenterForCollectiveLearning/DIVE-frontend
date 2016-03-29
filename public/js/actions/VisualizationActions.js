@@ -3,6 +3,7 @@ import {
   PROGRESS_SPECS,
   RECEIVE_SPECS,
   FAILED_RECEIVE_SPECS,
+  SELECT_RECOMMENDATION_TYPE,
   SELECT_VISUALIZATION_TYPE,
   SELECT_BUILDER_VISUALIZATION_TYPE,
   REQUEST_VISUALIZATION_DATA,
@@ -21,6 +22,7 @@ import {
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
+import _ from 'underscore';
 import { fetch, pollForTask } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
@@ -63,8 +65,9 @@ function receiveSpecsDispatcher(params, json) {
   };
 }
 
-export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
+export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommendationTypes = ['exact']) {
   const selectedFieldProperties = fieldProperties.filter((property) => property.selected);
+  const selectedRecommendationTypes = _.pluck(recommendationTypes.filter((property) => property.selected), 'id');
 
   const fieldAggPairs = selectedFieldProperties
     .map((property) =>
@@ -93,6 +96,7 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
     'project_id': projectId,
     'dataset_id': datasetId,
     'field_agg_pairs': fieldAggPairs,
+    'recommendation_types': selectedRecommendationTypes,
     'conditionals': conditionals
   };
 
@@ -113,6 +117,13 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
         }
       })
   };
+}
+
+export function selectRecommendationType(selectedRecommendationType) {
+  return {
+    type: SELECT_RECOMMENDATION_TYPE,
+    selectedRecommendationType: selectedRecommendationType
+  }
 }
 
 export function selectVisualizationType(selectedType) {
