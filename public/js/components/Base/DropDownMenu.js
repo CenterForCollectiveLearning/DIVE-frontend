@@ -56,7 +56,7 @@ DropDownMenu.propTypes = {
   className: PropTypes.string,
   valueClassName: PropTypes.string,
   prefix: PropTypes.string,
-  width: PropTypes.number
+  width: PropTypes.any
 };
 
 DropDownMenu.defaultProps = {

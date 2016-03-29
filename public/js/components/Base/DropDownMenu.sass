@@ -15,9 +15,12 @@
         cursor: pointer
         width: 100%
 
+        &:hover
+          box-shadow: none
+
         > div
           &:first-child // .Select-placeholder
-            line-height: 33px
+            line-height: 34px
             height: 33px
             padding: 0 24px 0 12px
 
@@ -43,7 +46,7 @@
           border-bottom-right-radius: 2px
 
           > div // .Select-option
-            font-size: 13px
+            font-size: 12px
             font-weight: 400
             padding: 9px 0 10px 12px
             background-color: white
@@ -52,7 +55,7 @@
               background-color: whitesmoke
 
 .valueContainer
-  font-size: 13px
+  font-size: 12px
   overflow: hidden
   white-space: nowrap
   text-overflow: ellipsis

@@ -141,6 +141,7 @@ export default class ConditionalSelector extends Component {
               className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown + ' ' + styles.operatorDropdown + (fieldId == null ? ' ' + styles.disabledDropdown : '') }
               value={ operator }
               options={ operators }
+              width="20%"
               valueMember="value"
               displayTextMember="label"
               onChange={ this.onSelectOperator.bind(this) }/>
@@ -150,6 +151,7 @@ export default class ConditionalSelector extends Component {
                 className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown + ' ' + styles.fieldValueDropdown + (fieldId == null ? ' ' + styles.disabledDropdown : '') }
                 value={ value }
                 options={ fieldValues }
+                width="80%"
                 valueMember="value"
                 displayTextMember="label"
                 onChange={ this.onSelectFieldValue.bind(this) }/>
