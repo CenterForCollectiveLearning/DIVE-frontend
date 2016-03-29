@@ -16,10 +16,10 @@ export default class VisualizationBlock extends Component {
   }
 
   render() {
-    const { spec, exportedSpecs, filteredVisualizationTypes } = this.props;
+    const { spec, exportedSpecs, filteredVisualizationTypes, className } = this.props;
 
     return (
-      <div className={ styles.visualizationBlocksContainer }>
+      <div className={ styles.visualizationBlocksContainer + ' ' + ( styles[className] || '') }>
         <Visualization
           visualizationTypes={ filteredVisualizationTypes }
           spec={ spec }
@@ -37,6 +37,7 @@ export default class VisualizationBlock extends Component {
 
 VisualizationBlock.propTypes = {
   spec: PropTypes.object.isRequired,
+  className: PropTypes.string,
   filteredVisualizationTypes: PropTypes.array.isRequired,
   exportedSpecs: PropTypes.object.isRequired,
   saveVisualization: PropTypes.func.isRequired,
