@@ -83,6 +83,11 @@ export class GalleryView extends Component {
       )
     );
 
+    const baselineSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'baseline');
+    const subsetSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'subset');
+    const exactSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'exact');
+    const expandedSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'expanded');
+
     return (
       <div className={ styles.specsContainer }>
         <div className={ styles.innerSpecsContainer }>
@@ -133,16 +138,70 @@ export class GalleryView extends Component {
             { !specs.isFetching && filteredSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>
             }
-            { !specs.isFetching && filteredSpecs.length > 0 && filteredSpecs.map((spec) =>
-              <VisualizationBlock
-                key={ spec.id }
-                spec={ spec }
-                filteredVisualizationTypes={ filteredVisualizationTypes }
-                exportedSpecs={ exportedSpecs }
-                onClick={ this.onClickVisualization.bind(this) }
-                saveVisualization={ this.saveVisualization.bind(this) }
-                />
-              )
+
+            { !specs.isFetching && exactSpecs.length > 0 &&
+              <div className={ styles.exactSpecBlocksContainer }>
+                <div>Exact</div>
+                { exactSpecs.map((spec) =>
+                  <VisualizationBlock
+                    key={ spec.id }
+                    spec={ spec }
+                    filteredVisualizationTypes={ filteredVisualizationTypes }
+                    exportedSpecs={ exportedSpecs }
+                    onClick={ this.onClickVisualization.bind(this) }
+                    saveVisualization={ this.saveVisualization.bind(this) }
+                    />
+                  )
+                }
+              </div>
+            }
+            { !specs.isFetching && subsetSpecs.length > 0 &&
+              <div className={ styles.subsetSpecBlocksContainer }>
+                <div>Subset</div>
+                { subsetSpecs.map((spec) =>
+                  <VisualizationBlock
+                    key={ spec.id }
+                    spec={ spec }
+                    filteredVisualizationTypes={ filteredVisualizationTypes }
+                    exportedSpecs={ exportedSpecs }
+                    onClick={ this.onClickVisualization.bind(this) }
+                    saveVisualization={ this.saveVisualization.bind(this) }
+                    />
+                  )
+                }
+              </div>
+            }
+            { !specs.isFetching && baselineSpecs.length > 0 &&
+              <div className={ styles.baselineSpecBlocksContainer }>
+                <div>Subset</div>
+                { baselineSpecs.map((spec) =>
+                  <VisualizationBlock
+                    key={ spec.id }
+                    spec={ spec }
+                    filteredVisualizationTypes={ filteredVisualizationTypes }
+                    exportedSpecs={ exportedSpecs }
+                    onClick={ this.onClickVisualization.bind(this) }
+                    saveVisualization={ this.saveVisualization.bind(this) }
+                    />
+                  )
+                }
+              </div>
+            }
+            { !specs.isFetching && expandedSpecs.length > 0 &&
+              <div className={ styles.expandedSpecBlocksContainer }>
+                <div>Subset</div>
+                { expandedSpecs.map((spec) =>
+                  <VisualizationBlock
+                    key={ spec.id }
+                    spec={ spec }
+                    filteredVisualizationTypes={ filteredVisualizationTypes }
+                    exportedSpecs={ exportedSpecs }
+                    onClick={ this.onClickVisualization.bind(this) }
+                    saveVisualization={ this.saveVisualization.bind(this) }
+                    />
+                  )
+                }
+              </div>
             }
           </div>
         </div>
