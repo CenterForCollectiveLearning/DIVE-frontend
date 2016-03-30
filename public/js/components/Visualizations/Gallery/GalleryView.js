@@ -23,8 +23,8 @@ export class GalleryView extends Component {
       fetchDatasets(project.properties.id);
     }
 
-    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && notLoadedAndNotFetching) {
-      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
+    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && gallerySelector.recommendationTypes.length && notLoadedAndNotFetching) {
+      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendationTypes);
     }
 
     clearVisualization();
@@ -42,7 +42,7 @@ export class GalleryView extends Component {
     }
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && (datasetChanged || gallerySelectorChanged || notLoadedAndNotFetching)) {
-      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties);
+      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendationTypes);
     }
 
     if (project.properties.id && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {
@@ -82,6 +82,14 @@ export class GalleryView extends Component {
         spec.vizTypes.indexOf(filter) >= 0
       )
     );
+
+    var selectedFieldProperties = gallerySelector.fieldProperties
+      .filter((property) => property.selected);
+
+    const baselineSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'baseline');
+    const subsetSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'subset');
+    const exactSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'exact');
+    const expandedSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'expanded');
 
     return (
       <div className={ styles.specsContainer }>
@@ -124,7 +132,7 @@ export class GalleryView extends Component {
 
               </div>
             }/>
-          <div className={ styles.specBlocksContainer }>
+          <div className={ styles.specContainer }>
             { specs.isFetching &&
               <div className={ styles.watermark }>
                 { specs.progress != null ? specs.progress : 'Fetching visualizations…' }
@@ -133,16 +141,114 @@ export class GalleryView extends Component {
             { !specs.isFetching && filteredSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>
             }
-            { !specs.isFetching && filteredSpecs.length > 0 && filteredSpecs.map((spec) =>
-              <VisualizationBlock
-                key={ spec.id }
-                spec={ spec }
-                filteredVisualizationTypes={ filteredVisualizationTypes }
-                exportedSpecs={ exportedSpecs }
-                onClick={ this.onClickVisualization.bind(this) }
-                saveVisualization={ this.saveVisualization.bind(this) }
-                />
-              )
+
+            { !specs.isFetching && exactSpecs.length > 0 &&
+              <div className={ styles.specSection }>
+                <div className={ styles.blockSectionHeader }>
+                  <span className={ styles.bold }>Exact Matches: </span>
+                  Including {
+                  selectedFieldProperties.map((field) =>
+                    <span className={ `${ styles.exactTitleField }`}>
+                      { field.name }
+                    </span>
+                  )
+                }</div>
+                <div className={ styles.specs + ' ' + styles.exact }>
+                  { exactSpecs.map((spec) =>
+                    <VisualizationBlock
+                      key={ spec.id }
+                      spec={ spec }
+                      className='exact'
+                      filteredVisualizationTypes={ filteredVisualizationTypes }
+                      exportedSpecs={ exportedSpecs }
+                      onClick={ this.onClickVisualization.bind(this) }
+                      saveVisualization={ this.saveVisualization.bind(this) }
+                      />
+                    )
+                  }
+                </div>
+              </div>
+            }
+            { !specs.isFetching && subsetSpecs.length > 0 &&
+              <div className={ styles.specSection }>
+                <div className={ styles.blockSectionHeader }>
+                  <span className={ styles.bold }>Close Matches: </span>
+                  Including two or more of {
+                  selectedFieldProperties.map((field) =>
+                    <span className={ `${ styles.subsetTitleField }`}>
+                      { field.name }
+                    </span>
+                  )
+                }</div>
+                <div className={ styles.specs + ' ' + styles.subset }>
+                  { subsetSpecs.map((spec) =>
+                    <VisualizationBlock
+                      key={ spec.id }
+                      spec={ spec }
+                      className='subset'
+                      filteredVisualizationTypes={ filteredVisualizationTypes }
+                      exportedSpecs={ exportedSpecs }
+                      onClick={ this.onClickVisualization.bind(this) }
+                      saveVisualization={ this.saveVisualization.bind(this) }
+                      />
+                    )
+                  }
+                </div>
+              </div>
+            }
+            { !specs.isFetching && baselineSpecs.length > 0 &&
+              <div className={ styles.specSection }>
+                <div className={ styles.blockSectionHeader }>
+                  <span className={ styles.bold }>Individual Matches: </span>
+                  Including <span className={ styles.bold }>only</span> {
+                  selectedFieldProperties.map((field) =>
+                    <span className={ `${ styles.baselineTitleField }`}>
+                      { field.name }
+                    </span>
+                  )
+                }</div>
+                <div className={ styles.specs + ' ' + styles.baseline }>
+                  { baselineSpecs.map((spec) =>
+                    <VisualizationBlock
+                      key={ spec.id }
+                      spec={ spec }
+                      className='baseline'
+                      filteredVisualizationTypes={ filteredVisualizationTypes }
+                      exportedSpecs={ exportedSpecs }
+                      onClick={ this.onClickVisualization.bind(this) }
+                      saveVisualization={ this.saveVisualization.bind(this) }
+                      />
+                    )
+                  }
+                </div>
+              </div>
+            }
+            { !specs.isFetching && expandedSpecs.length > 0 &&
+              <div className={ styles.specSection }>
+                <div className={ styles.blockSectionHeader }>
+                <span className={ styles.bold }>Expanded Matches: </span>
+                  Including {
+                  selectedFieldProperties.map((field) =>
+                    <span className={ `${ styles.expandedTitleField }`}>
+                      { field.name }
+                    </span>
+                  )
+                } with other fields</div>
+                <div className={ styles.specs + ' ' + styles.expanded }>
+                  { expandedSpecs.map((spec) =>
+                    <VisualizationBlock
+                      key={ spec.id }
+                      spec={ spec }
+                      className='expanded'
+                      filteredVisualizationTypes={ filteredVisualizationTypes }
+                      exportedSpecs={ exportedSpecs }
+                      onClick={ this.onClickVisualization.bind(this) }
+                      saveVisualization={ this.saveVisualization.bind(this) }
+                      />
+                    )
+                  }
+                </div>
+              </div>
             }
           </div>
         </div>

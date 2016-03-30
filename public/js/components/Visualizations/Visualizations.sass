@@ -187,20 +187,63 @@ div.conditionalCombinator
   .innerSpecsContainer
     display: block
 
-  .specBlocksContainer
+  .specContainer
     display: flex
-    flex-direction: row
+    flex-direction: column
     flex-wrap: wrap
     align-content: flex-start
     flex-grow: 1
+
+    .specSection
+      display: flex
+      flex-direction: column
+      flex-wrap: wrap
+      align-content: flex-start
+      flex-grow: 1
+
+      .blockSectionHeader
+        margin-top: 15px
+        margin-left: 15px
+        margin-right: 15px
+        padding-left: 5px
+        line-height: 35px
+        color: #414141
+        font-size: 16px
+        font-weight: 300
+        border-bottom: 1px solid #959595
+
+        .bold
+          font-weight: 500
+
+        .exactTitleField, .subsetTitleField, .baselineTitleField, .expandedTitleField
+          + .exactTitleField:before
+            content: ' and '
+
+          + .subsetTitleField:before, + .expandedTitleField:before, + .baselineTitleField:before
+            content: ' or '
+
+      .specs
+        display: flex
+        flex-direction: row
+        flex-wrap: wrap
+        align-content: flex-start
+        flex-grow: 1
 
 .visualizationBlocksContainer
   display: flex
   flex-direction: column
   position: relative
 
-  width: 33.33%
   padding: 15px
+
+  &.exact
+    width: 50%
+
+  &.subset, &.baseline
+    width: 33.33333%
+
+  &.expanded
+    width: 20%
 
   &:hover .starContainer i
     opacity: 0.5
