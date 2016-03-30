@@ -15,12 +15,12 @@ const recommendationTypes = [
   {
     id: 'baseline',
     label: 'Baseline',
-    selected: false
+    selected: true
   },
   {
     id: 'subset',
     label: 'Subset',
-    selected: false
+    selected: true
   },
   {
     id: 'exact',
