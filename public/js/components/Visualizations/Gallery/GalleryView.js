@@ -86,6 +86,7 @@ export class GalleryView extends Component {
     var selectedFieldProperties = gallerySelector.fieldProperties
       .filter((property) => property.selected);
 
+    const areFieldsSelected = selectedFieldProperties.length > 0;
     const baselineSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'baseline');
     const subsetSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'subset');
     const exactSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'exact');
@@ -199,14 +200,25 @@ export class GalleryView extends Component {
             { !specs.isFetching && baselineSpecs.length > 0 &&
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
-                  <span className={ styles.bold }>Individual Matches: </span>
-                  Including <span className={ styles.bold }>only</span> {
-                  selectedFieldProperties.map((field) =>
-                    <span key={ `span-individual-match-title-${ field.name }`} className={ `${ styles.baselineTitleField }`}>
-                      { field.name }
+                  { areFieldsSelected &&
+                    <span>
+                      <span className={ styles.bold }>Individual Matches: </span>
+                      Including <span className={ styles.bold }>only</span> {
+                        selectedFieldProperties.map((field) =>
+                          <span key={ `span-individual-match-title-${ field.name }`} className={ `${ styles.baselineTitleField }` }>
+                            { field.name }
+                          </span>
+                        )
+                      }
                     </span>
-                  )
-                }</div>
+                  }
+                  { !areFieldsSelected &&
+                    <span>
+                      <span className={ styles.bold }>Default Matches: </span>
+                      Summary of each field
+                    </span>
+                  }
+                </div>
                 <div className={ styles.specs + ' ' + styles.baseline }>
                   { baselineSpecs.map((spec) =>
                     <VisualizationBlock
