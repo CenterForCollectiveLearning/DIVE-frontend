@@ -45,6 +45,7 @@
     + .sortOrder
       margin-left: 8px
       margin-top: 1px
+      flex-shrink: 0
 
 .conditionalInput
   width: 80%
@@ -140,7 +141,7 @@ div.conditionalCombinator
   .chartsContainer
     +fillContainer
     padding: 10px
-    background-color: white
+    background-color: rgba(255, 255, 255, 0.1)
 
   .innerVisualizationViewContainer
     +fillContainer
@@ -152,8 +153,7 @@ div.conditionalCombinator
     flex-grow: 1
 
     min-height: 400px
-    padding-top: 10px
-    padding-bottom: 30px
+    padding-bottom: 20px
 
     .header
       text-align: center
@@ -286,6 +286,8 @@ div.conditionalCombinator
 
   .header
     margin-top: 1px
+    padding-right: 13px
+    padding-left: 13px
     font-size: 13px
     overflow: hidden
     text-overflow: ellipsis
