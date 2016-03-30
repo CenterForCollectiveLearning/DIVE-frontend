@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from './Visualizations.sass';
 
+import { getPalette } from '../../helpers/helpers';
+
 import TreeMap from './Charts/TreeMap';
 import PieChart from './Charts/PieChart';
 import ColumnChart from './Charts/ColumnChart';
@@ -91,7 +93,17 @@ export default class Visualization extends Component {
       finalDataArray = [ header, ...sortedDataPoints ];
     }
 
+    var hashElements;
+    if (labels && labels.x && labels.y) {
+      hashElements = [labels.x, labels.y];
+    } else {
+      hashElements = [finalDataArray[0][0], finalDataArray[0][1]];
+    }
+
+    const colors = getPalette(hashElements);
+
     var options = {
+      colors: colors,
       backgroundColor: 'transparent',
       headerColor: 'white',
       headerHeight: 0,
@@ -103,8 +115,9 @@ export default class Visualization extends Component {
       },
       chartArea: {
         top: '5%',
-        width: '70%',
-        height: '80%'
+        height: '78%',
+        left: '15%',
+        width: '80%'
       },
       legend: {
         textStyle: {
@@ -112,24 +125,40 @@ export default class Visualization extends Component {
         }
       },
       hAxis: {
+        title: labels && labels.x ? labels.x : finalDataArray[0][0],
+        titleTextStyle: {
+          color: "#333",
+          italic: false,
+          bold: true
+        },
         textStyle: {
-          color: "#333"
+          color: "#777",
+          italic: false
         }
       },
       vAxis: {
+        title: labels && labels.y ? labels.y : finalDataArray[0][1],
+        titleTextStyle: {
+          color: "#333",
+          italic: false,
+          bold: true
+        },
         textStyle: {
-          color: "#333"
+          color: "#777",
+          italic: false
         }
       },
       vAxes: [
         {
           textStyle: {
-            color: "#333"
+            color: "#777",
+            italic: false
           }
         },
         {
           textStyle: {
-            color: "#333"
+            color: "#777",
+            italic: false
           }
         }
       ]
