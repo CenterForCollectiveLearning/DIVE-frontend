@@ -5,7 +5,6 @@ import styles from '../Visualizations.sass';
 var Chart = require('react-google-charts').Chart;
 
 export default class ColumnChart extends Component {
-
   render() {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options, labels } = this.props;
 
@@ -19,22 +18,35 @@ export default class ColumnChart extends Component {
           const formattedBin = `${ bin[0] } - ${ bin[1] }`;
           return [ formattedBin, value ];
       })
-      finalData = [ header, ...formattedValues ]
+      finalData = [ header, ...formattedValues ];
     }
 
     const columnChartOptions = {
       ...options,
       hAxis: {
-        title: labels ? labels.x : finalData[0][0],
+        title: labels && labels.x ? labels.x : finalData[0][0],
+        textStyle: {
+          color: '#888'
+        },
         titleTextStyle: {
           color: '#333',
           bold: true,
           italic: false
         }
       },
+      vAxes: [
+        {
+          textStyle: {
+            color: '#888'
+          }
+        }
+      ],
       vAxis: {
         minValue: 0,
-        title: labels ? labels.y : finalData[0][1],
+        title: labels && labels.y ? labels.y : finalData[0][1],
+        textStyle: {
+          color: '#888'
+        },
         titleTextStyle: {
           color: '#333',
           bold: true,
