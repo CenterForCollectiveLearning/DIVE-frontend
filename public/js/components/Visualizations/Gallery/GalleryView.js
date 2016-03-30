@@ -148,7 +148,7 @@ export class GalleryView extends Component {
                   <span className={ styles.bold }>Exact Matches: </span>
                   Including {
                   selectedFieldProperties.map((field) =>
-                    <span className={ `${ styles.exactTitleField }`}>
+                    <span key={ `span-exact-match-title-${ field.name }`} className={ `${ styles.exactTitleField }`}>
                       { field.name }
                     </span>
                   )
@@ -175,7 +175,7 @@ export class GalleryView extends Component {
                   <span className={ styles.bold }>Close Matches: </span>
                   Including two or more of {
                   selectedFieldProperties.map((field) =>
-                    <span className={ `${ styles.subsetTitleField }`}>
+                    <span key={ `span-close-match-title-${ field.name }`} className={ `${ styles.subsetTitleField }`}>
                       { field.name }
                     </span>
                   )
@@ -202,7 +202,7 @@ export class GalleryView extends Component {
                   <span className={ styles.bold }>Individual Matches: </span>
                   Including <span className={ styles.bold }>only</span> {
                   selectedFieldProperties.map((field) =>
-                    <span className={ `${ styles.baselineTitleField }`}>
+                    <span key={ `span-individual-match-title-${ field.name }`} className={ `${ styles.baselineTitleField }`}>
                       { field.name }
                     </span>
                   )
@@ -229,7 +229,7 @@ export class GalleryView extends Component {
                 <span className={ styles.bold }>Expanded Matches: </span>
                   Including {
                   selectedFieldProperties.map((field) =>
-                    <span className={ `${ styles.expandedTitleField }`}>
+                    <span key={ `span-expanded-match-title-${ field.name }`} className={ `${ styles.expandedTitleField }`}>
                       { field.name }
                     </span>
                   )

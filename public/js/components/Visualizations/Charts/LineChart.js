@@ -12,9 +12,8 @@ export default class LineChart extends Component {
     const lineChartOptions = {
       ...options,
       pointSize: 0,
-      hAxis: { title: labels ? labels.x : data[0][0]},
-      vAxis: { title: labels ? labels.y : data[0][1]},
       legend: {
+        ...options.legend,
         position: 'none'
       }
     }
