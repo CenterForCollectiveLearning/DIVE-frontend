@@ -10,6 +10,7 @@ import ColumnChart from './Charts/ColumnChart';
 import StackedColumnChart from './Charts/StackedColumnChart';
 import ScatterChart from './Charts/ScatterChart';
 import LineChart from './Charts/LineChart';
+import Histogram from './Charts/Histogram';
 
 export default class Visualization extends Component {
   constructor(props) {
@@ -280,7 +281,16 @@ export default class Visualization extends Component {
             + ' ' + styles[validVisualizationTypes[0]]
             + (visualizationClassName ? ' ' + visualizationClassName : '')
           }>
-            { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
+          { (validVisualizationTypes[0] == 'hist') &&
+            <Histogram
+              chartId={ `spec-bar-${ chartId }` }
+              data={ finalDataArray }
+              bins={ spec.data.bins }
+              labels={ labels }
+              options={ options }
+              isMinimalView={ isMinimalView }/>
+          }
+            { (validVisualizationTypes[0] == 'bar') &&
               <ColumnChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
