@@ -146,7 +146,7 @@ export class GalleryView extends Component {
             { !specs.isFetching && exactSpecs.length > 0 &&
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
-                  <span className={ styles.bold }>Exact Matches: </span>
+                  <div className={ styles.blockSectionHeaderTitle }>Exact Matches</div>
                   Including {
                   selectedFieldProperties.map((field) =>
                     <span key={ `span-exact-match-title-${ field.name }`} className={ `${ styles.exactTitleField }`}>
@@ -173,7 +173,7 @@ export class GalleryView extends Component {
             { !specs.isFetching && subsetSpecs.length > 0 &&
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
-                  <span className={ styles.bold }>Close Matches: </span>
+                  <div className={ styles.blockSectionHeaderTitle }>Close Matches</div>
                   Including two or more of {
                   selectedFieldProperties.map((field) =>
                     <span key={ `span-close-match-title-${ field.name }`} className={ `${ styles.subsetTitleField }`}>
@@ -202,8 +202,8 @@ export class GalleryView extends Component {
                 <div className={ styles.blockSectionHeader }>
                   { areFieldsSelected &&
                     <span>
-                      <span className={ styles.bold }>Individual Matches: </span>
-                      Including <span className={ styles.bold }>only</span> {
+                      <div className={ styles.blockSectionHeaderTitle }>Individual Matches</div>
+                      Including <strong>only</strong> {
                         selectedFieldProperties.map((field) =>
                           <span key={ `span-individual-match-title-${ field.name }`} className={ `${ styles.baselineTitleField }` }>
                             { field.name }
@@ -214,7 +214,7 @@ export class GalleryView extends Component {
                   }
                   { !areFieldsSelected &&
                     <span>
-                      <span className={ styles.bold }>Default Matches: </span>
+                      <div className={ styles.blockSectionHeaderTitle }>Default Matches</div>
                       Summary of each field
                     </span>
                   }
@@ -238,7 +238,7 @@ export class GalleryView extends Component {
             { !specs.isFetching && expandedSpecs.length > 0 &&
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
-                <span className={ styles.bold }>Expanded Matches: </span>
+                  <div className={ styles.blockSectionHeaderTitle }>Expanded Matches</div>
                   Including {
                   selectedFieldProperties.map((field) =>
                     <span key={ `span-expanded-match-title-${ field.name }`} className={ `${ styles.expandedTitleField }`}>
