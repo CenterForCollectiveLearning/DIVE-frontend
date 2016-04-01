@@ -197,7 +197,7 @@ export class GalleryView extends Component {
                 </div>
               </div>
             }
-            { !specs.isFetching && baselineSpecs.length > 0 &&
+            { !specs.isFetching && baselineSpecs.length > 0 && selectedFieldProperties.length > 1 &&
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
                   { areFieldsSelected &&

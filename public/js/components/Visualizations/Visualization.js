@@ -52,7 +52,7 @@ export default class Visualization extends Component {
         treemap: 400
       }
     }
-    const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
+    const { data, bins, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
 
     var finalDataArray = data;
 
@@ -250,14 +250,11 @@ export default class Visualization extends Component {
         )
       );
 
-
     var tooMuchDataString = '';
     if (tooMuchDataToPreview || tooMuchDataToShowFull) {
       tooMuchDataString = 'Top 20';
       finalDataArray = data.slice(0, 20);
     }
-
-    console.log(finalDataArray);
 
     const noData = finalDataArray.length == 1;
     if (noData) {
@@ -288,15 +285,15 @@ export default class Visualization extends Component {
             + ' ' + styles[validVisualizationTypes[0]]
             + (visualizationClassName ? ' ' + visualizationClassName : '')
           }>
-          { (validVisualizationTypes[0] == 'hist') &&
-            <Histogram
-              chartId={ `spec-bar-${ chartId }` }
-              data={ finalDataArray }
-              bins={ spec.data.bins }
-              labels={ labels }
-              options={ options }
-              isMinimalView={ isMinimalView }/>
-          }
+            { (validVisualizationTypes[0] == 'hist') &&
+              <Histogram
+                chartId={ `spec-hist-${ chartId }` }
+                data={ finalDataArray }
+                bins={ bins }
+                labels={ labels }
+                options={ options }
+                isMinimalView={ isMinimalView }/>
+            }
             { (validVisualizationTypes[0] == 'bar') &&
               <ColumnChart
                 chartId={ `spec-bar-${ chartId }` }
@@ -364,6 +361,7 @@ Visualization.propTypes = {
   onClick: PropTypes.func,
   showHeader: PropTypes.bool,
   visualizationTypes: PropTypes.array,
+  bins: PropTypes.array,
   sortOrders: PropTypes.array,
   sortFields: PropTypes.array
 };

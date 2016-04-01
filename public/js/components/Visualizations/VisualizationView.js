@@ -26,6 +26,7 @@ export default class VisualizationView extends Component {
                 containerClassName={ styles.visualizationContainer }
                 visualizationTypes={ visualizationTypes }
                 spec={ visualization.spec }
+                bins={ visualization.bins }
                 data={ visualization.visualizationData }
                 sortOrders={ visualization.sortOrders }
                 sortFields={ visualization.sortFields }/>

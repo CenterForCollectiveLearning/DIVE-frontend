@@ -25,6 +25,7 @@ const baseConditional = {
 const baseState = {
   tableData: [],
   visualizationData: [],
+  bins: [],
   sortFields: [],
   sortOrders: [],
   spec: {},
@@ -84,6 +85,7 @@ export default function visualization(state = baseState, action) {
         exported: action.exported,
         exportedSpecId: action.exportedSpecId,
         spec: action.spec,
+        bins: action.bins,
         tableData: action.tableData,
         visualizationData: action.visualizationData,
         sortFields: SORT_FIELDS,
