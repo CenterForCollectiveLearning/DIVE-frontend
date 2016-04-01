@@ -82,7 +82,7 @@ export class BuilderSidebar extends Component {
             </div>
           </SidebarGroup>
         }
-        { visualization.visualizationType == 'bar' &&
+        { visualization.visualizationType == 'hist' &&
           <BinningSelector
             config={ visualization.spec.config }
             selectBinningConfig={ selectVisualizationConfig } />

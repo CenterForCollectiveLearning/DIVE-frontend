@@ -6,11 +6,12 @@ import { getPalette } from '../../../helpers/helpers';
 
 var Chart = require('react-google-charts').Chart;
 
-export default class ColumnChart extends Component {
+export default class Histogram extends Component {
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options, labels } = this.props;
+    const { data, bins, fieldNames, generatingProcedure, isMinimalView, chartId, options, labels } = this.props;
 
     var finalData = data;
+
     var hashElements;
     if (labels && labels.x && labels.y) {
       hashElements = [labels.x, labels.y];
@@ -20,11 +21,14 @@ export default class ColumnChart extends Component {
 
     const colors = getPalette(hashElements);
 
-    const columnChartOptions = {
+    const histogramOptions = {
       ...options,
       colors: colors,
       hAxis: {
         title: labels && labels.x ? labels.x : finalData[0][0],
+        ticks: bins,
+        slantedText: true,
+        slantedTextAngle: 45,
         textStyle: {
           color: '#888'
         },
@@ -42,6 +46,9 @@ export default class ColumnChart extends Component {
         }
       ],
       vAxis: {
+        gridlines: {
+          color: 'transparent'
+        },
         minValue: 0,
         title: labels && labels.y ? labels.y : finalData[0][1],
         textStyle: {
@@ -53,26 +60,30 @@ export default class ColumnChart extends Component {
           italic: false
         }
       },
+      tooltip: {
+        isHtml: true
+      },
       legend: {
         position: 'none'
       }
     };
 
     return (
-      <Chart chartType="ColumnChart" chartVersion="43" options={ columnChartOptions } data={ finalData } graph_id={ chartId }/>
+      <Chart chartType="ColumnChart" chartVersion="43" options={ histogramOptions } data={ finalData } graph_id={ chartId }/>
     );
   }
 }
 
-ColumnChart.propTypes = {
+Histogram.propTypes = {
   chartId: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
+  bins: PropTypes.array.isRequired,
   isMinimalView: PropTypes.bool,
   options: PropTypes.object,
   labels: PropTypes.object
 };
 
-ColumnChart.defaultProps = {
+Histogram.defaultProps = {
   isMinimalView: false,
   options: {},
   labels: {}
