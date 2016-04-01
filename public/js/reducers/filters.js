@@ -23,7 +23,7 @@ const visualizationTypes = [
   },
   {
     type: "hist",
-    imageName: "bar",
+    imageName: "hist",
     label: "Histogram",
     selected: false,
     disabled: false

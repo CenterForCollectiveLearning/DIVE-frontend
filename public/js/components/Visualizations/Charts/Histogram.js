@@ -10,18 +10,7 @@ export default class Histogram extends Component {
   render() {
     const { data, bins, fieldNames, generatingProcedure, isMinimalView, chartId, options, labels } = this.props;
 
-    const firstElement = data[1][0];
     var finalData = data;
-    if (Array.isArray(firstElement)) {
-      const header = data[0];
-      const formattedValues = data.slice(1).map(function(d) {
-          const bin = d[0];
-          const value = d[1];
-          const formattedBin = `${ bin[0] } - ${ bin[1] }`;
-          return [ formattedBin, value ];
-      })
-      finalData = [ header, ...formattedValues ];
-    }
 
     var hashElements;
     if (labels && labels.x && labels.y) {
@@ -79,6 +68,7 @@ export default class Histogram extends Component {
       }
     };
 
+    console.log('NEW DATA', finalData);
     return (
       <Chart chartType="ColumnChart" chartVersion="43" options={ histogramOptions } data={ finalData } graph_id={ chartId }/>
     );

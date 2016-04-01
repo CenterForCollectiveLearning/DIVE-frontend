@@ -64,7 +64,9 @@ export default function visualization(state = baseState, action) {
       return { ...state, isFetching: true };
 
     case RECEIVE_VISUALIZATION_DATA:
-      const headers = action.visualizationData[0];
+      const headers = action.visualizationData[0].filter((header) =>
+        (typeof header === 'string' || header instanceof String)
+      );
 
       const SORT_FIELDS = headers.map((field, index) => {
         var selected = false;

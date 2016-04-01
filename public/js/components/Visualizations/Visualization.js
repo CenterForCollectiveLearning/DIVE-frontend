@@ -257,6 +257,8 @@ export default class Visualization extends Component {
       finalDataArray = data.slice(0, 20);
     }
 
+    console.log(finalDataArray);
+
     const noData = finalDataArray.length == 1;
     if (noData) {
       return (
