@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
 
 import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectFieldPropertyValue, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
-import { selectVisualizationType, selectRecommendationType } from '../../../actions/VisualizationActions';
+import { selectVisualizationType } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
 import _ from 'underscore';
@@ -70,7 +70,7 @@ export class GallerySidebar extends Component {
   }
 
   render() {
-    const { visualizationTypes, datasetSelector, gallerySelector, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectAggregationFunction, selectRecommendationType, recommendationTypes } = this.props;
+    const { visualizationTypes, datasetSelector, gallerySelector, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectAggregationFunction } = this.props;
 
     return (
       <Sidebar>
@@ -85,13 +85,6 @@ export class GallerySidebar extends Component {
               onChange={ selectVisualizationType } />
           </SidebarGroup>
         }
-        <SidebarGroup heading="Recommendation Mode">
-          <ToggleButtonGroup
-            toggleItems={ recommendationTypes }
-            valueMember="id"
-            displayTextMember="label"
-            onChange={ selectRecommendationType } />
-        </SidebarGroup>
         { gallerySelector.fieldProperties.length > 0 &&
           <SidebarGroup heading="Find Visualizations by Field">
             { gallerySelector.fieldProperties.filter((property) => property.generalType == 'c').length > 0 &&
@@ -152,8 +145,7 @@ function mapStateToProps(state) {
     project,
     datasetSelector,
     gallerySelector,
-    filters,
-    recommendationTypes: gallerySelector.recommendationTypes
+    filters
   };
 }
 
@@ -163,6 +155,5 @@ export default connect(mapStateToProps, {
   selectFieldProperty,
   selectFieldPropertyValue,
   selectAggregationFunction,
-  selectRecommendationType,
   pushState
 })(GallerySidebar);
