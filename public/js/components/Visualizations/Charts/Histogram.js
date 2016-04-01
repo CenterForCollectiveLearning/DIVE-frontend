@@ -38,6 +38,8 @@ export default class Histogram extends Component {
       hAxis: {
         title: labels && labels.x ? labels.x : finalData[0][0],
         ticks: bins,
+        slantedText: true,
+        slantedTextAngle: 45,
         textStyle: {
           color: '#888'
         },
@@ -55,6 +57,9 @@ export default class Histogram extends Component {
         }
       ],
       vAxis: {
+        gridlines: {
+          color: 'transparent'
+        },
         minValue: 0,
         title: labels && labels.y ? labels.y : finalData[0][1],
         textStyle: {

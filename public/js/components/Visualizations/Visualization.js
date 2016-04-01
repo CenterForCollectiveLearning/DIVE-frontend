@@ -178,7 +178,11 @@ export default class Visualization extends Component {
         enableInteractivity: false,
         fontSize: 0,
         hAxis: {
-          textPosition: 'none'
+          textPosition: 'none',
+          gridlines: {
+            count: 0,
+            color: 'transparent'
+          },
         },
         height: 140,
         highlightOnMouseOver: false,
@@ -199,7 +203,8 @@ export default class Visualization extends Component {
           baselineColor: 'transparent',
           textPosition: 'none',
           gridlines: {
-            count: 0
+            count: 0,
+            color: 'transparent'
           }
         },
         vAxes: [
