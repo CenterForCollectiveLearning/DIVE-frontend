@@ -92,6 +92,9 @@ export class GalleryView extends Component {
     const exactSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'exact');
     const expandedSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'expanded');
 
+    console.log(filteredSpecs.length);
+    console.log(baselineSpecs.length);
+
     return (
       <div className={ styles.specsContainer }>
         <div className={ styles.innerSpecsContainer }>
@@ -197,7 +200,7 @@ export class GalleryView extends Component {
                 </div>
               </div>
             }
-            { !specs.isFetching && baselineSpecs.length > 0 && selectedFieldProperties.length > 1 &&
+            { !specs.isFetching && baselineSpecs.length > 0 && (selectedFieldProperties.length > 1 || selectedFieldProperties.length == 0)&&
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
                   { areFieldsSelected &&
