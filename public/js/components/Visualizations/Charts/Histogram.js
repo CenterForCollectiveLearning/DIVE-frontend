@@ -68,6 +68,10 @@ export default class Histogram extends Component {
       }
     };
 
+    if (!isMinimalView) {
+
+    }
+
     return (
       <Chart chartType="ColumnChart" chartVersion="43" options={ histogramOptions } data={ finalData } graph_id={ chartId }/>
     );
