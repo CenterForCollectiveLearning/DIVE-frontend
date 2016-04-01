@@ -47,11 +47,12 @@ function errorSpecsDispatcher(data) {
 }
 
 function receiveSpecsDispatcher(params, json) {
+  const recommendationLevel = params.recommendationType ? params.recommendationType.level : null;
   if (json && !json.error) {
     return {
       ...params,
       type: RECEIVE_SPECS,
-      specs: json,
+      specs: json.map((spec) => new Object({ ...spec, recommendationLevel })),
       receivedAt: Date.now()
     };
   }
@@ -65,9 +66,9 @@ function receiveSpecsDispatcher(params, json) {
   };
 }
 
-export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommendationTypes = ['exact']) {
+export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommendationType = null) {
   const selectedFieldProperties = fieldProperties.filter((property) => property.selected);
-  const selectedRecommendationTypes = _.pluck(recommendationTypes.filter((property) => property.selected), 'id');
+  const selectedRecommendationType = recommendationType ? recommendationType.id : null;
 
   const fieldAggPairs = selectedFieldProperties
     .map((property) =>
@@ -96,7 +97,7 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommend
     'project_id': projectId,
     'dataset_id': datasetId,
     'field_agg_pairs': fieldAggPairs,
-    'recommendation_types': selectedRecommendationTypes,
+    'recommendation_types': [selectedRecommendationType],
     'conditionals': conditionals
   };
 
@@ -109,7 +110,7 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommend
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json())
       .then(function(json) {
-        const dispatchParams = { project_id: projectId, dataset_id: datasetId };
+        const dispatchParams = { project_id: projectId, dataset_id: datasetId, recommendationType: recommendationType };
         if (json.compute) {
           dispatch(pollForTask(json.taskId, REQUEST_SPECS, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher, errorSpecsDispatcher));
         } else {
