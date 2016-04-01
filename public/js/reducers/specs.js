@@ -8,7 +8,6 @@ import {
 
 const baseState = {
   isFetching: false,
-  recommendationLevel: null,
   loaded: false,
   items: [],
   updatedAt: 0,
@@ -28,11 +27,7 @@ export default function specs(state=baseState, action) {
       return state;
 
     case RECEIVE_SPECS:
-      var allSpecs = action.specs;
-      if (action.recommendationType.level && state.items) {
-        allSpecs = [ ...state.items, ...allSpecs ];
-      }
-      return { ...state, isFetching: false, items: allSpecs, recommendationLevel: action.recommendationType.level, updatedAt: action.receivedAt, loaded: true, progress: null, error: null };
+      return { ...state, isFetching: false, items: action.specs, updatedAt: action.receivedAt, loaded: true, progress: null, error: null };
 
     case FAILED_RECEIVE_SPECS:
       return { ...state, isFetching: false, loaded: true, error: action.error };
