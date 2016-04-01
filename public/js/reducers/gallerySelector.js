@@ -13,31 +13,31 @@ import {
 
 const recommendationTypes = [
   {
-    id: 'baseline',
-    label: 'Baseline',
-    selected: true
+    id: 'exact',
+    level: 0
   },
   {
     id: 'subset',
-    label: 'Subset',
-    selected: true
+    level: 1
   },
   {
-    id: 'exact',
-    label: 'Exact',
-    selected: true
+    id: 'baseline',
+    level: 2
   },
   {
     id: 'expanded',
-    label: 'Expanded',
-    selected: false
+    level: 3
   },
 ]
 
 const baseState = {
   title: [],
   datasetId: null,
-  recommendationTypes: recommendationTypes,
+  recommendations: {
+    types: recommendationTypes,
+    currentLevel: 0,
+    maxLevel: 3
+  },
   fieldProperties: [],
   originalFieldProperties: [],
   specs: [],
@@ -150,7 +150,12 @@ export default function gallerySelector(state = baseState, action) {
         return sortSpecsByFunction(selectedSortingFunction, specA, specB);
       };
 
-      return { ...state, specs: action.specs.sort(defaultSortSpecs) };
+      var allSpecs = action.specs;
+      if (action.recommendationType.level && state.specs) {
+        allSpecs = [ ...state.specs, ...allSpecs ];
+      }
+
+      return { ...state, specs: allSpecs.sort(defaultSortSpecs) };
 
     case SELECT_FIELD_PROPERTY:
       const fieldProperties = state.fieldProperties.map((property) =>
