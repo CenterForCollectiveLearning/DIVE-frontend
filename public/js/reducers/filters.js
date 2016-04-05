@@ -22,6 +22,13 @@ const visualizationTypes = [
     disabled: false
   },
   {
+    type: "hist",
+    imageName: "hist",
+    label: "Histogram",
+    selected: false,
+    disabled: false
+  },
+  {
     type: "pie",
     imageName: "pie",
     label: "Pie",

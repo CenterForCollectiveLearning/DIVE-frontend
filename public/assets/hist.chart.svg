@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="33px" height="33px" viewBox="0 0 33 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.6.1 (26313) - http://www.bohemiancoding.com/sketch -->
+    <title>bar.chart</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="bar.chart" transform="translate(4.000000, 5.000000)" stroke="#5D5D5D">
+            <g id="Page-1">
+                <g id="barchart">
+                    <g id="Group" transform="translate(2.678571, 0.690909)">
+                        <path d="M0.729813765,8.76585992 L2.03998457,8.76585992 L3.35015538,8.76585992 L3.35015538,16.6350265 L0.729813765,16.6350265 L0.729813765,8.76585992 Z" id="Rectangle-360"></path>
+                        <rect id="Rectangle-360-Copy" x="8.69565217" y="6.75070839" width="2.62034161" height="9.8843186"></rect>
+                        <path d="M11.3159938,10.332665 L12.365154,10.332665 L13.9363354,10.332665 L13.9363354,16.635027 L11.3159938,16.635027 L11.3159938,10.332665 Z" id="Rectangle-360-Copy-2"></path>
+                        <path d="M13.9363354,13.483846 L14.9854957,13.483846 L16.556677,13.483846 L16.556677,16.635027 L13.9363354,16.635027 L13.9363354,13.483846 Z" id="Rectangle-360-Copy-2"></path>
+                        <path d="M16.6090831,14.1060606 L17.6582433,14.1060606 L19.2294247,14.1060606 L19.2294247,16.635027 L16.6090831,16.635027 L16.6090831,14.1060606 Z" id="Rectangle-360-Copy-2"></path>
+                        <rect id="Rectangle-360-Copy-3" x="3.40256191" y="0.70525383" width="2.62034161" height="15.9297731"></rect>
+                        <rect id="Rectangle-360-Copy-3" x="6.07531056" y="4.03030303" width="2.62034161" height="12.6047239"></rect>
+                    </g>
+                    <path d="M1.69642857,17.4886364 L1.69642857,1.7272727" id="Line-Copy-5" stroke-width="0.65" fill="#5D5D5D"></path>
+                    <path d="M1.41692547,17.4886364 L24.4759317,17.4886364" id="Line-Copy-4" stroke-width="0.65" fill="#5D5D5D"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

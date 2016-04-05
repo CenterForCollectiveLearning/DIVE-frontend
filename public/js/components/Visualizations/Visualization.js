@@ -10,6 +10,7 @@ import ColumnChart from './Charts/ColumnChart';
 import StackedColumnChart from './Charts/StackedColumnChart';
 import ScatterChart from './Charts/ScatterChart';
 import LineChart from './Charts/LineChart';
+import Histogram from './Charts/Histogram';
 
 export default class Visualization extends Component {
   constructor(props) {
@@ -51,7 +52,7 @@ export default class Visualization extends Component {
         treemap: 400
       }
     }
-    const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
+    const { data, bins, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
 
     var finalDataArray = data;
 
@@ -177,7 +178,11 @@ export default class Visualization extends Component {
         enableInteractivity: false,
         fontSize: 0,
         hAxis: {
-          textPosition: 'none'
+          textPosition: 'none',
+          gridlines: {
+            count: 0,
+            color: 'transparent'
+          },
         },
         height: 140,
         highlightOnMouseOver: false,
@@ -198,7 +203,8 @@ export default class Visualization extends Component {
           baselineColor: 'transparent',
           textPosition: 'none',
           gridlines: {
-            count: 0
+            count: 0,
+            color: 'transparent'
           }
         },
         vAxes: [
@@ -244,7 +250,6 @@ export default class Visualization extends Component {
         )
       );
 
-
     var tooMuchDataString = '';
     if (tooMuchDataToPreview || tooMuchDataToShowFull) {
       tooMuchDataString = 'Top 20';
@@ -280,7 +285,16 @@ export default class Visualization extends Component {
             + ' ' + styles[validVisualizationTypes[0]]
             + (visualizationClassName ? ' ' + visualizationClassName : '')
           }>
-            { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
+            { (validVisualizationTypes[0] == 'hist') &&
+              <Histogram
+                chartId={ `spec-hist-${ chartId }` }
+                data={ finalDataArray }
+                bins={ bins }
+                labels={ labels }
+                options={ options }
+                isMinimalView={ isMinimalView }/>
+            }
+            { (validVisualizationTypes[0] == 'bar') &&
               <ColumnChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
@@ -347,6 +361,7 @@ Visualization.propTypes = {
   onClick: PropTypes.func,
   showHeader: PropTypes.bool,
   visualizationTypes: PropTypes.array,
+  bins: PropTypes.array,
   sortOrders: PropTypes.array,
   sortFields: PropTypes.array
 };
