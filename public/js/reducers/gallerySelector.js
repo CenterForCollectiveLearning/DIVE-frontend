@@ -27,7 +27,7 @@ const recommendationTypes = [
   {
     id: 'expanded',
     level: 3
-  },
+  }
 ]
 
 const baseState = {
@@ -182,7 +182,7 @@ export default function gallerySelector(state = baseState, action) {
         [ ...titleVisualizationStrings, ...selectedPropertyStrings ]
         : defaultTitle;
 
-      return { ...state, fieldProperties: fieldProperties, title: title, updatedAt: Date.now() };
+      return { ...state, fieldProperties: fieldProperties, title: title, specs: [], updatedAt: Date.now() };
 
     case SELECT_FIELD_PROPERTY_VALUE:
       const fieldPropertiesWithNewPropertyValue = state.fieldProperties.map((property) =>

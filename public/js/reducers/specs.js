@@ -3,6 +3,7 @@ import {
   PROGRESS_SPECS,
   RECEIVE_SPECS,
   FAILED_RECEIVE_SPECS,
+  SELECT_FIELD_PROPERTY,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -36,6 +37,9 @@ export default function specs(state=baseState, action) {
 
     case FAILED_RECEIVE_SPECS:
       return { ...state, isFetching: false, loaded: true, error: action.error };
+
+    case SELECT_FIELD_PROPERTY:
+      return baseState;
 
     case WIPE_PROJECT_STATE:
       return baseState;
