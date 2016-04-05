@@ -23,8 +23,8 @@ export class GalleryView extends Component {
       fetchDatasets(project.properties.id);
     }
 
-    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && gallerySelector.recommendationTypes.length && notLoadedAndNotFetching) {
-      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendationTypes);
+    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && notLoadedAndNotFetching) {
+      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendations.types[0]);
     }
 
     clearVisualization();
@@ -41,8 +41,14 @@ export class GalleryView extends Component {
       fetchDatasets(project.properties.id);
     }
 
-    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && (datasetChanged || gallerySelectorChanged || notLoadedAndNotFetching)) {
-      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendationTypes);
+    const specRecommendationLevelIncreasedLessThanMaxLevel = specs.recommendationLevel > previousProps.specs.recommendationLevel && specs.recommendationLevel < gallerySelector.recommendations.maxLevel;
+
+    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && !specs.isFetching) {
+      if (datasetChanged || gallerySelectorChanged || notLoadedAndNotFetching) {
+        fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendations.types[specs.recommendationLevel == null ? 0 : specs.recommendationLevel]);
+      } else if (specRecommendationLevelIncreasedLessThanMaxLevel || (specs.recommendationLevel != null && previousProps.specs.recommendationLevel == null)) {
+        fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendations.types[specs.recommendationLevel == null ? 0 : specs.recommendationLevel + 1]);
+      }
     }
 
     if (project.properties.id && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {
@@ -137,26 +143,21 @@ export class GalleryView extends Component {
               </div>
             }/>
           <div className={ styles.specContainer }>
-            { specs.isFetching &&
-              <div className={ styles.watermark }>
-                { specs.progress != null ? specs.progress : 'Fetching visualizations…' }
-              </div>
-            }
             { !specs.isFetching && filteredSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>
             }
-
-            { !specs.isFetching && exactSpecs.length > 0 &&
+            { exactSpecs.length > 0 &&
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
                   <div className={ styles.blockSectionHeaderTitle }>Exact Matches</div>
                   Including {
-                  selectedFieldProperties.map((field) =>
-                    <span key={ `span-exact-match-title-${ field.name }`} className={ `${ styles.exactTitleField }`}>
-                      { field.name }
-                    </span>
-                  )
-                }</div>
+                    selectedFieldProperties.map((field) =>
+                      <span key={ `span-exact-match-title-${ field.name }`} className={ `${ styles.exactTitleField }`}>
+                        { field.name }
+                      </span>
+                    )
+                  }
+                </div>
                 <div className={ styles.specs + ' ' + styles.exact }>
                   { exactSpecs.map((spec) =>
                     <VisualizationBlock
@@ -173,7 +174,7 @@ export class GalleryView extends Component {
                 </div>
               </div>
             }
-            { !specs.isFetching && subsetSpecs.length > 0 &&
+            { subsetSpecs.length > 0 &&
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
                   <div className={ styles.blockSectionHeaderTitle }>Close Matches</div>
@@ -200,7 +201,7 @@ export class GalleryView extends Component {
                 </div>
               </div>
             }
-            { !specs.isFetching && baselineSpecs.length > 0 && (selectedFieldProperties.length > 1 || selectedFieldProperties.length == 0)&&
+            { !specs.isFetching && baselineSpecs.length > 1 && (selectedFieldProperties.length > 1 || selectedFieldProperties.length == 0)&&
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
                   { areFieldsSelected &&
@@ -238,7 +239,7 @@ export class GalleryView extends Component {
                 </div>
               </div>
             }
-            { !specs.isFetching && expandedSpecs.length > 0 &&
+            { expandedSpecs.length > 0 &&
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
                   <div className={ styles.blockSectionHeaderTitle }>Expanded Matches</div>
@@ -263,6 +264,11 @@ export class GalleryView extends Component {
                     )
                   }
                 </div>
+              </div>
+            }
+            { specs.isFetching &&
+              <div className={ styles.watermark }>
+                { specs.progress != null ? specs.progress : 'Fetching visualizations…' }
               </div>
             }
           </div>
