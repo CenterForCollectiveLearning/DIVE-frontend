@@ -21,7 +21,7 @@ export default class Histogram extends Component {
 
     const colors = getPalette(hashElements);
 
-    const histogramOptions = {
+    const fullHistogramOptions = {
       ...options,
       colors: colors,
       hAxis: {
@@ -68,9 +68,7 @@ export default class Histogram extends Component {
       }
     };
 
-    if (!isMinimalView) {
-
-    }
+    const histogramOptions = isMinimalView ? options : fullHistogramOptions;
 
     return (
       <Chart chartType="ColumnChart" chartVersion="43" options={ histogramOptions } data={ finalData } graph_id={ chartId }/>

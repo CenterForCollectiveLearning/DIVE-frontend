@@ -178,6 +178,7 @@ export default class Visualization extends Component {
         enableInteractivity: false,
         fontSize: 0,
         hAxis: {
+          baselineColor: 'transparent',
           textPosition: 'none',
           gridlines: {
             count: 0,
