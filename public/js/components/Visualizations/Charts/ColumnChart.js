@@ -20,7 +20,7 @@ export default class ColumnChart extends Component {
 
     const colors = getPalette(hashElements);
 
-    const columnChartOptions = {
+    const fullColumnChartOptions = {
       ...options,
       colors: colors,
       hAxis: {
@@ -47,10 +47,6 @@ export default class ColumnChart extends Component {
         textStyle: {
           color: '#888'
         },
-        gridlines: {
-          count: 0,
-          color: 'transparent'
-        },
         titleTextStyle: {
           color: '#333',
           bold: true,
@@ -61,6 +57,8 @@ export default class ColumnChart extends Component {
         position: 'none'
       }
     };
+
+    const columnChartOptions = isMinimalView ? options : fullColumnChartOptions;
 
     return (
       <Chart chartType="ColumnChart" chartVersion="43" options={ columnChartOptions } data={ finalData } graph_id={ chartId }/>

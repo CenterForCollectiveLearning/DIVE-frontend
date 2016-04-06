@@ -55,6 +55,7 @@ export default class Visualization extends Component {
     const { data, bins, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
 
     var finalDataArray = data;
+    var sortIndex;
 
     if (sortFields.length && sortOrders.length) {
       var sortField, sortOrder;
@@ -67,7 +68,7 @@ export default class Visualization extends Component {
         if (s.selected)
           sortOrder = s.id;
       });
-      const sortIndex = (sortOrder == 'asc') ? 1 : -1;
+      sortIndex = (sortOrder == 'asc') ? 1 : -1;
 
       const header = data[0];
       const dataPoints = data.slice(1);
@@ -178,6 +179,7 @@ export default class Visualization extends Component {
         enableInteractivity: false,
         fontSize: 0,
         hAxis: {
+          baselineColor: 'transparent',
           textPosition: 'none',
           gridlines: {
             count: 0,
@@ -265,7 +267,7 @@ export default class Visualization extends Component {
       );
     }
 
-    const chartId = this.props.chartId || spec.id;
+    const chartId = `${ this.props.chartId || spec.id }-${ sortIndex }`;
 
     return (
       <div className={ containerClassName } onClick={ this.handleClick }>

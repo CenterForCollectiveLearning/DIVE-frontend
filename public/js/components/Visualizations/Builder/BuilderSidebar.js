@@ -63,7 +63,7 @@ export class BuilderSidebar extends Component {
               onChange={ selectBuilderVisualizationType } />
           </SidebarGroup>
         }
-        { (visualization.visualizationType == 'hist' || visualization.visualizationType == 'bar') &&
+        { (visualization.visualizationType == 'bar') &&
           <SidebarGroup heading="Sort by">
             <div className={ styles.sortGroup }>
               <ToggleButtonGroup
