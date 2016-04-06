@@ -16,20 +16,21 @@ import ContributionToRSquaredCard from './ContributionToRSquaredCard';
 
 export class RegressionView extends Component {
 
+  componentWillMount() {
+    const { projectId, datasets, datasetSelector, fetchDatasets } = this.props;
+
+    if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
+      fetchDatasets(projectId);
+    }
+
+    clearAnalysis();
+  }
+
   componentWillReceiveProps(nextProps) {
     const { projectId, datasetId, dependentVariableName, independentVariableNames, regressionResult, runRegression, getContributionToRSquared, fetchDatasets } = this.props;
     const independentVariablesChanged = nextProps.independentVariableNames.length != independentVariableNames.length;
     const dependentVariableChanged = (nextProps.dependentVariableName != dependentVariableName);
     const dependentVariableExists = (nextProps.dependentVariableName != null);
-
-    const projectChanged = (nextProps.projectId !== projectId);
-    const datasetChanged = (nextProps.datasetId !== datasetId);
-
-    if (nextProps.projectId && nextProps.datasetId) {
-      if (projectChanged && nextProps.projectId) {
-        fetchDatasets(nextProps.projectId);
-      }
-    }
 
     if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && (dependentVariableChanged || independentVariablesChanged)) {
       runRegression(nextProps.projectId, nextProps.datasetId, nextProps.dependentVariableName, nextProps.independentVariableNames);
@@ -37,6 +38,16 @@ export class RegressionView extends Component {
 
     if (nextProps.projectId && nextProps.regressionResult.data && nextProps.regressionResult.data.id && (this.props.regressionResult.data == null || (nextProps.regressionResult.data.id != this.props.regressionResult.data.id))) {
       getContributionToRSquared(nextProps.projectId, nextProps.regressionResult.data.id);
+    }
+  }
+
+  componentDidUpdate(previousProps) {
+    const { projectId, datasetId, datasets, fetchDatasets } = this.props
+    const projectChanged = (previousProps.projectId !== projectId);
+    const datasetChanged = (previousProps.datasetId !== datasetId);
+
+    if (projectChanged || (projectId && (!datasetId || (!datasets.isFetching && !datasets.loaded)))) {
+      fetchDatasets(projectId);
     }
   }
 

@@ -16,11 +16,17 @@ import CorrelationScatterplotCard from './CorrelationScatterplotCard';
 
 export class CorrelationView extends Component {
   componentWillMount() {
-    const { projectId, datasetId, correlationVariableNames, getCorrelations, fetchDatasets } = this.props
+    const { projectId, datasetId, datasetSelector, datasets, correlationVariableNames, getCorrelations, fetchDatasets } = this.props
+
+    if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
+      fetchDatasets(projectId);
+    }
 
     if (projectId && datasetId && correlationVariableNames.length) {
       getCorrelations(projectId, datasetId, correlationVariableNames)
     }
+
+    clearAnalysis();
   }
 
 
@@ -32,16 +38,7 @@ export class CorrelationView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, correlationVariableNames, getCorrelations, getCorrelationScatterplot, correlationResult } = this.props
-
-    const projectChanged = (nextProps.projectId !== projectId);
-    const datasetChanged = (nextProps.datasetId !== datasetId);
-
-    if (nextProps.projectId && nextProps.datasetId) {
-      if (projectChanged && nextProps.projectId) {
-        fetchDatasets(nextProps.projectId);
-      }
-    }
+    const { projectId, datasetId, datasets, correlationVariableNames, getCorrelations, getCorrelationScatterplot, correlationResult } = this.props
 
     const correlationVariableChanged = nextProps.correlationVariableNames.length != correlationVariableNames.length;
     const twoVariablesSelected = nextProps.correlationVariableNames.length >= 2;
@@ -51,6 +48,16 @@ export class CorrelationView extends Component {
 
     if (nextProps.projectId && nextProps.correlationResult.data && nextProps.correlationResult.data.id && (this.props.correlationResult.data == null || (nextProps.correlationResult.data.id != this.props.correlationResult.data.id))) {
       getCorrelationScatterplot(nextProps.projectId, nextProps.correlationResult.data.id);
+    }
+  }
+
+  componentDidUpdate(previousProps) {
+    const { projectId, datasetId, datasets, fetchDatasets } = this.props
+    const projectChanged = (previousProps.projectId !== projectId);
+    const datasetChanged = (previousProps.datasetId !== datasetId);
+
+    if (projectChanged || (projectId && (!datasetId || (!datasets.isFetching && !datasets.loaded)))) {
+      fetchDatasets(projectId);
     }
   }
 
@@ -127,6 +134,7 @@ function mapStateToProps(state) {
   return {
     datasets: datasets,
     datasetSelector: datasetSelector,
+    project: project,
     projectId: project.properties.id,
     datasetId: datasetSelector.datasetId,
     correlationResult: correlationSelector.correlationResult,
