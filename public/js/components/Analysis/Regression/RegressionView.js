@@ -1,22 +1,35 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 
+import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { runRegression, getContributionToRSquared } from '../../../actions/RegressionActions';
+import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
+import DropDownMenu from '../../Base/DropDownMenu';
 import RegressionTableCard from './RegressionTableCard';
 import ContributionToRSquaredCard from './ContributionToRSquaredCard';
 
 export class RegressionView extends Component {
 
   componentWillReceiveProps(nextProps) {
-    const { dependentVariableName, independentVariableNames, regressionResult, runRegression, getContributionToRSquared } = this.props;
+    const { projectId, datasetId, dependentVariableName, independentVariableNames, regressionResult, runRegression, getContributionToRSquared, fetchDatasets } = this.props;
     const independentVariablesChanged = nextProps.independentVariableNames.length != independentVariableNames.length;
     const dependentVariableChanged = (nextProps.dependentVariableName != dependentVariableName);
     const dependentVariableExists = (nextProps.dependentVariableName != null);
+
+    const projectChanged = (nextProps.projectId !== projectId);
+    const datasetChanged = (nextProps.datasetId !== datasetId);
+
+    if (nextProps.projectId && nextProps.datasetId) {
+      if (projectChanged && nextProps.projectId) {
+        fetchDatasets(nextProps.projectId);
+      }
+    }
 
     if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && (dependentVariableChanged || independentVariablesChanged)) {
       runRegression(nextProps.projectId, nextProps.datasetId, nextProps.dependentVariableName, nextProps.independentVariableNames);
@@ -27,8 +40,15 @@ export class RegressionView extends Component {
     }
   }
 
+  clickDataset(datasetId) {
+    const { projectId, clearAnalysis, selectDataset, pushState } = this.props;
+    clearAnalysis();
+    selectDataset(projectId, datasetId);
+    pushState(null, `/projects/${ projectId }/datasets/${ datasetId }/analyze/regression`);
+  }
+
   render() {
-    const { regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames } = this.props;
+    const { datasets, datasetId, regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames } = this.props;
 
     if ( !regressionResult.loading && (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0)) {
       return (
@@ -40,7 +60,20 @@ export class RegressionView extends Component {
       <div className={ styles.regressionViewContainer }>
         <HeaderBar
           header="Regression Analysis"
-        />
+          actions={
+            datasets.items && datasets.items.length > 0 ?
+              <div className={ styles.headerControl }>
+                <DropDownMenu
+                  prefix="Dataset"
+                  width={ 240 }
+                  value={ parseInt(datasetId) }
+                  options={ datasets.items }
+                  valueMember="datasetId"
+                  displayTextMember="title"
+                  onChange={ this.clickDataset.bind(this) } />
+              </div>
+            : ''
+          }/>
         { regressionResult.loading &&
           <Card header={ <span>Explaining <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> }>
             <div className={ styles.watermark }>
@@ -65,7 +98,7 @@ export class RegressionView extends Component {
 }
 
 function mapStateToProps(state) {
-  const { project, regressionSelector, datasetSelector, fieldProperties } = state;
+  const { project, datasets, regressionSelector, datasetSelector, fieldProperties } = state;
   const { progress, error, regressionResult, contributionToRSquared } = regressionSelector;
 
   const dependentVariable = fieldProperties.items.find((property) => property.id == regressionSelector.dependentVariableId);
@@ -76,6 +109,8 @@ function mapStateToProps(state) {
     .map((independentVariable) => independentVariable.name);
 
   return {
+    datasets: datasets,
+    datasetSelector: datasetSelector,
     projectId: project.properties.id,
     dependentVariableName: dependentVariableName,
     independentVariableNames: independentVariableNames,
@@ -85,4 +120,11 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { runRegression, getContributionToRSquared })(RegressionView);
+export default connect(mapStateToProps, {
+  pushState,
+  runRegression,
+  getContributionToRSquared,
+  selectDataset,
+  fetchDatasets,
+  clearAnalysis
+})(RegressionView);
