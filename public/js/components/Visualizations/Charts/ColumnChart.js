@@ -47,10 +47,6 @@ export default class ColumnChart extends Component {
         textStyle: {
           color: '#888'
         },
-        gridlines: {
-          count: 0,
-          color: 'transparent'
-        },
         titleTextStyle: {
           color: '#333',
           bold: true,

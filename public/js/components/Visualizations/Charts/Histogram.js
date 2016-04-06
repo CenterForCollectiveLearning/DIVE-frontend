@@ -46,9 +46,6 @@ export default class Histogram extends Component {
         }
       ],
       vAxis: {
-        gridlines: {
-          color: 'transparent'
-        },
         minValue: 0,
         title: labels && labels.y ? labels.y : finalData[0][1],
         textStyle: {
@@ -71,7 +68,7 @@ export default class Histogram extends Component {
     const histogramOptions = isMinimalView ? options : fullHistogramOptions;
 
     return (
-      <Chart chartType="ColumnChart" chartVersion="43" options={ histogramOptions } data={ finalData } graph_id={ chartId }/>
+      <Chart key={ chartId } chartType="ColumnChart" chartVersion="43" options={ histogramOptions } data={ finalData } graph_id={ chartId }/>
     );
   }
 }
