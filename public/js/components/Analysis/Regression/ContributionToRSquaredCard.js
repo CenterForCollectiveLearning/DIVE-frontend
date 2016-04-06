@@ -17,6 +17,23 @@ export default class ContributionToRSquaredCard extends Component {
         (i == 0) ? [keyValuePair[1], keyValuePair[0]] : [keyValuePair[0], getRoundedNum(keyValuePair[1])]
       );
 
+    const header = trimmedContributionToRSquared[0];
+    const dataPoints = trimmedContributionToRSquared.slice(1);
+    const sortedDataPoints = dataPoints.sort((a, b) => {
+      var aValue = a[1];
+      var bValue = b[1];
+      if (aValue < bValue) {
+        return 1;
+      }
+      else if (aValue > bValue) {
+        return -1;
+      }
+      else {
+        return 0;
+      }
+    })
+    const finalData = [ header, ...sortedDataPoints ];
+
     var options = {
       fontName: 'RobotoDraft',
       fontFamily: 'RobotoDraft',
@@ -64,7 +81,7 @@ export default class ContributionToRSquaredCard extends Component {
         <div className={ styles.contributionToRSquared }>
           <ColumnChart
             chartId={ `bar-${ id }` }
-            data={ trimmedContributionToRSquared }
+            data={ finalData }
             options={ options } />
         </div>
       </Card>
