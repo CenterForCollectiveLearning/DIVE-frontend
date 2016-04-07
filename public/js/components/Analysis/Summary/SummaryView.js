@@ -17,21 +17,15 @@ import VariableSummaryCard from './VariableSummaryCard';
 
 export class SummaryView extends Component {
   componentWillMount() {
-    const { projectId, datasetId, datasets, datasetSelector, allComparisonVariableIds, getVariableSummaryStatistics } = this.props
-
-    if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
-      fetchDatasets(projectId);
-    }
+    const {projectId, datasetId, allComparisonVariableIds, getVariableSummaryStatistics} = this.props
 
     if (projectId && datasetId && allComparisonVariableIds.length) {
       getVariableSummaryStatistics(projectId, datasetId, allComparisonVariableIds)
     }
-
-    clearAnalysis();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, datasets, loadSummary, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runComparisonOneDimensional, allComparisonVariableIds, getVariableSummaryStatistics, fetchDatasets } = this.props;
+    const { projectId, datasetId, loadSummary, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runComparisonOneDimensional, allComparisonVariableIds, getVariableSummaryStatistics, fetchDatasets } = this.props;
     const aggregationIndependentVariablesChanged = nextProps.aggregationIndependentVariableNamesAndTypes.length != aggregationIndependentVariableNamesAndTypes.length;
     const aggregationVariableChanged = nextProps.aggregationVariableName != aggregationVariableName;
     const aggregationFunctionChanged = nextProps.aggregationFunction != aggregationFunction;
@@ -43,7 +37,14 @@ export class SummaryView extends Component {
     const oneIndependentVariableSelected = nextProps.aggregationIndependentVariableNamesAndTypes.length == 1;
     const twoIndependentVariablesSelected = nextProps.aggregationIndependentVariableNamesAndTypes.length == 2;
 
+    const projectChanged = (nextProps.projectId !== projectId);
+    const datasetChanged = (nextProps.datasetId !== datasetId);
+
+
     if (nextProps.projectId && nextProps.datasetId) {
+      if (projectChanged && nextProps.projectId) {
+        fetchDatasets(nextProps.projectId);
+      }
 
       if (sideBarChanged) {
         if (oneIndependentVariableSelected) {
@@ -60,16 +61,6 @@ export class SummaryView extends Component {
       }
     }
   }
-
-  componentDidUpdate(previousProps) {
-    const { projectId, datasetId, datasets, fetchDatasets } = this.props
-    const projectChanged = (previousProps.projectId !== projectId);
-    const datasetChanged = (previousProps.datasetId !== datasetId);
-
-    if (projectChanged || (projectId && (!datasetId || (!datasets.isFetching && !datasets.loaded)))) {
-      fetchDatasets(projectId);
-    }
-  }  
 
   clickDataset(datasetId) {
     const { projectId, clearAnalysis, selectDataset, pushState } = this.props;

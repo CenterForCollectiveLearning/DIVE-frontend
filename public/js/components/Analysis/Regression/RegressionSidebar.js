@@ -50,60 +50,18 @@ export class RegressionSidebar extends Component {
         }
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Explanatory Factors (X)">
-            { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Categorical</div>
-                <ToggleButtonGroup
-                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
-                    new Object({
-                      id: item.id,
-                      name: item.name,
-                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique)
-                    })
-                  )}
-                  displayTextMember="name"
-                  valueMember="id"
-                  externalSelectedItems={ regressionSelector.independentVariableIds }
-                  separated={ true }
-                  onChange={ selectIndependentVariable } />
-              </div>
-            }
-            { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Temporal</div>
-                <ToggleButtonGroup
-                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
-                    new Object({
-                      id: item.id,
-                      name: item.name,
-                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique)
-                    })
-                  )}
-                  valueMember="id"
-                  displayTextMember="name"
-                  externalSelectedItems={ regressionSelector.independentVariableIds }
-                  separated={ true }
-                  onChange={ selectIndependentVariable } />
-              </div>
-            }
-            { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Quantitative</div>
-                <ToggleButtonGroup
-                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
-                    new Object({
-                      id: item.id,
-                      name: item.name,
-                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique)
-                    })
-                  )}
-                  valueMember="id"
-                  displayTextMember="name"
-                  externalSelectedItems={ regressionSelector.independentVariableIds }
-                  separated={ true }
-                  onChange={ selectIndependentVariable } />
-              </div>
-            }
+            <ToggleButtonGroup
+              toggleItems={ fieldProperties.items.map((item) =>
+                new Object({
+                  id: item.id,
+                  name: item.name,
+                  disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique)
+                })
+              )}
+              valueMember="id"
+              displayTextMember="name"
+              externalSelectedItems={ regressionSelector.independentVariableIds }
+              onChange={ selectIndependentVariable } />
           </SidebarGroup>
         }
 

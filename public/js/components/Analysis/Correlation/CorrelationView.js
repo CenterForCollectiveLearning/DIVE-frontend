@@ -1,44 +1,26 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
 
-import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { getCorrelations, getCorrelationScatterplot } from '../../../actions/CorrelationActions';
-import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import styles from '../Analysis.sass';
 
-import Card from '../../Base/Card';
-import HeaderBar from '../../Base/HeaderBar';
-import DropDownMenu from '../../Base/DropDownMenu';
 import CorrelationTable from './CorrelationTable';
 import CorrelationScatterplotCard from './CorrelationScatterplotCard';
+import Card from '../../Base/Card';
+import HeaderBar from '../../Base/HeaderBar';
 
 export class CorrelationView extends Component {
   componentWillMount() {
-    const { projectId, datasetId, datasetSelector, datasets, correlationVariableNames, getCorrelations, fetchDatasets } = this.props
-
-    if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
-      fetchDatasets(projectId);
-    }
+    const {projectId, datasetId, correlationVariableNames, getCorrelations } = this.props
 
     if (projectId && datasetId && correlationVariableNames.length) {
       getCorrelations(projectId, datasetId, correlationVariableNames)
     }
-
-    clearAnalysis();
-  }
-
-
-  clickDataset(datasetId) {
-    const { projectId, clearAnalysis, selectDataset, pushState } = this.props;
-    clearAnalysis();
-    selectDataset(projectId, datasetId);
-    pushState(null, `/projects/${ projectId }/datasets/${ datasetId }/analyze/correlation`);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, datasets, correlationVariableNames, getCorrelations, getCorrelationScatterplot, correlationResult } = this.props
+    const { correlationVariableNames, getCorrelations, getCorrelationScatterplot, correlationResult } = this.props
 
     const correlationVariableChanged = nextProps.correlationVariableNames.length != correlationVariableNames.length;
     const twoVariablesSelected = nextProps.correlationVariableNames.length >= 2;
@@ -51,18 +33,8 @@ export class CorrelationView extends Component {
     }
   }
 
-  componentDidUpdate(previousProps) {
-    const { projectId, datasetId, datasets, fetchDatasets } = this.props
-    const projectChanged = (previousProps.projectId !== projectId);
-    const datasetChanged = (previousProps.datasetId !== datasetId);
-
-    if (projectChanged || (projectId && (!datasetId || (!datasets.isFetching && !datasets.loaded)))) {
-      fetchDatasets(projectId);
-    }
-  }
-
   render() {
-    const { correlationResult, correlationVariableNames, correlationScatterplots, datasets, datasetId } = this.props;
+    const { correlationResult, correlationVariableNames, correlationScatterplots } = this.props;
     const twoCorrelationVariablesSelected = correlationVariableNames.length >= 2;
     const correlationResultHasElements = correlationResult.data && correlationResult.data.rows && correlationResult.data.rows.length > 0;
 
@@ -103,20 +75,7 @@ export class CorrelationView extends Component {
       <div className={ styles.aggregationViewContainer }>
         <HeaderBar
           header="Correlation Analysis"
-          actions={
-            datasets.items && datasets.items.length > 0 ?
-              <div className={ styles.headerControl }>
-                <DropDownMenu
-                  prefix="Dataset"
-                  width={ 240 }
-                  value={ parseInt(datasetId) }
-                  options={ datasets.items }
-                  valueMember="datasetId"
-                  displayTextMember="title"
-                  onChange={ this.clickDataset.bind(this) } />
-              </div>
-            : ''
-          }/>
+        />        
         { correlationContent }
       </div>
     );
@@ -124,7 +83,7 @@ export class CorrelationView extends Component {
 }
 
 function mapStateToProps(state) {
-  const { project, datasets, correlationSelector, datasetSelector, fieldProperties } = state;
+  const { project, correlationSelector, datasetSelector, fieldProperties } = state;
   const { correlationScatterplots } = correlationSelector;
 
   const correlationVariableNames = fieldProperties.items
@@ -132,9 +91,6 @@ function mapStateToProps(state) {
     .map((field) => field.name);
 
   return {
-    datasets: datasets,
-    datasetSelector: datasetSelector,
-    project: project,
     projectId: project.properties.id,
     datasetId: datasetSelector.datasetId,
     correlationResult: correlationSelector.correlationResult,
@@ -143,11 +99,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, {
-  pushState,
-  getCorrelations,
-  getCorrelationScatterplot,
-  selectDataset,
-  fetchDatasets,
-  clearAnalysis
-})(CorrelationView);
+export default connect(mapStateToProps, { getCorrelations, getCorrelationScatterplot })(CorrelationView);
