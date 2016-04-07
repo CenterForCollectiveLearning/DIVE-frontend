@@ -84,5 +84,5 @@ RegressionSummary.propTypes = {
   dependentVariableName: PropTypes.string.isRequired,
   independentVariableNames: PropTypes.array.isRequired,
   regressionResult: PropTypes.object.isRequired,
-  contributionToRSquared: PropTypes.object.isRequired
+  contributionToRSquared: PropTypes.array.isRequired
 }
