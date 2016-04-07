@@ -29,24 +29,67 @@ export class SummarySidebar extends Component {
   }
 
   render() {
+    const { fieldProperties, summarySelector, selectSummaryIndependentVariable } = this.props;
     const nonComparisonVariables = this.props.fieldProperties.items.filter((item) => this.props.summarySelector.comparisonVariablesIds.indexOf(item.id) < 0)
     const aggregationOptions = [{'id': 'count', 'name' : 'count'}, ...nonComparisonVariables.filter((item) => item.generalType == 'q')]
     return (
       <Sidebar>
         { this.props.fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Comparison Variables">
-            <ToggleButtonGroup
-              toggleItems={ this.props.fieldProperties.items.map((item) =>
-                new Object({
-                  id: item.id,
-                  name: item.name,
-                  disabled: (item.id == this.props.summarySelector.aggregationVariableId)
-                })
-              )}
-              valueMember="id"
-              displayTextMember="name"
-              externalSelectedItems={ this.props.summarySelector.comparisonVariablesIds }
-              onChange={ this.props.selectSummaryIndependentVariable } />
+            { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Categorical</div>
+                <ToggleButtonGroup
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      disabled: (item.id == summarySelector.aggregationVariableId) || ( item.generalType == 'c' && item.isUnique)
+                    })
+                  )}
+                  displayTextMember="name"
+                  valueMember="id"
+                  externalSelectedItems={ summarySelector.comparisonVariablesIds }
+                  separated={ true }
+                  onChange={ selectSummaryIndependentVariable } />
+              </div>
+            }
+            { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Temporal</div>
+                <ToggleButtonGroup
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      disabled: (item.id == summarySelector.aggregationVariableId)
+                    })
+                  )}
+                  valueMember="id"
+                  displayTextMember="name"
+                  externalSelectedItems={ summarySelector.comparisonVariablesIds }
+                  separated={ true }
+                  onChange={ selectSummaryIndependentVariable } />
+              </div>
+            }
+            { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Quantitative</div>
+                <ToggleButtonGroup
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      disabled: (item.id == summarySelector.aggregationVariableId)
+                    })
+                  )}
+                  valueMember="id"
+                  displayTextMember="name"
+                  externalSelectedItems={ summarySelector.comparisonVariablesIds }
+                  separated={ true }
+                  onChange={ selectSummaryIndependentVariable } />
+              </div>
+            }
           </SidebarGroup>
         }
         { this.props.fieldProperties.items.length != 0 &&

@@ -31,7 +31,11 @@ export default class CorrelationScatterplotCard extends Component {
         width: '70%',
         height: '80%'
       },
-      trendlines: { 0: {} },
+      // trendlines: { 0: {
+      //     type: 'linear',
+      //     showR2: true
+      //   }
+      // },
       hAxis: {
         textStyle: {
           color: "#333"
