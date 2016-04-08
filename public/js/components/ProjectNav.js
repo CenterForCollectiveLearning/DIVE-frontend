@@ -92,7 +92,7 @@ export class ProjectNav extends Component {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 
     const datasetId = paramDatasetId || datasetSelector.datasetId;
-    
+
     return (
       <div className={ styles.header }>
         <div className={ styles.logoContainer } onClick={ this._onClickLogo }>
