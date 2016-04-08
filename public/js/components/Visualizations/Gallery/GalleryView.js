@@ -212,19 +212,16 @@ export class GalleryView extends Component {
             { !specs.isFetching && baselineSpecs.length > 1 && (selectedFieldProperties.length > 1 || selectedFieldProperties.length == 0)&&
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
-                  { areFieldsSelected &&
-                    <span>
-                      <div className={ styles.blockSectionHeaderTitle }>Individual Matches</div>
-                      Including <strong>only</strong> {
-                        selectedFieldProperties.map((field) =>
-                          <span key={ `span-individual-match-title-${ field.name }`} className={ `${ styles.baselineTitleField }` }>
-                            { field.name }
-                          </span>
-                        )
-                      }
-                    </span>
-                  }
-
+                  <span>
+                    <div className={ styles.blockSectionHeaderTitle }>Individual Matches</div>
+                    Including <strong>only</strong> {
+                      selectedFieldProperties.map((field) =>
+                        <span key={ `span-individual-match-title-${ field.name }`} className={ `${ styles.baselineTitleField }` }>
+                          { field.name }
+                        </span>
+                      )
+                    }
+                  </span>
                 </div>
                 <div className={ styles.specs + ' ' + styles.baseline }>
                   { baselineSpecs.map((spec) =>
