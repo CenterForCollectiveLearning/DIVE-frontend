@@ -147,13 +147,23 @@ export class GalleryView extends Component {
             { exactSpecs.length > 0 &&
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
-                  <div className={ styles.blockSectionHeaderTitle }>Exact Matches</div>
-                  Including {
-                    selectedFieldProperties.map((field) =>
-                      <span key={ `span-exact-match-title-${ field.name }`} className={ `${ styles.exactTitleField }`}>
-                        { field.name }
-                      </span>
-                    )
+                  { areFieldsSelected &&
+                    <span>
+                      <div className={ styles.blockSectionHeaderTitle }>Exact Matches</div>
+                        Including {
+                          selectedFieldProperties.map((field) =>
+                            <span key={ `span-exact-match-title-${ field.name }`} className={ `${ styles.exactTitleField }`}>
+                              { field.name }
+                            </span>
+                          )
+                        }
+                    </span>
+                  }
+                  { !areFieldsSelected &&
+                    <span>
+                      <div className={ styles.blockSectionHeaderTitle }>Default Matches</div>
+                      Summary of each field
+                    </span>
                   }
                 </div>
                 <div className={ styles.specs + ' ' + styles.exact }>
@@ -214,12 +224,7 @@ export class GalleryView extends Component {
                       }
                     </span>
                   }
-                  { !areFieldsSelected &&
-                    <span>
-                      <div className={ styles.blockSectionHeaderTitle }>Default Matches</div>
-                      Summary of each field
-                    </span>
-                  }
+
                 </div>
                 <div className={ styles.specs + ' ' + styles.baseline }>
                   { baselineSpecs.map((spec) =>
