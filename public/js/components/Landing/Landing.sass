@@ -9,105 +9,78 @@
   z-index: 10
   justify-content: center
   align-items: center
+  position: relative
 
-// https://codepen.io/jasonadelia/pen/DnrAe
+  &:before
+    background: url("http://i.imgur.com/rqcfgEV.jpg") no-repeat
+    background-size: cover
+    background-position: 50% 0%
+    opacity: 0.7
+
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100vh
+    content: ""
+    z-index: -1  
+
 .background
   position: absolute
   top: 0
   left: 0
   right: 0
-  bottom: 0
-  background: linear-gradient(to bottom, #0D4288, #0B2346)
+  height: 100vh
 
-  .innerBackground
-    background-image: linear-gradient(to bottom right, #929CE1, #39347B)
-    opacity: 0.26
-    position: absolute
-    top: 0
-    left: 0
-    right: 0
-    bottom: 0
-
-    .grid
-      background-color: transparent
-      background-image: linear-gradient(0deg, transparent 24%, #646FB7 25%, #646FB7 26%, transparent 27%, transparent 74%, #646FB7 75%, #646FB7 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, #646FB7 25%, transparent 26%, transparent 74%, #646FB7 75%, transparent 76%, transparent)
-      height: 100%
-      background-size: 150px 50px
+  background: linear-gradient(to bottom right, #3A3147, #1A2E56)
+  background-size: cover
+  background-position: 50% 0%
 
 .header
   display: flex
   flex-direction: row
   position: relative
   width: 100%
-  padding: 40px 40px 0
-
-  .landingTabs
-    display: flex
-    flex-direction: row
-    align-items: center
-
-    .landingTab
-      +montserrat
-      font-weight: 300
-      padding-left: 16px
-      padding-right: 16px
-      margin-top: 7px
-
-      &:hover
-        background-color: transparent
-        border-bottom: 1px solid rgba(15, 39, 98, 0.4)
-
-      &.selectedTab
-        border: none
-        background-color: transparent
-        font-weight: 500
-        color: white
+  padding: 25px 40px 0
 
   .logoContainer
     display: flex
     flex-direction: row
     padding-right: 30px
     cursor: pointer
+    opacity: 0.86
 
     .logo
-      width: 38px
-      height: 28px
+      width: 30px
+      height: 38px
       margin-left: 10px
-      margin-top: 10px
+      margin-top: 17px
 
     .logoText
-      font-size: 23px
+      font-size: 44px
       font-weight: 600
       margin-top: 11px
-
-.secondaryCopy
-  +montserrat
-  color: rgba(255, 255, 255, 0.7)
-  font-weight: 200
-  font-size: 18px
-  line-height: 24px
-
-  &.emphasis
-    color: white
-    letter-spacing: 1px
 
 .ctaBox
   display: flex
 
   flex-direction: column
-  max-width: 740px
+  max-width: 800px
   align-items: center
-  +montserrat
+
+  .primaryCopy, .secondaryCopy
+    font-family: 'Roboto Condensed', 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
 
   .primaryCopy
     display: flex
     align-items: center
     justify-content: center
 
-    margin: 30px auto 15px
+    margin: 30px auto 5px
 
-    color: rgba(255, 255, 255, 0.9)
-    font-size: 23px
+    color: white
+    font-size: 39px
+    font-weight: 600
     text-transform: uppercase
     letter-spacing: 1px
 
@@ -116,22 +89,25 @@
     margin: 15px auto 20px
     text-align: center
     letter-spacing: 0.78px
+    font-size: 23px
+    font-weight: 300
 
   .ctaContainer
     display: flex
     margin: 15px auto
 
     .uploadButton
-      height: 46px
-      line-height: 45px
-      background-color: #0F2762
-      letter-spacing: 0.88px
-      font-weight: 300
-      padding: 0 40px
-      font-size: 14px
+      height: 67px
+      line-height: 67px
+      font-weight: 600
+
+      background-color: #4fbfa3
+      padding: 0 60px
+      font-size: 24px
+      border-radius: 40px
 
       &:hover
-        background-color: rgba(15, 39, 98, 0.58)
+        background-color: #40B094
 
     .videoContainer
       height: 360px
@@ -141,28 +117,20 @@
       iframe
         border: none
 
-.separater
-  border-bottom: 1px solid rgba(111,130,177,0.50)
-  width: 400px
-  display: flex
-  margin: 15px auto 30px
-  align-items: center
-  justify-content: center
-
 .projectButton
   +montserrat
   display: flex
-  width: 310px
-  height: 80px
+  width: 27%
+  min-height: 80px
+  padding: 11px 16px
+  margin: 0 3% 20px 0
 
-  margin: 0 30px 20px
   align-items: center
   justify-content: center
   text-align: center
 
-  border: 1px solid #819DCC
-  background-color: rgba(15, 39, 98, 0.5)
-  border-radius: 3px
+  border: 1px solid hsl(219, 65%, 78%)
+  background-color: hsla(0, 0%, 100%, 0.11)
   font-size: 15px
   text-transform: uppercase
   letter-spacing: 1px
@@ -172,17 +140,29 @@
   text-decoration: none
 
   &:hover
-    background-color: rgba(15, 39, 98, 0.8)
+    background-color: hsla(0, 0%, 100%, 0.15)
+    border-color: hsl(219, 65%, 90%)
 
-.projectsContainer
+.section
   display: flex
   flex-grow: 1
   flex-direction: column
   align-items: center
 
-  &:last-child
-    margin-bottom: 40px
+  h2
+    font-family: 'Roboto Condensed', 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
+    text-transform: uppercase
+    font-weight: 600
+    font-size: 26px
 
+    width: 100%
+    margin: 0
+    padding-left: 8%
+
+.projectsContainer
+  margin-top: 100px
+  padding-bottom: 60px
+  background: linear-gradient(rgba(58, 49, 71, 0), rgba(26, 46, 86, 1) 40%)
 
   .projectTypeContainer
     display: flex
@@ -192,9 +172,11 @@
     .projectListContainer
       display: flex
       flex-direction: row
-      margin-top: 30px
       flex-wrap: wrap
       justify-content: center
+
+      margin-top: 20px
+      padding-left: 3%
 
 .watermark
   +montserrat
@@ -203,28 +185,44 @@
   opacity: 0.8
   font-size: 12px
 
+.topRightControls
+  +montserrat
+  display: flex
+  flex-grow: 1
+  flex-direction: row-reverse
+  align-items: center
+  font-size: 12px
+  font-weight: 300
+  text-transform: uppercase
+
+  .separater
+    opacity: 0.5
+    margin-left: 5px
+    margin-right: 5px
+
 .textBox
   display: flex
   flex-direction: column
-  background-color: rgba(0,0,0,0.2)
-  width: 500px
+  width: 47%
   min-height: 100px
-  padding: 20px
+  padding: 20px 3% 20px 0
   border-radius: 2px
   font-size: 18px
   font-weight: 300
 
   strong
     display: inline-block
-    font-weight: 500
+    font-weight: 600
+
+  p
+    margin: 0 0 1em
 
   a
     text-decoration: none
-    color: white
-    font-weight: 400
+    color: hsla(220, 54%, 36%, 1)
 
     &:hover, strong:hover
-      color: rgba(255, 255, 255, 0.8)
+      color: hsla(220, 54%, 40%, 1)
       text-decoration: underline
 
 .spacer
@@ -232,7 +230,61 @@
   flex-grow: 1
 
 .aboutContainer
-  margin-top: 30px
+  padding: 60px 0 70px
+  background-color: white
+  width: 100%
+
+  h2
+    color: #5A5A5A
+
+  .aboutContent
+    display: flex
+    width: 100%
+    padding-left: 8%
+    padding-bottom: 25px
+    color: #868686
+
+  .rightBox
+    width: 47%
+    padding-left: 3%
+
+    .mugshots
+      display: flex
+      flex-wrap: wrap
+      justify-content: center
+
+      .mugshotContainer
+        margin: 10px
+        width: 140px
+        display: flex
+        flex-direction: column
+
+        .mugCaption
+          display: flex
+          flex-direction: column
+          text-align: center
+          margin-top: 10px
+
+          .mugCaptionRole
+            font-style: italic
+            font-size: 14px
+            color: #BBB
+            margin-top: 2px
+
+        img.mugshot
+          border-radius: 100px
+          width: 140px
+          height: 140px
+          overflow: hidden
+
+  .footer
+    .macroConnectionsLogo, .mediaLabLogo
+      max-height: 70px
+      width: auto
+      opacity: 0.5
+
+    .macroConnectionsLogo
+      padding-right: 40px
 
 .featuresContainer
   .featureBlock
