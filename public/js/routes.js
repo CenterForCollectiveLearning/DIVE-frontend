@@ -8,7 +8,7 @@ import AboutPage from './components/Landing/AboutPage';
 import LoginPage from './components/Auth/LoginPage';
 import RegisterPage from './components/Auth/RegisterPage';
 import LandingPage from './components/Landing/LandingPage';
-import HomePage from './components/Landing/HomePage';
+import ProjectListPage from './components/Landing/ProjectListPage';
 import FeaturesPage from './components/Landing/FeaturesPage';
 import App from './components/App/App';
 import ProjectsPage from './components/ProjectsPage';
@@ -34,7 +34,7 @@ const requireAuthentication = UserAuthWrapper({
   predicate: user => user.isAuthenticated,
   redirectAction: function({ pathname, query }){
     if (query.redirect) {
-      return pushState(null, `${pathname}?next=${query.redirect}`)
+      return pushState(null, `${ pathname }?next=${ query.redirect }`)
     } else {
       return pushState(null, pathname)
     }
@@ -49,7 +49,7 @@ export default (
 
     <IndexRoute component={ LandingPage }/>
     <Route path="/landing" component={ LandingPage }>
-      <Route path="/home" component={ HomePage }/>
+      <Route path="/projects" component={ ProjectListPage }/>
       <Route path="/about" component={ AboutPage }/>
       <Route path="/features" component={ FeaturesPage }/>
     </Route>

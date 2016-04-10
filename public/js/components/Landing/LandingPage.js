@@ -3,21 +3,26 @@ import styles from './Landing.sass';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-react-router';
+import { logoutUser } from '../../actions/AuthActions'
 
-import Tabs from '../Base/Tabs';
-import Tab from '../Base/Tab';
-import UserDropdown from '../Base/UserDropdown';
-import FeaturesPage from './FeaturesPage';
+import Link from '../Base/Link';
+import HomePage from './HomePage';
 
 var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
 
 export class LandingPage extends Component {
+  componentWillMount() {
+    const { user, pushState } = this.props;
+    if (user.isAuthenticated) {
+      pushState(null, '/projects')
+    }
+  }
   _onClickLogo(){
     this.props.pushState(null, `/`);
   }
 
   _getSelectedTab(){
-    const tabList = ["/home", "/about"];
+    const tabList = ["/projects", "/about"];
     const _validTab = function (tabValue) {
       return tabList.indexOf(tabValue) > -1;
     }
@@ -28,40 +33,35 @@ export class LandingPage extends Component {
     return "";
   }
 
-  _logout() {
-    const { logoutUser } = this.props;
-    logoutUser();
-  }
-
   render() {
     const { user } = this.props;
     return (
       <DocumentTitle title='DIVE | Landing'>
         <div className={ styles.fillContainer + ' ' + styles.landingPage }>
           <div className={ styles.background }>
-            <div className={ styles.innerBackground }>
-              <div className={ styles.grid }></div>
-            </div>
+            <div className={ styles.grid }/>
           </div>
           <div className={ styles.landingPageContent }>
             <div className={ styles.header }>
               <div className={ styles.logoContainer } onClick={ this._onClickLogo.bind(this) }>
-                <Logo className={ styles.logo } />
                 <div className={ styles.logoText }>
                   DIVE
                 </div>
+                <Logo className={ styles.logo } />
               </div>
-              <Tabs value={ this._getSelectedTab() } className={ styles.landingTabs } selectedClassName={ styles.selectedTab }>
-                <Tab label="PROJECTS" value="/home" route="/home" className={ styles.landingTab } />
-                <Tab label="LOG IN" active={ !user.id } value="/login" route="/login" className={ styles.landingTab } />
-                <Tab label="REGISTER" active={ !user.id } value="/register" route="/register" className={ styles.landingTab } />
-                <Tab label="ABOUT" value="/about" route="/about" className={ styles.landingTab } />
-              </Tabs>
-              <UserDropdown user={ user }/>
+              <div className={ styles.topRightControls }>
+                { user && user.username &&
+                  <span>{ user.username }<span className={ styles.separater }> | </span><Link onClick={ this.props.logoutUser }>Sign out</Link></span>
+                }
+                { (!user || !user.username) &&
+                  <Link route="/login">Sign in</Link>
+                }
+              </div>
+
             </div>
             <div className={ styles.centeredFill }>
               { this.props.children ||
-                <FeaturesPage />
+                <HomePage />
               }
             </div>
           </div>
@@ -80,4 +80,4 @@ function mapStateToProps(state) {
   return { user };
 }
 
-export default connect(mapStateToProps, { pushState })(LandingPage);
+export default connect(mapStateToProps, { pushState, logoutUser })(LandingPage);

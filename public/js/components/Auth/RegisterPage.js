@@ -39,7 +39,7 @@ class AuthPage extends Component {
 
   closeRegistrationPage() {
     const { pushState } = this.props;
-    pushState(null, '/home')
+    pushState(null, '/projects')
   }
 
   componentWillMount() {
@@ -92,7 +92,7 @@ class AuthPage extends Component {
     const { isAuthenticated, pushState } = props;
 
     if (isAuthenticated){
-      pushState(null, props.location.query.next || '/home');
+      pushState(null, props.location.query.next || '/projects');
     }
   };
 
