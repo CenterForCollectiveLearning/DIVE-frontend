@@ -12,6 +12,14 @@ import FeaturesPage from './FeaturesPage';
 var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
 
 export class LandingPage extends Component {
+  componentWillMount() {
+    const { user, pushState } = this.props;
+    console.log('LandingPage will mount', user.isAuthenticated);
+    if (user.isAuthenticated) {
+      console.log('Pushing state');
+      pushState(null, '/projects')
+    }
+  }
   _onClickLogo(){
     this.props.pushState(null, `/`);
   }
@@ -52,7 +60,7 @@ export class LandingPage extends Component {
                 </div>
               </div>
               <Tabs value={ this._getSelectedTab() } className={ styles.landingTabs } selectedClassName={ styles.selectedTab }>
-                <Tab label="PROJECTS" value="/home" route="/home" className={ styles.landingTab } />
+                <Tab label="PROJECTS" value="/projects" route="/projects" className={ styles.landingTab } />
                 <Tab label="LOG IN" active={ !user.id } value="/login" route="/login" className={ styles.landingTab } />
                 <Tab label="REGISTER" active={ !user.id } value="/register" route="/register" className={ styles.landingTab } />
                 <Tab label="ABOUT" value="/about" route="/about" className={ styles.landingTab } />
