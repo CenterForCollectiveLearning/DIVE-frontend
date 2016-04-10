@@ -63,7 +63,6 @@ function errorRegisterUserDispatcher(error) {
   }
 }
 
-
 export function loginUser(email, username, password, rememberMe) {
   const encryptedPassword = Crypto.MD5(password);
   const params = {
