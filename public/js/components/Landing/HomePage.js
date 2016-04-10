@@ -115,8 +115,8 @@ export class HomePage extends Component {
               </div>
             </div>
             <div className={ styles.footer }>
-              <MacroConnectionsLogo className={ styles.macroConnectionsLogo } />
-              <MediaLabLogo className={ styles.mediaLabLogo } />
+              <a href="http://macro.media.mit.edu" target="_blank"><MacroConnectionsLogo className={ styles.macroConnectionsLogo } /></a>
+              <a href="http://media.mit.edu" target="_blank"><MediaLabLogo className={ styles.mediaLabLogo } /></a>
             </div>
           </div>
         </div>

@@ -39,6 +39,7 @@ export class LandingPage extends Component {
       <DocumentTitle title='DIVE | Landing'>
         <div className={ styles.fillContainer + ' ' + styles.landingPage }>
           <div className={ styles.background }>
+            <div className={ styles.grid }/>
           </div>
           <div className={ styles.landingPageContent }>
             <div className={ styles.header }>
