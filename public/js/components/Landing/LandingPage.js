@@ -22,7 +22,7 @@ export class LandingPage extends Component {
   }
 
   _getSelectedTab(){
-    const tabList = ["/home", "/about"];
+    const tabList = ["/projects", "/about"];
     const _validTab = function (tabValue) {
       return tabList.indexOf(tabValue) > -1;
     }
