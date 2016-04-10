@@ -7,7 +7,7 @@ import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectSt
 
 import RaisedButton from '../Base/RaisedButton';
 
-export class ProjectListPage extends Component {
+export class HomePage extends Component {
   componentWillMount() {
     const { projects, userId } = this.props;
     this.props.fetchPreloadedProjects(userId);
@@ -108,4 +108,4 @@ function mapStateToProps(state) {
   return { project, projects, userId: user.id };
 }
 
-export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, pushState })(ProjectListPage);
+export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, pushState })(HomePage);
