@@ -61,6 +61,9 @@
       font-weight: 600
       margin-top: 11px
 
+.ctaContainer
+  width: 100%
+
 .ctaBox
   display: flex
 
@@ -162,7 +165,20 @@
 .projectsContainer
   margin-top: 100px
   padding-bottom: 60px
+  width: 100%
   background: linear-gradient(rgba(58, 49, 71, 0), rgba(26, 46, 86, 1) 40%)
+
+  &.myProjectsContainer
+    background: none
+    padding-bottom: 0
+    margin-top: 50px
+    margin-bottom: -50px
+
+  .secondaryCopy
+    text-transform: uppercase
+    font-weight: 600
+    color: #DDD
+    font-size: 16px
 
   .projectTypeContainer
     display: flex
@@ -177,6 +193,7 @@
 
       margin-top: 20px
       padding-left: 3%
+      width: 100%
 
 .watermark
   +montserrat

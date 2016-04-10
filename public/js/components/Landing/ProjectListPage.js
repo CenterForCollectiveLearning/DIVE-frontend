@@ -45,13 +45,6 @@ export class ProjectListPage extends Component {
       <DocumentTitle title='DIVE | Projects'>
         <div className={ styles.centeredFill }>
           <div className={ styles.ctaBox }>
-            <div className={ styles.primaryCopy }>
-              <span>Stop Processing Data and Start <strong>Understanding It</strong></span>
-            </div>
-            <div className={ styles.secondaryCopy }>
-              Merge and query datasets, conduct statistical analyses, and explore
-              automatically generated visualizations within seconds.
-            </div>
             <div className={ styles.ctaContainer }>
               <RaisedButton
                 label="Create Project"
@@ -61,21 +54,18 @@ export class ProjectListPage extends Component {
             </div>
           </div>
           { userId && userProjects.length > 0 &&
-            <div>
-              <div className={ styles.separater }></div>
-              <div className={ styles.projectsContainer }>
-                <div className={ styles.projectTypeContainer }>
-                  <div className={ styles.flexbox }>
-                    <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Your projects:</div>
-                  </div>
-                  <div className={ styles.projectListContainer }>
-                    { projects.isFetching &&
-                      <div className={ styles.watermark }>Fetching projects...</div>
-                    }
-                    { userProjects.map((project) =>
-                      <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
-                    )}
-                  </div>
+            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+              <div className={ styles.projectTypeContainer }>
+                <div className={ styles.flexbox }>
+                  <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Your projects:</div>
+                </div>
+                <div className={ styles.projectListContainer }>
+                  { projects.isFetching &&
+                    <div className={ styles.watermark }>Fetching projects...</div>
+                  }
+                  { userProjects.map((project) =>
+                    <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
+                  )}
                 </div>
               </div>
             </div>
