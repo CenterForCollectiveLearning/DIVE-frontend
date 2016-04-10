@@ -34,7 +34,7 @@ const requireAuthentication = UserAuthWrapper({
   predicate: user => user.isAuthenticated,
   redirectAction: function({ pathname, query }){
     if (query.redirect) {
-      return pushState(null, `${pathname}?next=${query.redirect}`)
+      return pushState(null, `${ pathname }?next=${ query.redirect }`)
     } else {
       return pushState(null, pathname)
     }
