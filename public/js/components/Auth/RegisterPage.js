@@ -11,8 +11,7 @@ import Input from '../Base/Input'
 import BlockingModal from '../Base/BlockingModal';
 import RaisedButton from '../Base/RaisedButton';
 
-function validateEmail(email)
-{
+function validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
 }

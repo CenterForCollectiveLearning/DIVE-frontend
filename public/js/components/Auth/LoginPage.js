@@ -11,8 +11,7 @@ import Input from '../Base/Input'
 import BlockingModal from '../Base/BlockingModal';
 import RaisedButton from '../Base/RaisedButton';
 
-function validateEmail(email)
-{
+function validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
 }
@@ -43,12 +42,21 @@ class AuthPage extends Component {
     this.ensureNotLoggedIn(nextProps)
   }
 
-  handleEmailChange(e) {
-     this.setState({ email: e.target.value });
-  }
+  handleUsernameOrEmailChange(e) {
+    const input = e.target.value;
+    const isEmailInput = validateEmail(input);
 
-  handleUsernameChange(e) {
-     this.setState({ username: e.target.value });
+    if (isEmailInput) {
+      this.setState({
+        username: '',
+        email: input
+      });
+    } else {
+      this.setState({
+        username: input,
+        email: ''
+      });
+    }
   }
 
   handlePasswordChange(e) {
@@ -83,8 +91,6 @@ class AuthPage extends Component {
     const { email, username, password } = this.state;
     const loginDisabled = ( !email && !username ) || (!password || password == null)
 
-    console.log()
-
     if (authRequired) {
       openModal();
     }
@@ -108,7 +114,7 @@ class AuthPage extends Component {
           <form className={ styles.authForm } onSubmit={ this.submit.bind(this) } >
             <div className={ styles.authInputGroup }>
               <div className={ styles.authInputLabelAndError}>
-                <div className={ styles.authInputLabel }>Username</div>
+                <div className={ styles.authInputLabel }>Username or E-mail</div>
                 { loginError &&
                   <div className={ styles.error }>
                     { loginError }
@@ -119,25 +125,9 @@ class AuthPage extends Component {
                 type="text"
                 placeholder="diveuser"
                 autocomplete="on"
-                onChange={ this.handleUsernameChange.bind(this) }
+                onChange={ this.handleUsernameOrEmailChange.bind(this) }
               />
             </div>
-            <div className={ styles.orSeparator }>
-              <div className={ styles.or }>OR</div>
-            </div>
-            <div className={ styles.authInputGroup }>
-              <div className={ styles.authInputLabelAndError}>
-                <div className={ styles.authInputLabel }>E-mail</div>
-              </div>
-              <Input
-                type="text"
-                placeholder="jane@gmail.com"
-                autocomplete="on"
-                onChange={ this.handleEmailChange.bind(this) }
-              />
-            </div>
-            <div className={ styles.separator } />
-
             <div className={ styles.authInputGroup }>
               <div className={ styles.authInputLabelAndError}>
                 <div className={ styles.authInputLabel }>Password</div>
