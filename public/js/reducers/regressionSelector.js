@@ -1,4 +1,5 @@
 import {
+  SELECT_REGRESSION_MODE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
   RECEIVE_FIELD_PROPERTIES,
@@ -11,6 +12,16 @@ import {
   CLEAR_ANALYSIS
 } from '../constants/ActionTypes';
 
+const regressionModes = [ {
+  id: 'automated',
+  label: 'Automated',
+  selected: false,
+}, {
+  id: 'builder',
+  label: 'Builder',
+  selected: false
+}];
+
 const baseState = {
   fieldProperties: [],
   dependentVariableId: null,
@@ -21,11 +32,28 @@ const baseState = {
     error: null,
     data: null
   },
+  builderSpec: {
+  },
+  regressionModes: regressionModes,
+  selectedMode: null,
   contributionToRSquared: []
 }
 
 export default function regressionSelector(state = baseState, action) {
   switch (action.type) {
+    case SELECT_REGRESSION_MODE:
+      var regressionResult;
+      if (action.selectedModeId == 'builder') {
+        regressionResult = baseState.regressionResult;
+      } else {
+        regressionResult = state.regressionResult;
+      }
+
+      const selectedRegressionModes = state.regressionModes.map((modeObject) =>
+        new Object({ ...modeObject, selected: ( modeObject.id == action.selectedModeId )})
+      )
+      return { ...state, regressionModes: selectedRegressionModes, selectedMode: action.selectedModeId, regressionResult: regressionResult }
+
     case SELECT_REGRESSION_DEPENDENT_VARIABLE:
       const independentVariables = state.fieldProperties
         .filter((property) => property.id != action.dependentVariableId && !( property.generalType == 'c' && property.isUnique ) && !( property.generalType == 'c' && property.uniqueValues.length > 2 ))
