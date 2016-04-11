@@ -6,7 +6,7 @@ import styles from './Compose.sass';
 import { fetchDocuments } from '../../actions/ComposeActions';
 import ComposePage from './ComposePage';
 import ComposeSidebar from './ComposeSidebar';
-import ComposeView from './ComposeView';
+import ComposeEditor from './ComposeEditor';
 
 export class NarrativeBasePage extends Component {
   render() {
@@ -14,7 +14,9 @@ export class NarrativeBasePage extends Component {
     return (
       <div className={ `${ styles.fillContainer } ${ styles.composePageContainer }` }>
         <div className={ `${ styles.fillContainer } ${ styles.composeContentContainer }` }>
-          <ComposeView editable={ false } selectedDocument={ selectedDocument }/>
+          <div className={ styles.storyContainer }>
+            <ComposeEditor editable={ false } selectedDocument={ selectedDocument }/>
+          </div>
         </div>
         { this.props.children }
       </div>
