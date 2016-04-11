@@ -15,8 +15,6 @@ import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
 import HeaderBar from '../Base/HeaderBar';
 import ComposeEditor from './ComposeEditor';
-import Input from '../Base/Input';
-import _ from 'underscore';
 
 import { saveDocumentTitle } from '../../actions/ComposeActions';
 
@@ -27,15 +25,12 @@ export class ComposeView extends Component {
     this.onClickNewDocument = this.onClickNewDocument.bind(this);
     this.onClickDeleteDocument = this.onClickDeleteDocument.bind(this);
     this.onSelectDocument = this.onSelectDocument.bind(this);
+    this.onClickShareDocument = this.onClickShareDocument.bind(this);
 
     const { selectedDocument } = this.props;
-    const heading = selectedDocument ? selectedDocument.title : 'New Document';
-
-    this.saveDocumentTitle = _.debounce(this.props.saveDocumentTitle, 800);
 
     this.state = {
-      selectedDocument: selectedDocument,
-      documentHeading: heading
+      selectedDocument: selectedDocument
     }
   }
 
@@ -58,12 +53,6 @@ export class ComposeView extends Component {
     }
   }
 
-  onTitleChange(event) {
-    const heading = event.target.value;
-    this.setState({ documentHeading: heading });
-    this.saveDocumentTitle(this.state.selectedDocument.id, heading);
-  }
-
   onSelectDocument(documentId) {
     const { projectId, pushState } = this.props;
     if (documentId) {
@@ -81,6 +70,10 @@ export class ComposeView extends Component {
     deleteDocument(projectId, composeSelector.documentId);
     const nextDocId = documents.items.find((doc) => doc.id != composeSelector.documentId).id;
     pushState(null, `/projects/${ projectId }/compose/${ nextDocId }`);
+  }
+
+  onClickShareDocument() {
+    window.open(`/stories/${ this.props.composeSelector.documentId }`, '_blank');
   }
 
   render() {
@@ -104,6 +97,9 @@ export class ComposeView extends Component {
               <div className={ styles.headerControl }>
                 <RaisedButton icon altText="New document" onClick={ this.onClickNewDocument }><i className="fa fa-file-o"></i></RaisedButton>
               </div>
+              <div className={ styles.headerControl }>
+                <RaisedButton onClick={ this.onClickShareDocument }>Share</RaisedButton>
+              </div>
               { !documents.isFetching && documents.items.length > 0 &&
                 <div className={ styles.headerControl + ' ' + styles.headerControlLong }>
                   <DropDownMenu
@@ -119,22 +115,7 @@ export class ComposeView extends Component {
               }
             </div>
           }/>
-        <div className={ styles.composeEditorContainer }>
-          <div className={
-              styles.editorHeader
-              + ( editable ? ' ' + styles.editable : '' )
-            }>
-            <div className={ styles.editorHeaderText }>
-              <Input
-                className={ styles.documentTitle }
-                readonly={ !editable }
-                type="text"
-                value={ this.state.documentHeading }
-                onChange={ this.onTitleChange.bind(this) }/>
-            </div>
-          </div>
-          <ComposeEditor editable={ editable }/>
-        </div>
+        <ComposeEditor editable={ editable }/>
       </div>
     );
   }

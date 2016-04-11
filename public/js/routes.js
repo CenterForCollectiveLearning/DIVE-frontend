@@ -54,7 +54,7 @@ export default (
       <Route path="/features" component={ FeaturesPage }/>
     </Route>
 
-    <Route path="narrative" component={ NarrativeBasePage }>
+    <Route path="/stories" component={ NarrativeBasePage }>
       <Route path=":documentId" component={ NarrativePage }/>
     </Route>
 

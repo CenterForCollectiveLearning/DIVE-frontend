@@ -14,7 +14,7 @@
 .composeContentContainer
   flex-direction: row
 
-  .composeViewContainer
+  .composeViewContainer, .storyContainer
     display: flex
     flex-direction: column
     flex-grow: 1
@@ -24,6 +24,12 @@
     .composeEditorContainer
       flex-grow: 1
       background-color: rgba(255, 255, 255, 0.7)
+
+  .storyContainer
+    align-items: center
+
+    .composeEditorContainer
+      max-width: 960px
 
 .sidebarVisualizationHeader
   font-size: 13px
