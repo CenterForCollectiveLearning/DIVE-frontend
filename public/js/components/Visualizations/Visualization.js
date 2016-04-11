@@ -54,6 +54,8 @@ export default class Visualization extends Component {
     }
     const { data, bins, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
 
+    const labels = spec.meta.labels ? spec.meta.labels : {};
+
     var finalDataArray = data;
     var sortIndex;
 
@@ -236,8 +238,6 @@ export default class Visualization extends Component {
     }
 
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
-
-    const labels = spec.meta.labels ? spec.meta.labels : {}
 
     const tooMuchDataToPreview =
       (isMinimalView &&
