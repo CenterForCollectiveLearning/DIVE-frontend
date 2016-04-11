@@ -4,7 +4,7 @@ import { pushState, replaceState } from 'redux-react-router';
 import DocumentTitle from 'react-document-title';
 import styles from './Compose.sass';
 
-import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
+import { fetchDatasets } from '../../actions/DatasetActions';
 import { fetchDocuments } from '../../actions/ComposeActions';
 import ComposePage from './ComposePage';
 import ComposeSidebar from './ComposeSidebar';
@@ -12,10 +12,10 @@ import ComposeView from './ComposeView';
 
 export class ComposeBasePage extends Component {
   componentWillMount() {
-    const { params, project, datasetSelector, datasets, documents, replaceState, fetchDatasetsIfNeeded, fetchDocuments } = this.props;
+    const { params, project, datasetSelector, datasets, documents, replaceState, fetchDatasets, fetchDocuments } = this.props;
 
     if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
-      fetchDatasetsIfNeeded(project.properties.id);
+      fetchDatasets(project.properties.id);
     }
 
     if (!params.documentId) {
@@ -28,10 +28,10 @@ export class ComposeBasePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, composeSelector, project, datasetSelector, datasets, documents, replaceState, pushState, fetchDatasetsIfNeeded, fetchDocuments } = nextProps;
+    const { params, composeSelector, project, datasetSelector, datasets, documents, replaceState, pushState, fetchDatasets, fetchDocuments } = nextProps;
 
     if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
-      fetchDatasetsIfNeeded(project.properties.id);
+      fetchDatasets(project.properties.id);
     }
 
     if (!params.documentId && documents.items.length > 0) {
@@ -68,4 +68,4 @@ function mapStateToProps(state) {
   return { documents, composeSelector, project, datasetSelector, datasets, selectedDocument: selectedDocument, projectTitle: project.properties.title };
 }
 
-export default connect(mapStateToProps, { fetchDocuments, fetchDatasetsIfNeeded, pushState, replaceState })(ComposeBasePage);
+export default connect(mapStateToProps, { fetchDocuments, fetchDatasets, pushState, replaceState })(ComposeBasePage);
