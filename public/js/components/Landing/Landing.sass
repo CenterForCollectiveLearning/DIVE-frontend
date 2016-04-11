@@ -25,6 +25,20 @@
     content: ""
     z-index: -1
 
+  &:after
+    content: ""
+    position: absolute
+    top: 0
+    left: 0
+    height: 100%
+    width: 100%
+    z-index: -1
+
+    opacity: 0.2
+    background-color: transparent
+    background-image: linear-gradient(0deg, transparent 24%, #646FB7 25%, #646FB7 26%, transparent 27%, transparent 74%, #646FB7 75%, #646FB7 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, #646FB7 25%, transparent 26%, transparent 74%, #646FB7 75%, transparent 76%, transparent)
+    background-size: 150px 50px
+
 .background
   position: absolute
   top: 0
@@ -35,14 +49,7 @@
   background: linear-gradient(to bottom right, #3A3147, #1A2E56)
   background-size: cover
   background-position: 50% 0%
-
-  .grid
-    opacity: 0.3
-    background-color: transparent
-    background-image: linear-gradient(0deg, transparent 24%, #646FB7 25%, #646FB7 26%, transparent 27%, transparent 74%, #646FB7 75%, #646FB7 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, #646FB7 25%, transparent 26%, transparent 74%, #646FB7 75%, transparent 76%, transparent)
-    height: 100%
-    background-size: 150px 50px
-
+  
 .header
   display: flex
   flex-direction: row
