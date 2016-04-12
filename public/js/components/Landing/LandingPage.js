@@ -40,7 +40,7 @@ export class LandingPage extends Component {
         <div className={ styles.fillContainer + ' ' + styles.landingPage }>
           <div className={ styles.background }>
           </div>
-          <div className={ styles.landingPageContent }>
+          <div className={ styles.landingPageContent + ( this.props.children ? ' ' + styles.landingPageProjects : ' ' + styles.landingPageHome) }>
             <div className={ styles.header }>
               <div className={ styles.logoContainer } onClick={ this._onClickLogo.bind(this) }>
                 <div className={ styles.logoText }>
