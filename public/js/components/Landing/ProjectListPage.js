@@ -70,8 +70,7 @@ export class ProjectListPage extends Component {
               </div>
             </div>
           }
-          <div className={ styles.separater }></div>
-          <div className={ styles.projectsContainer }>
+          <div className={ styles.projectsContainer + ' ' + styles.preloadedProjectsContainer }>
             <div className={ styles.projectTypeContainer }>
               <div className={ styles.flexbox }>
                 <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Or explore preloaded projects:</div>
