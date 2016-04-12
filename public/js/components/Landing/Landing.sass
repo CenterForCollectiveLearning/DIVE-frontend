@@ -11,6 +11,12 @@
   align-items: center
   position: relative
 
+  flex-grow: 1
+
+  &.landingPageProjects
+    display: flex
+    flex-direction: column
+
   &:before
     background: url("http://i.imgur.com/rqcfgEV.jpg") no-repeat
     background-size: cover
@@ -49,7 +55,7 @@
   background: linear-gradient(to bottom right, #3A3147, #1A2E56)
   background-size: cover
   background-position: 50% 0%
-  
+
 .header
   display: flex
   flex-direction: row
@@ -81,6 +87,7 @@
   flex-direction: column
   max-width: 800px
   align-items: center
+  flex-shrink: 0
 
   .primaryCopy, .secondaryCopy
     font-family: 'Roboto Condensed', 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
@@ -184,6 +191,11 @@
     padding-bottom: 0
     margin-top: 50px
     margin-bottom: -50px
+    flex-shrink: 0
+
+  &.preloadedProjectsContainer
+    flex-grow: 1
+    flex-shrink: 0
 
   .secondaryCopy
     text-transform: uppercase
