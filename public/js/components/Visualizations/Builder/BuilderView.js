@@ -79,6 +79,7 @@ export class BuilderView extends Component {
           </div>
         </div>
       </VisualizationView>
+
     );
   }
 }

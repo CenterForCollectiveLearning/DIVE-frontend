@@ -285,6 +285,7 @@ export default class Visualization extends Component {
         }
         <div className={ styles.visualization
             + ' ' + styles[validVisualizationTypes[0]]
+            + (isMinimalView ? ' ' + styles.minimal : '')
             + (visualizationClassName ? ' ' + visualizationClassName : '')
           }>
             { (validVisualizationTypes[0] == 'hist') &&
