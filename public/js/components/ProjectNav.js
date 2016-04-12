@@ -101,7 +101,7 @@ export class ProjectNav extends Component {
           </div>
           <Logo className={ styles.logo } />
         </div>
-        { project.properties.length && !project.properties.preloaded &&
+        { project.properties.id && !project.properties.preloaded &&
           <div className={ styles.projectSelectorContainer }>
             <DropDownMenu
               className={ styles.projectSelector }
