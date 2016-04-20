@@ -174,7 +174,7 @@ function receiveSpecVisualizationDispatcher(json) {
     spec: json.spec,
     exported: json.exported,
     exportedSpecId: json.exportedSpecId,
-    tableData: formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data),
+    tableData: json.visualization.table ? formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data) : [],
     bins: json.visualization.bins,
     visualizationData: json.visualization.visualize,
     receivedAt: Date.now()
