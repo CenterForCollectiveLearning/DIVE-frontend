@@ -317,7 +317,7 @@ div.conditionalCombinator
 
     svg
       g
-        cursor: pointer!important // override google's default
+        cursor: pointer!important
 
 .gridContainer
   .grid
@@ -357,18 +357,22 @@ div.conditionalCombinator
       height: 29px
       line-height: 29px
 
+
 .visualization
   &.tree
     svg
-      pointer-events: none
-
       g
         outline: none
-        pointer-events: none
-
       text
         fill: rgba(0, 0, 0, 0.4)
         font-size: 16px
+
+    &.minimal
+      svg
+        pointer-events: none
+        g
+          outline: none
+          pointer-events: none
 
   svg
     g text[font-weight="bold"][text-anchor="middle"]

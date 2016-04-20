@@ -24,7 +24,7 @@ import {
 
 import _ from 'underscore';
 import { fetch, pollForTask } from './api.js';
-import { formatTableData } from './ActionHelpers.js'
+import { formatVisualizationTableData } from './ActionHelpers.js'
 
 function requestSpecsDispatcher() {
   return {
@@ -174,7 +174,7 @@ function receiveSpecVisualizationDispatcher(json) {
     spec: json.spec,
     exported: json.exported,
     exportedSpecId: json.exportedSpecId,
-    tableData: json.visualization.table ? formatTableData(json.visualization.table.columns, json.visualization.table.data) : [],
+    tableData: json.visualization.table ? formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data) : [],
     bins: json.visualization.bins,
     visualizationData: json.visualization.visualize,
     receivedAt: Date.now()

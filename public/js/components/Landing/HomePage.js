@@ -49,7 +49,7 @@ export class HomePage extends Component {
         <div className={ styles.centeredFill }>
           <div className={ styles.ctaBox }>
             <div className={ styles.primaryCopy }>
-              <span>Find the stories in your data</span>
+              <span>Turn Data into Stories in Minutes</span>
             </div>
             <div className={ styles.secondaryCopy }>
               Easy, powerful data visualizations and analysis. Create visual stories in seconds.
@@ -91,21 +91,27 @@ export class HomePage extends Component {
               <div className={ styles.rightBox }>
                 <div className={ styles.mugshots }>
                   <div className={ styles.mugshotContainer }>
-                    <img className={ styles.mugshot } src="/assets/images/kevin.mugshot.jpg"/>
+                    <a href="http://twitter.com/kevinzenghu" target="_blank">
+                      <img className={ styles.mugshot } src="/assets/images/kevin.mugshot.jpg"/>
+                    </a>
                     <div className={ styles.mugCaption }>
                       <span className={ styles.mugCaptionName }>Kevin Hu</span>
                       <span className={ styles.mugCaptionRole }>PhD Candidate, Software Engineer</span>
                     </div>
                   </div>
                   <div className={ styles.mugshotContainer }>
-                    <img className={ styles.mugshot } src="/assets/images/guru.mugshot.jpg"/>
+                    <a href="http://twitter.com/gurubavan" target="_blank">
+                      <img className={ styles.mugshot } src="/assets/images/guru.mugshot.jpg"/>
+                    </a>
                     <div className={ styles.mugCaption }>
                       <span className={ styles.mugCaptionName }>Guru Mahendran</span>
                       <span className={ styles.mugCaptionRole }>Software Engineer, Designer</span>
                     </div>
                   </div>
                   <div className={ styles.mugshotContainer }>
-                    <img className={ styles.mugshot } src="/assets/images/cesar.mugshot.jpg"/>
+                    <a href="http://twitter.com/cesifoti" target="_blank">
+                      <img className={ styles.mugshot } src="/assets/images/cesar.mugshot.jpg"/>
+                    </a>
                     <div className={ styles.mugCaption }>
                       <span className={ styles.mugCaptionName }>César Hidalgo</span>
                       <span className={ styles.mugCaptionRole }>Professor, Advisor</span>

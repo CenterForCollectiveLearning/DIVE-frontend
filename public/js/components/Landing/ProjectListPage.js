@@ -63,7 +63,7 @@ export class ProjectListPage extends Component {
                   { projects.isFetching &&
                     <div className={ styles.watermark }>Fetching projects...</div>
                   }
-                  { userProjects.map((project) =>
+                  { userProjects.slice(0, 6).map((project) =>
                     <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
                   )}
                 </div>

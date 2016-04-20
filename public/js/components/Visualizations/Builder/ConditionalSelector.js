@@ -27,32 +27,32 @@ export default class ConditionalSelector extends Component {
       {
         value: '==',
         label: '=',
-        validTypes: ['c', 'q']
+        validTypes: ['c', 'q', 't']
       },
       {
         value: '!=',
         label: '≠',
-        validTypes: ['c', 'q']
+        validTypes: ['c', 'q', 't']
       },
       {
         value: '<',
         label: '<',
-        validTypes: ['q']
+        validTypes: ['q', 't']
       },
       {
         value: '>',
         label: '>',
-        validTypes: ['q']
+        validTypes: ['q', 't']
       },
       {
         value: '<=',
         label: '≤',
-        validTypes: ['q']
+        validTypes: ['q', 't']
       },
       {
         value: '>=',
         label: '≥',
-        validTypes: ['q']
+        validTypes: ['q', 't']
       },
     ];
 
@@ -156,7 +156,7 @@ export default class ConditionalSelector extends Component {
                 displayTextMember="label"
                 onChange={ this.onSelectFieldValue.bind(this) }/>
             }
-            { selectedField && selectedField.generalType == 'q' &&
+            { selectedField && (selectedField.generalType == 'q' || selectedField.generalType == 't') &&
               <Input
                 className={ styles.conditionalInput + (fieldId == null ? ' ' + styles.disabledInput : '') }
                 placeholder={ `${ value }` }
