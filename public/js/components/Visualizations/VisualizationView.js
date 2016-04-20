@@ -11,6 +11,7 @@ export default class VisualizationView extends Component {
     const { visualization } = this.props;
 
     const visualizationTypes = visualization.visualizationType ? [ visualization.visualizationType ] : [];
+
     return (
       <div className={ styles.visualizationViewContainer }>
         { visualization.spec.id && !visualization.isFetching &&
