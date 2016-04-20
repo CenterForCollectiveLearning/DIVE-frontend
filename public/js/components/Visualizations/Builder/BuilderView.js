@@ -62,27 +62,25 @@ export class BuilderView extends Component {
     const disabled = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
 
     return (
-      <div>
-        <VisualizationView visualization={ visualization }>
-          <div className={ styles.headerControlRow }>
-            <div className={ styles.headerControl }>
-              <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
-            </div>
-            <div className={ styles.headerControl }>
-              <RaisedButton onClick={ this.onClickShare }>
-                { visualization.isExporting && "Exporting..." }
-                { !visualization.isExporting && "Share" }
-              </RaisedButton>
-            </div>
-            <div className={ styles.headerControl }>
-              <RaisedButton onClick={ this.saveVisualization } disabled={ disabled }>
-                { !visualization.isSaving && visualization.exportedSpecId && <i className="fa fa-star"></i> }
-                { !visualization.exportedSpecId && <i className="fa fa-star-o"></i> }
-              </RaisedButton>
-            </div>
+      <VisualizationView visualization={ visualization }>
+        <div className={ styles.headerControlRow }>
+          <div className={ styles.headerControl }>
+            <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
           </div>
-        </VisualizationView>
-      </div>
+          <div className={ styles.headerControl }>
+            <RaisedButton onClick={ this.onClickShare }>
+              { visualization.isExporting && "Exporting..." }
+              { !visualization.isExporting && "Share" }
+            </RaisedButton>
+          </div>
+          <div className={ styles.headerControl }>
+            <RaisedButton onClick={ this.saveVisualization } disabled={ disabled }>
+              { !visualization.isSaving && visualization.exportedSpecId && <i className="fa fa-star"></i> }
+              { !visualization.exportedSpecId && <i className="fa fa-star-o"></i> }
+            </RaisedButton>
+          </div>
+        </div>
+      </VisualizationView>
     );
   }
 }
