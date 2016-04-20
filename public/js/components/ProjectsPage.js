@@ -30,6 +30,7 @@ export class ProjectsPage extends Component {
   render() {
     const { project } = this.props;
     const documentTitle = project.properties.title ? `DIVE / ${ project.properties.title }`: 'DIVE';
+
     return (
       <DocumentTitle title={ documentTitle }>
         <div className={ styles.fillContainer + ' ' + styles.projectContainer }>

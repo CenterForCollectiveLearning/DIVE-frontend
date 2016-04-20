@@ -8,7 +8,15 @@ const taskManager = new TaskManager();
 
 export function fetch(urlPath, options) {
   const completeUrl = API_URL + urlPath;
-  return isomorphicFetch(completeUrl, { ...options, credentials: 'include' });
+  return isomorphicFetch(completeUrl, { ...options, credentials: 'include' })
+    .then(function(response) {
+      console.log('IN THEN', response.status, response);
+      if (response.status >= 400) {
+        console.log('FETCH FAILURE');
+        throw new Error("Bad response from server");
+      }
+      return response;
+    });
 }
 
 export function httpRequest(method, urlPath, formData, completeEvent, uploadEvents) {
@@ -54,6 +62,7 @@ export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, prog
         } else if (data.state == 'FAILURE') {
           taskManager.removeTask(taskId);
           console.error(data.error);
+          Raven.captureException(new Error(data.error));
           dispatch(errorDispatcher(data));
         } else if (counter > limit) {
           revokeTasks(taskId).then((revokeData) => {
