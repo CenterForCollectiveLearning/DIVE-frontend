@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
+import { analyticsMiddleware } from '../middleware/analytics';
 import debounce from 'redux-debounced';
 import rootReducer from '../reducers/index';
 
@@ -16,7 +17,7 @@ const loggerMiddleware = createLogger({
 let createStoreWithMiddleware;
 
 createStoreWithMiddleware = compose(
-  applyMiddleware(debounce, thunkMiddleware, loggerMiddleware),
+  applyMiddleware(debounce, thunkMiddleware, analyticsMiddleware, loggerMiddleware),
   reduxReactRouter({
     routes,
     createHistory
