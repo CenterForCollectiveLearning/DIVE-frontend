@@ -95,8 +95,7 @@ export function runAggregation(projectId, datasetId, aggregationVariable, compar
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(function(json) {
+    }).then(function(json) {
         if (json.compute) {
           dispatch(pollForTask(json.taskId, REQUEST_AGGREGATION, params, receiveAggregationDispatcher, progressAggregationDispatcher, errorAggregationDispatcher));
         } else {
@@ -151,15 +150,13 @@ export function runComparisonOneDimensional(projectId, datasetId, aggregationVar
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(function(json) {
+    }).then(function(json) {
         if (json.compute) {
           dispatch(pollForTask(json.taskId, REQUEST_ONE_D_COMPARISON, params, receiveOneDComparisonDispatcher, progressOneDComparisonDispatcher, errorOneDComparisonDispatcher));
         } else {
           dispatch(receiveOneDComparisonDispatcher(params, json));
         }
       })
-      .catch(err => console.error("Error creating contingency table: ", err));
   };
 }
 
@@ -206,14 +203,12 @@ export function getVariableSummaryStatistics(projectId, datasetId, aggregationVa
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(function(json) {
+    }).then(function(json) {
         if (json.compute) {
           dispatch(pollForTask(json.taskId, REQUEST_SUMMARY_STATISTICS, params, receiveSummaryStatisticsDispatcher, progressSummaryStatisticsDispatcher, errorSummaryStatisticsDispatcher));
         } else {
           dispatch(receiveSummaryStatisticsDispatcher(params, json));
         }
       })
-      .catch(err => console.error('Error creating summary table: ', err));
   };
 }

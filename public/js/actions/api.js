@@ -6,17 +6,35 @@ const API_URL = window.__env.API_URL;
 
 const taskManager = new TaskManager();
 
+function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response
+  } else {
+    var error = new Error(response.statusText)
+    Raven.captureException(error);
+    error.response = response
+    throw error
+  }
+}
+
+function parseJSON(response) {
+  return response.json()
+}
+
 export function fetch(urlPath, options) {
   const completeUrl = API_URL + urlPath;
   return isomorphicFetch(completeUrl, { ...options, credentials: 'include' })
-    .then(function(response) {
-      console.log('IN THEN', response.status, response);
-      if (response.status >= 400) {
-        console.log('FETCH FAILURE');
-        throw new Error("Bad response from server");
-      }
-      return response;
-    });
+    .then(checkStatus)
+    .then(parseJSON);
+  // return isomorphicFetch(completeUrl, { ...options, credentials: 'include' })
+  //   .then(function(response) {
+  //     const responseCopy = response;
+  //     if (responseCopy.status >= 400) {
+  //       console.log(responseCopy.text());
+  //       Raven.captureException(new Error(responseCopy.message));
+  //     }
+  //     return response;
+  //   });
 }
 
 export function httpRequest(method, urlPath, formData, completeEvent, uploadEvents) {

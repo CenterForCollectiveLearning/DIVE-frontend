@@ -60,7 +60,6 @@ export function fetchExportedVisualizationSpecs(projectId) {
   return (dispatch) => {
     dispatch(requestExportedVisualizationSpecsDispatcher());
     return fetch(`/exported_specs/v1/exported_specs?project_id=${projectId}`)
-      .then(response => response.json())
       .then(function(json) {
         const dispatchParams = {};
         dispatch(receiveExportedVisualizationSpecsDispatcher(dispatchParams, json.result))
@@ -125,7 +124,6 @@ export function fetchPublishedDocument(documentId) {
   return (dispatch) => {
     dispatch(requestPublishedDocumentDispatcher(documentId));
     return fetch(`/compose/v1/document/${ documentId }?include_data=true`)
-      .then(response => response.json())
       .then(function(json) {
         const dispatchParams = {};
         dispatch(receivePublishedDocumentDispatcher(documentId, json))
@@ -137,7 +135,6 @@ export function fetchDocuments(projectId) {
   return (dispatch) => {
     dispatch(requestDocumentsDispatcher(projectId));
     return fetch(`/compose/v1/documents?project_id=${projectId}`)
-      .then(response => response.json())
       .then(function(json) {
         const dispatchParams = {};
         dispatch(receiveDocumentsDispatcher(dispatchParams, json))
@@ -173,8 +170,7 @@ export function createNewDocument(projectId, content={}) {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveCreateDocumentDispatcher(projectId, json)))
+    }).then(json => dispatch(receiveCreateDocumentDispatcher(projectId, json)))
   }
 }
 
@@ -199,8 +195,7 @@ export function deleteDocument(projectId, documentId) {
     dispatch(requestDeleteDocumentDispatcher(projectId, documentId));
     return fetch(`/compose/v1/document/${ documentId }?project_id=${projectId}`, {
       method: 'delete'
-    }).then(response => response.json())
-      .then(json => dispatch(receiveDeleteDocumentDispatcher(projectId, json)))
+    }).then(json => dispatch(receiveDeleteDocumentDispatcher(projectId, json)))
   }
 }
 
@@ -239,8 +234,7 @@ function saveDocument(dispatch, getState) {
     method: 'put',
     body: JSON.stringify(params),
     headers: { 'Content-Type': 'application/json' }
-  }).then(response => response.json())
-    .then(json => dispatch(receiveSaveDocumentDispatcher(projectId, documentId, json)))
+  }).then(json => dispatch(receiveSaveDocumentDispatcher(projectId, documentId, json)))
 }
 
 const debouncedChangeDocument = _.debounce(saveDocument, 800);

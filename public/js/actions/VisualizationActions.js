@@ -108,8 +108,7 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommend
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(function(json) {
+    }).then(function(json) {
         const dispatchParams = { project_id: projectId, dataset_id: datasetId, recommendationType: recommendationType };
         if (json.compute) {
           dispatch(pollForTask(json.taskId, REQUEST_SPECS, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher, errorSpecsDispatcher));
@@ -229,7 +228,6 @@ function fetchSpecVisualization(projectId, specId, conditionals = [], config = n
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     })
-      .then(response => response.json())
       .then(json => dispatch(receiveSpecVisualizationDispatcher(json)));
   };
 }
@@ -306,8 +304,7 @@ export function createExportedSpec(projectId, specId, data, conditionals=[], con
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveCreatedExportedSpecDispatcher(receiveAction, json)))
+    }).then(json => dispatch(receiveCreatedExportedSpecDispatcher(receiveAction, json)))
       .catch(err => console.error("Error creating exported spec: ", err));
   };
 }
