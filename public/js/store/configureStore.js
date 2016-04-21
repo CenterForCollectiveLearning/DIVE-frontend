@@ -1,4 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
+import { browserHistory } from 'react-router';
+import { routerMiddleware } from 'react-router-redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import { analyticsMiddleware } from '../middleware/analytics';
@@ -21,6 +23,7 @@ export default function configureStore(initialState) {
       debounce,
       thunkMiddleware,
       analyticsMiddleware,
+      routerMiddleware(browserHistory),
       loggerMiddleware
     )
   );
