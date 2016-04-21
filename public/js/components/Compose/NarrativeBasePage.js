@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState, replaceState } from 'redux-react-router';
 import styles from './Compose.sass';
 
 import { fetchDocuments } from '../../actions/ComposeActions';
@@ -36,4 +35,4 @@ function mapStateToProps(state) {
   return { composeSelector, selectedDocument: selectedDocument };
 }
 
-export default connect(mapStateToProps, { fetchDocuments, pushState, replaceState })(NarrativeBasePage);
+export default connect(mapStateToProps, { fetchDocuments })(NarrativeBasePage);

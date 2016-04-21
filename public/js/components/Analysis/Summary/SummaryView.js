@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import { push } from 'react-router-redux';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { runAggregation, runComparisonOneDimensional, getVariableSummaryStatistics } from '../../../actions/SummaryActions';
@@ -72,10 +72,10 @@ export class SummaryView extends Component {
   }  
 
   clickDataset(datasetId) {
-    const { projectId, clearAnalysis, selectDataset, pushState } = this.props;
+    const { projectId, clearAnalysis, selectDataset, push } = this.props;
     clearAnalysis();
     selectDataset(projectId, datasetId);
-    pushState(null, `/projects/${ projectId }/datasets/${ datasetId }/analyze/summary`);
+    push(`/projects/${ projectId }/datasets/${ datasetId }/analyze/summary`);
   }
 
   render() {
@@ -231,7 +231,7 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  pushState,
+  push,
   runAggregation,
   runComparisonOneDimensional,
   getVariableSummaryStatistics,
