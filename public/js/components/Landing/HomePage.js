@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './Landing.sass';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
@@ -23,7 +23,7 @@ export class HomePage extends Component {
 
     if (this.props.project.properties.id != nextProjectId) {
       this.props.wipeProjectState();
-      this.props.pushState(null, `/projects/${ nextProjectId }/datasets/upload`);
+      this.props.push(`/projects/${ nextProjectId }/datasets/upload`);
     }
 
     if (this.props.userId != nextUserId) {
@@ -137,4 +137,4 @@ function mapStateToProps(state) {
   return { project, projects, userId: user.id };
 }
 
-export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, pushState })(HomePage);
+export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, push })(HomePage);

@@ -6,26 +6,24 @@ import debounce from 'redux-debounced';
 import rootReducer from '../reducers/index';
 
 import createHistory from 'history/lib/createBrowserHistory';
-import { reduxReactRouter } from 'redux-react-router';
-import routes from '../routes';
 
 const loggerMiddleware = createLogger({
   level: 'info',
   collapsed: false
 });
 
-let createStoreWithMiddleware;
-
-createStoreWithMiddleware = compose(
-  applyMiddleware(debounce, thunkMiddleware, analyticsMiddleware, loggerMiddleware),
-  reduxReactRouter({
-    routes,
-    createHistory
-  })
-)(createStore);
 
 export default function configureStore(initialState) {
-  const store = createStoreWithMiddleware(rootReducer, initialState);
+  const store = createStore(
+    rootReducer,
+    initialState,
+    applyMiddleware(
+      debounce,
+      thunkMiddleware,
+      analyticsMiddleware,
+      loggerMiddleware
+    )
+  );
 
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import { push } from 'react-router-redux';
 
 import { fetchProjectIfNeeded, createAUID, logoutUser } from '../actions/ProjectActions.js';
 import styles from './App/App.sass';
@@ -64,11 +64,11 @@ export class ProjectNav extends Component {
   }
 
   _handleTabsChange(tab){
-    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/${ tab.props.route }`);
+    this.props.push(`/projects/${ this.props.project.properties.id }/${ tab.props.route }`);
   }
 
   _onClickLogo(){
-    this.props.pushState(null, `/projects`);
+    this.props.push(`/projects`);
   }
 
   _logout() {
@@ -158,7 +158,6 @@ export class ProjectNav extends Component {
 
 ProjectNav.propTypes = {
   paramDatasetId: PropTypes.string,
-  pushState: PropTypes.func.isRequired,
   project: PropTypes.object,
   projects: PropTypes.object,
   user: PropTypes.object,
@@ -177,4 +176,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { pushState, logoutUser })(ProjectNav);
+export default connect(mapStateToProps, { push, logoutUser })(ProjectNav);

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import { pushState } from 'redux-react-router';
+import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/AuthActions';
@@ -38,8 +38,8 @@ class AuthPage extends Component {
   }
 
   closeRegistrationPage() {
-    const { pushState } = this.props;
-    pushState(null, '/projects')
+    const { push } = this.props;
+    push('/projects')
   }
 
   componentWillMount() {
@@ -84,15 +84,15 @@ class AuthPage extends Component {
   }
 
   _clickLogin() {
-    const { pushState } = this.props;
-    pushState(null, '/login')
+    const { push } = this.props;
+    push('/login')
   }
 
   ensureNotLoggedIn(props) {
-    const { isAuthenticated, pushState } = props;
+    const { isAuthenticated, push } = props;
 
     if (isAuthenticated){
-      pushState(null, props.location.query.next || '/projects');
+      push(props.location.query.next || '/projects');
     }
   };
 
@@ -236,4 +236,4 @@ function mapStateToProps(state) {
   return { registrationErrors: user.error.register, isAuthenticated: user.isAuthenticated };
 }
 
-export default connect(mapStateToProps, { registerUser, pushState})(AuthPage);
+export default connect(mapStateToProps, { registerUser, push })(AuthPage);

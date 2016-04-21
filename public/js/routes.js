@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Route, IndexRoute } from 'react-router';
-import { pushState } from 'redux-react-router';
+import { push } from 'react-router-redux';
 import { UserAuthWrapper } from 'redux-auth-wrapper';
 
 import AboutPage from './components/Landing/AboutPage';
@@ -34,9 +34,9 @@ const requireAuthentication = UserAuthWrapper({
   predicate: user => user.isAuthenticated,
   redirectAction: function({ pathname, query }){
     if (query.redirect) {
-      return pushState(null, `${ pathname }?next=${ query.redirect }`)
+      return push(`${ pathname }?next=${ query.redirect }`);
     } else {
-      return pushState(null, pathname)
+      return push(pathname);
     }
   },
   wrapperDisplayName: 'UserIsAuthenticated'
