@@ -32,8 +32,10 @@
 
         amplitude.init("64911db01ed752a1f955348ddd0e2276");
       } else {
-        window.amplitude = {};
-        amplitude.logEvent = (event) => {};
+        window.amplitude = {
+          logEvent: (event) => {},
+          setUserId: (id) => {}
+        };
       }
     </script>
     
