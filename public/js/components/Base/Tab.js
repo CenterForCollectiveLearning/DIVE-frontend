@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import { push } from 'react-router-redux';
 import styles from './Tabs.sass';
 
 class Tab extends Component {
@@ -8,7 +8,7 @@ class Tab extends Component {
     if (this.props.onClick) {
       this.props.onClick(e);
     } else if (this.props.route) {
-      this.props.pushState(null, this.props.route);
+      this.props.push(this.props.route);
     }
   }
   render() {
@@ -59,4 +59,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { pushState })(Tab);
+export default connect(mapStateToProps, { push })(Tab);
