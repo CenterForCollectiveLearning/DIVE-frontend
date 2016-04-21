@@ -5,21 +5,51 @@ import styles from './Compose.sass';
 import ComposeBlockHeader from './ComposeBlockHeader';
 import ComposeBlockText from './ComposeBlockText';
 import ComposeBlockVisualization from './ComposeBlockVisualization';
+import ToggleButtonGroup from '../Base/ToggleButtonGroup';
+import RaisedButton from '../Base/RaisedButton';
 
 import { saveBlock } from '../../actions/ComposeActions'
 import { BLOCK_FORMATS } from '../../constants/BlockFormats';
-
 
 export class ComposeBlock extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      exportedSpec: null
+      exportedSpec: null,
+      formatTypes: [
+        {
+          label: "Visualization on top",
+          content: <i className="fa fa-caret-up"></i>,
+          value: BLOCK_FORMATS.TEXT_BOTTOM,
+          selected: false
+        },
+        {
+          label: "Visualization on bottom",
+          content: <i className="fa fa-caret-down"></i>,
+          value: BLOCK_FORMATS.TEXT_TOP,
+          selected: false
+        },
+        {
+          label: "Visualization on left",
+          content: <i className="fa fa-caret-left"></i>,
+          value: BLOCK_FORMATS.TEXT_RIGHT,
+          selected: false
+        },
+        {
+          label: "Visualization on right",
+          content: <i className="fa fa-caret-right"></i>,
+          value: BLOCK_FORMATS.TEXT_LEFT,
+          selected: true
+        }
+      ]
     }
+
+    this.onClickRemoveBlock = this.onClickRemoveBlock.bind(this);
   }
 
   componentWillMount() {
     const exportedSpec = this.props.exportedSpecs.items.find((spec) => spec.id == this.props.block.exportedSpecId);
+    this.setStateBlockFormat(this.props.format);
     this.setState({ exportedSpec: exportedSpec });
   }
 
@@ -28,8 +58,28 @@ export class ComposeBlock extends Component {
       const exportedSpec = nextProps.exportedSpecs.items.find((spec) => spec.id == nextProps.block.exportedSpecId);
       this.setState({ exportedSpec: exportedSpec });
     }
+    if (nextProps.format != this.props.format) {
+      this.setStateBlockFormat(nextProps.format);
+    }
   }
 
+  setStateBlockFormat(blockFormat) {
+    const formats = this.state.formatTypes.map((formatType) =>
+      new Object({ ...formatType, selected: formatType.value == blockFormat })
+    );
+    this.setState({ formatTypes: formats });
+  }
+
+  selectBlockFormat(blockFormat) {
+    const { id, onSave } = this.props;
+    onSave(id, 'format', blockFormat);
+    this.setStateBlockFormat(blockFormat);
+  }
+
+  onClickRemoveBlock() {
+    const { spec, selectComposeVisualization } = this.props;
+    selectComposeVisualization(spec.id, spec.meta.desc);
+  }
 
   render() {
     const { exportedSpec, updatedAt } = this.state;
@@ -104,6 +154,23 @@ export class ComposeBlock extends Component {
 
     return (
       <div ref="composeBlock" className={ styles.composeBlock + ' ' + styles[block.format] }>
+        <div className={ styles.composeVisualizationControls }>
+          <ToggleButtonGroup
+            toggleItems={ this.state.formatTypes }
+            className={ styles.visualizationOverlayControl }
+            buttonClassName={ styles.visualizationOverlayButton }
+            altTextMember="label"
+            displayTextMember="content"
+            valueMember="value"
+            onChange={ this.selectBlockFormat.bind(this) } />
+          <RaisedButton
+            className={ styles.visualizationOverlayButton + ' ' + styles.visualizationOverlayControl }
+            icon
+            altText="Remove"
+            onClick={ this.onClickRemoveBlock }>
+            <i className="fa">&times;</i>
+          </RaisedButton>
+        </div>
         { formatBlock }
       </div>
     );
