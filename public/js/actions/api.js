@@ -10,7 +10,9 @@ function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response
   } else {
-    var error = new Error(response.statusText)
+    const statusText = response.statusText;
+    var error = new Error(statusText)
+    console.log('STATUS TEXT:', statusText)
     Raven.captureException(error);
     error.response = response
     throw error
@@ -26,15 +28,6 @@ export function fetch(urlPath, options) {
   return isomorphicFetch(completeUrl, { ...options, credentials: 'include' })
     .then(checkStatus)
     .then(parseJSON);
-  // return isomorphicFetch(completeUrl, { ...options, credentials: 'include' })
-  //   .then(function(response) {
-  //     const responseCopy = response;
-  //     if (responseCopy.status >= 400) {
-  //       console.log(responseCopy.text());
-  //       Raven.captureException(new Error(responseCopy.message));
-  //     }
-  //     return response;
-  //   });
 }
 
 export function httpRequest(method, urlPath, formData, completeEvent, uploadEvents) {

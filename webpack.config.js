@@ -12,6 +12,7 @@ function getEntrySources(sources) {
 }
 
 module.exports = {
+  devtool: 'source-map',
   entry: getEntrySources([
       './public/js/index.js',
       './public/css/app.css'
