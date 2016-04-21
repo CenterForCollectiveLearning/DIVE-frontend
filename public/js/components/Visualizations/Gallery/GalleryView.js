@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { pushState } from 'redux-react-router';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { clearVisualization, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
@@ -58,8 +58,8 @@ export class GalleryView extends Component {
   }
 
   onClickVisualization(specId) {
-    const { project, datasetSelector, push } = this.props;
-    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/builder/${ specId }`);
+    const { project, datasetSelector, pushState } = this.props;
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/builder/${ specId }`);
   }
 
   saveVisualization(specId, specData) {
@@ -68,7 +68,7 @@ export class GalleryView extends Component {
   }
 
   clickDataset(datasetId) {
-    const { gallerySelector, project, push, selectDataset } = this.props;
+    const { gallerySelector, project, pushState, selectDataset } = this.props;
     var selectedFieldPropertiesQueryString = gallerySelector.fieldProperties
       .filter((property) => property.selected)
       .map((property) => `fields%5B%5D=${ property.name }`);
@@ -78,7 +78,7 @@ export class GalleryView extends Component {
     }
 
     selectDataset(project.properties.id, datasetId);
-    push(`/projects/${ project.properties.id }/datasets/${ datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
   }
 
   render() {
@@ -302,7 +302,7 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  push,
+  pushState,
   fetchSpecs,
   fetchExportedVisualizationSpecs,
   fetchDatasets,

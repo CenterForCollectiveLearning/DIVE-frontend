@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { routerReducer as routing } from 'react-router-redux';
+import { routerStateReducer as router } from 'redux-react-router';
 
 import composeSelector from './composeSelector';
 import correlationSelector from './correlationSelector'
@@ -39,7 +39,7 @@ const rootReducer = combineReducers({
   transformSelector,
   user,
   visualization,
-  routing
+  router
 });
 
 export default rootReducer;

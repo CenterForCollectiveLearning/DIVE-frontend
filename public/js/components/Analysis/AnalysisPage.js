@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 import DocumentTitle from 'react-document-title';
 
 import styles from './Analysis.sass';
@@ -27,4 +28,4 @@ function mapStateToProps(state) {
   return { projectTitle: project.properties.title };
 }
 
-export default connect(mapStateToProps, { })(AnalysisPage);
+export default connect(mapStateToProps, { pushState })(AnalysisPage);

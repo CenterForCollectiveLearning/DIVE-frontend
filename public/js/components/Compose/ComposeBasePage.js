@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push, replace } from 'react-router-redux';
+import { pushState, replaceState } from 'redux-react-router';
 import DocumentTitle from 'react-document-title';
 import styles from './Compose.sass';
 
@@ -12,7 +12,7 @@ import ComposeView from './ComposeView';
 
 export class ComposeBasePage extends Component {
   componentWillMount() {
-    const { params, project, datasetSelector, datasets, documents, replace, fetchDatasets, fetchDocuments } = this.props;
+    const { params, project, datasetSelector, datasets, documents, replaceState, fetchDatasets, fetchDocuments } = this.props;
 
     if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
       fetchDatasets(project.properties.id);
@@ -20,7 +20,7 @@ export class ComposeBasePage extends Component {
 
     if (!params.documentId) {
       if (documents.items.length > 0) {
-        replace(`/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
+        replaceState(null, `/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
       } else {
         fetchDocuments(params.projectId);
       }
@@ -28,18 +28,18 @@ export class ComposeBasePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, composeSelector, project, datasetSelector, datasets, documents, replace, push, fetchDatasets, fetchDocuments } = nextProps;
+    const { params, composeSelector, project, datasetSelector, datasets, documents, replaceState, pushState, fetchDatasets, fetchDocuments } = nextProps;
 
     if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
       fetchDatasets(project.properties.id);
     }
 
     if (!params.documentId && documents.items.length > 0) {
-      replace(`/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
+      replaceState(null, `/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
     }
 
     if (composeSelector.documentId != this.props.composeSelector.documentId && composeSelector.documentId != params.documentId) {
-      push(`/projects/${ params.projectId }/compose/${ composeSelector.documentId }`);
+      pushState(null, `/projects/${ params.projectId }/compose/${ composeSelector.documentId }`);
     }
 
   }
@@ -68,4 +68,4 @@ function mapStateToProps(state) {
   return { documents, composeSelector, project, datasetSelector, datasets, selectedDocument: selectedDocument, projectTitle: project.properties.title };
 }
 
-export default connect(mapStateToProps, { fetchDocuments, fetchDatasets, push, replace })(ComposeBasePage);
+export default connect(mapStateToProps, { fetchDocuments, fetchDatasets, pushState, replaceState })(ComposeBasePage);

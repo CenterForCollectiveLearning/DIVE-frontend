@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { pushState } from 'redux-react-router';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { getCorrelations, getCorrelationScatterplot } from '../../../actions/CorrelationActions';
@@ -31,10 +31,10 @@ export class CorrelationView extends Component {
 
 
   clickDataset(datasetId) {
-    const { projectId, clearAnalysis, selectDataset, push } = this.props;
+    const { projectId, clearAnalysis, selectDataset, pushState } = this.props;
     clearAnalysis();
     selectDataset(projectId, datasetId);
-    push(`/projects/${ projectId }/datasets/${ datasetId }/analyze/correlation`);
+    pushState(null, `/projects/${ projectId }/datasets/${ datasetId }/analyze/correlation`);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -144,7 +144,7 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  push,
+  pushState,
   getCorrelations,
   getCorrelationScatterplot,
   selectDataset,

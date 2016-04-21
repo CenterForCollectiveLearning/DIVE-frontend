@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { pushState } from 'redux-react-router';
 
 import { selectDataset, fetchDatasets } from '../../actions/DatasetActions';
 import { clearAnalysis } from '../../actions/AnalysisActions';
@@ -30,14 +30,14 @@ export class AnalysisSidebar extends Component {
   }
 
   _handleTabsChange(tab) {
-    this.props.push(`/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/analyze/${ tab }`);
+    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/analyze/${ tab }`);
   }
 
   clickDataset(datasetId) {
-    const { project, selectedTab, clearAnalysis, selectDataset, push } = this.props;
+    const { project, selectedTab, clearAnalysis, selectDataset, pushState } = this.props;
     clearAnalysis();
     selectDataset(project.properties.id, datasetId);
-    push(`/projects/${ project.properties.id }/datasets/${ datasetId }/analyze/${ selectedTab }`);
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/analyze/${ selectedTab }`);
   }
 
   render() {
@@ -108,5 +108,5 @@ export default connect(mapStateToProps, {
   selectDataset,
   fetchDatasets,
   clearAnalysis,
-  push
+  pushState
 })(AnalysisSidebar);

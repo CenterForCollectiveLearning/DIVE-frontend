@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { pushState } from 'redux-react-router';
 import {
   selectDocument,
   createNewDocument,
@@ -54,9 +54,9 @@ export class ComposeView extends Component {
   }
 
   onSelectDocument(documentId) {
-    const { projectId, push } = this.props;
+    const { projectId, pushState } = this.props;
     if (documentId) {
-      push(`/projects/${ projectId }/compose/${ documentId }`);
+      pushState(null, `/projects/${ projectId }/compose/${ documentId }`);
     }
   }
 
@@ -66,10 +66,10 @@ export class ComposeView extends Component {
   }
 
   onClickDeleteDocument() {
-    const { projectId, documents, composeSelector, deleteDocument, push } = this.props;
+    const { projectId, documents, composeSelector, deleteDocument, pushState } = this.props;
     deleteDocument(projectId, composeSelector.documentId);
     const nextDocId = documents.items.find((doc) => doc.id != composeSelector.documentId).id;
-    push(`/projects/${ projectId }/compose/${ nextDocId }`);
+    pushState(null, `/projects/${ projectId }/compose/${ nextDocId }`);
   }
 
   onClickShareDocument() {
@@ -143,5 +143,5 @@ export default connect(mapStateToProps, {
   createNewDocument,
   deleteDocument,
   saveDocumentTitle,
-  push
+  pushState
 })(ComposeView);

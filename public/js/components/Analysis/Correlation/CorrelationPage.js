@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 import styles from '../Analysis.sass';
 
 import CorrelationSidebar from './CorrelationSidebar';
@@ -20,4 +21,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { })(CorrelationPage);
+export default connect(mapStateToProps, { pushState })(CorrelationPage);
