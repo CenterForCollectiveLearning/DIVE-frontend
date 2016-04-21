@@ -90,6 +90,7 @@ export function loginUser(email, username, password, rememberMe) {
         );
       } else {
         response.json().then( json =>
+          amplitude.setUserId(json.user.email);
           dispatch(receiveLoginUserDispatcher(json))
         );
       }
@@ -173,6 +174,8 @@ export function logoutUser() {
         );
       } else {
         response.json().then( json =>
+          amplitude.setUserId(null);
+          amplitude.regenerateDeviceId();
           dispatch(receiveLogoutUserDispatcher(json))
         );
       }
