@@ -1,19 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { replaceState } from 'redux-react-router';
+import { replace } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import styles from './Visualizations.sass';
 
 export class VisualizationsPage extends Component {
   componentWillMount() {
     if (this.props.routes.length < 4) {
-      this.props.replaceState(null, `/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/visualize/explore`);
+      this.props.replace(`/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/visualize/explore`);
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.routes.length < 4) {
-      this.props.replaceState(null, `/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/visualize/explore`);
+      this.props.replace(`/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/visualize/explore`);
     }
   }
 
@@ -35,4 +35,4 @@ function mapStateToProps(state) {
   return { projectTitle: project.properties.title };
 }
 
-export default connect(mapStateToProps, { replaceState })(VisualizationsPage);
+export default connect(mapStateToProps, { replace })(VisualizationsPage);
