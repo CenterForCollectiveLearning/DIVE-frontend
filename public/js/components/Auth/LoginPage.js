@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import { push } from 'react-router-redux';
+import { pushState } from 'redux-react-router';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { loginUser } from '../../actions/AuthActions';
@@ -31,8 +31,8 @@ class AuthPage extends Component {
   }
 
   closeLoginPage() {
-    const { push } = this.props;
-    push('/projects')
+    const { pushState } = this.props;
+    pushState(null, '/projects')
   }
 
   componentWillMount() {
@@ -56,8 +56,8 @@ class AuthPage extends Component {
   }
 
   _clickRegister() {
-    const { push } = this.props;
-    push('/register')
+    const { pushState } = this.props;
+    pushState(null, '/register')
   }
 
   _handleRememberMeChange(e) {
@@ -65,10 +65,10 @@ class AuthPage extends Component {
   }
 
   ensureNotLoggedIn(props) {
-    const { isAuthenticated, push } = props;
+    const { isAuthenticated, pushState } = props;
 
     if (isAuthenticated){
-      push(props.location.query.next || '/projects');
+      pushState(null, props.location.query.next || '/projects');
     }
   };
 
@@ -82,6 +82,8 @@ class AuthPage extends Component {
     const { authRequired, loginError } = this.props;
     const { email, username, password } = this.state;
     const loginDisabled = ( !email && !username ) || (!password || password == null)
+
+    console.log()
 
     if (authRequired) {
       openModal();
@@ -184,4 +186,4 @@ function mapStateToProps(state) {
   return { isAuthenticated: user.isAuthenticated, loginError: user.error.login };
 }
 
-export default connect(mapStateToProps, { loginUser, push })(AuthPage);
+export default connect(mapStateToProps, { loginUser, pushState})(AuthPage);

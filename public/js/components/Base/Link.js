@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { pushState } from 'redux-react-router';
 
 import styles from './Link.sass';
 
 export class Link extends Component {
   goToRoute() {
-    const { route, push } = this.props;
-    push(route);
+    const { route, pushState } = this.props;
+    pushState(null, route);
   }
 
   render() {
@@ -33,4 +33,4 @@ function mapStateToProps(state) {
   return { };
 }
 
-export default connect(mapStateToProps, { push })(Link);
+export default connect(mapStateToProps, { pushState })(Link);

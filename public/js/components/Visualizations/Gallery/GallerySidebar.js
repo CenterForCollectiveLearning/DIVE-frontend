@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { pushState } from 'redux-react-router';
 
 import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectFieldPropertyValue, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
 import { selectVisualizationType } from '../../../actions/VisualizationActions';
@@ -49,7 +49,7 @@ export class GallerySidebar extends Component {
   }
 
   clickFieldProperty(fieldPropertyId) {
-    const { gallerySelector, project, datasetSelector, push } = this.props;
+    const { gallerySelector, project, datasetSelector, pushState } = this.props;
     var selectedFieldPropertiesQueryString = gallerySelector.fieldProperties
       .filter((property) => (!property.selected && property.id == fieldPropertyId) || (property.selected && property.id != fieldPropertyId))
       .map((property) => `fields%5B%5D=${ property.name }`);
@@ -58,7 +58,7 @@ export class GallerySidebar extends Component {
       selectedFieldPropertiesQueryString = selectedFieldPropertiesQueryString.reduce((a, b) => a + "&" + b);
     }
 
-    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
+    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
   }
 
   clickFieldPropertyValue(fieldPropertyId, fieldPropertyValueId) {
@@ -158,5 +158,5 @@ export default connect(mapStateToProps, {
   selectFieldProperty,
   selectFieldPropertyValue,
   selectAggregationFunction,
-  push
+  pushState
 })(GallerySidebar);

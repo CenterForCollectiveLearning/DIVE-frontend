@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { pushState } from 'redux-react-router';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { runRegression, getContributionToRSquared } from '../../../actions/RegressionActions';
@@ -52,10 +52,10 @@ export class RegressionView extends Component {
   }
 
   clickDataset(datasetId) {
-    const { projectId, clearAnalysis, selectDataset, push } = this.props;
+    const { projectId, clearAnalysis, selectDataset, pushState } = this.props;
     clearAnalysis();
     selectDataset(projectId, datasetId);
-    push(`/projects/${ projectId }/datasets/${ datasetId }/analyze/regression`);
+    pushState(null, `/projects/${ projectId }/datasets/${ datasetId }/analyze/regression`);
   }
 
   render() {
@@ -132,7 +132,7 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  push,
+  pushState,
   runRegression,
   getContributionToRSquared,
   selectDataset,

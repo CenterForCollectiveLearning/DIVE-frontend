@@ -3,6 +3,7 @@ import styles from './App.sass';
 
 import { createAnonymousUserIfNeeded } from '../../actions/UserActions';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 
 require("font-awesome-webpack");
 // this seems real dumb;
@@ -27,6 +28,7 @@ export class App extends React.Component {
 }
 
 App.propTypes = {
+  pushState: PropTypes.func.isRequired,
   user: PropTypes.object,
   children: PropTypes.node
 };
@@ -38,4 +40,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { createAnonymousUserIfNeeded })(App);
+export default connect(mapStateToProps, { pushState, createAnonymousUserIfNeeded })(App);

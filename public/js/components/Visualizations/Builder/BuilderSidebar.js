@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-react-router';
 
 import { selectBuilderVisualizationType, selectBuilderSortOrder, selectBuilderSortField, selectVisualizationConditional, selectVisualizationConfig } from '../../../actions/VisualizationActions';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
@@ -127,5 +128,6 @@ export default connect(mapStateToProps, {
   selectBuilderSortField,
   fetchFieldPropertiesIfNeeded,
   selectVisualizationConditional,
-  selectVisualizationConfig
+  selectVisualizationConfig,
+  pushState
 })(BuilderSidebar);

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { pushState } from 'redux-react-router';
 
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
@@ -17,9 +17,9 @@ export class DatasetUploadPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { datasetSelector, push, params } = nextProps;
+    const { datasetSelector, pushState, params } = nextProps;
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+      pushState(null, `/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
     }
   }
 
@@ -76,4 +76,4 @@ function mapStateToProps(state) {
   return { project, datasetSelector };
 }
 
-export default connect(mapStateToProps, { uploadDataset, push })(DatasetUploadPage);
+export default connect(mapStateToProps, { uploadDataset, pushState })(DatasetUploadPage);
