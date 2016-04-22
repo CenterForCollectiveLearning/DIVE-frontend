@@ -22,9 +22,13 @@ function parseJSON(response) {
   return response.json()
 }
 
-export function fetch(urlPath, options) {
+export function rawFetch(urlPath, options) {
   const completeUrl = API_URL + urlPath;
-  return isomorphicFetch(completeUrl, { ...options, credentials: 'include' })
+  return isomorphicFetch(completeUrl, { ...options, credentials: 'include' });
+}
+
+export function fetch(urlPath, options) {
+  return rawFetch(urlPath, options)
     .then(checkStatus)
     .then(parseJSON);
 }
