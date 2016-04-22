@@ -21,7 +21,7 @@ createStoreWithMiddleware = compose(
     debounce,
     thunkMiddleware,
     loggerMiddleware,
-    RavenMiddleware('https://14f3500c6e1a471896fac7308f972db6@app.getsentry.com/74787')
+    RavenMiddleware('https://34b21b0198eb43d4bebc0a35ddd11b5c@app.getsentry.com/75309')
   ),
   reduxReactRouter({
     routes,
