@@ -8,7 +8,7 @@ import ComposeBlockVisualization from './ComposeBlockVisualization';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import RaisedButton from '../Base/RaisedButton';
 
-import { saveBlock } from '../../actions/ComposeActions'
+import { saveBlock, selectComposeVisualization } from '../../actions/ComposeActions'
 import { BLOCK_FORMATS } from '../../constants/BlockFormats';
 
 export class ComposeBlock extends Component {
@@ -71,14 +71,14 @@ export class ComposeBlock extends Component {
   }
 
   selectBlockFormat(blockFormat) {
-    const { id, onSave } = this.props;
-    onSave(id, 'format', blockFormat);
+    const { block, saveBlock } = this.props;
+    saveBlock(block.exportedSpecId, 'format', blockFormat);
     this.setStateBlockFormat(blockFormat);
   }
 
   onClickRemoveBlock() {
-    const { spec, selectComposeVisualization } = this.props;
-    selectComposeVisualization(spec.id, spec.meta.desc);
+    const { block, selectComposeVisualization } = this.props;
+    selectComposeVisualization(block.exportedSpecId);
   }
 
   render() {
@@ -190,5 +190,6 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  saveBlock
+  saveBlock,
+  selectComposeVisualization
 })(ComposeBlock);

@@ -1,8 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
-import { selectComposeVisualization } from '../../actions/ComposeActions';
-
 import styles from './Compose.sass';
 
 import _ from 'underscore';
@@ -86,4 +84,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { selectComposeVisualization })(ComposeBlockVisualization);
+export default connect(mapStateToProps, {})(ComposeBlockVisualization);
