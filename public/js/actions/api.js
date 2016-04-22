@@ -12,7 +12,6 @@ function checkStatus(response) {
   } else {
     const statusText = response.statusText;
     var error = new Error(statusText)
-    console.log('STATUS TEXT:', statusText)
     Raven.captureException(error);
     error.response = response
     throw error
