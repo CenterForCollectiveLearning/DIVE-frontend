@@ -12,7 +12,7 @@ import {
 
 import cookie from 'react-cookie';
 import { default } from 'cryptojs';
-import { fetch } from './api.js';
+import { rawFetch } from './api.js';
 
 
 function requestLoginUserDispatcher() {
@@ -74,7 +74,8 @@ export function loginUser(email, username, password, rememberMe) {
 
   return (dispatch) => {
     dispatch(requestLoginUserDispatcher());
-    return fetch('/auth/v1/login', {
+    return rawFetch('/auth/v1/login', {
+      credentials: 'include',
       method: 'post',
       credentials: 'include',
       body: JSON.stringify(params),
@@ -109,7 +110,8 @@ export function registerUser(email, username, password) {
 
   return (dispatch) => {
     dispatch(requestRegisterUserDispatcher());
-    return fetch('/auth/v1/register', {
+    return rawFetch('/auth/v1/register', {
+      credentials: 'include',
       method: 'post',
       credentials: 'include',
       body: JSON.stringify(params),
@@ -158,7 +160,7 @@ export function logoutUser() {
 
   return (dispatch) => {
     dispatch(requestLogoutUserDispatcher());
-    return fetch('/auth/v1/logout', {
+    return rawFetch('/auth/v1/logout', {
       method: 'post',
       credentials: 'include',
       body: JSON.stringify(params),
