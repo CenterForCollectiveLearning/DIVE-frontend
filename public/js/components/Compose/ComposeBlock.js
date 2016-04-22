@@ -49,7 +49,7 @@ export class ComposeBlock extends Component {
 
   componentWillMount() {
     const exportedSpec = this.props.exportedSpecs.items.find((spec) => spec.id == this.props.block.exportedSpecId);
-    this.setStateBlockFormat(this.props.format);
+    this.setStateBlockFormat(this.props.block.format);
     this.setState({ exportedSpec: exportedSpec });
   }
 
@@ -58,8 +58,8 @@ export class ComposeBlock extends Component {
       const exportedSpec = nextProps.exportedSpecs.items.find((spec) => spec.id == nextProps.block.exportedSpecId);
       this.setState({ exportedSpec: exportedSpec });
     }
-    if (nextProps.format != this.props.format) {
-      this.setStateBlockFormat(nextProps.format);
+    if (nextProps.block.format != this.props.block.format) {
+      this.setStateBlockFormat(nextProps.block.format);
     }
   }
 
@@ -151,6 +151,7 @@ export class ComposeBlock extends Component {
         break;
     }
 
+    console.log(this.state.formatTypes);
 
     return (
       <div ref="composeBlock" className={ styles.composeBlock + ' ' + styles[block.format] }>
