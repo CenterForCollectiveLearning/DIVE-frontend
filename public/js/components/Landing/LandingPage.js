@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import styles from './Landing.sass';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import { push } from 'react-router-redux';
 import { logoutUser } from '../../actions/AuthActions'
 
 import Link from '../Base/Link';
@@ -12,13 +12,13 @@ var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Log
 
 export class LandingPage extends Component {
   componentWillMount() {
-    const { user, pushState } = this.props;
+    const { user, push } = this.props;
     if (user.isAuthenticated) {
-      pushState(null, '/projects')
+      push('/projects')
     }
   }
   _onClickLogo(){
-    this.props.pushState(null, `/`);
+    this.props.push(`/`);
   }
 
   _getSelectedTab(){
@@ -79,4 +79,4 @@ function mapStateToProps(state) {
   return { user };
 }
 
-export default connect(mapStateToProps, { pushState, logoutUser })(LandingPage);
+export default connect(mapStateToProps, { push, logoutUser })(LandingPage);

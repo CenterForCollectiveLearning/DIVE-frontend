@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import { push } from 'react-router-redux';
 import { uploadDataset, deleteDataset, fetchDatasets } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
@@ -34,7 +34,7 @@ export class DatasetToolbar extends Component {
 
   onSelectDataset(selectedValue) {
     if (selectedValue) {
-      this.props.pushState(null, `/projects/${ this.props.projectId }/datasets/${ selectedValue }/inspect`);
+      this.props.push(`/projects/${ this.props.projectId }/datasets/${ selectedValue }/inspect`);
     }
   }
 
@@ -46,7 +46,7 @@ export class DatasetToolbar extends Component {
 
   onClickUploadDataset() {
     const projectId = this.props.projectId;
-    this.props.pushState(null, `/projects/${ projectId }/datasets/upload`);
+    this.props.push(`/projects/${ projectId }/datasets/upload`);
   }
 
   render() {
@@ -106,4 +106,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { pushState, uploadDataset, deleteDataset, fetchDatasets })(DatasetToolbar);
+export default connect(mapStateToProps, { push, uploadDataset, deleteDataset, fetchDatasets })(DatasetToolbar);

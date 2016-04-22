@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
 
 import styles from './UserDropdown.sass';
 import { logoutUser } from '../../actions/AuthActions'
@@ -64,4 +63,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { pushState, logoutUser })(UserDropdown);
+export default connect(mapStateToProps, { logoutUser })(UserDropdown);

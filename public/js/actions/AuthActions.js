@@ -89,9 +89,10 @@ export function loginUser(email, username, password, rememberMe) {
           dispatch(errorLoginUserDispatcher(json))
         );
       } else {
-        response.json().then( json =>
-          dispatch(receiveLoginUserDispatcher(json))
-        );
+        response.json().then( json => {
+          amplitude.setUserId(json.user.email);
+          return dispatch(receiveLoginUserDispatcher(json));
+        });
       }
     })
     .catch( error => { console.log('Login failed', error); });
@@ -172,9 +173,11 @@ export function logoutUser() {
           dispatch(errorLogoutUserDispatcher(json))
         );
       } else {
-        response.json().then( json =>
-          dispatch(receiveLogoutUserDispatcher(json))
-        );
+        response.json().then( json => {
+          amplitude.setUserId(null);
+          amplitude.regenerateDeviceId();
+          return dispatch(receiveLogoutUserDispatcher(json))
+        });
       }
     })
     .catch( error => { console.log('Logout failed', error); });

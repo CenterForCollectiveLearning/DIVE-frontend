@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import { push } from 'react-router-redux';
 
 import { fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
@@ -53,8 +53,8 @@ export class BuilderView extends Component {
   }
 
   onClickGallery() {
-    const { project, datasetSelector, gallerySelector, pushState } = this.props;
-    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ gallerySelector.queryString }`);
+    const { project, datasetSelector, gallerySelector, push } = this.props;
+    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ gallerySelector.queryString }`);
   }
 
   render() {
@@ -62,27 +62,25 @@ export class BuilderView extends Component {
     const disabled = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
 
     return (
-      <div>
-        <VisualizationView visualization={ visualization }>
-          <div className={ styles.headerControlRow }>
-            <div className={ styles.headerControl }>
-              <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
-            </div>
-            <div className={ styles.headerControl }>
-              <RaisedButton onClick={ this.onClickShare }>
-                { visualization.isExporting && "Exporting..." }
-                { !visualization.isExporting && "Share" }
-              </RaisedButton>
-            </div>
-            <div className={ styles.headerControl }>
-              <RaisedButton onClick={ this.saveVisualization } disabled={ disabled }>
-                { !visualization.isSaving && visualization.exportedSpecId && <i className="fa fa-star"></i> }
-                { !visualization.exportedSpecId && <i className="fa fa-star-o"></i> }
-              </RaisedButton>
-            </div>
+      <VisualizationView visualization={ visualization }>
+        <div className={ styles.headerControlRow }>
+          <div className={ styles.headerControl }>
+            <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
           </div>
-        </VisualizationView>
-      </div>
+          <div className={ styles.headerControl }>
+            <RaisedButton onClick={ this.onClickShare }>
+              { visualization.isExporting && "Exporting..." }
+              { !visualization.isExporting && "Share" }
+            </RaisedButton>
+          </div>
+          <div className={ styles.headerControl }>
+            <RaisedButton onClick={ this.saveVisualization } disabled={ disabled }>
+              { !visualization.isSaving && visualization.exportedSpecId && <i className="fa fa-star"></i> }
+              { !visualization.exportedSpecId && <i className="fa fa-star-o"></i> }
+            </RaisedButton>
+          </div>
+        </div>
+      </VisualizationView>
     );
   }
 }
@@ -104,4 +102,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { pushState, fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow })(BuilderView);
+export default connect(mapStateToProps, { push, fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow })(BuilderView);
