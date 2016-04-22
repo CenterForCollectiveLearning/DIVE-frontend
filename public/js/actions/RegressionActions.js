@@ -85,8 +85,7 @@ export function runRegression(projectId, datasetId, dependentVariableName, indep
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(function(json) {
+    }).then(function(json) {
         if (json.compute) {
           dispatch(pollForTask(json.taskId, REQUEST_RUN_REGRESSION, params, receiveRunRegressionDispatcher, progressRunRegressionDispatcher, errorRunRegressionDispatcher));
         } else {
@@ -101,7 +100,6 @@ export function getContributionToRSquared(projectId, regressionId) {
   return (dispatch) => {
     dispatch(requestContributionToRSquaredDispatcher());
     return fetch(`/statistics/v1/contribution_to_r_squared/${regressionId}?projectId=${projectId}`)
-      .then(response => response.json())
       .then(json => dispatch(receiveContributionToRSquaredDispatcher(json)));
   };
 }

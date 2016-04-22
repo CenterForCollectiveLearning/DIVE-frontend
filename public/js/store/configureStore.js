@@ -6,6 +6,7 @@ import createLogger from 'redux-logger';
 import { analyticsMiddleware } from '../middleware/analytics';
 import debounce from 'redux-debounced';
 import rootReducer from '../reducers/index';
+import RavenMiddleware from 'redux-raven-middleware';
 
 import createHistory from 'history/lib/createBrowserHistory';
 
@@ -13,7 +14,6 @@ const loggerMiddleware = createLogger({
   level: 'info',
   collapsed: false
 });
-
 
 export default function configureStore(initialState) {
   const store = createStore(
@@ -24,6 +24,7 @@ export default function configureStore(initialState) {
       thunkMiddleware,
       analyticsMiddleware,
       routerMiddleware(browserHistory),
+      RavenMiddleware('https://34b21b0198eb43d4bebc0a35ddd11b5c@app.getsentry.com/75309'),
       loggerMiddleware
     )
   );

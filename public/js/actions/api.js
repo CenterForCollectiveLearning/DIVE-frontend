@@ -6,9 +6,27 @@ const API_URL = window.__env.API_URL;
 
 const taskManager = new TaskManager();
 
+function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response
+  } else {
+    const statusText = response.statusText;
+    var error = new Error(statusText)
+    Raven.captureException(error);
+    error.response = response
+    throw error
+  }
+}
+
+function parseJSON(response) {
+  return response.json()
+}
+
 export function fetch(urlPath, options) {
   const completeUrl = API_URL + urlPath;
-  return isomorphicFetch(completeUrl, { ...options, credentials: 'include' });
+  return isomorphicFetch(completeUrl, { ...options, credentials: 'include' })
+    .then(checkStatus)
+    .then(parseJSON);
 }
 
 export function httpRequest(method, urlPath, formData, completeEvent, uploadEvents) {
@@ -54,6 +72,7 @@ export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, prog
         } else if (data.state == 'FAILURE') {
           taskManager.removeTask(taskId);
           console.error(data.error);
+          Raven.captureException(new Error(data.error));
           dispatch(errorDispatcher(data));
         } else if (counter > limit) {
           revokeTasks(taskId).then((revokeData) => {

@@ -61,7 +61,7 @@ export function getCorrelations(projectId, datasetId, correlationVariables) {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
+    })
     .then(function(json) {
       if (json.compute) {
         dispatch(pollForTask(json.taskId, REQUEST_CORRELATION, params, receiveCorrelationDispatcher, progressCorrelationDispatcher, errorCorrelationDispatcher));
@@ -91,7 +91,6 @@ export function getCorrelationScatterplot(projectId, correlationId) {
   return (dispatch) => {
     dispatch(requestCorrelationScatterplotDispatcher());
     return fetch(`/statistics/v1/correlation_scatterplot/${correlationId}?projectId=${projectId}`)
-      .then(response => response.json())
       .then(json => dispatch(receiveCorrelationScatterplotDispatcher(json)));
   };
 }

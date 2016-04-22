@@ -99,7 +99,6 @@ export function fetchFieldProperties(projectId, datasetId, selectedFieldProperty
   return dispatch => {
     dispatch(requestFieldPropertiesDispatcher());
     return fetch(`/field_properties/v1/field_properties?project_id=${projectId}&dataset_id=${datasetId}`)
-      .then(response => response.json())
       .then(json => dispatch(receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFieldPropertyNames)));
   };
 }
@@ -171,7 +170,6 @@ export function setFieldType(projectId, fieldId, fieldType) {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveSetFieldTypeDispatcher(json)));
+    }).then(json => dispatch(receiveSetFieldTypeDispatcher(json)));
   };
 }

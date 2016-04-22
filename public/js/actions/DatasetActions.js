@@ -45,7 +45,6 @@ export function fetchDatasets(projectId, setSelector = true) {
   return dispatch => {
     dispatch(requestDatasetsDispatcher(projectId));
     return fetch('/datasets/v1/datasets?project_id=' + projectId)
-      .then(response => response.json())
       .then(json => dispatch(receiveDatasetsDispatcher(projectId, json, setSelector)));
   };
 }
@@ -143,7 +142,6 @@ export function fetchDataset(projectId, datasetId) {
   return (dispatch) => {
     dispatch(requestDatasetDispatcher(projectId, datasetId));
     return fetch(`/datasets/v1/datasets/${ datasetId }?project_id=${projectId}`)
-      .then(response => response.json())
       .then(json => dispatch(receiveDatasetDispatcher({}, json)));
   };
 }
@@ -159,8 +157,7 @@ export function deleteDataset(projectId, datasetId) {
   return (dispatch) => {
     return fetch(`/datasets/v1/datasets/${ datasetId }?project_id=${ projectId }`, {
       method: 'delete'
-    }).then(response => response.json())
-      .then(json => dispatch(deletedDatasetDispatcher(datasetId, json)));
+    }).then(json => dispatch(deletedDatasetDispatcher(datasetId, json)));
   };
 }
 
@@ -199,8 +196,7 @@ export function reduceDatasetColumns(projectId, datasetId, columnIds=[]) {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(function(json) {
+    }).then(function(json) {
         const dispatchParams = { projectId };
         dispatch(pollForTask(json.taskId, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher, errorTransformDispatcher));
       });
@@ -232,8 +228,7 @@ export function pivotDatasetColumns(projectId, datasetId, variableName, valueNam
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(function(json) {
+    }).then(function(json) {
         const dispatchParams = { projectId };
         dispatch(pollForTask(json.taskId, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher, errorTransformDispatcher));
       });
@@ -265,8 +260,7 @@ export function mergeDatasets(projectId, leftDatasetId, rightDatasetId, onColumn
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(function(json) {
+    }).then(function(json) {
         const dispatchParams = {};
         dispatch(pollForTask(json.taskId, REQUEST_MERGE_DATASETS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher));
       });
