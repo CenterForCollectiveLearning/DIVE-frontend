@@ -1,6 +1,7 @@
 import {
   WIPE_PROJECT_STATE,
   SELECT_COMPOSE_VISUALIZATION,
+  REMOVE_COMPOSE_VISUALIZATION,
   SELECT_DOCUMENT,
   SET_DOCUMENT_TITLE,
   RECEIVE_DOCUMENTS,
@@ -12,6 +13,7 @@ import {
 } from '../constants/ActionTypes';
 
 import { BLOCK_FORMATS } from '../constants/BlockFormats';
+import uuid from 'uuid';
 
 const baseState = {
   title: null,
@@ -37,20 +39,23 @@ export default function composeSelector(state = baseState, action) {
 
     case SELECT_COMPOSE_VISUALIZATION:
       var blocks = state.blocks.slice();
+      blocks.push({
+        heading: action.heading,
+        body: '',
+        uuid: uuid.v4(),
+        exportedSpecId: action.exportedSpecId,
+        format: BLOCK_FORMATS.TEXT_LEFT,
+        dimensions: {},
+        updatedAt: Date.now()
+      })
+
+      return { ...state, blocks: blocks, updatedAt: Date.now() };
+
+    case REMOVE_COMPOSE_VISUALIZATION:
+      var blocks = state.blocks.slice();
       const filteredBlocks = blocks.filter((block) => block.exportedSpecId != action.exportedSpecId);
 
-      if (filteredBlocks.length != blocks.length) {
-        blocks = filteredBlocks;
-      } else {
-        blocks.push({
-          heading: action.heading,
-          body: '',
-          exportedSpecId: action.exportedSpecId,
-          format: BLOCK_FORMATS.TEXT_LEFT,
-          dimensions: {}
-        })
-      }
-
+      blocks = filteredBlocks;
       return { ...state, blocks: blocks, updatedAt: Date.now() };
 
     case RECEIVE_DOCUMENTS:
@@ -92,8 +97,9 @@ export default function composeSelector(state = baseState, action) {
     case SAVE_BLOCK:
       const newBlocks = state.blocks.slice().map(function(block) {
         var newBlock = block;
-        if (block.exportedSpecId == action.exportedSpecId) {
-          newBlock[action.key] = action[action.key];
+        if (block.uuid == action.blockId) {
+          newBlock[action.key] = action[action.key]
+          newBlock.updatedAt = Date.now();
         }
         return newBlock;
       });

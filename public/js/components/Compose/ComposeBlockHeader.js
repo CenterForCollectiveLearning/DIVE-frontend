@@ -19,10 +19,10 @@ export default class ComposeBlockHeader extends Component {
   }
 
   onChange(event) {
-    const { id, onSave } = this.props;
+    const { blockId, onSave } = this.props;
     const value = event.target.value;
     this.setState({ heading: value });
-    onSave(id, 'heading', value);
+    onSave(blockId, 'heading', value);
   }
 
   render() {
@@ -47,7 +47,7 @@ export default class ComposeBlockHeader extends Component {
 
 ComposeBlockHeader.propTypes = {
   heading: PropTypes.string,
-  id: PropTypes.number.isRequired,
+  blockId: PropTypes.string.isRequired,
   onSave: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired
 };

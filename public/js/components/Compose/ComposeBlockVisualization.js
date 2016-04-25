@@ -21,24 +21,24 @@ export default class ComposeBlockVisualization extends Component {
   }
 
   onResize(event, { element, size }) {
-    const { id, onSave } = this.props;
+    const { blockId, onSave } = this.props;
     this.setState({ resizeCounter: this.state.resizeCounter + 1 });
-    onSave(id, 'dimensions', size);
+    onSave(blockId, 'dimensions', size);
   }
 
   render() {
-    const { spec, updatedAt, parentSize, format, editable } = this.props;
+    const { chartId, spec, updatedAt, parentSize, format, editable } = this.props;
 
-    const absoluteMaxWidth = parentSize ? parentSize[0] - 18 : 700;
+    const absoluteMaxWidth = parentSize ? parentSize[0] - 18 : 908;
     const isHalfWidthFormat = (format == BLOCK_FORMATS.TEXT_LEFT || format == BLOCK_FORMATS.TEXT_RIGHT);
     const maxWidth = parentSize && isHalfWidthFormat ?
       ((parentSize[0])*2/3) - 15 : absoluteMaxWidth;
 
-    const width = isHalfWidthFormat ? 600 : absoluteMaxWidth;
+    const width = isHalfWidthFormat ? 620 : absoluteMaxWidth;
     const height = isHalfWidthFormat ? 300 : 400;
 
     const visualizationComponent = <Visualization
-      chartId={ `full-compose-visualization-${ spec.id }-${ updatedAt }-${ this.state.resizeCounter }` }
+      chartId={ `full-compose-visualization-${ chartId }-${ updatedAt }-${ this.state.resizeCounter }` }
       containerClassName={ styles.fullComposeVisualization }
       visualizationTypes={ spec.vizTypes }
       spec={ spec }
@@ -75,7 +75,8 @@ ComposeBlockVisualization.propTypes = {
   updatedAt: PropTypes.number,
   parentSize: PropTypes.any,
   format: PropTypes.string,
-  id: PropTypes.number.isRequired,
+  blockId: PropTypes.string.isRequired,
+  chartId: PropTypes.string.isRequired,
   onSave: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired
 };

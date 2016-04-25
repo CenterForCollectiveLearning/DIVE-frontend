@@ -8,7 +8,7 @@ import ComposeBlockVisualization from './ComposeBlockVisualization';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import RaisedButton from '../Base/RaisedButton';
 
-import { saveBlock, selectComposeVisualization } from '../../actions/ComposeActions'
+import { saveBlock, removeComposeVisualization } from '../../actions/ComposeActions'
 import { BLOCK_FORMATS } from '../../constants/BlockFormats';
 
 export class ComposeBlock extends Component {
@@ -16,6 +16,7 @@ export class ComposeBlock extends Component {
     super(props);
     this.state = {
       exportedSpec: null,
+      selectedBlockFormat: BLOCK_FORMATS.TEXT_LEFT,
       formatTypes: [
         {
           label: "Visualization on top",
@@ -50,7 +51,7 @@ export class ComposeBlock extends Component {
   componentWillMount() {
     const exportedSpec = this.props.exportedSpecs.items.find((spec) => spec.id == this.props.block.exportedSpecId);
     this.setStateBlockFormat(this.props.block.format);
-    this.setState({ exportedSpec: exportedSpec });
+    this.setState({ exportedSpec: exportedSpec });      
   }
 
   componentWillReceiveProps(nextProps) {
@@ -58,7 +59,8 @@ export class ComposeBlock extends Component {
       const exportedSpec = nextProps.exportedSpecs.items.find((spec) => spec.id == nextProps.block.exportedSpecId);
       this.setState({ exportedSpec: exportedSpec });
     }
-    if (nextProps.block.format != this.props.block.format) {
+
+    if (nextProps.block.format != this.props.block.format && nextProps.block.format != this.state.selectedBlockFormat) {
       this.setStateBlockFormat(nextProps.block.format);
     }
   }
@@ -67,49 +69,54 @@ export class ComposeBlock extends Component {
     const formats = this.state.formatTypes.map((formatType) =>
       new Object({ ...formatType, selected: formatType.value == blockFormat })
     );
-    this.setState({ formatTypes: formats });
+
+    this.setState({ formatTypes: formats, selectedBlockFormat: blockFormat });
   }
 
   selectBlockFormat(blockFormat) {
     const { block, saveBlock } = this.props;
-    saveBlock(block.exportedSpecId, 'format', blockFormat);
+
+    if (block.format != blockFormat){
+      saveBlock(block.uuid, 'format', blockFormat);
+    }
+
     this.setStateBlockFormat(blockFormat);
   }
 
   onClickRemoveBlock() {
-    const { block, selectComposeVisualization } = this.props;
-    selectComposeVisualization(block.exportedSpecId);
+    const { block, removeComposeVisualization } = this.props;
+    removeComposeVisualization(block.exportedSpecId);
   }
 
   render() {
-    const { exportedSpec, updatedAt } = this.state;
+    const { exportedSpec, selectedBlockFormat } = this.state;
     const { block, editable } = this.props;
 
     const spec = exportedSpec ? exportedSpec : block.spec;
 
     const composeHeader =
-      <ComposeBlockHeader id={ block.exportedSpecId } onSave={ this.props.saveBlock } heading={ block.heading } editable={ this.props.editable } />;
+      <ComposeBlockHeader blockId={ block.uuid } onSave={ this.props.saveBlock } heading={ block.heading } editable={ this.props.editable } />;
 
     const composeVisualization = spec &&
       <ComposeBlockVisualization
-                id={ block.exportedSpecId }
+                blockId={ block.uuid }
+                chartId={ `visualization-${ block.uuid }-${ spec.id }` }
                 editable={ editable }
                 onSave={ this.props.saveBlock }
-                format={ block.format }
+                format={ selectedBlockFormat }
                 parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
-                spec={ spec }
-                updatedAt={ this.props.updatedAt } />;
+                spec={ spec } />;
 
     const composeText =
       <ComposeBlockText
-            id={ block.exportedSpecId }
+            blockId={ block.uuid }
             editable={ editable }
             onSave={ this.props.saveBlock }
             text={ block.body } />;
 
 
     var formatBlock = <div></div>;
-    switch (block.format) {
+    switch (selectedBlockFormat) {
       case BLOCK_FORMATS.TEXT_LEFT:
         formatBlock =
           <div className={ styles.flexrow }>
@@ -151,10 +158,8 @@ export class ComposeBlock extends Component {
         break;
     }
 
-    console.log(this.state.formatTypes);
-
     return (
-      <div ref="composeBlock" className={ styles.composeBlock + ' ' + styles[block.format] }>
+      <div ref="composeBlock" className={ styles.composeBlock + ' ' + styles[selectedBlockFormat] + (editable ? ' ' + styles.editable : '') }>
         <div className={ styles.composeVisualizationControls }>
           <ToggleButtonGroup
             toggleItems={ this.state.formatTypes }
@@ -181,7 +186,6 @@ export class ComposeBlock extends Component {
 ComposeBlock.propTypes = {
   block: PropTypes.object.isRequired,
   exportedSpecs: PropTypes.object.isRequired,
-  updatedAt: PropTypes.number,
   editable: PropTypes.bool.isRequired
 };
 
@@ -192,5 +196,5 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   saveBlock,
-  selectComposeVisualization
+  removeComposeVisualization
 })(ComposeBlock);

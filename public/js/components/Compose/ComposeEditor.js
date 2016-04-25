@@ -4,10 +4,11 @@ import styles from './Compose.sass';
 
 import Input from '../Base/Input';
 import ComposeBlock from './ComposeBlock';
+import ComposeBlockPlaceHolder from './ComposeBlockPlaceHolder';
 
 import _ from 'underscore';
 
-export class ComposeEditor extends Component {
+export default class ComposeEditor extends Component {
   constructor(props) {
     super(props);
 
@@ -36,7 +37,11 @@ export class ComposeEditor extends Component {
   }
 
   render() {
-    const { composeSelector, editable } = this.props;
+    const { selectedDocument, exportedSpecs, updatedAt, editable, selectComposeVisualization } = this.props;
+    if (!selectedDocument.blocks) {
+      return (<div></div>);
+    }
+
     return (
       <div className={ styles.composeEditorContainer }>
         <div className={
@@ -53,18 +58,18 @@ export class ComposeEditor extends Component {
           </div>
         </div>
         <div className={ styles.composeEditor + ' ' + (editable ? styles.editable : '') }>
-          { composeSelector.blocks.length == 0 &&
-            <div className={ styles.composeEditorNewDocumentPlaceholder }>
-              select a visualization from the sidebar
-            </div>
-          }
-          { composeSelector.blocks.map((block) =>
+          { selectedDocument.blocks.map((block) =>
             <ComposeBlock
-              key={ `compose-block-${ composeSelector.documentId }-${ block.exportedSpecId }` }
+              key={ `compose-block-${ block.uuid }-${ block.updatedAt }` }
               block={ block }
-              editable={ editable }
-              updatedAt={ composeSelector.updatedAt }/>
+              editable={ editable } />
           )}
+          { editable && 
+            <ComposeBlockPlaceHolder
+              editable={ true }
+              exportedSpecs={ exportedSpecs }
+              selectComposeVisualization={ selectComposeVisualization } />
+          }
         </div>
       </div>
     );
@@ -72,13 +77,8 @@ export class ComposeEditor extends Component {
 }
 
 ComposeEditor.propTypes = {
-  composeSelector: PropTypes.object.isRequired,
-  editable: PropTypes.bool.isRequired
+  selectedDocument: PropTypes.object.isRequired,
+  editable: PropTypes.bool.isRequired,
+  exportedSpecs: PropTypes.object,
+  selectComposeVisualization: PropTypes.func
 };
-
-function mapStateToProps(state) {
-  const { composeSelector } = state;
-  return { composeSelector };
-}
-
-export default connect(mapStateToProps, {})(ComposeEditor);
