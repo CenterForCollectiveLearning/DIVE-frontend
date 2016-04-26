@@ -17,9 +17,9 @@ export default class ComposeBlockText extends Component {
   }
 
   onChange(value) {
-    const { id, onSave } = this.props;
+    const { blockId, onSave } = this.props;
     this.setState({ text: value });
-    onSave(id, 'body', value);
+    onSave(blockId, 'body', value);
   }
 
   render() {
@@ -45,7 +45,7 @@ export default class ComposeBlockText extends Component {
 
 ComposeBlockText.propTypes = {
   text: PropTypes.string,
-  id: PropTypes.number.isRequired,
+  blockId: PropTypes.string.isRequired,
   onSave: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired
 };

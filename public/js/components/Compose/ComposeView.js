@@ -5,7 +5,8 @@ import {
   selectDocument,
   createNewDocument,
   deleteDocument,
-  fetchDocuments
+  fetchDocuments,
+  selectComposeVisualization
 } from '../../actions/ComposeActions';
 
 import styles from './Compose.sass';
@@ -77,12 +78,13 @@ export class ComposeView extends Component {
   }
 
   render() {
-    const { documents, composeSelector, selectedDocument, editable } = this.props;
+    const { documents, composeSelector, selectedDocument, exportedSpecs, saveDocumentTitle, selectComposeVisualization } = this.props;
     const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
 
     return (
       <div className={ styles.composeViewContainer }>
         <HeaderBar
+          className={ styles.headerBar }
           header="Story Composer"
           subheader={
             <span className={ styles.saveStatus }>
@@ -115,7 +117,12 @@ export class ComposeView extends Component {
               }
             </div>
           }/>
-        <ComposeEditor editable={ editable }/>
+        <ComposeEditor
+          selectComposeVisualization={ selectComposeVisualization }
+          exportedSpecs={ exportedSpecs }
+          saveDocumentTitle={ saveDocumentTitle }
+          selectedDocument={ selectedDocument }
+          editable={ true }/>
       </div>
     );
   }
@@ -123,16 +130,16 @@ export class ComposeView extends Component {
 
 ComposeView.propTypes = {
   projectId: PropTypes.string,
-  editable: PropTypes.bool,
   documents: PropTypes.object.isRequired,
   selectedDocument: PropTypes.object.isRequired
 }
 
 function mapStateToProps(state) {
-  const { project, composeSelector, documents } = state;
+  const { project, composeSelector, exportedSpecs, documents } = state;
   return {
     projectId: (project.properties.id ? `${ project.properties.id }` : null),
     composeSelector,
+    exportedSpecs,
     documents
   };
 }
@@ -143,5 +150,6 @@ export default connect(mapStateToProps, {
   createNewDocument,
   deleteDocument,
   saveDocumentTitle,
+  selectComposeVisualization,
   push
 })(ComposeView);

@@ -13,6 +13,7 @@ import {
   REQUEST_DELETE_DOCUMENT,
   RECEIVE_DELETE_DOCUMENT,
   SELECT_COMPOSE_VISUALIZATION,
+  REMOVE_COMPOSE_VISUALIZATION,
   REQUEST_SAVE_DOCUMENT,
   RECEIVE_SAVE_DOCUMENT,
   SET_DOCUMENT_TITLE,
@@ -28,6 +29,13 @@ export function selectComposeVisualization(exportedSpecId, exportedSpecHeading) 
     type: SELECT_COMPOSE_VISUALIZATION,
     exportedSpecId: exportedSpecId,
     heading: exportedSpecHeading
+  }
+}
+
+export function removeComposeVisualization(exportedSpecId) {
+  return {
+    type: REMOVE_COMPOSE_VISUALIZATION,
+    exportedSpecId: exportedSpecId
   }
 }
 
@@ -239,10 +247,10 @@ function saveDocument(dispatch, getState) {
 
 const debouncedChangeDocument = _.debounce(saveDocument, 800);
 
-function saveBlockDispatcher(id, key, value) {
+function saveBlockDispatcher(blockId, key, value) {
   var action = {
     type: SAVE_BLOCK,
-    exportedSpecId: id,
+    blockId: blockId,
     key: key,
     meta: {
       debounce: {
@@ -254,9 +262,9 @@ function saveBlockDispatcher(id, key, value) {
   return action;
 }
 
-export function saveBlock(id, key, value) {
+export function saveBlock(blockId, key, value) {
   return (dispatch, getState) => {
-    dispatch(saveBlockDispatcher(id, key, value));
+    dispatch(saveBlockDispatcher(blockId, key, value));
     debouncedChangeDocument(dispatch, getState);
   }
 }

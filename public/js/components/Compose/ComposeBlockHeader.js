@@ -19,27 +19,21 @@ export default class ComposeBlockHeader extends Component {
   }
 
   onChange(event) {
-    const { id, onSave } = this.props;
+    const { blockId, onSave } = this.props;
     const value = event.target.value;
     this.setState({ heading: value });
-    onSave(id, 'heading', value);
+    onSave(blockId, 'heading', value);
   }
 
   render() {
     const editable = this.state.editable;
     return (
       <div className={ styles.composeBlockHeader }>
-        { editable &&
-          <ContentEditable
-            className={ styles.composeBlockHeaderText }
-            html={ this.state.heading }
-            onChange={ this.onChange.bind(this) }/>
-        }
-        { !editable &&
-          <div className={ styles.composeBlockHeaderText }>
-            { this.state.heading }
-          </div>
-        }
+        <ContentEditable
+          className={ styles.composeBlockHeaderText }
+          html={ this.state.heading }
+          disabled={ !editable }
+          onChange={ this.onChange.bind(this) }/>
       </div>
     );
   }
@@ -47,7 +41,7 @@ export default class ComposeBlockHeader extends Component {
 
 ComposeBlockHeader.propTypes = {
   heading: PropTypes.string,
-  id: PropTypes.number.isRequired,
+  blockId: PropTypes.string.isRequired,
   onSave: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired
 };
