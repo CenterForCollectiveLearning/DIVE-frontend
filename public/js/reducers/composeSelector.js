@@ -1,7 +1,7 @@
 import {
   WIPE_PROJECT_STATE,
-  SELECT_COMPOSE_VISUALIZATION,
-  REMOVE_COMPOSE_VISUALIZATION,
+  SELECT_COMPOSE_CONTENT,
+  REMOVE_COMPOSE_CONTENT,
   SELECT_DOCUMENT,
   SET_DOCUMENT_TITLE,
   RECEIVE_DOCUMENTS,
@@ -13,6 +13,7 @@ import {
 } from '../constants/ActionTypes';
 
 import { BLOCK_FORMATS } from '../constants/BlockFormats';
+import { CONTENT_TYPES } from '../constants/ContentTypes';
 import uuid from 'uuid';
 
 const baseState = {
@@ -24,39 +25,41 @@ const baseState = {
   updatedAt: Date.now(),
 }
 
-// blocks: [
-//   {
-//     heading:
-//     body:
-//     exportedSpecId:
-//     format:
-//     dimensions:
-//   } ,...
-// ]
-
 export default function composeSelector(state = baseState, action) {
   switch (action.type) {
 
-    case SELECT_COMPOSE_VISUALIZATION:
+    case SELECT_COMPOSE_CONTENT:
       var blocks = state.blocks.slice();
-      blocks.push({
-        heading: action.heading,
+
+      let blockProperties = {
+        contentType: action.contentType,
+        heading: action.title || 'Paragraph Heading',
         body: '',
         uuid: uuid.v4(),
-        exportedSpecId: action.exportedSpecId,
-        format: BLOCK_FORMATS.TEXT_LEFT,
         dimensions: {},
-        updatedAt: Date.now()
-      })
+        updatedAt: Date.now(),
+        exportedSpecId: null
+      };
+
+      switch(action.contentType) {
+        case CONTENT_TYPES.VISUALIZATION:
+          blockProperties.exportedSpecId = action.contentId;
+          blockProperties.format = BLOCK_FORMATS.TEXT_LEFT;
+          break;
+        case CONTENT_TYPES.TEXT:
+          blockProperties.format = BLOCK_FORMATS.TEXT_TOP
+          break;
+      }
+
+      blocks.push(blockProperties);
 
       return { ...state, blocks: blocks, updatedAt: Date.now() };
 
-    case REMOVE_COMPOSE_VISUALIZATION:
-      var blocks = state.blocks.slice();
-      const filteredBlocks = blocks.filter((block) => block.exportedSpecId != action.exportedSpecId);
+    case REMOVE_COMPOSE_CONTENT:
+      const filteredBlocks = state.blocks.slice()
+        .filter((block) => block.uuid != action.blockId);
 
-      blocks = filteredBlocks;
-      return { ...state, blocks: blocks, updatedAt: Date.now() };
+      return { ...state, blocks: filteredBlocks, updatedAt: Date.now() };
 
     case RECEIVE_DOCUMENTS:
       const documentId = parseInt(state.documentId);

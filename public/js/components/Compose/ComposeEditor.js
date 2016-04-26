@@ -37,7 +37,7 @@ export default class ComposeEditor extends Component {
   }
 
   render() {
-    const { selectedDocument, exportedSpecs, updatedAt, editable, selectComposeVisualization } = this.props;
+    const { selectedDocument, exportedSpecs, updatedAt, editable, selectComposeContent } = this.props;
     if (!selectedDocument.blocks) {
       return (<div></div>);
     }
@@ -68,7 +68,7 @@ export default class ComposeEditor extends Component {
             <ComposeBlockPlaceholder
               editable={ true }
               exportedSpecs={ exportedSpecs }
-              selectComposeVisualization={ selectComposeVisualization } />
+              selectComposeContent={ selectComposeContent } />
           }
         </div>
       </div>
@@ -80,5 +80,5 @@ ComposeEditor.propTypes = {
   selectedDocument: PropTypes.object.isRequired,
   editable: PropTypes.bool.isRequired,
   exportedSpecs: PropTypes.object,
-  selectComposeVisualization: PropTypes.func
+  selectComposeContent: PropTypes.func
 };

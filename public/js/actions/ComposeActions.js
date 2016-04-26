@@ -12,8 +12,8 @@ import {
   RECEIVE_UPDATE_DOCUMENT,
   REQUEST_DELETE_DOCUMENT,
   RECEIVE_DELETE_DOCUMENT,
-  SELECT_COMPOSE_VISUALIZATION,
-  REMOVE_COMPOSE_VISUALIZATION,
+  SELECT_COMPOSE_CONTENT,
+  REMOVE_COMPOSE_CONTENT,
   REQUEST_SAVE_DOCUMENT,
   RECEIVE_SAVE_DOCUMENT,
   SET_DOCUMENT_TITLE,
@@ -24,18 +24,19 @@ import _ from 'underscore'
 
 import { fetch, pollForTask } from './api.js';
 
-export function selectComposeVisualization(exportedSpecId, exportedSpecHeading) {
+export function selectComposeContent(contentType, contentId, title) {
   return {
-    type: SELECT_COMPOSE_VISUALIZATION,
-    exportedSpecId: exportedSpecId,
-    heading: exportedSpecHeading
+    type: SELECT_COMPOSE_CONTENT,
+    contentType: contentType,
+    contentId: contentId,
+    title: title
   }
 }
 
-export function removeComposeVisualization(exportedSpecId) {
+export function removeComposeBlock(blockId) {
   return {
-    type: REMOVE_COMPOSE_VISUALIZATION,
-    exportedSpecId: exportedSpecId
+    type: REMOVE_COMPOSE_CONTENT,
+    blockId: blockId
   }
 }
 

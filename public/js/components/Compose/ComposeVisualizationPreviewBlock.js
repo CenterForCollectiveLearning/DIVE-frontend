@@ -17,7 +17,7 @@ export default class ComposeVisualizationPreviewBlock extends Component {
     const { spec } = this.props;
 
     return (
-      <div className={ styles.visualizationPreviewBlockContainer }
+      <div className={ styles.contentPreviewBlockContainer }
            onClick={ this.handleClick.bind(this) }>
         <Visualization
           headerClassName={ styles.visualizationPreviewBlockHeader }

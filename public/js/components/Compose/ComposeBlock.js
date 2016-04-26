@@ -8,14 +8,16 @@ import ComposeBlockVisualization from './ComposeBlockVisualization';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import RaisedButton from '../Base/RaisedButton';
 
-import { saveBlock, removeComposeVisualization } from '../../actions/ComposeActions'
+import { saveBlock, removeComposeBlock } from '../../actions/ComposeActions'
 import { BLOCK_FORMATS } from '../../constants/BlockFormats';
+import { CONTENT_TYPES } from '../../constants/ContentTypes';
 
 export class ComposeBlock extends Component {
   constructor(props) {
     super(props);
     this.state = {
       exportedSpec: null,
+      contentType: null,
       selectedBlockFormat: BLOCK_FORMATS.TEXT_LEFT,
       formatTypes: [
         {
@@ -49,9 +51,13 @@ export class ComposeBlock extends Component {
   }
 
   componentWillMount() {
-    const exportedSpec = this.props.exportedSpecs.items.find((spec) => spec.id == this.props.block.exportedSpecId);
-    this.setStateBlockFormat(this.props.block.format);
-    this.setState({ exportedSpec: exportedSpec });      
+    const { block, exportedSpecs } = this.props;
+
+    const exportedSpec = exportedSpecs.items.find((spec) => spec.id == block.exportedSpecId);
+    this.setStateBlockFormat(block.format);
+
+    const contentType = block.contentType || (exportedSpec ? CONTENT_TYPES.VISUALIZATION : CONTENT_TYPES.TEXT);
+    this.setState({ exportedSpec: exportedSpec, contentType: contentType });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -84,11 +90,11 @@ export class ComposeBlock extends Component {
   }
 
   onClickRemoveBlock() {
-    const { block, removeComposeVisualization } = this.props;
-    removeComposeVisualization(block.exportedSpecId);
+    const { block, removeComposeBlock } = this.props;
+    removeComposeBlock(block.uuid);
   }
 
-  render() {
+  getBlockContent() {
     const { exportedSpec, selectedBlockFormat } = this.state;
     const { block, editable } = this.props;
 
@@ -114,8 +120,8 @@ export class ComposeBlock extends Component {
             onSave={ this.props.saveBlock }
             text={ block.body } />;
 
+    let formatBlock;
 
-    var formatBlock = <div></div>;
     switch (selectedBlockFormat) {
       case BLOCK_FORMATS.TEXT_LEFT:
         formatBlock =
@@ -158,25 +164,61 @@ export class ComposeBlock extends Component {
         break;
     }
 
+    return formatBlock;
+  }
+
+  getBlockControls() {
+    const { formatTypes, contentType } = this.state;
+
+    let blockControls;
+
+    const removeBlockButton = 
+      <RaisedButton
+        className={ styles.visualizationOverlayButton + ' ' + styles.visualizationOverlayControl }
+        icon
+        altText="Remove"
+        onClick={ this.onClickRemoveBlock }>
+        <i className="fa">&times;</i>
+      </RaisedButton>;
+
+
+    switch (contentType){
+      case CONTENT_TYPES.TEXT:
+        blockControls =
+          <div className={ styles.composeVisualizationControls }>
+            { removeBlockButton }
+          </div>;
+        break;
+
+      case CONTENT_TYPES.VISUALIZATION:
+        blockControls =
+          <div className={ styles.composeVisualizationControls }>
+            <ToggleButtonGroup
+              toggleItems={ formatTypes }
+              className={ styles.visualizationOverlayControl }
+              buttonClassName={ styles.visualizationOverlayButton }
+              altTextMember="label"
+              displayTextMember="content"
+              valueMember="value"
+              onChange={ this.selectBlockFormat.bind(this) } />
+            { removeBlockButton }
+          </div>;
+        break;
+    }
+
+    return blockControls;
+  }
+
+  render() {
+    const { selectedBlockFormat } = this.state;
+    const { editable } = this.props;
+
+    const formatBlock = this.getBlockContent();
+    const blockControls = this.getBlockControls();
+
     return (
       <div ref="composeBlock" className={ styles.composeBlock + ' ' + styles[selectedBlockFormat] + (editable ? ' ' + styles.editable : '') }>
-        <div className={ styles.composeVisualizationControls }>
-          <ToggleButtonGroup
-            toggleItems={ this.state.formatTypes }
-            className={ styles.visualizationOverlayControl }
-            buttonClassName={ styles.visualizationOverlayButton }
-            altTextMember="label"
-            displayTextMember="content"
-            valueMember="value"
-            onChange={ this.selectBlockFormat.bind(this) } />
-          <RaisedButton
-            className={ styles.visualizationOverlayButton + ' ' + styles.visualizationOverlayControl }
-            icon
-            altText="Remove"
-            onClick={ this.onClickRemoveBlock }>
-            <i className="fa">&times;</i>
-          </RaisedButton>
-        </div>
+        { blockControls }
         { formatBlock }
       </div>
     );
@@ -196,5 +238,5 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   saveBlock,
-  removeComposeVisualization
+  removeComposeBlock
 })(ComposeBlock);
