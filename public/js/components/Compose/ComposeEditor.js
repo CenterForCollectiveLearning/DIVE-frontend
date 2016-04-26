@@ -4,7 +4,7 @@ import styles from './Compose.sass';
 
 import Input from '../Base/Input';
 import ComposeBlock from './ComposeBlock';
-import ComposeBlockPlaceHolder from './ComposeBlockPlaceHolder';
+import ComposeBlockPlaceholder from './ComposeBlockPlaceholder';
 
 import _ from 'underscore';
 
@@ -65,7 +65,7 @@ export default class ComposeEditor extends Component {
               editable={ editable } />
           )}
           { editable && 
-            <ComposeBlockPlaceHolder
+            <ComposeBlockPlaceholder
               editable={ true }
               exportedSpecs={ exportedSpecs }
               selectComposeVisualization={ selectComposeVisualization } />
