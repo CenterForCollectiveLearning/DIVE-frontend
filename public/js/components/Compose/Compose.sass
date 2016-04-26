@@ -139,19 +139,30 @@
         padding: 10px 1.5%
         color: #999
 
-      .visualizationPreviewBlocksContainer
+      .contentPreviewBlocksContainer
         display: flex
         flex-direction: row
         flex-wrap: wrap
         width: 100%
         position: relative
 
-        .visualizationPreviewBlockContainer
+        .contentPreviewBlockContainer
           margin: 10px 1.5%
           width: 30.33%
 
           > div
             box-shadow: none
+
+          .textBlock
+            +block
+            padding-top: 30px
+            padding-bottom: 30px
+
+            box-shadow: none
+
+            font-size: 13px
+            font-weight: 500
+            color: #444444
 
     .flexrow
       max-width: 100%

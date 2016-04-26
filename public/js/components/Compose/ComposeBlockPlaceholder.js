@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import styles from './Compose.sass';
 import ComposeVisualizationPreviewBlock from './ComposeVisualizationPreviewBlock';
+import { CONTENT_TYPES } from '../../constants/ContentTypes';
 
 export default class ComposeBlockPlaceholder extends Component {
   constructor(props) {
@@ -10,9 +11,7 @@ export default class ComposeBlockPlaceholder extends Component {
     };
 
     this.selectVisualization = this.selectVisualization.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps) {
+    this.selectText = this.selectText.bind(this);
   }
 
   goPhase2() {
@@ -25,16 +24,22 @@ export default class ComposeBlockPlaceholder extends Component {
     this.setState({
       phase: 1
     }, () => {
-      this.props.selectComposeVisualization(specId, specHeading);
+      this.props.selectComposeContent(CONTENT_TYPES.VISUALIZATION, specId, specHeading);
     });
+  }
+
+  selectText() {
+    this.setState({
+      phase: 1
+    }, () => {
+      this.props.selectComposeContent(CONTENT_TYPES.TEXT);
+    });    
   }
 
   render() {
     const { phase } = this.state;
     const { exportedSpecs } = this.props;
-    let content;
-    let header;
-    let action;
+    let content, header, action;
 
     switch(phase) {
       case 1:
@@ -43,12 +48,17 @@ export default class ComposeBlockPlaceholder extends Component {
         break;
 
       case 2:
-        header = <h2>Select a visualization</h2>;
+        header = <h2>Select content</h2>;
         content = 
-          <div className={ styles.visualizationPreviewBlocksContainer }>
+          <div className={ styles.contentPreviewBlocksContainer }>
             { !exportedSpecs.isFetching && exportedSpecs.items.length > 0 && exportedSpecs.items.map((spec) =>
               <ComposeVisualizationPreviewBlock onClick={ this.selectVisualization } spec={ spec } key={ spec.id }/>
             )}
+            <div
+              className={ styles.contentPreviewBlockContainer }
+              onClick={ this.selectText }>
+              <div className={ styles.textBlock }>Text only</div>
+            </div>
           </div>
         ;
         break;
@@ -68,5 +78,5 @@ export default class ComposeBlockPlaceholder extends Component {
 
 ComposeBlockPlaceholder.propTypes = {
   exportedSpecs: PropTypes.object,
-  selectComposeVisualization: PropTypes.func
+  selectComposeContent: PropTypes.func
 };

@@ -6,7 +6,7 @@ import {
   createNewDocument,
   deleteDocument,
   fetchDocuments,
-  selectComposeVisualization
+  selectComposeContent
 } from '../../actions/ComposeActions';
 
 import styles from './Compose.sass';
@@ -78,7 +78,7 @@ export class ComposeView extends Component {
   }
 
   render() {
-    const { documents, composeSelector, selectedDocument, exportedSpecs, saveDocumentTitle, selectComposeVisualization } = this.props;
+    const { documents, composeSelector, selectedDocument, exportedSpecs, saveDocumentTitle, selectComposeContent } = this.props;
     const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
 
     return (
@@ -118,7 +118,7 @@ export class ComposeView extends Component {
             </div>
           }/>
         <ComposeEditor
-          selectComposeVisualization={ selectComposeVisualization }
+          selectComposeContent={ selectComposeContent }
           exportedSpecs={ exportedSpecs }
           saveDocumentTitle={ saveDocumentTitle }
           selectedDocument={ selectedDocument }
@@ -150,6 +150,6 @@ export default connect(mapStateToProps, {
   createNewDocument,
   deleteDocument,
   saveDocumentTitle,
-  selectComposeVisualization,
+  selectComposeContent,
   push
 })(ComposeView);
