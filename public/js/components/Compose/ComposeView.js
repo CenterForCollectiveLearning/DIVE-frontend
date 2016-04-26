@@ -78,7 +78,7 @@ export class ComposeView extends Component {
   }
 
   render() {
-    const { documents, composeSelector, selectedDocument, exportedSpecs, editable, saveDocumentTitle, selectComposeVisualization } = this.props;
+    const { documents, composeSelector, selectedDocument, exportedSpecs, saveDocumentTitle, selectComposeVisualization } = this.props;
     const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
 
     return (
@@ -122,7 +122,7 @@ export class ComposeView extends Component {
           exportedSpecs={ exportedSpecs }
           saveDocumentTitle={ saveDocumentTitle }
           selectedDocument={ selectedDocument }
-          editable={ editable }/>
+          editable={ true }/>
       </div>
     );
   }
@@ -130,7 +130,6 @@ export class ComposeView extends Component {
 
 ComposeView.propTypes = {
   projectId: PropTypes.string,
-  editable: PropTypes.bool,
   documents: PropTypes.object.isRequired,
   selectedDocument: PropTypes.object.isRequired
 }

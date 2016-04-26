@@ -29,17 +29,11 @@ export default class ComposeBlockHeader extends Component {
     const editable = this.state.editable;
     return (
       <div className={ styles.composeBlockHeader }>
-        { editable &&
-          <ContentEditable
-            className={ styles.composeBlockHeaderText }
-            html={ this.state.heading }
-            onChange={ this.onChange.bind(this) }/>
-        }
-        { !editable &&
-          <div className={ styles.composeBlockHeaderText }>
-            { this.state.heading }
-          </div>
-        }
+        <ContentEditable
+          className={ styles.composeBlockHeaderText }
+          html={ this.state.heading }
+          disabled={ !editable }
+          onChange={ this.onChange.bind(this) }/>
       </div>
     );
   }

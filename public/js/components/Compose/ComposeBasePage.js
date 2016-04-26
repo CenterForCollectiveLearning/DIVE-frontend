@@ -57,9 +57,7 @@ export class ComposeBasePage extends Component {
     return (
       <DocumentTitle title={ composeTitle }>
         <div className={ `${ styles.fillContainer } ${ styles.composePageContainer }` }>
-          <div className={ `${ styles.fillContainer } ${ styles.composeContentContainer }` }>
-            <ComposeView editable={ true } selectedDocument={ selectedDocument } />
-          </div>
+          <ComposeView selectedDocument={ selectedDocument } />
           { this.props.children }
         </div>
       </DocumentTitle>
