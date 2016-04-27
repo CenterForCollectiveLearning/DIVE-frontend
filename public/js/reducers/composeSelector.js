@@ -2,6 +2,7 @@ import {
   WIPE_PROJECT_STATE,
   SELECT_COMPOSE_CONTENT,
   REMOVE_COMPOSE_CONTENT,
+  MOVE_COMPOSE_BLOCK,
   SELECT_DOCUMENT,
   SET_DOCUMENT_TITLE,
   RECEIVE_DOCUMENTS,
@@ -23,6 +24,16 @@ const baseState = {
   saving: false,
   loaded: false,
   updatedAt: Date.now(),
+}
+
+function formatBlocks(blocks) {
+  return blocks.slice().map((block) =>
+    new Object({
+      ...block,
+      uuid: block.uuid || uuid.v4(),
+      contentType: block.contentType || (block.exportedSpecId ? CONTENT_TYPES.VISUALIZATION : CONTENT_TYPES.TEXT)
+    })
+  );
 }
 
 export default function composeSelector(state = baseState, action) {
@@ -61,13 +72,36 @@ export default function composeSelector(state = baseState, action) {
 
       return { ...state, blocks: filteredBlocks, updatedAt: Date.now() };
 
+    case MOVE_COMPOSE_BLOCK:
+      var sortedBlocks = state.blocks.slice();
+
+      const originalIndex = sortedBlocks.findIndex((block) => block.uuid == action.blockId);
+      const selectedBlock = sortedBlocks.find((block) => block.uuid == action.blockId);
+      sortedBlocks = sortedBlocks.filter((block) => block.uuid != action.blockId)
+
+      let beginningBlocks, endBlocks;
+      switch (action.direction) {
+        case 1:
+          beginningBlocks = sortedBlocks.slice(0, originalIndex + 1)
+          endBlocks = sortedBlocks.slice(originalIndex + 1)
+          break;
+        case -1:
+          beginningBlocks = sortedBlocks.slice(0, originalIndex - 1)
+          endBlocks = sortedBlocks.slice(originalIndex - 1)
+          break;
+      }
+
+      sortedBlocks = [...beginningBlocks, selectedBlock, ...endBlocks];
+
+      return { ...state, blocks: sortedBlocks, updatedAt: Date.now() };
+
     case RECEIVE_DOCUMENTS:
       const documentId = parseInt(state.documentId);
       const selectedDocument = action.documents.find((doc) => doc.id == documentId);
 
       if (selectedDocument) {
         var selectedDocumentContent = selectedDocument.content;
-        var selectedDocumentBlocks = selectedDocumentContent.blocks ? selectedDocumentContent.blocks : [];
+        var selectedDocumentBlocks = selectedDocumentContent.blocks ? formatBlocks(selectedDocumentContent.blocks) : [];
         return {
           ...state,
           blocks: selectedDocumentBlocks,
@@ -118,7 +152,7 @@ export default function composeSelector(state = baseState, action) {
       return {
         ...state,
         documentId: action.documentId,
-        blocks: action.document.content.blocks,
+        blocks: formatBlocks(action.document.content.blocks),
         title: action.document.title,
         loaded: true
       }
