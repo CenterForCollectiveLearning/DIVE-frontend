@@ -41,11 +41,18 @@ export function removeComposeBlock(blockId) {
   }
 }
 
-export function moveComposeBlock(blockId, direction) {
+function moveComposeBlockDispatcher(blockId, direction) {
   return {
     type: MOVE_COMPOSE_BLOCK,
     blockId: blockId,
     direction: direction
+  }
+}
+
+export function moveComposeBlock(blockId, direction) {
+  return (dispatch, getState) => {
+    dispatch(moveComposeBlockDispatcher(blockId, direction));
+    debouncedChangeDocument(dispatch, getState);
   }
 }
 
