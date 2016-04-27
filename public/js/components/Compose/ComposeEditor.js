@@ -58,10 +58,12 @@ export default class ComposeEditor extends Component {
           </div>
         </div>
         <div className={ styles.composeEditor + ' ' + (editable ? styles.editable : '') }>
-          { selectedDocument.blocks.map((block) =>
+          { selectedDocument.blocks.map((block, i, blocks) =>
             <ComposeBlock
-              key={ `compose-block-${ block.uuid }-${ block.updatedAt }` }
+              key={ `compose-block-${ block.uuid }-${ block.updatedAt }-${ i }` }
               block={ block }
+              index={ i }
+              length={ blocks.length }
               editable={ editable } />
           )}
           { editable && 

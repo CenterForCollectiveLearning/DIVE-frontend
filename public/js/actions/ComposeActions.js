@@ -14,6 +14,7 @@ import {
   RECEIVE_DELETE_DOCUMENT,
   SELECT_COMPOSE_CONTENT,
   REMOVE_COMPOSE_CONTENT,
+  MOVE_COMPOSE_BLOCK,
   REQUEST_SAVE_DOCUMENT,
   RECEIVE_SAVE_DOCUMENT,
   SET_DOCUMENT_TITLE,
@@ -37,6 +38,14 @@ export function removeComposeBlock(blockId) {
   return {
     type: REMOVE_COMPOSE_CONTENT,
     blockId: blockId
+  }
+}
+
+export function moveComposeBlock(blockId, direction) {
+  return {
+    type: MOVE_COMPOSE_BLOCK,
+    blockId: blockId,
+    direction: direction
   }
 }
 

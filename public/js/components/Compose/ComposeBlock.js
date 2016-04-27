@@ -8,7 +8,7 @@ import ComposeBlockVisualization from './ComposeBlockVisualization';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import RaisedButton from '../Base/RaisedButton';
 
-import { saveBlock, removeComposeBlock } from '../../actions/ComposeActions'
+import { saveBlock, removeComposeBlock, moveComposeBlock } from '../../actions/ComposeActions'
 import { BLOCK_FORMATS } from '../../constants/BlockFormats';
 import { CONTENT_TYPES } from '../../constants/ContentTypes';
 
@@ -18,6 +18,7 @@ export class ComposeBlock extends Component {
     this.state = {
       exportedSpec: null,
       contentType: null,
+      autoSetContentType: false,
       selectedBlockFormat: BLOCK_FORMATS.TEXT_LEFT,
       formatTypes: [
         {
@@ -48,6 +49,8 @@ export class ComposeBlock extends Component {
     }
 
     this.onClickRemoveBlock = this.onClickRemoveBlock.bind(this);
+    this.onClickMoveBlockUp = this.onClickMoveBlockUp.bind(this);
+    this.onClickMoveBlockDown = this.onClickMoveBlockDown.bind(this);
   }
 
   componentWillMount() {
@@ -56,14 +59,27 @@ export class ComposeBlock extends Component {
     const exportedSpec = exportedSpecs.items.find((spec) => spec.id == block.exportedSpecId);
     this.setStateBlockFormat(block.format);
 
-    const contentType = block.contentType || (exportedSpec ? CONTENT_TYPES.VISUALIZATION : CONTENT_TYPES.TEXT);
-    this.setState({ exportedSpec: exportedSpec, contentType: contentType });
+    if (block.contentType) {
+      this.setState({ contentType: block.contentType });
+    } else {
+      this.autoSetContentType(exportedSpec);
+    }
+
+    this.setState({ exportedSpec: exportedSpec });
+  }
+
+  autoSetContentType(hasSpec) {
+    const contentType = hasSpec ? CONTENT_TYPES.VISUALIZATION : CONTENT_TYPES.TEXT;
+    this.setState({ autoSetContentType: true, contentType: contentType });
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.exportedSpecs.updatedAt != this.props.exportedSpecs.updatedAt) {
       const exportedSpec = nextProps.exportedSpecs.items.find((spec) => spec.id == nextProps.block.exportedSpecId);
       this.setState({ exportedSpec: exportedSpec });
+      if (this.state.autoSetContentType) {
+        this.autoSetContentType(exportedSpec);
+      }
     }
 
     if (nextProps.block.format != this.props.block.format && nextProps.block.format != this.state.selectedBlockFormat) {
@@ -92,6 +108,16 @@ export class ComposeBlock extends Component {
   onClickRemoveBlock() {
     const { block, removeComposeBlock } = this.props;
     removeComposeBlock(block.uuid);
+  }
+
+  onClickMoveBlockUp() {
+    const { block, moveComposeBlock } = this.props;
+    moveComposeBlock(block.uuid, -1);
+  }
+
+  onClickMoveBlockDown() {
+    const { block, moveComposeBlock } = this.props;
+    moveComposeBlock(block.uuid, 1);
   }
 
   getBlockContent() {
@@ -169,13 +195,37 @@ export class ComposeBlock extends Component {
 
   getBlockControls() {
     const { formatTypes, contentType } = this.state;
+    const { index, length } = this.props;
 
     let blockControls;
+
+    const moveUpButton =
+      <RaisedButton
+        className={ styles.visualizationOverlayButton + ' ' + styles.visualizationOverlayControl }
+        icon
+        minWidth={ 24 }
+        disabled={ index == 0 }
+        altText="Move block up"
+        onClick={ this.onClickMoveBlockUp }>
+        <i className="fa fa-long-arrow-up"></i>
+      </RaisedButton>;
+
+    const moveDownButton = 
+      <RaisedButton
+        className={ styles.visualizationOverlayButton + ' ' + styles.visualizationOverlayControl }
+        icon
+        minWidth={ 24 }
+        disabled={ index == length - 1 }
+        altText="Move block down"
+        onClick={ this.onClickMoveBlockDown }>
+        <i className="fa fa-long-arrow-down"></i>
+      </RaisedButton>;
 
     const removeBlockButton = 
       <RaisedButton
         className={ styles.visualizationOverlayButton + ' ' + styles.visualizationOverlayControl }
         icon
+        minWidth={ 24 }
         altText="Remove"
         onClick={ this.onClickRemoveBlock }>
         <i className="fa">&times;</i>
@@ -186,6 +236,8 @@ export class ComposeBlock extends Component {
       case CONTENT_TYPES.TEXT:
         blockControls =
           <div className={ styles.composeVisualizationControls }>
+            { moveUpButton }
+            { moveDownButton }
             { removeBlockButton }
           </div>;
         break;
@@ -201,6 +253,8 @@ export class ComposeBlock extends Component {
               displayTextMember="content"
               valueMember="value"
               onChange={ this.selectBlockFormat.bind(this) } />
+            { moveUpButton }
+            { moveDownButton }
             { removeBlockButton }
           </div>;
         break;
@@ -228,7 +282,9 @@ export class ComposeBlock extends Component {
 ComposeBlock.propTypes = {
   block: PropTypes.object.isRequired,
   exportedSpecs: PropTypes.object.isRequired,
-  editable: PropTypes.bool.isRequired
+  editable: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  length: PropTypes.number.isRequired
 };
 
 function mapStateToProps(state) {
@@ -238,5 +294,6 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   saveBlock,
-  removeComposeBlock
+  removeComposeBlock,
+  moveComposeBlock
 })(ComposeBlock);
