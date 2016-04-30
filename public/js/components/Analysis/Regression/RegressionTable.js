@@ -11,9 +11,45 @@ export default class RegressionTable extends Component {
     super(props);
 
     this.getCoefficientString = this.getCoefficientString.bind(this);
+
+    this.state = {
+      columns: []
+    }
+
+    this.onCellClick = this.onCellClick.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillMount(){
+    const { regressionResult } = this.props;
+    var columns = this.state.columns.slice();
+
+    regressionResult.regressionsByColumn.forEach((column) =>
+      columns.push({
+        variables: column.regressedFields
+      })
+    );
+
+    this.setState({
+      columns: columns
+    });
+  }
+
+  onCellClick(selectedCell) {
+    const selectedRow = this.props.regressionResult.fields[selectedCell.row - 1].name;
+    const selectedCol = this.state.columns[selectedCell.column - 1];
+
+    var columns = this.state.columns.slice();
+    columns[selectedCell.column - 1] = this.getToggledColumn(selectedCol, selectedRow);
+    this.setState({ columns: columns });
+  }
+
+  getToggledColumn(columnVariables, field) {
+    if (columnVariables.variables.find((variable) => variable == field)) {
+      columnVariables.variables = columnVariables.variables.filter((variable) => variable != field)
+    } else {
+      columnVariables.variables.push(field)
+    }
+    return columnVariables;
   }
 
   getCoefficientString(coefficient, pValue, enabled) {
@@ -48,26 +84,22 @@ export default class RegressionTable extends Component {
       } else {
         // categorical fixed effects
         return { ...field, formattedName: field.name, enabled: false };
-
       }
     });
 
-
-    const renderDataColumn = function(property, enabled) {
-      return (
-        <div className={ styles.dataCell }>
-          <div className={ styles.coefficient }>
-            { context.getCoefficientString(property.coefficient, property.pValue, enabled) }
-          </div>
-          { enabled &&
-            <div className={ styles.standardError }>
-              ({ getRoundedString(property.standardError) })
-            </div>
-          }
+    const renderDataColumn = (property, enabled) =>
+      <div className={ styles.dataCell }>
+        <div className={ styles.coefficient }>
+          { context.getCoefficientString(property.coefficient, property.pValue, enabled) }
         </div>
-      );
-    }
+        { enabled &&
+          <div className={ styles.standardError }>
+            ({ getRoundedString(property.standardError) })
+          </div>
+        }
+      </div>
 
+    const { onCellClick } = this;
     const data = [
       {
         rowClass: styles.tableHeaderRow,
@@ -78,6 +110,7 @@ export default class RegressionTable extends Component {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
+          onClick: onCellClick,
           items: [ field.formattedName, ...regressionResult.regressionsByColumn.map(function (column) {
             const property = column.regression.propertiesByField.find((property) => property.baseField == field.name);
             if (!property) return '';
@@ -129,7 +162,9 @@ export default class RegressionTable extends Component {
 
     return (
       <div className={ styles.regressionTable }>
-        <BareDataGrid data={ data }/>
+        <BareDataGrid
+          data={ data }          
+          />
       </div>
     );
   }

@@ -19,6 +19,10 @@ export default class BareDataGrid extends Component {
     }
   }
 
+  onClick() {
+    this.onClick(this);
+  }
+
   render() {
     const { data, id, tableClassName, containerClassName } = this.props;
 
@@ -26,38 +30,58 @@ export default class BareDataGrid extends Component {
     const minimumColumnWidth = 105;
 
     const nColumns = data.length ? data[0].items.length : 0;
-    const Column = React.createClass({
-      getDefaultProps: function() {
-        return { className: '' };
-      },
-      render: function() {
-        return (
-          <div style={{ 'width': `${ 100/nColumns }%`, minWidth: minimumColumnWidth, 'maxWidth': `${ 100/nColumns }%` }} className={ styles.column + ' ' + this.props.className }>{ this.props.children }</div>
-        );
-      }
-    });
 
-    const Row = React.createClass({
-      getDefaultProps: function() {
-        return { className: '' };
-      },
-      render: function() {
-        return (
-          <div className={ styles.row + ' ' + this.props.className }>{ this.props.children }</div>
-        );
+    class Column extends Component {
+      defaultProps = {
+        className: '',
+        onClick: null
       }
-    });
 
-    const Cell = React.createClass({
-      getDefaultProps: function() {
-        return { className: '', title: null };
-      },
-      render: function() {
+      render() {
         return (
-          <div title={ this.props.title } className={ styles.cell + ' ' + this.props.className }>{ this.props.children }</div>
+          <div style={{
+              width: `${ 100 / nColumns }%`,
+              minWidth: minimumColumnWidth,
+              maxWidth: `${ 100 / nColumns }%`
+            }}
+            onClick={ this.props.onClick }
+            className={ styles.column + ' ' + this.props.className }>
+            { this.props.children }
+          </div>
         );
       }
-    });
+    };
+
+    class Row extends Component {
+      defaultProps = {
+        className: ''
+      }
+
+      render() {
+        return (
+          <div className={ styles.row + ' ' + this.props.className }>
+            { this.props.children }
+          </div>
+        );
+      }
+    };
+
+    class Cell extends Component {
+      defaultProps = {
+        className: ''
+      }
+
+      render() {
+        return (
+          <div
+            onClick={ this.props.onCellClick }
+            title={ this.props.title }
+            className={ styles.cell + ' ' + this.props.className }>
+            { this.props.children }
+          </div>
+        );
+      }
+    };
 
     return (
       <div className={ styles.gridContainer }>
@@ -70,7 +94,12 @@ export default class BareDataGrid extends Component {
               { data.map((row, i) =>
                 <Row key={ `${ row.rowClass }-${ i }`} className={ row.rowClass }>{
                   row.items.map((column, j) =>
-                    <Column key={ `${ row.rowClass }-${ i }-${ row.columnClass }-${ j }`} className={ row.columnClass }>{ column }</Column>
+                    <Column
+                      onClick={ row.onClick ? this.onClick.bind({ onClick: row.onClick, row: i, column: j }) : null }
+                      key={ `${ row.rowClass }-${ i }-${ row.columnClass }-${ j }`}
+                      className={ row.columnClass }>
+                      { column }
+                    </Column>
                   )
                 }</Row>
               )}
