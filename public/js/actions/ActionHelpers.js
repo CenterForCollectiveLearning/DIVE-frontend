@@ -3,11 +3,22 @@ function formatVisualizationTableRow(columnNames, row, rowNumber) {
 
   columnNames.forEach(function(columnName, j) {
     const value = row[j];
-    const formattedValue = Array.isArray(value)
-      ? `Bin ${ rowNumber + 1 }: ${ value[0] } — ${ value[1] }`
-      : value;
+    var formattedValue;
 
-    newRow[`${ columnName.replace(/[.]/g, '_') }`] = formattedValue;
+    if (Array.isArray(value)) {  // Array
+      formattedValue = `Bin ${ rowNumber + 1 }: ${ value[0] } — ${ value[1] }`
+    } else if (typeof value == 'string' || value instanceof String) {  // String
+      // formattedValue = value.replace(/[.]/g, '_');
+      formattedValue = value;
+    } else if (value === 'number') {  // Object
+      formattedValue = value.toString();
+    } else if (value === Object(value)) {  // Object
+      formattedValue = value['id'];
+    } else if (value === undefined || value === null ){
+    } else {
+      formattedValue = value.toString();
+    }
+      newRow[columnName] = formattedValue;
   });
 
   return newRow;

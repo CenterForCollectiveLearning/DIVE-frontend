@@ -13,6 +13,7 @@ export default class LineChart extends Component {
 
     const lineChartOptions = {
       ...options,
+      intervals: { style: 'boxes' },
       pointSize: 0,
       hAxis: {
         title: labels && labels.x ? labels.x : finalData[0][0],
