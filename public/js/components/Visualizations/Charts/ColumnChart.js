@@ -11,6 +11,7 @@ export default class ColumnChart extends Component {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options, labels } = this.props;
 
     var finalData = data;
+
     var hashElements;
     if (labels && labels.x && labels.y) {
       hashElements = [labels.x, labels.y];
@@ -22,6 +23,7 @@ export default class ColumnChart extends Component {
 
     const fullColumnChartOptions = {
       ...options,
+      intervals: { 'lineWidth': 2, 'barWidth': 0.25 },      
       colors: colors,
       hAxis: {
         title: labels && labels.x ? labels.x : finalData[0][0],
