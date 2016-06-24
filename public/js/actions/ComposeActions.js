@@ -1,8 +1,10 @@
 import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
-  REQUEST_EXPORTED_ANALYSES,
-  RECEIVE_EXPORTED_ANALYSES,
+  REQUEST_EXPORTED_CORRELATIONS,
+  RECEIVE_EXPORTED_CORRELATIONS,
+  REQUEST_EXPORTED_REGRESSIONS,
+  RECEIVE_EXPORTED_REGRESSIONS,
   SELECT_DOCUMENT,
   REQUEST_PUBLISHED_DOCUMENT,
   RECEIVE_PUBLISHED_DOCUMENT,
@@ -66,31 +68,60 @@ export function setVisualizationFormat(exportedSpecId, format) {
   }
 }
 
-function requestExportedAnalysesDispatcher() {
+function requestExportedCorrelationsDispatcher() {
   return {
-    type: REQUEST_EXPORTED_ANALYSES
+    type: REQUEST_EXPORTED_CORRELATIONS
   };
 }
 
-function receiveExportedAnalysesDispatcher(params, json) {
+function receiveExportedCorrelationsDispatcher(params, json) {
   if (json && !json.error) {
     return {
       ...params,
-      type: RECEIVE_EXPORTED_ANALYSES,
-      analyses: json,
+      type: RECEIVE_EXPORTED_CORRELATIONS,
+      correlations: json,
       receivedAt: Date.now()
     };
   }
 }
 
-export function fetchExportedAnalyses(projectId) {
+function requestExportedRegressionsDispatcher() {
+  return {
+    type: REQUEST_EXPORTED_REGRESSIONS
+  };
+}
+
+function receiveExportedRegressionsDispatcher(params, json) {
+  if (json && !json.error) {
+    return {
+      ...params,
+      type: RECEIVE_EXPORTED_REGRESSIONS,
+      regressions: json,
+      receivedAt: Date.now()
+    };
+  }
+}
+
+export function fetchExportedCorrelations(projectId) {
+  console.log('Fetching correlations');
   return (dispatch) => {
-    dispatch(requestExportedAnalysesDispatcher());
-    return fetch(`/exported_results/v1/exported_results?project_id=${projectId}&result_type=regression&result_type=correlation`)
-      .then(response => response.json())
+    dispatch(requestExportedCorrelationsDispatcher());
+    return fetch(`/exported_results/v1/exported_results?project_id=${projectId}&result_type=correlation`)
       .then(function(json) {
         const dispatchParams = {};
-        dispatch(receiveExportedAnalysesDispatcher(dispatchParams, json.result))
+        dispatch(receiveExportedCorrelationsDispatcher(dispatchParams, json.result))
+      });
+  };
+}
+
+export function fetchExportedRegressions(projectId) {
+  console.log('Fetching regressions');
+  return (dispatch) => {
+    dispatch(requestExportedRegressionsDispatcher());
+    return fetch(`/exported_results/v1/exported_results?project_id=${projectId}&result_type=regression`)
+      .then(function(json) {
+        const dispatchParams = {};
+        dispatch(receiveExportedRegressionsDispatcher(dispatchParams, json.result))
       });
   };
 }
