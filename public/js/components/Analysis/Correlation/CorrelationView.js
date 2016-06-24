@@ -3,18 +3,28 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
-import { getCorrelations, getCorrelationScatterplot } from '../../../actions/CorrelationActions';
+import { getCorrelations, getCorrelationScatterplot, createExportedCorrelation } from '../../../actions/CorrelationActions';
+import { setShareWindow } from '../../../actions/VisualizationActions';
 import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
+import RaisedButton from '../../Base/RaisedButton';
 import DropDownMenu from '../../Base/DropDownMenu';
 import CorrelationTable from './CorrelationTable';
 import CorrelationScatterplotCard from './CorrelationScatterplotCard';
 
 export class CorrelationView extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.saveCorrelation = this.saveCorrelation.bind(this);
+    this.onClickShare = this.onClickShare.bind(this);
+  }
+
   componentWillMount() {
     const { projectId, datasetId, datasetSelector, datasets, correlationVariableNames, getCorrelations, fetchDatasets } = this.props
 
@@ -61,10 +71,21 @@ export class CorrelationView extends Component {
     }
   }
 
+  saveCorrelation(saveAction = true) {
+    const { project, correlationResult, createExportedCorrelation } = this.props;
+    createExportedCorrelation(project.properties.id, correlationResult.data.id, correlationResult.data, saveAction);
+  }
+
+  onClickShare() {
+    setShareWindow(window.open('about:blank'));
+    this.saveCorrelation(false);
+  }
+
   render() {
     const { correlationResult, correlationVariableNames, correlationScatterplots, datasets, datasetId } = this.props;
     const twoCorrelationVariablesSelected = correlationVariableNames.length >= 2;
     const correlationResultHasElements = correlationResult.data && correlationResult.data.rows && correlationResult.data.rows.length > 0;
+    const disabled = (correlationResult.isSaving || (!correlationResult.isSaving && correlationResult.exportedRegressionId) || correlationResult.exported) ? true : false;
 
     var correlationContent;
     if (twoCorrelationVariablesSelected ) {
@@ -104,18 +125,34 @@ export class CorrelationView extends Component {
         <HeaderBar
           header="Correlation Analysis"
           actions={
-            datasets.items && datasets.items.length > 0 ?
+            <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
-                <DropDownMenu
-                  prefix="Dataset"
-                  width={ 240 }
-                  value={ parseInt(datasetId) }
-                  options={ datasets.items }
-                  valueMember="datasetId"
-                  displayTextMember="title"
-                  onChange={ this.clickDataset.bind(this) } />
+                <RaisedButton onClick={ this.onClickShare }>
+                  { correlationResult.isExporting && "Exporting..." }
+                  { !correlationResult.isExporting && "Share" }
+                </RaisedButton>
               </div>
-            : ''
+              <div className={ styles.headerControl }>
+                <RaisedButton onClick={ this.saveCorrelation } disabled={ disabled }>
+                  { !correlationResult.isSaving && correlationResult.exportedSpecId && <i className="fa fa-star"></i> }
+                  { !correlationResult.exportedSpecId && <i className="fa fa-star-o"></i> }
+                </RaisedButton>
+              </div>
+              <div className={ styles.headerControl }>
+                { datasets.items && datasets.items.length > 0 ?
+                  <div className={ styles.headerControl }>
+                    <DropDownMenu
+                      prefix="Dataset"
+                      width={ 240 }
+                      value={ parseInt(datasetId) }
+                      options={ datasets.items }
+                      valueMember="datasetId"
+                      displayTextMember="title"
+                      onChange={ this.clickDataset.bind(this) } />
+                  </div>
+                : '' }
+              </div>
+            </div>
           }/>
         { correlationContent }
       </div>
@@ -147,6 +184,7 @@ export default connect(mapStateToProps, {
   push,
   getCorrelations,
   getCorrelationScatterplot,
+  createExportedCorrelation,
   selectDataset,
   fetchDatasets,
   clearAnalysis

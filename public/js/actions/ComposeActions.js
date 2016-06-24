@@ -1,6 +1,8 @@
 import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
+  REQUEST_EXPORTED_ANALYSES,
+  RECEIVE_EXPORTED_ANALYSES,
   SELECT_DOCUMENT,
   REQUEST_PUBLISHED_DOCUMENT,
   RECEIVE_PUBLISHED_DOCUMENT,
@@ -62,6 +64,35 @@ export function setVisualizationFormat(exportedSpecId, format) {
     exportedSpecId: exportedSpecId,
     format: format
   }
+}
+
+function requestExportedAnalysesDispatcher() {
+  return {
+    type: REQUEST_EXPORTED_ANALYSES
+  };
+}
+
+function receiveExportedAnalysesDispatcher(params, json) {
+  if (json && !json.error) {
+    return {
+      ...params,
+      type: RECEIVE_EXPORTED_ANALYSES,
+      analyses: json,
+      receivedAt: Date.now()
+    };
+  }
+}
+
+export function fetchExportedAnalyses(projectId) {
+  return (dispatch) => {
+    dispatch(requestExportedAnalysesDispatcher());
+    return fetch(`/exported_results/v1/exported_results?project_id=${projectId}&result_type=regression&result_type=correlation`)
+      .then(response => response.json())
+      .then(function(json) {
+        const dispatchParams = {};
+        dispatch(receiveExportedAnalysesDispatcher(dispatchParams, json.result))
+      });
+  };
 }
 
 function requestExportedVisualizationSpecsDispatcher() {

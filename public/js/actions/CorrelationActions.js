@@ -5,7 +5,11 @@ import {
   PROGRESS_CORRELATION,
   ERROR_CORRELATION,
   REQUEST_CORRELATION_SCATTERPLOT,
-  RECEIVE_CORRELATION_SCATTERPLOT
+  RECEIVE_CORRELATION_SCATTERPLOT,
+  REQUEST_CREATE_SAVED_CORRELATION,
+  RECEIVE_CREATED_SAVED_CORRELATION,
+  REQUEST_CREATE_EXPORTED_CORRELATION,
+  RECEIVE_CREATED_EXPORTED_CORRELATION,
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
@@ -92,5 +96,44 @@ export function getCorrelationScatterplot(projectId, correlationId) {
     dispatch(requestCorrelationScatterplotDispatcher());
     return fetch(`/statistics/v1/correlation_scatterplot/${correlationId}?projectId=${projectId}`)
       .then(json => dispatch(receiveCorrelationScatterplotDispatcher(json)));
+  };
+}
+
+function requestCreateExportedCorrelationDispatcher(action) {
+  return {
+    type: action
+  };
+}
+
+function receiveCreatedExportedCorrelationDispatcher(action, json) {
+  return {
+    type: action,
+    exportedCorrelationId: json.id,
+    exportedSpec: json,
+    receivedAt: Date.now()
+  };
+}
+
+export function createExportedCorrelation(projectId, correlationId, data, saveAction = false) {
+  console.log('in createExportedCorrelation', projectId, correlationId, data);
+  const requestAction = saveAction ? REQUEST_CREATE_SAVED_CORRELATION : REQUEST_CREATE_EXPORTED_CORRELATION;
+  const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_CORRELATION : RECEIVE_CREATED_EXPORTED_CORRELATION;
+
+  const params = {
+    project_id: projectId,
+    correlation_id: correlationId,
+    data: data,
+  }
+
+  return dispatch => {
+    console.log('dispatching');
+    dispatch(requestCreateExportedCorrelationDispatcher(requestAction));
+    return fetch('/exported_correlation/v1/exported_correlation', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+      .then(json => dispatch(receiveCreatedExportedCorrelationDispatcher(receiveAction, json)))
+      .catch(err => console.error("Error creating exported correlation: ", err));
   };
 }
