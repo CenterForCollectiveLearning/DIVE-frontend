@@ -115,7 +115,6 @@ function receiveCreatedExportedCorrelationDispatcher(action, json) {
 }
 
 export function createExportedCorrelation(projectId, correlationId, data, saveAction = false) {
-  console.log('in createExportedCorrelation', projectId, correlationId, data);
   const requestAction = saveAction ? REQUEST_CREATE_SAVED_CORRELATION : REQUEST_CREATE_EXPORTED_CORRELATION;
   const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_CORRELATION : RECEIVE_CREATED_EXPORTED_CORRELATION;
 
@@ -126,14 +125,12 @@ export function createExportedCorrelation(projectId, correlationId, data, saveAc
   }
 
   return dispatch => {
-    console.log('dispatching');
     dispatch(requestCreateExportedCorrelationDispatcher(requestAction));
     return fetch('/exported_correlation/v1/exported_correlation', {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveCreatedExportedCorrelationDispatcher(receiveAction, json)))
+    }).then(json => dispatch(receiveCreatedExportedCorrelationDispatcher(receiveAction, json)))
       .catch(err => console.error("Error creating exported correlation: ", err));
   };
 }

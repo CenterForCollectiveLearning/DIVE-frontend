@@ -124,7 +124,6 @@ function receiveCreatedExportedRegressionDispatcher(action, json) {
 }
 
 export function createExportedRegression(projectId, regressionId, data, saveAction = false) {
-  console.log('in createExportedRegression', projectId, regressionId, data);
   const requestAction = saveAction ? REQUEST_CREATE_SAVED_REGRESSION : REQUEST_CREATE_EXPORTED_REGRESSION;
   const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_REGRESSION : RECEIVE_CREATED_EXPORTED_REGRESSION;
 
@@ -135,14 +134,12 @@ export function createExportedRegression(projectId, regressionId, data, saveActi
   }
 
   return dispatch => {
-    console.log('dispatching');
     dispatch(requestCreateExportedRegressionDispatcher(requestAction));
     return fetch('/exported_regression/v1/exported_regression', {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveCreatedExportedRegressionDispatcher(receiveAction, json)))
+    }).then(json => dispatch(receiveCreatedExportedRegressionDispatcher(receiveAction, json)))
       .catch(err => console.error("Error creating exported regressions: ", err));
   };
 }
