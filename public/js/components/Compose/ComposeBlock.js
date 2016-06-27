@@ -56,9 +56,26 @@ export class ComposeBlock extends Component {
   }
 
   componentWillMount() {
-    const { block, exportedSpecs } = this.props;
+    const { block, exportedSpecs, exportedRegressions, exportedCorrelations } = this.props;
 
-    const exportedSpec = exportedSpecs.items.find((spec) => spec.id == block.exportedSpecId);
+    let specs;
+    switch(block.contentType) {
+      case CONTENT_TYPES.VISUALIZATION:
+        specs = exportedSpecs;
+        break;
+      case CONTENT_TYPES.REGRESSION:
+        specs = exportedRegressions;
+        break;
+      case CONTENT_TYPES.CORRELATION:
+        specs = exportedCorrelations;
+        break;
+      default:
+        specs = exportedSpecs;
+        break;
+    }
+
+    const exportedSpec = specs.items.find((spec) => spec.id == block.exportedSpecId);
+    console.log('in componentWillMount', exportedSpec, specs.items, block.exportedSpecId);
     this.setStateBlockFormat(block.format);
 
     if (block.contentType) {
@@ -72,6 +89,7 @@ export class ComposeBlock extends Component {
 
   autoSetContentType(hasSpec) {
     const contentType = hasSpec ? CONTENT_TYPES.VISUALIZATION : CONTENT_TYPES.TEXT;
+    console.log('in autoSetContentType', hasSpec, contentType);
     this.setState({ autoSetContentType: true, contentType: contentType });
   }
 
@@ -128,38 +146,50 @@ export class ComposeBlock extends Component {
 
     const spec = exportedSpec ? exportedSpec : block.spec;
 
+    console.log('in getBlockContent', block, spec)
+
     const composeHeader =
       <ComposeBlockHeader blockId={ block.uuid } onSave={ this.props.saveBlock } heading={ block.heading } editable={ this.props.editable } />;
 
-    const composeVisualization = spec &&
-      <ComposeBlockVisualization
-                blockId={ block.uuid }
-                chartId={ `visualization-${ block.uuid }-${ spec.id }` }
-                editable={ editable }
-                onSave={ this.props.saveBlock }
-                format={ selectedBlockFormat }
-                parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
-                spec={ spec } />;
-
-    const composeRegression = spec &&
-      <ComposeBlockRegression
-                blockId={ block.uuid }
-                chartId={ `regression-${ block.uuid }-${ spec.id }` }
-                editable={ editable }
-                onSave={ this.props.saveBlock }
-                format={ selectedBlockFormat }
-                parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
-                spec={ spec } />;
-
-    const composeCorrelation = spec &&
-      <ComposeBlockCorrelation
-                blockId={ block.uuid }
-                chartId={ `correlation-${ block.uuid }-${ spec.id }` }
-                editable={ editable }
-                onSave={ this.props.saveBlock }
-                format={ selectedBlockFormat }
-                parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
-                spec={ spec } />;
+    let composeContent;
+    switch(block.contentType) {
+      case CONTENT_TYPES.VISUALIZATION:
+        composeContent = spec &&
+          <ComposeBlockVisualization
+                    blockId={ block.uuid }
+                    chartId={ `visualization-${ block.uuid }-${ spec.id }` }
+                    editable={ editable }
+                    onSave={ this.props.saveBlock }
+                    format={ selectedBlockFormat }
+                    parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
+                    spec={ spec } />;
+        break;
+      case CONTENT_TYPES.REGRESSION:
+        composeContent = spec &&
+          <ComposeBlockRegression
+                    blockId={ block.uuid }
+                    chartId={ `regression-${ block.uuid }-${ spec.id }` }
+                    editable={ editable }
+                    onSave={ this.props.saveBlock }
+                    format={ selectedBlockFormat }
+                    parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
+                    spec={ spec } />;
+        break;
+      case CONTENT_TYPES.CORRELATION:
+        composeContent = spec &&
+          <ComposeBlockCorrelation
+                    blockId={ block.uuid }
+                    chartId={ `correlation-${ block.uuid }-${ spec.id }` }
+                    editable={ editable }
+                    onSave={ this.props.saveBlock }
+                    format={ selectedBlockFormat }
+                    parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
+                    spec={ spec } />;
+        break;
+      default:
+        specs = exportedSpecs;
+        break;
+    }
 
     const composeText =
       <ComposeBlockText
@@ -178,14 +208,14 @@ export class ComposeBlock extends Component {
               { composeHeader }
               { composeText }
             </div>
-            { composeVisualization }
+            { composeContent }
           </div>;
         break;
 
       case BLOCK_FORMATS.TEXT_RIGHT:
         formatBlock =
           <div className={ styles.flexrow }>
-            { composeVisualization }
+            { composeContent }
             <div className={ styles.flexcolumn }>
               { composeHeader }
               { composeText }
@@ -198,7 +228,7 @@ export class ComposeBlock extends Component {
           <div className={ styles.flexcolumn }>
             { composeHeader }
             { composeText }
-            { composeVisualization }
+            { composeContent }
           </div>;
         break;
 
@@ -206,7 +236,7 @@ export class ComposeBlock extends Component {
         formatBlock =
           <div className={ styles.flexcolumn }>
             { composeHeader }
-            { composeVisualization }
+            { composeContent }
             { composeText }
           </div>;
         break;
@@ -304,14 +334,16 @@ export class ComposeBlock extends Component {
 ComposeBlock.propTypes = {
   block: PropTypes.object.isRequired,
   exportedSpecs: PropTypes.object.isRequired,
+  exportedRegressions: PropTypes.object.isRequired,
+  exportedCorrelations: PropTypes.object.isRequired,
   editable: PropTypes.bool.isRequired,
   index: PropTypes.number.isRequired,
   length: PropTypes.number.isRequired
 };
 
 function mapStateToProps(state) {
-  const { exportedSpecs } = state;
-  return { exportedSpecs };
+  const { exportedSpecs, exportedRegressions, exportedCorrelations } = state;
+  return { exportedSpecs, exportedRegressions, exportedCorrelations };
 }
 
 export default connect(mapStateToProps, {

@@ -5,7 +5,7 @@ import styles from './Compose.sass';
 
 import _ from 'underscore';
 import { ResizableBox } from 'react-resizable';
-import Visualization from '../Visualizations/Visualization';
+import RegressionTable from '../Analysis/Regression/RegressionTable';
 
 import { BLOCK_FORMATS } from '../../constants/BlockFormats';
 
@@ -37,14 +37,8 @@ export default class ComposeBlockRegression extends Component {
     const width = isHalfWidthFormat ? 620 : absoluteMaxWidth;
     const height = isHalfWidthFormat ? 300 : 400;
 
-    const visualizationComponent = <Visualization
-      chartId={ `full-compose-visualization-${ chartId }-${ updatedAt }-${ this.state.resizeCounter }` }
-      containerClassName={ styles.fullComposeVisualization }
-      visualizationTypes={ spec.vizTypes }
-      spec={ spec }
-      data={ spec.data }
-      isMinimalView={ false }
-      showHeader={ false }/>
+    const regressionTableComponent = <RegressionTable regressionResult={ spec.data || {} } preview={ false }/>
+
 
     return (
       <div ref="composeBlockVisualization" className={ styles.composeBlockVisualization }>
@@ -57,12 +51,12 @@ export default class ComposeBlockRegression extends Component {
             height={ height }
             minConstraints={ [200, 200] }
             maxConstraints={ [maxWidth, 600] }>
-            { visualizationComponent }
+            { regressionTableComponent }
           </ResizableBox>
         }
         { !editable &&
           <div style={{ width: width, height: height }} className={ styles.resizableContainer }>
-            { visualizationComponent }
+            { regressionTableComponent }
           </div>
         }
       </div>

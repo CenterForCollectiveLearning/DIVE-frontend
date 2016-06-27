@@ -33,6 +33,7 @@ export default class ComposeBlockPlaceholder extends Component {
   }
 
   selectCorrelation(specId, specHeading) {
+    console.log('Setting correlation', specId, specHeading)
     this.setState({
       phase: 1
     }, () => {

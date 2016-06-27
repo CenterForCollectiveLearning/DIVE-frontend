@@ -9,9 +9,9 @@ import CorrelationTable from '../Analysis/Correlation/CorrelationTable';
 
 export default class ComposeCorrelationPreviewBlock extends Component {
   handleClick() {
-    const { spec, onClick } = this.props;
-    console.log('clicking correlation');
-    onClick(spec.id, 'correlation', 'correlation');
+    const { spec, onClick, id } = this.props;
+    const desc = 'Correlating ' + (spec.data.headers.map((name, i) => { name }));
+    onClick(spec.id, 'correlation');
   }
 
   render() {
