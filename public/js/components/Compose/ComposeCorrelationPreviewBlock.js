@@ -5,12 +5,13 @@ import { selectComposeVisualization } from '../../actions/ComposeActions';
 
 import styles from './Compose.sass';
 
-import Visualization from '../Visualizations/Visualization';
+import CorrelationTable from '../Analysis/Correlation/CorrelationTable';
 
 export default class ComposeCorrelationPreviewBlock extends Component {
   handleClick() {
     const { spec, onClick } = this.props;
-    onClick(spec.id, spec.meta.desc);
+    console.log('clicking correlation');
+    onClick(spec.id, 'correlation', 'correlation');
   }
 
   render() {
@@ -19,13 +20,17 @@ export default class ComposeCorrelationPreviewBlock extends Component {
     return (
       <div className={ styles.contentPreviewBlockContainer }
            onClick={ this.handleClick.bind(this) }>
-        <Visualization
-          headerClassName={ styles.visualizationPreviewBlockHeader }
-          visualizationTypes={ spec.vizTypes }
-          spec={ spec }
-          data={ spec.data }
-          isMinimalView={ true }
-          showHeader={ true } />
+         <span className={ styles.visualizationPreviewBlockHeader }>
+           Correlating {
+             spec.data.headers.map((name, i) =>
+               <span
+                 key={ `correlation-title-${ name }-${ i }` }
+                 className={ `${ styles.dependentVariableTitle }` }>
+                 { name }
+               </span>
+             )}
+          </span>
+         <CorrelationTable correlationResult={ spec.data || {} } preview={ true }/>
       </div>
     );
   }

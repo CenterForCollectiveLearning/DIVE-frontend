@@ -5,6 +5,8 @@ import styles from './Compose.sass';
 import ComposeBlockHeader from './ComposeBlockHeader';
 import ComposeBlockText from './ComposeBlockText';
 import ComposeBlockVisualization from './ComposeBlockVisualization';
+import ComposeBlockRegression from './ComposeBlockRegression';
+import ComposeBlockCorrelation from './ComposeBlockCorrelation';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import RaisedButton from '../Base/RaisedButton';
 
@@ -139,6 +141,26 @@ export class ComposeBlock extends Component {
                 parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
                 spec={ spec } />;
 
+    const composeRegression = spec &&
+      <ComposeBlockRegression
+                blockId={ block.uuid }
+                chartId={ `regression-${ block.uuid }-${ spec.id }` }
+                editable={ editable }
+                onSave={ this.props.saveBlock }
+                format={ selectedBlockFormat }
+                parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
+                spec={ spec } />;
+
+    const composeCorrelation = spec &&
+      <ComposeBlockCorrelation
+                blockId={ block.uuid }
+                chartId={ `correlation-${ block.uuid }-${ spec.id }` }
+                editable={ editable }
+                onSave={ this.props.saveBlock }
+                format={ selectedBlockFormat }
+                parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
+                spec={ spec } />;
+
     const composeText =
       <ComposeBlockText
             blockId={ block.uuid }
@@ -210,7 +232,7 @@ export class ComposeBlock extends Component {
         <i className="fa fa-long-arrow-up"></i>
       </RaisedButton>;
 
-    const moveDownButton = 
+    const moveDownButton =
       <RaisedButton
         className={ styles.visualizationOverlayButton + ' ' + styles.visualizationOverlayControl }
         icon
@@ -221,7 +243,7 @@ export class ComposeBlock extends Component {
         <i className="fa fa-long-arrow-down"></i>
       </RaisedButton>;
 
-    const removeBlockButton = 
+    const removeBlockButton =
       <RaisedButton
         className={ styles.visualizationOverlayButton + ' ' + styles.visualizationOverlayControl }
         icon

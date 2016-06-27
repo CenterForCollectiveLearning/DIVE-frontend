@@ -9,7 +9,7 @@ import Visualization from '../Visualizations/Visualization';
 
 import { BLOCK_FORMATS } from '../../constants/BlockFormats';
 
-export default class ComposeBlockVisualization extends Component {
+export default class ComposeBlockCorrelation extends Component {
   constructor(props) {
     super(props);
 
@@ -70,7 +70,7 @@ export default class ComposeBlockVisualization extends Component {
   }
 }
 
-ComposeBlockVisualization.propTypes = {
+ComposeBlockCorrelation.propTypes = {
   spec: PropTypes.object.isRequired,
   updatedAt: PropTypes.number,
   parentSize: PropTypes.any,
@@ -85,4 +85,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, {})(ComposeBlockVisualization);
+export default connect(mapStateToProps, {})(ComposeBlockCorrelation);

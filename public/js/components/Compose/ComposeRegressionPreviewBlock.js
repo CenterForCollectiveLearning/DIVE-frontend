@@ -5,12 +5,12 @@ import { selectComposeVisualization } from '../../actions/ComposeActions';
 
 import styles from './Compose.sass';
 
-import Visualization from '../Visualizations/Visualization';
+import RegressionTable from '../Analysis/Regression/RegressionTable';
 
 export default class ComposeRegressionPreviewBlock extends Component {
   handleClick() {
     const { spec, onClick } = this.props;
-    onClick(spec.id, spec.meta.desc);
+    onClick(spec.id, 'regression', 'regression');
   }
 
   render() {
@@ -19,13 +19,11 @@ export default class ComposeRegressionPreviewBlock extends Component {
     return (
       <div className={ styles.contentPreviewBlockContainer }
            onClick={ this.handleClick.bind(this) }>
-        <Visualization
-          headerClassName={ styles.visualizationPreviewBlockHeader }
-          visualizationTypes={ spec.vizTypes }
-          spec={ spec }
-          data={ spec.data }
-          isMinimalView={ true }
-          showHeader={ true } />
+       <span className={ styles.visualizationPreviewBlockHeader }>Explaining <strong className={ styles.dependentVariableTitle }>{ spec.spec.dependentVariable }</strong></span>
+       <RegressionTable
+        regressionResult={ spec.data || {} }
+        preview={ true }
+      />
       </div>
     );
   }

@@ -75,10 +75,10 @@ export default class ComposeBlockPlaceholder extends Component {
               <ComposeVisualizationPreviewBlock onClick={ this.selectVisualization } spec={ spec } key={ spec.id }/>
             )}
             { !exportedRegressions.isFetching && exportedRegressions.items.length > 0 && exportedRegressions.items.map((spec) =>
-              <ComposeRegressionPreviewBlock onClick={ this.selectVisualization } spec={ spec } key={ spec.id }/>
+              <ComposeRegressionPreviewBlock onClick={ this.selectRegression } spec={ spec } key={ spec.id }/>
             )}
             { !exportedCorrelations.isFetching && exportedCorrelations.items.length > 0 && exportedCorrelations.items.map((spec) =>
-              <ComposeCorrelationPreviewBlock onClick={ this.selectVisualization } spec={ spec } key={ spec.id }/>
+              <ComposeCorrelationPreviewBlock onClick={ this.selectCorrelation } spec={ spec } key={ spec.id }/>
             )}
             <div
               className={ styles.contentPreviewBlockContainer }

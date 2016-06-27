@@ -33,7 +33,7 @@ export default class RegressionTable extends Component {
   }
 
   render() {
-    const { regressionResult } = this.props;
+    const { regressionResult, preview } = this.props;
     const context = this;
 
     const allRegressedFields = regressionResult.fields.map(function (field){
@@ -68,7 +68,7 @@ export default class RegressionTable extends Component {
       );
     }
 
-    const data = [
+    const fieldData = [
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
@@ -81,10 +81,18 @@ export default class RegressionTable extends Component {
           items: [ field.formattedName, ...regressionResult.regressionsByColumn.map(function (column) {
             const property = column.regression.propertiesByField.find((property) => property.baseField == field.name);
             if (!property) return '';
-            return (renderDataColumn(property, field.enabled));
+
+            if (preview) {
+              return 'X'
+            } else {
+              return (renderDataColumn(property, field.enabled));
+            }
           }) ]
         })
-      }),
+      })
+    ]
+
+    const additionalData = [
       {
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
@@ -127,14 +135,21 @@ export default class RegressionTable extends Component {
       }
     ];
 
+    const data = preview ? fieldData : fieldData.concat(additionalData);
+
     return (
       <div className={ styles.regressionTable }>
-        <BareDataGrid data={ data }/>
+        <BareDataGrid data={ data } preview={ preview }/>
       </div>
     );
   }
 }
 
+RegressionTable.defaultProps = {
+  preview: false
+}
+
 RegressionTable.propTypes = {
-  regressionResult: PropTypes.object.isRequired
+  regressionResult: PropTypes.object.isRequired,
+  preview: PropTypes.bool
 }
