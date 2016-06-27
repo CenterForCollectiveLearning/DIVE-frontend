@@ -39,6 +39,11 @@ export class RegressionSidebar extends Component {
     return (
       <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
+          <SidebarGroup heading="Regression Type">
+            <DropDownMenu/>
+          </SidebarGroup>
+        }
+        { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Dependent Variable (Y)">
             <DropDownMenu
               value={ parseInt(regressionSelector.dependentVariableId) }
