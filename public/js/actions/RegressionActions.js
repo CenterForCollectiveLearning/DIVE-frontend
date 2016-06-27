@@ -78,11 +78,12 @@ function receiveContributionToRSquaredDispatcher(json) {
   };
 }
 
-export function runRegression(projectId, datasetId, dependentVariableName, independentVariableNames) {
+export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames) {
   const params = {
     projectId: projectId,
     spec: {
       datasetId: datasetId,
+      regressionType: regressionType,
       dependentVariable: dependentVariableName,
       independentVariables: independentVariableNames
     }
