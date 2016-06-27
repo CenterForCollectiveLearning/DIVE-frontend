@@ -193,6 +193,7 @@ export class ComposeBlock extends Component {
 
     const composeText =
       <ComposeBlockText
+            contentType={ block.contentType }
             blockId={ block.uuid }
             editable={ editable }
             onSave={ this.props.saveBlock }
