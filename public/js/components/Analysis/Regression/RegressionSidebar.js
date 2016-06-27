@@ -11,6 +11,12 @@ import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 
+const regressionTypes = [
+  { value: 'linear', label: 'Linear' },
+  { value: 'logistic', label: 'Logistic' },
+  { value: 'polynomial', label: 'Polynomial '}
+];
+
 export class RegressionSidebar extends Component {
   componentWillMount(props) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
@@ -40,7 +46,9 @@ export class RegressionSidebar extends Component {
       <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Regression Type">
-            <DropDownMenu/>
+            <DropDownMenu
+              options={ regressionTypes }
+            />
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
