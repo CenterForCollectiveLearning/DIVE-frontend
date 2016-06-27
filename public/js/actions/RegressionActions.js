@@ -6,10 +6,19 @@ import {
   PROGRESS_RUN_REGRESSION,
   ERROR_RUN_REGRESSION,
   REQUEST_CONTRIBUTION_TO_R_SQUARED,
-  RECEIVE_CONTRIBUTION_TO_R_SQUARED
+  RECEIVE_CONTRIBUTION_TO_R_SQUARED,
+  SELECT_REGRESSION_TYPE
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
+
+export function selectRegressionType(selectedRegressionType) {
+  return {
+    type: SELECT_REGRESSION_TYPE,
+    regressionType: selectedRegressionType,
+    selectedAt: Date.now()
+  }
+}
 
 export function selectIndependentVariable(selectedIndependentVariableId) {
   return {

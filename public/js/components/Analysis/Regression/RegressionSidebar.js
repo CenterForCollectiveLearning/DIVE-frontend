@@ -39,6 +39,10 @@ export class RegressionSidebar extends Component {
     this.props.push(`/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/analyze/regression/${ dependentVariable }`);
   }
 
+  onSelectRegressionType(regressionType) {
+    console.log('in onSelectRegressionType', regressionType)
+  }
+
   render() {
     const { fieldProperties, regressionSelector, selectIndependentVariable } = this.props;
 
@@ -47,8 +51,9 @@ export class RegressionSidebar extends Component {
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Regression Type">
             <DropDownMenu
+              value="linear"
               options={ regressionTypes }
-            />
+              onChange={ this.onSelectRegressionType.bind(this) } />
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
