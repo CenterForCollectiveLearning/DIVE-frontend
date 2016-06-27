@@ -24,25 +24,25 @@ export class ComposeBlock extends Component {
       selectedBlockFormat: BLOCK_FORMATS.TEXT_LEFT,
       formatTypes: [
         {
-          label: "Visualization on top",
+          label: "Content on top",
           content: <i className="fa fa-caret-up"></i>,
           value: BLOCK_FORMATS.TEXT_BOTTOM,
           selected: false
         },
         {
-          label: "Visualization on bottom",
+          label: "Content on bottom",
           content: <i className="fa fa-caret-down"></i>,
           value: BLOCK_FORMATS.TEXT_TOP,
           selected: false
         },
         {
-          label: "Visualization on left",
+          label: "Content on left",
           content: <i className="fa fa-caret-left"></i>,
           value: BLOCK_FORMATS.TEXT_RIGHT,
           selected: false
         },
         {
-          label: "Visualization on right",
+          label: "Content on right",
           content: <i className="fa fa-caret-right"></i>,
           value: BLOCK_FORMATS.TEXT_LEFT,
           selected: true
@@ -75,7 +75,6 @@ export class ComposeBlock extends Component {
     }
 
     const exportedSpec = specs.items.find((spec) => spec.id == block.exportedSpecId);
-    console.log('in componentWillMount', exportedSpec, specs.items, block.exportedSpecId);
     this.setStateBlockFormat(block.format);
 
     if (block.contentType) {
@@ -145,8 +144,6 @@ export class ComposeBlock extends Component {
     const { block, editable } = this.props;
 
     const spec = exportedSpec ? exportedSpec : block.spec;
-
-    console.log('in getBlockContent', block, spec)
 
     const composeHeader =
       <ComposeBlockHeader blockId={ block.uuid } onSave={ this.props.saveBlock } heading={ block.heading } editable={ this.props.editable } />;
@@ -296,6 +293,8 @@ export class ComposeBlock extends Component {
         break;
 
       case CONTENT_TYPES.VISUALIZATION:
+      case CONTENT_TYPES.REGRESSION:
+      case CONTENT_TYPES.CORRELATION:
         blockControls =
           <div className={ styles.composeVisualizationControls }>
             <ToggleButtonGroup

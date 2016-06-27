@@ -10,7 +10,8 @@ import RegressionTable from '../Analysis/Regression/RegressionTable';
 export default class ComposeRegressionPreviewBlock extends Component {
   handleClick() {
     const { spec, onClick } = this.props;
-    onClick(spec.id, 'regression', 'regression');
+    const desc = `Explaining ${ spec.spec.dependentVariable }`;
+    onClick(spec.id, desc);
   }
 
   render() {
