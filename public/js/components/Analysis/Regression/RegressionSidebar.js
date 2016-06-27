@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectIndependentVariable } from '../../../actions/RegressionActions';
+import { selectIndependentVariable, selectRegressionType } from '../../../actions/RegressionActions';
 import styles from '../Analysis.sass';
 
 import Sidebar from '../../Base/Sidebar';
@@ -40,7 +40,7 @@ export class RegressionSidebar extends Component {
   }
 
   onSelectRegressionType(regressionType) {
-    console.log('in onSelectRegressionType', regressionType)
+    this.props.selectRegressionType(regressionType);
   }
 
   render() {
@@ -51,7 +51,7 @@ export class RegressionSidebar extends Component {
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Regression Type">
             <DropDownMenu
-              value="linear"
+              value={ regressionSelector.regressionType }
               options={ regressionTypes }
               onChange={ this.onSelectRegressionType.bind(this) } />
           </SidebarGroup>
@@ -147,4 +147,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, push })(RegressionSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectRegressionType, selectIndependentVariable, push })(RegressionSidebar);
