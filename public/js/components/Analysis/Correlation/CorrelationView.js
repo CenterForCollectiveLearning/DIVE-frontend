@@ -134,8 +134,8 @@ export class CorrelationView extends Component {
               </div>
               <div className={ styles.headerControl }>
                 <RaisedButton onClick={ this.saveCorrelation } disabled={ disabled }>
-                  { !correlationResult.isSaving && correlationResult.exportedSpecId && <i className="fa fa-star"></i> }
-                  { !correlationResult.exportedSpecId && <i className="fa fa-star-o"></i> }
+                  { !correlationResult.isSaving && correlationResult.exportedCorrelationId && <i className="fa fa-star"></i> }
+                  { !correlationResult.exportedCorrelationId && <i className="fa fa-star-o"></i> }
                 </RaisedButton>
               </div>
               <div className={ styles.headerControl }>

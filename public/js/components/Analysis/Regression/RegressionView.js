@@ -86,6 +86,7 @@ export class RegressionView extends Component {
       );
     }
 
+    console.log(regressionResult.exportedRegressionId)
     return (
       <div className={ styles.regressionViewContainer }>
         <HeaderBar
@@ -100,8 +101,8 @@ export class RegressionView extends Component {
               </div>
               <div className={ styles.headerControl }>
                 <RaisedButton onClick={ this.saveRegression } disabled={ disabled }>
-                  { !regressionResult.isSaving && regressionResult.exportedSpecId && <i className="fa fa-star"></i> }
-                  { !regressionResult.exportedSpecId && <i className="fa fa-star-o"></i> }
+                  { !regressionResult.isSaving && regressionResult.exportedRegressionId && <i className="fa fa-star"></i> }
+                  { !regressionResult.exportedRegressionId && <i className="fa fa-star-o"></i> }
                 </RaisedButton>
               </div>
               <div className={ styles.headerControl }>

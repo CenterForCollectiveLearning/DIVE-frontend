@@ -27,6 +27,8 @@ const baseState = {
   dependentVariableId: null,
   independentVariableIds: [],
   regressionResult: {
+    exported: false,
+    exportedRegressionId: null,
     loading: false,
     progress: null,
     error: null,
@@ -83,7 +85,14 @@ export default function regressionSelector(state = baseState, action) {
       return { ...state, regressionResult: { ...state.regressionResult, loading: true } };
 
     case RECEIVE_RUN_REGRESSION:
-      return { ...state, regressionResult: { loading: false, data: action.data }};
+      return { ...state,
+        regressionResult: {
+          exported: action.data.exported,
+          exportedRegressionId: action.data.exportedRegressionId,
+          loading: false,
+          data: action.data
+        }
+      };
 
     case ERROR_RUN_REGRESSION:
       return { ...state, regressionResult: { ...state.regressionResult, error: action.error } };

@@ -58,15 +58,12 @@ export default function composeSelector(state = baseState, action) {
           blockProperties.format = BLOCK_FORMATS.TEXT_LEFT;
           break;
         case CONTENT_TYPES.REGRESSION:
-          blockProperties.exportedSpecId = action.contentId;
-          blockProperties.format = BLOCK_FORMATS.TEXT_LEFT;
-          break;
         case CONTENT_TYPES.CORRELATION:
           blockProperties.exportedSpecId = action.contentId;
-          blockProperties.format = BLOCK_FORMATS.TEXT_LEFT;
+          blockProperties.format = BLOCK_FORMATS.TEXT_BOTTOM;
           break;
         case CONTENT_TYPES.TEXT:
-          blockProperties.format = BLOCK_FORMATS.TEXT_TOP
+          blockProperties.format = BLOCK_FORMATS.TEXT_BOTTOM
           break;
       }
 

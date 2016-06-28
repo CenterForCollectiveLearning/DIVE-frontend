@@ -14,6 +14,8 @@ import {
 const baseState = {
   correlationVariableIds: [],
   correlationResult: {
+    exported: false,
+    exportedCorrelationId: null,
     loading: false,
     progress: null,
     error: null,
@@ -39,7 +41,14 @@ export default function correlationSelector(state = baseState, action) {
       return { ...state, correlationResult: { ...state.correlationResult, loading: true } };
 
     case RECEIVE_CORRELATION:
-      return { ...state, correlationResult: { loading: false, data: action.data } };
+      return { ...state,
+        correlationResult: {
+          loading: false,
+          data: action.data,
+          exported: action.data.exported,
+          exportedCorrelationId: action.data.exportedCorrelationId,
+        }
+      };
 
     case ERROR_CORRELATION:
       return { ...state, correlationResult: { ...state.correlationResult, error: action.error } };
