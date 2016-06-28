@@ -73,7 +73,7 @@ export class CorrelationView extends Component {
 
   saveCorrelation(saveAction = true) {
     const { project, correlationResult, createExportedCorrelation } = this.props;
-    createExportedCorrelation(project.properties.id, correlationResult.data.id, correlationResult.data, saveAction);
+    createExportedCorrelation(project.properties.id, correlationResult.data.id, correlationResult.data, correlationResult.conditionals, correlationResult.config, saveAction);
   }
 
   onClickShare() {

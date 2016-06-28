@@ -24,7 +24,7 @@ import {
 
 import _ from 'underscore';
 import { fetch, pollForTask } from './api.js';
-import { formatVisualizationTableData } from './ActionHelpers.js'
+import { formatVisualizationTableData, getFilteredConditionals } from './ActionHelpers.js'
 
 function requestSpecsDispatcher() {
   return {
@@ -178,31 +178,6 @@ function receiveSpecVisualizationDispatcher(json) {
     visualizationData: json.visualization.visualize,
     receivedAt: Date.now()
   };
-}
-
-function getFilteredConditionals(conditionals) {
-  const validConditionals = conditionals.filter((conditional) =>
-    conditional.conditionalIndex != null && conditional.value != "ALL_VALUES" && conditional.value != ""
-  );
-
-  conditionals = null;
-
-  if (validConditionals.length) {
-    conditionals = {};
-
-    validConditionals.forEach((conditional) => {
-      if (!conditionals[conditional.combinator]) {
-        conditionals[conditional.combinator] = [];
-      }
-
-      conditionals[conditional.combinator].push({
-        'field_id': conditional.fieldId,
-        'operation': conditional.operator,
-        'criteria': conditional.value
-      })
-    });
-  }
-  return conditionals
 }
 
 

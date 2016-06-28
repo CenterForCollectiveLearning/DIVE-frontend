@@ -68,7 +68,7 @@ export class RegressionView extends Component {
 
   saveRegression(saveAction = true) {
     const { projectId, regressionResult, createExportedRegression } = this.props;
-    createExportedRegression(projectId, regressionResult.data.id, regressionResult.data, saveAction);
+    createExportedRegression(projectId, regressionResult.data.id, regressionResult.data, regressionResult.conditionals, regressionResult.config, saveAction);
   }
 
   onClickShare() {

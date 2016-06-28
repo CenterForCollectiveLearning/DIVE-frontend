@@ -7,9 +7,17 @@ import {
   ERROR_CORRELATION,
   RECEIVE_FIELD_PROPERTIES,
   RECEIVE_CORRELATION_SCATTERPLOT,
+  RECEIVE_CREATED_SAVED_CORRELATION,
   WIPE_PROJECT_STATE,
   CLEAR_ANALYSIS
 } from '../constants/ActionTypes';
+
+const baseConditional = {
+  conditionalIndex: null,
+  fieldId: null,
+  operator: null,
+  value: null
+};
 
 const baseState = {
   correlationVariableIds: [],
@@ -21,6 +29,7 @@ const baseState = {
     error: null,
     data: null
   },
+  conditionals: [ baseConditional ],
   correlationScatterplots: []
 }
 
@@ -58,6 +67,15 @@ export default function correlationSelector(state = baseState, action) {
         return { ...state, correlationResult: { ...state.correlationResult, progress: action.progress } };
       }
       return state;
+
+    case RECEIVE_CREATED_SAVED_CORRELATION:
+      return { ...state,
+        correlationResult: {
+          ...state.correlationResult,
+          exportedCorrelation: true,
+          exportedCorrelationId: action.exportedCorrelationId
+        }
+      };
 
     case RECEIVE_FIELD_PROPERTIES:
       var allQuantitativeItemIds = action.fieldProperties.filter((item) => item.generalType == 'q').map((item) => item.id)

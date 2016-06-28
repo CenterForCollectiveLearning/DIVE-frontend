@@ -13,6 +13,7 @@ import {
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
+import { getFilteredConditionals } from './ActionHelpers.js'
 
 export function selectCorrelationVariable(selectedCorrelationVariable) {
   return {
@@ -114,14 +115,18 @@ function receiveCreatedExportedCorrelationDispatcher(action, json) {
   };
 }
 
-export function createExportedCorrelation(projectId, correlationId, data, saveAction = false) {
+export function createExportedCorrelation(projectId, correlationId, data, conditionals=[], config={}, saveAction = false) {
   const requestAction = saveAction ? REQUEST_CREATE_SAVED_CORRELATION : REQUEST_CREATE_EXPORTED_CORRELATION;
   const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_CORRELATION : RECEIVE_CREATED_EXPORTED_CORRELATION;
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
 
   const params = {
     project_id: projectId,
     correlation_id: correlationId,
     data: data,
+    conditionals: filteredConditionals ? filteredConditionals : {},
+    config: config
   }
 
   return dispatch => {

@@ -8,6 +8,7 @@ import {
   PROGRESS_RUN_REGRESSION,
   ERROR_RUN_REGRESSION,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
+  RECEIVE_CREATED_SAVED_REGRESSION,
   WIPE_PROJECT_STATE,
   CLEAR_ANALYSIS
 } from '../constants/ActionTypes';
@@ -21,6 +22,13 @@ const regressionModes = [ {
   label: 'Builder',
   selected: false
 }];
+
+const baseConditional = {
+  conditionalIndex: null,
+  fieldId: null,
+  operator: null,
+  value: null
+};
 
 const baseState = {
   fieldProperties: [],
@@ -38,6 +46,7 @@ const baseState = {
   },
   regressionModes: regressionModes,
   selectedMode: null,
+  conditionals: [ baseConditional ],
   contributionToRSquared: []
 }
 
@@ -105,6 +114,15 @@ export default function regressionSelector(state = baseState, action) {
 
     case ERROR_RUN_REGRESSION:
       return { ...state, regressionResult: { loading: false, error: action.error } };
+
+    case RECEIVE_CREATED_SAVED_REGRESSION:
+      return { ...state,
+        regressionResult: {
+          ...state.regressionResult,
+          exportedRegression: true,
+          exportedRegressionId: action.exportedRegressionId
+        }
+      };
 
     case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
       return { ...state, contributionToRSquared: (action.data.data || []) };

@@ -14,6 +14,7 @@ import {
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
+import { getFilteredConditionals } from './ActionHelpers.js'
 
 export function selectIndependentVariable(selectedIndependentVariableId) {
   return {
@@ -123,14 +124,18 @@ function receiveCreatedExportedRegressionDispatcher(action, json) {
   };
 }
 
-export function createExportedRegression(projectId, regressionId, data, saveAction = false) {
+export function createExportedRegression(projectId, regressionId, data, conditionals=[], config={}, saveAction = false) {
   const requestAction = saveAction ? REQUEST_CREATE_SAVED_REGRESSION : REQUEST_CREATE_EXPORTED_REGRESSION;
   const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_REGRESSION : RECEIVE_CREATED_EXPORTED_REGRESSION;
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
 
   const params = {
     project_id: projectId,
     regression_id: regressionId,
     data: data,
+    conditionals: filteredConditionals ? filteredConditionals : {},
+    config: config
   }
 
   return dispatch => {
