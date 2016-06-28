@@ -26,6 +26,14 @@ export class ComposeBasePage extends Component {
       fetchExportedVisualizationSpecs(project.properties.id);
     }
 
+    if (project.properties.id && exportedRegressions.items.length == 0 && !exportedRegressions.loaded && !exportedRegressions.isFetching) {
+      fetchExportedRegressions(project.properties.id);
+    }
+
+    if (project.properties.id && exportedCorrelations.items.length == 0 && !exportedCorrelations.loaded && !exportedCorrelations.isFetching) {
+      fetchExportedCorrelations(project.properties.id);
+    }    
+
     if (!params.documentId) {
       if (documents.items.length > 0) {
         replace(`/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
