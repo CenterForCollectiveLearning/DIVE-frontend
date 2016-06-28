@@ -19,13 +19,15 @@ export default class ComposeRegressionPreviewBlock extends Component {
 
     return (
       <div className={ styles.contentPreviewBlockContainer }
-           onClick={ this.handleClick.bind(this) }>
-       <span className={ styles.visualizationPreviewBlockHeader }>Explaining <strong className={ styles.dependentVariableTitle }>{ spec.spec.dependentVariable }</strong></span>
-       <RegressionTable
-        regressionResult={ spec.data || {} }
-        preview={ true }
-      />
-      </div>
+            onClick={ this.handleClick.bind(this) }>
+        <div className={ styles.regressionBlock }>
+          <span className={ styles.header }>Explaining <strong className={ styles.dependentVariableTitle }>{ spec.spec.dependentVariable }</strong></span>
+          <RegressionTable
+            regressionResult={ spec.data || {} }
+            preview={ true }
+          />
+        </div>
+    </div>
     );
   }
 }

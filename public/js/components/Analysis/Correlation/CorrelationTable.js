@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 
 import styles from '../Analysis.sass';
@@ -36,13 +37,13 @@ export default class CorrelationTable extends Component {
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
-        items: ["", ...correlationResult.headers.map((column) => <div className={ styles.tableCell }>{ column }</div>) ]
+        items: preview ? _.range(correlationResult.headers.length + 1).map((i) => <div></div>) : ["", ...correlationResult.headers.map((column) => <div className={ styles.tableCell }>{ column }</div>) ]
       },
       ...correlationResult.rows.map(function(row) {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
-          items: [ row.field, ...row.data.map(function(column){
+          items: [ ( preview ? '' : row.field ), ...row.data.map(function(column){
             if (column[0] == null) { return "";}
 
             return (renderDataColumn(

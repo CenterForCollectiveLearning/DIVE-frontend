@@ -21,17 +21,19 @@ export default class ComposeCorrelationPreviewBlock extends Component {
     return (
       <div className={ styles.contentPreviewBlockContainer }
            onClick={ this.handleClick.bind(this) }>
-         <span className={ styles.visualizationPreviewBlockHeader }>
-           Correlating {
-             spec.data.headers.map((name, i) =>
-               <span
-                 key={ `correlation-title-${ name }-${ i }` }
-                 className={ `${ styles.dependentVariableTitle }` }>
-                 { name }
-               </span>
-             )}
-          </span>
-         <CorrelationTable correlationResult={ spec.data || {} } preview={ true }/>
+        <div className={ styles.correlationBlock }>
+           <span className={ styles.header + ' ' + styles.correlationHeader }>
+             Correlating {
+               spec.data.headers.map((name, i) =>
+                 <span
+                   key={ `correlation-title-${ name }-${ i }` }
+                   className={ `${ styles.field }` }>
+                   { name }
+                 </span>
+               )}
+           </span>
+          <CorrelationTable correlationResult={ spec.data || {} } preview={ true }/>
+        </div>
       </div>
     );
   }
