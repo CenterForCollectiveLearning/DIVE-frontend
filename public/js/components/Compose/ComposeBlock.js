@@ -183,9 +183,6 @@ export class ComposeBlock extends Component {
                     parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
                     spec={ spec } />;
         break;
-      default:
-        specs = exportedSpecs;
-        break;
     }
 
     const composeText =
