@@ -20,6 +20,13 @@ import {
   RECEIVE_FIELD_PROPERTIES
 } from '../constants/ActionTypes';
 
+const baseConditional = {
+  conditionalIndex: null,
+  fieldId: null,
+  operator: null,
+  value: null
+};
+
 const baseState = {
   aggregationVariableId: 'count',
   comparisonVariablesIds: [],
@@ -43,6 +50,7 @@ const baseState = {
     error: null,
     data: null
   },
+  conditionals: [ baseConditional ],  
   loadSummary: false
 }
 

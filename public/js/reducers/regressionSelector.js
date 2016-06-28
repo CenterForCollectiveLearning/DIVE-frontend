@@ -8,6 +8,7 @@ import {
   PROGRESS_RUN_REGRESSION,
   ERROR_RUN_REGRESSION,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
+  RECEIVE_CREATED_SAVED_REGRESSION,
   WIPE_PROJECT_STATE,
   CLEAR_ANALYSIS
 } from '../constants/ActionTypes';
@@ -22,11 +23,20 @@ const regressionModes = [ {
   selected: false
 }];
 
+const baseConditional = {
+  conditionalIndex: null,
+  fieldId: null,
+  operator: null,
+  value: null
+};
+
 const baseState = {
   fieldProperties: [],
   dependentVariableId: null,
   independentVariableIds: [],
   regressionResult: {
+    exported: false,
+    exportedRegressionId: null,
     loading: false,
     progress: null,
     error: null,
@@ -36,6 +46,7 @@ const baseState = {
   },
   regressionModes: regressionModes,
   selectedMode: null,
+  conditionals: [ baseConditional ],
   contributionToRSquared: []
 }
 
@@ -83,7 +94,14 @@ export default function regressionSelector(state = baseState, action) {
       return { ...state, regressionResult: { ...state.regressionResult, loading: true } };
 
     case RECEIVE_RUN_REGRESSION:
-      return { ...state, regressionResult: { loading: false, data: action.data }};
+      return { ...state,
+        regressionResult: {
+          exported: action.data.exported,
+          exportedRegressionId: action.data.exportedRegressionId,
+          loading: false,
+          data: action.data
+        }
+      };
 
     case ERROR_RUN_REGRESSION:
       return { ...state, regressionResult: { ...state.regressionResult, error: action.error } };
@@ -96,6 +114,15 @@ export default function regressionSelector(state = baseState, action) {
 
     case ERROR_RUN_REGRESSION:
       return { ...state, regressionResult: { loading: false, error: action.error } };
+
+    case RECEIVE_CREATED_SAVED_REGRESSION:
+      return { ...state,
+        regressionResult: {
+          ...state.regressionResult,
+          exportedRegression: true,
+          exportedRegressionId: action.exportedRegressionId
+        }
+      };
 
     case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
       return { ...state, contributionToRSquared: (action.data.data || []) };

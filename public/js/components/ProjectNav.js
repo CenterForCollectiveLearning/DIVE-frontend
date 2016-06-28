@@ -32,7 +32,7 @@ export class ProjectNav extends Component {
     const tabList = [
       "upload",
       "inspect",
-      "combine",
+      "transform",
       "explore",
       "builder",
       "starred",
@@ -121,22 +121,22 @@ export class ProjectNav extends Component {
           </div>
         }
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
-          <TabGroup heading="DATASETS">
+          <TabGroup heading="1. DATASETS">
             <Tab label="Upload" value="upload" route={ `datasets/upload` } />
             <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
-            <Tab label="Combine" value="combine" route={ `datasets${ datasetId ? `/${ datasetId }/combine` : '/combine' }` } disabled={ true }/>
+            <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } disabled={ true }/>
           </TabGroup>
-          <TabGroup heading="VISUALIZATIONS">
+          <TabGroup heading="2. VISUALIZATIONS">
             <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
             <Tab label="Build" value="builder" route={ `datasets/${ datasetId }/visualize/builder` } disabled={ true }/>
             <Tab label="Starred" value="starred" route={ `datasets/${ datasetId }/visualize/starred` } disabled={ true }/>
           </TabGroup>
-          <TabGroup heading="ANALYSIS">
+          <TabGroup heading="3. ANALYSIS">
             <Tab label="Summary" value="summary" route={ `datasets/${ datasetId }/analyze/summary` } disabled={ !datasetId }/>
             <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
             <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
           </TabGroup>
-          <TabGroup heading="STORIES">
+          <TabGroup heading="4. STORIES">
             <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>
             <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
           </TabGroup>

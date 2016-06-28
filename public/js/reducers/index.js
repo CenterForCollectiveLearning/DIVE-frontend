@@ -8,6 +8,10 @@ import datasetSelector from './datasetSelector';
 import documents from './documents'
 import exportedSpec from './exportedSpec';
 import exportedSpecs from './exportedSpecs';
+import exportedCorrelation from './exportedCorrelation';
+import exportedCorrelations from './exportedCorrelations';
+import exportedRegression from './exportedRegression';
+import exportedRegressions from './exportedRegressions';
 import fieldProperties from './fieldProperties';
 import filters from './filters';
 import gallerySelector from './gallerySelector';
@@ -28,6 +32,10 @@ const rootReducer = combineReducers({
   documents,
   exportedSpec,
   exportedSpecs,
+  exportedCorrelation,
+  exportedCorrelations,
+  exportedRegression,
+  exportedRegressions,
   fieldProperties,
   filters,
   gallerySelector,
