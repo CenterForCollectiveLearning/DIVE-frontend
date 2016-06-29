@@ -31,7 +31,6 @@ export default class CorrelationScatterplotCard extends Component {
         width: '70%',
         height: '80%'
       },
-      trendlines: { 0: {} },
       hAxis: {
         textStyle: {
           color: "#333"
@@ -57,16 +56,14 @@ export default class CorrelationScatterplotCard extends Component {
     };
 
     return (
-      <Card>
-        <HeaderBar header={ <span>Correlation Scatterplots</span> } />
+      <Card header="Correlation scatterplots">
         <div className={ styles.correlationScatterplots }>
           { data.map((scatterplotData, i) =>
-            <div className={ styles.correlationScatterplot } >
+            <div className={ styles.correlationScatterplot } key={ `scatterplot-${ scatterplotData.x }-${ scatterplotData.y }` }>
               <div className={ styles.header }>
                 { scatterplotData.x + ' vs. ' + scatterplotData.y }
               </div>
               <ScatterChart
-                key={ `scatterplot-${ i }` }
                 chartId={ `scatterplot-${ i }` }
                 data={ scatterplotData.data }
                 options={ options }

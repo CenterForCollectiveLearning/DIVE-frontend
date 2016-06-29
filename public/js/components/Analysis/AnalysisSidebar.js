@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import { push } from 'react-router-redux';
 
-import { selectDataset, fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
+import { selectDataset, fetchDatasets } from '../../actions/DatasetActions';
 import { clearAnalysis } from '../../actions/AnalysisActions';
 import styles from './Analysis.sass';
 
@@ -19,25 +19,25 @@ export class AnalysisSidebar extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, datasets, datasetSelector, fieldProperties, fetchDatasetsIfNeeded, fetchFieldPropertiesIfNeeded } = this.props;
+    const { project, datasets, datasetSelector, fieldProperties, fetchDatasets, fetchFieldPropertiesIfNeeded } = this.props;
 
     const projectChanged = (nextProps.project.properties.id !== project.properties.id);
     const datasetChanged = (nextProps.datasetSelector.datasetId !== datasetSelector.datasetId);
 
     if (projectChanged || nextProps.project.properties.id) {
-      fetchDatasetsIfNeeded(nextProps.project.properties.id);
+      fetchDatasets(nextProps.project.properties.id);
     }
   }
 
   _handleTabsChange(tab) {
-    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/analyze/${ tab }`);
+    this.props.push(`/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/analyze/${ tab }`);
   }
 
   clickDataset(datasetId) {
-    const { project, selectedTab, clearAnalysis, selectDataset, pushState } = this.props;
+    const { project, selectedTab, clearAnalysis, selectDataset, push } = this.props;
     clearAnalysis();
-    selectDataset(datasetId);
-    pushState(null, `/projects/${ project.properties.id }/datasets/${ datasetId }/analyze/${ selectedTab }`);
+    selectDataset(project.properties.id, datasetId);
+    push(`/projects/${ project.properties.id }/datasets/${ datasetId }/analyze/${ selectedTab }`);
   }
 
   render() {
@@ -111,7 +111,7 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   selectDataset,
-  fetchDatasetsIfNeeded,
+  fetchDatasets,
   clearAnalysis,
-  pushState
+  push
 })(AnalysisSidebar);

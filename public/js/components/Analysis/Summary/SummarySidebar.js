@@ -5,7 +5,7 @@ import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesAc
 import { selectBinningConfigX, selectBinningConfigY, selectSummaryIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable } from '../../../actions/SummaryActions';
 import styles from '../Analysis.sass';
 
-import AnalysisSidebar from '../AnalysisSidebar';
+import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -24,33 +24,76 @@ export class SummarySidebar extends Component {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = nextProps;
     const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
 
-    if (project.properties.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
+    if (project.properties.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.loaded) && !fieldProperties.fetching) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId)
     }
   }
 
   render() {
+    const { fieldProperties, summarySelector, selectSummaryIndependentVariable } = this.props;
     const nonComparisonVariables = this.props.fieldProperties.items.filter((item) => this.props.summarySelector.comparisonVariablesIds.indexOf(item.id) < 0)
     const aggregationOptions = [{'id': 'count', 'name' : 'count'}, ...nonComparisonVariables.filter((item) => item.generalType == 'q')]
     const numComparisonVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q' && this.props.summarySelector.comparisonVariablesIds.indexOf(item.id) >= 0 )
     const numQuantitative = numComparisonVariables.length;
     const { selectBinningConfigX, selectBinningConfigY } = this.props;
     return (
-      <AnalysisSidebar selectedTab="summary">
+      <Sidebar>
         { this.props.fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Comparison Variables">
-            <ToggleButtonGroup
-              toggleItems={ this.props.fieldProperties.items.map((item) =>
-                new Object({
-                  id: item.id,
-                  name: item.name,
-                  disabled: (item.id == this.props.summarySelector.aggregationVariableId)
-                })
-              )}
-              valueMember="id"
-              displayTextMember="name"
-              externalSelectedItems={ this.props.summarySelector.comparisonVariablesIds }
-              onChange={ this.props.selectSummaryIndependentVariable } />
+            { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Categorical</div>
+                <ToggleButtonGroup
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      disabled: (item.id == summarySelector.aggregationVariableId) || ( item.generalType == 'c' && item.isUnique)
+                    })
+                  )}
+                  displayTextMember="name"
+                  valueMember="id"
+                  externalSelectedItems={ summarySelector.comparisonVariablesIds }
+                  separated={ true }
+                  onChange={ selectSummaryIndependentVariable } />
+              </div>
+            }
+            { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Temporal</div>
+                <ToggleButtonGroup
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      disabled: (item.id == summarySelector.aggregationVariableId)
+                    })
+                  )}
+                  valueMember="id"
+                  displayTextMember="name"
+                  externalSelectedItems={ summarySelector.comparisonVariablesIds }
+                  separated={ true }
+                  onChange={ selectSummaryIndependentVariable } />
+              </div>
+            }
+            { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Quantitative</div>
+                <ToggleButtonGroup
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      disabled: (item.id == summarySelector.aggregationVariableId)
+                    })
+                  )}
+                  valueMember="id"
+                  displayTextMember="name"
+                  externalSelectedItems={ summarySelector.comparisonVariablesIds }
+                  separated={ true }
+                  onChange={ selectSummaryIndependentVariable } />
+              </div>
+            }
           </SidebarGroup>
         }
         { this.props.fieldProperties.items.length != 0 &&
@@ -96,7 +139,7 @@ export class SummarySidebar extends Component {
             name={ numComparisonVariables[1].name }/>
         }
 
-      </AnalysisSidebar>
+      </Sidebar>
     );
   }
 }

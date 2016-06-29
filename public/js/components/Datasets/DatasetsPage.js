@@ -1,59 +1,63 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { replaceState } from 'redux-react-router';
+import { replace } from 'react-router-redux';
+import DocumentTitle from 'react-document-title';
 
-import { fetchDatasetsIfNeeded, selectDataset } from '../../actions/DatasetActions';
+import { fetchDatasets, selectDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
 export class DatasetsPage extends Component {
   constructor(props) {
     super(props);
 
-    const { replaceState, params, routes, project, datasetSelector, datasets, fetchDatasetsIfNeeded, selectDataset } = this.props;
+    const { replace, params, routes, project, datasetSelector, datasets, fetchDatasets, selectDataset } = this.props;
 
     if (routes.length < 4) {
       if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
-        fetchDatasetsIfNeeded(project.properties.id);
+        fetchDatasets(project.properties.id);
       } else if (datasetSelector.loaded) {
         if (datasetSelector.datasetId) {
-          replaceState(null, `/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+          replace(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
         } else {
-          replaceState(null, `/projects/${ params.projectId }/datasets/upload`);
+          replace(`/projects/${ params.projectId }/datasets/upload`);
         }
       }
     } else {
         if (params.datasetId && params.datasetId != datasetSelector.datasetId) {
-          selectDataset(params.datasetId);
+          selectDataset(params.projectId, params.datasetId);
         }
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { replaceState, params, routes, project, datasetSelector, datasets, fetchDatasetsIfNeeded } = nextProps;
+    const { replace, params, routes, project, datasetSelector, datasets, fetchDatasets } = nextProps;
     if (params.datasetId && params.datasetId != datasetSelector.datasetId) {
-      selectDataset(params.datasetId);
+      selectDataset(params.projectId, params.datasetId);
     }
 
-    if ((this.props.project.properties.id !== project.properties.id) || (this.props.datasets.isFetching && !nextProps.datasets.isFetching)) {
-      if (routes.length < 4) {
-        if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
-          fetchDatasetsIfNeeded(project.properties.id);
-        } else if (datasetSelector.loaded) {
-          if (datasetSelector.datasetId) {
-            replaceState(null, `/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
-          } else {
-            replaceState(null, `/projects/${ params.projectId }/datasets/upload`);
-          }
+    if (routes.length < 4) {
+      if ((project.properties.id && !datasetSelector.loaded && !datasets.isFetching) || (!datasets.isFetching && datasets.projectId != params.projectId)) {
+        fetchDatasets(params.projectId);
+      } else if (datasets.loaded && params.projectId == datasetSelector.projectId) {
+        if (datasetSelector.datasetId && params.projectId == datasetSelector.projectId) {
+          replace(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+        } else {
+          replace(`/projects/${ params.projectId }/datasets/upload`);
         }
       }
     }
   }
 
   render() {
+    const { projectTitle } = this.props;
+    const datasetsTitle = 'DATA' + ( projectTitle ? ` | ${ projectTitle }` : '' )
+
     return (
-      <div className={ styles.fillContainer + ' ' + styles.datasetPageContainer }>
-        { this.props.children }
-      </div>
+      <DocumentTitle title={ datasetsTitle }>
+        <div className={ styles.fillContainer + ' ' + styles.datasetPageContainer }>
+          { this.props.children }
+        </div>
+      </DocumentTitle>
     );
   }
 }
@@ -71,8 +75,9 @@ function mapStateToProps(state) {
     project,
     datasets,
     datasetSelector,
-    datasetId
+    datasetId,
+    projectTitle: project.properties.title
   }
 }
 
-export default connect(mapStateToProps, { fetchDatasetsIfNeeded, selectDataset, replaceState })(DatasetsPage);
+export default connect(mapStateToProps, { fetchDatasets, selectDataset, replace })(DatasetsPage);

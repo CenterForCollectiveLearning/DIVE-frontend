@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
-import { uploadDataset, deleteDataset, fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
+import { push } from 'react-router-redux';
+import { uploadDataset, deleteDataset, fetchDatasets } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
 import Toolbar from '../Base/Toolbar';
@@ -18,23 +18,23 @@ export class DatasetToolbar extends Component {
   }
 
   componentWillMount() {
-    const { projectId, datasets, fetchDatasetsIfNeeded } = this.props;
+    const { projectId, datasets, fetchDatasets } = this.props;
 
     if (projectId && !datasets.fetchedAll && !datasets.isFetching) {
-      fetchDatasetsIfNeeded(projectId, false);
+      fetchDatasets(projectId, false);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasets, fetchDatasetsIfNeeded } = nextProps;
+    const { projectId, datasets, fetchDatasets } = nextProps;
     if (projectId != this.projectId && !datasets.fetchedAll && !datasets.isFetching) {
-      fetchDatasetsIfNeeded(projectId, false);
+      fetchDatasets(projectId, false);
     }
   }
 
   onSelectDataset(selectedValue) {
     if (selectedValue) {
-      this.props.pushState(null, `/projects/${ this.props.projectId }/datasets/${ selectedValue }/inspect`);
+      this.props.push(`/projects/${ this.props.projectId }/datasets/${ selectedValue }/inspect`);
     }
   }
 
@@ -46,7 +46,7 @@ export class DatasetToolbar extends Component {
 
   onClickUploadDataset() {
     const projectId = this.props.projectId;
-    this.props.pushState(null, `/projects/${ projectId }/datasets/upload`);
+    this.props.push(`/projects/${ projectId }/datasets/upload`);
   }
 
   render() {
@@ -106,4 +106,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { pushState, uploadDataset, deleteDataset, fetchDatasetsIfNeeded })(DatasetToolbar);
+export default connect(mapStateToProps, { push, uploadDataset, deleteDataset, fetchDatasets })(DatasetToolbar);

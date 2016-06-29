@@ -5,7 +5,7 @@ import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesAc
 import { selectCorrelationVariable } from '../../../actions/CorrelationActions';
 import styles from '../Analysis.sass';
 
-import AnalysisSidebar from '../AnalysisSidebar';
+import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -30,25 +30,33 @@ export class CorrelationSidebar extends Component {
   }
 
   render() {
+    const { fieldProperties, selectCorrelationVariable, correlationSelector } = this.props;
     const quantitativeVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q')
     return (
-      <AnalysisSidebar selectedTab="correlation">
-        { this.props.fieldProperties.items.length != 0 &&
+      <Sidebar selectedTab="correlation">
+        { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Correlation Variables">
-            <ToggleButtonGroup
-              toggleItems={ quantitativeVariables.map((item) =>
-                new Object({
-                  id: item.id,
-                  name: item.name
-                })
-              )}
-              valueMember="id"
-              displayTextMember="name"
-              externalSelectedItems={ this.props.correlationSelector.correlationVariableIds }
-              onChange={ this.props.selectCorrelationVariable } />
+            { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <ToggleButtonGroup
+                  toggleItems={ quantitativeVariables.map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name
+                    })
+                  )}
+                  valueMember="id"
+                  displayTextMember="name"
+                  externalSelectedItems={ correlationSelector.correlationVariableIds }
+                  separated={ true }
+                  onChange={ selectCorrelationVariable } />
+              </div>
+            }
           </SidebarGroup>
         }
-      </AnalysisSidebar>
+
+
+      </Sidebar>
     );
   }
 }

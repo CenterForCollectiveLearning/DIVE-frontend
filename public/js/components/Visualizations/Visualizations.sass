@@ -45,15 +45,7 @@
     + .sortOrder
       margin-left: 8px
       margin-top: 1px
-
-.sidebarDropdown
-  margin-top: 1px
-
-  > div > div:first-of-type
-    margin-top: -1px
-
-    > div:first-child
-      font-size: 12px
+      flex-shrink: 0
 
 .conditionalInput
   width: 80%
@@ -75,7 +67,6 @@
     width: 20%
 
     > div > div:first-of-type
-      padding-right: 20px
       border-bottom-left-radius: 2px
       border-top-width: 0
 
@@ -130,7 +121,7 @@ div.conditionalCombinator
   flex-direction: row
   overflow: hidden
 
-  background-color: #e9e7e8
+  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
 
 .watermark
   +watermark
@@ -143,19 +134,14 @@ div.conditionalCombinator
 .specsContainer, .visualizationViewContainer
   +fillContainer
   max-width: 100%
-  padding: 8px
   max-height: 100%
   overflow-y: scroll
-
-  .innerSpecsContainer, .innerVisualizationViewContainer
-    box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.16)
-    background-color: white
 
 .visualizationViewContainer
   .chartsContainer
     +fillContainer
     padding: 10px
-    background-color: white
+    background-color: rgba(255, 255, 255, 0.1)
 
   .innerVisualizationViewContainer
     +fillContainer
@@ -167,8 +153,7 @@ div.conditionalCombinator
     flex-grow: 1
 
     min-height: 400px
-    padding-top: 10px
-    padding-bottom: 30px
+    padding-bottom: 20px
 
     .header
       text-align: center
@@ -202,20 +187,69 @@ div.conditionalCombinator
   .innerSpecsContainer
     display: block
 
-  .specBlocksContainer
+  .specContainer
     display: flex
-    flex-direction: row
+    flex-direction: column
     flex-wrap: wrap
     align-content: flex-start
     flex-grow: 1
+
+    .specSection
+      display: flex
+      flex-direction: column
+      flex-wrap: wrap
+      align-content: flex-start
+      flex-grow: 1
+
+      .blockSectionHeader
+        margin: 5px 15px 0
+        padding-left: 8px
+        padding-bottom: 3px
+        line-height: 18px
+        font-size: 12px
+        color: #666
+        font-weight: 300
+        border-bottom: 1px solid #CCCCCC
+
+        .blockSectionHeaderTitle
+          text-transform: uppercase
+          color: #414141
+          font-weight: 600
+          font-size: 12px
+
+        strong
+          font-weight: 500
+
+        .exactTitleField, .subsetTitleField, .baselineTitleField, .expandedTitleField
+          + .exactTitleField:before
+            content: ' and '
+
+          + .subsetTitleField:before, + .expandedTitleField:before, + .baselineTitleField:before
+            content: ' or '
+
+      .specs
+        display: flex
+        flex-direction: row
+        flex-wrap: wrap
+        align-content: flex-start
+        flex-grow: 1
+        margin-bottom: 5px
 
 .visualizationBlocksContainer
   display: flex
   flex-direction: column
   position: relative
 
-  width: 33.33%
   padding: 15px
+
+  &.exact
+    width: 50%
+
+  &.subset, &.baseline
+    width: 33.33333%
+
+  &.expanded
+    width: 25%
 
   &:hover .starContainer i
     opacity: 0.5
@@ -225,13 +259,14 @@ div.conditionalCombinator
     top: 27px
     right: 27px
     font-size: 13px
-    color: #666
+    color: orangered
     cursor: pointer
 
     i
-      opacity: 0
+      opacity: 0.5
 
       &.starred
+        color: orange
         opacity: 0.6
 
     &:hover i
@@ -241,24 +276,14 @@ div.conditionalCombinator
       opacity: 0.8
 
 .visualizationBlock
+  +block
   display: flex
   flex-direction: column
-  padding: 11px
-  margin: 0
-  overflow: hidden
-
-  background-color: #FAFAFA
-  border: 1px solid #D0D0D0
-  border-radius: 2px
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.01), 0px 2px 2px 0px rgba(0, 0, 0, 0.058), 0px 1px 5px 0px rgba(0, 0, 0, 0.034)
-
-  font-size: 14px
-  text-align: center
-  cursor: pointer
-  outline: none
 
   .header
     margin-top: 1px
+    padding-right: 13px
+    padding-left: 13px
     font-size: 13px
     overflow: hidden
     text-overflow: ellipsis
@@ -282,7 +307,7 @@ div.conditionalCombinator
 
     svg
       g
-        cursor: pointer!important // override google's default
+        cursor: pointer!important
 
 .gridContainer
   .grid
@@ -322,18 +347,22 @@ div.conditionalCombinator
       height: 29px
       line-height: 29px
 
+
 .visualization
   &.tree
     svg
-      pointer-events: none
-
       g
         outline: none
-        pointer-events: none
-
       text
         fill: rgba(0, 0, 0, 0.4)
         font-size: 16px
+
+    &.minimal
+      svg
+        pointer-events: none
+        g
+          outline: none
+          pointer-events: none
 
   svg
     g text[font-weight="bold"][text-anchor="middle"]
@@ -342,16 +371,3 @@ div.conditionalCombinator
     g:last-child
       rect[stroke-width="5"], rect[stroke-width="4"], rect[stroke-width="3"]
         display: none
-
-.sortingControl
-  display: flex
-  flex-direction: row
-  min-width: 160px
-  align-items: center
-
-  > span
-    margin-right: 10px
-
-    white-space: nowrap
-    font-size: 13px
-    font-weight: 300

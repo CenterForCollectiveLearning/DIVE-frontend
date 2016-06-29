@@ -1,13 +1,21 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+import {
+  selectDocument,
+  createNewDocument,
+  deleteDocument,
+  fetchDocuments,
+  selectComposeContent
+} from '../../actions/ComposeActions';
 
 import styles from './Compose.sass';
 
 import Card from '../Base/Card';
+import RaisedButton from '../Base/RaisedButton';
+import DropDownMenu from '../Base/DropDownMenu';
 import HeaderBar from '../Base/HeaderBar';
 import ComposeEditor from './ComposeEditor';
-import Input from '../Base/Input';
-import _ from 'underscore';
 
 import { saveDocumentTitle } from '../../actions/ComposeActions';
 
@@ -15,67 +23,137 @@ export class ComposeView extends Component {
   constructor(props) {
     super(props);
 
-    const { selectedDocument } = this.props;
-    const heading = selectedDocument ? selectedDocument.title : 'New Document';
+    this.onClickNewDocument = this.onClickNewDocument.bind(this);
+    this.onClickDeleteDocument = this.onClickDeleteDocument.bind(this);
+    this.onSelectDocument = this.onSelectDocument.bind(this);
+    this.onClickShareDocument = this.onClickShareDocument.bind(this);
 
-    this.saveDocumentTitle = _.debounce(this.props.saveDocumentTitle, 800);
+    const { selectedDocument } = this.props;
 
     this.state = {
-      selectedDocument: selectedDocument,
-      documentHeading: heading
+      selectedDocument: selectedDocument
+    }
+  }
+
+  componentWillMount() {
+    const { projectId, fetchDocuments } = this.props;
+    if (projectId){
+      fetchDocuments(projectId);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { selectedDocument } = nextProps;
+    const { projectId, documents, selectedDocument, fetchDocuments } = nextProps;
+
+    if (projectId && !documents.loaded && !documents.isFetching){
+      fetchDocuments(projectId);
+    }
+
     if (selectedDocument && (!this.props.selectedDocument || (selectedDocument.title != this.props.selectedDocument.title))) {
       this.setState({ documentHeading: selectedDocument.title });
     }
   }
 
-  onTitleChange(event) {
-    const heading = event.target.value;
-    this.setState({ documentHeading: heading });
-    this.saveDocumentTitle(this.state.selectedDocument.id, heading);
+  onSelectDocument(documentId) {
+    const { projectId, push } = this.props;
+    if (documentId) {
+      push(`/projects/${ projectId }/compose/${ documentId }`);
+    }
+  }
+
+  onClickNewDocument() {
+    const { projectId, createNewDocument } = this.props;
+    createNewDocument(projectId);
+  }
+
+  onClickDeleteDocument() {
+    const { projectId, documents, composeSelector, deleteDocument, push } = this.props;
+    deleteDocument(projectId, composeSelector.documentId);
+    const nextDocId = documents.items.find((doc) => doc.id != composeSelector.documentId).id;
+    push(`/projects/${ projectId }/compose/${ nextDocId }`);
+  }
+
+  onClickShareDocument() {
+    window.open(`/stories/${ this.props.composeSelector.documentId }`, '_blank');
   }
 
   render() {
-    const { composeSelector, selectedDocument, editable } = this.props;
+    const { documents, composeSelector, selectedDocument, exportedSpecs, exportedRegressions, exportedCorrelations, saveDocumentTitle, selectComposeContent } = this.props;
     const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
+
     return (
       <div className={ styles.composeViewContainer }>
-        <Card>
-          <HeaderBar
-            className={ styles.editorHeader + ' ' + ( editable ? styles.editable : ' ' ) }
-            textClassName={ styles.editorHeaderText }
-            header={
-              <Input
-                className={ styles.documentTitle }
-                readonly={ !editable }
-                type="text"
-                value={ this.state.documentHeading }
-                onChange={ this.onTitleChange.bind(this) }/>
+        <HeaderBar
+          className={ styles.headerBar }
+          header="Story Composer"
+          subheader={
+            <span className={ styles.saveStatus }>
+              { saveStatus }
+            </span>
+          }
+          actions={
+            <div className={ styles.headerControlRow }>
+              <div className={ styles.headerControl }>
+                <RaisedButton icon altText="Delete document" onClick={ this.onClickDeleteDocument } disabled={ documents.items.length <= 1 }><i className="fa fa-trash"></i></RaisedButton>
+              </div>
+              <div className={ styles.headerControl }>
+                <RaisedButton icon altText="New document" onClick={ this.onClickNewDocument }><i className="fa fa-file-o"></i></RaisedButton>
+              </div>
+              <div className={ styles.headerControl }>
+                <RaisedButton onClick={ this.onClickShareDocument }>Share</RaisedButton>
+              </div>
+              { !documents.isFetching && documents.items.length > 0 &&
+                <div className={ styles.headerControl + ' ' + styles.headerControlLong }>
+                  <DropDownMenu
+                    prefix="Document"
+                    width={ 250 }
+                    className={ styles.documentSelector }
+                    value={ parseInt(composeSelector.documentId) }
+                    options={ documents.items.length > 0 ? documents.items : [] }
+                    valueMember="id"
+                    displayTextMember="title"
+                    onChange={ this.onSelectDocument } />
+                </div>
               }
-              actions={ editable &&
-                <span className={ styles.saveStatus }>{ saveStatus }</span>
-              }
-            />
-          <ComposeEditor editable={ editable }/>
-        </Card>
+            </div>
+          }/>
+        <ComposeEditor
+          selectComposeContent={ selectComposeContent }
+          exportedSpecs={ exportedSpecs }
+          exportedRegressions={ exportedRegressions }
+          exportedCorrelations={ exportedCorrelations }
+          saveDocumentTitle={ saveDocumentTitle }
+          selectedDocument={ selectedDocument }
+          editable={ true }/>
       </div>
     );
   }
 }
 
 ComposeView.propTypes = {
-  editable: PropTypes.bool,
+  projectId: PropTypes.string,
+  documents: PropTypes.object.isRequired,
   selectedDocument: PropTypes.object.isRequired
 }
 
 function mapStateToProps(state) {
-  const { composeSelector } = state;
-
-  return { composeSelector };
+  const { project, composeSelector, exportedSpecs, exportedRegressions, exportedCorrelations, documents } = state;
+  return {
+    projectId: (project.properties.id ? `${ project.properties.id }` : null),
+    composeSelector,
+    exportedSpecs,
+    exportedRegressions,
+    exportedCorrelations,
+    documents
+  };
 }
 
-export default connect(mapStateToProps, { saveDocumentTitle })(ComposeView);
+export default connect(mapStateToProps, {
+  fetchDocuments,
+  selectDocument,
+  createNewDocument,
+  deleteDocument,
+  saveDocumentTitle,
+  selectComposeContent,
+  push
+})(ComposeView);

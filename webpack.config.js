@@ -6,12 +6,13 @@ var devFlagPlugin = new webpack.DefinePlugin({
 });
 
 function getEntrySources(sources) {
-  sources.push('webpack-dev-server/client?http://localhost:3009')
+  sources.push('webpack-dev-server/client?http://0.0.0.0:3009')
   sources.push('webpack/hot/only-dev-server')
   return sources;
 }
 
 module.exports = {
+  devtool: 'source-map',
   entry: getEntrySources([
       './public/js/index.js',
       './public/css/app.css'
@@ -29,11 +30,16 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     devFlagPlugin,
-    new ExtractTextPlugin('app.css')
+    new ExtractTextPlugin('app.css'),
+    new webpack.ProvidePlugin({
+      Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
+      fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+    }),
   ],
   module: {
     noParse: /node_modules\/quill\/dist/,
     loaders: [
+      { test: require.resolve("react"), loader: "imports?shim=es6-shim/es6-shim&sham=es6-shim/es6-sham" },
       { test: /\.js$/, loaders: ['react-hot', 'babel'], exclude: /node_modules/ },
       { test: /\.css$/, loader: ExtractTextPlugin.extract('css-loader?module!cssnext-loader') },
       { test: /\.sass$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?indentedSyntax&outputStyle=expanded&sourceMap' },

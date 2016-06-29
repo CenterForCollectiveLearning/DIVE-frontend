@@ -1,6 +1,10 @@
 import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
+  REQUEST_EXPORTED_CORRELATIONS,
+  RECEIVE_EXPORTED_CORRELATIONS,
+  REQUEST_EXPORTED_REGRESSIONS,
+  RECEIVE_EXPORTED_REGRESSIONS,
   SELECT_DOCUMENT,
   REQUEST_PUBLISHED_DOCUMENT,
   RECEIVE_PUBLISHED_DOCUMENT,
@@ -12,7 +16,9 @@ import {
   RECEIVE_UPDATE_DOCUMENT,
   REQUEST_DELETE_DOCUMENT,
   RECEIVE_DELETE_DOCUMENT,
-  SELECT_COMPOSE_VISUALIZATION,
+  SELECT_COMPOSE_CONTENT,
+  REMOVE_COMPOSE_CONTENT,
+  MOVE_COMPOSE_BLOCK,
   REQUEST_SAVE_DOCUMENT,
   RECEIVE_SAVE_DOCUMENT,
   SET_DOCUMENT_TITLE,
@@ -23,11 +29,34 @@ import _ from 'underscore'
 
 import { fetch, pollForTask } from './api.js';
 
-export function selectComposeVisualization(exportedSpecId, exportedSpecHeading) {
+export function selectComposeContent(contentType, contentId, title) {
   return {
-    type: SELECT_COMPOSE_VISUALIZATION,
-    exportedSpecId: exportedSpecId,
-    heading: exportedSpecHeading
+    type: SELECT_COMPOSE_CONTENT,
+    contentType: contentType,
+    contentId: contentId,
+    title: title
+  }
+}
+
+export function removeComposeBlock(blockId) {
+  return {
+    type: REMOVE_COMPOSE_CONTENT,
+    blockId: blockId
+  }
+}
+
+function moveComposeBlockDispatcher(blockId, direction) {
+  return {
+    type: MOVE_COMPOSE_BLOCK,
+    blockId: blockId,
+    direction: direction
+  }
+}
+
+export function moveComposeBlock(blockId, direction) {
+  return (dispatch, getState) => {
+    dispatch(moveComposeBlockDispatcher(blockId, direction));
+    debouncedChangeDocument(dispatch, getState);
   }
 }
 
@@ -37,6 +66,64 @@ export function setVisualizationFormat(exportedSpecId, format) {
     exportedSpecId: exportedSpecId,
     format: format
   }
+}
+
+function requestExportedCorrelationsDispatcher() {
+  return {
+    type: REQUEST_EXPORTED_CORRELATIONS
+  };
+}
+
+function receiveExportedCorrelationsDispatcher(params, json) {
+  if (json && !json.error) {
+    return {
+      ...params,
+      type: RECEIVE_EXPORTED_CORRELATIONS,
+      correlations: json,
+      receivedAt: Date.now()
+    };
+  }
+}
+
+function requestExportedRegressionsDispatcher() {
+  return {
+    type: REQUEST_EXPORTED_REGRESSIONS
+  };
+}
+
+function receiveExportedRegressionsDispatcher(params, json) {
+  if (json && !json.error) {
+    return {
+      ...params,
+      type: RECEIVE_EXPORTED_REGRESSIONS,
+      regressions: json,
+      receivedAt: Date.now()
+    };
+  }
+}
+
+export function fetchExportedCorrelations(projectId) {
+  console.log('Fetching correlations');
+  return (dispatch) => {
+    dispatch(requestExportedCorrelationsDispatcher());
+    return fetch(`/exported_results/v1/exported_results?project_id=${projectId}&result_type=correlation`)
+      .then(function(json) {
+        const dispatchParams = {};
+        dispatch(receiveExportedCorrelationsDispatcher(dispatchParams, json.result))
+      });
+  };
+}
+
+export function fetchExportedRegressions(projectId) {
+  console.log('Fetching regressions');
+  return (dispatch) => {
+    dispatch(requestExportedRegressionsDispatcher());
+    return fetch(`/exported_results/v1/exported_results?project_id=${projectId}&result_type=regression`)
+      .then(function(json) {
+        const dispatchParams = {};
+        dispatch(receiveExportedRegressionsDispatcher(dispatchParams, json.result))
+      });
+  };
 }
 
 function requestExportedVisualizationSpecsDispatcher() {
@@ -60,7 +147,6 @@ export function fetchExportedVisualizationSpecs(projectId) {
   return (dispatch) => {
     dispatch(requestExportedVisualizationSpecsDispatcher());
     return fetch(`/exported_specs/v1/exported_specs?project_id=${projectId}`)
-      .then(response => response.json())
       .then(function(json) {
         const dispatchParams = {};
         dispatch(receiveExportedVisualizationSpecsDispatcher(dispatchParams, json.result))
@@ -125,7 +211,6 @@ export function fetchPublishedDocument(documentId) {
   return (dispatch) => {
     dispatch(requestPublishedDocumentDispatcher(documentId));
     return fetch(`/compose/v1/document/${ documentId }?include_data=true`)
-      .then(response => response.json())
       .then(function(json) {
         const dispatchParams = {};
         dispatch(receivePublishedDocumentDispatcher(documentId, json))
@@ -137,7 +222,6 @@ export function fetchDocuments(projectId) {
   return (dispatch) => {
     dispatch(requestDocumentsDispatcher(projectId));
     return fetch(`/compose/v1/documents?project_id=${projectId}`)
-      .then(response => response.json())
       .then(function(json) {
         const dispatchParams = {};
         dispatch(receiveDocumentsDispatcher(dispatchParams, json))
@@ -173,8 +257,7 @@ export function createNewDocument(projectId, content={}) {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveCreateDocumentDispatcher(projectId, json)))
+    }).then(json => dispatch(receiveCreateDocumentDispatcher(projectId, json)))
   }
 }
 
@@ -199,8 +282,7 @@ export function deleteDocument(projectId, documentId) {
     dispatch(requestDeleteDocumentDispatcher(projectId, documentId));
     return fetch(`/compose/v1/document/${ documentId }?project_id=${projectId}`, {
       method: 'delete'
-    }).then(response => response.json())
-      .then(json => dispatch(receiveDeleteDocumentDispatcher(projectId, json)))
+    }).then(json => dispatch(receiveDeleteDocumentDispatcher(projectId, json)))
   }
 }
 
@@ -239,16 +321,15 @@ function saveDocument(dispatch, getState) {
     method: 'put',
     body: JSON.stringify(params),
     headers: { 'Content-Type': 'application/json' }
-  }).then(response => response.json())
-    .then(json => dispatch(receiveSaveDocumentDispatcher(projectId, documentId, json)))
+  }).then(json => dispatch(receiveSaveDocumentDispatcher(projectId, documentId, json)))
 }
 
 const debouncedChangeDocument = _.debounce(saveDocument, 800);
 
-function saveBlockDispatcher(id, key, value) {
+function saveBlockDispatcher(blockId, key, value) {
   var action = {
     type: SAVE_BLOCK,
-    exportedSpecId: id,
+    blockId: blockId,
     key: key,
     meta: {
       debounce: {
@@ -260,9 +341,9 @@ function saveBlockDispatcher(id, key, value) {
   return action;
 }
 
-export function saveBlock(id, key, value) {
+export function saveBlock(blockId, key, value) {
   return (dispatch, getState) => {
-    dispatch(saveBlockDispatcher(id, key, value));
+    dispatch(saveBlockDispatcher(blockId, key, value));
     debouncedChangeDocument(dispatch, getState);
   }
 }

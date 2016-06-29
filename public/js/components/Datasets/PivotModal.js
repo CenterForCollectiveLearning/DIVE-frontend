@@ -109,7 +109,7 @@ class PivotModal extends Component {
       default:
     }
 
-    footer = 
+    footer =
       <div className={ styles.footerContent }>
         <div className={ styles.footerLabel }>
           { error &&

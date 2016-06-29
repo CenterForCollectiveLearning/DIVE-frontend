@@ -25,6 +25,7 @@ const baseConditional = {
 const baseState = {
   tableData: [],
   visualizationData: [],
+  bins: [],
   sortFields: [],
   sortOrders: [],
   spec: {},
@@ -64,7 +65,9 @@ export default function visualization(state = baseState, action) {
       return { ...state, isFetching: true };
 
     case RECEIVE_VISUALIZATION_DATA:
-      const headers = action.visualizationData[0];
+      const headers = action.visualizationData[0].filter((header) =>
+        (typeof header === 'string' || header instanceof String)
+      );
 
       const SORT_FIELDS = headers.map((field, index) => {
         var selected = false;
@@ -82,6 +85,7 @@ export default function visualization(state = baseState, action) {
         exported: action.exported,
         exportedSpecId: action.exportedSpecId,
         spec: action.spec,
+        bins: action.bins,
         tableData: action.tableData,
         visualizationData: action.visualizationData,
         sortFields: SORT_FIELDS,

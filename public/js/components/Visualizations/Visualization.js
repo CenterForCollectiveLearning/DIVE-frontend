@@ -2,12 +2,15 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from './Visualizations.sass';
 
+import { getPalette } from '../../helpers/helpers';
+
 import TreeMap from './Charts/TreeMap';
 import PieChart from './Charts/PieChart';
 import ColumnChart from './Charts/ColumnChart';
 import StackedColumnChart from './Charts/StackedColumnChart';
 import ScatterChart from './Charts/ScatterChart';
 import LineChart from './Charts/LineChart';
+import Histogram from './Charts/Histogram';
 
 export default class Visualization extends Component {
   constructor(props) {
@@ -40,16 +43,21 @@ export default class Visualization extends Component {
     const MAX_ELEMENTS = {
       preview: {
         all: 2000,
+        scatter: 500,
         treemap: 200
       },
       full: {
         all: 3000,
+        scatter: 1000,
         treemap: 400
       }
     }
-    const { data, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
+    const { data, bins, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
+
+    const labels = spec.meta.labels ? spec.meta.labels : {};
 
     var finalDataArray = data;
+    var sortIndex;
 
     if (sortFields.length && sortOrders.length) {
       var sortField, sortOrder;
@@ -62,7 +70,7 @@ export default class Visualization extends Component {
         if (s.selected)
           sortOrder = s.id;
       });
-      const sortIndex = (sortOrder == 'asc') ? 1 : -1;
+      sortIndex = (sortOrder == 'asc') ? 1 : -1;
 
       const header = data[0];
       const dataPoints = data.slice(1);
@@ -89,7 +97,17 @@ export default class Visualization extends Component {
       finalDataArray = [ header, ...sortedDataPoints ];
     }
 
+    var hashElements;
+    if (labels && labels.x && labels.y) {
+      hashElements = [labels.x, labels.y];
+    } else {
+      hashElements = [finalDataArray[0][0], finalDataArray[0][1]];
+    }
+
+    const colors = getPalette(hashElements);
+
     var options = {
+      colors: colors,
       backgroundColor: 'transparent',
       headerColor: 'white',
       headerHeight: 0,
@@ -101,8 +119,9 @@ export default class Visualization extends Component {
       },
       chartArea: {
         top: '5%',
-        width: '70%',
-        height: '80%'
+        height: '78%',
+        left: '15%',
+        width: '80%'
       },
       legend: {
         textStyle: {
@@ -110,24 +129,40 @@ export default class Visualization extends Component {
         }
       },
       hAxis: {
+        title: labels && labels.x ? labels.x : finalDataArray[0][0],
+        titleTextStyle: {
+          color: "#333",
+          italic: false,
+          bold: true
+        },
         textStyle: {
-          color: "#333"
+          color: "#777",
+          italic: false
         }
       },
       vAxis: {
+        title: labels && labels.y ? labels.y : finalDataArray[0][1],
+        titleTextStyle: {
+          color: "#333",
+          italic: false,
+          bold: true
+        },
         textStyle: {
-          color: "#333"
+          color: "#777",
+          italic: false
         }
       },
       vAxes: [
         {
           textStyle: {
-            color: "#333"
+            color: "#777",
+            italic: false
           }
         },
         {
           textStyle: {
-            color: "#333"
+            color: "#777",
+            italic: false
           }
         }
       ]
@@ -146,7 +181,12 @@ export default class Visualization extends Component {
         enableInteractivity: false,
         fontSize: 0,
         hAxis: {
-          textPosition: 'none'
+          baselineColor: 'transparent',
+          textPosition: 'none',
+          gridlines: {
+            count: 0,
+            color: 'transparent'
+          },
         },
         height: 140,
         highlightOnMouseOver: false,
@@ -167,7 +207,8 @@ export default class Visualization extends Component {
           baselineColor: 'transparent',
           textPosition: 'none',
           gridlines: {
-            count: 0
+            count: 0,
+            color: 'transparent'
           }
         },
         vAxes: [
@@ -198,8 +239,6 @@ export default class Visualization extends Component {
 
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
 
-    const labels = spec.meta.labels ? spec.meta.labels : {}
-
     const tooMuchDataToPreview =
       (isMinimalView &&
         (data.length > MAX_ELEMENTS.preview.all ||
@@ -212,7 +251,6 @@ export default class Visualization extends Component {
           (validVisualizationTypes[0] == 'tree' && data.length > MAX_ELEMENTS.full.treemap)
         )
       );
-
 
     var tooMuchDataString = '';
     if (tooMuchDataToPreview || tooMuchDataToShowFull) {
@@ -229,7 +267,7 @@ export default class Visualization extends Component {
       );
     }
 
-    const chartId = this.props.chartId || spec.id;
+    const chartId = `${ this.props.chartId || spec.id }-${ sortIndex }`;
 
     return (
       <div className={ containerClassName } onClick={ this.handleClick }>
@@ -247,9 +285,19 @@ export default class Visualization extends Component {
         }
         <div className={ styles.visualization
             + ' ' + styles[validVisualizationTypes[0]]
+            + (isMinimalView ? ' ' + styles.minimal : '')
             + (visualizationClassName ? ' ' + visualizationClassName : '')
           }>
-            { (validVisualizationTypes[0] == 'bar' || validVisualizationTypes[0] == 'hist') &&
+            { (validVisualizationTypes[0] == 'hist') &&
+              <Histogram
+                chartId={ `spec-hist-${ chartId }` }
+                data={ finalDataArray }
+                bins={ bins }
+                labels={ labels }
+                options={ options }
+                isMinimalView={ isMinimalView }/>
+            }
+            { (validVisualizationTypes[0] == 'bar') &&
               <ColumnChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
@@ -316,6 +364,7 @@ Visualization.propTypes = {
   onClick: PropTypes.func,
   showHeader: PropTypes.bool,
   visualizationTypes: PropTypes.array,
+  bins: PropTypes.array,
   sortOrders: PropTypes.array,
   sortFields: PropTypes.array
 };

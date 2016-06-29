@@ -1,25 +1,44 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState, replaceState } from 'redux-react-router';
+import { push, replace } from 'react-router-redux';
+import DocumentTitle from 'react-document-title';
 import styles from './Compose.sass';
 
-import { fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
-import { fetchDocuments } from '../../actions/ComposeActions';
+import { fetchDatasets } from '../../actions/DatasetActions';
+import {
+  fetchDocuments,
+  fetchExportedVisualizationSpecs,
+  fetchExportedRegressions,
+  fetchExportedCorrelations
+} from '../../actions/ComposeActions';
 import ComposePage from './ComposePage';
-import ComposeSidebar from './ComposeSidebar';
 import ComposeView from './ComposeView';
 
 export class ComposeBasePage extends Component {
   componentWillMount() {
-    const { params, project, datasetSelector, datasets, documents, replaceState, fetchDatasetsIfNeeded, fetchDocuments } = this.props;
+    const { params, project, datasetSelector, datasets, documents, exportedSpecs, exportedRegressions, exportedCorrelations, replace, fetchDatasets, fetchDocuments, fetchExportedVisualizationSpecs } = this.props;
 
-    if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
-      fetchDatasetsIfNeeded(project.properties.id);
+    if (project.properties.id) {
+      if (!datasetSelector.loaded && !datasets.isFetching) {
+        fetchDatasets(project.properties.id);
+      }
+
+      if (exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {
+        fetchExportedVisualizationSpecs(project.properties.id);
+      }
+
+      if (exportedRegressions.items.length == 0 && !exportedRegressions.loaded && !exportedRegressions.isFetching) {
+        fetchExportedRegressions(project.properties.id);
+      }
+
+      if (exportedCorrelations.items.length == 0 && !exportedCorrelations.loaded && !exportedCorrelations.isFetching) {
+        fetchExportedCorrelations(project.properties.id);
+      }
     }
 
     if (!params.documentId) {
       if (documents.items.length > 0) {
-        replaceState(null, `/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
+        replace(`/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
       } else {
         fetchDocuments(params.projectId);
       }
@@ -27,40 +46,78 @@ export class ComposeBasePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, composeSelector, project, datasetSelector, datasets, documents, replaceState, pushState, fetchDatasetsIfNeeded, fetchDocuments } = nextProps;
+    const { params, composeSelector, project, datasetSelector, datasets, documents, exportedSpecs, exportedRegressions, exportedCorrelations, replace, push, fetchDatasets, fetchDocuments, fetchExportedVisualizationSpecs, fetchExportedRegressions, fetchExportedCorrelations } = nextProps;
 
-    if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
-      fetchDatasetsIfNeeded(project.properties.id);
-    }
+    if (project.properties.id) {
+      if (!datasetSelector.loaded && !datasets.isFetching) {
+        fetchDatasets(project.properties.id);
+      }
 
-    if (!params.documentId && documents.items.length > 0) {
-      replaceState(null, `/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
+      if (exportedSpecs.items.length == 0 && !exportedSpecs.loaded && !exportedSpecs.isFetching) {
+        fetchExportedVisualizationSpecs(project.properties.id);
+      }
+
+      if (exportedRegressions.items.length == 0 && !exportedRegressions.loaded && !exportedRegressions.isFetching) {
+        fetchExportedRegressions(project.properties.id);
+      }
+
+      if (exportedCorrelations.items.length == 0 && !exportedCorrelations.loaded && !exportedCorrelations.isFetching) {
+        fetchExportedCorrelations(project.properties.id);
+      }
+
+      if (!params.documentId && documents.items.length > 0) {
+        replace(`/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
+      }
     }
 
     if (composeSelector.documentId != this.props.composeSelector.documentId && composeSelector.documentId != params.documentId) {
-      pushState(null, `/projects/${ params.projectId }/compose/${ composeSelector.documentId }`);
+      push(`/projects/${ params.projectId }/compose/${ composeSelector.documentId }`);
     }
 
   }
 
   render() {
-    const { selectedDocument } = this.props;
+    const { selectedDocument, projectTitle } = this.props;
+    const composeTitle = 'COMPOSE' + ( projectTitle ? ` | ${ projectTitle }` : '' )
     return (
-      <div className={ `${ styles.fillContainer } ${ styles.composePageContainer }` }>
-        <div className={ `${ styles.fillContainer } ${ styles.composeContentContainer }` }>
-          <ComposeSidebar />
-          <ComposeView editable={ true } selectedDocument={ selectedDocument } />
+      <DocumentTitle title={ composeTitle }>
+        <div className={ `${ styles.fillContainer } ${ styles.composePageContainer }` }>
+          <ComposeView selectedDocument={ selectedDocument } />
+          { this.props.children }
         </div>
-        { this.props.children }
-      </div>
+      </DocumentTitle>
     );
   }
 }
 
 function mapStateToProps(state) {
-  const { documents, composeSelector, project, datasetSelector, datasets } = state;
-  const selectedDocument = documents.items.find((doc) => doc.id == composeSelector.documentId) || {};
-  return { documents, composeSelector, project, datasetSelector, datasets, selectedDocument: selectedDocument };
+  const { documents, composeSelector, exportedSpecs, exportedRegressions, exportedCorrelations, project, datasetSelector, datasets } = state;
+  const selectedDocument = {
+    blocks: composeSelector.blocks,
+    title: composeSelector.title,
+    id: composeSelector.documentId
+  };
+
+  return {
+    documents,
+    composeSelector,
+    exportedSpecs,
+    exportedRegressions,
+    exportedCorrelations,
+    project,
+    datasetSelector,
+    datasets,
+    selectedDocument: selectedDocument,
+    projectTitle: project.properties.title
+  };
 }
 
-export default connect(mapStateToProps, { fetchDocuments, fetchDatasetsIfNeeded, pushState, replaceState })(ComposeBasePage);
+export default connect(mapStateToProps, {
+  fetchDocuments,
+  fetchExportedVisualizationSpecs,
+  fetchExportedCorrelations,
+  fetchExportedRegressions,
+  fetchDatasets,
+  push,
+  replace
+})(ComposeBasePage);

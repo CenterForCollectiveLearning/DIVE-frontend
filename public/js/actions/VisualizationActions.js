@@ -3,6 +3,7 @@ import {
   PROGRESS_SPECS,
   RECEIVE_SPECS,
   FAILED_RECEIVE_SPECS,
+  SELECT_RECOMMENDATION_TYPE,
   SELECT_VISUALIZATION_TYPE,
   SELECT_BUILDER_VISUALIZATION_TYPE,
   REQUEST_VISUALIZATION_DATA,
@@ -21,8 +22,9 @@ import {
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
+import _ from 'underscore';
 import { fetch, pollForTask } from './api.js';
-import { formatTableData } from './ActionHelpers.js'
+import { formatVisualizationTableData, getFilteredConditionals } from './ActionHelpers.js'
 
 function requestSpecsDispatcher() {
   return {
@@ -45,11 +47,12 @@ function errorSpecsDispatcher(data) {
 }
 
 function receiveSpecsDispatcher(params, json) {
+  const recommendationLevel = params.recommendationType ? params.recommendationType.level : null;
   if (json && !json.error) {
     return {
       ...params,
       type: RECEIVE_SPECS,
-      specs: json,
+      specs: json.map((spec) => new Object({ ...spec, recommendationLevel })),
       receivedAt: Date.now()
     };
   }
@@ -63,8 +66,9 @@ function receiveSpecsDispatcher(params, json) {
   };
 }
 
-export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
+export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommendationType = null) {
   const selectedFieldProperties = fieldProperties.filter((property) => property.selected);
+  const selectedRecommendationType = recommendationType ? recommendationType.id : null;
 
   const fieldAggPairs = selectedFieldProperties
     .map((property) =>
@@ -93,6 +97,7 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
     'project_id': projectId,
     'dataset_id': datasetId,
     'field_agg_pairs': fieldAggPairs,
+    'recommendation_types': [selectedRecommendationType],
     'conditionals': conditionals
   };
 
@@ -103,9 +108,8 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(function(json) {
-        const dispatchParams = { project_id: projectId, dataset_id: datasetId };
+    }).then(function(json) {
+        const dispatchParams = { project_id: projectId, dataset_id: datasetId, recommendationType: recommendationType };
         if (json.compute) {
           dispatch(pollForTask(json.taskId, REQUEST_SPECS, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher, errorSpecsDispatcher));
         } else {
@@ -113,6 +117,13 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
         }
       })
   };
+}
+
+export function selectRecommendationType(selectedRecommendationType) {
+  return {
+    type: SELECT_RECOMMENDATION_TYPE,
+    selectedRecommendationType: selectedRecommendationType
+  }
 }
 
 export function selectVisualizationType(selectedType) {
@@ -162,35 +173,11 @@ function receiveSpecVisualizationDispatcher(json) {
     spec: json.spec,
     exported: json.exported,
     exportedSpecId: json.exportedSpecId,
-    tableData: formatTableData(json.visualization.table.columns, json.visualization.table.data),
+    tableData: json.visualization.table ? formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data) : [],
+    bins: json.visualization.bins,
     visualizationData: json.visualization.visualize,
     receivedAt: Date.now()
   };
-}
-
-function getFilteredConditionals(conditionals) {
-  const validConditionals = conditionals.filter((conditional) =>
-    conditional.conditionalIndex != null && conditional.value != "ALL_VALUES" && conditional.value != ""
-  );
-
-  conditionals = null;
-
-  if (validConditionals.length) {
-    conditionals = {};
-
-    validConditionals.forEach((conditional) => {
-      if (!conditionals[conditional.combinator]) {
-        conditionals[conditional.combinator] = [];
-      }
-
-      conditionals[conditional.combinator].push({
-        'field_id': conditional.fieldId,
-        'operation': conditional.operator,
-        'criteria': conditional.value
-      })
-    });
-  }
-  return conditionals
 }
 
 
@@ -216,9 +203,7 @@ function fetchSpecVisualization(projectId, specId, conditionals = [], config = n
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     })
-      .then(response => response.json())
-      .then(json => dispatch(receiveSpecVisualizationDispatcher(json)))
-      .catch(err => console.error("Error fetching visualization: ", err));
+      .then(json => dispatch(receiveSpecVisualizationDispatcher(json)));
   };
 }
 
@@ -294,8 +279,7 @@ export function createExportedSpec(projectId, specId, data, conditionals=[], con
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveCreatedExportedSpecDispatcher(receiveAction, json)))
+    }).then(json => dispatch(receiveCreatedExportedSpecDispatcher(receiveAction, json)))
       .catch(err => console.error("Error creating exported spec: ", err));
   };
 }

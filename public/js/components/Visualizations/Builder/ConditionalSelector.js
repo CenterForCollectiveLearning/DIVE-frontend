@@ -27,32 +27,32 @@ export default class ConditionalSelector extends Component {
       {
         value: '==',
         label: '=',
-        validTypes: ['c', 'q']
+        validTypes: ['c', 'q', 't']
       },
       {
         value: '!=',
         label: '≠',
-        validTypes: ['c', 'q']
+        validTypes: ['c', 'q', 't']
       },
       {
         value: '<',
         label: '<',
-        validTypes: ['q']
+        validTypes: ['q', 't']
       },
       {
         value: '>',
         label: '>',
-        validTypes: ['q']
+        validTypes: ['q', 't']
       },
       {
         value: '<=',
         label: '≤',
-        validTypes: ['q']
+        validTypes: ['q', 't']
       },
       {
         value: '>=',
         label: '≥',
-        validTypes: ['q']
+        validTypes: ['q', 't']
       },
     ];
 
@@ -141,6 +141,7 @@ export default class ConditionalSelector extends Component {
               className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown + ' ' + styles.operatorDropdown + (fieldId == null ? ' ' + styles.disabledDropdown : '') }
               value={ operator }
               options={ operators }
+              width="20%"
               valueMember="value"
               displayTextMember="label"
               onChange={ this.onSelectOperator.bind(this) }/>
@@ -150,11 +151,12 @@ export default class ConditionalSelector extends Component {
                 className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown + ' ' + styles.fieldValueDropdown + (fieldId == null ? ' ' + styles.disabledDropdown : '') }
                 value={ value }
                 options={ fieldValues }
+                width="80%"
                 valueMember="value"
                 displayTextMember="label"
                 onChange={ this.onSelectFieldValue.bind(this) }/>
             }
-            { selectedField && selectedField.generalType == 'q' &&
+            { selectedField && (selectedField.generalType == 'q' || selectedField.generalType == 't') &&
               <Input
                 className={ styles.conditionalInput + (fieldId == null ? ' ' + styles.disabledInput : '') }
                 placeholder={ `${ value }` }

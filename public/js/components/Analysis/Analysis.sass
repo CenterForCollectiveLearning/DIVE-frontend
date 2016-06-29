@@ -1,6 +1,30 @@
 @import '../../../css/flexbox.sass'
 @import '../../../css/mixins.sass'
 
+.fieldGroup
+  &:first-child
+    .fieldGroupLabel
+      margin-top: 0
+
+  + .fieldGroup
+    margin-top: 7px
+
+  .fieldGroupLabel
+    margin-top: 17px
+    margin-bottom: 10px
+
+    font-size: 11px
+    font-weight: 500
+    color: #999
+    text-transform: uppercase
+
+.watermark
+  +watermark
+  padding: 200px 0 260px
+
+  &.watermarkNoSpacer
+    padding: 0
+
 .analysisContainer
   overflow: hidden
 
@@ -9,30 +33,15 @@
   flex-direction: row
   overflow: hidden
 
-  background-color: #e9e7e8
-
-.regressionViewContainer, .summaryViewContainer, .aggregationViewContainer
+.regressionViewContainer, .summaryViewContainer, .aggregationViewContainer, .correlationViewContainer
   +fillContainer
   overflow-y: scroll
 
+  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
+
 .summaryViewContainer
-  flex-direction: row
-  flex-wrap: wrap
-
   .summaryCardHolder
-    width: 50%
-
-    &:last-child > div
-      margin-bottom: 8px
-
-    &:nth-child(odd) > div
-      margin-right: 4px
-
-    &:nth-child(even) > div
-      margin-left: 4px
-
-    > div
-      margin-bottom: 0
+    flex-grow: 1
 
 .summaryVariableContainer
   display: flex
@@ -65,7 +74,8 @@
     bottom: 0
 
 .regressionTable, .summaryTable
-  margin: 10px
+  margin: 0 20px 10px
+  background-color: white
 
 .regressionSummary
   display: flex
@@ -164,7 +174,7 @@
   background-color: #fbfbfb
 
 .aggregationTable
-  padding: 10px 10px 20px
+  padding: 0 20px 20px
 
   .columnFieldLabel, .rowFieldLabel
     font-size: 13px

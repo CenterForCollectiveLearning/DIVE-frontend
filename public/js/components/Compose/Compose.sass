@@ -11,67 +11,45 @@
   > div:last-child
     margin-left: 7px
 
-.composeContentContainer
+.composePageContainer
   flex-direction: row
 
-.composeViewContainer
-  display: flex
-  flex-direction: column
-  flex-grow: 1
-  background-color: #e9e7e8
-  overflow-y: scroll
+  .composeViewContainer, .storyContainer
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+    background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
+    overflow-y: scroll
+    align-items: center
 
-  .saveStatus
-    font-size: 12px
-    color: #6A6A6A
-    margin-top: 10px
-    margin-right: 8px
+    .headerBar
+      width: 100%
 
-.sidebarVisualizationHeader
-  font-size: 13px
-
-.sidebarVisualizationContainer
-  display: flex
-  flex-direction: column
-  padding: 11px
-  margin: 0 0 10px
-  overflow: hidden
-
-  background-color: #FAFAFA
-  border: 1px solid #D0D0D0
-  border-radius: 2px
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.01), 0px 2px 2px 0px rgba(0, 0, 0, 0.058), 0px 1px 5px 0px rgba(0, 0, 0, 0.034)
-
-  text-align: center
-  cursor: pointer
-  outline: none
-
-  > div:last-child
-    padding: 11px 0 4px
-    min-height: none
-
-    svg
-      text
-        fill: rgba(0, 0, 0, 0)
-
-      g
-        cursor: pointer!important
+    .composeEditorContainer
+      flex-grow: 1
+      flex-shrink: 0
+      background-color: white
+      width: 960px
+      box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.1)
+      margin-top: 15px
+      margin-bottom: 30px
+      padding: 15px 10px 10px
 
 .editorHeader
-  background-color: white
+  padding: 10px
 
   .editorHeaderText
-    margin-left: 6px
-    width: 80%
+    width: 100%
+    padding-left: 6px
+    padding-right: 6px
 
     .documentTitle
       color: #333
+      background-color: transparent
       font-family: 'Source Sans Pro', sans-serif
       font-size: 55px
       font-weight: 300
       line-height: 1
-      margin-left: 0px
-      margin-top: 20px
       padding-left: 11px
       letter-spacing: -.003em
       height: auto
@@ -94,16 +72,16 @@
       .composeBlockText, .composeBlockHeader .composeBlockHeaderText
         border-color: #eee
 
-  .composeEditorNewDocumentPlaceholder
-    +watermark
-    padding-top: 180px
-
   .composeBlock
     display: flex
     flex-direction: column
     padding: 8px
     margin: 7px
     border: 1px dashed transparent
+    position: relative
+
+    &.editable:hover .composeVisualizationControls
+      display: flex
 
     &.TEXT_TOP
       flex-direction: column-reverse
@@ -114,16 +92,100 @@
     &.TEXT_LEFT
       flex-direction: row-reverse
 
+      .flexcolumn
+        width: 30%
+
       .composeBlockVisualization
-        max-width: 70%
+        width: 70%
         margin-left: 7px
 
     &.TEXT_RIGHT
       flex-direction: row
 
+      .flexcolumn
+        width: 30%
+
       .composeBlockVisualization
-        max-width: 70%
+        width: 70%
         margin-right: 7px
+
+    &.composeBlockPlaceholder
+      min-height: 60px
+      border-color: rgba(0, 0, 0, 0.1)
+      border-radius: 2px
+      text-align: center
+      justify-content: center
+      align-items: center
+
+      &.phase1
+        +watermark
+        flex-grow: 0
+        letter-spacing: 0
+        color: #999
+        cursor: pointer
+
+        &:hover
+          border-style: solid
+          border-color: #959595
+          color: #333
+
+      &.phase2
+        background-color: rgba(0, 0, 0, 0.01)
+
+      h2
+        text-align: left
+        font-weight: 300
+        width: 100%
+        margin: 0
+        padding: 10px 1.5%
+        color: #999
+
+      .contentPreviewBlocksContainer
+        display: flex
+
+        flex-direction: row
+        flex-wrap: wrap
+        width: 100%
+        position: relative
+
+        .contentPreviewBlockContainer
+          margin: 10px 1.5%
+          width: 30.33%
+
+          > div
+            box-shadow: none
+
+          .textBlock, .regressionBlock, .correlationBlock
+            +block
+            box-shadow: none
+
+            font-size: 13px
+            font-weight: 500
+            color: #444444
+
+          .textBlock
+            padding-top: 30px
+            padding-bottom: 30px
+
+          .regressionBlock, .correlationBlock
+            padding: 11px
+
+            .header, .correlationHeader
+              padding-bottom: 8px
+              font-weight: 400
+
+            .correlationHeader
+              .field
+                font-weight: 500
+                color: #444444
+                text-transform: lowercase
+
+                + .field:before
+                  font-weight: 400
+                  content: ', '
+
+    .flexrow
+      max-width: 100%
 
   .composeBlockHeader
     display: flex
@@ -131,10 +193,11 @@
     .composeBlockHeaderText
       font-family: 'Source Sans Pro', sans-serif
       font-size: 30px
-      line-height: 1.1
+      line-height: 1.2
       letter-spacing: -.02em
       color: rgba(0,0,0,.8)
       font-weight: 300
+      word-break: break-word
 
       height: auto
       width: 100%
@@ -168,8 +231,24 @@
     &:hover
       opacity: 0.8
 
+    .visualizationOverlayControl
+      &.visualizationOverlayButton
+        height: 30px
+        line-height: 29px
+        padding: 0 7px
+        border-color: #D0D0D0
+
+        i
+          font-weight: 600
+          font-size: 12px
+
+      + .visualizationOverlayControl
+        margin-left: 5px
+
     .visualizationOverlayButton
+      min-width: 24px
       max-width: none
+      background-color: white
 
       > div
         padding: 0 8px
@@ -177,6 +256,9 @@
         line-height: 29px
         box-shadow: none
         opacity: 0.9
+
+        &[data-selected]
+          background-color: #D0D0D0
 
         &:hover
           opacity: 1
@@ -187,9 +269,6 @@
     display: flex
     justify-content: center
     align-items: center
-
-    &:hover .composeVisualizationControls
-      display: flex
 
     .fullComposeVisualization
       background-color: white
@@ -240,9 +319,3 @@
 
         > div:first-child
           flex-grow: 1
-
-.visualizationPreviewBlockContainer
-  &.selectedVisualizationPreviewBlockContainer
-    .sidebarVisualizationContainer
-      background-color: #F1F1F1
-      box-shadow: none

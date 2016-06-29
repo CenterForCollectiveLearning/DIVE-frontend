@@ -1,92 +1,64 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
-import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions.js';
+import DocumentTitle from 'react-document-title';
+import { fetchProjectIfNeeded, fetchUserProjects } from '../actions/ProjectActions.js';
+
 import styles from './App/App.sass';
 
-import Tabs from './Base/Tabs';
-import Tab from './Base/Tab';
-
-var Logo = require('babel!svg-react!../../assets/DIVE_logo_white.svg?name=Logo');
+import ProjectNav from './ProjectNav';
 
 export class ProjectsPage extends Component {
-  constructor(props) {
-    super(props);
-
-    this._handleTabsChange = this._handleTabsChange.bind(this);
-    this._onClickLogo = this._onClickLogo.bind(this);
-  }
-
   componentDidMount() {
-    if (this.props.params.projectId) {
-      this.props.fetchProjectIfNeeded(this.props.params.projectId);
-    }
-  }
-
-  _getSelectedTab(){
-    const tabList = ["datasets", "transform", "visualize", "analyze", "compose"];
-    const _validTab = function (tabValue) {
-      return tabList.indexOf(tabValue.split('/')[0]) > -1;
+    const { params, user, projects, fetchProjectIfNeeded, fetchUserProjects } = this.props;
+    if (params.projectId) {
+      fetchProjectIfNeeded(params.projectId);
     }
 
-    if ((this.props.routes.length > 2) && _validTab(this.props.routes[2].path)) {
-      if ((this.props.routes.length > 3) && _validTab(this.props.routes[3].path)) {
-        return this.props.routes[3].path;
+    if (user.id && !projects.isFetchingUserProjects && !projects.userProjectsLoaded) {
+      fetchUserProjects(user.id);
+      if (user.email) {
+        amplitude.setUserId(user.email);
       }
-      return this.props.routes[2].path;
     }
-    return "datasets";
   }
 
-  _handleTabsChange(tab){
-    this.props.pushState(null, `/projects/${ this.props.params.projectId }/${ tab.props.route }`);
-  }
+  componentWillReceiveProps(nextProps) {
+    const { user, projects, fetchUserProjects } = nextProps;
 
-  _onClickLogo(){
-    this.props.pushState(null, `/`);
+    if (user.id && !projects.isFetchingUserProjects && !projects.userProjectsLoaded) {
+      fetchUserProjects(user.id);
+    }
   }
 
   render() {
-    const { params, datasetSelector } = this.props;
-
-    const datasetId = params.datasetId || datasetSelector.datasetId;
+    const { project } = this.props;
+    const documentTitle = project.properties.title ? `DIVE / ${ project.properties.title }`: 'DIVE';
 
     return (
-      <div className={ styles.fillContainer + ' ' + styles.projectContainer }>
-        <div className={ styles.header }>
-          <div className={ styles.logoContainer } onClick={ this._onClickLogo }>
-            <Logo className={ styles.logo } />
-            <div className={ styles.logoText }>
-              DIVE
-            </div>
-          </div>
-          <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
-            <Tab label="DATA" value="datasets" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '' }` } />
-            <Tab label="VISUALIZE" value="visualize" route={ `datasets/${ datasetId }/visualize/gallery` } disabled={ !datasetId }/>
-            <Tab label="ANALYZE" value="analyze" route={ `datasets/${ datasetId }/analyze/summary` } disabled={ !datasetId }/>
-            <Tab label="COMPOSE" value="compose" route={ `compose` }/>
-          </Tabs>
+      <DocumentTitle title={ documentTitle }>
+        <div className={ styles.fillContainer + ' ' + styles.projectContainer }>
+          <ProjectNav paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
+          { this.props.children }
         </div>
-        {this.props.children}
-      </div>
+      </DocumentTitle>
     );
   }
 }
 
 ProjectsPage.propTypes = {
-  pushState: PropTypes.func.isRequired,
   children: PropTypes.node,
+  projects: PropTypes.object,
   project: PropTypes.object,
   user: PropTypes.object
 };
 
 function mapStateToProps(state) {
-  const { project, user, datasetSelector } = state;
+  const { projects, project, user } = state;
   return {
-    project: project,
-    user: user,
-    datasetSelector: datasetSelector
+    projects,
+    project,
+    user
   };
 }
 
-export default connect(mapStateToProps, { pushState, fetchProjectIfNeeded })(ProjectsPage);
+export default connect(mapStateToProps, { fetchProjectIfNeeded, fetchUserProjects })(ProjectsPage);

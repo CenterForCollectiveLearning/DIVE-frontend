@@ -1,6 +1,8 @@
 import {
   WIPE_PROJECT_STATE,
-  SELECT_COMPOSE_VISUALIZATION,
+  SELECT_COMPOSE_CONTENT,
+  REMOVE_COMPOSE_CONTENT,
+  MOVE_COMPOSE_BLOCK,
   SELECT_DOCUMENT,
   SET_DOCUMENT_TITLE,
   RECEIVE_DOCUMENTS,
@@ -12,6 +14,8 @@ import {
 } from '../constants/ActionTypes';
 
 import { BLOCK_FORMATS } from '../constants/BlockFormats';
+import { CONTENT_TYPES } from '../constants/ContentTypes';
+import uuid from 'uuid';
 
 const baseState = {
   title: null,
@@ -22,36 +26,79 @@ const baseState = {
   updatedAt: Date.now(),
 }
 
-// blocks: [
-//   {
-//     heading:
-//     body:
-//     exportedSpecId:
-//     format:
-//     dimensions:
-//   } ,...
-// ]
+function formatBlocks(blocks) {
+  return blocks.slice().map((block) =>
+    new Object({
+      ...block,
+      uuid: block.uuid || uuid.v4(),
+      contentType: block.contentType || (block.exportedSpecId ? CONTENT_TYPES.VISUALIZATION : CONTENT_TYPES.TEXT)
+    })
+  );
+}
 
 export default function composeSelector(state = baseState, action) {
   switch (action.type) {
 
-    case SELECT_COMPOSE_VISUALIZATION:
+    case SELECT_COMPOSE_CONTENT:
       var blocks = state.blocks.slice();
-      const filteredBlocks = blocks.filter((block) => block.exportedSpecId != action.exportedSpecId);
 
-      if (filteredBlocks.length != blocks.length) {
-        blocks = filteredBlocks;
-      } else {
-        blocks.push({
-          heading: action.heading,
-          body: '',
-          exportedSpecId: action.exportedSpecId,
-          format: BLOCK_FORMATS.TEXT_LEFT,
-          dimensions: {}
-        })
+      let blockProperties = {
+        contentType: action.contentType,
+        heading: action.title || 'Paragraph Heading',
+        body: '',
+        uuid: uuid.v4(),
+        dimensions: {},
+        updatedAt: Date.now(),
+        exportedSpecId: null
+      };
+
+      switch(action.contentType) {
+        case CONTENT_TYPES.VISUALIZATION:
+          blockProperties.exportedSpecId = action.contentId;
+          blockProperties.format = BLOCK_FORMATS.TEXT_LEFT;
+          break;
+        case CONTENT_TYPES.REGRESSION:
+        case CONTENT_TYPES.CORRELATION:
+          blockProperties.exportedSpecId = action.contentId;
+          blockProperties.format = BLOCK_FORMATS.TEXT_BOTTOM;
+          break;
+        case CONTENT_TYPES.TEXT:
+          blockProperties.format = BLOCK_FORMATS.TEXT_BOTTOM
+          break;
       }
 
-      return { ...state, blocks: blocks };
+      blocks.push(blockProperties);
+
+      return { ...state, blocks: blocks, updatedAt: Date.now() };
+
+    case REMOVE_COMPOSE_CONTENT:
+      const filteredBlocks = state.blocks.slice()
+        .filter((block) => block.uuid != action.blockId);
+
+      return { ...state, blocks: filteredBlocks, updatedAt: Date.now() };
+
+    case MOVE_COMPOSE_BLOCK:
+      var sortedBlocks = state.blocks.slice();
+
+      const originalIndex = sortedBlocks.findIndex((block) => block.uuid == action.blockId);
+      const selectedBlock = sortedBlocks.find((block) => block.uuid == action.blockId);
+      sortedBlocks = sortedBlocks.filter((block) => block.uuid != action.blockId)
+
+      let beginningBlocks, endBlocks;
+      switch (action.direction) {
+        case 1:
+          beginningBlocks = sortedBlocks.slice(0, originalIndex + 1)
+          endBlocks = sortedBlocks.slice(originalIndex + 1)
+          break;
+        case -1:
+          beginningBlocks = sortedBlocks.slice(0, originalIndex - 1)
+          endBlocks = sortedBlocks.slice(originalIndex - 1)
+          break;
+      }
+
+      sortedBlocks = [...beginningBlocks, selectedBlock, ...endBlocks];
+
+      return { ...state, blocks: sortedBlocks, updatedAt: Date.now() };
 
     case RECEIVE_DOCUMENTS:
       const documentId = parseInt(state.documentId);
@@ -59,7 +106,7 @@ export default function composeSelector(state = baseState, action) {
 
       if (selectedDocument) {
         var selectedDocumentContent = selectedDocument.content;
-        var selectedDocumentBlocks = selectedDocumentContent.blocks ? selectedDocumentContent.blocks : [];
+        var selectedDocumentBlocks = selectedDocumentContent.blocks ? formatBlocks(selectedDocumentContent.blocks) : [];
         return {
           ...state,
           blocks: selectedDocumentBlocks,
@@ -92,8 +139,9 @@ export default function composeSelector(state = baseState, action) {
     case SAVE_BLOCK:
       const newBlocks = state.blocks.slice().map(function(block) {
         var newBlock = block;
-        if (block.exportedSpecId == action.exportedSpecId) {
-          newBlock[action.key] = action[action.key];
+        if (block.uuid == action.blockId) {
+          newBlock[action.key] = action[action.key]
+          newBlock.updatedAt = Date.now();
         }
         return newBlock;
       });
@@ -109,7 +157,7 @@ export default function composeSelector(state = baseState, action) {
       return {
         ...state,
         documentId: action.documentId,
-        blocks: action.document.content.blocks,
+        blocks: formatBlocks(action.document.content.blocks),
         title: action.document.title,
         loaded: true
       }

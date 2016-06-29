@@ -1,10 +1,14 @@
 import React from 'react';
 
 import { Route, IndexRoute } from 'react-router';
+import { push } from 'react-router-redux';
+import { UserAuthWrapper } from 'redux-auth-wrapper';
 
 import AboutPage from './components/Landing/AboutPage';
+import LoginPage from './components/Auth/LoginPage';
+import RegisterPage from './components/Auth/RegisterPage';
 import LandingPage from './components/Landing/LandingPage';
-import HomePage from './components/Landing/HomePage';
+import ProjectListPage from './components/Landing/ProjectListPage';
 import FeaturesPage from './components/Landing/FeaturesPage';
 import App from './components/App/App';
 import ProjectsPage from './components/ProjectsPage';
@@ -26,20 +30,36 @@ import ComposePage from './components/Compose/ComposePage';
 import NarrativeBasePage from './components/Compose/NarrativeBasePage';
 import NarrativePage from './components/Compose/NarrativePage';
 
+const requireAuthentication = UserAuthWrapper({
+  authSelector: state => state.user,
+  predicate: user => user.isAuthenticated,
+  redirectAction: function({ pathname, query }){
+    if (query.redirect) {
+      return push(`${ pathname }?next=${ query.redirect }`);
+    } else {
+      return push(pathname);
+    }
+  },
+  wrapperDisplayName: 'UserIsAuthenticated'
+})
+
 export default (
   <Route path="/" component={ App }>
+    <Route path="/login" component={ LoginPage } />
+    <Route path="/register" component={ RegisterPage } />
+
     <IndexRoute component={ LandingPage }/>
     <Route path="/landing" component={ LandingPage }>
-      <Route path="/home" component={ HomePage }/>
+      <Route path="/projects" component={ ProjectListPage }/>
       <Route path="/about" component={ AboutPage }/>
       <Route path="/features" component={ FeaturesPage }/>
     </Route>
 
-    <Route path="narrative" component={ NarrativeBasePage }>
+    <Route path="/stories" component={ NarrativeBasePage }>
       <Route path=":documentId" component={ NarrativePage }/>
     </Route>
 
-    <Route path="/projects/:projectId" component={ ProjectsPage }>
+    <Route path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }>
       <Route path="datasets" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>
         <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>
@@ -47,7 +67,7 @@ export default (
 
       <Route path="datasets/:datasetId" component={ DatasetsPage }>
         <Route path="visualize" component={ VisualizationsPage }>
-          <Route path="gallery" component={ GalleryPage }/>
+          <Route path="explore" component={ GalleryPage }/>
           <Route path="builder/:specId" component={ BuilderPage }/>
         </Route>
         <Route path="analyze" component={ AnalysisPage }>

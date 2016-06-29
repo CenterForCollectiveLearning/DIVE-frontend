@@ -2,14 +2,16 @@ import React, { PropTypes, Component } from 'react';
 import styles from './Compose.sass';
 import ReactQuill from 'react-quill';
 
+import { CONTENT_TYPES } from '../../constants/ContentTypes';
+
 export default class ComposeBlockText extends Component {
   constructor(props) {
     super(props);
 
-    const { text, editable } = this.props;
+    const { text, editable, contentType } = this.props;
 
     this.state = {
-      text: text || "Enter a description for this visualization here.",
+      text: text || `Enter a description for this ${ contentType.toLowerCase() } here.`,
       editable: editable
     }
 
@@ -17,9 +19,9 @@ export default class ComposeBlockText extends Component {
   }
 
   onChange(value) {
-    const { id, onSave } = this.props;
+    const { blockId, onSave } = this.props;
     this.setState({ text: value });
-    onSave(id, 'body', value);
+    onSave(blockId, 'body', value);
   }
 
   render() {
@@ -44,8 +46,9 @@ export default class ComposeBlockText extends Component {
 }
 
 ComposeBlockText.propTypes = {
+  contentType: PropTypes.string,
   text: PropTypes.string,
-  id: PropTypes.number.isRequired,
+  blockId: PropTypes.string.isRequired,
   onSave: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired
 };
