@@ -13,13 +13,10 @@ import {
   ERROR_ONE_D_COMPARISON,
   REQUEST_SUMMARY_STATISTICS,
   RECEIVE_SUMMARY_STATISTICS,
-<<<<<<< HEAD
   SELECT_SUMMARY_CONFIG_X,
-  SELECT_SUMMARY_CONFIG_Y
-=======
+  SELECT_SUMMARY_CONFIG_Y,
   PROGRESS_SUMMARY_STATISTICS,
   ERROR_SUMMARY_STATISTICS
->>>>>>> master
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
