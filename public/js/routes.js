@@ -70,6 +70,8 @@ export default (
           <Route path="explore" component={ GalleryPage }/>
           <Route path="builder/:specId" component={ BuilderPage }/>
         </Route>
+        <Route path="summary" component={ SummaryPage }/>
+        <Route path="comparison" component={ ComparisonPage }/>
         <Route path="analyze" component={ AnalysisPage }>
           <Route path="regression" component={ RegressionBasePage }>
             <Route path=":dependentVariable" component={ RegressionPage }/>

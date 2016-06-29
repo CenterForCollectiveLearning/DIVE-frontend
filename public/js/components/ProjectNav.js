@@ -37,8 +37,9 @@ export class ProjectNav extends Component {
       "builder",
       "starred",
       "summary",
-      "regression",
+      "comparison",
       "correlation",
+      "regression",
       "compose",
       "saved"
     ];
@@ -133,8 +134,9 @@ export class ProjectNav extends Component {
           </TabGroup>
           <TabGroup heading="3. ANALYSIS">
             <Tab label="Summary" value="summary" route={ `datasets/${ datasetId }/analyze/summary` } disabled={ !datasetId }/>
-            <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
+            <Tab label="Comparison" value="comparison" route={ `datasets/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>            
             <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
+            <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
           </TabGroup>
           <TabGroup heading="4. STORIES">
             <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>

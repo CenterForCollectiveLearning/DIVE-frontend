@@ -12,8 +12,7 @@ const baseState = {
   independentVariablesIds: [],
   dependentVariablesIds: [],
   numericalComparisonResult: {},
-  anovaResult: {},
-  inputsDict: {}
+  anovaResult: {}
 }
 
 export default function comparisonSelector(state = baseState, action) {
