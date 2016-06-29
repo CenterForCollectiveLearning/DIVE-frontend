@@ -67,7 +67,6 @@ export default class RegressionTable extends Component {
         </div>
       );
     }
-    console.log('regression type', regressionType)
     const data = [
       {
         rowClass: styles.tableHeaderRow,
@@ -138,6 +137,7 @@ export default class RegressionTable extends Component {
       ]
     }
 
+    // TODO: mop up spaghetti
     if(regressionType == 'logistic') {
       data.splice(7, 0, llrPvalue)
     }
