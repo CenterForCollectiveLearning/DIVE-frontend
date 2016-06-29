@@ -3,6 +3,8 @@ import {
   SELECT_SUMMARY_INDEPENDENT_VARIABLE,
   SELECT_SUMMARY_AGGREGATION_FUNCTION,
   SELECT_SUMMARY_AGGREGATION_WEIGHT_VARIABLE,
+  SELECT_SUMMARY_CONFIG_X,
+  SELECT_SUMMARY_CONFIG_Y,
   REQUEST_AGGREGATION,
   RECEIVE_AGGREGATION,
   PROGRESS_AGGREGATION,
@@ -19,6 +21,13 @@ import {
   SELECT_DATASET,
   RECEIVE_FIELD_PROPERTIES
 } from '../constants/ActionTypes';
+
+const baseConditional = {
+  conditionalIndex: null,
+  fieldId: null,
+  operator: null,
+  value: null
+};
 
 const baseState = {
   aggregationVariableId: 'count',
@@ -37,12 +46,16 @@ const baseState = {
   },
   aggregationFunction: 'SUM',
   weightVariableId: 'UNIFORM',
+  summaryResult: {},
+  binningConfigX: {},
+  binningConfigY: {},
   summaryResult: {
     loading: false,
     progress: null,
     error: null,
     data: null
   },
+  conditionals: [ baseConditional ],
   loadSummary: false
 }
 
@@ -119,6 +132,16 @@ export default function summarySelector(state = baseState, action) {
     case SELECT_SUMMARY_AGGREGATION_WEIGHT_VARIABLE:
       return { ...state, weightVariableId: action.aggregationWeightVariableId }
 
+    case SELECT_SUMMARY_CONFIG_X:
+      return { ...state, binningConfigX: action.config }
+
+    case SELECT_SUMMARY_CONFIG_Y:
+      return { ...state, binningConfigY: action.config }
+
+    case WIPE_PROJECT_STATE:
+      return baseState;
+
+    case SELECT_DATASET:
     case WIPE_PROJECT_STATE, SELECT_DATASET:
       return baseState;
 

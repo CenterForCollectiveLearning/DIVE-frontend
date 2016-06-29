@@ -45,3 +45,28 @@ export function formatTableData(columnNames, data) {
     formatRow(columnNames, row)
   );
 }
+
+export function getFilteredConditionals(conditionals) {
+  const validConditionals = conditionals.filter((conditional) =>
+    conditional.conditionalIndex != null && conditional.value != "ALL_VALUES" && conditional.value != ""
+  );
+
+  conditionals = null;
+
+  if (validConditionals.length) {
+    conditionals = {};
+
+    validConditionals.forEach((conditional) => {
+      if (!conditionals[conditional.combinator]) {
+        conditionals[conditional.combinator] = [];
+      }
+
+      conditionals[conditional.combinator].push({
+        'field_id': conditional.fieldId,
+        'operation': conditional.operator,
+        'criteria': conditional.value
+      })
+    });
+  }
+  return conditionals
+}

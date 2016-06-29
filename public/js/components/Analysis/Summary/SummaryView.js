@@ -31,14 +31,15 @@ export class SummaryView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, datasets, loadSummary, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runComparisonOneDimensional, allComparisonVariableIds, getVariableSummaryStatistics, fetchDatasets } = this.props;
+    const { projectId, datasetId, datasets, binningConfigX, binningConfigY, loadSummary, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runComparisonOneDimensional, allComparisonVariableIds, getVariableSummaryStatistics, fetchDatasets } = this.props;
     const aggregationIndependentVariablesChanged = nextProps.aggregationIndependentVariableNamesAndTypes.length != aggregationIndependentVariableNamesAndTypes.length;
     const aggregationVariableChanged = nextProps.aggregationVariableName != aggregationVariableName;
     const aggregationFunctionChanged = nextProps.aggregationFunction != aggregationFunction;
     const weightVariableChanged = nextProps.weightVariableName != weightVariableName;
     const shouldLoadSummary = nextProps.loadSummary != loadSummary;
+    const binningConfigsChanged = nextProps.binningConfigX != binningConfigX || nextProps.binningConfigY != binningConfigY
 
-    const sideBarChanged = aggregationIndependentVariablesChanged || aggregationVariableChanged || aggregationFunctionChanged || weightVariableChanged;
+    const sideBarChanged = binningConfigsChanged || aggregationIndependentVariablesChanged || aggregationVariableChanged || aggregationFunctionChanged || weightVariableChanged;
     const noIndependentVariablesSelected = nextProps.aggregationIndependentVariableNamesAndTypes.length == 0;
     const oneIndependentVariableSelected = nextProps.aggregationIndependentVariableNamesAndTypes.length == 1;
     const twoIndependentVariablesSelected = nextProps.aggregationIndependentVariableNamesAndTypes.length == 2;
@@ -69,7 +70,7 @@ export class SummaryView extends Component {
     if (projectChanged || (projectId && (!datasetId || (!datasets.isFetching && !datasets.loaded)))) {
       fetchDatasets(projectId);
     }
-  }  
+  }
 
   clickDataset(datasetId) {
     const { projectId, clearAnalysis, selectDataset, push } = this.props;
@@ -186,7 +187,7 @@ export class SummaryView extends Component {
 
 function mapStateToProps(state) {
   const { project, datasets, summarySelector, datasetSelector, fieldProperties } = state;
-  const { aggregationResult, oneDimensionComparisonResult } = summarySelector;
+  const { aggregationResult, oneDimensionComparisonResult, binningConfigX, binningConfigY } = summarySelector;
 
   const allComparisonVariableIds = fieldProperties.items.map((field) => field.id);
 
@@ -199,14 +200,24 @@ function mapStateToProps(state) {
   const aggregationIndependentVariableNames = aggregationIndependentVariables
     .map((field) => field.name);
 
-  const aggregationIndependentVariableNamesAndTypes = aggregationIndependentVariables
+  var aggregationIndependentVariableNamesAndTypes  = aggregationIndependentVariables
     .map(function(field){
       if (field.generalType == 'q'){
-        return [field.generalType, field.name, 5];
+        return [field.generalType, field.name, binningConfigX];
       } else {
         return [field.generalType, field.name];
       }
     });
+
+  if (aggregationIndependentVariables.length == 2){
+    var var1= aggregationIndependentVariables[0]
+    var var2 = aggregationIndependentVariables[1]
+    if (var1.generalType == 'q' && var2.generalType == 'q'){
+      aggregationIndependentVariableNamesAndTypes[0] = [var1.generalType, var1.name, binningConfigX]
+      aggregationIndependentVariableNamesAndTypes[1] = [var2.generalType, var2.name, binningConfigY]
+    }
+  }
+
 
 
   const weightVariable = fieldProperties.items.find((property) => property.id == summarySelector.weightVariableId);
@@ -226,7 +237,9 @@ function mapStateToProps(state) {
     oneDimensionComparisonResult: oneDimensionComparisonResult,
     summaryResult: summarySelector.summaryResult,
     allComparisonVariableIds: allComparisonVariableIds,
-    loadSummary: summarySelector.loadSummary
+    loadSummary: summarySelector.loadSummary,
+    binningConfigX: binningConfigX,
+    binningConfigY: binningConfigY
   };
 }
 

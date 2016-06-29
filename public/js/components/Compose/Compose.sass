@@ -142,6 +142,7 @@
 
       .contentPreviewBlocksContainer
         display: flex
+
         flex-direction: row
         flex-wrap: wrap
         width: 100%
@@ -154,16 +155,34 @@
           > div
             box-shadow: none
 
-          .textBlock
+          .textBlock, .regressionBlock, .correlationBlock
             +block
-            padding-top: 30px
-            padding-bottom: 30px
-
             box-shadow: none
 
             font-size: 13px
             font-weight: 500
             color: #444444
+
+          .textBlock
+            padding-top: 30px
+            padding-bottom: 30px
+
+          .regressionBlock, .correlationBlock
+            padding: 11px
+
+            .header, .correlationHeader
+              padding-bottom: 8px
+              font-weight: 400
+
+            .correlationHeader
+              .field
+                font-weight: 500
+                color: #444444
+                text-transform: lowercase
+
+                + .field:before
+                  font-weight: 400
+                  content: ', '
 
     .flexrow
       max-width: 100%

@@ -5,20 +5,35 @@ import DocumentTitle from 'react-document-title';
 import styles from './Compose.sass';
 
 import { fetchDatasets } from '../../actions/DatasetActions';
-import { fetchDocuments, fetchExportedVisualizationSpecs } from '../../actions/ComposeActions';
+import {
+  fetchDocuments,
+  fetchExportedVisualizationSpecs,
+  fetchExportedRegressions,
+  fetchExportedCorrelations
+} from '../../actions/ComposeActions';
 import ComposePage from './ComposePage';
 import ComposeView from './ComposeView';
 
 export class ComposeBasePage extends Component {
   componentWillMount() {
-    const { params, project, datasetSelector, datasets, documents, exportedSpecs, replace, fetchDatasets, fetchDocuments, fetchExportedVisualizationSpecs } = this.props;
+    const { params, project, datasetSelector, datasets, documents, exportedSpecs, exportedRegressions, exportedCorrelations, replace, fetchDatasets, fetchDocuments, fetchExportedVisualizationSpecs } = this.props;
 
-    if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
-      fetchDatasets(project.properties.id);
-    }
+    if (project.properties.id) {
+      if (!datasetSelector.loaded && !datasets.isFetching) {
+        fetchDatasets(project.properties.id);
+      }
 
-    if (project.properties.id && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {
-      fetchExportedVisualizationSpecs(project.properties.id);
+      if (exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {
+        fetchExportedVisualizationSpecs(project.properties.id);
+      }
+
+      if (exportedRegressions.items.length == 0 && !exportedRegressions.loaded && !exportedRegressions.isFetching) {
+        fetchExportedRegressions(project.properties.id);
+      }
+
+      if (exportedCorrelations.items.length == 0 && !exportedCorrelations.loaded && !exportedCorrelations.isFetching) {
+        fetchExportedCorrelations(project.properties.id);
+      }
     }
 
     if (!params.documentId) {
@@ -31,18 +46,28 @@ export class ComposeBasePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, composeSelector, project, datasetSelector, datasets, documents, exportedSpecs, replace, push, fetchDatasets, fetchDocuments, fetchExportedVisualizationSpecs } = nextProps;
+    const { params, composeSelector, project, datasetSelector, datasets, documents, exportedSpecs, exportedRegressions, exportedCorrelations, replace, push, fetchDatasets, fetchDocuments, fetchExportedVisualizationSpecs, fetchExportedRegressions, fetchExportedCorrelations } = nextProps;
 
-    if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
-      fetchDatasets(project.properties.id);
-    }
+    if (project.properties.id) {
+      if (!datasetSelector.loaded && !datasets.isFetching) {
+        fetchDatasets(project.properties.id);
+      }
 
-    if (project.properties.id && exportedSpecs.items.length == 0 && !exportedSpecs.loaded && !exportedSpecs.isFetching) {
-      fetchExportedVisualizationSpecs(project.properties.id);
-    }
+      if (exportedSpecs.items.length == 0 && !exportedSpecs.loaded && !exportedSpecs.isFetching) {
+        fetchExportedVisualizationSpecs(project.properties.id);
+      }
 
-    if (!params.documentId && documents.items.length > 0) {
-      replace(`/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
+      if (exportedRegressions.items.length == 0 && !exportedRegressions.loaded && !exportedRegressions.isFetching) {
+        fetchExportedRegressions(project.properties.id);
+      }
+
+      if (exportedCorrelations.items.length == 0 && !exportedCorrelations.loaded && !exportedCorrelations.isFetching) {
+        fetchExportedCorrelations(project.properties.id);
+      }
+
+      if (!params.documentId && documents.items.length > 0) {
+        replace(`/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
+      }
     }
 
     if (composeSelector.documentId != this.props.composeSelector.documentId && composeSelector.documentId != params.documentId) {
@@ -66,14 +91,33 @@ export class ComposeBasePage extends Component {
 }
 
 function mapStateToProps(state) {
-  const { documents, composeSelector, exportedSpecs, project, datasetSelector, datasets } = state;
+  const { documents, composeSelector, exportedSpecs, exportedRegressions, exportedCorrelations, project, datasetSelector, datasets } = state;
   const selectedDocument = {
     blocks: composeSelector.blocks,
     title: composeSelector.title,
     id: composeSelector.documentId
   };
 
-  return { documents, composeSelector, exportedSpecs, project, datasetSelector, datasets, selectedDocument: selectedDocument, projectTitle: project.properties.title };
+  return {
+    documents,
+    composeSelector,
+    exportedSpecs,
+    exportedRegressions,
+    exportedCorrelations,
+    project,
+    datasetSelector,
+    datasets,
+    selectedDocument: selectedDocument,
+    projectTitle: project.properties.title
+  };
 }
 
-export default connect(mapStateToProps, { fetchDocuments, fetchExportedVisualizationSpecs, fetchDatasets, push, replace })(ComposeBasePage);
+export default connect(mapStateToProps, {
+  fetchDocuments,
+  fetchExportedVisualizationSpecs,
+  fetchExportedCorrelations,
+  fetchExportedRegressions,
+  fetchDatasets,
+  push,
+  replace
+})(ComposeBasePage);

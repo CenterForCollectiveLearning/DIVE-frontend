@@ -20,10 +20,10 @@ export default class BareDataGrid extends Component {
   }
 
   render() {
-    const { data, id, tableClassName, containerClassName } = this.props;
+    const { data, id, tableClassName, containerClassName, preview } = this.props;
 
-    const columnWidth = 200;
-    const minimumColumnWidth = 105;
+    const columnWidth = preview ? 0 : 200;
+    const minimumColumnWidth = preview ? 0 : 105;
 
     const nColumns = data.length ? data[0].items.length : 0;
     const Column = React.createClass({
@@ -82,6 +82,11 @@ export default class BareDataGrid extends Component {
   }
 }
 
+BareDataGrid.defaultProps = {
+  preview: false
+}
+
 BareDataGrid.propTypes = {
-  data: PropTypes.array.isRequired
+  data: PropTypes.array.isRequired,
+  preview: PropTypes.bool
 };

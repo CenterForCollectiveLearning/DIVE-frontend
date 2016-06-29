@@ -46,7 +46,7 @@ export class ComposeView extends Component {
     const { projectId, documents, selectedDocument, fetchDocuments } = nextProps;
 
     if (projectId && !documents.loaded && !documents.isFetching){
-      fetchDocuments(projectId);      
+      fetchDocuments(projectId);
     }
 
     if (selectedDocument && (!this.props.selectedDocument || (selectedDocument.title != this.props.selectedDocument.title))) {
@@ -78,7 +78,7 @@ export class ComposeView extends Component {
   }
 
   render() {
-    const { documents, composeSelector, selectedDocument, exportedSpecs, saveDocumentTitle, selectComposeContent } = this.props;
+    const { documents, composeSelector, selectedDocument, exportedSpecs, exportedRegressions, exportedCorrelations, saveDocumentTitle, selectComposeContent } = this.props;
     const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
 
     return (
@@ -120,6 +120,8 @@ export class ComposeView extends Component {
         <ComposeEditor
           selectComposeContent={ selectComposeContent }
           exportedSpecs={ exportedSpecs }
+          exportedRegressions={ exportedRegressions }
+          exportedCorrelations={ exportedCorrelations }
           saveDocumentTitle={ saveDocumentTitle }
           selectedDocument={ selectedDocument }
           editable={ true }/>
@@ -135,11 +137,13 @@ ComposeView.propTypes = {
 }
 
 function mapStateToProps(state) {
-  const { project, composeSelector, exportedSpecs, documents } = state;
+  const { project, composeSelector, exportedSpecs, exportedRegressions, exportedCorrelations, documents } = state;
   return {
     projectId: (project.properties.id ? `${ project.properties.id }` : null),
     composeSelector,
     exportedSpecs,
+    exportedRegressions,
+    exportedCorrelations,
     documents
   };
 }

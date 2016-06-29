@@ -33,7 +33,7 @@ export default class RegressionTable extends Component {
   }
 
   render() {
-    const { regressionResult, regressionType } = this.props;
+    const { regressionResult, regressionType, preview } = this.props;
     const context = this;
 
     const allRegressedFields = regressionResult.fields.map(function (field){
@@ -72,16 +72,21 @@ export default class RegressionTable extends Component {
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
-        items: [ 'Variables', ..._.range(regressionResult.numColumns).map((i) => <div className={ styles.tableCell }>({ i + 1 })</div>)]
+        items: preview ? _.range(regressionResult.numColumns + 1).map((i) => <div></div>) : [ 'Variables', ..._.range(regressionResult.numColumns).map((i) => <div className={ styles.tableCell }>({ i + 1 })</div>)]
       },
       ...allRegressedFields.map(function (field) {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
-          items: [ field.formattedName, ...regressionResult.regressionsByColumn.map(function (column) {
+          items: [ ( preview ? '' : field.formattedName ), ...regressionResult.regressionsByColumn.map(function (column) {
             const property = column.regression.propertiesByField.find((property) => property.baseField == field.name);
             if (!property) return '';
-            return (renderDataColumn(property, field.enabled));
+
+            if (preview) {
+              return 'X'
+            } else {
+              return (renderDataColumn(property, field.enabled));
+            }
           }) ]
         })
       }),
@@ -95,9 +100,9 @@ export default class RegressionTable extends Component {
           )
         ]
       }
-    ];
+    ]
 
-    const gofMeasures = {
+    const regressionMeasures = {
       linear: [
         { name: 'DOF', prop: 'dof' },
         { name: 'F', prop: 'fTest' },
@@ -111,7 +116,7 @@ export default class RegressionTable extends Component {
       ]
     }
 
-    const gofData = gofMeasures[regressionType].map((val, key) => {
+    const additionalData = regressionMeasures[regressionType].map((val, key) => {
       return {
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
@@ -124,16 +129,21 @@ export default class RegressionTable extends Component {
       }
     })
 
-    const data = baseData.concat(gofData);
+    const data = preview ? baseData : baseData.concat(additionalData);
 
     return (
       <div className={ styles.regressionTable }>
-        <BareDataGrid data={ data }/>
+        <BareDataGrid data={ data } preview={ preview }/>
       </div>
     );
   }
 }
 
+RegressionTable.defaultProps = {
+  preview: false
+}
+
 RegressionTable.propTypes = {
-  regressionResult: PropTypes.object.isRequired
+  regressionResult: PropTypes.object.isRequired,
+  preview: PropTypes.bool
 }
