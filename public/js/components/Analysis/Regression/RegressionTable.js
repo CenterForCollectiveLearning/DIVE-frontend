@@ -95,36 +95,6 @@ export default class RegressionTable extends Component {
           )
         ]
       }
-      // {
-      //   rowClass: styles.footerRow,
-      //   columnClass: styles.footerColumn,
-      //   items: [
-      //     <em className="cmu">{ regressionType == 'logistic' ? 'Log-likelihood' : 'DOF' }</em>,
-      //     ...regressionResult.regressionsByColumn.map((column) =>
-      //       <div className={ styles.footerCell }>{ regressionType == 'logistic' ? getRoundedString(column.columnProperties.llf) : getRoundedString(column.columnProperties.dof) }</div>
-      //     )
-      //   ]
-      // },
-      // {
-      //   rowClass: styles.footerRow,
-      //   columnClass: styles.footerColumn,
-      //   items: [
-      //     <em className="cmu">{ regressionType == 'logistic' ? 'LL-null' : 'F' }</em>,
-      //     ...regressionResult.regressionsByColumn.map((column) =>
-      //       <div className={ styles.footerCell }>{ regressionType == 'logistic' ? getRoundedString(column.columnProperties.llnull) : getRoundedString(column.columnProperties.fTest) }</div>
-      //     )
-      //   ]
-      // },
-      // {
-      //   rowClass: styles.footerRow,
-      //   columnClass: styles.footerColumn,
-      //   items: [
-      //     <div className="cmu">BIC</div>,
-      //     ...regressionResult.regressionsByColumn.map((column) =>
-      //       <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.bic) }</div>
-      //     )
-      //   ]
-      // }
     ];
 
     const gofMeasures = {
