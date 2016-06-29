@@ -70,19 +70,30 @@ export class ComparisonView extends Component {
     const numericalComparisonResultNotEmpty = numericalComparisonResult && numericalComparisonResult.tests && numericalComparisonResult.tests.length > 0
     const canShowNumericalComparison = (canRunNumericalComparisonDependent || canRunNumericalComparisonIndependent) && numericalComparisonResultNotEmpty;
 
-    let header;
+    let cardHeader;
     if (canShowNumericalComparison) {
-      header = 'Numerical Comparison Statistics'
+      cardHeader = 'Numerical Comparison Statistics'
     } else if (anovaCanBeDisplayed) {
-      header = 'ANOVA Table'
+      cardHeader = 'ANOVA Table'
+    }
+
+    var comparisonContent = <div></div>;
+
+    if (canShowNumericalComparison) {
+      comparisonContent = <StatsTable numericalData={ numericalComparisonResult.tests } />
+    } else if (anovaCanBeDisplayed) {
+      comparisonContent = <AnovaTable anovaData={ anovaResult } />
     } else {
-      header = 'Comparison'
+      comparisonContent =
+      <div className={ styles.watermark }>
+        Please Select Two or More Variables
+      </div>
     }
 
     return (
       <div className={ styles.regressionViewContainer }>
         <HeaderBar
-          header={ header }
+          header={ 'Comparison' }
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
@@ -101,12 +112,11 @@ export class ComparisonView extends Component {
             </div>
           </div>
         }/>
-        { canShowNumericalComparison &&
-          <StatsTable numericalData={ numericalComparisonResult.tests } />
-        }
-        { (!canShowNumericalComparison && anovaCanBeDisplayed) &&
-          <AnovaTable anovaData={ anovaResult } />
-        }
+        <div className={ styles.aggregationViewContainer }>
+          <Card header={ <span>{ cardHeader }</span> }>
+            { comparisonContent }
+          </Card>
+        </div>
       </div>
     );
   }
