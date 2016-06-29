@@ -67,7 +67,8 @@ export default class RegressionTable extends Component {
         </div>
       );
     }
-    const data = [
+
+    const baseData = [
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
@@ -93,55 +94,67 @@ export default class RegressionTable extends Component {
             <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.rSquaredAdj) }</div>
           )
         ]
-      },
-      {
-        rowClass: styles.footerRow,
-        columnClass: styles.footerColumn,
-        items: [
-          <em className="cmu">{ regressionType == 'logistic' ? 'Log-likelihood' : 'DOF' }</em>,
-          ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ regressionType == 'logistic' ? getRoundedString(column.columnProperties.llf) : getRoundedString(column.columnProperties.dof) }</div>
-          )
-        ]
-      },
-      {
-        rowClass: styles.footerRow,
-        columnClass: styles.footerColumn,
-        items: [
-          <em className="cmu">{ regressionType == 'logistic' ? 'LL-null' : 'F' }</em>,
-          ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ regressionType == 'logistic' ? getRoundedString(column.columnProperties.llnull) : getRoundedString(column.columnProperties.fTest) }</div>
-          )
-        ]
-      },
-      {
-        rowClass: styles.footerRow,
-        columnClass: styles.footerColumn,
-        items: [
-          <div className="cmu">BIC</div>,
-          ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.bic) }</div>
-          )
-        ]
       }
+      // {
+      //   rowClass: styles.footerRow,
+      //   columnClass: styles.footerColumn,
+      //   items: [
+      //     <em className="cmu">{ regressionType == 'logistic' ? 'Log-likelihood' : 'DOF' }</em>,
+      //     ...regressionResult.regressionsByColumn.map((column) =>
+      //       <div className={ styles.footerCell }>{ regressionType == 'logistic' ? getRoundedString(column.columnProperties.llf) : getRoundedString(column.columnProperties.dof) }</div>
+      //     )
+      //   ]
+      // },
+      // {
+      //   rowClass: styles.footerRow,
+      //   columnClass: styles.footerColumn,
+      //   items: [
+      //     <em className="cmu">{ regressionType == 'logistic' ? 'LL-null' : 'F' }</em>,
+      //     ...regressionResult.regressionsByColumn.map((column) =>
+      //       <div className={ styles.footerCell }>{ regressionType == 'logistic' ? getRoundedString(column.columnProperties.llnull) : getRoundedString(column.columnProperties.fTest) }</div>
+      //     )
+      //   ]
+      // },
+      // {
+      //   rowClass: styles.footerRow,
+      //   columnClass: styles.footerColumn,
+      //   items: [
+      //     <div className="cmu">BIC</div>,
+      //     ...regressionResult.regressionsByColumn.map((column) =>
+      //       <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.bic) }</div>
+      //     )
+      //   ]
+      // }
     ];
 
-    const llrPvalue = {
-      rowClass: styles.footerRow,
-      columnClass: styles.footerColumn,
-      items: [
-        <div className="cmu">LLR p-value</div>,
-        ...regressionResult.regressionsByColumn.map((column) =>
-          <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.llrPvalue) }</div>
-        )
+    const gofMeasures = {
+      linear: [
+        { name: 'DOF', prop: 'dof' },
+        { name: 'F', prop: 'fTest' },
+        { name: 'BIC', prop: 'bic' } 
+      ],
+      logistic: [
+        { name: 'Log-likelihood', prop: 'llf' },
+        { name: 'LL-null', prop: 'llnull' },
+        { name: 'LLR p-value', prop: 'llrPvalue' },
+        { name: 'BIC', prop: 'bic' }
       ]
     }
 
-    // TODO: mop up spaghetti
-    if(regressionType == 'logistic') {
-      data.splice(7, 0, llrPvalue)
-    }
+    const gofData = gofMeasures[regressionType].map((val, key) => {
+      return {
+        rowClass: styles.footerRow,
+        columnClass: styles.footerColumn,
+        items: [
+          <div className="cmu">{ val.name }</div>,
+          ...regressionResult.regressionsByColumn.map((column) =>
+            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties[val.prop]) }</div>
+          )
+        ]
+      }
+    })
 
+    const data = baseData.concat(gofData);
 
     return (
       <div className={ styles.regressionTable }>
