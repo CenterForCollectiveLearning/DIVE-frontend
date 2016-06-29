@@ -5,7 +5,7 @@ import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesAc
 import { selectIndependentVariable, selectDependentVariable } from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
 
-import AnalysisSidebar from '../AnalysisSidebar';
+import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -30,7 +30,7 @@ export class ComparisonSidebar extends Component {
 
   render() {
     return (
-      <AnalysisSidebar selectedTab="comparison">
+      <Sidebar selectedTab="comparison">
         { this.props.fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Independent Variables">
             <ToggleButtonGroup
@@ -45,6 +45,7 @@ export class ComparisonSidebar extends Component {
               valueMember="id"
               displayTextMember="name"
               externalSelectedItems={ this.props.comparisonSelector.independentVariablesIds }
+              separated={ true }
               onChange={ this.props.selectIndependentVariable } />
           </SidebarGroup>
         }
@@ -61,10 +62,11 @@ export class ComparisonSidebar extends Component {
               valueMember="id"
               displayTextMember="name"
               externalSelectedItems={ this.props.comparisonSelector.dependentVariablesIds }
+              separated={ true }
               onChange={ this.props.selectDependentVariable } />
           </SidebarGroup>
         }
-      </AnalysisSidebar>
+      </Sidebar>
     );
   }
 }

@@ -65,8 +65,7 @@ export function runNumericalComparison(projectId, datasetId, independentVariable
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveNumericalComparisonDispatcher(json)))
+    }).then(json => dispatch(receiveNumericalComparisonDispatcher(json)))
       .catch(err => console.error("Error performing numerical comparison: ", err));
   };
 }
@@ -101,8 +100,7 @@ export function runAnova(projectId, datasetId, independentVariableNames, depende
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveAnovaDispatcher(json)))
+    }).then(json => dispatch(receiveAnovaDispatcher(json)))
       .catch(err => console.error("Error performing anova: ", err));
   };
 }

@@ -10,8 +10,8 @@ export class ComparisonPage extends Component {
   render() {
     return (
       <div className={ `${ styles.fillContainer } ${ styles.summaryContainer }` }>
-        <ComparisonSidebar />
         <ComparisonView />
+        <ComparisonSidebar />
       </div>
     );
   }
