@@ -60,14 +60,12 @@ export class RegressionView extends Component {
   }
 
   render() {
-    const { datasets, datasetId, regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames } = this.props;
-
+    const { datasets, datasetId, regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames, regressionType } = this.props;
     if ( !regressionResult.loading && (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0)) {
       return (
         <div className={ styles.regressionViewContainer }></div>
       );
     }
-
     return (
       <div className={ styles.regressionViewContainer }>
         <HeaderBar
@@ -95,6 +93,7 @@ export class RegressionView extends Component {
         }
         { (!regressionResult.loading && regressionResult.data) &&
           <RegressionTableCard
+            regressionType={ regressionType }
             dependentVariableName={ dependentVariableName }
             independentVariableNames={ independentVariableNames }
             regressionResult={ regressionResult.data || {} }
@@ -112,7 +111,6 @@ export class RegressionView extends Component {
 function mapStateToProps(state) {
   const { project, datasets, regressionSelector, datasetSelector, fieldProperties } = state;
   const { progress, error, regressionResult, contributionToRSquared, regressionType } = regressionSelector;
-
   const dependentVariable = fieldProperties.items.find((property) => property.id == regressionSelector.dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;
 

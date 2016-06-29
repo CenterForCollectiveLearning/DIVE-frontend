@@ -8,14 +8,13 @@ import RegressionSummary from './RegressionSummary';
 
 export default class RegressionTableCard extends Component {
   render() {
-    const { dependentVariableName, independentVariableNames, regressionResult, contributionToRSquared } = this.props;
-
+    const { regressionType, dependentVariableName, independentVariableNames, regressionResult, contributionToRSquared } = this.props;
     return (
       <Card
         header={
           <span>Explaining <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span>
         }>
-        <RegressionTable regressionResult={ regressionResult }/>
+        <RegressionTable regressionType={ regressionType } regressionResult={ regressionResult }/>
         <RegressionSummary
           dependentVariableName={ dependentVariableName }
           independentVariableNames={ independentVariableNames }

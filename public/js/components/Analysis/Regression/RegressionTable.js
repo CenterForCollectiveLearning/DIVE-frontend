@@ -33,7 +33,7 @@ export default class RegressionTable extends Component {
   }
 
   render() {
-    const { regressionResult } = this.props;
+    const { regressionResult, regressionType } = this.props;
     const context = this;
 
     const allRegressedFields = regressionResult.fields.map(function (field){
@@ -67,7 +67,7 @@ export default class RegressionTable extends Component {
         </div>
       );
     }
-
+    console.log('regression type', regressionType)
     const data = [
       {
         rowClass: styles.tableHeaderRow,
@@ -89,7 +89,7 @@ export default class RegressionTable extends Component {
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
         items: [
-          <div className={ styles.rSquaredAdjust }><div className={ styles.r }>R</div><sup className="cmu">2</sup></div>,
+          <div className={ styles.rSquaredAdjust }>{ regressionType == 'logistic' ? <div className="cmu">Pseudo</div> : null }<div className={ styles.r }>R</div><sup className="cmu">2</sup></div>,
           ...regressionResult.regressionsByColumn.map((column) =>
             <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.rSquaredAdj) }</div>
           )
@@ -99,9 +99,9 @@ export default class RegressionTable extends Component {
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
         items: [
-          <em className="cmu">DOF</em>,
+          <em className="cmu">{ regressionType == 'logistic' ? 'Log-likelihood' : 'DOF' }</em>,
           ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.dof) }</div>
+            <div className={ styles.footerCell }>{ regressionType == 'logistic' ? getRoundedString(column.columnProperties.llf) : getRoundedString(column.columnProperties.dof) }</div>
           )
         ]
       },
@@ -109,9 +109,9 @@ export default class RegressionTable extends Component {
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
         items: [
-          <em className="cmu">F</em>,
+          <em className="cmu">{ regressionType == 'logistic' ? 'LL-null' : 'F' }</em>,
           ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.fTest) }</div>
+            <div className={ styles.footerCell }>{ regressionType == 'logistic' ? getRoundedString(column.columnProperties.llnull) : getRoundedString(column.columnProperties.fTest) }</div>
           )
         ]
       },
@@ -126,6 +126,22 @@ export default class RegressionTable extends Component {
         ]
       }
     ];
+
+    const llrPvalue = {
+      rowClass: styles.footerRow,
+      columnClass: styles.footerColumn,
+      items: [
+        <div className="cmu">LLR p-value</div>,
+        ...regressionResult.regressionsByColumn.map((column) =>
+          <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.llrPvalue) }</div>
+        )
+      ]
+    }
+
+    if(regressionType == 'logistic') {
+      data.splice(7, 0, llrPvalue)
+    }
+
 
     return (
       <div className={ styles.regressionTable }>

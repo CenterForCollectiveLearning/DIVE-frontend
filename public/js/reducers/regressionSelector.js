@@ -25,7 +25,7 @@ const regressionModes = [ {
 
 const baseState = {
   fieldProperties: [],
-  regressionType: 'linear',
+  regressionType: null,
   dependentVariableId: null,
   independentVariableIds: [],
   regressionResult: {
