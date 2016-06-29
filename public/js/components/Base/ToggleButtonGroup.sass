@@ -7,6 +7,18 @@
   margin-left: 1px
   margin-top: 1px
 
+  &.column
+    flex-direction: column
+
+    .toggleButtonContainer
+      &:first-child .raisedButton.toggleButton
+        border-top-right-radius: 2px
+        border-bottom-left-radius: 0
+
+      &:last-child .raisedButton.toggleButton
+        border-top-right-radius: 0px
+        border-bottom-left-radius: 2px
+
   + .toggleButtonGroup
     margin-top: 10px
 
@@ -15,11 +27,11 @@
     flex-grow: 1
     max-width: 50%
 
-    &:first-child .raisedButton.toggleButton
+    &:first-child, &:first-child .raisedButton.toggleButton
       border-top-left-radius: 2px
       border-bottom-left-radius: 2px
 
-    &:last-child .raisedButton.toggleButton
+    &:last-child, &:last-child .raisedButton.toggleButton
       border-top-right-radius: 2px
       border-bottom-right-radius: 2px
 
@@ -38,21 +50,22 @@
 
   .raisedButton.toggleButton
     padding: 0
+    border-color: #BBB
     border-radius: 0
     margin-left: -1px
     margin-top: -1px
     flex-grow: 1
+    background-color: rgba(255, 255, 255, 0.4)
+
+    &[data-selected]
+      background-color: rgba(86, 42, 110, 0.07)
 
     img
       padding: 3px
 
   .splitButton.textToggleButton
     display: flex
-
-    &.selected .splitButtonSelect
-      opacity: 1
-      cursor: pointer
-      pointer-events: auto
+    background-color: rgba(255, 255, 255, 0.4)
 
     &:first-child
       .raisedButton.toggleButton
@@ -68,22 +81,37 @@
       .splitButtonSelect > div > div > div
         border-bottom-right-radius: 2px
 
+    &[data-selected]
+      background-color: rgba(86, 42, 110, 0.07)
+      box-shadow: none
+
     .raisedButton.toggleButton
       flex-grow: 1
       border-radius: 0
+      background-color: transparent
+
+    .dropDownMenu
+      &.defaultDropdown
+        > div > div:first-of-type > div > span:first-child
+          color: #888
+
+      > div > div:first-of-type
+        box-shadow: none
+        background-color: transparent
+        border-color: #BBB
 
     .splitButtonSelect
       width: 110px
       margin-top: -1px
       margin-left: -1px
-      opacity: 0.5
-      cursor: default
-      pointer-events: none
       flex-shrink: 0
+      opacity: 1
+      cursor: pointer
+      pointer-events: auto
 
       > div > div > div
         border-radius: 0
 
-        > div
+        > div > span:first-child
           font-weight: 400
           font-size: 11px

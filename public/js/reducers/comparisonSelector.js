@@ -3,6 +3,7 @@ import {
   SELECT_COMPARISON_DEPENDENT_VARIABLE,
   WIPE_PROJECT_STATE,
   RECEIVE_NUMERICAL_COMPARISON,
+  UPDATE_COMPARISON_INPUT,
   RECEIVE_ANOVA,
   SELECT_DATASET
 } from '../constants/ActionTypes';
@@ -14,7 +15,7 @@ const baseState = {
   anovaResult: {}
 }
 
-export default function summarySelector(state = baseState, action) {
+export default function comparisonSelector(state = baseState, action) {
   switch (action.type) {
     case SELECT_COMPARISON_INDEPENDENT_VARIABLE:
       var independentVariablesIds = state.independentVariablesIds.slice();
@@ -41,6 +42,12 @@ export default function summarySelector(state = baseState, action) {
 
     case RECEIVE_ANOVA:
       return { ...state, anovaResult: action.data };
+
+    case UPDATE_COMPARISON_INPUT:
+      var inputDict = state.inputsDict;
+      inputDict[action.test] = action.userInput;
+      return { ...state, inputsDict: inputDict }
+
     case WIPE_PROJECT_STATE:
       return baseState;
 

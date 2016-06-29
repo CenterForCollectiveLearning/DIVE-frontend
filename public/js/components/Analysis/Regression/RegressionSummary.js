@@ -49,8 +49,8 @@ export default class RegressionSummary extends Component {
     }
 
     return (
-      <div className={ styles.summary }>
-        <div className={ styles.summaryColumn }>
+      <div className={ styles.regressionSummary }>
+        <div className={ styles.regressionSummaryColumn }>
           <div>
             This table displays the results of a linear regression explaining the dependent variable { textParams.dependentVariableName } with combinations of the independent variables { textParams.independentVariableNames }.
           </div>
@@ -58,7 +58,7 @@ export default class RegressionSummary extends Component {
             For each variable, the regression coefficient is the first value, significance is represented by number of asterisks, and standard error by the number in parentheses.
           </div>
         </div>
-        <div className={ styles.summaryColumn }>
+        <div className={ styles.regressionSummaryColumn }>
           { ((textParams.rSquaredAdjusted.lowest.index != textParams.rSquaredAdjusted.highest.index) || (textParams.rSquaredAdjusted.lowest.value != textParams.rSquaredAdjusted.highest.value)) &&
             <div>
               The { textParams.rSquaredAdjustedText }, the amount of variance explained by the independent variables, varies from <strong>{ textParams.rSquaredAdjusted.highest.value }</strong> in equation <strong>{ textParams.rSquaredAdjusted.highest.index }</strong> to <strong>{ textParams.rSquaredAdjusted.lowest.value }</strong> in equation <strong>{ textParams.rSquaredAdjusted.lowest.index }</strong>.
@@ -80,7 +80,9 @@ export default class RegressionSummary extends Component {
   }
 }
 
-// ContributionToRSquaredCard.propTypes = {
-//   id: PropTypes.string,
-//   contributionToRSquared: PropTypes.object.isRequired
-// }
+RegressionSummary.propTypes = {
+  dependentVariableName: PropTypes.string.isRequired,
+  independentVariableNames: PropTypes.array.isRequired,
+  regressionResult: PropTypes.object.isRequired,
+  contributionToRSquared: PropTypes.array.isRequired
+}

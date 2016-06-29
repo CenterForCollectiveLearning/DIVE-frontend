@@ -2,6 +2,7 @@
 @import '../../../css/flexbox.sass'
 
 .datasetPageContainer, .datasetContainer
+  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
   overflow: hidden
 
 .uploadingZone
@@ -41,13 +42,13 @@
 
 .datasetUploadBox
   flex-grow: 1
-
-  .datasetUploadBoxContent
-    flex-grow: 1
+  display: flex
+  flex-direction: column
+  margin: 5px 10px 10px
 
   .dropzone
-    background-color: #FDFDFD
-    border: 2px dashed #DDD
+    background-color: rgba(255, 255, 255, 0.8)
+    border: 2px dashed #BBB
     justify-content: center
 
     span
@@ -78,6 +79,7 @@
   flex-direction: column
   overflow-x: scroll
   position: relative
+  margin-top: -1px
 
   .scrollContainer
     position: absolute
@@ -85,6 +87,7 @@
     flex-direction: column
     flex-grow: 1
     max-height: 100%
+    height: 100%
     min-width: 100%
 
 .headerRowTable, .dataRowsTable
@@ -94,6 +97,7 @@
 
 .dataRowsTable
   overflow-y: scroll
+  height: 100%
 
   .cell
     overflow: hidden
@@ -110,7 +114,7 @@
 .headerRowTable
   .row
     .cell
-      background-color: #F3F3F3
+      background-color: rgba(243, 243, 243, 0.7)
       border: 1px solid #CCCCCC
       border-left-width: 0
       border-top-color: #C0C0C0
@@ -143,7 +147,7 @@
       border-right-width: 0px
 
 .fieldTypeDropDown.dropDownMenu
-  max-width: 50%
+  max-width: 72px
 
   > div
     > div:first-of-type
@@ -154,19 +158,20 @@
       border: none
       box-shadow: none
       text-align: right
+      position: relative
 
       > div:first-child
         height: 20px
         line-height: 20px
-        font-weight: 400
-        font-size: 12px
-        color: #888
         padding-right: 12px
 
       > span:last-child
-        top: 8px
-        border-width: 4px 3px 0
-        right: 1px
+        position: absolute
+        right: -9px
+        top: -1px
+
+        > span:first-child
+          border-width: 4px 3px 0
 
     > div:nth-of-type(2)
       width: auto
@@ -176,3 +181,32 @@
         > div
           text-align: right
           padding-right: 10px
+
+  .fieldTypeValue
+    font-weight: 400
+    font-size: 12px
+    color: #888
+
+.headerControlRow
+  display: flex
+  flex-direction: row-reverse
+  flex-grow: 1
+
+  > div
+    margin-left: 10px
+
+.headerControl
+  display: flex
+  flex-direction: row
+  align-items: center
+
+  &.datasetSelectorControl
+    min-width: 240px
+
+  > span
+    margin-right: 10px
+
+    white-space: nowrap
+    font-size: 13px
+    font-weight: 300
+

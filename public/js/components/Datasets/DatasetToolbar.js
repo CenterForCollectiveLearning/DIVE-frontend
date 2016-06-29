@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
-import { uploadDataset, deleteDataset, fetchDatasetsIfNeeded } from '../../actions/DatasetActions';
+import { push } from 'react-router-redux';
+import { uploadDataset, deleteDataset, fetchDatasets } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
 import Toolbar from '../Base/Toolbar';
@@ -18,16 +18,23 @@ export class DatasetToolbar extends Component {
   }
 
   componentWillMount() {
-    const { projectId, datasets, fetchDatasetsIfNeeded } = this.props;
+    const { projectId, datasets, fetchDatasets } = this.props;
 
-    if (!datasets.fetchedAll && !datasets.isFetching) {
-      fetchDatasetsIfNeeded(projectId);
+    if (projectId && !datasets.fetchedAll && !datasets.isFetching) {
+      fetchDatasets(projectId, false);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { projectId, datasets, fetchDatasets } = nextProps;
+    if (projectId != this.projectId && !datasets.fetchedAll && !datasets.isFetching) {
+      fetchDatasets(projectId, false);
     }
   }
 
   onSelectDataset(selectedValue) {
     if (selectedValue) {
-      this.props.pushState(null, `/projects/${this.props.projectId}/data/${selectedValue}/inspect`);
+      this.props.push(`/projects/${ this.props.projectId }/datasets/${ selectedValue }/inspect`);
     }
   }
 
@@ -39,15 +46,15 @@ export class DatasetToolbar extends Component {
 
   onClickUploadDataset() {
     const projectId = this.props.projectId;
-    this.props.pushState(null, `/projects/${ projectId }/data/upload`);
+    this.props.push(`/projects/${ projectId }/datasets/upload`);
   }
 
   render() {
-    const { datasets, selectedDatasetId, isPreloadedProject, openColumnReductionModalAction, openPivotModalAction, openMergeModalAction } = this.props;
+    const { datasets, selectedDatasetId, isPreloadedProject, uploadMode, openColumnReductionModalAction, openPivotModalAction, openMergeModalAction } = this.props;
 
     return (
       <Toolbar rightActions=
-        { !isPreloadedProject && selectedDatasetId &&
+        { !isPreloadedProject && selectedDatasetId && !uploadMode &&
           <div className={ styles.rightActions }>
             <RaisedButton icon={ true } onClick={ this.onClickDeleteDataset }>
               <i className="fa fa-trash"></i>
@@ -63,13 +70,13 @@ export class DatasetToolbar extends Component {
           <div className={ styles.datasetSelectorContainer }>
             <DropDownMenu
               className={ styles.datasetSelector }
-              value={ selectedDatasetId }
-              options={ datasets.items }
+              value={ uploadMode ? null : parseInt(selectedDatasetId) }
+              options={ datasets.items.length > 0 ? datasets.items : [] }
               valueMember="datasetId"
               displayTextMember="title"
               onChange={ this.onSelectDataset } />
           </div>
-          { !isPreloadedProject &&
+          { !isPreloadedProject && !uploadMode &&
             <RaisedButton label="Upload new dataset" onClick={ this.onClickUploadDataset } />
           }
         </div>
@@ -80,22 +87,23 @@ export class DatasetToolbar extends Component {
 
 DatasetToolbar.propTypes = {
   datasets: PropTypes.object.isRequired,
-  projectId: PropTypes.string.isRequired,
+  projectId: PropTypes.string,
   selectedDatasetId: PropTypes.string,
   openColumnReductionModalAction: PropTypes.func,
   openPivotModalAction: PropTypes.func,
   openMergeModalAction: PropTypes.func,
-  isPreloadedProject: PropTypes.bool
+  isPreloadedProject: PropTypes.bool,
+  uploadMode: PropTypes.bool
 };
 
 function mapStateToProps(state) {
   const { datasets, project, datasetSelector } = state;
   return {
     datasets: datasets,
-    projectId: `${ project.properties.id }`,
+    projectId: (project.properties.id ? `${ project.properties.id }` : null),
     selectedDatasetId: `${ datasetSelector.datasetId }`,
     preloadedProject: project.properties.preloaded
   };
 }
 
-export default connect(mapStateToProps, { pushState, uploadDataset, deleteDataset, fetchDatasetsIfNeeded })(DatasetToolbar);
+export default connect(mapStateToProps, { push, uploadDataset, deleteDataset, fetchDatasets })(DatasetToolbar);

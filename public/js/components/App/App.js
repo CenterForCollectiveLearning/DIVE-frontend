@@ -1,10 +1,8 @@
 import React, { PropTypes } from 'react';
-import BaseComponent from './BaseComponent';
 import styles from './App.sass';
 
 import { createAnonymousUserIfNeeded } from '../../actions/UserActions';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
 
 require("font-awesome-webpack");
 // this seems real dumb;
@@ -12,7 +10,7 @@ require('react-select/less/select.less');
 require('../../../css/app.less');
 require('../../../css/griddle.less');
 
-export class App extends BaseComponent {
+export class App extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.user.loaded && !this.props.user.loaded) {
       this.props.createAnonymousUserIfNeeded();
@@ -29,7 +27,6 @@ export class App extends BaseComponent {
 }
 
 App.propTypes = {
-  pushState: PropTypes.func.isRequired,
   user: PropTypes.object,
   children: PropTypes.node
 };
@@ -41,4 +38,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { pushState, createAnonymousUserIfNeeded })(App);
+export default connect(mapStateToProps, { createAnonymousUserIfNeeded })(App);

@@ -1,0 +1,321 @@
+@import '../../../css/flexbox.sass'
+@import '../../../css/mixins.sass'
+
+.documentControls
+  display: flex
+
+  .documentSelector
+    width: 80%
+    margin-right: 7px
+
+  > div:last-child
+    margin-left: 7px
+
+.composePageContainer
+  flex-direction: row
+
+  .composeViewContainer, .storyContainer
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+    background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
+    overflow-y: scroll
+    align-items: center
+
+    .headerBar
+      width: 100%
+
+    .composeEditorContainer
+      flex-grow: 1
+      flex-shrink: 0
+      background-color: white
+      width: 960px
+      box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.1)
+      margin-top: 15px
+      margin-bottom: 30px
+      padding: 15px 10px 10px
+
+.editorHeader
+  padding: 10px
+
+  .editorHeaderText
+    width: 100%
+    padding-left: 6px
+    padding-right: 6px
+
+    .documentTitle
+      color: #333
+      background-color: transparent
+      font-family: 'Source Sans Pro', sans-serif
+      font-size: 55px
+      font-weight: 300
+      line-height: 1
+      padding-left: 11px
+      letter-spacing: -.003em
+      height: auto
+      border-color: transparent
+
+  &.editable
+    .documentTitle:hover
+      border-color: #eee
+
+.composeEditor
+  display: flex
+  flex-direction: column
+  flex-grow: 1
+  min-height: 400px
+
+  &.editable
+    .composeBlock:hover
+      border-color: rgba(0, 0, 0, 0.1)
+
+      .composeBlockText, .composeBlockHeader .composeBlockHeaderText
+        border-color: #eee
+
+  .composeBlock
+    display: flex
+    flex-direction: column
+    padding: 8px
+    margin: 7px
+    border: 1px dashed transparent
+    position: relative
+
+    &.editable:hover .composeVisualizationControls
+      display: flex
+
+    &.TEXT_TOP
+      flex-direction: column-reverse
+
+    &.TEXT_BOTTOM
+      flex-direction: column
+
+    &.TEXT_LEFT
+      flex-direction: row-reverse
+
+      .flexcolumn
+        width: 30%
+
+      .composeBlockVisualization
+        width: 70%
+        margin-left: 7px
+
+    &.TEXT_RIGHT
+      flex-direction: row
+
+      .flexcolumn
+        width: 30%
+
+      .composeBlockVisualization
+        width: 70%
+        margin-right: 7px
+
+    &.composeBlockPlaceholder
+      min-height: 60px
+      border-color: rgba(0, 0, 0, 0.1)
+      border-radius: 2px
+      text-align: center
+      justify-content: center
+      align-items: center
+
+      &.phase1
+        +watermark
+        flex-grow: 0
+        letter-spacing: 0
+        color: #999
+        cursor: pointer
+
+        &:hover
+          border-style: solid
+          border-color: #959595
+          color: #333
+
+      &.phase2
+        background-color: rgba(0, 0, 0, 0.01)
+
+      h2
+        text-align: left
+        font-weight: 300
+        width: 100%
+        margin: 0
+        padding: 10px 1.5%
+        color: #999
+
+      .contentPreviewBlocksContainer
+        display: flex
+
+        flex-direction: row
+        flex-wrap: wrap
+        width: 100%
+        position: relative
+
+        .contentPreviewBlockContainer
+          margin: 10px 1.5%
+          width: 30.33%
+
+          > div
+            box-shadow: none
+
+          .textBlock, .regressionBlock, .correlationBlock
+            +block
+            box-shadow: none
+
+            font-size: 13px
+            font-weight: 500
+            color: #444444
+
+          .textBlock
+            padding-top: 30px
+            padding-bottom: 30px
+
+          .regressionBlock, .correlationBlock
+            padding: 11px
+
+            .header, .correlationHeader
+              padding-bottom: 8px
+              font-weight: 400
+
+            .correlationHeader
+              .field
+                font-weight: 500
+                color: #444444
+                text-transform: lowercase
+
+                + .field:before
+                  font-weight: 400
+                  content: ', '
+
+    .flexrow
+      max-width: 100%
+
+  .composeBlockHeader
+    display: flex
+
+    .composeBlockHeaderText
+      font-family: 'Source Sans Pro', sans-serif
+      font-size: 30px
+      line-height: 1.2
+      letter-spacing: -.02em
+      color: rgba(0,0,0,.8)
+      font-weight: 300
+      word-break: break-word
+
+      height: auto
+      width: 100%
+      padding: 6px 10px 5px 14px
+      margin-bottom: 5px
+      border-color: transparent
+
+      border: 1px solid transparent
+      border-radius: 2px
+      outline: none
+
+  &.editable
+    .composeBlockHeaderText
+      &:hover
+        border-color: #CDCDCD
+
+  .resizableContainer
+    display: flex
+    flex-direction: column
+    justify-content: center
+    overflow: hidden
+
+  .composeVisualizationControls
+    position: absolute
+    right: 10px
+    top: 10px
+    z-index: 100
+    display: none
+    opacity: 0.7
+
+    &:hover
+      opacity: 0.8
+
+    .visualizationOverlayControl
+      &.visualizationOverlayButton
+        height: 30px
+        line-height: 29px
+        padding: 0 7px
+        border-color: #D0D0D0
+
+        i
+          font-weight: 600
+          font-size: 12px
+
+      + .visualizationOverlayControl
+        margin-left: 5px
+
+    .visualizationOverlayButton
+      min-width: 24px
+      max-width: none
+      background-color: white
+
+      > div
+        padding: 0 8px
+        height: 30px
+        line-height: 29px
+        box-shadow: none
+        opacity: 0.9
+
+        &[data-selected]
+          background-color: #D0D0D0
+
+        &:hover
+          opacity: 1
+
+  .composeBlockVisualization
+    position: relative
+    margin-bottom: 7px
+    display: flex
+    justify-content: center
+    align-items: center
+
+    .fullComposeVisualization
+      background-color: white
+      max-width: 100%
+      flex-grow: 1
+      display: flex
+      flex-direction: column
+
+      > div
+        max-width: 100%
+        flex-grow: 1
+        display: flex
+        flex-direction: column
+
+        > div
+          flex-grow: 1
+          display: flex
+          flex-direction: column
+
+  .composeBlockText
+    display: flex
+    min-height: 100px
+    border: 1px solid transparent
+    border-radius: 2px
+    margin-bottom: 7px
+    flex-grow: 1
+
+    > div
+      display: flex
+      flex-direction: column
+      flex-grow: 1
+
+      > div:first-child
+        display: none
+
+      .quillContents
+        font-family: 'Source Sans Pro', sans-serif
+        font-size: 16px
+        font-weight: 400
+        font-style: normal
+        line-height: 26px
+        letter-spacing: -.003em
+
+        padding: 5px 15px
+        flex-grow: 1
+        display: flex
+        flex-direction: column
+
+        > div:first-child
+          flex-grow: 1

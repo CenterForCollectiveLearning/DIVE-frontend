@@ -3,6 +3,7 @@ import {
   SELECT_COMPARISON_DEPENDENT_VARIABLE,
   REQUEST_NUMERICAL_COMPARISON,
   RECEIVE_NUMERICAL_COMPARISON,
+  UPDATE_COMPARISON_INPUT,
   REQUEST_ANOVA,
   RECEIVE_ANOVA
 } from '../constants/ActionTypes';
@@ -21,6 +22,15 @@ export function selectDependentVariable(selectedVariableId) {
   return {
     type: SELECT_COMPARISON_DEPENDENT_VARIABLE,
     dependentVariableId: selectedVariableId,
+    selectedAt: Date.now()
+  }
+}
+
+export function updateComparisonInput(listTestInput) {
+  return {
+    type: UPDATE_COMPARISON_INPUT,
+    test: listTestInput[0],
+    userInput: listTestInput[1],
     selectedAt: Date.now()
   }
 }

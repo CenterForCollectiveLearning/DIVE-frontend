@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import { push } from 'react-router-redux';
 import styles from './Tabs.sass';
 
 class Tab extends Component {
@@ -8,23 +8,29 @@ class Tab extends Component {
     if (this.props.onClick) {
       this.props.onClick(e);
     } else if (this.props.route) {
-      this.props.pushState(null, this.props.route);
+      this.props.push(this.props.route);
     }
   }
   render() {
     const selectedClassName = this.props.selectedClassName ? this.props.selectedClassName : styles.selected;
-    return (
-      <div
-        className={
-          styles.tab
-          + ' ' + this.props.className
-          + (this.props.selected ? ' ' + selectedClassName : '')
-          + (this.props.disabled ? ' ' + styles.disabled : '')
-        }
-        onClick={ this.handleClick.bind(this) }>
-        { this.props.label }
-      </div>
-    );
+    if (this.props.active) {
+      return (
+        <div
+          className={
+            styles.tab
+            + ' ' + this.props.className
+            + (this.props.selected ? ' ' + selectedClassName : '')
+            + (this.props.disabled ? ' ' + styles.disabled : '')
+          }
+          onClick={ this.handleClick.bind(this) }>
+          { this.props.label }
+        </div>
+      );
+    } else {
+      return (
+        <div></div>
+      );
+    }
   }
 }
 
@@ -32,6 +38,7 @@ Tab.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   route: PropTypes.string,
+  active: PropTypes.bool,
   selected: PropTypes.bool,
   onClick: PropTypes.func,
   className: PropTypes.string,
@@ -41,6 +48,7 @@ Tab.propTypes = {
 
 Tab.defaultProps = {
   selected: false,
+  active: true,
   route: null,
   className: "",
   disabled: false,
@@ -51,4 +59,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { pushState })(Tab);
+export default connect(mapStateToProps, { push })(Tab);

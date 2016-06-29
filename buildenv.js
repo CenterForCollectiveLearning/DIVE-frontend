@@ -9,8 +9,3 @@ var env = require('./.env.js');
 output = util.inspect(env, {depth: null});
 output = 'window.__env = ' + output + ';\n';
 output.to(path.join(__dirname, 'public')+'/env.js');
-
-// Used to test build with divshot server
-output = JSON.stringify(env, null, 2);
-output = output + '\n';
-output.to('.env.json');

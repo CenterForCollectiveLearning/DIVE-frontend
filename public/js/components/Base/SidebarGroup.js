@@ -6,7 +6,9 @@ export default class SidebarGroup extends Component {
   render() {
     return (
       <div className={ styles.sidebarGroup }>
-        <h3 className={ styles.sidebarGroupHeading }>{ this.props.heading }</h3>
+        { this.props.heading &&
+          <h3 className={ styles.sidebarGroupHeading }>{ this.props.heading }</h3>
+        }
         <div className={ styles.sidebarGroupContent}>
           { this.props.children }
         </div>

@@ -26,14 +26,18 @@ export default class ToggleButton extends Component {
 
     const selectedMenuItem = selectedMenuItemIndex >= 0 ? this.props.splitMenu[selectedMenuItemIndex] : null;
 
+    const selectedMenuItemIsDefault = selectedMenuItemIndex == 0;
+
     return (
-      <div className={
+      <div data-selected={ this.props.isSelected ? true : undefined } className={
         styles.toggleButtonContainer
+        + (this.props.className ? ' ' + this.props.className : '')
         + (!this.props.imageName ? ' ' + styles.textToggleButton : '')
         + (this.props.separated ? ' ' + styles.separatedToggleButton : '')
         + (this.props.isSelected ? ' ' + styles.selected : '')
         + (this.props.splitMenu.length > 0 ? ' ' + styles.splitButton : '')}>
         <div
+          data-selected={ this.props.isSelected ? true : undefined }
           className={
             styles.toggleButton + ' ' + styles.raisedButton
             + (this.props.isSelected ? ' ' + styles.selected : '')
@@ -45,12 +49,13 @@ export default class ToggleButton extends Component {
             <img
               src={ this.props.imageName }
               alt={ this.props.altText } />
-            : this.props.altText
+            : this.props.content
           }
         </div>
         { this.props.splitMenu.length > 0 &&
           <div className={ styles.splitButtonSelect } title={ selectedMenuItem.label }>
             <DropDownMenu
+              className={ styles.dropDownMenu + (selectedMenuItemIsDefault ? ' ' + styles.defaultDropdown : '') }
               value={ selectedMenuItem.value }
               options={ this.props.splitMenu }
               onChange={ this.selectMenuItem } />
@@ -62,7 +67,9 @@ export default class ToggleButton extends Component {
 }
 
 ToggleButton.propTypes = {
+  className: PropTypes.string,
   altText: PropTypes.string,
+  content: PropTypes.any,
   imageName: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,

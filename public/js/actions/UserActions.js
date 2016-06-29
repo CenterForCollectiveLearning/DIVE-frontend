@@ -3,7 +3,6 @@ import {
   SET_USER_EMAIL,
   SUBMIT_USER
 } from '../constants/ActionTypes';
-import { LOAD, SAVE } from 'redux-storage';
 import uuid from 'uuid';
 
 export function createAnonymousUserIfNeeded() {

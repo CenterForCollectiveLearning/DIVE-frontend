@@ -63,3 +63,30 @@
   font-family: 'Computer Modern Serif', 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;
 }
 
+.Select.is-focused:not(.is-open) > .Select-control {
+  border-color: #d9d9d9 #cccccc #b3b3b3;
+  box-shadow: none;
+}
+
+
+.react-resizable {
+  position: relative;
+}
+.react-resizable-handle {
+  position: absolute;
+  border-radius: 2px;
+  bottom: 0;
+  left: 0;
+  top: 0;
+  right: 0;
+  padding: 0 3px 3px 0;
+  box-sizing: border-box;
+  cursor: se-resize;
+  outline: none;
+  &:hover {
+    border: 1px solid #eee;
+  }
+  &:focus, &:active {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+}

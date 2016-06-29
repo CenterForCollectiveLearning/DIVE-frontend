@@ -6,13 +6,38 @@ import {
   SELECT_FIELD_PROPERTY_VALUE,
   SELECT_AGGREGATION_FUNCTION,
   SELECT_SORTING_FUNCTION,
+  SELECT_RECOMMENDATION_TYPE,
   WIPE_PROJECT_STATE,
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
+const recommendationTypes = [
+  {
+    id: 'exact',
+    level: 0
+  },
+  {
+    id: 'subset',
+    level: 1
+  },
+  {
+    id: 'baseline',
+    level: 2
+  },
+  {
+    id: 'expanded',
+    level: 3
+  }
+]
+
 const baseState = {
   title: [],
   datasetId: null,
+  recommendations: {
+    types: recommendationTypes,
+    currentLevel: 0,
+    maxLevel: 3
+  },
   fieldProperties: [],
   originalFieldProperties: [],
   specs: [],
@@ -125,12 +150,22 @@ export default function gallerySelector(state = baseState, action) {
         return sortSpecsByFunction(selectedSortingFunction, specA, specB);
       };
 
-      return { ...state, specs: action.specs.sort(defaultSortSpecs) };
+      var allSpecs = action.specs;
+      if (action.recommendationType.level && state.specs) {
+        allSpecs = [ ...state.specs, ...allSpecs ];
+      }
+
+      return { ...state, specs: allSpecs.sort(defaultSortSpecs) };
 
     case SELECT_FIELD_PROPERTY:
       const fieldProperties = state.fieldProperties.map((property) =>
         (property.id == action.selectedFieldPropertyId) ?
-          new Object({ ...property, selected: !property.selected })
+          new Object({
+            ...property,
+            selected: !property.selected,
+            values: (!property.selected || property.generalType == 'q') ? property.values : property.values.map((value, i) => new Object({...value, selected: i == 0 })),
+            aggregations: (!property.selected || property.generalType == 'c') ? property.aggregations : property.aggregations.map((aggregation, i) => new Object({...aggregation, selected: i == 0 }))
+          })
           : property
       );
 
@@ -147,7 +182,7 @@ export default function gallerySelector(state = baseState, action) {
         [ ...titleVisualizationStrings, ...selectedPropertyStrings ]
         : defaultTitle;
 
-      return { ...state, fieldProperties: fieldProperties, title: title, updatedAt: Date.now() };
+      return { ...state, fieldProperties: fieldProperties, title: title, specs: [], updatedAt: Date.now() };
 
     case SELECT_FIELD_PROPERTY_VALUE:
       const fieldPropertiesWithNewPropertyValue = state.fieldProperties.map((property) =>
@@ -186,6 +221,17 @@ export default function gallerySelector(state = baseState, action) {
       const sortedSpecs = state.specs.sort(sortSpecs);
 
       return { ...state, sortingFunctions: sortingFunctions, specs: sortedSpecs };
+
+    case SELECT_RECOMMENDATION_TYPE:
+      const recommendationTypes = state.recommendationTypes.map((typeObject) =>
+        (typeObject.id == action.selectedRecommendationType) ?
+          new Object({
+            ...typeObject,
+            selected: (typeObject.id == action.selectedRecommendationType && !typeObject.selected)
+          })
+        : typeObject
+      );
+      return { ...state, recommendationTypes: recommendationTypes, updatedAt: Date.now() };
 
     case WIPE_PROJECT_STATE:
       return baseState;

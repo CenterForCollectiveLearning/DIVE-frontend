@@ -109,7 +109,7 @@ class PivotModal extends Component {
       default:
     }
 
-    footer = 
+    footer =
       <div className={ styles.footerContent }>
         <div className={ styles.footerLabel }>
           { error &&
@@ -124,7 +124,7 @@ class PivotModal extends Component {
         scrollable={ phase != 1 }
         closeAction={ this.props.closeAction }
         heading={ <span>{ heading }</span> }
-        footer={{ footer }}>
+        footer={ footer }>
         <div style={{ display: "flex" }}>
           { phase == 1 &&
             <div>

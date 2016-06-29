@@ -1,29 +1,54 @@
 import React, { Component, PropTypes } from 'react';
 
-import * as GeneratingProcedures from '../../../constants/GeneratingProcedures';
-
 import styles from '../Visualizations.sass';
+
+import { getPalette } from '../../../helpers/helpers';
 
 var Chart = require('react-google-charts').Chart;
 
 export default class ColumnChart extends Component {
-
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options } = this.props;
+    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options, labels } = this.props;
 
-    const columnChartOptions = {
+    var finalData = data;
+
+    var hashElements;
+    if (labels && labels.x && labels.y) {
+      hashElements = [labels.x, labels.y];
+    } else {
+      hashElements = [finalData[0][0], finalData[0][1]];
+    }
+
+    const colors = getPalette(hashElements);
+
+    const fullColumnChartOptions = {
       ...options,
+      intervals: { 'lineWidth': 2, 'barWidth': 0.25 },      
+      colors: colors,
       hAxis: {
-        title: data[0][0],
+        title: labels && labels.x ? labels.x : finalData[0][0],
+        textStyle: {
+          color: '#888'
+        },
         titleTextStyle: {
           color: '#333',
           bold: true,
           italic: false
         }
       },
+      vAxes: [
+        {
+          textStyle: {
+            color: '#888'
+          }
+        }
+      ],
       vAxis: {
         minValue: 0,
-        title: data[0][1],
+        title: labels && labels.y ? labels.y : finalData[0][1],
+        textStyle: {
+          color: '#888'
+        },
         titleTextStyle: {
           color: '#333',
           bold: true,
@@ -35,8 +60,10 @@ export default class ColumnChart extends Component {
       }
     };
 
+    const columnChartOptions = isMinimalView ? options : fullColumnChartOptions;
+
     return (
-      <Chart chartType="ColumnChart" options={ columnChartOptions } data={ data } graph_id={ chartId }/>
+      <Chart chartType="ColumnChart" chartVersion="43" options={ columnChartOptions } data={ finalData } graph_id={ chartId }/>
     );
   }
 }
@@ -45,10 +72,12 @@ ColumnChart.propTypes = {
   chartId: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   isMinimalView: PropTypes.bool,
-  options: PropTypes.object
+  options: PropTypes.object,
+  labels: PropTypes.object
 };
 
 ColumnChart.defaultProps = {
   isMinimalView: false,
-  options: {}
+  options: {},
+  labels: {}
 };

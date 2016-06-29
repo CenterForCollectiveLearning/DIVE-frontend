@@ -1,7 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 
-import * as GeneratingProcedures from '../../../constants/GeneratingProcedures';
-
 import styles from '../Visualizations.sass';
 
 var Chart = require('react-google-charts').Chart;
@@ -16,7 +14,7 @@ export default class PieChart extends Component {
     );
 
     return (
-      <Chart chartType="PieChart" options={ options } data={ pieData } graph_id={ chartId }/>
+      <Chart chartType="PieChart" chartVersion="43" options={ options } data={ pieData } graph_id={ chartId }/>
     );
   }
 }

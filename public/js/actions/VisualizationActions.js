@@ -1,23 +1,30 @@
 import {
   REQUEST_SPECS,
+  PROGRESS_SPECS,
   RECEIVE_SPECS,
   FAILED_RECEIVE_SPECS,
+  SELECT_RECOMMENDATION_TYPE,
   SELECT_VISUALIZATION_TYPE,
   SELECT_BUILDER_VISUALIZATION_TYPE,
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
   CLEAR_VISUALIZATION,
+  REQUEST_CREATE_SAVED_SPEC,
+  RECEIVE_CREATED_SAVED_SPEC,
   REQUEST_CREATE_EXPORTED_SPEC,
   RECEIVE_CREATED_EXPORTED_SPEC,
   SET_SHARE_WINDOW,
   SELECT_SORTING_FUNCTION,
   SELECT_BUILDER_SORT_ORDER,
   SELECT_BUILDER_SORT_FIELD,
+  SELECT_VISUALIZATION_CONDITIONAL,
+  SELECT_VISUALIZATION_CONFIG,
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
-import { fetch, pollForTaskResult } from './api.js';
-import { formatTableData } from './ActionHelpers.js'
+import _ from 'underscore';
+import { fetch, pollForTask } from './api.js';
+import { formatVisualizationTableData, getFilteredConditionals } from './ActionHelpers.js'
 
 function requestSpecsDispatcher() {
   return {
@@ -25,12 +32,27 @@ function requestSpecsDispatcher() {
   };
 }
 
+function progressSpecsDispatcher(data) {
+  return {
+    type: PROGRESS_SPECS,
+    progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
+  };
+}
+
+function errorSpecsDispatcher(data) {
+  return {
+    type: PROGRESS_SPECS,
+    progress: 'Error processing visualizations, please check console.'
+  };
+}
+
 function receiveSpecsDispatcher(params, json) {
-  if (json) {
+  const recommendationLevel = params.recommendationType ? params.recommendationType.level : null;
+  if (json && !json.error) {
     return {
       ...params,
       type: RECEIVE_SPECS,
-      specs: json,
+      specs: json.map((spec) => new Object({ ...spec, recommendationLevel })),
       receivedAt: Date.now()
     };
   }
@@ -39,12 +61,14 @@ function receiveSpecsDispatcher(params, json) {
     ...params,
     type: FAILED_RECEIVE_SPECS,
     specs: [],
-    receivedAt: Date.now()
+    receivedAt: Date.now(),
+    error: (json && json.error) ? json.error : "Error retrieving visualizations."
   };
 }
 
-export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
+export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommendationType = null) {
   const selectedFieldProperties = fieldProperties.filter((property) => property.selected);
+  const selectedRecommendationType = recommendationType ? recommendationType.id : null;
 
   const fieldAggPairs = selectedFieldProperties
     .map((property) =>
@@ -73,6 +97,7 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
     'project_id': projectId,
     'dataset_id': datasetId,
     'field_agg_pairs': fieldAggPairs,
+    'recommendation_types': [selectedRecommendationType],
     'conditionals': conditionals
   };
 
@@ -83,20 +108,22 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = []) {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(function(json) {
-        const dispatchParams = { project_id: projectId, dataset_id: datasetId };
-        // TODO Do this more consistently with status flags
-        // console.log(json, (json.specs.length > 0))
-        if (json.taskId) {
-          dispatch(pollForTaskResult(json.taskId, dispatchParams, receiveSpecsDispatcher));
-        }
-        else if (json.specs.length > 0) {
-          dispatch(receiveSpecsDispatcher(dispatchParams, json.specs));
+    }).then(function(json) {
+        const dispatchParams = { project_id: projectId, dataset_id: datasetId, recommendationType: recommendationType };
+        if (json.compute) {
+          dispatch(pollForTask(json.taskId, REQUEST_SPECS, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher, errorSpecsDispatcher));
+        } else {
+          dispatch(receiveSpecsDispatcher(dispatchParams, json.result));
         }
       })
-
   };
+}
+
+export function selectRecommendationType(selectedRecommendationType) {
+  return {
+    type: SELECT_RECOMMENDATION_TYPE,
+    selectedRecommendationType: selectedRecommendationType
+  }
 }
 
 export function selectVisualizationType(selectedType) {
@@ -144,17 +171,31 @@ function receiveSpecVisualizationDispatcher(json) {
   return {
     type: RECEIVE_VISUALIZATION_DATA,
     spec: json.spec,
-    tableData: formatTableData(json.visualization.table.columns, json.visualization.table.data),
+    exported: json.exported,
+    exportedSpecId: json.exportedSpecId,
+    tableData: json.visualization.table ? formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data) : [],
+    bins: json.visualization.bins,
     visualizationData: json.visualization.visualize,
     receivedAt: Date.now()
   };
 }
 
-function fetchSpecVisualization(projectId, specId, conditionals) {
+
+function fetchSpecVisualization(projectId, specId, conditionals = [], config = null) {
   const params = {
-    project_id: projectId,
-    conditionals: conditionals,
+    project_id: projectId
   }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
+  }
+
+  if (config) {
+    params.config = config;
+  }
+
   return dispatch => {
     dispatch(requestSpecVisualizationDispatcher());
     return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`, {
@@ -162,9 +203,7 @@ function fetchSpecVisualization(projectId, specId, conditionals) {
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     })
-      .then(response => response.json())
-      .then(json => dispatch(receiveSpecVisualizationDispatcher(json)))
-      .catch(err => console.error("Error fetching visualization: ", err));
+      .then(json => dispatch(receiveSpecVisualizationDispatcher(json)));
   };
 }
 
@@ -176,12 +215,26 @@ function shouldFetchSpecVisualization(state) {
   return true;
 }
 
-export function fetchSpecVisualizationIfNeeded(projectId, specId, conditionals) {
+export function fetchSpecVisualizationIfNeeded(projectId, specId, conditionals, config) {
   return (dispatch, getState) => {
     if (shouldFetchSpecVisualization(getState())) {
-      return dispatch(fetchSpecVisualization(projectId, specId, conditionals));
+      return dispatch(fetchSpecVisualization(projectId, specId, conditionals, config));
     }
   };
+}
+
+export function selectVisualizationConditional(conditional) {
+  return {
+    type: SELECT_VISUALIZATION_CONDITIONAL,
+    conditional: conditional
+  }
+}
+
+export function selectVisualizationConfig(config) {
+  return {
+    type: SELECT_VISUALIZATION_CONFIG,
+    config: config
+  }
 }
 
 export function clearVisualization() {
@@ -190,37 +243,43 @@ export function clearVisualization() {
   };
 }
 
-function requestCreateExportedSpecDispatcher() {
+function requestCreateExportedSpecDispatcher(action) {
   return {
-    type: REQUEST_CREATE_EXPORTED_SPEC
+    type: action
   };
 }
 
-function receiveCreatedExportedSpecDispatcher(json) {
+function receiveCreatedExportedSpecDispatcher(action, json) {
   return {
-    type: RECEIVE_CREATED_EXPORTED_SPEC,
+    type: action,
     exportedSpecId: json.id,
     specId: json.specId,
+    exportedSpec: json,
     receivedAt: Date.now()
   };
 }
 
-export function createExportedSpec(projectId, specId, conditionals, config) {
+export function createExportedSpec(projectId, specId, data, conditionals=[], config={}, saveAction = false) {
+  const requestAction = saveAction ? REQUEST_CREATE_SAVED_SPEC : REQUEST_CREATE_EXPORTED_SPEC;
+  const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_SPEC : RECEIVE_CREATED_EXPORTED_SPEC;
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+
   const params = {
     project_id: projectId,
     spec_id: specId,
-    conditionals: conditionals,
+    data: data,
+    conditionals: filteredConditionals ? filteredConditionals : {},
     config: config
   }
 
   return dispatch => {
-    dispatch(requestCreateExportedSpecDispatcher());
+    dispatch(requestCreateExportedSpecDispatcher(requestAction));
     return fetch('/exported_specs/v1/exported_specs', {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveCreatedExportedSpecDispatcher(json)))
+    }).then(json => dispatch(receiveCreatedExportedSpecDispatcher(receiveAction, json)))
       .catch(err => console.error("Error creating exported spec: ", err));
   };
 }
@@ -236,14 +295,15 @@ export function setGalleryQueryString(query) {
   var queryString = '';
 
   Object.keys(query).forEach(
-    function (currentValue, index, array) {
+    function (fullKey, index, array) {
+      const key = fullKey.slice(0, -2);
       var fieldString = '';
-      if (Array.isArray(query[currentValue])) {
-        query[currentValue].forEach((c, i, a) =>
-          fieldString = fieldString + `&${ currentValue }[]=${ c }`
+      if (Array.isArray(query[fullKey])) {
+        query[fullKey].forEach((c, i, a) =>
+          fieldString = fieldString + `&${ key }[]=${ c }`
         )
       } else {
-        fieldString = `&${ currentValue }=${ query[currentValue] }`;
+        fieldString = `&${ key }[]=${ query[fullKey] }`;
       }
       queryString = queryString + fieldString;
     }

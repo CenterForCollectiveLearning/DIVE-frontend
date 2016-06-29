@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import { push } from 'react-router-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { selectIndependentVariable } from '../../../actions/RegressionActions';
 import styles from '../Analysis.sass';
 
-import AnalysisSidebar from '../AnalysisSidebar';
+import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -24,24 +24,24 @@ export class RegressionSidebar extends Component {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = nextProps;
     const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
 
-    if (project.properties.id && datasetSelector.datasetId && datasetIdChanged && !fieldProperties.fetching) {
+    if (project.properties.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId)
     }
   }
 
   onSelectDependentVariable(dependentVariable) {
-    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/analyze/regression/${ dependentVariable }`);
+    this.props.push(`/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/analyze/regression/${ dependentVariable }`);
   }
 
   render() {
     const { fieldProperties, regressionSelector, selectIndependentVariable } = this.props;
 
     return (
-      <AnalysisSidebar selectedTab="regression">
+      <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Dependent Variable (Y)">
             <DropDownMenu
-              value={ regressionSelector.dependentVariableId }
+              value={ parseInt(regressionSelector.dependentVariableId) }
               options={ fieldProperties.items.filter((item) => item.generalType == 'q') }
               valueMember="id"
               displayTextMember="name"
@@ -50,22 +50,64 @@ export class RegressionSidebar extends Component {
         }
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Explanatory Factors (X)">
-            <ToggleButtonGroup
-              toggleItems={ fieldProperties.items.map((item) =>
-                new Object({
-                  id: item.id,
-                  name: item.name,
-                  disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique)
-                })
-              )}
-              valueMember="id"
-              displayTextMember="name"
-              externalSelectedItems={ regressionSelector.independentVariableIds }
-              onChange={ selectIndependentVariable } />
+            { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Categorical</div>
+                <ToggleButtonGroup
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique)
+                    })
+                  )}
+                  displayTextMember="name"
+                  valueMember="id"
+                  externalSelectedItems={ regressionSelector.independentVariableIds }
+                  separated={ true }
+                  onChange={ selectIndependentVariable } />
+              </div>
+            }
+            { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Temporal</div>
+                <ToggleButtonGroup
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique)
+                    })
+                  )}
+                  valueMember="id"
+                  displayTextMember="name"
+                  externalSelectedItems={ regressionSelector.independentVariableIds }
+                  separated={ true }
+                  onChange={ selectIndependentVariable } />
+              </div>
+            }
+            { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Quantitative</div>
+                <ToggleButtonGroup
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique)
+                    })
+                  )}
+                  valueMember="id"
+                  displayTextMember="name"
+                  externalSelectedItems={ regressionSelector.independentVariableIds }
+                  separated={ true }
+                  onChange={ selectIndependentVariable } />
+              </div>
+            }
           </SidebarGroup>
         }
 
-      </AnalysisSidebar>
+      </Sidebar>
     );
   }
 }
@@ -87,4 +129,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, pushState })(RegressionSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, push })(RegressionSidebar);

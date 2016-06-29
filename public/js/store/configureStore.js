@@ -1,45 +1,33 @@
 import { createStore, applyMiddleware, compose } from 'redux';
+import { browserHistory } from 'react-router';
+import { routerMiddleware } from 'react-router-redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
+import { analyticsMiddleware } from '../middleware/analytics';
+import debounce from 'redux-debounced';
 import rootReducer from '../reducers/index';
+import RavenMiddleware from 'redux-raven-middleware';
 
 import createHistory from 'history/lib/createBrowserHistory';
-import { reduxReactRouter } from 'redux-react-router';
-import routes from '../routes';
-import storage from 'redux-storage'
-
-import { AUTH_REMOVE_TOKEN } from '../constants/ActionTypes';
 
 const loggerMiddleware = createLogger({
   level: 'info',
   collapsed: false
 });
 
-const storageReducer = storage.reducer(rootReducer);
-import createEngine from 'redux-storage/engines/localStorage';
-
-const engine = storage.decorators.debounce(createEngine('dive'), 1500)
-const storageMiddleware = storage.createMiddleware(engine);
-
-let createStoreWithMiddleware;
-
-
-createStoreWithMiddleware = compose(
-  applyMiddleware(thunkMiddleware, loggerMiddleware, storageMiddleware),
-  reduxReactRouter({
-    routes,
-    createHistory
-  })
-)(createStore);
-
-
 export default function configureStore(initialState) {
-  const store = createStoreWithMiddleware(rootReducer, initialState);
-
-  // Load previous state from local storage
-  const load = storage.createLoader(engine);
-  load(store)
-    .catch(() => console.log('Failed to load previous state'));
+  const store = createStore(
+    rootReducer,
+    initialState,
+    applyMiddleware(
+      debounce,
+      thunkMiddleware,
+      analyticsMiddleware,
+      routerMiddleware(browserHistory),
+      RavenMiddleware('https://34b21b0198eb43d4bebc0a35ddd11b5c@app.getsentry.com/75309'),
+      loggerMiddleware
+    )
+  );
 
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers

@@ -12,24 +12,34 @@ export default class Input extends Component {
   render() {
     return (
       <input
-        className={ styles.input + (this.props.large ? ' ' + styles.large : '') }
+        autoComplete={ this.props.autocomplete }
+        className={ styles.input
+          + (this.props.large ? ' ' + styles.large : '')
+          + (this.props.className ? ' ' + this.props.className : '') }
         type={ this.props.type }
         placeholder={ this.props.placeholder }
         onChange={ this.props.onChange }
-        onKeyUp={ this.onInputKeyUp.bind(this) }/>
+        onKeyUp={ this.onInputKeyUp.bind(this) }
+        readOnly={ this.props.readonly }
+        value={ this.props.value }/>
     );
   }
 }
 
 Input.propTypes = {
+  autocomplete: PropTypes.string,
+  className: PropTypes.string,
   placeholder: PropTypes.string,
   type: PropTypes.string,
   large: PropTypes.bool,
   onChange: PropTypes.func,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  value: PropTypes.string,
+  readonly: PropTypes.bool
 }
 
 Input.defaultProps = {
+  autocomplete: "off",
   large: false,
   type: "text",
   placeholder: ""

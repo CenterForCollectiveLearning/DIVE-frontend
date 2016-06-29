@@ -1,13 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
-import { fetchDataset } from '../../actions/DatasetActions';
+import { push } from 'react-router-redux';
+import { fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 
 import styles from './Datasets.sass';
 
+import HeaderBar from '../Base/HeaderBar';
+import RaisedButton from '../Base/RaisedButton';
+import DropDownMenu from '../Base/DropDownMenu';
 import DatasetDataGrid from './DatasetDataGrid';
-import DatasetToolbar from './DatasetToolbar';
 import DatasetRow from './DatasetRow';
 import ReduceColumnsModal from './ReduceColumnsModal';
 import PivotModal from './PivotModal';
@@ -22,23 +24,39 @@ export class DatasetInspectPage extends Component {
       pivotModalOpen: false,
       mergeDatasetsModalOpen: false
     }
+
+    this.onSelectDataset = this.onSelectDataset.bind(this);
+    this.onClickUploadDataset = this.onClickUploadDataset.bind(this);
+    this.onClickDeleteDataset = this.onClickDeleteDataset.bind(this);
   }
 
   componentWillMount() {
-    const { project, params, fetchDataset, fetchFieldPropertiesIfNeeded } = this.props;
+    const { project, datasets, params, fetchDataset, fetchDatasets, fetchFieldPropertiesIfNeeded } = this.props;
     fetchDataset(params.projectId, params.datasetId);
     fetchFieldPropertiesIfNeeded(params.projectId, params.datasetId);
+
+    if (project.properties.id && !datasets.fetchedAll && !datasets.isFetching) {
+      fetchDatasets(params.projectId, false);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { fetchDataset, fetchFieldPropertiesIfNeeded, pushState, project, params, datasetSelector } = nextProps;
+    const { project, params, datasetSelector, datasets, fetchDataset, fetchDatasets, fetchFieldPropertiesIfNeeded, push } = nextProps;
+    if (project.properties.id !== this.props.project.properties.id || (!datasets.fetchedAll && !datasets.isFetching)) {
+      fetchDatasets(project.properties.id, false);
+    }
+
     if (params.projectId !== this.props.params.projectId || params.datasetId !== this.props.params.datasetId) {
       fetchDataset(params.projectId, params.datasetId);
       fetchFieldPropertiesIfNeeded(params.projectId, params.datasetId);
     }
 
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      pushState(null, `/projects/${ this.props.params.projectId }/data/${ datasetSelector.datasetId }/inspect`);
+      if (datasetSelector.datasetId) {
+        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+      } else {
+        push(`/projects/${ params.projectId }/datasets/upload`);        
+      }
     }
   }
 
@@ -66,31 +84,77 @@ export class DatasetInspectPage extends Component {
     this.setState({ reduceColumnsModalOpen: false });
   }
 
+  onSelectDataset(selectedValue) {
+    if (selectedValue) {
+      this.props.push(`/projects/${ this.props.project.properties.id }/datasets/${ selectedValue }/inspect`);
+    }
+  }
+
+  onClickDeleteDataset() {
+    const { deleteDataset, datasetSelector, project } = this.props;
+
+    deleteDataset(project.properties.id, datasetSelector.datasetId);
+  }
+
+  onClickUploadDataset() {
+    this.props.push(`/projects/${ this.props.project.properties.id }/datasets/upload`);
+  }
+
   render() {
-    const { datasets, fieldProperties, params, project } = this.props;
+    const { datasets, datasetSelector, fieldProperties, params, project } = this.props;
     const dataset = datasets.items.filter((dataset) =>
       dataset.datasetId == params.datasetId
     )[0];
 
     return (
       <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
-        { datasets.items.length > 0 &&
-          <DatasetToolbar
-            openMergeModalAction={ this.openMergeDatasetsModal.bind(this) }
-            openPivotModalAction={ this.openPivotModal.bind(this) }
-            openColumnReductionModalAction={ this.openColumnReductionModal.bind(this) }/>
-        }
+        <HeaderBar
+          header="Inspect"
+          actions={
+            <div className={ styles.headerControlRow }>
+              <div className={ styles.headerControl }>
+                <RaisedButton icon onClick={ this.onClickDeleteDataset }>
+                  <i className="fa fa-trash"></i>
+                </RaisedButton>
+              </div>
+              <div className={ styles.headerControl }>
+                <RaisedButton label="Reduce columns" onClick={ this.openColumnReductionModal.bind(this) }/>
+              </div>
+              <div className={ styles.headerControl }>
+                <RaisedButton label="Pivot" onClick={ this.openPivotModal.bind(this) }/>
+              </div>
+              <div className={ styles.headerControl }>
+                <RaisedButton label="Combine datasets" onClick={ this.openMergeDatasetsModal.bind(this) }/>
+              </div>
+              <div className={ styles.headerControl }>
+                <RaisedButton label="Upload new dataset" onClick={ this.onClickUploadDataset } />
+              </div>
+              <div className={ styles.headerControl }>
+                <DropDownMenu
+                  prefix="Dataset"
+                  width={ 240 }
+                  className={ styles.datasetSelector }
+                  value={ parseInt(datasetSelector.datasetId) }
+                  options={ datasets.items.length > 0 ? datasets.items : [] }
+                  valueMember="datasetId"
+                  displayTextMember="title"
+                  onChange={ this.onSelectDataset } />
+              </div>
+            </div>            
+          }
+        />
+
         { dataset && dataset.details &&
           <DatasetDataGrid dataset={ dataset } fieldProperties={ fieldProperties }/>
         }
-        { this.state.reduceColumnsModalOpen &&
+        { dataset && dataset.details && this.state.reduceColumnsModalOpen &&
           <ReduceColumnsModal
             projectId={ params.projectId }
             datasetId={ params.datasetId }
             closeAction={ this.closeColumnReductionModal.bind(this) }
             columnNames={ dataset.details.fieldNames }/>
         }
-        { this.state.mergeDatasetsModalOpen &&
+        { dataset && dataset.details && this.state.mergeDatasetsModalOpen &&
           <MergeDatasetsModal
             projectId={ params.projectId }
             datasetId={ params.datasetId }
@@ -98,7 +162,7 @@ export class DatasetInspectPage extends Component {
             closeAction={ this.closeMergeDatasetsModal.bind(this) }
             columnNames={ dataset.details.fieldNames }/>
         }
-        { this.state.pivotModalOpen &&
+        { dataset && dataset.details && this.state.pivotModalOpen &&
           <PivotModal
             projectId={ params.projectId }
             datasetId={ params.datasetId }
@@ -124,4 +188,10 @@ function mapStateToProps(state) {
   return { project, datasets, datasetSelector, fieldProperties };
 }
 
-export default connect(mapStateToProps, { fetchDataset, fetchFieldPropertiesIfNeeded, pushState })(DatasetInspectPage);
+export default connect(mapStateToProps, {
+  deleteDataset,
+  fetchDataset,
+  fetchDatasets,
+  fetchFieldPropertiesIfNeeded,
+  push
+})(DatasetInspectPage);

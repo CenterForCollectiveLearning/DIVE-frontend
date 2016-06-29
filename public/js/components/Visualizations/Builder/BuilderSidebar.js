@@ -1,8 +1,8 @@
+import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
 
-import { selectBuilderVisualizationType, selectBuilderSortOrder, selectBuilderSortField } from '../../../actions/VisualizationActions';
+import { selectBuilderVisualizationType, selectBuilderSortOrder, selectBuilderSortField, selectVisualizationConditional, selectVisualizationConfig } from '../../../actions/VisualizationActions';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import styles from '../Visualizations.sass';
 
@@ -12,52 +12,46 @@ import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 import RaisedButton from '../../Base/RaisedButton';
 
-export class BuilderSidebar extends Component {
-  constructor(props) {
-    super(props);
+import ConditionalSelector from './ConditionalSelector';
+import BinningSelector from './BinningSelector';
 
-    this.onClickGallery = this.onClickGallery.bind(this);
-  }
+export class BuilderSidebar extends Component {
 
   componentWillMount() {
-    const { project, datasetSelector } = this.props;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { project, datasetSelector, selectBuilderVisualizationType } = this.props;
-
-    if (nextProps.visualization.spec.id && !nextProps.visualization.visualizationType) {
-      selectBuilderVisualizationType(nextProps.visualization.spec.vizTypes[0]);
+    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
+    if (project.properties.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.isFetching) {
+      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId);
     }
   }
 
-  onClickGallery() {
-    this.props.pushState(null, `/projects/${ this.props.project.properties.id }/visualize/gallery${ this.props.gallerySelector.queryString }`);
+  componentDidUpdate(previousProps) {
+    const { project, visualization, datasetSelector, fieldProperties, selectBuilderVisualizationType, fetchFieldPropertiesIfNeeded } = this.props;
+
+    if (visualization.spec.id && !visualization.visualizationType) {
+      selectBuilderVisualizationType(visualization.spec.vizTypes[0]);
+    }
+
+    if (project.properties.id && !fieldProperties.isFetching && fieldProperties.items.length == 0) {
+      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId);
+    }
   }
 
   render() {
-    const { selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, filters, visualization } = this.props;
+    const { fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectVisualizationConditional, selectVisualizationConfig, filters, visualization } = this.props;
 
-    var visualizationTypes = [];
-
-    if (visualization.spec.vizTypes) {
-      visualizationTypes = filters.visualizationTypes.map((filter) =>
-        new Object({
-          type: filter.type,
-          imageName: filter.imageName,
-          label: filter.label,
-          disabled: visualization.spec.vizTypes.indexOf(filter.type) < 0,
-          selected: filter.type == visualization.visualizationType
-        })
-      );
+    if (!visualization.lastUpdated) {
+      return (<div></div>);
     }
+
+    const visualizationTypes = filters.visualizationTypes.filter((visualizationType) =>
+      (visualization.spec.vizTypes.indexOf(visualizationType.type) > -1)
+    ).map((visualizationType) =>
+      new Object({ ...visualizationType, selected: visualizationType.type == visualization.visualizationType })
+    );
 
     return (
       <Sidebar>
-        <SidebarGroup>
-          <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
-        </SidebarGroup>
-        { visualization.visualizationType &&
+        { visualization.visualizationType && visualizationTypes.length > 1 &&
           <SidebarGroup heading="Visualization type">
             <ToggleButtonGroup
               toggleItems={ visualizationTypes }
@@ -68,22 +62,40 @@ export class BuilderSidebar extends Component {
               onChange={ selectBuilderVisualizationType } />
           </SidebarGroup>
         }
-        { visualization.visualizationType == 'hist' &&
-          <SidebarGroup heading="Sort Field">
-            <ToggleButtonGroup
-              toggleItems={ visualization.sortFields }
-              valueMember="id"
-              displayTextMember="name"
-              onChange={ selectBuilderSortField } />
+        { (visualization.visualizationType == 'bar') &&
+          <SidebarGroup heading="Sort by">
+            <div className={ styles.sortGroup }>
+              <ToggleButtonGroup
+                className={ styles.sortFields }
+                toggleItems={ visualization.sortFields }
+                valueMember="id"
+                displayTextMember="name"
+                onChange={ selectBuilderSortField } />
+              <ToggleButtonGroup
+                className={ styles.sortOrder }
+                toggleItems={ visualization.sortOrders.map((sortOrder) => new Object({...sortOrder, icon: <i className={ sortOrder.iconName }></i> })) }
+                valueMember="id"
+                displayTextMember="icon"
+                altTextMember="name"
+                onChange={ selectBuilderSortOrder } />
+            </div>
           </SidebarGroup>
         }
         { visualization.visualizationType == 'hist' &&
-          <SidebarGroup heading="Sort Order">
-            <ToggleButtonGroup
-              toggleItems={ visualization.sortOrders }
-              valueMember="id"
-              displayTextMember="name"
-              onChange={ selectBuilderSortOrder } />
+          <BinningSelector
+            config={ visualization.spec.config }
+            selectBinningConfig={ selectVisualizationConfig } />
+        }
+        { visualization.visualizationType &&
+          <SidebarGroup heading="Filter by field">
+            { visualization.conditionals.map((conditional, i) =>
+              <div key={ `conditional-selector-${ i }` }>
+                <ConditionalSelector
+                  conditionalIndex={ i }
+                  fieldProperties={ fieldProperties.items }
+                  selectConditionalValue={ selectVisualizationConditional }/>
+              </div>
+            )}
           </SidebarGroup>
         }
       </Sidebar>
@@ -95,17 +107,17 @@ BuilderSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
-  visualization: PropTypes.object.isRequired,
+  visualization: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, filters, visualization, gallerySelector } = state;
+  const { project, datasetSelector, filters, visualization, fieldProperties } = state;
   return {
     project,
     datasetSelector,
     filters,
     visualization,
-    gallerySelector
+    fieldProperties
   };
 }
 
@@ -113,5 +125,7 @@ export default connect(mapStateToProps, {
   selectBuilderVisualizationType,
   selectBuilderSortOrder,
   selectBuilderSortField,
-  pushState
+  fetchFieldPropertiesIfNeeded,
+  selectVisualizationConditional,
+  selectVisualizationConfig
 })(BuilderSidebar);

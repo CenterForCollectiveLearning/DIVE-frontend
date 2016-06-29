@@ -31,17 +31,19 @@ export class ComparisonView extends Component {
   }
 
   render() {
-    const { numericalComparisonResult, independentVariableNames, dependentVariableNames, anovaResult } = this.props;
+    const { numericalComparisonResult, independentVariableNames, dependentVariableNames, anovaResult, canRunNumericalComparisonDependent, canRunNumericalComparisonIndependent } = this.props;
     const atLeastTwoVariablesSelectedOfOneType = independentVariableNames.length >= 2 || dependentVariableNames.length >= 2;
     const anovaResultNotEmpty = anovaResult && anovaResult.stats && anovaResult.stats.length > 0;
     const anovaCanBeDisplayed = independentVariableNames.length && dependentVariableNames.length && anovaResultNotEmpty;
-    const numericalComparisonResultNotEmpty = numericalComparisonResult && numericalComparisonResult.tests && numericalComparisonResult.tests.length > 0
-    if (atLeastTwoVariablesSelectedOfOneType && numericalComparisonResultNotEmpty) {
+    const numericalComparisonResultNotEmpty = numericalComparisonResult && numericalComparisonResult.length > 0
+
+    if ((canRunNumericalComparisonDependent || canRunNumericalComparisonIndependent) && numericalComparisonResultNotEmpty) {
+      console.log('SHOULD BE DISPLAYING STUFF');
       return (
-        <div className={ styles.summaryViewContainer }>
+        <div className={ styles.aggregationViewContainer }>
           <Card>
             <HeaderBar header={ <span>Statistics Table</span> } />
-            <StatsTable numericalData={ numericalComparisonResult.tests } />
+            <StatsTable numericalData={ numericalComparisonResult } />
           </Card>
         </div>
       );
@@ -49,7 +51,7 @@ export class ComparisonView extends Component {
 
     else if (anovaCanBeDisplayed) {
       return (
-        <div className={ styles.summaryViewContainer }>
+        <div className={ styles.aggregationViewContainer }>
           <Card>
             <HeaderBar header={ <span>Anova Table</span> } />
             <AnovaTable anovaData={ anovaResult } />

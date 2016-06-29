@@ -1,87 +1,64 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
-import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions.js';
+import DocumentTitle from 'react-document-title';
+import { fetchProjectIfNeeded, fetchUserProjects } from '../actions/ProjectActions.js';
+
 import styles from './App/App.sass';
 
-import EmailBlockingModal from './Base/EmailBlockingModal';
-import Tabs from './Base/Tabs';
-import Tab from './Base/Tab';
-
-var Logo = require('babel!svg-react!../../assets/DIVE_logo_white.svg?name=Logo');
+import ProjectNav from './ProjectNav';
 
 export class ProjectsPage extends Component {
-  constructor(props) {
-    super(props);
-
-    this._handleTabsChange = this._handleTabsChange.bind(this);
-    this._onClickLogo = this._onClickLogo.bind(this);
-  }
-
   componentDidMount() {
-    if (this.props.params.projectId) {
-      this.props.fetchProjectIfNeeded(this.props.params.projectId);
+    const { params, user, projects, fetchProjectIfNeeded, fetchUserProjects } = this.props;
+    if (params.projectId) {
+      fetchProjectIfNeeded(params.projectId);
+    }
+
+    if (user.id && !projects.isFetchingUserProjects && !projects.userProjectsLoaded) {
+      fetchUserProjects(user.id);
+      if (user.email) {
+        amplitude.setUserId(user.email);
+      }
     }
   }
 
-  _getSelectedTab(){
-    const tabList = ["data", "transform", "visualize", "analyze"];
-    const _validTab = function (tabValue) {
-      return tabList.indexOf(tabValue) > -1;
+  componentWillReceiveProps(nextProps) {
+    const { user, projects, fetchUserProjects } = nextProps;
+
+    if (user.id && !projects.isFetchingUserProjects && !projects.userProjectsLoaded) {
+      fetchUserProjects(user.id);
     }
-
-    if ((this.props.routes.length > 2) && _validTab(this.props.routes[2].path)) {
-      return this.props.routes[2].path;
-    }
-    return "datasets";
-  }
-
-  _handleTabsChange(tab){
-    this.props.pushState(null, `/projects/${this.props.params.projectId}/${tab.props.route}`);
-  }
-
-  _onClickLogo(){
-    this.props.pushState(null, `/`);
   }
 
   render() {
+    const { project } = this.props;
+    const documentTitle = project.properties.title ? `DIVE / ${ project.properties.title }`: 'DIVE';
+
     return (
-      <div className={ styles.fillContainer + ' ' + styles.projectContainer }>
-        <EmailBlockingModal />
-        <div className={ styles.header }>
-          <div className={ styles.logoContainer } onClick={ this._onClickLogo }>
-            <Logo className={ styles.logo } />
-            <div className={ styles.logoText }>
-              DIVE
-            </div>
-          </div>
-          <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
-            <Tab label="DATA" value="data" route="data" />
-            <Tab label="VISUALIZE" value="visualize" route="visualize/gallery" disabled={ this.props.datasetSelector.datasetId == null }/>
-            <Tab label="ANALYZE" value="analyze" route="analyze/regression" disabled={ this.props.datasetSelector.datasetId == null }/>
-            <Tab label="COMPOSE" value="compose" route="compose" disabled/>
-          </Tabs>
+      <DocumentTitle title={ documentTitle }>
+        <div className={ styles.fillContainer + ' ' + styles.projectContainer }>
+          <ProjectNav paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
+          { this.props.children }
         </div>
-        {this.props.children}
-      </div>
+      </DocumentTitle>
     );
   }
 }
 
 ProjectsPage.propTypes = {
-  pushState: PropTypes.func.isRequired,
   children: PropTypes.node,
+  projects: PropTypes.object,
   project: PropTypes.object,
   user: PropTypes.object
 };
 
 function mapStateToProps(state) {
-  const { project, user, datasetSelector } = state;
+  const { projects, project, user } = state;
   return {
-    project: project,
-    user: user,
-    datasetSelector: datasetSelector
+    projects,
+    project,
+    user
   };
 }
 
-export default connect(mapStateToProps, { pushState, fetchProjectIfNeeded })(ProjectsPage);
+export default connect(mapStateToProps, { fetchProjectIfNeeded, fetchUserProjects })(ProjectsPage);

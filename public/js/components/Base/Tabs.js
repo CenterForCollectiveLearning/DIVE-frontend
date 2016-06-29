@@ -6,11 +6,6 @@ export default class Tabs extends Component {
     super(props);
 
     this.renderChildren = this.renderChildren.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick(i) {
-    this.props.onChange(this.props.children[i]);
   }
 
   renderChildren() {
@@ -18,19 +13,11 @@ export default class Tabs extends Component {
     return React.Children.map(this.props.children, function (child){
       i++;
 
-      if (child.props.value == this.props.value){
-        return React.cloneElement(child, {
-          selected: true,
-          selectedClassName: this.props.selectedClassName,
-          onClick: this.props.onChange ? this.handleClick.bind(this, i) : null
-        });
-      } else {
-        return React.cloneElement(child, {
-          selected: false,
-          selectedClassName: this.props.selectedClassName,
-          onClick: this.props.onChange ? this.handleClick.bind(this, i) : null
-        });
-      }
+      return React.cloneElement(child, {
+        value: this.props.value,
+        selectedClassName: this.props.selectedClassName,
+        onChange: this.props.onChange ? this.props.onChange : null
+      });      
     }, this);
   }
 

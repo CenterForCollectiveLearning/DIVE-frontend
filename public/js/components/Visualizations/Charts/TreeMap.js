@@ -1,7 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 
-import * as GeneratingProcedures from '../../../constants/GeneratingProcedures';
-
 import styles from '../Visualizations.sass';
 
 var Chart = require('react-google-charts').Chart;
@@ -24,20 +22,33 @@ export default class TreeMap extends Component {
       )
     ];
 
+    function generateTooltip(row, size, value) {
+      return `
+        <div style="padding: 8px 12px; background-color: white;" className=${ styles.tooltip } class="tooltip">
+          <div style="white-space: nowrap; font-size: 14px;">${ data[row][0] }</div>
+          <div style="font-weight: 500; font-size: 18px; padding-top: 4px;">${ size }</div>
+        </div>
+      `;
+    }
+
     const treeMapOptions = {
       ...options,
-      minColor: '#DE6943',
-      maxColor: '#2D962D',
+      minColor: '#F3595C',
+      maxColor: '#78C466',
       textStyle: {
         ...options.textStyle,
         fontSize: 20,
         bold: true
       },
-      showTooltips: false
+      showTooltips: true,
+      generateTooltip: generateTooltip,
+      tooltip: {
+        trigger: 'both'
+      }
     }
 
     return (
-      <Chart chartType="TreeMap" options={ treeMapOptions } data={ dataWithParent } graph_id={ chartId }/>
+      <Chart chartType="TreeMap" chartVersion="43" options={ treeMapOptions } data={ dataWithParent } graph_id={ chartId }/>
     );
   }
 }

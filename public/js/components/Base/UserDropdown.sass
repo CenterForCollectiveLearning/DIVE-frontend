@@ -1,0 +1,45 @@
+@import '../../../css/mixins.sass'
+
+.userDropdown
+  display: flex
+  align-items: center
+  margin-left: auto
+
+  .username
+    +montserrat
+    display: flex
+    background-color: transparent
+    line-height: 24px
+    height: 24px
+
+    font-size: 11px
+    font-weight: 600
+    text-align: center
+    color: #CFD8DC
+
+    cursor: pointer
+    white-space: nowrap
+
+    .chevron
+      line-height: 26px
+      margin-left: 6px
+
+  .dropdown
+    +montserrat
+    position: absolute
+    right: 35px
+    top: 72px
+    width: auto
+    border-radius: 2px
+    z-index: 1000
+
+    .dropdownItem
+      padding: 8px 12px
+      background-color: #0F2762
+      font-size: 14px
+      font-weight: 300
+      cursor: pointer
+
+      &:hover
+        background-color: rgba(15, 39, 98, 0.58)
+

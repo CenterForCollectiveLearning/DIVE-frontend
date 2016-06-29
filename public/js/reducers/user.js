@@ -1,28 +1,78 @@
-import { LOAD } from 'redux-storage';
-
 import {
-  CREATE_ANONYMOUS_USER,
-  SET_USER_EMAIL,
-  SUBMIT_USER
+  REQUEST_LOGIN_USER,
+  RECEIVE_LOGIN_USER,
+  ERROR_LOGIN_USER,
+  REQUEST_REGISTER_USER,
+  RECEIVE_REGISTER_USER,
+  ERROR_REGISTER_USER,
+  REQUEST_LOGOUT_USER,
+  RECEIVE_LOGOUT_USER,
+  ERROR_LOGOUT_USER,
 } from '../constants/ActionTypes';
 
-export default function user(state = {
-  isFetching: false,
-  loaded: false,
+import cookie from 'react-cookie';
+
+const baseState = {
+  rememberToken: cookie.load('remember_token') || null,
+  isAuthenticated: cookie.load('remember_token') ? true : false,
+  username: cookie.load('username') || '',
+  email: cookie.load('email') || '',
+  id: cookie.load('user_id') || '',
+  error: {
+    login: '',
+    logout: '',
+    register: {
+      email: null,
+      username: null
+    }
+  },
+  success: {
+    login: '',
+    logout: '',
+    register: ''
+  },
   properties: {}
-}, action) {
+}
+
+export default function user(state = baseState, action) {
   switch (action.type) {
-    case LOAD:
-      if (action.payload.user) {
-        return { ...action.payload.user, loaded: true };
-      }
-      return { ...state, loaded: true };
-    case CREATE_ANONYMOUS_USER:
-      return { ...state, properties: action.userProperties };
-    case SET_USER_EMAIL:
-      return { ...state, properties: { ...state.properties, email: action.email } };
-    case SUBMIT_USER:
-      return { ...state, properties: { ...state.properties, submitted: true } };
+    case RECEIVE_LOGIN_USER:
+      return { ...state,
+        success: { login: action.message, register: '' },
+        isAuthenticated: true,
+        username: action.username,
+        email: action.email,
+        id: action.id
+      };
+    case ERROR_LOGIN_USER:
+      return { ...state, error: { ...state.error, login: action.error }};
+    case RECEIVE_REGISTER_USER:
+      return { ...state,
+        success: { register: action.message, login: ''},
+        isAuthenticated: true,
+        username: action.username,
+        email: action.email,
+        id: action.id
+      };
+    case ERROR_REGISTER_USER:
+      return { ...state,
+        error: {
+          ...state.error,
+          register: {
+            ...state.error.register,
+            email: action.emailError,
+            username: action.usernameError,
+          }
+      }};
+    case RECEIVE_LOGOUT_USER:
+      return {
+        ...baseState,
+        rememberToken: null,
+        username: '',
+        email: '',
+        id: '',
+        isAuthenticated: false
+      };
     default:
       return state;
   }

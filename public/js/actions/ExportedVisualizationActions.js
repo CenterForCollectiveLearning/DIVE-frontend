@@ -27,13 +27,12 @@ function fetchExportedSpec(projectId, exportedSpecId) {
   return dispatch => {
     dispatch(requestExportedSpecDispatcher());
     return fetch(`/exported_specs/v1/exported_specs/${ exportedSpecId }/visualization?project_id=${ projectId }`)
-      .then(response => response.json())
       .then(json => dispatch(receiveExportedSpecDispatcher(json)))
       .catch(err => console.error("Error fetching visualization: ", err));
   };
 }
 
-function shouldFetchExportedSpec(state) {  
+function shouldFetchExportedSpec(state) {
   const { exportedSpec } = state;
   if (exportedSpec.spec.id || exportedSpec.isFetching) {
     return false;

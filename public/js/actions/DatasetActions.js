@@ -4,65 +4,48 @@ import {
   RECEIVE_DATASET,
   REQUEST_DATASETS,
   RECEIVE_DATASETS,
+  DELETED_DATASET,
   REQUEST_UPLOAD_DATASET,
+  PROGRESS_UPLOAD_DATASET,
   RECEIVE_UPLOAD_DATASET,
+  PROGRESS_TRANSFORM,
   REQUEST_REDUCE_DATASET_COLUMNS,
   REQUEST_MERGE_DATASETS
 } from '../constants/ActionTypes';
 
-import { fetch, pollForTaskResult } from './api.js';
+import { fetch, httpRequest, pollForTask } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
-export function selectDataset(datasetId) {
+export function selectDataset(projectId, datasetId) {
   return {
     type: SELECT_DATASET,
+    projectId: projectId,
     datasetId: datasetId
   };
 }
 
-function requestDatasetsDispatcher() {
+function requestDatasetsDispatcher(projectId) {
   return {
-    type: REQUEST_DATASETS
+    type: REQUEST_DATASETS,
+    projectId: projectId
   };
 }
 
-function receiveDatasetsDispatcher(projectId, json) {
+function receiveDatasetsDispatcher(projectId, json, setSelector) {
   return {
     type: RECEIVE_DATASETS,
     projectId: projectId,
     datasets: json.datasets,
-    receivedAt: Date.now()
+    receivedAt: Date.now(),
+    setSelector: setSelector
   };
 }
 
-function deleteDatasetDispatcher() {
-  return {
-    type: DELETE_DATASETS
-  };
-}
-
-function fetchDatasets(projectId) {
+export function fetchDatasets(projectId, setSelector = true) {
   return dispatch => {
-    dispatch(requestDatasetsDispatcher());
+    dispatch(requestDatasetsDispatcher(projectId));
     return fetch('/datasets/v1/datasets?project_id=' + projectId)
-      .then(response => response.json())
-      .then(json => dispatch(receiveDatasetsDispatcher(projectId, json)));
-  };
-}
-
-function shouldFetchDatasets(state) {
-  const datasets = state.datasets;
-  if (datasets.loaded || datasets.isFetching) {
-    return false;
-  }
-  return true;
-}
-
-export function fetchDatasetsIfNeeded(projectId) {
-  return (dispatch, getState) => {
-    if (shouldFetchDatasets(getState())) {
-      return dispatch(fetchDatasets(projectId));
-    }
+      .then(json => dispatch(receiveDatasetsDispatcher(projectId, json, setSelector)));
   };
 }
 
@@ -72,19 +55,42 @@ function requestUploadDatasetDispatcher() {
   };
 }
 
+function progressUploadDatasetDispatcher(event) {
+  return {
+    type: PROGRESS_UPLOAD_DATASET,
+    progress: `Uploading dataset… ${ Math.round(event.loaded / event.total * 100) }%`
+  }
+}
+
+function progressTaskUploadDatasetDispatcher(data) {
+  return {
+    type: PROGRESS_UPLOAD_DATASET,
+    progress:  data.currentTask
+  }
+}
+
+function errorTaskUploadDatasetDispatcher(event) {
+  return {
+    type: PROGRESS_UPLOAD_DATASET,
+    progress: 'Error uploading dataset, please check console.'
+  }
+}
+
 function receiveUploadDatasetDispatcher(params, json) {
   if (json) {
     return {
       type: RECEIVE_UPLOAD_DATASET,
-      datasets: [{ datasetId: json.id }],
+      datasets: [{ datasetId: json.datasetId }],
+      projectId: params.projectId,
       error: null
-    };    
+    };
   }
   return {
     type: RECEIVE_UPLOAD_DATASET,
     datasets: [],
+      projectId: params.projectId,
     error: "Sorry, this dataset is too large for us to process right now."
-  };    
+  };
 }
 
 export function uploadDataset(projectId, datasetFile) {
@@ -94,29 +100,38 @@ export function uploadDataset(projectId, datasetFile) {
 
   return (dispatch) => {
     dispatch(requestUploadDatasetDispatcher());
-    return fetch('/datasets/v1/upload', {
-      method: 'post',
-      body: formData
-    }).then(response => response.json())
-      .then(function(json) {
-        if (json.taskId) {
-          dispatch(pollForTaskResult(json.taskId, {}, receiveUploadDatasetDispatcher))
+
+    const uploadEvents = [
+      {
+        type: 'progress',
+        function: (event) => {
+          dispatch(progressUploadDatasetDispatcher(event));
         }
-      })
+      }
+    ];
+
+    const completeEvent = (request) => (evt) => {
+      const { taskId } = JSON.parse(request.responseText);
+      dispatch(pollForTask(taskId, REQUEST_UPLOAD_DATASET, {}, receiveUploadDatasetDispatcher, progressTaskUploadDatasetDispatcher, errorTaskUploadDatasetDispatcher));
+    };
+
+    return httpRequest('POST', '/datasets/v1/upload', formData, completeEvent, uploadEvents);
   };
 }
 
-function requestDatasetDispatcher(datasetId) {
+function requestDatasetDispatcher(projectId, datasetId) {
   return {
     type: REQUEST_DATASET,
+    projectId: projectId,
     datasetId: datasetId
   };
 }
 
-function receiveDatasetDispatcher(json) {
+function receiveDatasetDispatcher(params, json) {
   return {
     type: RECEIVE_DATASET,
     datasetId: json.datasetId,
+    projectId: json.projectId,
     title: json.title,
     details: json.details,
     data: json.details ? formatTableData(json.details.fieldNames, json.details.sample) : []
@@ -125,20 +140,38 @@ function receiveDatasetDispatcher(json) {
 
 export function fetchDataset(projectId, datasetId) {
   return (dispatch) => {
-    dispatch(requestDatasetDispatcher(datasetId));
-    return fetch(`/datasets/v1/datasets/${datasetId}?project_id=${projectId}`)
-      .then(response => response.json())
-      .then(json => dispatch(receiveDatasetDispatcher(json)));
+    dispatch(requestDatasetDispatcher(projectId, datasetId));
+    return fetch(`/datasets/v1/datasets/${ datasetId }?project_id=${projectId}`)
+      .then(json => dispatch(receiveDatasetDispatcher({}, json)));
+  };
+}
+
+function deletedDatasetDispatcher(datasetId, json) {
+  return {
+    type: DELETED_DATASET,
+    datasetId: datasetId
   };
 }
 
 export function deleteDataset(projectId, datasetId) {
   return (dispatch) => {
-    dispatch(requestDatasetDispatcher(datasetId));
-    return fetch(`/datasets/v1/datasets/${datasetId}?project_id=${projectId}`, {
+    return fetch(`/datasets/v1/datasets/${ datasetId }?project_id=${ projectId }`, {
       method: 'delete'
-    }).then(response => response.json())
-      .then(json => dispatch(deleteDatasetDispatcher(json)));
+    }).then(json => dispatch(deletedDatasetDispatcher(datasetId, json)));
+  };
+}
+
+function progressTransformDispatcher(data) {
+  return {
+    type: PROGRESS_TRANSFORM,
+    progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
+  };
+}
+
+function errorTransformDispatcher(data) {
+  return {
+    type: ERROR_TRANSFORM,
+    progress: 'Error transforming dataset, please check console.'
   };
 }
 
@@ -163,8 +196,10 @@ export function reduceDatasetColumns(projectId, datasetId, columnIds=[]) {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveDatasetDispatcher(json)));
+    }).then(function(json) {
+        const dispatchParams = { projectId };
+        dispatch(pollForTask(json.taskId, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher, errorTransformDispatcher));
+      });
   };
 }
 
@@ -193,8 +228,10 @@ export function pivotDatasetColumns(projectId, datasetId, variableName, valueNam
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveDatasetDispatcher(json)));
+    }).then(function(json) {
+        const dispatchParams = { projectId };
+        dispatch(pollForTask(json.taskId, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher, errorTransformDispatcher));
+      });
   };
 }
 
@@ -223,7 +260,9 @@ export function mergeDatasets(projectId, leftDatasetId, rightDatasetId, onColumn
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(response => response.json())
-      .then(json => dispatch(receiveDatasetDispatcher(json)));
+    }).then(function(json) {
+        const dispatchParams = {};
+        dispatch(pollForTask(json.taskId, REQUEST_MERGE_DATASETS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher));
+      });
   };
 }

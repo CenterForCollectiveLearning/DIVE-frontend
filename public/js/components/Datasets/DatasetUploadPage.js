@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-react-router';
+import { push } from 'react-router-redux';
 
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
-import RaisedButton from '../Base/RaisedButton';
-import ActionBox from '../Base/ActionBox';
 import Dropzone from 'react-dropzone';
+import HeaderBar from '../Base/HeaderBar';
+import RaisedButton from '../Base/RaisedButton';
 
 export class DatasetUploadPage extends Component {
   constructor(props) {
@@ -17,9 +17,9 @@ export class DatasetUploadPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { datasetSelector, pushState, params } = nextProps;
+    const { datasetSelector, push, params } = nextProps;
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      pushState(null, `/projects/${ params.projectId }/data/${ datasetSelector.datasetId }/inspect`);
+      push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
     }
   }
 
@@ -35,13 +35,16 @@ export class DatasetUploadPage extends Component {
     const { datasetSelector } = this.props;
     return (
       <div className={ styles.fillContainer }>
-        <ActionBox
-          className={ styles.datasetUploadBox }
-          contentClassName={ styles.datasetUploadBoxContent }
-          heading="Upload Dataset">
+        <HeaderBar
+          header="Upload Dataset"
+        />
+        <div
+          className={ styles.datasetUploadBox }>
           { datasetSelector.isUploading &&
             <div className={ styles.uploadingZone + ' ' + styles.centeredFill }>
-              <div className={ styles.watermark }>Uploading dataset...</div>
+              { datasetSelector.progress &&
+                <div className={ styles.watermark }>{ datasetSelector.progress }</div>
+              }
             </div>
           }
           { !datasetSelector.isUploading &&
@@ -56,7 +59,7 @@ export class DatasetUploadPage extends Component {
               <span>or drop files here to upload</span>
             </Dropzone>
           }
-        </ActionBox>
+        </div>
       </div>
     );
   }
@@ -73,4 +76,4 @@ function mapStateToProps(state) {
   return { project, datasetSelector };
 }
 
-export default connect(mapStateToProps, { uploadDataset, pushState })(DatasetUploadPage);
+export default connect(mapStateToProps, { uploadDataset, push })(DatasetUploadPage);

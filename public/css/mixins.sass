@@ -9,4 +9,63 @@
   border: 1px solid #EAEAEA
   border-radius: 2px
   box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.01), 0px 2px 2px 0px rgba(0, 0, 0, 0.058), 0px 1px 5px 0px rgba(0, 0, 0, 0.034)
-  
+
+=watermark
+  +montserrat
+  display: flex
+  flex-grow: 1
+  justify-content: center
+
+  text-transform: uppercase
+  font-weight: 500
+  letter-spacing: 1px
+  font-size: 16px
+  color: #999
+
+=block
+  padding: 11px
+  margin: 0
+
+  background-color: #FAFAFA
+  border: 1px solid #CFCFCF
+  box-shadow: 0px 1px 4px 0 rgba(0, 0, 0, 0.1)
+
+  font-size: 14px
+  text-align: center
+
+  cursor: pointer
+  outline: none
+
+.headerControlRow
+  display: flex
+  flex-direction: row-reverse
+  flex-grow: 1
+
+  > div
+    margin-left: 10px
+
+.headerControl
+  display: flex
+  flex-direction: row
+  align-items: center
+
+  &.headerControlLong
+    min-width: 160px
+
+  > span
+    margin-right: 10px
+
+    white-space: nowrap
+    font-size: 13px
+    font-weight: 300
+
+.sidebarDropdown
+  margin-top: 1px
+
+  > div > div:first-of-type
+    margin-top: -1px
+    border-color: #D0D0D0
+    background-color: rgba(255, 255, 255, 0.4)
+
+    > div:first-child
+      font-size: 12px
