@@ -36,6 +36,7 @@ const baseState = {
   regressionType: 'linear',
   dependentVariableId: null,
   independentVariableIds: [],
+  interactionTermIds: [], //IVs: { id: 30, variableIds: [2, 3]}
   regressionResult: {
     exported: false,
     exportedRegressionId: null,

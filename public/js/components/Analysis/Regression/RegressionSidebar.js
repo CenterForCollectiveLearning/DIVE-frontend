@@ -122,6 +122,31 @@ export class RegressionSidebar extends Component {
                   onChange={ selectIndependentVariable } />
               </div>
             }
+            { fieldProperties.items.filter((property) => property.generalType == 'q' || property.generalType == 'c').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Interaction Terms</div>
+                { regressionSelector.interactionTermIds.length > 0 ? 
+                   <div></div> :
+                  <div> None selected </div>
+                }
+              </div>
+            }
+          </SidebarGroup>
+        }
+          <SidebarGroup heading="Add Interaction Terms">
+            <DropDownMenu
+              value={ parseInt(regressionSelector.independentVariableId) }
+              options={ fieldProperties.items.filter((item) => item.generalType == 'q' || item.generalType == 'c') }
+              valueMember="id"
+              displayTextMember="name"
+              />
+            <DropDownMenu 
+              value={ parseInt(regressionSelector.independentVariableId) }
+              options={ fieldProperties.items.filter((item) => item.generalType == 'q') }
+              valueMember="id"
+              displayTextMember="name"
+              />
+            <button>Add</button>
           </SidebarGroup>
         }
 
