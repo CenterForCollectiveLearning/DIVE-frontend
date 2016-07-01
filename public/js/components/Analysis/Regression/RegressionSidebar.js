@@ -67,7 +67,7 @@ export class RegressionSidebar extends Component {
           <SidebarGroup heading="Dependent Variable (Y)">
             <DropDownMenu
               value={ parseInt(regressionSelector.dependentVariableId) }
-              options={ fieldProperties.items.filter((item) => item.generalType == 'q') }
+              options={ fieldProperties.items }
               valueMember="id"
               displayTextMember="name"
               onChange={ this.onSelectDependentVariable.bind(this) }/>
