@@ -10,6 +10,7 @@ import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
+import RaisedButton from '../../Base/RaisedButton';
 
 const regressionTypes = [
   { value: 'linear', label: 'Linear' },
@@ -18,6 +19,14 @@ const regressionTypes = [
 ];
 
 export class RegressionSidebar extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      interactionVariables: [null, null]
+    }
+  }
+
   componentWillMount(props) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
 
@@ -41,6 +50,17 @@ export class RegressionSidebar extends Component {
 
   onSelectRegressionType(regressionType) {
     this.props.selectRegressionType(regressionType);
+  }
+
+  onSelectInteractionTerm(dropDownNumber, independentVariableId) {
+    const interactionVariables = this.state.interactionVariables;
+    interactionVariables[dropDownNumber] = independentVariableId;
+
+    this.setState({ interactionVariables: interactionVariables });
+  }
+
+  onSubmitInteractionTerm() {
+
   }
 
   render() {
@@ -139,17 +159,16 @@ export class RegressionSidebar extends Component {
               options={ fieldProperties.items.filter((item) => item.generalType == 'q' || item.generalType == 'c') }
               valueMember="id"
               displayTextMember="name"
+              onChange={this.onSelectInteractionTerm.bind(this, 0)}
               />
             <DropDownMenu 
               value={ parseInt(regressionSelector.independentVariableId) }
               options={ fieldProperties.items.filter((item) => item.generalType == 'q') }
               valueMember="id"
               displayTextMember="name"
-              />
-            <button>Add</button>
+              onChange={this.onSelectInteractionTerm.bind(this, 1)}/>
+            <RaisedButton altText="Add" label="Add" onClick={this.onSubmitInteractionTerm.bind(this)}/>
           </SidebarGroup>
-        }
-
       </Sidebar>
     );
   }
