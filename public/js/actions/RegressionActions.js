@@ -2,6 +2,7 @@ import {
   SELECT_REGRESSION_TYPE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
+  CREATE_INTERACTION_TERM,
   REQUEST_RUN_REGRESSION,
   RECEIVE_RUN_REGRESSION,
   PROGRESS_RUN_REGRESSION,
@@ -37,6 +38,15 @@ export function selectDependentVariable(selectedDependentVariableId) {
   return {
     type: SELECT_REGRESSION_DEPENDENT_VARIABLE,
     dependentVariableId: selectedDependentVariableId,
+    selectedAt: Date.now()
+  }
+}
+
+export function createInteractionTerm(selectedVariableIds) {
+  console.log(selectedVariableIds)
+  return {
+    type: CREATE_INTERACTION_TERM,
+    interactionTermIds: selectedVariableIds,
     selectedAt: Date.now()
   }
 }
