@@ -155,15 +155,15 @@ export class RegressionSidebar extends Component {
         }
           <SidebarGroup heading="Add Interaction Terms">
             <DropDownMenu
-              value={ parseInt(regressionSelector.independentVariableId) }
-              options={ fieldProperties.items.filter((item) => item.generalType == 'q' || item.generalType == 'c') }
+              value={ this.state.interactionVariables[0] }
+              options={ fieldProperties.items.filter((item) => (item.generalType == 'q' || item.generalType == 'c') && item.id != this.state.interactionVariables[1]) }
               valueMember="id"
               displayTextMember="name"
               onChange={this.onSelectInteractionTerm.bind(this, 0)}
               />
             <DropDownMenu 
-              value={ parseInt(regressionSelector.independentVariableId) }
-              options={ fieldProperties.items.filter((item) => item.generalType == 'q') }
+              value={ this.state.interactionVariables[1] }
+              options={ fieldProperties.items.filter((item) => (item.generalType == 'q' || item.generalType == 'c') && item.id != this.state.interactionVariables[0]) }
               valueMember="id"
               displayTextMember="name"
               onChange={this.onSelectInteractionTerm.bind(this, 1)}/>
