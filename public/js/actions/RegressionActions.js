@@ -84,6 +84,7 @@ function receiveContributionToRSquaredDispatcher(json) {
 }
 
 export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames) {
+  console.log('in run regression')
   const params = {
     projectId: projectId,
     spec: {
@@ -109,7 +110,6 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
       })
   };
 }
-
 
 export function getContributionToRSquared(projectId, regressionId) {
   return (dispatch) => {
