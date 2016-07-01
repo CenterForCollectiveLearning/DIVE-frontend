@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { selectDependentVariable } from '../../../actions/RegressionActions';
+import { selectDependentVariable, selectRegressionType } from '../../../actions/RegressionActions';
 
 export class RegressionPage extends Component {
   componentWillMount() {

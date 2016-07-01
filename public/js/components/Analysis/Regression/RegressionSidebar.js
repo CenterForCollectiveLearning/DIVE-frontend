@@ -45,6 +45,12 @@ export class RegressionSidebar extends Component {
 
   render() {
     const { fieldProperties, regressionSelector, selectIndependentVariable } = this.props;
+    const dependentVariable = fieldProperties.items.filter((property) => property.id == parseInt(regressionSelector.dependentVariableId));
+    console.log(dependentVariable)
+    let shownRegressionTypes = regressionTypes;
+    if(dependentVariable.length > 0 && dependentVariable[0].type == 'decimal') {
+      shownRegressionTypes = regressionTypes.filter((type) => type.value != 'logistic')
+    }
 
     return (
       <Sidebar selectedTab="regression">
@@ -52,7 +58,7 @@ export class RegressionSidebar extends Component {
           <SidebarGroup heading="Regression Type">
             <DropDownMenu
               value={ regressionSelector.regressionType }
-              options={ regressionTypes }
+              options={ shownRegressionTypes }
               onChange={ this.onSelectRegressionType.bind(this) } />
           </SidebarGroup>
         }
