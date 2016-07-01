@@ -15,7 +15,9 @@ function dependentVariableToRegressionType(type) {
 export class RegressionPage extends Component {
   componentWillMount() {
     const { selectDependentVariable, params, fieldProperties, selectRegressionType} = this.props;
+
     selectDependentVariable(params.dependentVariable);
+
     const dependentVariable = fieldProperties.items.filter((property) => property.id == params.dependentVariable)
     if(dependentVariable.length > 0) {
       selectRegressionType(dependentVariableToRegressionType(dependentVariable[0].generalType));
@@ -23,10 +25,12 @@ export class RegressionPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.params.dependentVariable != nextProps.params.dependentVariable) {
-      this.props.selectDependentVariable(nextProps.params.dependentVariable);
-      const dependentVariable = this.props.fieldProperties.items.filter((property) => property.id == nextProps.params.dependentVariable)
-      this.props.selectRegressionType(dependentVariableToRegressionType(dependentVariable[0].generalType))
+    const { params, selectDependentVariable, fieldProperties, selectRegressionType } = this.props;
+    
+    if (params.dependentVariable != nextProps.params.dependentVariable) {
+      selectDependentVariable(nextProps.params.dependentVariable);
+      const dependentVariable = fieldProperties.items.filter((property) => property.id == nextProps.params.dependentVariable)
+      selectRegressionType(dependentVariableToRegressionType(dependentVariable[0].generalType))
     }
   }
 
