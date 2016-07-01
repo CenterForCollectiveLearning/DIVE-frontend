@@ -61,10 +61,15 @@ export class RegressionSidebar extends Component {
 
   onCreateInteractionTerm() {
     this.props.createInteractionTerm(this.state.interactionVariables);
+    this.setState({ interactionVariables: [null, null] })
   }
 
   render() {
     const { fieldProperties, regressionSelector, selectIndependentVariable } = this.props;
+    
+    const interactionTermNames = regressionSelector.interactionTermIds.map((idTuple) => {
+      return fieldProperties.items.filter((property) => property.id == idTuple[0] || property.id == idTuple[1]).map((item) => item.name)
+    })
 
     return (
       <Sidebar selectedTab="regression">
@@ -146,8 +151,16 @@ export class RegressionSidebar extends Component {
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Interaction Terms</div>
                 { regressionSelector.interactionTermIds.length > 0 ? 
-                   <div></div> :
-                  <div> None selected </div>
+                    <ToggleButtonGroup
+                      toggleItems={ interactionTermNames.map((idTuple, key) =>
+                        new Object({
+                          id: key,
+                          name:  idTuple[0] + "*" + idTuple[1]
+                        }) 
+                      )}
+                      valueMember="id"
+                      displayTextMember="name" />
+                   : <div> None selected </div>
                 }
               </div>
             }
