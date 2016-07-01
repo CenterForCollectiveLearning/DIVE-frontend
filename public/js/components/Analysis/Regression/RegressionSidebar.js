@@ -45,8 +45,9 @@ export class RegressionSidebar extends Component {
 
   render() {
     const { fieldProperties, regressionSelector, selectIndependentVariable } = this.props;
+
+    //light filtering for regression types by dependent variable
     const dependentVariable = fieldProperties.items.filter((property) => property.id == parseInt(regressionSelector.dependentVariableId));
-    console.log(dependentVariable)
     let shownRegressionTypes = regressionTypes;
     if(dependentVariable.length > 0 && dependentVariable[0].type == 'decimal') {
       shownRegressionTypes = regressionTypes.filter((type) => type.value != 'logistic')
