@@ -14,7 +14,8 @@ function dependentVariableToRegressionType(type) {
 
 export class RegressionPage extends Component {
   componentWillMount() {
-    const { selectDependentVariable, params } = this.props;
+    const { selectDependentVariable, params, location } = this.props;
+    console.log(location.query)
     selectDependentVariable(params.dependentVariable);
   }
 

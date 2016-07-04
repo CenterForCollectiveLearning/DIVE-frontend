@@ -9,8 +9,9 @@ import RegressionView from './RegressionView';
 export class RegressionBasePage extends Component {
   componentWillMount() {
     if (this.props.fieldProperties.items.length > 0 && !this.props.params.dependentVariable) {
-      const newDependentVariableId =  (this.props.fieldProperties.items.find((property) => property.name == 'salary' || property.name == 'Intensity') || this.props.fieldProperties.items.find((property) => property.generalType == 'q')).id
-      this.props.replace(`/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/analyze/regression/${ newDependentVariableId }`);
+      const newDependentVariableId =  (this.props.fieldProperties.items.find((property) => property.generalType == 'q') || this.props.fieldProperties.items.find((property) => property.generalType == 'c')).id
+      const regressionType = 'linear';
+      this.props.replace(`/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/analyze/regression/${ newDependentVariableId }?reg=${ regressionType }`);
     }
   }
 
@@ -18,7 +19,7 @@ export class RegressionBasePage extends Component {
     const { fieldProperties, params, replace } = nextProps;
     if (fieldProperties.datasetId == params.datasetId && fieldProperties.items.length > 0 && !params.dependentVariable) {
       const newDependentVariableId = (fieldProperties.items.find((property) => property.name == 'salary' || property.name == 'Intensity') || fieldProperties.items.find((property) => property.generalType == 'q')).id
-      replace(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression/${ newDependentVariableId }`);
+      replace(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression/${ newDependentVariableId }?reg=${ regressionType }`);
     }
   }
 

@@ -100,6 +100,7 @@ export default function regressionSelector(state = baseState, action) {
       return { ...state, regressionResult: { ...state.regressionResult, loading: true } };
 
     case RECEIVE_RUN_REGRESSION:
+      console.log(action.data)
       return { ...state,
         regressionResult: {
           exported: action.data.exported,
