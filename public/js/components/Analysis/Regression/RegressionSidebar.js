@@ -36,9 +36,9 @@ export class RegressionSidebar extends Component {
   }
 
   onSelectDependentVariable(dependentVariable) {
-    const { project, datasetSelector, regressionSelector, push } = this.props;
+    const { project, datasetSelector, push } = this.props;
 
-    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression/${ dependentVariable }?reg=${ regressionSelector.regressionType }`);
+    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression/${ dependentVariable }`);
   }
 
   onSelectRegressionType(regressionType) {
