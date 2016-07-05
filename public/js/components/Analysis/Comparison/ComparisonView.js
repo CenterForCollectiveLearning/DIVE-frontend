@@ -13,6 +13,7 @@ import StatsTable from './StatsTable';
 import NumericalComparisonText from './NumericalComparisonText'
 import AnovaTable from './AnovaTable';
 import AnovaText from './AnovaText';
+import AnovaBoxplotCard from './AnovaBoxplotCard';
 
 import HeaderBar from '../../Base/HeaderBar';
 import RaisedButton from '../../Base/RaisedButton';
@@ -95,21 +96,28 @@ export class ComparisonView extends Component {
 
     if (canShowNumericalComparison) {
       comparisonContent =
-        <div>
+        <Card header={ <span>{ cardHeader }</span> }>
           <StatsTable numericalData={ numericalComparisonResult.tests } />
-        </div>
+        </Card>
 
     } else if (anovaCanBeDisplayed) {
       comparisonContent =
         <div>
-          <AnovaTable anovaData={ anovaResult } />
-          <AnovaText
-            dependentVariableNames={ dependentVariableNames }
-            independentVariableNames={ independentVariableNames }
-            anovaData={ anovaResult }
-          />
+          <Card header={ <span>{ cardHeader }</span> }>
+            <AnovaTable anovaData={ anovaResult } />
+            <AnovaText
+              dependentVariableNames={ dependentVariableNames }
+              independentVariableNames={ independentVariableNames }
+              anovaData={ anovaResult }
+            />
+          </Card>
+          { anovaBoxplotData.length > 0 &&
+            <AnovaBoxplotCard
+              anovaBoxplotData={ anovaBoxplotData }
+            />
+          }
         </div>
-    } else {
+      } else {
       comparisonContent =
       <div className={ styles.watermark }>
         Please Select Two or More Variables
@@ -139,9 +147,7 @@ export class ComparisonView extends Component {
           </div>
         }/>
         <div className={ styles.aggregationViewContainer }>
-          <Card header={ <span>{ cardHeader }</span> }>
-            { comparisonContent }
-          </Card>
+          { comparisonContent }
         </div>
       </div>
     );
