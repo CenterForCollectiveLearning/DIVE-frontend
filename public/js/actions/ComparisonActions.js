@@ -104,3 +104,24 @@ export function runAnova(projectId, datasetId, independentVariableNames, depende
       .catch(err => console.error("Error performing anova: ", err));
   };
 }
+
+export function getAnovaBoxplotData(projectId, datasetId, independentVariableNames, dependentVariableNames) {
+  const params = {
+    projectId: projectId,
+    spec: {
+      datasetId: datasetId,
+      independentVariables: independentVariableNames,
+      dependentVariables: dependentVariableNames,
+    }
+  }
+
+  return (dispatch) => {
+    dispatch(requestAnovaDispatcher);
+    return fetch('/statistics/v1/anova_boxplot', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(json => dispatch(receiveAnovaDispatcher(json)))
+      .catch(err => console.error("Error getting ANOVA boxplot: ", err));
+  };
+}
