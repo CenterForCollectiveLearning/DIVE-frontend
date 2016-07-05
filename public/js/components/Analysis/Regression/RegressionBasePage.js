@@ -6,20 +6,41 @@ import styles from '../Analysis.sass';
 import RegressionSidebar from './RegressionSidebar';
 import RegressionView from './RegressionView';
 
+const dvToType = {
+  q: 'linear',
+  c: 'logistic',
+  t: 'linear'
+}
+
+
 export class RegressionBasePage extends Component {
+
   componentWillMount() {
-    if (this.props.fieldProperties.items.length > 0 && !this.props.params.dependentVariable) {
-      const newDependentVariableId =  (this.props.fieldProperties.items.find((property) => property.generalType == 'q') || this.props.fieldProperties.items.find((property) => property.generalType == 'c')).id
-      const regressionType = 'linear';
-      this.props.replace(`/projects/${ this.props.params.projectId }/datasets/${ this.props.params.datasetId }/analyze/regression/${ newDependentVariableId }?reg=${ regressionType }`);
+    const { fieldProperties, params, replace, location } = this.props;
+
+    if (fieldProperties.items.length > 0 && !params.dependentVariable) {
+      const dependentVariableId = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c')).id;
+      replace(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression/${ dependentVariableId }`);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { fieldProperties, params, replace } = nextProps;
+    const { fieldProperties, params, replace, location } = nextProps;
+
     if (fieldProperties.datasetId == params.datasetId && fieldProperties.items.length > 0 && !params.dependentVariable) {
-      const newDependentVariableId = (fieldProperties.items.find((property) => property.name == 'salary' || property.name == 'Intensity') || fieldProperties.items.find((property) => property.generalType == 'q')).id
-      replace(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression/${ newDependentVariableId }?reg=${ regressionType }`);
+      const dependentVariableId = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c')).id;
+      replace(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression/${ dependentVariableId }`);
+    }
+
+    if(fieldProperties.items.length > 0 && params.dependentVariable && !location.query.reg) {
+      console.log('got fieldprops, but no regression type')
+
+      const dependentVariableType = fieldProperties.items.find((property) => property.id == params.dependentVariable).generalType;
+      const recommendedRegressionType = dvToType[dependentVariableType];
+
+      console.log(dependentVariableType, recommendedRegressionType)
+      
+      replace(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression/${ params.dependentVariable }?reg=${ recommendedRegressionType }`);
     }
   }
 

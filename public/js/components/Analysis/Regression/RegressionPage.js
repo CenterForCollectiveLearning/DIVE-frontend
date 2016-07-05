@@ -14,16 +14,21 @@ function dependentVariableToRegressionType(type) {
 
 export class RegressionPage extends Component {
   componentWillMount() {
-    const { selectDependentVariable, params, location } = this.props;
-    console.log(location.query)
+    const { selectDependentVariable, selectRegressionType, params, location } = this.props;
+    const regressionType = location.query.reg;
+
     selectDependentVariable(params.dependentVariable);
+
+    if(regressionType) {
+      selectRegressionType(regressionType)
+    }
   }
 
   componentDidMount() {
     const { selectDependentVariable, params, fieldProperties, selectRegressionType} = this.props;
 
-    console.log('cdm', fieldProperties)
     const dependentVariable = fieldProperties.items.filter((property) => property.id == params.dependentVariable)
+
     if(dependentVariable.length > 0) {
       selectRegressionType(dependentVariableToRegressionType(dependentVariable[0].generalType));
     }
