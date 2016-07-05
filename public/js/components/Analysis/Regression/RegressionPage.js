@@ -1,16 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { replace } from 'react-router-redux';
 
 import { selectDependentVariable, selectRegressionType } from '../../../actions/RegressionActions';
 
-function dependentVariableToRegressionType(type) {
-  const dvToType = {
-    q: 'linear',
-    c: 'logistic',
-    t: 'linear'
-  }
-  return dvToType[type];
+const dvToType = {
+  q: 'linear',
+  c: 'logistic',
+  t: 'linear'
 }
+
+// this page runs regressions according to the dependent variable and type of regression
 
 export class RegressionPage extends Component {
   componentWillMount() {
@@ -20,27 +20,27 @@ export class RegressionPage extends Component {
     selectDependentVariable(params.dependentVariable);
 
     if(regressionType) {
-      selectRegressionType(regressionType)
-    }
-  }
-
-  componentDidMount() {
-    const { selectDependentVariable, params, fieldProperties, selectRegressionType} = this.props;
-
-    const dependentVariable = fieldProperties.items.filter((property) => property.id == params.dependentVariable)
-
-    if(dependentVariable.length > 0) {
-      selectRegressionType(dependentVariableToRegressionType(dependentVariable[0].generalType));
+      selectRegressionType(regressionType);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, selectDependentVariable, fieldProperties, selectRegressionType } = this.props;
+    const { params, selectDependentVariable, fieldProperties, selectRegressionType, location, replace } = this.props;
 
-    if (params.dependentVariable != nextProps.params.dependentVariable) {
+    //if new type of regression selected, run that regression
+    if(location.query.reg != nextProps.location.query.reg && nextProps.location.query.reg) {
+      console.log('new regressiontype', nextProps.location.query.reg)
+      selectRegressionType(nextProps.location.query.reg);
+    }
+
+    //if new dependent variable selected, push to new link
+    if(params.dependentVariable != nextProps.params.dependentVariable) {
       selectDependentVariable(nextProps.params.dependentVariable);
-      const dependentVariable = fieldProperties.items.filter((property) => property.id == nextProps.params.dependentVariable)
-      selectRegressionType(dependentVariableToRegressionType(dependentVariable[0].generalType))
+      
+      const dependentVariableType = fieldProperties.items.find((property) => property.id == nextProps.params.dependentVariable).generalType;
+      const recommendedRegressionType = dvToType[dependentVariableType];
+
+      replace(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression/${ nextProps.params.dependentVariable }?reg=${ recommendedRegressionType }`)
     }
   }
 
@@ -54,4 +54,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { selectDependentVariable, selectRegressionType })(RegressionPage);
+export default connect(mapStateToProps, { selectDependentVariable, selectRegressionType, replace })(RegressionPage);

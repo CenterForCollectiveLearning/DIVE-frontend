@@ -36,11 +36,15 @@ export class RegressionSidebar extends Component {
   }
 
   onSelectDependentVariable(dependentVariable) {
-    this.props.push(`/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/analyze/regression/${ dependentVariable }`);
+    const { project, datasetSelector, regressionSelector, push } = this.props;
+
+    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression/${ dependentVariable }?reg=${ regressionSelector.regressionType }`);
   }
 
   onSelectRegressionType(regressionType) {
-    this.props.selectRegressionType(regressionType);
+    const { project, datasetSelector, regressionSelector, push } = this.props;
+    
+    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression/${ regressionSelector.dependentVariableId }?reg=${ regressionType }`);
   }
 
   render() {
