@@ -31,7 +31,16 @@ export class ComparisonView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { independentVariableNamesAndTypes, independentVariableNames, dependentVariableNames, runNumericalComparison, runAnova, canRunNumericalComparisonDependent, canRunNumericalComparisonIndependent } = this.props;
+    const {
+      independentVariableNamesAndTypes,
+      independentVariableNames,
+      dependentVariableNames,
+      runNumericalComparison,
+      runAnova,
+      getAnovaBoxplotData,
+      canRunNumericalComparisonDependent,
+      canRunNumericalComparisonIndependent
+    } = this.props;
 
     const independentVariablesChanged = nextProps.independentVariableNames.length != independentVariableNames.length;
     const dependentVariablesChanged = nextProps.dependentVariableNames.length != dependentVariableNames.length;
@@ -99,12 +108,6 @@ export class ComparisonView extends Component {
             independentVariableNames={ independentVariableNames }
             anovaData={ anovaResult }
           />
-          { (anovaBoxplot.length > 0 && anovaData ) &&
-            <AnovaBoxplot
-              anovaBoxplotData={ anovaBoxplotData }
-            />
-            />
-          }
         </div>
     } else {
       comparisonContent =
