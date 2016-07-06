@@ -30,12 +30,13 @@ export class RegressionBasePage extends Component {
 
     // if navigating to page within the app
     if(fieldProperties.items.length > 0 && !queriedDependentVariable) {
+      console.log('navigating in base page')
       const dependentVariable = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c'));
       const dependentVariableId = dependentVariable.id;
       const regressionType = dvToType[dependentVariable.generalType];
 
-      const params = { 'dependent-variable': dependentVariableId, 'regression-type': regressionType };
-      const url  = createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, params);
+      const queryParams = { 'dependent-variable': dependentVariableId, 'regression-type': regressionType };
+      const url  = createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, queryParams);
       replace(url);
     }
 
@@ -47,17 +48,56 @@ export class RegressionBasePage extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { params, selectDependentVariable, fieldProperties, selectRegressionType, location, replace } = this.props;
-    const { fieldProperties: nextFieldProperties, params: nextParams, replace: nextReplace, location: nextLocation } = nextProps;
+    const { query } = location;
 
-    if (nextFieldProperties.items.length > 0 && nextFieldProperties.datasetId == nextParams.datasetId && !nextLocation.query['dependent-variable']) {
+    const { fieldProperties: nextFieldProperties, params: nextParams, replace: nextReplace, location: nextLocation } = nextProps;
+    const { query: nextQuery } = nextLocation;
+
+    // if there's no dependent variable, but there are field properties coming in
+    if (nextFieldProperties.items.length > 0 && nextFieldProperties.datasetId == nextParams.datasetId && !nextQuery['dependent-variable']) {
+      console.log('no dep var but field properties exist');
       const dependentVariable = (nextFieldProperties.items.find((property) => property.generalType == 'q') || nextFieldProperties.items.find((property) => property.generalType == 'c'));
       const dependentVariableId = dependentVariable.id;
       const regressionType = dvToType[dependentVariable.generalType];
       
-      const params = { 'dependent-variable': dependentVariable, 'regression-type': regressionType };
-      const url = createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, params);
+      const queryParams = { 'dependent-variable': dependentVariable, 'regression-type': regressionType };
+      const url = createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, queryParams);
       replace(url);
     }
+
+    /** When queries update **/
+
+    // Dependent variable change
+    if(query['dependent-variable'] != nextQuery['dependent-variable'] && nextQuery['dependent-variable']) {
+      console.log('new dependent-variable');
+      selectDependentVariable(nextQuery['dependent-variable']);
+    }
+
+    // Regression type change
+    if(query['regression-type'] != nextQuery['regression-type'] && nextQuery['regression-type']) {
+      console.log('new regression');
+      selectRegressionType(nextQuery['regression-type']);
+    }
+
+    // if 
+
+    // //if there was no regression type specified, and there were no field properties
+    // //wait for props to come in, then run regression
+    // if(fieldProperties.items.length == 0 && nextProps.fieldProperties.items.length > 0) {
+    //   console.log('ahhh')
+    //   const dependentVariableType = nextProps.fieldProperties.items.find((property) => property.id == parseInt(location.query.dependentVariable)).generalType;
+    //   const recommendedRegressionType = dvToType[dependentVariableType];
+    //   replace(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression?dependentVariable=${ nextProps.location.query.dependentVariable }&reg=${ recommendedRegressionType }`);
+    // }
+
+    // //if new dependent variable selected, first figure out new regression type
+    // if(location.query.dependentVariable != nextProps.location.query.dependentVariable) {
+    //   console.log('ahhhhh')
+    //   selectDependentVariable(nextProps.location.query.dependentVariable);
+    //   const dependentVariableType = fieldProperties.items.find((property) => property.id == nextProps.location.query.dependentVariable).generalType;
+    //   const recommendedRegressionType = dvToType[dependentVariableType];
+    //   replace(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression?dependentVariable=${ nextProps.location.query.dependentVariable }&reg=${ recommendedRegressionType }`);
+    // }
   }
 
   render() {

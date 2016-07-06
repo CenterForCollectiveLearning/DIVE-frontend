@@ -48,6 +48,7 @@ export class RegressionSidebar extends Component {
     
     const params = { 'dependent-variable': regressionSelector.dependentVariableId, 'regression-type': regressionType };
     const url = createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, params);
+    console.log('url', url)
     push(url);
   }
 
