@@ -50,3 +50,14 @@ export function getPalette(hashElements) {
   const colors = shift(palettes[3], hash % 4);
   return colors;
 }
+
+export function createURL(uri, queryObj) {
+  return Object.keys(queryObj).reduce((prev, curr, index) => {
+    const param = curr + '=' + queryObj[curr];
+    
+    if(index === 0) return prev + param;
+    return prev + '&' + param;
+  }, uri + '?')
+}
+
+

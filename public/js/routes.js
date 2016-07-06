@@ -73,9 +73,7 @@ export default (
         <Route path="summary" component={ SummaryPage }/>
         <Route path="comparison" component={ ComparisonPage }/>
         <Route path="analyze" component={ AnalysisPage }>
-          <Route path="regression" component={ RegressionBasePage }>
-            <Route path=":dependentVariable" component={ RegressionPage }/>
-          </Route>
+        <Route path="regression" component={ RegressionBasePage }/>
           <Route path="summary" component={ SummaryPage }/>
           <Route path="correlation" component={ CorrelationPage }/>
           <Route path="comparison" component={ ComparisonPage }/>
