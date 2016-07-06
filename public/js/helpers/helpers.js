@@ -64,4 +64,13 @@ export function createURL(uri, queryObj) {
   }, uri + '?')
 }
 
+export function recommendRegressionType(dependentVariableType) {
+  const dvToType = {
+    q: 'linear',
+    c: 'logistic',
+    t: 'linear'
+  }
+  return dvToType[dependentVariableType];
+}
+
 
