@@ -5,6 +5,7 @@ import { push } from 'react-router-redux';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { selectIndependentVariable, selectRegressionType } from '../../../actions/RegressionActions';
 import styles from '../Analysis.sass';
+import { createURL } from '../../../helpers/helpers.js';
 
 import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
@@ -38,13 +39,16 @@ export class RegressionSidebar extends Component {
   onSelectDependentVariable(dependentVariable) {
     const { project, datasetSelector, push } = this.props;
 
-    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression/${ dependentVariable }`);
+    const url = createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, { 'dependent-variable': dependentVariable });
+    push(url);
   }
 
   onSelectRegressionType(regressionType) {
     const { project, datasetSelector, regressionSelector, push } = this.props;
     
-    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression/${ regressionSelector.dependentVariableId }?reg=${ regressionType }`);
+    const params = { 'dependent-variable': regressionSelector.dependentVariableId, 'regression-type': regressionType };
+    const url = createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, params);
+    push(url);
   }
 
   render() {

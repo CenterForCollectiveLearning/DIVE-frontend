@@ -20,33 +20,44 @@ export class RegressionBasePage extends Component {
 
   componentWillMount() {
     const { fieldProperties, params, replace, location, selectDependentVariable, selectRegressionType } = this.props;
-
-    console.log(location.query)
+    const { 'dependent-variable': queriedDependentVariable, 'regression-type': queriedRegressionType } = location.query;
 
     // if url specifies dependent variable and regression type
-    if(location.query['dependent-variable'] && location.query['regression-type']) {
-      selectDependentVariable(location.query['dependent-variable']);
-      selectRegressionType(location.query['regression-type']);
+    if(queriedDependentVariable && queriedRegressionType) {
+      selectDependentVariable(queriedDependentVariable);
+      selectRegressionType(queriedRegressionType);
     }
 
-    // if navigating to page directly
-    if (fieldProperties.items.length > 0 && !location.query.dependentVariable) {
-      const dependentVariable = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c')).id;
-      let url  = createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, { 'dependent-variable': dependentVariable, 'regression-type': 'linear' })
+    // if navigating to page within the app
+    if(fieldProperties.items.length > 0 && !queriedDependentVariable) {
+      const dependentVariable = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c'));
+      const dependentVariableId = dependentVariable.id;
+      const regressionType = dvToType[dependentVariable.generalType];
+
+      const params = { 'dependent-variable': dependentVariableId, 'regression-type': regressionType };
+      const url  = createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, params);
       replace(url);
+    }
+
+    // if navigating to url /regression without query params
+    if(fieldProperties.items.length === 0) {
+
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { fieldProperties, params, replace, location } = nextProps;
+    const { params, selectDependentVariable, fieldProperties, selectRegressionType, location, replace } = this.props;
+    const { fieldProperties: nextFieldProperties, params: nextParams, replace: nextReplace, location: nextLocation } = nextProps;
 
-    if (fieldProperties.items.length > 0 && fieldProperties.datasetId == params.datasetId && !location.query['dependent-variable']) {
-      console.log('agh')
-      const dependentVariable = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c')).id;
-      replace(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression?dependent-variable=${ dependentVariable }`);
+    if (nextFieldProperties.items.length > 0 && nextFieldProperties.datasetId == nextParams.datasetId && !nextLocation.query['dependent-variable']) {
+      const dependentVariable = (nextFieldProperties.items.find((property) => property.generalType == 'q') || nextFieldProperties.items.find((property) => property.generalType == 'c'));
+      const dependentVariableId = dependentVariable.id;
+      const regressionType = dvToType[dependentVariable.generalType];
+      
+      const params = { 'dependent-variable': dependentVariable, 'regression-type': regressionType };
+      const url = createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, params);
+      replace(url);
     }
-
-
   }
 
   render() {
