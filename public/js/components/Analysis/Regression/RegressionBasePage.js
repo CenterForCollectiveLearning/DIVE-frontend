@@ -22,26 +22,24 @@ export class RegressionBasePage extends Component {
     const { fieldProperties, params, replace, location, selectDependentVariable, selectRegressionType } = this.props;
     const { 'dependent-variable': queriedDependentVariable, 'regression-type': queriedRegressionType } = location.query;
 
-    // if url specifies dependent variable and regression type
+    // URL specifies dependent variable and regression type
     if(queriedDependentVariable && queriedRegressionType) {
       selectDependentVariable(queriedDependentVariable);
       selectRegressionType(queriedRegressionType);
     }
 
-    // if navigating to page within the app
+    // Navigate to page within the app
     if(fieldProperties.items.length > 0 && !queriedDependentVariable) {
-      console.log('navigating in base page')
       const dependentVariable = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c'));
       const dependentVariableId = dependentVariable.id;
       const regressionType = dvToType[dependentVariable.generalType];
 
       const queryParams = { 'dependent-variable': dependentVariableId, 'regression-type': regressionType };
-      console.log(queryParams)
       const url  = createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, queryParams);
       replace(url);
     }
 
-    // if navigating to url /regression without query params
+    // URL lacks query params
     if(fieldProperties.items.length === 0) {
 
     }
@@ -53,9 +51,8 @@ export class RegressionBasePage extends Component {
     const { fieldProperties: nextFieldProperties, params: nextParams, replace: nextReplace, location: nextLocation } = nextProps;
     const { query: nextQuery } = nextLocation;
 
-    // if there's no dependent variable, but there are field properties coming in
+    // No dependent variable, but there are field properties coming in
     if (nextFieldProperties.items.length > 0 && nextFieldProperties.datasetId == nextParams.datasetId && !nextQuery['dependent-variable']) {
-      console.log('no dep var but field properties exist', nextFieldProperties.items);
       const dependentVariable = (nextFieldProperties.items.find((property) => property.generalType == 'q') || nextFieldProperties.items.find((property) => property.generalType == 'c'));
       const dependentVariableId = dependentVariable.id;
       const regressionType = dvToType[dependentVariable.generalType];
@@ -69,11 +66,11 @@ export class RegressionBasePage extends Component {
 
     // Dependent variable change
     if(query['dependent-variable'] != nextQuery['dependent-variable'] && nextQuery['dependent-variable']) {
-      console.log('new dependent-variable', nextQuery);
       selectDependentVariable(nextQuery['dependent-variable']);
 
       if(!nextQuery['regressionType']) {
         const regressionType = dvToType[nextFieldProperties.items.find((property) => property.id == nextQuery['dependent-variable']).generalType];
+        
         const queryParams = { 'dependent-variable': nextQuery['dependent-variable'], 'regression-type': regressionType };
         const url = createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, queryParams);
         replace(url);
@@ -82,7 +79,6 @@ export class RegressionBasePage extends Component {
 
     // Regression type change
     if(query['regression-type'] != nextQuery['regression-type'] && nextQuery['regression-type']) {
-      console.log('new regression');
       selectRegressionType(nextQuery['regression-type']);
     }
 
