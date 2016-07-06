@@ -9,6 +9,11 @@ import RegressionSidebar from './RegressionSidebar';
 import RegressionView from './RegressionView';
 import { selectDependentVariable, selectRegressionType } from '../../../actions/RegressionActions';
 
+const dvToType = {
+  q: 'linear',
+  c: 'logistic',
+  t: 'linear'
+}
 // this page finds a dependent variable id and regression type, if not supplied
 
 export class RegressionBasePage extends Component {
@@ -18,18 +23,16 @@ export class RegressionBasePage extends Component {
 
     console.log(location.query)
 
-    if(location.query.dependentVariable && location.query.regressionType) {
-      selectDependentVariable(location.query.dependentVariable);
-      selectRegressionType(location.query.regressionType);
+    // if url specifies dependent variable and regression type
+    if(location.query['dependent-variable'] && location.query['regression-type']) {
+      selectDependentVariable(location.query['dependent-variable']);
+      selectRegressionType(location.query['regression-type']);
     }
 
     // if navigating to page directly
     if (fieldProperties.items.length > 0 && !location.query.dependentVariable) {
       const dependentVariable = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c')).id;
-      let url  = createURL(
-        '/projects/' + params.projectId + '/datasets/' + params.datasetId + '/analyze/regression', 
-        { dependentVariable: dependentVariable, regressionType: 'linear' })
-      console.log('going to replace', url)
+      let url  = createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, { 'dependent-variable': dependentVariable, 'regression-type': 'linear' })
       replace(url);
     }
   }
@@ -37,10 +40,10 @@ export class RegressionBasePage extends Component {
   componentWillReceiveProps(nextProps) {
     const { fieldProperties, params, replace, location } = nextProps;
 
-    if (fieldProperties.items.length > 0 && fieldProperties.datasetId == params.datasetId && !location.query.dependentVariable) {
+    if (fieldProperties.items.length > 0 && fieldProperties.datasetId == params.datasetId && !location.query['dependent-variable']) {
       console.log('agh')
       const dependentVariable = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c')).id;
-      replace(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression?dependentVariable=${ dependentVariable }`);
+      replace(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression?dependent-variable=${ dependentVariable }`);
     }
 
 

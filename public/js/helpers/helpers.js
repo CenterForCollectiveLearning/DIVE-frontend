@@ -51,10 +51,14 @@ export function getPalette(hashElements) {
   return colors;
 }
 
+function camelCaseToDash( myStr ) {
+  return myStr.replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase();
+}
+
 export function createURL(uri, queryObj) {
   return Object.keys(queryObj).reduce((prev, curr, index) => {
-    const param = curr + '=' + queryObj[curr];
-    
+    const param = camelCaseToDash(curr) + '=' + queryObj[curr];
+
     if(index === 0) return prev + param;
     return prev + '&' + param;
   }, uri + '?')
