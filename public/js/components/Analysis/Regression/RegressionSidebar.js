@@ -15,8 +15,7 @@ import DropDownMenu from '../../Base/DropDownMenu';
 
 const regressionTypes = [
   { value: 'linear', label: 'Linear' },
-  { value: 'logistic', label: 'Logistic' },
-  { value: 'polynomial', label: 'Polynomial '}
+  { value: 'logistic', label: 'Logistic' }
 ];
 
 export class RegressionSidebar extends Component {
