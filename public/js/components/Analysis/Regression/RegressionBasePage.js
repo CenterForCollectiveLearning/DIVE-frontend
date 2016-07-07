@@ -41,7 +41,7 @@ export class RegressionBasePage extends Component {
       replace(createURL(`/projects/${ nextParams.projectId }/datasets/${ nextParams.datasetId }/analyze/regression`, queryParams));
     }
 
-    if(query['dependent-variable'] != nextQuery['dependent-variable'] && nextQuery['dependent-variable']) {
+    if(nextQuery['dependent-variable'] && (query['dependent-variable'] != nextQuery['dependent-variable'])) {
       selectDependentVariable(nextQuery['dependent-variable']);
 
       if(!nextQuery['regressionType']) {
