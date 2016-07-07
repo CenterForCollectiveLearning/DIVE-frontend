@@ -50,3 +50,25 @@ export function getPalette(hashElements) {
   const colors = shift(palettes[3], hash % 4);
   return colors;
 }
+
+function camelCaseToDash( myStr ) {
+  return myStr.replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase();
+}
+
+export function createURL(base, queryObj) {
+  return Object.keys(queryObj).reduce((prev, curr, index) => {
+    const param = camelCaseToDash(curr) + '=' + queryObj[curr];
+
+    if(index === 0) return prev + param;
+    return prev + '&' + param;
+  }, base + '?')
+}
+
+export function recommendRegressionType(dependentVariableType) {
+  const dvToType = {
+    q: 'linear',
+    c: 'logistic',
+    t: 'linear'
+  }
+  return dvToType[dependentVariableType];
+}

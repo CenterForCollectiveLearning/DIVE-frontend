@@ -29,41 +29,42 @@ export class ComparisonSidebar extends Component {
   }
 
   render() {
+    const { fieldProperties, comparisonSelector, selectIndependentVariable, selectDependentVariable } = this.props;
     return (
       <Sidebar selectedTab="comparison">
-        { this.props.fieldProperties.items.length != 0 &&
+        { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Independent Variables">
             <ToggleButtonGroup
-              toggleItems={ this.props.fieldProperties.items.map((item) =>
+              toggleItems={ fieldProperties.items.map((item) =>
                 new Object({
                   id: item.id,
                   name: item.name,
-                  disabled: (this.props.comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0)
+                  disabled: (comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0)
 
                 })
               )}
               valueMember="id"
               displayTextMember="name"
-              externalSelectedItems={ this.props.comparisonSelector.independentVariablesIds }
+              externalSelectedItems={ comparisonSelector.independentVariablesIds }
               separated={ true }
-              onChange={ this.props.selectIndependentVariable } />
+              onChange={ selectIndependentVariable } />
           </SidebarGroup>
         }
-        { this.props.fieldProperties.items.length != 0 &&
+        { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Dependent Variables">
             <ToggleButtonGroup
-              toggleItems={ this.props.fieldProperties.items.map((item) =>
+              toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
                 new Object({
                   id: item.id,
                   name: item.name,
-                  disabled: (this.props.comparisonSelector.independentVariablesIds.indexOf(item.id) >= 0 || item.generalType == 'c')
+                  disabled: (comparisonSelector.independentVariablesIds.indexOf(item.id) >= 0 || item.generalType == 'c')
                 })
               )}
               valueMember="id"
               displayTextMember="name"
-              externalSelectedItems={ this.props.comparisonSelector.dependentVariablesIds }
+              externalSelectedItems={ comparisonSelector.dependentVariablesIds }
               separated={ true }
-              onChange={ this.props.selectDependentVariable } />
+              onChange={ selectDependentVariable } />
           </SidebarGroup>
         }
       </Sidebar>

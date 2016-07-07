@@ -34,7 +34,7 @@ const baseConditional = {
 
 const baseState = {
   fieldProperties: [],
-  regressionType: 'linear',
+  regressionType: null,
   dependentVariableId: null,
   independentVariableIds: [],
   interactionTermIds: [], //IVs: { id: 30, variableIds: [2, 3]}

@@ -20,7 +20,6 @@ import GalleryPage from './components/Visualizations/Gallery/GalleryPage';
 import BuilderPage from './components/Visualizations/Builder/BuilderPage';
 import AnalysisPage from './components/Analysis/AnalysisPage';
 import RegressionBasePage from './components/Analysis/Regression/RegressionBasePage';
-import RegressionPage from './components/Analysis/Regression/RegressionPage';
 import SummaryPage from './components/Analysis/Summary/SummaryPage';
 import CorrelationPage from './components/Analysis/Correlation/CorrelationPage';
 import ComparisonPage from './components/Analysis/Comparison/ComparisonPage';
@@ -45,8 +44,8 @@ const requireAuthentication = UserAuthWrapper({
 
 export default (
   <Route path="/" component={ App }>
-    <Route path="/login" component={ LoginPage } />
-    <Route path="/register" component={ RegisterPage } />
+    <Route path="/login" component={ LoginPage }/>
+    <Route path="/register" component={ RegisterPage }/>
 
     <IndexRoute component={ LandingPage }/>
     <Route path="/landing" component={ LandingPage }>
@@ -73,9 +72,7 @@ export default (
         <Route path="summary" component={ SummaryPage }/>
         <Route path="comparison" component={ ComparisonPage }/>
         <Route path="analyze" component={ AnalysisPage }>
-          <Route path="regression" component={ RegressionBasePage }>
-            <Route path=":dependentVariable" component={ RegressionPage }/>
-          </Route>
+          <Route path="regression" component={ RegressionBasePage }/>
           <Route path="summary" component={ SummaryPage }/>
           <Route path="correlation" component={ CorrelationPage }/>
           <Route path="comparison" component={ ComparisonPage }/>

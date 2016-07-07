@@ -103,7 +103,7 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
       independentVariables: independentVariableNames
     }
   }
-
+  
   return (dispatch) => {
     dispatch(requestRunRegressionDispatcher());
     return fetch('/statistics/v1/regression', {
@@ -119,7 +119,6 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
       })
   };
 }
-
 
 export function getContributionToRSquared(projectId, regressionId) {
   return (dispatch) => {

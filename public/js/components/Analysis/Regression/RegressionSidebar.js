@@ -4,6 +4,8 @@ import { push } from 'react-router-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { selectIndependentVariable, selectRegressionType, createInteractionTerm } from '../../../actions/RegressionActions';
+import { createURL } from '../../../helpers/helpers.js';
+
 import styles from '../Analysis.sass';
 
 import Sidebar from '../../Base/Sidebar';
@@ -14,8 +16,7 @@ import RaisedButton from '../../Base/RaisedButton';
 
 const regressionTypes = [
   { value: 'linear', label: 'Linear' },
-  { value: 'logistic', label: 'Logistic' },
-  { value: 'polynomial', label: 'Polynomial '}
+  { value: 'logistic', label: 'Logistic' }
 ];
 
 export class RegressionSidebar extends Component {
@@ -45,11 +46,17 @@ export class RegressionSidebar extends Component {
   }
 
   onSelectDependentVariable(dependentVariable) {
-    this.props.push(`/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/analyze/regression/${ dependentVariable }`);
+    const { project, datasetSelector, fieldProperties, push } = this.props;
+
+    const queryParams = { 'dependent-variable': dependentVariable };
+    push(createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
   }
 
   onSelectRegressionType(regressionType) {
-    this.props.selectRegressionType(regressionType);
+    const { project, datasetSelector, regressionSelector, push } = this.props;
+    
+    const queryParams = { 'dependent-variable': regressionSelector.dependentVariableId, 'regression-type': regressionType };
+    push(createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
   }
 
   onSelectInteractionTerm(dropDownNumber, independentVariableId) {
@@ -70,6 +77,15 @@ export class RegressionSidebar extends Component {
     const interactionTermNames = regressionSelector.interactionTermIds.map((idTuple) => {
       return fieldProperties.items.filter((property) => property.id == idTuple[0] || property.id == idTuple[1]).map((item) => item.name)
     })
+    
+    var shownRegressionTypes = regressionTypes;
+
+    if(fieldProperties.items.length > 0) {
+      const dependentVariableType = fieldProperties.items.find((property) => property.id == regressionSelector.dependentVariableId);
+      if(dependentVariableType == 'decimal') {
+        shownRegressionTypes = regressionTypes.filter((type) => type.value != 'logistic')
+      }
+    }
 
     return (
       <Sidebar selectedTab="regression">
@@ -77,7 +93,7 @@ export class RegressionSidebar extends Component {
           <SidebarGroup heading="Regression Type">
             <DropDownMenu
               value={ regressionSelector.regressionType }
-              options={ regressionTypes }
+              options={ shownRegressionTypes }
               onChange={ this.onSelectRegressionType.bind(this) } />
           </SidebarGroup>
         }
@@ -85,7 +101,7 @@ export class RegressionSidebar extends Component {
           <SidebarGroup heading="Dependent Variable (Y)">
             <DropDownMenu
               value={ parseInt(regressionSelector.dependentVariableId) }
-              options={ fieldProperties.items.filter((item) => item.generalType == 'q') }
+              options={ fieldProperties.items.filter((property) => !property.isUnique) }
               valueMember="id"
               displayTextMember="name"
               onChange={ this.onSelectDependentVariable.bind(this) }/>
