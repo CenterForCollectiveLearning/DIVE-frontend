@@ -42,6 +42,7 @@ export class RegressionView extends Component {
     const dependentVariableExists = (nextProps.dependentVariableName != null);
 
     if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.regressionType && (dependentVariableChanged || independentVariablesChanged || regressionTypeChanged)) {
+      console.log('going to run regression')
       runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames);
     }
 

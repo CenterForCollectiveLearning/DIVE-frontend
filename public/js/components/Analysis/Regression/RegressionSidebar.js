@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { selectIndependentVariable, selectRegressionType } from '../../../actions/RegressionActions';
 import styles from '../Analysis.sass';
-import { createURL, recommendRegressionType } from '../../../helpers/helpers.js';
+import { createURL } from '../../../helpers/helpers.js';
 
 import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
