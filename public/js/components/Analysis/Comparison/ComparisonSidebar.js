@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { selectIndependentVariable, selectDependentVariable } from '../../../actions/ComparisonActions';
+import { createURL, recommendRegressionType } from '../../../helpers/helpers.js';
 import styles from '../Analysis.sass';
 
 import Sidebar from '../../Base/Sidebar';
@@ -28,6 +30,28 @@ export class ComparisonSidebar extends Component {
     }
   }
 
+  onSelectDependentVariable(dependentVariable) {
+    const { project, datasetSelector, comparisonSelector, fieldProperties, push } = this.props;
+
+    const queryParams = { 'dependent-variable': dependentVariable };
+    push(createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/comparison`, queryParams));
+  }
+
+  onSelectIndependentVariable(independentVariable) {
+    const { project, datasetSelector, comparisonSelector, fieldProperties, push } = this.props;
+
+    var selectedFieldPropertiesQueryString = comparisonSelector.fieldProperties
+      .filter((property) => (!property.selected && property.id == fieldPropertyId) || (property.selected && property.id != fieldPropertyId))
+      .map((property) => `fields%5B%5D=${ property.name }`);
+
+    const queryParams = {
+      dependentVariable: comparisonSelector.dependentVariable ,
+      independentVariables: selectedFieldProperties
+    };
+
+    push(createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/comparison`, queryParams));
+  }
+
   render() {
     const { fieldProperties, comparisonSelector, selectIndependentVariable, selectDependentVariable } = this.props;
     return (
@@ -47,7 +71,7 @@ export class ComparisonSidebar extends Component {
               displayTextMember="name"
               externalSelectedItems={ comparisonSelector.independentVariablesIds }
               separated={ true }
-              onChange={ selectIndependentVariable } />
+              onChange={ this.onSelectIndependentVariable.bind(this) } />
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
@@ -64,7 +88,7 @@ export class ComparisonSidebar extends Component {
               displayTextMember="name"
               externalSelectedItems={ comparisonSelector.dependentVariablesIds }
               separated={ true }
-              onChange={ selectDependentVariable } />
+              onChange={ this.onSelectDependentVariable.bind(this) } />
           </SidebarGroup>
         }
       </Sidebar>
@@ -89,4 +113,9 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, selectDependentVariable })(ComparisonSidebar);
+export default connect(mapStateToProps, {
+  fetchFieldPropertiesIfNeeded,
+  selectIndependentVariable,
+  selectDependentVariable,
+  push
+})(ComparisonSidebar);

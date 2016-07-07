@@ -9,7 +9,7 @@ import RegressionSidebar from './RegressionSidebar';
 import RegressionView from './RegressionView';
 import { selectDependentVariable, selectRegressionType } from '../../../actions/RegressionActions';
 
-export class RegressionBasePage extends Component {
+export class RegressionPage extends Component {
 
   componentWillMount() {
     const { fieldProperties, params, replace, location, selectDependentVariable, selectRegressionType } = this.props;
@@ -36,7 +36,7 @@ export class RegressionBasePage extends Component {
 
     if (nextFieldProperties.items.length > 0 && nextFieldProperties.datasetId == nextParams.datasetId && !nextQuery['dependent-variable']) {
       const dependentVariable = (nextFieldProperties.items.find((property) => property.generalType == 'q') || nextFieldProperties.items.find((property) => property.generalType == 'c'));
-      
+
       const queryParams = { 'dependent-variable': dependentVariable.id, 'regression-type': recommendRegressionType(dependentVariable.generalType) };
       replace(createURL(`/projects/${ nextParams.projectId }/datasets/${ nextParams.datasetId }/analyze/regression`, queryParams));
     }
@@ -45,8 +45,8 @@ export class RegressionBasePage extends Component {
       selectDependentVariable(nextQuery['dependent-variable']);
 
       if(!nextQuery['regressionType']) {
-        const regressionType = recommendRegressionType(nextFieldProperties.items.find((property) => property.id == nextQuery['dependent-variable']).generalType);        
-        
+        const regressionType = recommendRegressionType(nextFieldProperties.items.find((property) => property.id == nextQuery['dependent-variable']).generalType);
+
         const queryParams = { 'dependent-variable': nextQuery['dependent-variable'], 'regression-type': regressionType };
         replace(createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, queryParams));
       }
@@ -73,4 +73,4 @@ function mapStateToProps(state) {
   return { fieldProperties };
 }
 
-export default connect(mapStateToProps, { replace, selectDependentVariable, selectRegressionType })(RegressionBasePage);
+export default connect(mapStateToProps, { replace, selectDependentVariable, selectRegressionType })(RegressionPage);

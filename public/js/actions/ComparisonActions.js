@@ -1,5 +1,5 @@
 import {
-  SELECT_COMPARISON_INDEPENDENT_VARIABLE,
+  SELECT_COMPARISON_INDEPENDENT_VARIABLES,
   SELECT_COMPARISON_DEPENDENT_VARIABLE,
   REQUEST_NUMERICAL_COMPARISON,
   RECEIVE_NUMERICAL_COMPARISON,
@@ -13,9 +13,15 @@ import {
 import { fetch } from './api.js';
 
 export function selectIndependentVariable(selectedVariableId) {
+  return (dispatch) => {
+    dispatch(selectIndependentVariables([selectedVariableId]));
+  };
+}
+
+export function selectIndependentVariables(selectedVariablesIds) {
   return {
-    type: SELECT_COMPARISON_INDEPENDENT_VARIABLE,
-    independentVariableId: selectedVariableId,
+    type: SELECT_COMPARISON_INDEPENDENT_VARIABLES,
+    independentVariablesIds: selectedVariablesIds,
     selectedAt: Date.now()
   }
 }
@@ -123,7 +129,6 @@ function receiveAnovaBoxplotDispatcher(json) {
 
 
 export function getAnovaBoxplotData(projectId, datasetId, independentVariableNames, dependentVariableNames) {
-  console.log('Getting ANOVA boxplot');
   const params = {
     projectId: projectId,
     spec: {

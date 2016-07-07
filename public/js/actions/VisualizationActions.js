@@ -294,6 +294,8 @@ export function setShareWindow(shareWindow) {
 export function setGalleryQueryString(query) {
   var queryString = '';
 
+  console.log(query);
+
   Object.keys(query).forEach(
     function (fullKey, index, array) {
       const key = fullKey.slice(0, -2);

@@ -1,5 +1,5 @@
 import {
-  SELECT_COMPARISON_INDEPENDENT_VARIABLE,
+  SELECT_COMPARISON_INDEPENDENT_VARIABLES,
   SELECT_COMPARISON_DEPENDENT_VARIABLE,
   WIPE_PROJECT_STATE,
   RECEIVE_NUMERICAL_COMPARISON,
@@ -19,15 +19,23 @@ const baseState = {
 
 export default function comparisonSelector(state = baseState, action) {
   switch (action.type) {
-    case SELECT_COMPARISON_INDEPENDENT_VARIABLE:
-      var independentVariablesIds = state.independentVariablesIds.slice();
-      const selectedIdIndependent = parseInt(action.independentVariableId);
-      if (state.independentVariablesIds.find((independentVariablesId) => independentVariablesId == selectedIdIndependent)) {
-        independentVariablesIds = independentVariablesIds.filter((independentVariablesId) => independentVariablesId != selectedIdIndependent);
-      } else {
-        independentVariablesIds.push(selectedIdIndependent);
-      }
-      return { ...state, independentVariablesIds: independentVariablesIds };
+    case SELECT_COMPARISON_INDEPENDENT_VARIABLES:
+      var currentIndependentVariablesIds = state.independentVariablesIds.slice();
+      var selectedIndependentVariablesIds = action.independentVariablesIds;
+
+      console.log(action);
+
+      selectedIndependentVariablesIds.forEach(function(selectedIndependentVariableId) {
+        var selectedIndependentVariableId = parseInt(selectedIndependentVariableId);
+
+        if (currentIndependentVariablesIds.find((independentVariableId) => independentVariableId == selectedIndependentVariableId)) {
+          currentIndependentVariablesIds = currentIndependentVariablesIds.filter((independentVariableId) => independentVariableId != selectedIndependentVariableId);
+        } else {
+          currentIndependentVariablesIds.push(selectedIndependentVariableId);
+        }
+      });
+
+      return { ...state, independentVariablesIds: currentIndependentVariablesIds };
 
     case SELECT_COMPARISON_DEPENDENT_VARIABLE:
       var dependentVariablesIds = state.dependentVariablesIds.slice();
