@@ -4,8 +4,9 @@ import { push } from 'react-router-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { selectIndependentVariable, selectRegressionType } from '../../../actions/RegressionActions';
-import styles from '../Analysis.sass';
 import { createURL } from '../../../helpers/helpers.js';
+
+import styles from '../Analysis.sass';
 
 import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
@@ -42,7 +43,6 @@ export class RegressionSidebar extends Component {
     const dependentVariableType = fieldProperties.items.find((property) => property.id == dependentVariable).generalType;
 
     const params = { 'dependent-variable': dependentVariable };
-    console.log(params)
     const url = createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, params);
     push(url);
   }
@@ -52,18 +52,18 @@ export class RegressionSidebar extends Component {
     
     const params = { 'dependent-variable': regressionSelector.dependentVariableId, 'regression-type': regressionType };
     const url = createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, params);
-    console.log('url', url)
     push(url);
   }
 
   render() {
     const { fieldProperties, regressionSelector, selectIndependentVariable } = this.props;
+    var shownRegressionTypes = regressionTypes;
 
-    //light filtering for regression types by dependent variable
-    const dependentVariable = fieldProperties.items.filter((property) => property.id == parseInt(regressionSelector.dependentVariableId));
-    let shownRegressionTypes = regressionTypes;
-    if(dependentVariable.length > 0 && dependentVariable[0].type == 'decimal') {
-      shownRegressionTypes = regressionTypes.filter((type) => type.value != 'logistic')
+    if(fieldProperties.items.length > 0) {
+      const dependentVariableType = fieldProperties.items.find((property) => property.id == regressionSelector.dependentVariableId);
+      if(dependentVariableType == 'decimal') {
+        shownRegressionTypes = regressionTypes.filter((type) => type.value != 'logistic')
+      }
     }
 
     return (

@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import _ from 'underscore';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { runRegression, getContributionToRSquared, createExportedRegression } from '../../../actions/RegressionActions';
@@ -43,15 +42,11 @@ export class RegressionView extends Component {
     const dependentVariableExists = (nextProps.dependentVariableName != null);
 
     if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.regressionType && (dependentVariableChanged || independentVariablesChanged || regressionTypeChanged)) {
-      _.debounce(() => {
-        runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames);
-      }, 100)();
+      runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames);
     }
 
     if (nextProps.projectId && nextProps.regressionResult.data && nextProps.regressionResult.data.id && (this.props.regressionResult.data == null || (nextProps.regressionResult.data.id != this.props.regressionResult.data.id))) {
-      _.debounce(() => {
-        getContributionToRSquared(nextProps.projectId, nextProps.regressionResult.data.id);
-      }, 100)();
+      getContributionToRSquared(nextProps.projectId, nextProps.regressionResult.data.id);
     }
   }
 
