@@ -3,13 +3,20 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectIndependentVariable } from '../../../actions/RegressionActions';
+import { selectIndependentVariable, selectRegressionType } from '../../../actions/RegressionActions';
+import { createURL } from '../../../helpers/helpers.js';
+
 import styles from '../Analysis.sass';
 
 import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
+
+const regressionTypes = [
+  { value: 'linear', label: 'Linear' },
+  { value: 'logistic', label: 'Logistic' }
+];
 
 export class RegressionSidebar extends Component {
   componentWillMount(props) {
@@ -30,19 +37,45 @@ export class RegressionSidebar extends Component {
   }
 
   onSelectDependentVariable(dependentVariable) {
-    this.props.push(`/projects/${ this.props.project.properties.id }/datasets/${ this.props.datasetSelector.datasetId }/analyze/regression/${ dependentVariable }`);
+    const { project, datasetSelector, fieldProperties, push } = this.props;
+
+    const queryParams = { 'dependent-variable': dependentVariable };
+    push(createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
+  }
+
+  onSelectRegressionType(regressionType) {
+    const { project, datasetSelector, regressionSelector, push } = this.props;
+    
+    const queryParams = { 'dependent-variable': regressionSelector.dependentVariableId, 'regression-type': regressionType };
+    push(createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
   }
 
   render() {
     const { fieldProperties, regressionSelector, selectIndependentVariable } = this.props;
+    var shownRegressionTypes = regressionTypes;
+
+    if(fieldProperties.items.length > 0) {
+      const dependentVariableType = fieldProperties.items.find((property) => property.id == regressionSelector.dependentVariableId);
+      if(dependentVariableType == 'decimal') {
+        shownRegressionTypes = regressionTypes.filter((type) => type.value != 'logistic')
+      }
+    }
 
     return (
       <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
+          <SidebarGroup heading="Regression Type">
+            <DropDownMenu
+              value={ regressionSelector.regressionType }
+              options={ shownRegressionTypes }
+              onChange={ this.onSelectRegressionType.bind(this) } />
+          </SidebarGroup>
+        }
+        { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Dependent Variable (Y)">
             <DropDownMenu
               value={ parseInt(regressionSelector.dependentVariableId) }
-              options={ fieldProperties.items.filter((item) => item.generalType == 'q') }
+              options={ fieldProperties.items.filter((property) => !property.isUnique) }
               valueMember="id"
               displayTextMember="name"
               onChange={ this.onSelectDependentVariable.bind(this) }/>
@@ -129,4 +162,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, push })(RegressionSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectRegressionType, selectIndependentVariable, push })(RegressionSidebar);

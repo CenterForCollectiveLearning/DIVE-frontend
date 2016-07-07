@@ -1,4 +1,5 @@
 import {
+  SELECT_REGRESSION_TYPE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
   REQUEST_RUN_REGRESSION,
@@ -15,6 +16,14 @@ import {
 
 import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
+
+export function selectRegressionType(selectedRegressionType) {
+  return {
+    type: SELECT_REGRESSION_TYPE,
+    regressionType: selectedRegressionType,
+    selectedAt: Date.now()
+  }
+}
 
 export function selectIndependentVariable(selectedIndependentVariableId) {
   return {
@@ -74,16 +83,17 @@ function receiveContributionToRSquaredDispatcher(json) {
   };
 }
 
-export function runRegression(projectId, datasetId, dependentVariableName, independentVariableNames) {
+export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames) {
   const params = {
     projectId: projectId,
     spec: {
       datasetId: datasetId,
+      regressionType: regressionType,
       dependentVariable: dependentVariableName,
       independentVariables: independentVariableNames
     }
   }
-
+  
   return (dispatch) => {
     dispatch(requestRunRegressionDispatcher());
     return fetch('/statistics/v1/regression', {
@@ -99,7 +109,6 @@ export function runRegression(projectId, datasetId, dependentVariableName, indep
       })
   };
 }
-
 
 export function getContributionToRSquared(projectId, regressionId) {
   return (dispatch) => {

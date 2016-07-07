@@ -1,4 +1,5 @@
 import {
+  SELECT_REGRESSION_TYPE,
   SELECT_REGRESSION_MODE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
@@ -32,6 +33,7 @@ const baseConditional = {
 
 const baseState = {
   fieldProperties: [],
+  regressionType: null,
   dependentVariableId: null,
   independentVariableIds: [],
   regressionResult: {
@@ -64,6 +66,9 @@ export default function regressionSelector(state = baseState, action) {
         new Object({ ...modeObject, selected: ( modeObject.id == action.selectedModeId )})
       )
       return { ...state, regressionModes: selectedRegressionModes, selectedMode: action.selectedModeId, regressionResult: regressionResult }
+
+    case SELECT_REGRESSION_TYPE:
+      return { ...state, regressionType: action.regressionType }
 
     case SELECT_REGRESSION_DEPENDENT_VARIABLE:
       const independentVariables = state.fieldProperties

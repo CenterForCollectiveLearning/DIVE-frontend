@@ -35,13 +35,14 @@ export class RegressionView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, dependentVariableName, independentVariableNames, regressionResult, runRegression, getContributionToRSquared, fetchDatasets } = this.props;
+    const { projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, regressionResult, runRegression, getContributionToRSquared, fetchDatasets } = this.props;
+    const regressionTypeChanged = nextProps.regressionType != regressionType;
     const independentVariablesChanged = nextProps.independentVariableNames.length != independentVariableNames.length;
     const dependentVariableChanged = (nextProps.dependentVariableName != dependentVariableName);
     const dependentVariableExists = (nextProps.dependentVariableName != null);
 
-    if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && (dependentVariableChanged || independentVariablesChanged)) {
-      runRegression(nextProps.projectId, nextProps.datasetId, nextProps.dependentVariableName, nextProps.independentVariableNames);
+    if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.regressionType && (dependentVariableChanged || independentVariablesChanged || regressionTypeChanged)) {
+      runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames);
     }
 
     if (nextProps.projectId && nextProps.regressionResult.data && nextProps.regressionResult.data.id && (this.props.regressionResult.data == null || (nextProps.regressionResult.data.id != this.props.regressionResult.data.id))) {
@@ -77,7 +78,7 @@ export class RegressionView extends Component {
   }
 
   render() {
-    const { datasets, datasetId, regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames } = this.props;
+    const { datasets, datasetId, regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames, regressionType } = this.props;
     const disabled = (regressionResult.isSaving || (!regressionResult.isSaving && regressionResult.exportedRegressionId) || regressionResult.exported) ? true : false;
 
     if ( !regressionResult.loading && (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0)) {
@@ -86,7 +87,6 @@ export class RegressionView extends Component {
       );
     }
 
-    console.log(regressionResult.exportedRegressionId)
     return (
       <div className={ styles.regressionViewContainer }>
         <HeaderBar
@@ -130,6 +130,7 @@ export class RegressionView extends Component {
         }
         { (!regressionResult.loading && regressionResult.data) &&
           <RegressionTableCard
+            regressionType={ regressionType }
             dependentVariableName={ dependentVariableName }
             independentVariableNames={ independentVariableNames }
             regressionResult={ regressionResult.data || {} }
@@ -146,8 +147,7 @@ export class RegressionView extends Component {
 
 function mapStateToProps(state) {
   const { project, datasets, regressionSelector, datasetSelector, fieldProperties } = state;
-  const { progress, error, regressionResult, contributionToRSquared } = regressionSelector;
-
+  const { progress, error, regressionResult, contributionToRSquared, regressionType } = regressionSelector;
   const dependentVariable = fieldProperties.items.find((property) => property.id == regressionSelector.dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;
 
@@ -159,6 +159,7 @@ function mapStateToProps(state) {
     datasets: datasets,
     datasetSelector: datasetSelector,
     projectId: project.properties.id,
+    regressionType: regressionType,
     dependentVariableName: dependentVariableName,
     independentVariableNames: independentVariableNames,
     datasetId: datasetSelector.datasetId,
