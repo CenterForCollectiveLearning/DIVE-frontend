@@ -5,7 +5,9 @@ import {
   RECEIVE_NUMERICAL_COMPARISON,
   UPDATE_COMPARISON_INPUT,
   REQUEST_ANOVA,
-  RECEIVE_ANOVA
+  RECEIVE_ANOVA,
+  REQUEST_ANOVA_BOXPLOT_DATA,
+  RECEIVE_ANOVA_BOXPLOT_DATA,
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
@@ -102,5 +104,42 @@ export function runAnova(projectId, datasetId, independentVariableNames, depende
       headers: { 'Content-Type': 'application/json' }
     }).then(json => dispatch(receiveAnovaDispatcher(json)))
       .catch(err => console.error("Error performing anova: ", err));
+  };
+}
+
+function requestAnovaBoxplotDispatcher(datasetId) {
+  return {
+    type: REQUEST_ANOVA_BOXPLOT_DATA
+  };
+}
+
+function receiveAnovaBoxplotDispatcher(json) {
+  return {
+    type: RECEIVE_ANOVA_BOXPLOT_DATA,
+    data: json,
+    receivedAt: Date.now()
+  };
+}
+
+
+export function getAnovaBoxplotData(projectId, datasetId, independentVariableNames, dependentVariableNames) {
+  console.log('Getting ANOVA boxplot');
+  const params = {
+    projectId: projectId,
+    spec: {
+      datasetId: datasetId,
+      independentVariables: independentVariableNames,
+      dependentVariables: dependentVariableNames,
+    }
+  }
+
+  return (dispatch) => {
+    dispatch(requestAnovaBoxplotDispatcher);
+    return fetch('/statistics/v1/anova_boxplot', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(json => dispatch(receiveAnovaBoxplotDispatcher(json)))
+      .catch(err => console.error("Error getting ANOVA boxplot: ", err));
   };
 }
