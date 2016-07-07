@@ -24,10 +24,8 @@ export class RegressionBasePage extends Component {
     // Navigate to regression page within the app
     if(fieldProperties.items.length > 0 && !queriedDependentVariable) {
       const dependentVariable = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c'));
-      const dependentVariableId = dependentVariable.id;
-      const regressionType = recommendRegressionType(dependentVariable.generalType);
 
-      const queryParams = { 'dependent-variable': dependentVariableId, 'regression-type': regressionType };
+      const queryParams = { 'dependent-variable': dependentVariable.id, 'regression-type': recommendRegressionType(dependentVariable.generalType) };
       const url  = createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, queryParams);
       replace(url);
     }

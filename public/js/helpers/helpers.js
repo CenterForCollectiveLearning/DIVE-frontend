@@ -72,5 +72,3 @@ export function recommendRegressionType(dependentVariableType) {
   }
   return dvToType[dependentVariableType];
 }
-
-
