@@ -19,8 +19,6 @@ function requestFieldPropertiesDispatcher() {
 
 function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFieldPropertyNames) {
 
-  console.log('field properties received!', json)
-
   const AGGREGATIONS = [
     {
       value: "ALL_TYPES",
