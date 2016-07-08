@@ -51,6 +51,10 @@ export function createInteractionTerm(selectedVariableIds) {
   }
 }
 
+export function selectInteractionTerm(selectedTerm, x) {
+  console.log(selectedTerm, selectedTerm.length)
+}
+
 function requestRunRegressionDispatcher(datasetId) {
   return {
     type: REQUEST_RUN_REGRESSION

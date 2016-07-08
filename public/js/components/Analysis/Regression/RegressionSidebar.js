@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectIndependentVariable, selectRegressionType, createInteractionTerm } from '../../../actions/RegressionActions';
+import { selectIndependentVariable, selectRegressionType, createInteractionTerm, selectInteractionTerm } from '../../../actions/RegressionActions';
 import { createURL } from '../../../helpers/helpers.js';
 
 import styles from '../Analysis.sass';
@@ -59,7 +59,7 @@ export class RegressionSidebar extends Component {
     push(createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
   }
 
-  onSelectInteractionTerm(dropDownNumber, independentVariableId) {
+  onAddInteractionTerm(dropDownNumber, independentVariableId) {
     const interactionVariables = this.state.interactionVariables;
     interactionVariables[dropDownNumber] = independentVariableId;
 
@@ -72,12 +72,14 @@ export class RegressionSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, regressionSelector, selectIndependentVariable } = this.props;
+    const { fieldProperties, regressionSelector, selectIndependentVariable, selectInteractionTerm } = this.props;
     
     const interactionTermNames = regressionSelector.interactionTermIds.map((idTuple) => {
       return fieldProperties.items.filter((property) => property.id == idTuple[0] || property.id == idTuple[1]).map((item) => item.name)
     })
-    
+
+    console.log('interactionTermNames', interactionTermNames)
+
     var shownRegressionTypes = regressionTypes;
 
     if(fieldProperties.items.length > 0) {
@@ -168,15 +170,18 @@ export class RegressionSidebar extends Component {
                 <div className={ styles.fieldGroupLabel }>Interaction Terms</div>
                 { regressionSelector.interactionTermIds.length > 0 ? 
                     <ToggleButtonGroup
-                      toggleItems={ interactionTermNames.map((idTuple, key) =>
+                      toggleItems={ regressionSelector.interactionTermIds.map((idTuple, key) => 
                         new Object({
                           id: key,
-                          name:  idTuple[0] + "*" + idTuple[1]
-                        }) 
+                          name: interactionTermNames[key][0] + ' * ' + interactionTermNames[key][1],
+                          ids: idTuple 
+                        })
                       )}
-                      valueMember="id"
-                      displayTextMember="name" />
-                   : <div> None selected </div>
+                      valueMember="ids"
+                      displayTextMember="name"
+                      separated={ true }
+                      onChange={ selectInteractionTerm } />
+                    : <div> None selected </div>
                 }
               </div>
             }
@@ -188,13 +193,13 @@ export class RegressionSidebar extends Component {
               options={ fieldProperties.items.filter((item) => (item.generalType == 'q' || item.generalType == 'c') && item.id != this.state.interactionVariables[1]) }
               valueMember="id"
               displayTextMember="name"
-              onChange={this.onSelectInteractionTerm.bind(this, 0)} />
+              onChange={this.onAddInteractionTerm.bind(this, 0)} />
             <DropDownMenu 
               value={ this.state.interactionVariables[1] }
               options={ fieldProperties.items.filter((item) => (item.generalType == 'q' || item.generalType == 'c') && item.id != this.state.interactionVariables[0]) }
               valueMember="id"
               displayTextMember="name"
-              onChange={this.onSelectInteractionTerm.bind(this, 1)} />
+              onChange={this.onAddInteractionTerm.bind(this, 1)} />
             <RaisedButton altText="Add" label="Add" onClick={this.onCreateInteractionTerm.bind(this)}/>
           </SidebarGroup>
       </Sidebar>
@@ -219,4 +224,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectRegressionType, selectIndependentVariable, createInteractionTerm, push })(RegressionSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectRegressionType, selectIndependentVariable, createInteractionTerm, selectInteractionTerm, push })(RegressionSidebar);
