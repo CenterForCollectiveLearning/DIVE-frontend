@@ -53,6 +53,8 @@ export function createInteractionTerm(selectedVariableIds) {
 
 export function selectInteractionTerm(selectedTerm, x) {
   console.log(selectedTerm, selectedTerm.length)
+  const array = selectedTerm.split(',');
+  console.log(array)
 }
 
 function requestRunRegressionDispatcher(datasetId) {

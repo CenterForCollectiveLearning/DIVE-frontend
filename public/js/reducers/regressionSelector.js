@@ -37,7 +37,7 @@ const baseState = {
   regressionType: null,
   dependentVariableId: null,
   independentVariableIds: [],
-  interactionTermIds: [], //IVs: { id: 30, variableIds: [2, 3]}
+  interactionTermIds: [], 
   regressionResult: {
     exported: false,
     exportedRegressionId: null,
@@ -88,12 +88,14 @@ export default function regressionSelector(state = baseState, action) {
       } else {
         independentVariableIds.push(selectedId);
       }
+
+      console.log(independentVariableIds)
       return { ...state, independentVariableIds: independentVariableIds};
 
     case CREATE_INTERACTION_TERM:
       let interactionTermIds = state.interactionTermIds.slice();
       interactionTermIds.push(action.interactionTermIds);
-
+      console.log('interaction term', interactionTermIds)
       return {...state, interactionTermIds: interactionTermIds}
 
     case RECEIVE_FIELD_PROPERTIES:
