@@ -42,13 +42,32 @@ export function selectDependentVariable(selectedDependentVariableId) {
   }
 }
 
-export function createInteractionTerm(selectedVariableIds) {
-  console.log(selectedVariableIds)
-  return {
-    type: CREATE_INTERACTION_TERM,
-    interactionTermIds: selectedVariableIds,
-    selectedAt: Date.now()
+export function createInteractionTerm(projectId, datasetId, interactionTermIds) {
+  // return {
+  //   type: CREATE_INTERACTION_TERM,
+  //   interactionTermIds: interactionTermIds,
+  //   selectedAt: Date.now()
+  // }
+  const params = {
+    projectId,
+    datasetId,
+    interactionTermIds
   }
+
+  console.log(JSON.stringify(params))
+
+  return dispatch => {
+    return fetch('/statistics/v1/interaction_term', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(json => dispatch(receiveInteractionTermId(CREATE_INTERACTION_TERM, json)))
+      .catch(err => console.error("Error creating interaction term:", err));
+  }
+}
+
+function receiveInteractionTermId(action, json) {
+  console.log(action, json)
 }
 
 export function selectInteractionTerm(selectedTerm, x) {
@@ -173,3 +192,4 @@ export function createExportedRegression(projectId, regressionId, data, conditio
       .catch(err => console.error("Error creating exported regressions: ", err));
   };
 }
+

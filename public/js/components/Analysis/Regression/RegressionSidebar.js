@@ -67,7 +67,9 @@ export class RegressionSidebar extends Component {
   }
 
   onCreateInteractionTerm() {
-    this.props.createInteractionTerm(this.state.interactionVariables);
+    const { createInteractionTerm, fieldProperties, project } = this.props;
+
+    createInteractionTerm(project.properties.id, fieldProperties.datasetId, this.state.interactionVariables);
     this.setState({ interactionVariables: [null, null] })
   }
 
@@ -77,8 +79,6 @@ export class RegressionSidebar extends Component {
     const interactionTermNames = regressionSelector.interactionTermIds.map((idTuple) => {
       return fieldProperties.items.filter((property) => property.id == idTuple[0] || property.id == idTuple[1]).map((item) => item.name)
     })
-
-    console.log('interactionTermNames', interactionTermNames)
 
     var shownRegressionTypes = regressionTypes;
 
