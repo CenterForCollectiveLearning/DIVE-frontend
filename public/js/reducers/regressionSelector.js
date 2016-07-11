@@ -4,6 +4,7 @@ import {
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
   CREATE_INTERACTION_TERM,
+  // RECEIVE_CREATED_INTERACTION_TERM,
   RECEIVE_FIELD_PROPERTIES,
   REQUEST_RUN_REGRESSION,
   RECEIVE_RUN_REGRESSION,
@@ -97,6 +98,10 @@ export default function regressionSelector(state = baseState, action) {
       interactionTermIds.push(action.interactionTermIds);
       console.log('interaction term', interactionTermIds)
       return {...state, interactionTermIds: interactionTermIds}
+
+    // case RECEIVE_CREATED_INTERACTION_TERM:
+    //   console.log(action.type, action.data)
+      
 
     case RECEIVE_FIELD_PROPERTIES:
       const selectedIndependentVariables = action.fieldProperties

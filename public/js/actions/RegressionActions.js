@@ -7,6 +7,8 @@ import {
   RECEIVE_RUN_REGRESSION,
   PROGRESS_RUN_REGRESSION,
   ERROR_RUN_REGRESSION,
+  REQUEST_CREATE_INTERACTION_TERM,
+  RECEIVE_CREATED_INTERACTION_TERM,
   REQUEST_CONTRIBUTION_TO_R_SQUARED,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
   REQUEST_CREATE_SAVED_REGRESSION,
@@ -43,31 +45,31 @@ export function selectDependentVariable(selectedDependentVariableId) {
 }
 
 export function createInteractionTerm(projectId, datasetId, interactionTermIds) {
-  // return {
-  //   type: CREATE_INTERACTION_TERM,
-  //   interactionTermIds: interactionTermIds,
-  //   selectedAt: Date.now()
-  // }
+  // dispatch a request interaction term action
+
   const params = {
     projectId,
     datasetId,
     interactionTermIds
   }
 
-  console.log(JSON.stringify(params))
-
   return dispatch => {
     return fetch('/statistics/v1/interaction_term', {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(json => dispatch(receiveInteractionTermId(CREATE_INTERACTION_TERM, json)))
+    }).then(json => dispatch(receiveInteractionTerm(json)))
       .catch(err => console.error("Error creating interaction term:", err));
   }
 }
 
-function receiveInteractionTermId(action, json) {
-  console.log(action, json)
+function receiveInteractionTerm(json) {
+  console.log(json)
+  return {
+    type: RECEIVE_CREATED_INTERACTION_TERM,
+    data: json,
+    receivedAt: Date.now()
+  }
 }
 
 export function selectInteractionTerm(selectedTerm, x) {

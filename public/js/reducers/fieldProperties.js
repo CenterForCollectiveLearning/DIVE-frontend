@@ -1,6 +1,7 @@
 import {
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES,
+  RECEIVE_CREATED_INTERACTION_TERM,
   RECEIVE_SET_FIELD_TYPE,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
@@ -9,6 +10,7 @@ const baseState = {
   isFetching: false,
   loaded: false,
   items: [],
+  interactionTerms: [],
   datasetId: null,
   updatedAt: 0
 }
@@ -28,6 +30,14 @@ export default function fieldProperties(state=baseState, action) {
       );
 
       return { ...state, items: fieldProperties, updatedAt: action.receivedAt };
+
+    case RECEIVE_CREATED_INTERACTION_TERM:
+      console.log(action.data)
+      const updatedInteractionTerms = state.interactionTerms.slice();
+      updatedInteractionTerms.push({ id: action.data.id, variables: action.data.variables })
+
+      console.log(updatedInteractionTerms)
+      return { ...state, interactionTerms: updatedInteractionTerms }
 
     case WIPE_PROJECT_STATE:
       return baseState;
