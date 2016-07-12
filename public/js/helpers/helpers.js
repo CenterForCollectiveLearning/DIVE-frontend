@@ -72,3 +72,10 @@ export function recommendRegressionType(dependentVariableType) {
   }
   return dvToType[dependentVariableType];
 }
+
+export function createInteractionTermName(array) {
+  return array.reduce((prev, curr, key) => {
+    if(key === 0) return curr;
+    return prev + ' * ' + curr;
+  })
+}

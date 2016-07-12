@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { selectIndependentVariable, selectRegressionType, createInteractionTerm, selectInteractionTerm } from '../../../actions/RegressionActions';
-import { createURL } from '../../../helpers/helpers.js';
+import { createURL, createInteractionTermName } from '../../../helpers/helpers.js';
 
 import styles from '../Analysis.sass';
 
@@ -204,13 +204,6 @@ export class RegressionSidebar extends Component {
       </Sidebar>
     );
   }
-}
-
-function createInteractionTermName(array) {
-  return array.reduce((prev, curr, key) => {
-    if(key === 0) return curr.toString();
-    return prev + ' * ' + curr;
-  })
 }
 
 RegressionSidebar.propTypes = {
