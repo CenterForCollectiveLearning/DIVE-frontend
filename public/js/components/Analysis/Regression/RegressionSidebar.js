@@ -170,14 +170,15 @@ export class RegressionSidebar extends Component {
                 <div className={ styles.fieldGroupLabel }>Interaction Terms</div>
                 { fieldProperties.interactionTerms.length > 0 ?
                     <ToggleButtonGroup
-                      toggleItems={ fieldProperties.interactionTerms.map((val, key) => 
+                      toggleItems={ fieldProperties.interactionTerms.map((item) => 
                         new Object({
-                          id: val.id,
-                          name: createInteractionTermName(val.names)
+                          id: item.id,
+                          name: createInteractionTermName(item.names)
                         })
                       )}
                       valueMember="id"
                       displayTextMember="name"
+                      externalSelectedItems={ regressionSelector.interactionTermIds }
                       separated={ true }
                       onChange={ selectInteractionTerm } />
                     : <div> None selected </div>

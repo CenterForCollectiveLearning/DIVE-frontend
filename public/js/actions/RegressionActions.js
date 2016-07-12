@@ -2,12 +2,13 @@ import {
   SELECT_REGRESSION_TYPE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
+  SELECT_REGRESSION_INTERACTION_TERM,
   CREATE_INTERACTION_TERM,
   REQUEST_RUN_REGRESSION,
   RECEIVE_RUN_REGRESSION,
   PROGRESS_RUN_REGRESSION,
   ERROR_RUN_REGRESSION,
-  REQUEST_CREATE_INTERACTION_TERM,
+  // REQUEST_CREATE_INTERACTION_TERM,
   RECEIVE_CREATED_INTERACTION_TERM,
   REQUEST_CONTRIBUTION_TO_R_SQUARED,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
@@ -44,8 +45,16 @@ export function selectDependentVariable(selectedDependentVariableId) {
   }
 }
 
+export function selectInteractionTerm(interactionTermId) {
+  console.log(interactionTermId)
+  return {
+    type: SELECT_REGRESSION_INTERACTION_TERM,
+    interactionTermId: interactionTermId
+  }
+}
+
 export function createInteractionTerm(projectId, datasetId, interactionTermIds) {
-  // dispatch a request interaction term action
+  // dispatch a request interaction term action?
   const params = {
     projectId,
     datasetId,
@@ -68,12 +77,6 @@ function receiveInteractionTerm(json) {
     data: json,
     receivedAt: Date.now()
   }
-}
-
-export function selectInteractionTerm(selectedTerm, x) {
-  console.log(selectedTerm, selectedTerm.length)
-  const array = selectedTerm.split(',');
-  console.log(array)
 }
 
 function requestRunRegressionDispatcher(datasetId) {
@@ -118,14 +121,15 @@ function receiveContributionToRSquaredDispatcher(json) {
   };
 }
 
-export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames) {
+export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, interactionTermIds=null) {
   const params = {
     projectId: projectId,
     spec: {
       datasetId: datasetId,
       regressionType: regressionType,
       dependentVariable: dependentVariableName,
-      independentVariables: independentVariableNames
+      independentVariables: independentVariableNames,
+      interactionTerms: interactionTermIds
     }
   }
   
