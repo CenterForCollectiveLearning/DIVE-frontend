@@ -94,6 +94,9 @@
   > div
     width: auto!important
     overflow: visible!important
+  > span
+    width: auto!important
+    overflow: visible!important
 
 .dataRowsTable
   overflow-y: scroll
@@ -124,11 +127,15 @@
       padding: 5px 10px 4px
       text-align: left
       height: 31px
+      align-items: flex-start
 
       &:last-child
         border-right-width: 0px
 
 .headerRowTable
+  .dropDownMenu
+    width: auto!important
+    overflow: visible!important
   .row
     .cell
       border-bottom: 0px
@@ -136,8 +143,20 @@
 .metadataRowTable
   .row
     .cell
+      padding-top: 0px
+      font-weight: 400
       border-top: 0px
-      height: 60px
+      height: 140px
+      overflow: scroll !important
+
+      div
+        width: 100%
+
+      .statistics
+        padding-top: 5px
+
+        .field
+          font-weight: 500
 
 .row
   display: flex

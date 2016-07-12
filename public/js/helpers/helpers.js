@@ -15,6 +15,10 @@ export function getRoundedNum(num, decimalPlaces=3, useFixed=false) {
   return NaN;
 }
 
+export function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export function shuffle(a) {
   var j, x, i, aShuffled;
   aShuffled = a.slice();

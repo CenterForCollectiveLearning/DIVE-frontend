@@ -8,9 +8,6 @@ export default class MetadataRow extends Component {
     const { data } = this.props;
     const { items, rowType } = data;
 
-    console.log(data);
-    console.log(items, rowType);
-
     const Row = React.createClass({
       getDefaultProps: function() {
         return { className: '' };
