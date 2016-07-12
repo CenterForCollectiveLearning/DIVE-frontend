@@ -46,13 +46,11 @@ export function selectDependentVariable(selectedDependentVariableId) {
 
 export function createInteractionTerm(projectId, datasetId, interactionTermIds) {
   // dispatch a request interaction term action
-
   const params = {
     projectId,
     datasetId,
     interactionTermIds
   }
-
   return dispatch => {
     return fetch('/statistics/v1/interaction_term', {
       method: 'post',

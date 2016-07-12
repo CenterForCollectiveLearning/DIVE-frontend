@@ -168,16 +168,15 @@ export class RegressionSidebar extends Component {
             { fieldProperties.items.filter((property) => property.generalType == 'q' || property.generalType == 'c').length > 0 &&
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Interaction Terms</div>
-                { regressionSelector.interactionTermIds.length > 0 ? 
+                { fieldProperties.interactionTerms.length > 0 ?
                     <ToggleButtonGroup
-                      toggleItems={ regressionSelector.interactionTermIds.map((idTuple, key) => 
+                      toggleItems={ fieldProperties.interactionTerms.map((val, key) => 
                         new Object({
-                          id: key,
-                          name: interactionTermNames[key][0] + ' * ' + interactionTermNames[key][1],
-                          ids: idTuple 
+                          id: val.id,
+                          name: createInteractionTermName(val.names)
                         })
                       )}
-                      valueMember="ids"
+                      valueMember="id"
                       displayTextMember="name"
                       separated={ true }
                       onChange={ selectInteractionTerm } />
@@ -190,13 +189,13 @@ export class RegressionSidebar extends Component {
           <SidebarGroup heading="Add Interaction Terms">
             <DropDownMenu
               value={ this.state.interactionVariables[0] }
-              options={ fieldProperties.items.filter((item) => (item.generalType == 'q' || item.generalType == 'c') && item.id != this.state.interactionVariables[1]) }
+              options={ fieldProperties.items.filter((item) => (item.generalType == 'q') && item.id != this.state.interactionVariables[1]) }
               valueMember="id"
               displayTextMember="name"
               onChange={this.onAddInteractionTerm.bind(this, 0)} />
             <DropDownMenu 
               value={ this.state.interactionVariables[1] }
-              options={ fieldProperties.items.filter((item) => (item.generalType == 'q' || item.generalType == 'c') && item.id != this.state.interactionVariables[0]) }
+              options={ fieldProperties.items.filter((item) => (item.generalType == 'q') && item.id != this.state.interactionVariables[0]) }
               valueMember="id"
               displayTextMember="name"
               onChange={this.onAddInteractionTerm.bind(this, 1)} />
@@ -205,6 +204,13 @@ export class RegressionSidebar extends Component {
       </Sidebar>
     );
   }
+}
+
+function createInteractionTermName(array) {
+  return array.reduce((prev, curr, key) => {
+    if(key === 0) return curr.toString();
+    return prev + ' * ' + curr;
+  })
 }
 
 RegressionSidebar.propTypes = {

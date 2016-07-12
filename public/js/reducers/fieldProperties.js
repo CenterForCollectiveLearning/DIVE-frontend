@@ -28,16 +28,12 @@ export default function fieldProperties(state=baseState, action) {
         fieldProperty.id == action.fieldProperty.id ? 
           action.fieldProperty : fieldProperty
       );
-
       return { ...state, items: fieldProperties, updatedAt: action.receivedAt };
 
     case RECEIVE_CREATED_INTERACTION_TERM:
-      console.log(action.data)
       const updatedInteractionTerms = state.interactionTerms.slice();
-      updatedInteractionTerms.push({ id: action.data.id, variables: action.data.variables })
-
-      console.log(updatedInteractionTerms)
-      return { ...state, interactionTerms: updatedInteractionTerms }
+      updatedInteractionTerms.push(action.data);
+      return { ...state, interactionTerms: updatedInteractionTerms };
 
     case WIPE_PROJECT_STATE:
       return baseState;
