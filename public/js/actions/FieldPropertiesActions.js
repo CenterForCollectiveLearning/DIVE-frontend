@@ -90,6 +90,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
     type: RECEIVE_FIELD_PROPERTIES,
     projectId: projectId,
     datasetId: datasetId,
+    interactionTerms: json.interactionTerms,
     fieldProperties: [ ...cFieldProperties, ...tFieldProperties, ...qFieldProperties ],
     receivedAt: Date.now()
   };
