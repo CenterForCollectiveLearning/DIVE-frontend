@@ -90,23 +90,14 @@ export default class RegressionTable extends Component {
           }) ]
         })
       }),
-      {
-        rowClass: styles.footerRow,
-        columnClass: styles.footerColumn,
-        items: [
-          <div className={ styles.rSquaredAdjust }>{ regressionType == 'logistic' ? <div className="cmu">Pseudo</div> : null }<div className={ styles.r }>R</div><sup className="cmu">2</sup></div>,
-          ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.rSquaredAdj) }</div>
-          )
-        ]
-      }
+
     ]
 
     const regressionMeasures = {
       linear: [
         { name: 'DOF', prop: 'dof' },
         { name: 'F', prop: 'fTest' },
-        { name: 'BIC', prop: 'bic' } 
+        { name: 'BIC', prop: 'bic' }
       ],
       logistic: [
         { name: 'Log-likelihood', prop: 'llf' },
@@ -116,18 +107,32 @@ export default class RegressionTable extends Component {
       ]
     }
 
-    const additionalData = regressionMeasures[regressionType].map((val, key) => {
-      return {
+    console.log('REGRESSION TYPE', regressionType)
+
+    const additionalData = [
+      {
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
         items: [
-          <div className="cmu">{ val.name }</div>,
+          <div className={ styles.rSquaredAdjust }>{ regressionType == 'logistic' ? <div className="cmu">Pseudo</div> : null }<div className={ styles.r }>R</div><sup className="cmu">2</sup></div>,
           ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties[val.prop]) }</div>
+            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.rSquaredAdj) }</div>
           )
         ]
-      }
-    })
+      },
+      ...regressionMeasures[regressionType].map((val, key) => {
+        return {
+          rowClass: styles.footerRow,
+          columnClass: styles.footerColumn,
+          items: [
+            <div className="cmu">{ val.name }</div>,
+            ...regressionResult.regressionsByColumn.map((column) =>
+              <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties[val.prop]) }</div>
+            )
+          ]
+        }
+      })
+    ]
 
     const data = preview ? baseData : baseData.concat(additionalData);
 
@@ -145,5 +150,6 @@ RegressionTable.defaultProps = {
 
 RegressionTable.propTypes = {
   regressionResult: PropTypes.object.isRequired,
+  regressionType: PropTypes.string.isRequired,
   preview: PropTypes.bool
 }

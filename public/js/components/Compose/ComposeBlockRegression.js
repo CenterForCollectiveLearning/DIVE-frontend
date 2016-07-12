@@ -37,7 +37,11 @@ export default class ComposeBlockRegression extends Component {
     const width = isHalfWidthFormat ? 620 : absoluteMaxWidth;
     const height = isHalfWidthFormat ? 300 : 400;
 
-    const regressionTableComponent = <RegressionTable regressionResult={ spec.data || {} } preview={ false }/>
+    const regressionTableComponent = <RegressionTable
+      regressionResult={ spec.data || {} }
+      regressionType={ spec.spec.regressionType }
+      preview={ false }
+    />
 
 
     return (
