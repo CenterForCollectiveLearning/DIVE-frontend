@@ -46,13 +46,13 @@ export function selectDependentVariable(selectedDependentVariableId) {
 }
 
 export function selectInteractionTerm(interactionTermId) {
-  console.log(interactionTermId)
   return {
     type: SELECT_REGRESSION_INTERACTION_TERM,
     interactionTermId: interactionTermId
   }
 }
 
+//TODO move to field properties
 export function createInteractionTerm(projectId, datasetId, interactionTermIds) {
   // dispatch a request interaction term action?
   const params = {
@@ -121,7 +121,7 @@ function receiveContributionToRSquaredDispatcher(json) {
   };
 }
 
-export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, interactionTermIds=null) {
+export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, interactionTermIds) {
   const params = {
     projectId: projectId,
     spec: {
@@ -132,7 +132,7 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
       interactionTerms: interactionTermIds
     }
   }
-  
+
   return (dispatch) => {
     dispatch(requestRunRegressionDispatcher());
     return fetch('/statistics/v1/regression', {
