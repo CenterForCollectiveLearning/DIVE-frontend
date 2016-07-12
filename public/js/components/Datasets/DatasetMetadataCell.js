@@ -17,6 +17,8 @@ export class DatasetMetadataCell extends Component {
     const { fieldProperty } = this.props;
     const { id, generalType, vizData, typeScores, isId, isChild, isUnique, stats, uniqueValues } = fieldProperty;
 
+    console.log(isId, isUnique, fieldProperty)
+
     const isMinimalView = true;
     var options = {
       backgroundColor: 'transparent',
@@ -105,11 +107,8 @@ export class DatasetMetadataCell extends Component {
 
     let fieldContent;
     if ( generalType == 'c' ) {
-      const uniqueValuesCount = uniqueValues.length;
-
       fieldContent =
-        <div className={ styles.uniqueValuesList }>
-
+        <div>
           { vizData &&
             <ColumnChart
               chartId={ `field-bar-${ id }` }
@@ -126,6 +125,16 @@ export class DatasetMetadataCell extends Component {
               <div><span className={ styles.field }>Most Occurrences</span>: { getRoundedString(stats.freq) }</div>
             </div>
           }
+          { typeScores &&
+            <div className={ styles.typeScores }>
+              { Object.keys(typeScores).map((key, i) =>
+                <div>
+                  {i + 1}. { key }: { getRoundedString(typeScores[key]) }
+                </div>
+              ) }
+            </div>
+          }
+          { isId && <div><strong>IS ID</strong></div> }
         </div>
     } else if ( generalType == 'q' ) {
       fieldContent =
@@ -147,9 +156,30 @@ export class DatasetMetadataCell extends Component {
               <div><span className={ styles.field }>Std</span>: { getRoundedString(stats.std) }</div>
             </div>
           }
+          { typeScores &&
+            <div className={ styles.typeScores }>
+              { Object.keys(typeScores).map((key, i) =>
+                <div>
+                  {i + 1}. { key }: { getRoundedString(typeScores[key]) }
+                </div>
+              ) }
+            </div>
+          }
+          { isId && <div><strong>IS ID</strong></div> }
         </div>
     } else if ( generalType == 't' ) {
-      fieldContent = <div>T Field</div>
+      fieldContent =
+      <div>
+      { typeScores &&
+        <div className={ styles.typeScores }>
+          { Object.keys(typeScores).map((key, i) =>
+            <div>
+              {i + 1}. { key }: { getRoundedString(typeScores[key]) }
+            </div>
+          ) }
+        </div>
+      }
+      </div>
     }
 
     return (
