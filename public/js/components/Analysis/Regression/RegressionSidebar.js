@@ -187,16 +187,17 @@ export class RegressionSidebar extends Component {
             }
           </SidebarGroup>
         }
-          <SidebarGroup heading="Add Interaction Terms">
+          <SidebarGroup stacked={true} heading="Add Interaction Terms">
             <DropDownMenu
-              style={{ width: '50%' }}
+              width='50%'
+              margin='2px'
               value={ this.state.interactionVariables[0] }
               options={ fieldProperties.items.filter((item) => (item.generalType == 'q') && item.id != this.state.interactionVariables[1]) }
               valueMember="id"
               displayTextMember="name"
               onChange={this.onAddInteractionTerm.bind(this, 0)} />
             <DropDownMenu 
-              style={{ width: '50%' }}
+              width='50%'
               value={ this.state.interactionVariables[1] }
               options={ fieldProperties.items.filter((item) => (item.generalType == 'q') && item.id != this.state.interactionVariables[0]) }
               valueMember="id"

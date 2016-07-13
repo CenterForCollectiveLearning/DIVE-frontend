@@ -9,7 +9,7 @@ export default class SidebarGroup extends Component {
         { this.props.heading &&
           <h3 className={ styles.sidebarGroupHeading }>{ this.props.heading }</h3>
         }
-        <div className={ styles.sidebarGroupContent}>
+        <div className={(this.props.stacked ? styles.stacked : '')}>
           { this.props.children }
         </div>
       </div>
