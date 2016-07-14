@@ -91,7 +91,14 @@ export class GallerySidebar extends Component {
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Categorical</div>
                 <ToggleButtonGroup
-                  toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 'c') }
+                  toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 'c').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      selected: item.selected,
+                      disabled: item.isId
+                    })
+                  )}
                   displayTextMember="name"
                   valueMember="id"
                   splitMenuItemsMember="values"
@@ -107,7 +114,6 @@ export class GallerySidebar extends Component {
                   toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 't') }
                   displayTextMember="name"
                   valueMember="id"
-                  splitMenuItemsMember="aggregations"
                   separated={ true }
                   selectMenuItem={ selectAggregationFunction }
                   onChange={ this.clickFieldProperty } />
@@ -117,7 +123,14 @@ export class GallerySidebar extends Component {
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Quantitative</div>
                 <ToggleButtonGroup
-                  toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 'q') }
+                  toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 'q').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      selected: item.selected,
+                      disabled: item.isId
+                    })
+                  )}
                   displayTextMember="name"
                   valueMember="id"
                   splitMenuItemsMember="aggregations"

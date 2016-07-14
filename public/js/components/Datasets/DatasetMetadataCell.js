@@ -30,7 +30,7 @@ export class DatasetMetadataCell extends Component {
     const { id, generalType, vizData, typeScores, isId, isChild, isUnique, stats, uniqueValues } = fieldProperty;
     this.state.isId = isId;
 
-    const isMinimalView = true;
+    const showTypeScores = false;
     var options = {
       backgroundColor: 'transparent',
       headerColor: 'white',
@@ -136,15 +136,14 @@ export class DatasetMetadataCell extends Component {
               options={ categoricalOptions }
             />
           }
-          { isUnique && <div>Unique</div> }
           { stats &&
             <div className={ styles.statistics }>
-              <div><span className={ styles.field }>Unique Values</span>: { getRoundedString(stats.unique) }</div>
+              <div><span className={ styles.field }>Unique Values</span>: { getRoundedString(stats.unique) } ({ getRoundedString((stats.unique / stats.count) * 100) }%) </div>
               <div><span className={ styles.field }>Most Frequent</span>: { stats.top }</div>
               <div><span className={ styles.field }>Most Occurrences</span>: { getRoundedString(stats.freq) }</div>
             </div>
           }
-          { typeScores &&
+          { typeScores && showTypeScores &&
             <div className={ styles.typeScores }>
               { Object.keys(typeScores).map((key, i) =>
                 <div>
@@ -153,7 +152,7 @@ export class DatasetMetadataCell extends Component {
               ) }
             </div>
           }
-          <div>
+          <div className={ styles.toggles }>
             <input type="checkbox"
               checked={ this.state.isId }
               onChange={ this.onIDCheckboxChange.bind(this, projectId, datasetId, id) }
@@ -181,7 +180,7 @@ export class DatasetMetadataCell extends Component {
               <div><span className={ styles.field }>Std</span>: { getRoundedString(stats.std) }</div>
             </div>
           }
-          { typeScores &&
+          { typeScores && showTypeScores &&
             <div className={ styles.typeScores }>
               { Object.keys(typeScores).map((key, i) =>
                 <div>
@@ -190,7 +189,7 @@ export class DatasetMetadataCell extends Component {
               ) }
             </div>
           }
-          <div>
+          <div className={ styles.toggles }>
             <input type="checkbox"
               checked={ this.state.isId }
               onChange={ this.onIDCheckboxChange.bind(this, projectId, datasetId, id) }
@@ -215,7 +214,7 @@ export class DatasetMetadataCell extends Component {
             <div><span className={ styles.field }>Range</span>: { getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div>
           </div>
         }
-        { typeScores &&
+        { typeScores && showTypeScores &&
           <div className={ styles.typeScores }>
             { Object.keys(typeScores).map((key, i) =>
               <div>
