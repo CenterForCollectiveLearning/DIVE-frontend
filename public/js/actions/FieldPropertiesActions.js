@@ -5,7 +5,9 @@ import {
   SELECT_FIELD_PROPERTY_VALUE,
   SELECT_AGGREGATION_FUNCTION,
   REQUEST_SET_FIELD_TYPE,
-  RECEIVE_SET_FIELD_TYPE
+  RECEIVE_SET_FIELD_TYPE,
+  REQUEST_SET_FIELD_IS_ID,
+  RECEIVE_SET_FIELD_IS_ID
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
@@ -171,5 +173,36 @@ export function setFieldType(projectId, fieldId, fieldType) {
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(json => dispatch(receiveSetFieldTypeDispatcher(json)));
+  };
+}
+
+function requestSetFieldIsIdDispatcher(projectId, fieldId, fieldIsId) {
+  return {
+    type: REQUEST_SET_FIELD_IS_ID,
+    fieldId: fieldId,
+    fieldIsId: fieldIsId
+  };
+}
+
+function receiveSetFieldIsIdDispatcher(fieldProperty) {
+  return {
+    type: RECEIVE_SET_FIELD_IS_ID,
+    fieldProperty: fieldProperty
+  };
+}
+
+export function setFieldIsId(projectId, fieldId, fieldIsId) {
+  const params = {
+    project_id: projectId,
+    isId: fieldIsId
+  };
+
+  return (dispatch) => {
+    dispatch(requestSetFieldIsIdDispatcher(projectId, fieldId, fieldIsId));
+    return fetch(`/datasets/v1/fields/${ fieldId }`, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(json => dispatch(receiveSetFieldIsIdDispatcher(json)));
   };
 }

@@ -125,7 +125,7 @@ export class ProjectNav extends Component {
           <TabGroup heading="1. DATASETS">
             <Tab label="Upload" value="upload" route={ `datasets/upload` } />
             <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
-            <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } disabled={ true }/>
+            <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } disabled={ !datasets.items.length }/>
           </TabGroup>
           <TabGroup heading="2. VISUALIZATIONS">
             <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
@@ -134,7 +134,7 @@ export class ProjectNav extends Component {
           </TabGroup>
           <TabGroup heading="3. ANALYSIS">
             <Tab label="Summary" value="summary" route={ `datasets/${ datasetId }/analyze/summary` } disabled={ !datasetId }/>
-            <Tab label="Comparison" value="comparison" route={ `datasets/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>            
+            <Tab label="Comparison" value="comparison" route={ `datasets/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>
             <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
             <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
           </TabGroup>
