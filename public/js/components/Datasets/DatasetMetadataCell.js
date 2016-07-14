@@ -5,19 +5,30 @@ import styles from './Datasets.sass';
 import DropDownMenu from '../Base/DropDownMenu';
 import ColumnChart from '../Visualizations/Charts/ColumnChart';
 import Histogram from '../Visualizations/Charts/Histogram';
-import { setFieldType } from '../../actions/FieldPropertiesActions';
+import { setFieldIsId } from '../../actions/FieldPropertiesActions';
 import { numberWithCommas, getRoundedString } from '../../helpers/helpers.js';
+
 
 export class DatasetMetadataCell extends Component {
   constructor (props) {
     super(props);
+
+    this.state = {
+      isId: false
+    }
+  }
+
+  onIDCheckboxChange() {
+    const { projectId, fieldProperty, setFieldIsId } = this.props;
+    const { id: fieldId } = fieldProperty;
+    this.state.isId = !this.state.isId;
+    setFieldIsId( projectId, fieldId, this.state.isId );
   }
 
   render() {
-    const { fieldProperty } = this.props;
+    const { projectId, datasetId, fieldProperty } = this.props;
     const { id, generalType, vizData, typeScores, isId, isChild, isUnique, stats, uniqueValues } = fieldProperty;
-
-    console.log(isId, isUnique, fieldProperty)
+    this.state.isId = isId;
 
     const isMinimalView = true;
     var options = {
@@ -105,6 +116,14 @@ export class DatasetMetadataCell extends Component {
       colors: ['#579AD6']
     }
 
+    const temporalOptions = {
+      ...options,
+      tooltip: {
+        isHtml: true
+      },
+      colors: ['#F3595C']
+    }
+
     let fieldContent;
     if ( generalType == 'c' ) {
       fieldContent =
@@ -134,7 +153,13 @@ export class DatasetMetadataCell extends Component {
               ) }
             </div>
           }
-          { isId && <div><strong>IS ID</strong></div> }
+          <div>
+            <input type="checkbox"
+              checked={ this.state.isId }
+              onChange={ this.onIDCheckboxChange.bind(this, projectId, datasetId, id) }
+            />
+            <span>ID</span>
+          </div>
         </div>
     } else if ( generalType == 'q' ) {
       fieldContent =
@@ -165,20 +190,40 @@ export class DatasetMetadataCell extends Component {
               ) }
             </div>
           }
-          { isId && <div><strong>IS ID</strong></div> }
+          <div>
+            <input type="checkbox"
+              checked={ this.state.isId }
+              onChange={ this.onIDCheckboxChange.bind(this, projectId, datasetId, id) }
+            />
+            <span>ID</span>
+          </div>
         </div>
     } else if ( generalType == 't' ) {
       fieldContent =
       <div>
-      { typeScores &&
-        <div className={ styles.typeScores }>
-          { Object.keys(typeScores).map((key, i) =>
-            <div>
-              {i + 1}. { key }: { getRoundedString(typeScores[key]) }
-            </div>
-          ) }
-        </div>
-      }
+        { vizData &&
+          <Histogram
+            chartId={ `field-hist-time-${ id }` }
+            data={ vizData['visualize'] }
+            bins={ vizData['bins'] }
+            isMinimalView={ true }
+            options={ temporalOptions }
+          />
+        }
+        { stats &&
+          <div className={ styles.statistics }>
+            <div><span className={ styles.field }>Range</span>: { getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div>
+          </div>
+        }
+        { typeScores &&
+          <div className={ styles.typeScores }>
+            { Object.keys(typeScores).map((key, i) =>
+              <div>
+                {i + 1}. { key }: { getRoundedString(typeScores[key]) }
+              </div>
+            ) }
+          </div>
+        }
       </div>
     }
 
@@ -199,7 +244,10 @@ DatasetMetadataCell.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  return { projectId: state.project.properties.id };
+  const { project } = state;
+  return {
+    projectId: project.properties.id,
+  };
 }
 
-export default connect(mapStateToProps, { setFieldType })(DatasetMetadataCell);
+export default connect(mapStateToProps, { setFieldIsId })(DatasetMetadataCell);

@@ -2,6 +2,7 @@ import {
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES,
   RECEIVE_SET_FIELD_TYPE,
+  RECEIVE_SET_FIELD_IS_ID,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -22,8 +23,16 @@ export default function fieldProperties(state=baseState, action) {
       return { ...state, loaded: true, isFetching: false, items: action.fieldProperties, datasetId: action.datasetId, updatedAt: action.receivedAt };
 
     case RECEIVE_SET_FIELD_TYPE:
-      const fieldProperties = state.items.slice().map((fieldProperty) =>
-        fieldProperty.id == action.fieldProperty.id ? 
+      var fieldProperties = state.items.slice().map((fieldProperty) =>
+        fieldProperty.id == action.fieldProperty.id ?
+          action.fieldProperty : fieldProperty
+      );
+
+      return { ...state, items: fieldProperties, updatedAt: action.receivedAt };
+
+    case RECEIVE_SET_FIELD_IS_ID:
+      var fieldProperties = state.items.slice().map((fieldProperty) =>
+        fieldProperty.id == action.fieldProperty.id ?
           action.fieldProperty : fieldProperty
       );
 
