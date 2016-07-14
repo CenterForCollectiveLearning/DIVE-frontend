@@ -15,7 +15,7 @@ import ReduceColumnsModal from './ReduceColumnsModal';
 import PivotModal from './PivotModal';
 import MergeDatasetsModal from './MergeDatasetsModal';
 
-export class DatasetInspectPage extends Component {
+export class DatasetTransformPage extends Component {
   constructor(props) {
     super(props);
 
@@ -26,7 +26,6 @@ export class DatasetInspectPage extends Component {
     }
 
     this.onSelectDataset = this.onSelectDataset.bind(this);
-    this.onClickUploadDataset = this.onClickUploadDataset.bind(this);
     this.onClickDeleteDataset = this.onClickDeleteDataset.bind(this);
   }
 
@@ -53,7 +52,7 @@ export class DatasetInspectPage extends Component {
 
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
       if (datasetSelector.datasetId) {
-        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/transform`);
       } else {
         push(`/projects/${ params.projectId }/datasets/upload`);
       }
@@ -96,10 +95,6 @@ export class DatasetInspectPage extends Component {
     deleteDataset(project.properties.id, datasetSelector.datasetId);
   }
 
-  onClickUploadDataset() {
-    this.props.push(`/projects/${ this.props.project.properties.id }/datasets/upload`);
-  }
-
   render() {
     const { datasets, datasetSelector, fieldProperties, params, project } = this.props;
     const dataset = datasets.items.filter((dataset) =>
@@ -109,7 +104,7 @@ export class DatasetInspectPage extends Component {
     return (
       <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
         <HeaderBar
-          header="Inspect"
+          header="Transform"
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
@@ -125,9 +120,6 @@ export class DatasetInspectPage extends Component {
               </div>
               <div className={ styles.headerControl }>
                 <RaisedButton label="Combine datasets" onClick={ this.openMergeDatasetsModal.bind(this) }/>
-              </div>
-              <div className={ styles.headerControl }>
-                <RaisedButton label="Upload new dataset" onClick={ this.onClickUploadDataset } />
               </div>
               <div className={ styles.headerControl }>
                 <DropDownMenu
@@ -175,7 +167,7 @@ export class DatasetInspectPage extends Component {
   }
 }
 
-DatasetInspectPage.propTypes = {
+DatasetTransformPage.propTypes = {
   project: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
@@ -194,4 +186,4 @@ export default connect(mapStateToProps, {
   fetchDatasets,
   fetchFieldPropertiesIfNeeded,
   push
-})(DatasetInspectPage);
+})(DatasetTransformPage);
