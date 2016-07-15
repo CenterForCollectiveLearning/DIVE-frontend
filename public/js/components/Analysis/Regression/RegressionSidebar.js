@@ -45,7 +45,7 @@ export class RegressionSidebar extends Component {
 
   onSelectRegressionType(regressionType) {
     const { project, datasetSelector, regressionSelector, push } = this.props;
-    
+
     const queryParams = { 'dependent-variable': regressionSelector.dependentVariableId, 'regression-type': regressionType };
     push(createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
   }
@@ -75,7 +75,7 @@ export class RegressionSidebar extends Component {
           <SidebarGroup heading="Dependent Variable (Y)">
             <DropDownMenu
               value={ parseInt(regressionSelector.dependentVariableId) }
-              options={ fieldProperties.items.filter((property) => !property.isUnique) }
+              options={ fieldProperties.items.filter((property) => !property.isId) }
               valueMember="id"
               displayTextMember="name"
               onChange={ this.onSelectDependentVariable.bind(this) }/>
