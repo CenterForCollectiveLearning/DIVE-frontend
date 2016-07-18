@@ -75,7 +75,8 @@ export class RegressionSidebar extends Component {
 
   render() {
     const { fieldProperties, regressionSelector, selectIndependentVariable, selectInteractionTerm, deleteInteractionTerm } = this.props;
-    
+    const { interactionVariables } = this.state;
+
     const interactionTermNames = regressionSelector.interactionTermIds.map((idTuple) => {
       return fieldProperties.items.filter((property) => property.id == idTuple[0] || property.id == idTuple[1]).map((item) => item.name)
     })
@@ -191,20 +192,20 @@ export class RegressionSidebar extends Component {
             <DropDownMenu
               width='50%'
               margin='2px'
-              value={ this.state.interactionVariables[0] }
+              value={ interactionVariables[0] }
               options={ fieldProperties.items.filter((item) => 
-                (item.generalType == 'q') && item.id != parseInt(regressionSelector.dependentVariableId) && item.id != this.state.interactionVariables[1]
-                  && filterInteractionTermSelection(item.id, this.state.interactionVariables[1], fieldProperties.interactionTerms))
+                (item.generalType == 'q') && item.id != parseInt(regressionSelector.dependentVariableId) && item.id != interactionVariables[1]
+                  && filterInteractionTermSelection(item.id, interactionVariables[1], fieldProperties.interactionTerms))
               }
               valueMember="id"
               displayTextMember="name"
               onChange={this.onAddInteractionTerm.bind(this, 0)} />
             <DropDownMenu 
               width='50%'
-              value={ this.state.interactionVariables[1] }
+              value={ interactionVariables[1] }
               options={ fieldProperties.items.filter((item) => 
-                (item.generalType == 'q') && item.id != parseInt(regressionSelector.dependentVariableId) && item.id != this.state.interactionVariables[0] 
-                  && filterInteractionTermSelection(item.id, this.state.interactionVariables[0], fieldProperties.interactionTerms))
+                (item.generalType == 'q') && item.id != parseInt(regressionSelector.dependentVariableId) && item.id != interactionVariables[0] 
+                  && filterInteractionTermSelection(item.id, interactionVariables[0], fieldProperties.interactionTerms))
               }
               valueMember="id"
               displayTextMember="name"
