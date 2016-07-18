@@ -11,5 +11,11 @@ __/
 
 *.map
 
+public/*.eot
+public/*.ttf
+public/*.woff
+public/*.woff2
+public/*.svg
 public/bundle.js
+public/bundle.js.map
 public/app.css

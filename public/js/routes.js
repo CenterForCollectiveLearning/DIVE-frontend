@@ -15,6 +15,7 @@ import ProjectsPage from './components/ProjectsPage';
 import DatasetsPage from './components/Datasets/DatasetsPage';
 import DatasetUploadPage from './components/Datasets/DatasetUploadPage';
 import DatasetInspectPage from './components/Datasets/DatasetInspectPage';
+import DatasetTransformPage from './components/Datasets/DatasetTransformPage';
 import VisualizationsPage from './components/Visualizations/VisualizationsPage';
 import GalleryPage from './components/Visualizations/Gallery/GalleryPage';
 import BuilderPage from './components/Visualizations/Builder/BuilderPage';
@@ -62,6 +63,7 @@ export default (
       <Route path="datasets" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>
         <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>
+        <Route path=":datasetId/transform" component={ DatasetTransformPage }/>
       </Route>
 
       <Route path="datasets/:datasetId" component={ DatasetsPage }>

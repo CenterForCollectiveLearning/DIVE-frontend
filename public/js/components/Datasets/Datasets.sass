@@ -90,13 +90,13 @@
     height: 100%
     min-width: 100%
 
-.headerRowTable, .dataRowsTable
+.headerRowTable, .metadataRowTable, .dataRowsTable
   > div
     width: auto!important
     overflow: visible!important
 
 .dataRowsTable
-  overflow-y: scroll
+  overflow-y: auto
   height: 100%
 
   .cell
@@ -111,7 +111,7 @@
       .fieldValue
         text-align: right
 
-.headerRowTable
+.headerRowTable, .metadataRowTable
   .row
     .cell
       background-color: rgba(243, 243, 243, 0.7)
@@ -124,9 +124,42 @@
       padding: 5px 10px 4px
       text-align: left
       height: 31px
+      align-items: flex-start
 
       &:last-child
         border-right-width: 0px
+
+.headerRowTable
+  .row
+    .cell
+      border-bottom: 0px
+
+.metadataRowTable
+  .row
+    .cell
+      position: relative
+      padding-top: 0px
+      font-weight: 400
+      border-top: 0px
+      height: 170px
+      overflow-x: hidden
+      overflow-y: auto
+
+      div
+        width: 100%
+
+      .statistics, .typeScores
+        padding-top: 5px
+
+        .field
+          font-weight: 500
+
+      .toggles
+        position: absolute
+        bottom: 5px
+
+        input
+          margin-left: 0px
 
 .row
   display: flex
@@ -209,4 +242,3 @@
     white-space: nowrap
     font-size: 13px
     font-weight: 300
-

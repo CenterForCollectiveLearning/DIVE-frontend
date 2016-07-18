@@ -2,7 +2,9 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from './Datasets.sass';
 import DatasetRow from './DatasetRow';
+import MetadataRow from './MetadataRow';
 import DatasetHeaderCell from './DatasetHeaderCell';
+import DatasetMetadataCell from './DatasetMetadataCell';
 import DataGrid from '../Base/DataGrid';
 
 export default class DatasetDataGrid extends Component {
@@ -12,6 +14,7 @@ export default class DatasetDataGrid extends Component {
 
     var dataRows = [];
     var headerRows = [];
+    var metadataRows = [];
 
     if (fieldProperties.items.length && fieldProperties.datasetId == dataset.datasetId) {
       const createCellContent = function (value, children) {
@@ -31,6 +34,14 @@ export default class DatasetDataGrid extends Component {
         );
       };
 
+      const createMetadataCellContent = function(value, fieldProperty, context) {
+        return (
+          <span key={ `cell-content-${ value }` } title={ value } className={ styles.cellContent }>
+            <DatasetMetadataCell key={ `metadata-cell-${ value }` } fieldProperty={ fieldProperty } />
+          </span>
+        );
+      };
+
       const createCell = function(key, i, value, cellContentGenerator) {
         const fieldProperty = fieldProperties.items.find((fieldProperty) => fieldProperty.index == i);
         return {
@@ -43,8 +54,10 @@ export default class DatasetDataGrid extends Component {
       }
 
       const createHeaderCell = ((key, i) => createCell(key, i, key, createHeaderCellContent));
+      const createMetadataCell = ((key, i) => createCell(key, i, key, createMetadataCellContent));
 
       const headerRow = [...dataset.data[0].keys()].map(createHeaderCell);
+      const metadataRow = [...dataset.data[0].keys()].map(createMetadataCell);
 
       dataRows = dataset.data.map(function(row, i) {
         const createDataCell = ((key, j) => createCell(key, j, row.get(key), createDataCellContent));
@@ -61,6 +74,14 @@ export default class DatasetDataGrid extends Component {
           items: headerRow
         }
       ];
+
+
+      metadataRows = [
+        {
+          rowType: 'metadata',
+          items: metadataRow
+        }
+      ];
     }
 
     return (
@@ -71,6 +92,11 @@ export default class DatasetDataGrid extends Component {
             datasetId={ `${ dataset.datasetId }` }
             data={ headerRows }
             customRowComponent={ DatasetRow }/>
+          <DataGrid
+            containerClassName={ styles.metadataRowTable }
+            datasetId={ `${ dataset.datasetId }` }
+            data={ metadataRows }
+            customRowComponent={ MetadataRow }/>
           <DataGrid
             containerClassName={ styles.dataRowsTable }
             datasetId={ `${ dataset.datasetId }` }
