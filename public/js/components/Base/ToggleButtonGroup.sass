@@ -60,8 +60,21 @@
     &[data-selected]
       background-color: rgba(86, 42, 110, 0.07)
 
+    &:hover > .delete
+      display: block
+      color: rgba(161, 155, 155, 1)
+
     img
       padding: 3px
+
+  .delete
+    float: right
+    text-align: center
+    width: 10%
+    display: none
+
+    &:hover
+      background-color: blue
 
   .splitButton.textToggleButton
     display: flex

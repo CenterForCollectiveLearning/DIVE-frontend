@@ -52,9 +52,7 @@ export function selectInteractionTerm(interactionTermId) {
   }
 }
 
-//TODO move to field properties
 export function createInteractionTerm(projectId, datasetId, interactionTermIds) {
-  // dispatch a request interaction term action?
   const params = {
     projectId,
     datasetId,
@@ -68,6 +66,10 @@ export function createInteractionTerm(projectId, datasetId, interactionTermIds) 
     }).then(json => dispatch(receiveInteractionTerm(json)))
       .catch(err => console.error("Error creating interaction term:", err));
   }
+}
+
+export function deleteInteractionTerm(id) {
+  console.log('in deleteInteractionTerm', id)
 }
 
 function receiveInteractionTerm(json) {

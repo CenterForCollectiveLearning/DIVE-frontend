@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectIndependentVariable, selectRegressionType, createInteractionTerm, selectInteractionTerm } from '../../../actions/RegressionActions';
+import { selectIndependentVariable, selectRegressionType, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm } from '../../../actions/RegressionActions';
 import { createURL, createInteractionTermName } from '../../../helpers/helpers.js';
 
 import styles from '../Analysis.sass';
@@ -74,7 +74,7 @@ export class RegressionSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, regressionSelector, selectIndependentVariable, selectInteractionTerm } = this.props;
+    const { fieldProperties, regressionSelector, selectIndependentVariable, selectInteractionTerm, deleteInteractionTerm } = this.props;
     
     const interactionTermNames = regressionSelector.interactionTermIds.map((idTuple) => {
       return fieldProperties.items.filter((property) => property.id == idTuple[0] || property.id == idTuple[1]).map((item) => item.name)
@@ -165,7 +165,7 @@ export class RegressionSidebar extends Component {
                   onChange={ selectIndependentVariable } />
               </div>
             }
-            { fieldProperties.items.filter((property) => property.generalType == 'q' || property.generalType == 'c').length > 0 &&
+            { fieldProperties.interactionTerms.length > 0 &&
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Interaction Terms</div>
                 { fieldProperties.interactionTerms.length > 0 ?
@@ -180,8 +180,8 @@ export class RegressionSidebar extends Component {
                       displayTextMember="name"
                       externalSelectedItems={ regressionSelector.interactionTermIds }
                       separated={ true }
-                      onChange={ selectInteractionTerm } />
-                    : <div> None selected </div>
+                      onChange={ selectInteractionTerm }
+                      onDelete={ deleteInteractionTerm } /> : null
                 }
               </div>
             }
@@ -192,14 +192,14 @@ export class RegressionSidebar extends Component {
               width='50%'
               margin='2px'
               value={ this.state.interactionVariables[0] }
-              options={ fieldProperties.items.filter((item) => (item.generalType == 'q') && item.id != this.state.interactionVariables[1]) }
+              options={ fieldProperties.items.filter((item) => (item.generalType == 'q') && item.id != parseInt(regressionSelector.dependentVariableId)) }
               valueMember="id"
               displayTextMember="name"
               onChange={this.onAddInteractionTerm.bind(this, 0)} />
             <DropDownMenu 
               width='50%'
               value={ this.state.interactionVariables[1] }
-              options={ fieldProperties.items.filter((item) => (item.generalType == 'q') && item.id != this.state.interactionVariables[0]) }
+              options={ fieldProperties.items.filter((item) => (item.generalType == 'q') && item.id != parseInt(regressionSelector.dependentVariableId)) }
               valueMember="id"
               displayTextMember="name"
               onChange={this.onAddInteractionTerm.bind(this, 1)} />
@@ -227,4 +227,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectRegressionType, selectIndependentVariable, createInteractionTerm, selectInteractionTerm, push })(RegressionSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectRegressionType, selectIndependentVariable, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, push })(RegressionSidebar);
