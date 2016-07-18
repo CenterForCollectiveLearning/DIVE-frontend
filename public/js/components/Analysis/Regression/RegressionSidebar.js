@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { selectIndependentVariable, selectRegressionType, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm } from '../../../actions/RegressionActions';
-import { createURL, createInteractionTermName } from '../../../helpers/helpers.js';
+import { createURL, createInteractionTermName, filterInteractionTermSelection } from '../../../helpers/helpers.js';
 
 import styles from '../Analysis.sass';
 
@@ -192,14 +192,20 @@ export class RegressionSidebar extends Component {
               width='50%'
               margin='2px'
               value={ this.state.interactionVariables[0] }
-              options={ fieldProperties.items.filter((item) => (item.generalType == 'q') && item.id != parseInt(regressionSelector.dependentVariableId)) }
+              options={ fieldProperties.items.filter((item) => 
+                (item.generalType == 'q') && item.id != parseInt(regressionSelector.dependentVariableId) && item.id != this.state.interactionVariables[1]
+                  && filterInteractionTermSelection(item.id, this.state.interactionVariables[1], fieldProperties.interactionTerms))
+              }
               valueMember="id"
               displayTextMember="name"
               onChange={this.onAddInteractionTerm.bind(this, 0)} />
             <DropDownMenu 
               width='50%'
               value={ this.state.interactionVariables[1] }
-              options={ fieldProperties.items.filter((item) => (item.generalType == 'q') && item.id != parseInt(regressionSelector.dependentVariableId)) }
+              options={ fieldProperties.items.filter((item) => 
+                (item.generalType == 'q') && item.id != parseInt(regressionSelector.dependentVariableId) && item.id != this.state.interactionVariables[0] 
+                  && filterInteractionTermSelection(item.id, this.state.interactionVariables[0], fieldProperties.interactionTerms))
+              }
               valueMember="id"
               displayTextMember="name"
               onChange={this.onAddInteractionTerm.bind(this, 1)} />

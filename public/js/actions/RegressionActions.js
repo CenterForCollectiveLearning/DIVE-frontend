@@ -3,13 +3,12 @@ import {
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
   SELECT_REGRESSION_INTERACTION_TERM,
-  CREATE_INTERACTION_TERM,
   REQUEST_RUN_REGRESSION,
   RECEIVE_RUN_REGRESSION,
   PROGRESS_RUN_REGRESSION,
   ERROR_RUN_REGRESSION,
-  // REQUEST_CREATE_INTERACTION_TERM,
   RECEIVE_CREATED_INTERACTION_TERM,
+  DELETED_INTERACTION_TERM,
   REQUEST_CONTRIBUTION_TO_R_SQUARED,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
   REQUEST_CREATE_SAVED_REGRESSION,
@@ -68,14 +67,26 @@ export function createInteractionTerm(projectId, datasetId, interactionTermIds) 
   }
 }
 
-export function deleteInteractionTerm(id) {
-  console.log('in deleteInteractionTerm', id)
+export function deleteInteractionTerm(interaction_term_id) {
+  return dispatch => {
+    return fetch(`/statistics/v1/interaction_term?id=${ interaction_term_id }`, {
+      method: 'delete' 
+    }).then(json => dispatch(receiveDeletedInteractionTerm(json)))
+      .catch(err => console.error("Error deleting interaction term:", err));
+  }
 }
 
 function receiveInteractionTerm(json) {
-  console.log(json)
   return {
     type: RECEIVE_CREATED_INTERACTION_TERM,
+    data: json,
+    receivedAt: Date.now()
+  }
+}
+
+function receiveDeletedInteractionTerm(json) {
+  return {
+    type: DELETED_INTERACTION_TERM,
     data: json,
     receivedAt: Date.now()
   }

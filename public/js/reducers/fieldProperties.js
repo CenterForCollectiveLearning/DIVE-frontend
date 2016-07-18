@@ -2,6 +2,7 @@ import {
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES,
   RECEIVE_CREATED_INTERACTION_TERM,
+  DELETED_INTERACTION_TERM,
   RECEIVE_SET_FIELD_TYPE,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
@@ -42,6 +43,12 @@ export default function fieldProperties(state=baseState, action) {
       const updatedInteractionTerms = state.interactionTerms.slice();
       updatedInteractionTerms.push(action.data);
       return { ...state, interactionTerms: updatedInteractionTerms };
+
+    case DELETED_INTERACTION_TERM:
+      const interactionTerms = state.interactionTerms.slice().filter((term) =>
+        term.id != action.data.id
+      );
+      return {...state, interactionTerms: interactionTerms }
 
     case WIPE_PROJECT_STATE:
       return baseState;

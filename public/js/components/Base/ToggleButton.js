@@ -17,7 +17,9 @@ export default class ToggleButton extends Component {
   }
 
   handleDelete (event) {
-    event.stopPropagation();
+    if(!this.props.isSelected) {
+      event.stopPropagation();
+    }
     this.props.onDelete(this.props.value);
   }
 

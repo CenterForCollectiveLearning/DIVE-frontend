@@ -79,3 +79,16 @@ export function createInteractionTermName(array) {
     return prev + ' * ' + curr;
   })
 }
+
+export function filterInteractionTermSelection(item, alreadySelectedTerm, interactionTerms) {
+  var showVariable = true;
+  if(alreadySelectedTerm) {
+    for (var i=0; i < interactionTerms.length; i++) {
+      if(interactionTerms[i].variables.indexOf(item) > -1 && interactionTerms[i].variables.indexOf(alreadySelectedTerm) > -1){
+        showVariable = false;
+        break;
+      }
+    }
+  }
+  return showVariable;
+}
