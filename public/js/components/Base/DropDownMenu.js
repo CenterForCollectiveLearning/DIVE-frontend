@@ -10,25 +10,28 @@ export default class DropDownMenu extends Component {
   }
 
   render() {
-    const { value, options, valueMember, displayTextMember, onChange, multi, clearable, searchable, className, valueClassName, prefix } = this.props;
+    const { value, options, label, valueMember, displayTextMember, onChange, multi, clearable, searchable, className, valueClassName, prefix } = this.props;
 
     const selectedValueObject = options.find((option) => option.selected);
-    const selectedValue = (value == null && selectedValueObject) ? 
+    const selectedValue = (value == null && selectedValueObject) ?
       selectedValueObject[valueMember] : value;
 
     const valueRenderer = (option) => {
       return (
         <div className={ styles.valueContainer }>
-          { prefix && 
+          { prefix &&
             <span className={ styles.prefix }>{ prefix }: </span>
           }
           <span className={ styles.value + (valueClassName ? ' ' + valueClassName : '') }>{ option[displayTextMember] }</span>
         </div>
       );
-    } 
+    }
 
     return (
       <div style={{ width: this.props.width || '100%' }} className={ styles.dropDownMenu + (className ? ' ' + className : '') }>
+        { label &&
+          <div className={ styles.dropDownLabel }>{ label } </div>
+        }
         <Select
           value={ selectedValue }
           labelKey={ displayTextMember }
@@ -50,6 +53,7 @@ DropDownMenu.propTypes = {
   valueMember: PropTypes.string,
   displayTextMember: PropTypes.string,
   onChange: PropTypes.func.isRequired,
+  label: PropTypes.string,
   multi: PropTypes.bool,
   clearable: PropTypes.bool,
   searchable: PropTypes.bool,
@@ -63,6 +67,7 @@ DropDownMenu.defaultProps = {
   className: null,
   valueClassName: null,
   prefix: null,
+  label: null,
   value: null,
   multi: false,
   clearable: false,

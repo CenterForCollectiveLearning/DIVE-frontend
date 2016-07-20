@@ -6,37 +6,43 @@
   display: flex
   flex-direction: column
   position: relative
-  min-width: 179px
-  background: linear-gradient(to bottom right, #3A3147, #1A2E56)
+  min-width: 155px
+  background: #2A2D33
 
 .logoContainer
+  height: 50px
+  min-height: 50px
   display: flex
   flex-direction: row
   padding-bottom: 14px
   padding-top: 3px
   cursor: pointer
+  background-color: #4AD3B7
 
   .logo
     width: 24px
     height: 30px
     margin-left: 6px
-    margin-top: 14px
+    margin-top: 7px
 
   .logoText
     font-size: 31px
     font-weight: 800
-    margin-top: 11px
+    margin-top: 1px
     margin-left: 22px
     color: #FFFFFF
 
 .logoutUser
   padding: 12px 24px
   line-height: 24px
+  color: #414141
 
 .userStatus, .logoutUser
+  position: absolute
+  right: 0
   font-size: 12px
   font-weight: 400
-  color: rgba(255, 255, 255, 0.7)
+  color: #32363C
 
   &:hover
     cursor: pointer
@@ -53,39 +59,63 @@
 .projectContainer
   flex-direction: row
 
+.projectRightContainer
+  +fillContainer
+  flex-direction: column
+
+.projectTopBar
+  display: flex
+  flex-direction: row
+  min-height: 50px
+  flex-shrink: 0
+  border-bottom: 1px solid #F0F0F0
+
+  .projectTopBarLeft
+    width: 400px
+    height: 50px
+    font-weight: 300 !important
+    color: #32363C
+    font-size: 31px
+    padding-left: 20px
+    line-height: 48px
+
+    span.separator
+      padding: 0 5px
+
+    span.projectCurrentPage
+      text-transform: capitalize
+
 .projectSelectorContainer
   display: flex
   flex-direction: row
-
-  .projectSelector, .projectSelectorAction
-    background-color: rgba(28, 32, 40, 0.7)
-
-    &:hover
-      background-color: rgba(28, 32, 40, 0.5)
+  width: 400px
+  height: 50px
+  font-weight: 300 !important
 
   .projectSelectorAction
     padding-left: 11px
-    height: 33px
+    margin-top: 0
+    height: 50px
 
     border: none
     border-left: 1px solid rgba(255, 255, 255, 0.2)
     border-radius: 0
-    line-height: 37px
-
-    color: rgba(255, 255, 255, 0.7)
-
-    &:hover
-      color: rgba(255, 255, 255, 0.5)
+    line-height: 50px
 
   .projectSelector
-    margin-bottom: 20px
+    height: 50px
 
     > div > div:first-of-type
+      height: 50px
       border: none
       border-radius: 0
 
       > div:first-child
-        padding-left: 24px
+        height: 50px
+        padding-left: 20px
 
     span.projectSelectorValue
-      color: rgba(255, 255, 255, 0.8)
+      color: #414141
+      font-size: 31px
+      line-height: 50px
+      font-weight: 300

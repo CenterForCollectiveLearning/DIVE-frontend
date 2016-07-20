@@ -28,16 +28,15 @@
 .analysisContainer
   overflow: hidden
 
-.regressionContainer, .summaryContainer
+.regressionContainer, .summaryContainer, .correlationContainer, .comparisonContainer
   display: flex
   flex-direction: row
   overflow: hidden
 
 .regressionViewContainer, .summaryViewContainer, .comparisonViewContainer, .correlationViewContainer
+  +background
   +fillContainer
   overflow-y: auto
-
-  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
 
 .summaryViewContainer
   .summaryCardHolder
@@ -73,7 +72,7 @@
     right: 0
     bottom: 0
 
-.regressionTable, .summaryTable
+.regressionTable, .summaryTable, .comparisonTable, .correlationTable
   margin: 0 20px 10px
   background-color: white
 

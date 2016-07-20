@@ -134,7 +134,7 @@ export class ComparisonView extends Component {
                 { datasets.items && datasets.items.length > 0 ?
                   <div className={ styles.headerControl }>
                     <DropDownMenu
-                      prefix="Dataset"
+                      label="Dataset"
                       width={ 240 }
                       value={ parseInt(datasetId) }
                       options={ datasets.items }

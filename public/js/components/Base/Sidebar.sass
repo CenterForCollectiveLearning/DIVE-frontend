@@ -1,14 +1,18 @@
+@import '../../../css/mixins.sass'
+
 .sidebar
   flex-direction: column
   flex-shrink: 0
 
   overflow-y: auto
 
-  width: 304px
+  margin-top: 3px
+  margin-left: 3px
+  width: 264px
   padding-top: 10px
   z-index: 10
 
-  background: linear-gradient(to bottom right, #EBE4E4, #E8E4ED)
+  background: white
 
   .sidebarGroup
     display: flex
@@ -17,11 +21,6 @@
     margin-bottom: 10px
 
     .sidebarGroupHeading
-      font-size: 11px
-      font-weight: 500
-      text-transform: uppercase
-      color: #666
-      margin-top: 10px
-      margin-bottom: 10px
+      +smallCaps
 
     .sidebarGroupContent

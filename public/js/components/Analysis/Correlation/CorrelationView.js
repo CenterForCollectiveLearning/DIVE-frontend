@@ -90,7 +90,7 @@ export class CorrelationView extends Component {
     var correlationContent;
     if (twoCorrelationVariablesSelected ) {
       correlationContent =
-        <div>
+        <div className={ styles.correlationViewContainer }>
           <Card header={
               <span>Correlating {
                 correlationVariableNames.map((name, i) =>
@@ -121,7 +121,7 @@ export class CorrelationView extends Component {
     }
 
     return (
-      <div className={ styles.aggregationViewContainer }>
+      <div className={ styles.correlationViewContainer }>
         <HeaderBar
           header="Correlation Analysis"
           actions={
@@ -142,7 +142,7 @@ export class CorrelationView extends Component {
                 { datasets.items && datasets.items.length > 0 ?
                   <div className={ styles.headerControl }>
                     <DropDownMenu
-                      prefix="Dataset"
+                      label="Dataset"
                       width={ 240 }
                       value={ parseInt(datasetId) }
                       options={ datasets.items }

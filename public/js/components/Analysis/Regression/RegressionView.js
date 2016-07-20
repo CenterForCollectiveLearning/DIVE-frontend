@@ -90,7 +90,6 @@ export class RegressionView extends Component {
     return (
       <div className={ styles.regressionViewContainer }>
         <HeaderBar
-          header="Regression Analysis"
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
@@ -109,7 +108,7 @@ export class RegressionView extends Component {
                 { datasets.items && datasets.items.length > 0 ?
                   <div className={ styles.headerControl }>
                     <DropDownMenu
-                      prefix="Dataset"
+                      label="Dataset"
                       width={ 240 }
                       value={ parseInt(datasetId) }
                       options={ datasets.items }

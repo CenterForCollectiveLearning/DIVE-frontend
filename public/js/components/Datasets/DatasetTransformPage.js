@@ -104,7 +104,6 @@ export class DatasetTransformPage extends Component {
     return (
       <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
         <HeaderBar
-          header="Transform"
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
@@ -123,7 +122,7 @@ export class DatasetTransformPage extends Component {
               </div>
               <div className={ styles.headerControl }>
                 <DropDownMenu
-                  prefix="Dataset"
+                  label="Dataset"
                   width={ 240 }
                   className={ styles.datasetSelector }
                   value={ parseInt(datasetSelector.datasetId) }

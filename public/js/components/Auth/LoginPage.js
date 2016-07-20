@@ -32,7 +32,7 @@ class AuthPage extends Component {
 
   closeLoginPage() {
     const { push } = this.props;
-    push('/projects')
+    push('/')
   }
 
   componentWillMount() {

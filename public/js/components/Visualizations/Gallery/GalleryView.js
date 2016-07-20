@@ -118,7 +118,7 @@ export class GalleryView extends Component {
                 { filteredSpecs.length > 0 &&
                   <div className={ styles.headerControl + ' ' + styles.headerControlLong }>
                     <DropDownMenu
-                      prefix="Sort by"
+                      label="Sort by"
                       options={ gallerySelector.sortingFunctions }
                       valueMember="value"
                       displayTextMember="label"
@@ -128,7 +128,7 @@ export class GalleryView extends Component {
                 { datasets.items && datasets.items.length > 0 &&
                   <div className={ styles.headerControl }>
                     <DropDownMenu
-                      prefix="Dataset"
+                      label="Dataset"
                       width={ 240 }
                       value={ parseInt(datasetSelector.datasetId) }
                       options={ datasets.items }

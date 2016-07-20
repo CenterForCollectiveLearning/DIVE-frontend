@@ -6,6 +6,7 @@ import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
 import RaisedButton from '../Base/RaisedButton';
+import Footer from './Footer';
 
 export class ProjectListPage extends Component {
   componentWillMount() {
@@ -57,34 +58,36 @@ export class ProjectListPage extends Component {
             <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
               <div className={ styles.projectTypeContainer }>
                 <div className={ styles.flexbox }>
-                  <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Your projects:</div>
+                  <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Your projects</div>
                 </div>
                 <div className={ styles.projectListContainer }>
                   { projects.isFetching &&
                     <div className={ styles.watermark }>Fetching projects...</div>
                   }
-                  { userProjects.slice(0, 6).map((project) =>
+                  { userProjects.map((project) =>
                     <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
                   )}
                 </div>
               </div>
             </div>
           }
-          <div className={ styles.projectsContainer + ' ' + styles.preloadedProjectsContainer }>
-            <div className={ styles.projectTypeContainer }>
-              <div className={ styles.flexbox }>
-                <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Or explore preloaded projects:</div>
-              </div>
-              <div className={ styles.projectListContainer }>
-                { projects.isFetching &&
-                  <div className={ styles.watermark }>Fetching projects...</div>
-                }
-                { preloadedProjects.map((project) =>
-                  <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
-                )}
+          { preloadedProjects.length > 0 &&
+            <div className={ styles.projectsContainer + ' ' + styles.preloadedProjectsContainer }>
+              <div className={ styles.projectTypeContainer }>
+                <div className={ styles.flexbox }>
+                  <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Preloaded projects</div>
+                </div>
+                <div className={ styles.projectListContainer }>
+                  { projects.isFetching &&
+                    <div className={ styles.watermark }>Fetching projects...</div>
+                  }
+                  { preloadedProjects.map((project) =>
+                    <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          }
         </div>
       </DocumentTitle>
     );

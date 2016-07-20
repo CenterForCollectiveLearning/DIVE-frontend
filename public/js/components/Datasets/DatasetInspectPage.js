@@ -85,7 +85,6 @@ export class DatasetInspectPage extends Component {
     return (
       <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
         <HeaderBar
-          header="Inspect"
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
@@ -98,7 +97,7 @@ export class DatasetInspectPage extends Component {
               </div>
               <div className={ styles.headerControl }>
                 <DropDownMenu
-                  prefix="Dataset"
+                  label="Dataset"
                   width={ 240 }
                   className={ styles.datasetSelector }
                   value={ parseInt(datasetSelector.datasetId) }

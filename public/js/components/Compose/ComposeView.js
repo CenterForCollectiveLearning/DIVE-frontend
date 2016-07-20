@@ -105,7 +105,7 @@ export class ComposeView extends Component {
               { !documents.isFetching && documents.items.length > 0 &&
                 <div className={ styles.headerControl + ' ' + styles.headerControlLong }>
                   <DropDownMenu
-                    prefix="Document"
+                    label="Document"
                     width={ 250 }
                     className={ styles.documentSelector }
                     value={ parseInt(composeSelector.documentId) }

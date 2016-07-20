@@ -14,12 +14,10 @@ import ProjectSettingsModal from './ProjectSettingsModal';
 
 var Logo = require('babel!svg-react!../../assets/DIVE_logo_white.svg?name=Logo');
 
-export class ProjectNav extends Component {
+export class ProjectTopBar extends Component {
   constructor(props) {
     super(props);
 
-    this._handleTabsChange = this._handleTabsChange.bind(this);
-    this._onClickLogo = this._onClickLogo.bind(this);
     this.onSelectProject = this.onSelectProject.bind(this);
     this.onClickProjectSettings = this.onClickProjectSettings.bind(this);
 
@@ -28,7 +26,8 @@ export class ProjectNav extends Component {
     };
   }
 
-  _getSelectedTab(){
+  _getCurrentPage(){
+    const { routes } = this.props;
     const tabList = [
       "upload",
       "inspect",
@@ -53,25 +52,19 @@ export class ProjectNav extends Component {
       return splitTabValue.length > 1 && _validTab(splitTabValue[1]) ? splitTabValue[1] : splitTabValue[0];
     });
 
-    const _lastPath = this.props.routes.slice().reverse().find((route) =>{
+    const _lastPath = routes.slice().reverse().find((route) =>{
       return _validTab(_tabValue(route.path));
     });
 
     if (_lastPath) {
       return _tabValue(_lastPath.path);
     }
-
-    return "datasets";
   }
 
-  _handleTabsChange(tab){
-    this.props.push(`/projects/${ this.props.project.properties.id }/${ tab.props.route }`);
+  _logout() {
+    const { logoutUser } = this.props;
+    logoutUser();
   }
-
-  _onClickLogo(){
-    this.props.push(`/projects`);
-  }
-
 
   onSelectProject(projectId) {
     window.location.href = `/projects/${ projectId }/datasets`;
@@ -91,35 +84,21 @@ export class ProjectNav extends Component {
     const datasetId = paramDatasetId || datasetSelector.datasetId;
 
     return (
-      <div className={ styles.header }>
-        <div className={ styles.logoContainer } onClick={ this._onClickLogo }>
-          <div className={ styles.logoText }>
-            DIVE
+      <div className={ styles.projectTopBar }>
+        { project.properties.title && !project.properties.preloaded &&
+          <div className={ styles.projectTopBarLeft}>
+            <span className={ styles.projectTitle }>
+              { project.properties.title }
+            </span>
+            <span className={ styles.separator }>/</span>
+            <span className={ styles.projectCurrentPage }>
+              { this._getCurrentPage() }
+            </span>
           </div>
-          <Logo className={ styles.logo } />
+        }
+        <div className={ styles.logoutUser } onClick={ this._logout.bind(this) }>
+          Log out of <span className={ styles.username }>{ user.username }</span>
         </div>
-        <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
-          <TabGroup heading="1. DATASETS">
-            <Tab label="Upload" value="upload" route={ `datasets/upload` } />
-            <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
-            <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } disabled={ !datasets.items.length }/>
-          </TabGroup>
-          <TabGroup heading="2. VISUALIZATIONS">
-            <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
-            <Tab label="Build" value="builder" route={ `datasets/${ datasetId }/visualize/builder` } disabled={ true }/>
-            <Tab label="Starred" value="starred" route={ `datasets/${ datasetId }/visualize/starred` } disabled={ true }/>
-          </TabGroup>
-          <TabGroup heading="3. ANALYSIS">
-            <Tab label="Summary" value="summary" route={ `datasets/${ datasetId }/analyze/summary` } disabled={ !datasetId }/>
-            <Tab label="Comparison" value="comparison" route={ `datasets/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>
-            <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
-            <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
-          </TabGroup>
-          <TabGroup heading="4. STORIES">
-            <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>
-            <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
-          </TabGroup>
-        </Tabs>
         { this.state.projectSettingsModalOpen &&
           <ProjectSettingsModal
             projectName={ project.properties.title }
@@ -132,7 +111,7 @@ export class ProjectNav extends Component {
   }
 }
 
-ProjectNav.propTypes = {
+ProjectTopBar.propTypes = {
   paramDatasetId: PropTypes.string,
   project: PropTypes.object,
   projects: PropTypes.object,
@@ -152,4 +131,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { push, logoutUser })(ProjectNav);
+export default connect(mapStateToProps, { push, logoutUser })(ProjectTopBar);
