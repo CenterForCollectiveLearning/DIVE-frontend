@@ -93,6 +93,7 @@ class AuthPage extends Component {
           scrollable
           closeAction={ this.closeLoginPage.bind(this) }
           className={ styles.loginModal }
+          blackBackground={ true }
           heading={
             <span>Login or Register to Proceed</span>
           }

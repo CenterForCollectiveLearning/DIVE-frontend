@@ -4,8 +4,12 @@ import baseStyles from './BlockingModal.sass';
 export default class BlockingModal extends Component {
   render() {
     const styles = this.props.styles ? this.props.styles : baseStyles;
+
     return (
-      <div className={ styles.blockingModalMask }>
+      <div className={
+        styles.blockingModalMask
+        + (this.props.blackBackground ? ' ' + styles.blackBackground : '' )
+      }>
         <div className={ styles.blockingModalContainer }>
           <div className={
             styles.blockingModal
@@ -42,7 +46,8 @@ BlockingModal.propTypes = {
   className: PropTypes.string,
   closeAction: PropTypes.func,
   children: PropTypes.node,
-  scrollable: PropTypes.bool
+  scrollable: PropTypes.bool,
+  blackBackground: PropTypes.bool
 }
 
 BlockingModal.defaultProps = {
@@ -51,5 +56,7 @@ BlockingModal.defaultProps = {
   footer: null,
   className: "",
   closeAction: null,
-  scrollable: false
+  scrollable: false,
+  className: '',
+  blackBackground: false
 }

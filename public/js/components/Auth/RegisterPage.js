@@ -124,6 +124,7 @@ class AuthPage extends Component {
           scrollable
           closeAction={ this.closeRegistrationPage.bind(this) }
           className={ styles.registerModal }
+          blackBackground={ true }          
           heading={
             <span>Account Registration</span>
           }

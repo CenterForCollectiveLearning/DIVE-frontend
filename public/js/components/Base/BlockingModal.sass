@@ -1,6 +1,9 @@
 @import '../../../css/mixins.sass'
 
 .blockingModalMask
+  display: flex
+  align-items: center
+  justify-content: center
   position: fixed
   top: 0
   left: 0
@@ -8,11 +11,23 @@
   bottom: 0
   z-index: 1000
 
-  display: flex
-  align-items: center
-  justify-content: center
+  background-color: rgba(0, 0, 0, 0.45)
 
-  background-color: rgba(0,0,0,0.45)
+  &.blackBackground
+    background-color: rgba(0, 0, 0, 0.98)
+
+    &:before
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100vh
+      content: ""
+      z-index: -1
+      background: url(../../../assets/images/landing_background.png) no-repeat
+      background-size: cover
+      background-position: 50% 0%
+      opacity: 0.15
 
   .blockingModalContainer
     display: flex

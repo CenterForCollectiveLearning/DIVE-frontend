@@ -103,8 +103,7 @@ export class GalleryView extends Component {
       <div className={ styles.specsContainer }>
         <div className={ styles.innerSpecsContainer }>
           <HeaderBar
-            header="Explore"
-            subheader={
+            header={
               gallerySelector.title.map((construct, i) =>
                 <span
                   key={ `construct-${ construct.type }-${ i }` }
