@@ -8,11 +8,19 @@ export default class ToggleButton extends Component {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
     this.selectMenuItem = this.selectMenuItem.bind(this);
   } 
 
   handleClick (event) {
     this.props.onChange(this.props.value);
+  }
+
+  handleDelete (event) {
+    if(!this.props.isSelected) {
+      event.stopPropagation();
+    }
+    this.props.onDelete(this.props.value);
   }
 
   selectMenuItem (menuItem) {
@@ -50,6 +58,9 @@ export default class ToggleButton extends Component {
               src={ this.props.imageName }
               alt={ this.props.altText } />
             : this.props.content
+          }
+          { this.props.onDelete && 
+            <div className={styles.delete} onClick={ this.handleDelete }>x</div> 
           }
         </div>
         { this.props.splitMenu.length > 0 &&

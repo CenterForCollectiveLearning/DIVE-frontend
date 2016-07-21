@@ -28,7 +28,7 @@ export default class DropDownMenu extends Component {
     } 
 
     return (
-      <div style={{ width: this.props.width || '100%' }} className={ styles.dropDownMenu + (className ? ' ' + className : '') }>
+      <div style={{ width: this.props.width || '100%', marginRight: this.props.margin || '0px' }} className={ styles.dropDownMenu + (className ? ' ' + className : '') }>
         <Select
           value={ selectedValue }
           labelKey={ displayTextMember }

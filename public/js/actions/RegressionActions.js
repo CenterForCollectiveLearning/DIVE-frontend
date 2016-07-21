@@ -2,10 +2,13 @@ import {
   SELECT_REGRESSION_TYPE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
+  SELECT_REGRESSION_INTERACTION_TERM,
   REQUEST_RUN_REGRESSION,
   RECEIVE_RUN_REGRESSION,
   PROGRESS_RUN_REGRESSION,
   ERROR_RUN_REGRESSION,
+  RECEIVE_CREATED_INTERACTION_TERM,
+  DELETED_INTERACTION_TERM,
   REQUEST_CONTRIBUTION_TO_R_SQUARED,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
   REQUEST_CREATE_SAVED_REGRESSION,
@@ -38,6 +41,54 @@ export function selectDependentVariable(selectedDependentVariableId) {
     type: SELECT_REGRESSION_DEPENDENT_VARIABLE,
     dependentVariableId: selectedDependentVariableId,
     selectedAt: Date.now()
+  }
+}
+
+export function selectInteractionTerm(interactionTermId) {
+  return {
+    type: SELECT_REGRESSION_INTERACTION_TERM,
+    interactionTermId: interactionTermId
+  }
+}
+
+export function createInteractionTerm(projectId, datasetId, interactionTermIds) {
+  const params = {
+    projectId,
+    datasetId,
+    interactionTermIds
+  }
+  return dispatch => {
+    return fetch('/statistics/v1/interaction_term', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(json => dispatch(receiveInteractionTerm(json)))
+      .catch(err => console.error("Error creating interaction term:", err));
+  }
+}
+
+export function deleteInteractionTerm(interaction_term_id) {
+  return dispatch => {
+    return fetch(`/statistics/v1/interaction_term?id=${ interaction_term_id }`, {
+      method: 'delete' 
+    }).then(json => dispatch(receiveDeletedInteractionTerm(json)))
+      .catch(err => console.error("Error deleting interaction term:", err));
+  }
+}
+
+function receiveInteractionTerm(json) {
+  return {
+    type: RECEIVE_CREATED_INTERACTION_TERM,
+    data: json,
+    receivedAt: Date.now()
+  }
+}
+
+function receiveDeletedInteractionTerm(json) {
+  return {
+    type: DELETED_INTERACTION_TERM,
+    data: json,
+    receivedAt: Date.now()
   }
 }
 
@@ -83,17 +134,18 @@ function receiveContributionToRSquaredDispatcher(json) {
   };
 }
 
-export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames) {
+export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, interactionTermIds) {
   const params = {
     projectId: projectId,
     spec: {
       datasetId: datasetId,
       regressionType: regressionType,
       dependentVariable: dependentVariableName,
-      independentVariables: independentVariableNames
+      independentVariables: independentVariableNames,
+      interactionTerms: interactionTermIds
     }
   }
-  
+
   return (dispatch) => {
     dispatch(requestRunRegressionDispatcher());
     return fetch('/statistics/v1/regression', {
@@ -157,3 +209,4 @@ export function createExportedRegression(projectId, regressionId, data, conditio
       .catch(err => console.error("Error creating exported regressions: ", err));
   };
 }
+

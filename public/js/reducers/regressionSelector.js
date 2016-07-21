@@ -3,6 +3,7 @@ import {
   SELECT_REGRESSION_MODE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
+  SELECT_REGRESSION_INTERACTION_TERM,
   RECEIVE_FIELD_PROPERTIES,
   REQUEST_RUN_REGRESSION,
   RECEIVE_RUN_REGRESSION,
@@ -36,6 +37,7 @@ const baseState = {
   regressionType: null,
   dependentVariableId: null,
   independentVariableIds: [],
+  interactionTermIds: [], 
   regressionResult: {
     exported: false,
     exportedRegressionId: null,
@@ -79,14 +81,27 @@ export default function regressionSelector(state = baseState, action) {
 
     case SELECT_REGRESSION_INDEPENDENT_VARIABLE:
       var independentVariableIds = state.independentVariableIds.slice();
-      const selectedId = parseInt(action.independentVariableId);
+      var selectedId = parseInt(action.independentVariableId);
 
       if (state.independentVariableIds.find((independentVariableId) => independentVariableId == selectedId)) {
         independentVariableIds = independentVariableIds.filter((independentVariableId) => independentVariableId != selectedId);
       } else {
         independentVariableIds.push(selectedId);
       }
+
       return { ...state, independentVariableIds: independentVariableIds};
+
+    case SELECT_REGRESSION_INTERACTION_TERM:
+      var interactionTermIds = state.interactionTermIds.slice();
+      var selectedId = parseInt(action.interactionTermId);
+
+      if(state.interactionTermIds.find((interactionTermId)=> interactionTermId == selectedId)) {
+        interactionTermIds = interactionTermIds.filter((interactionTermId) => interactionTermId != selectedId);
+      } else {
+        interactionTermIds.push(selectedId);
+      }
+
+      return { ...state, interactionTermIds: interactionTermIds}
 
     case RECEIVE_FIELD_PROPERTIES:
       const selectedIndependentVariables = action.fieldProperties

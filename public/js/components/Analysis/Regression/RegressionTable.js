@@ -107,8 +107,6 @@ export default class RegressionTable extends Component {
       ]
     }
 
-    console.log('REGRESSION TYPE', regressionType)
-
     const additionalData = [
       {
         rowClass: styles.footerRow,
