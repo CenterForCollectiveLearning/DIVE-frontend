@@ -11,6 +11,7 @@ import Footer from './Footer';
 var MediaLabLogo = require('babel!svg-react!../../../assets/MIT_ML_Logo_K_RGB.svg?name=MediaLabLogo');
 var MacroConnectionsLogo = require('babel!svg-react!../../../assets/MacroConnections_Logo_K_RGB.svg?name=MacroConnectionsLogo');
 
+
 export class HomePage extends Component {
   componentWillMount() {
     const { projects, userId } = this.props;
@@ -48,7 +49,6 @@ export class HomePage extends Component {
     return (
       <DocumentTitle title='DIVE | Projects'>
         <div className={ styles.centeredFill }>
-
           <div className={ styles.section + ' ' + styles.ctaBox }>
             <div className={ styles.primaryCopy }>
               <span>Turn Data into Stories in Minutes</span>
@@ -62,6 +62,12 @@ export class HomePage extends Component {
                 primary={ true }
                 onClick={ this._onUploadClick.bind(this) }
                 className={ styles.uploadButton + ' ' + styles.primary } />
+            </div>
+            <div className={ styles.videoContainer }>
+              <img
+                className={ styles.video }
+                src='../../../assets/images/DIVE_screenshot.png'
+              />
             </div>
           </div>
 
@@ -108,12 +114,21 @@ export class HomePage extends Component {
                     </div>
                   </div>
                   <div className={ styles.mugshotContainer }>
+                    <a href="" target="_blank">
+                      <img className={ styles.mugshot } src="/assets/images/suzanne.mugshot.jpg"/>
+                    </a>
+                    <div className={ styles.mugCaption }>
+                      <span className={ styles.mugCaptionName }>Suzanne Wang</span>
+                      <span className={ styles.mugCaptionRole }>Undergraduate Intern</span>
+                    </div>
+                  </div>
+                  <div className={ styles.mugshotContainer }>
                     <a href="http://twitter.com/cesifoti" target="_blank">
                       <img className={ styles.mugshot } src="/assets/images/cesar.mugshot.jpg"/>
                     </a>
                     <div className={ styles.mugCaption }>
                       <span className={ styles.mugCaptionName }>César Hidalgo</span>
-                      <span className={ styles.mugCaptionRole }>Professor, Advisor</span>
+                      <span className={ styles.mugCaptionRole }>Principal Investigator</span>
                     </div>
                   </div>
                 </div>

@@ -1,5 +1,8 @@
+$white: white
 $black: #2a2d33
-$dark-grey: #CDCDCD
+$dark-grey: #CDCDCD // #D9D9DB // borders
+$light-grey: #F0F0F0 // backgrounds
+$primary-green: #4AD3B7
 
 =montserrat
   font-family: 'montserrat', 'Helvetica Neue, Helvetica, Arial', sans-serif
@@ -29,21 +32,33 @@ $dark-grey: #CDCDCD
   -ms-user-select: none
   user-select: none
 
-=linkStyle
+=linkStyle($font-size)
+  display: inline
   color: $black
-  font-size: 12px
+  // color: $primary-green
+
+  font-size: $font-size
   font-weight: 500
   cursor: pointer
+  text-decoration: none
 
   &:hover
     position: relative
     bottom: 1px
 
-=regularCopy
+=regularText
+  $font-size: 12px
   color: $black
-  font-size: 12px
+  font-size: $font-size
   a
-    +linkStyle
+    +linkStyle(font-size)
+
+=regularCopy
+  $font-size: 14px
+  color: $black
+  font-size: $font-size
+  a
+    +linkStyle(font-size)
 
 =smallCaps
   font-size: 11px

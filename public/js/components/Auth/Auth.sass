@@ -16,8 +16,6 @@
     display: flex
     flex-direction: column
 
-
-
 .authForm
   width: 100%
 
@@ -37,7 +35,7 @@
       flex-shrink: 0
 
       .authInputLabel, .error
-        +smallCaps
+        +regularText
         margin-top: 0
         margin-bottom: 5px
 
@@ -86,10 +84,11 @@
 
     .forgotPassword
       +noSelect
-      +linkStyle
+      +linkStyle(12px)
       margin-top: -2px
       margin-left: auto
-      font-weight: normal
+      // font-weight: normal
+      line-height: 18px
 
 .orSeparator
   display: flex
@@ -109,9 +108,9 @@
 
 
 .registerText, .loginText
-  +regularCopy
+  +regularText
   .registerLink, .loginLink
-    +linkStyle
+    +linkStyle(12px)
 
 .footerLabel
   display: flex

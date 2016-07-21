@@ -50,10 +50,10 @@ export class LandingPage extends Component {
               </div>
               <div className={ styles.topRightControls }>
                 { user && user.username &&
-                  <span>{ user.username }<span className={ styles.separater }> | </span><Link onClick={ this.props.logoutUser }>Sign out</Link></span>
+                  <span>{ user.username }<span className={ styles.separater }> | </span><Link onClick={ this.props.logoutUser }>Sign Out</Link></span>
                 }
                 { (!user || !user.username) &&
-                  <Link route="/login">Sign in</Link>
+                  <Link route="/login">Log In</Link>
                 }
               </div>
 
