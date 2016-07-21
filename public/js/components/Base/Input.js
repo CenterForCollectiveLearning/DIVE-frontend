@@ -13,6 +13,7 @@ export default class Input extends Component {
     return (
       <input
         autoComplete={ this.props.autocomplete }
+        autoFocus={ this.props.autofocus }
         className={ styles.input
           + (this.props.large ? ' ' + styles.large : '')
           + (this.props.className ? ' ' + this.props.className : '') }
@@ -28,6 +29,7 @@ export default class Input extends Component {
 
 Input.propTypes = {
   autocomplete: PropTypes.string,
+  autofocus: PropTypes.bool,
   className: PropTypes.string,
   placeholder: PropTypes.string,
   type: PropTypes.string,

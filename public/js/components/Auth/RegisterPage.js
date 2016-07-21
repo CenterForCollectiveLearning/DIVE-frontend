@@ -8,7 +8,7 @@ import { registerUser } from '../../actions/AuthActions';
 import styles from './Auth.sass';
 
 import Input from '../Base/Input'
-import BlockingModal from '../Base/BlockingModal';
+import AuthModal from '../Base/AuthModal';
 import RaisedButton from '../Base/RaisedButton';
 
 function validateEmail(email)
@@ -35,6 +35,8 @@ class AuthPage extends Component {
       usernameTaken: null,
       passwordMatching: null,
     };
+
+    this.submit = this.submit.bind(this);
   }
 
   closeRegistrationPage() {
@@ -102,13 +104,6 @@ class AuthPage extends Component {
     registerUser(email, username, password);
   }
 
-  // <div>
-  //   <div>email: { email }</div>
-  //   <div>emailValid: { emailValid }</div>
-  //   <div>password: { password }</div>
-  //   <div>confirmPassword: { confirmPassword }</div>
-  //   <div>passwordMatching: { passwordMatching }</div>
-  // </div>
   render() {
     const { authRequired, registrationErrors } = this.props;
     const { email, emailValid, username, usernameTooLong, usernameTooShort, password, confirmPassword, passwordMatching } = this.state;
@@ -120,11 +115,11 @@ class AuthPage extends Component {
 
     return (
       <DocumentTitle title='DIVE | Register'>
-        <BlockingModal
+        <AuthModal
           scrollable
           closeAction={ this.closeRegistrationPage.bind(this) }
           className={ styles.registerModal }
-          blackBackground={ true }          
+          blackBackground={ true }
           heading={
             <span>Account Registration</span>
           }
@@ -138,90 +133,56 @@ class AuthPage extends Component {
 
           <form className={ styles.authForm } onSubmit={ this.submit.bind(this) }>
             <div className={ styles.authInputGroup }>
-              <div className={ styles.authInputLabelAndError}>
-                <div className={ styles.authInputLabel }>E-mail</div>
-                { (registrationErrors.email) &&
-                  <div className={ styles.error }>
-                    { registrationErrors.email }
-                  </div>
-                }
-                { (email && emailValid != null && !emailValid) &&
-                  <div className={ styles.error }>
-                    Please enter a valid e-mail
-                  </div>
-                }
-              </div>
               <Input
                 type="text"
-                placeholder="jane@gmail.com"
+                className={ styles.email }
+                placeholder="E-mail Address"
                 autocomplete="on"
                 onChange={ this.handleEmailChange.bind(this) }
+                onSubmit={ this.submit }
               />
             </div>
 
             <div className={ styles.authInputGroup }>
-              <div className={ styles.authInputLabelAndError}>
-                <div className={ styles.authInputLabel }>Username</div>
-                { (registrationErrors.username) &&
-                  <div className={ styles.error }>
-                    { registrationErrors.username }
-                  </div>
-                }
-                { (username && username != null && usernameTooShort) &&
-                  <div className={ styles.error }>
-                    Username too short
-                  </div>
-                }
-                { (username && username != null && usernameTooLong) &&
-                  <div className={ styles.error }>
-                    Username too long
-                  </div>
-                }
-              </div>
               <Input
                 type="text"
-                placeholder="diveuser"
+                className={ styles.username }
+                placeholder="Username"
                 autocomplete="on"
                 onChange={ this.handleUsernameChange.bind(this) }
+                onSubmit={ this.submit }
               />
             </div>
 
             <div className={ styles.authInputGroup }>
-              <div className={ styles.authInputLabelAndError}>
-                <div className={ styles.authInputLabel }>Password</div>
-              </div>
               <Input
                 type="password"
-                placeholder="P4ssword1?"
+                className={ styles.password }
+                placeholder="Password"
                 onChange={ this.handlePasswordChange.bind(this) }
+                onSubmit={ this.submit }
               />
             </div>
 
             <div className={ styles.authInputGroup }>
-              <div className={ styles.authInputLabelAndError}>
-                <div className={ styles.authInputLabel }>Confirm Password</div>
-                { (confirmPassword && passwordMatching != null && !passwordMatching) &&
-                  <div className={ styles.error }>
-                    Passwords do not match
-                  </div>
-                }
-              </div>
               <Input
                 type="password"
-                placeholder="P4ssword1?"
+                className={ styles.password }
+                placeholder="Confirm Password"
                 onChange={ this.handleConfirmPasswordChange.bind(this) }
+                onSubmit={ this.submit }
               />
             </div>
             <RaisedButton
               primary
-              className={ styles.submit }
+              className={ styles.submitButton }
               minWidth={ 100 }
               disabled={ disabledRegister }
               onClick={ this.submit.bind(this) }>
               Create your account
             </RaisedButton>
           </form>
-        </BlockingModal>
+        </AuthModal>
       </DocumentTitle>
     );
   }

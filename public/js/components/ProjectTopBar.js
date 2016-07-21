@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { fetchProjectIfNeeded, createAUID, logoutUser } from '../actions/ProjectActions.js';
+import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions';
+import { logoutUser } from '../actions/AuthActions';
 import styles from './App/App.sass';
 
 import DropDownMenu from './Base/DropDownMenu';
