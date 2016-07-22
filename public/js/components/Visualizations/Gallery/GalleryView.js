@@ -67,19 +67,6 @@ export class GalleryView extends Component {
     createExportedSpec(project.properties.id, specId, specData, [], {}, true);
   }
 
-  clickDataset(datasetId) {
-    const { gallerySelector, project, push, selectDataset } = this.props;
-    var selectedFieldPropertiesQueryString = gallerySelector.fieldProperties
-      .filter((property) => property.selected)
-      .map((property) => `fields%5B%5D=${ property.name }`);
-
-    if (selectedFieldPropertiesQueryString.length) {
-      selectedFieldPropertiesQueryString = selectedFieldPropertiesQueryString.reduce((a, b) => a + "&" + b);
-    }
-
-    selectDataset(project.properties.id, datasetId);
-    push(`/projects/${ project.properties.id }/datasets/${ datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
-  }
 
   render() {
     const { specs, filters, datasets, datasetSelector, filteredVisualizationTypes, gallerySelector, exportedSpecs, selectSortingFunction } = this.props;
@@ -112,33 +99,7 @@ export class GalleryView extends Component {
                 </span>
               )
             }
-            actions={
-              <div className={ styles.headerControlRow }>
-                { filteredSpecs.length > 0 &&
-                  <div className={ styles.headerControl + ' ' + styles.headerControlLong }>
-                    <DropDownMenu
-                      label="Sort by"
-                      options={ gallerySelector.sortingFunctions }
-                      valueMember="value"
-                      displayTextMember="label"
-                      onChange={ selectSortingFunction } />
-                  </div>
-                }
-                { datasets.items && datasets.items.length > 0 &&
-                  <div className={ styles.headerControl }>
-                    <DropDownMenu
-                      label="Dataset"
-                      width={ 240 }
-                      value={ parseInt(datasetSelector.datasetId) }
-                      options={ datasets.items }
-                      valueMember="datasetId"
-                      displayTextMember="title"
-                      onChange={ this.clickDataset.bind(this) } />
-                  </div>
-                }
-
-              </div>
-            }/>
+          />
           <div className={ styles.specContainer }>
             { !specs.isFetching && filteredSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>
@@ -283,7 +244,7 @@ GalleryView.propTypes = {
   gallerySelector: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
-
+  filteredVisualizationTypes: PropTypes.array.isRequired,
   exportedSpecs: PropTypes.object.isRequired
 };
 

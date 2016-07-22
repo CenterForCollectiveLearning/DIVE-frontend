@@ -10,6 +10,9 @@ $light-grey: #F0F0F0 // backgrounds
 $primary-accent: #0747CE  // #0B6BDB //  ##4AD3B7
 $secondary-accent: #0B6BDB
 
+=headerText
+  color: $black
+  font-size: 24px
 
 =montserrat
   font-family: 'montserrat', 'Helvetica Neue, Helvetica, Arial', sans-serif
@@ -52,6 +55,13 @@ $secondary-accent: #0B6BDB
   &:hover
     position: relative
     bottom: 1px
+
+=titleText
+  $font-size: 16px
+  color: $black
+  font-size: $font-size
+  a
+    +linkStyle(font-size)
 
 =regularText
   $font-size: 12px

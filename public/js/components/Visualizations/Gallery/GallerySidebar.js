@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
+import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectFieldPropertyValue, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
-import { selectVisualizationType } from '../../../actions/VisualizationActions';
+import { selectVisualizationType, selectSortingFunction } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
 import _ from 'underscore';
@@ -70,14 +71,31 @@ export class GallerySidebar extends Component {
   }
 
   render() {
-    const { visualizationTypes, datasetSelector, gallerySelector, filters, filteredVisualizationTypes, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectAggregationFunction } = this.props;
+    const {
+      visualizationTypes,
+      datasets,
+      datasetSelector,
+      gallerySelector,
+      filters,
+      filteredVisualizationTypes,
+      selectVisualizationType,
+      selectFieldPropertyValue,
+      selectFieldProperty,
+      selectAggregationFunction,
+      selectSortingFunction
+    } = this.props;
+
+    const filteredSpecs = gallerySelector.specs.filter((spec) =>
+      (filteredVisualizationTypes.length == 0) || filteredVisualizationTypes.some((filter) =>
+        spec.vizTypes.indexOf(filter) >= 0
+      )
+    );
 
     return (
       <Sidebar>
         { filteredSpecs.length > 0 &&
           <SidebarGroup heading="Sort By">
             <DropDownMenu
-              label="Sort by"
               options={ gallerySelector.sortingFunctions }
               valueMember="value"
               displayTextMember="label"
@@ -167,9 +185,16 @@ GallerySidebar.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, gallerySelector, filters } = state;
+  const {
+    project,
+    datasets,
+    datasetSelector,
+    gallerySelector,
+    filters
+  } = state;
   return {
     project,
+    datasets,
     datasetSelector,
     gallerySelector,
     filters
@@ -182,5 +207,8 @@ export default connect(mapStateToProps, {
   selectFieldProperty,
   selectFieldPropertyValue,
   selectAggregationFunction,
+  selectSortingFunction,
+  fetchDatasets,
+  selectDataset,
   push
 })(GallerySidebar);

@@ -2,7 +2,19 @@
 @import '../../../css/mixins.sass'
 @import '../Base/BlockingModal.sass'
 
-.header
+.appContainer, .projectContainer
+  +maxHeight100NoOverflow
+
+.projectContainer
+  flex-direction: row
+
+.projectRightContainer
+  +fillContainer
+  flex-direction: column
+
+$topBarHeight: 55px
+
+.projectSidebar
   display: flex
   flex-direction: column
   position: relative
@@ -10,12 +22,12 @@
   background: $black
 
   .logoContainer
-    height: 50px
-    min-height: 50px
+    height: $topBarHeight
+    min-height: $topBarHeight
     display: flex
     flex-direction: row
     padding-bottom: 14px
-    padding-top: 3px
+    padding-top: 5px
     cursor: pointer
     background-color: $primary-accent
 
@@ -32,67 +44,136 @@
       margin-left: 22px
       color: $white
 
-.userOptions
-  display: flex
-  margin-left: auto
-  align-items: center
-  justify-content: center
-
-  img.picture
-    border-radius: 35px
-    width: 35px
-    height: 35px
-    overflow: hidden
-
-  .logoutUser
-    padding: 12px 24px 12px 12px
-    line-height: 24px
-    color: $white
-
-  .userStatus, .logoutUser
-    font-size: 12px
-    font-weight: 400
-    color: #32363C
-
-    &:hover
-      cursor: pointer
-
-    .username
-      font-weight: 600
-
-
-.appContainer, .projectContainer
-  +maxHeight100NoOverflow
-
-.projectContainer
-  flex-direction: row
-
-.projectRightContainer
-  +fillContainer
-  flex-direction: column
-
 .projectTopBar
   display: flex
   flex-direction: row
-  min-height: 50px
+  min-height: $topBarHeight
   flex-shrink: 0
+  background-color: $white
 
   .projectTopBarLeft
-    width: 400px
-    height: 50px
-    color: #32363C
-    font-size: 31px
+    +titleText
+    color: $black
+
+    display: flex
+    flex-direction: row
+    align-items: center
+    height: $topBarHeight
     padding-left: 20px
     line-height: 48px
 
-    span.separator
-      padding: 0 5px
-      position: relative
-      top: 1px
-      left: 7px
+    .section
+      display: flex
+      flex-direction: row
+      align-items: center
 
-    span.projectCurrentPage
-      text-transform: capitalize
+      .item
+        display: flex
+        flex-direction: column
+        .label
+          +smallCaps
+          line-height: 0px
+          margin-top: 10px
+          max-height: 0px
+          padding-bottom: 2px
+          margin-top: 10px
+          position: relative
+          top: 10px
+
+      span.separator
+        padding: 0 14px
+        position: relative
+        top: 1px
+        left: 7px
+
+      span.projectCurrentPage
+        text-transform: capitalize
+        padding-top: 2px
+
+      .projectSelector, .datasetSelector  // Dropdowns
+        height: $topBarHeight
+        min-width: 50px
+        background-color: transparent
+        font-weight: 500
+
+        .dropDownLabel
+          line-height: 0px
+          margin-top: 10px
+          max-height: 0px
+          padding-bottom: 2px
+          margin-top: 9px
+          position: relative
+          top: 10px
+
+        &:hover
+          > div > div:first-of-type > div:first-child
+            text-decoration: underline
+
+        > div > div:first-of-type  // .Select-control
+          height: $topBarHeight
+          border: none
+          line-height: 0px
+          background-color: transparent
+
+          > div:first-child  // .Select-value
+            display: inline-block
+            height: $topBarHeight
+            position: relative
+            white-space: normal
+            padding-left: 0px
+            padding-right: 0px
+
+            > span  // .Select-value-label
+              display: block
+              height: $topBarHeight
+              > div  // .valueContainer
+                > span
+                  color: $primary-accent
+
+          > div:nth-child(2)  // .Select-input
+            position: absolute
+            top: 0
+            height: 0
+            width: 0
+
+          > span  // .Select-arrow-zone
+            display: none
+
+        span.projectSelectorValue, span.datasetSelectorValue
+          +titleText
+          height: $topBarHeight
+          line-height: 50px
+          font-weight: 500
+
+
+
+  .userOptions
+    display: flex
+    margin-left: auto
+    align-items: center
+    justify-content: center
+
+    img.picture
+      border-radius: 35px
+      width: 35px
+      height: 35px
+      overflow: hidden
+
+    .logoutUser
+      padding: 12px 24px 12px 12px
+      line-height: 24px
+      color: $white
+
+    .userStatus, .logoutUser
+      font-size: 12px
+      font-weight: 400
+      color: #32363C
+
+      &:hover
+        cursor: pointer
+
+      .username
+        font-weight: 600
 
 .projectSelectorContainer
   display: flex

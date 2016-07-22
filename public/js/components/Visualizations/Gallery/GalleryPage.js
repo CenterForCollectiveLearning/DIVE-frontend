@@ -89,7 +89,7 @@ class GalleryPage extends Component {
 
     return (
       <div className={ `${ styles.fillContainer } ${ styles.galleryContainer }` }>
-        <GalleryView />
+        <GalleryView filteredVisualizationTypes={ visualizationTypes } />
         <GallerySidebar filteredVisualizationTypes={ visualizationTypes } visualizationTypes={ visualizationTypeObjects } queryFields={ queryFields }/>
         { this.props.children }
       </div>

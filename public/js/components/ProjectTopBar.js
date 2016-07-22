@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
+import { selectDataset, fetchDatasets } from '../actions/DatasetActions';
 import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions';
 import { logoutUser } from '../actions/AuthActions';
 import styles from './App/App.sass';
@@ -21,10 +22,19 @@ export class ProjectTopBar extends Component {
 
     this.onSelectProject = this.onSelectProject.bind(this);
     this.onClickProjectSettings = this.onClickProjectSettings.bind(this);
+    this.onSelectDataset = this.onSelectDataset.bind(this);
 
     this.state = {
       projectSettingsModalOpen: false
     };
+  }
+
+  onSelectDataset(datasetId) {
+    const { gallerySelector, project, push, selectDataset, routes } = this.props;
+    const { pathname, query } = location;
+    const remainingRoute = routes.slice(3).map((e) => e.path).join('/');
+    selectDataset(project.properties.id, datasetId);
+    push(`/projects/${ project.properties.id }/datasets/${ datasetId }/${ remainingRoute }`);
   }
 
   _getCurrentPage(){
@@ -84,17 +94,65 @@ export class ProjectTopBar extends Component {
 
     const datasetId = paramDatasetId || datasetSelector.datasetId;
 
+    const filteredUserProjects = projects.userProjects.filter((p) =>
+      (p.id !== project.properties.id)
+    )
+    const filteredDatasets = datasets.items.filter((d) =>
+      (d.id !== datasetSelector.datasetId)
+    )
+
     return (
       <div className={ styles.projectTopBar }>
-        { project.properties.title && !project.properties.preloaded &&
+        { project.properties.title && !project.properties.userProjects &&
           <div className={ styles.projectTopBarLeft}>
-            <span className={ styles.projectTitle }>
-              { project.properties.title }
-            </span>
-            <span className={ styles.separator }>&#9002;</span>
-            <span className={ styles.projectCurrentPage }>
-              { this._getCurrentPage() }
-            </span>
+            <div className={ styles.section }>
+              { projects.userProjects.length == 1 &&
+                <div>{ project.properties.title }</div>
+              }
+              { projects.userProjects.length > 1 &&
+                <DropDownMenu
+                  className={ styles.projectSelector }
+                  valueClassName={ styles.projectSelectorValue }
+                  labelClassName={ styles.dropDownLabel }
+                  value={ parseInt(project.properties.id) }
+                  options={ projects.userProjects }
+                  label="Project"
+                  valueMember="id"
+                  displayTextMember="title"
+                  onChange={ this.onSelectProject } />
+              }
+            </div>
+            {datasets.items && datasets.items.length > 0 &&
+              <div className={ styles.section }>
+                <span className={ styles.separator }>&#9002;</span>
+                { datasets.items.length == 1 &&
+                  <div>{ datasetSelector.title }</div>
+                }
+                { datasets.items.length > 1 &&
+                  <DropDownMenu
+                    autosize={ true }
+                    className={ styles.datasetSelector }
+                    valueClassName={ styles.datasetSelectorValue }
+                    labelClassName={ styles.dropDownLabel }
+                    value={ parseInt(datasetSelector.datasetId) }
+                    options={ datasets.items }
+                    label="Dataset"
+                    valueMember="datasetId"
+                    displayTextMember="title"
+                    onChange={ this.onSelectDataset.bind(this) } />
+                }
+              </div>
+            }
+
+            <div className={ styles.section }>
+              <span className={ styles.separator }>&#9002;</span>
+              <div className={ styles.item }>
+                <div className={ styles.label }>Mode</div>
+                <span className={ styles.projectCurrentPage }>
+                  { this._getCurrentPage() }
+                </span>
+              </div>
+            </div>
           </div>
         }
         <div className={ styles.userOptions }>
@@ -135,4 +193,9 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { push, logoutUser })(ProjectTopBar);
+export default connect(mapStateToProps, {
+  push,
+  logoutUser,
+  fetchDatasets,
+  selectDataset,
+})(ProjectTopBar);

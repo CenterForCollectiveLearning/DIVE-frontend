@@ -10,7 +10,7 @@ export default class DropDownMenu extends Component {
   }
 
   render() {
-    const { value, options, label, valueMember, displayTextMember, onChange, multi, clearable, searchable, className, valueClassName, prefix } = this.props;
+    const { value, autosize, options, label, valueMember, displayTextMember, onChange, multi, clearable, searchable, className, valueClassName, labelClassName, prefix } = this.props;
 
     const selectedValueObject = options.find((option) => option.selected);
     const selectedValue = (value == null && selectedValueObject) ?
@@ -30,10 +30,11 @@ export default class DropDownMenu extends Component {
     return (
       <div style={{ width: this.props.width || '100%' }} className={ styles.dropDownMenu + (className ? ' ' + className : '') }>
         { label &&
-          <div className={ styles.dropDownLabel }>{ label } </div>
+          <div className={ styles.dropDownLabel + ( labelClassName ? ' ' + labelClassName : '' ) }>{ label } </div>
         }
         <Select
           value={ selectedValue }
+          autosize={ autosize }
           labelKey={ displayTextMember }
           valueKey={ valueMember }
           options={ options }
@@ -55,10 +56,12 @@ DropDownMenu.propTypes = {
   onChange: PropTypes.func.isRequired,
   label: PropTypes.string,
   multi: PropTypes.bool,
+  autosize: PropTypes.bool,
   clearable: PropTypes.bool,
   searchable: PropTypes.bool,
   className: PropTypes.string,
   valueClassName: PropTypes.string,
+  labelClassName: PropTypes.string,
   prefix: PropTypes.string,
   width: PropTypes.any
 };
@@ -66,6 +69,7 @@ DropDownMenu.propTypes = {
 DropDownMenu.defaultProps = {
   className: null,
   valueClassName: null,
+  labelClassName: null,
   prefix: null,
   label: null,
   value: null,

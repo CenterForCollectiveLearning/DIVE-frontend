@@ -91,7 +91,7 @@ export class ProjectNav extends Component {
     const datasetId = paramDatasetId || datasetSelector.datasetId;
 
     return (
-      <div className={ styles.header }>
+      <div className={ styles.projectSidebar }>
         <div className={ styles.logoContainer } onClick={ this._onClickLogo }>
           <div className={ styles.logoText }>
             DIVE

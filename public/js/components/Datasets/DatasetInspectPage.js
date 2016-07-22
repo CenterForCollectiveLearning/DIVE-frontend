@@ -95,17 +95,6 @@ export class DatasetInspectPage extends Component {
               <div className={ styles.headerControl }>
                 <RaisedButton label="Upload new dataset" onClick={ this.onClickUploadDataset } />
               </div>
-              <div className={ styles.headerControl }>
-                <DropDownMenu
-                  label="Dataset"
-                  width={ 240 }
-                  className={ styles.datasetSelector }
-                  value={ parseInt(datasetSelector.datasetId) }
-                  options={ datasets.items.length > 0 ? datasets.items : [] }
-                  valueMember="datasetId"
-                  displayTextMember="title"
-                  onChange={ this.onSelectDataset } />
-              </div>
             </div>
           }
         />
