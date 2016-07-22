@@ -107,7 +107,6 @@ export class ProjectNav extends Component {
           <TabGroup heading="2. VISUALIZATIONS">
             <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
             <Tab label="Build" value="builder" route={ `datasets/${ datasetId }/visualize/builder` } disabled={ true }/>
-            <Tab label="Starred" value="starred" route={ `datasets/${ datasetId }/visualize/starred` } disabled={ true }/>
           </TabGroup>
           <TabGroup heading="3. ANALYSIS">
             <Tab label="Summary" value="summary" route={ `datasets/${ datasetId }/analyze/summary` } disabled={ !datasetId }/>

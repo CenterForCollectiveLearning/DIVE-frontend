@@ -91,14 +91,17 @@ export class ProjectTopBar extends Component {
             <span className={ styles.projectTitle }>
               { project.properties.title }
             </span>
-            <span className={ styles.separator }>/</span>
+            <span className={ styles.separator }>&#9002;</span>
             <span className={ styles.projectCurrentPage }>
               { this._getCurrentPage() }
             </span>
           </div>
         }
-        <div className={ styles.logoutUser } onClick={ this._logout.bind(this) }>
-          Log out of <span className={ styles.username }>{ user.username }</span>
+        <div className={ styles.userOptions }>
+          <img className={ styles.picture } src="/assets/images/blank_user.png"/>
+          <div className={ styles.logoutUser } onClick={ this._logout.bind(this) }>
+            Log out of <span className={ styles.username }>{ user.username }</span>
+          </div>
         </div>
         { this.state.projectSettingsModalOpen &&
           <ProjectSettingsModal

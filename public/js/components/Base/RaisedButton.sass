@@ -1,3 +1,5 @@
+@import '../../../css/mixins.sass'
+
 .raisedButton
   max-width: 160px
   overflow: hidden
@@ -10,17 +12,18 @@
 
   font-size: 12px
   text-align: center
-  color: #333
+  color: $ui-font-grey
 
-  background-color: transparent
+  background-color: $white
 
-  border: 1px solid #959595
+  border: 1px solid $ui-grey
   border-radius: 2px
 
   transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)
 
   &:hover
-    border-color: #666
+    border-color: $ui-grey
+    background-color: rgba(86, 42, 110, 0.1)
     cursor: pointer
 
   &:focus, &:active, &.selected
@@ -32,9 +35,9 @@
     box-shadow: none
 
   &.primary
-    background-color: #4AD3B7
+    background-color: $primary-accent
     border-width: 0
-    color: #2A2D33
+    color: $white
     max-width: none
     text-transform: uppercase
 

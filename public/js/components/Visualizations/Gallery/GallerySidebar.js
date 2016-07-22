@@ -70,10 +70,20 @@ export class GallerySidebar extends Component {
   }
 
   render() {
-    const { visualizationTypes, datasetSelector, gallerySelector, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectAggregationFunction } = this.props;
+    const { visualizationTypes, datasetSelector, gallerySelector, filters, filteredVisualizationTypes, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectAggregationFunction } = this.props;
 
     return (
       <Sidebar>
+        { filteredSpecs.length > 0 &&
+          <SidebarGroup heading="Sort By">
+            <DropDownMenu
+              label="Sort by"
+              options={ gallerySelector.sortingFunctions }
+              valueMember="value"
+              displayTextMember="label"
+              onChange={ selectSortingFunction } />
+          </SidebarGroup>
+        }
         { visualizationTypes.length > 1 &&
           <SidebarGroup heading="Filter Visualization type">
             <ToggleButtonGroup
@@ -152,7 +162,8 @@ GallerySidebar.propTypes = {
   gallerySelector: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
   queryFields: PropTypes.array.isRequired,
-  visualizationTypes: PropTypes.array.isRequired
+  visualizationTypes: PropTypes.array.isRequired,
+  filteredVisualizationTypes: PropTypes.array.isRequired,
 };
 
 function mapStateToProps(state) {

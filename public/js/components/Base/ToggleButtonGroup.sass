@@ -1,4 +1,5 @@
 @import './RaisedButton.sass'
+@import '../../../css/mixins.sass'
 
 .toggleButtonGroup
   display: flex
@@ -50,7 +51,8 @@
 
   .raisedButton.toggleButton
     padding: 0
-    border-color: #BBB
+    border-color: $ui-grey
+    color: $ui-font-grey
     border-radius: 0
     margin-left: -1px
     margin-top: -1px
@@ -62,6 +64,9 @@
 
     img
       padding: 3px
+
+    &:hover
+      background-color: $ui-active-grey
 
   .splitButton.textToggleButton
     display: flex

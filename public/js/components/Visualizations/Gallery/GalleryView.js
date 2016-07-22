@@ -84,14 +84,14 @@ export class GalleryView extends Component {
   render() {
     const { specs, filters, datasets, datasetSelector, filteredVisualizationTypes, gallerySelector, exportedSpecs, selectSortingFunction } = this.props;
 
+    var selectedFieldProperties = gallerySelector.fieldProperties
+      .filter((property) => property.selected);
+
     const filteredSpecs = gallerySelector.specs.filter((spec) =>
       (filteredVisualizationTypes.length == 0) || filteredVisualizationTypes.some((filter) =>
         spec.vizTypes.indexOf(filter) >= 0
       )
     );
-
-    var selectedFieldProperties = gallerySelector.fieldProperties
-      .filter((property) => property.selected);
 
     const areFieldsSelected = selectedFieldProperties.length > 0;
     const baselineSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'baseline');
@@ -283,7 +283,7 @@ GalleryView.propTypes = {
   gallerySelector: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
-  filteredVisualizationTypes: PropTypes.array.isRequired,
+
   exportedSpecs: PropTypes.object.isRequired
 };
 

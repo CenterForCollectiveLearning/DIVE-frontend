@@ -65,7 +65,7 @@ class GalleryPage extends Component {
       .map((filter) =>
         new Object({
           ...filter,
-          disabled: this.state.uniqueSpecVisualizationTypes.indexOf(filter.type) == -1 
+          disabled: this.state.uniqueSpecVisualizationTypes.indexOf(filter.type) == -1
         })
       );
   }
@@ -89,8 +89,8 @@ class GalleryPage extends Component {
 
     return (
       <div className={ `${ styles.fillContainer } ${ styles.galleryContainer }` }>
-        <GalleryView filteredVisualizationTypes={ visualizationTypes } />
-        <GallerySidebar visualizationTypes={ visualizationTypeObjects } queryFields={ queryFields }/>
+        <GalleryView />
+        <GallerySidebar filteredVisualizationTypes={ visualizationTypes } visualizationTypes={ visualizationTypeObjects } queryFields={ queryFields }/>
         { this.props.children }
       </div>
     );

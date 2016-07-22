@@ -7,7 +7,7 @@
   flex-direction: column
   position: relative
   min-width: 155px
-  background: #2A2D33
+  background: $black
 
   .logoContainer
     height: 50px
@@ -17,7 +17,7 @@
     padding-bottom: 14px
     padding-top: 3px
     cursor: pointer
-    background-color: #4AD3B7
+    background-color: $primary-accent
 
     .logo
       width: 24px
@@ -30,28 +30,36 @@
       font-weight: 800
       margin-top: 4px
       margin-left: 22px
-      color: #FFFFFF
+      color: $white
 
-.logoutUser
-  padding: 12px 24px
-  line-height: 24px
-  color: #414141
-
-.userStatus, .logoutUser
-  position: absolute
-  right: 0
-  font-size: 12px
-  font-weight: 400
-  color: #32363C
-
-  &:hover
-    cursor: pointer
-
-  .username
-    font-weight: 600
-
-.userStatus
+.userOptions
+  display: flex
   margin-left: auto
+  align-items: center
+  justify-content: center
+
+  img.picture
+    border-radius: 35px
+    width: 35px
+    height: 35px
+    overflow: hidden
+
+  .logoutUser
+    padding: 12px 24px 12px 12px
+    line-height: 24px
+    color: $white
+
+  .userStatus, .logoutUser
+    font-size: 12px
+    font-weight: 400
+    color: #32363C
+
+    &:hover
+      cursor: pointer
+
+    .username
+      font-weight: 600
+
 
 .appContainer, .projectContainer
   +maxHeight100NoOverflow
@@ -68,7 +76,6 @@
   flex-direction: row
   min-height: 50px
   flex-shrink: 0
-  border-bottom: 1px solid #F0F0F0
 
   .projectTopBarLeft
     width: 400px
@@ -80,6 +87,9 @@
 
     span.separator
       padding: 0 5px
+      position: relative
+      top: 1px
+      left: 7px
 
     span.projectCurrentPage
       text-transform: capitalize
