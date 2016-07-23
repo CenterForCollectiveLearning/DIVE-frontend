@@ -83,12 +83,6 @@ export class DatasetTransformPage extends Component {
     this.setState({ reduceColumnsModalOpen: false });
   }
 
-  onSelectDataset(selectedValue) {
-    if (selectedValue) {
-      this.props.push(`/projects/${ this.props.project.properties.id }/datasets/${ selectedValue }/inspect`);
-    }
-  }
-
   onClickDeleteDataset() {
     const { deleteDataset, datasetSelector, project } = this.props;
 
@@ -119,17 +113,6 @@ export class DatasetTransformPage extends Component {
               </div>
               <div className={ styles.headerControl }>
                 <RaisedButton label="Combine datasets" onClick={ this.openMergeDatasetsModal.bind(this) }/>
-              </div>
-              <div className={ styles.headerControl }>
-                <DropDownMenu
-                  label="Dataset"
-                  width={ 240 }
-                  className={ styles.datasetSelector }
-                  value={ parseInt(datasetSelector.datasetId) }
-                  options={ datasets.items.length > 0 ? datasets.items : [] }
-                  valueMember="datasetId"
-                  displayTextMember="title"
-                  onChange={ this.onSelectDataset } />
               </div>
             </div>
           }

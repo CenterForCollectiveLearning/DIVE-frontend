@@ -60,13 +60,6 @@ export class RegressionView extends Component {
     }
   }
 
-  clickDataset(datasetId) {
-    const { projectId, clearAnalysis, selectDataset, push } = this.props;
-    clearAnalysis();
-    selectDataset(projectId, datasetId);
-    push(`/projects/${ projectId }/datasets/${ datasetId }/analyze/regression`);
-  }
-
   saveRegression(saveAction = true) {
     const { projectId, regressionResult, createExportedRegression } = this.props;
     createExportedRegression(projectId, regressionResult.data.id, regressionResult.data, regressionResult.conditionals, regressionResult.config, saveAction);
@@ -104,20 +97,6 @@ export class RegressionView extends Component {
                   { !regressionResult.exportedRegressionId && <i className="fa fa-star-o"></i> }
                 </RaisedButton>
               </div>
-              <div className={ styles.headerControl }>
-                { datasets.items && datasets.items.length > 0 ?
-                  <div className={ styles.headerControl }>
-                    <DropDownMenu
-                      label="Dataset"
-                      width={ 240 }
-                      value={ parseInt(datasetId) }
-                      options={ datasets.items }
-                      valueMember="datasetId"
-                      displayTextMember="title"
-                      onChange={ this.clickDataset.bind(this) } />
-                  </div>
-              : '' }
-            </div>
           </div>
         }/>
         { regressionResult.loading &&
