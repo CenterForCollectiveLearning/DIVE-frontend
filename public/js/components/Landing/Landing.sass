@@ -142,32 +142,6 @@
       iframe
         border: none
 
-.projectButton
-  +montserrat
-  display: flex
-  min-height: 40px
-  padding: 11px 16px
-  width: 70%
-  max-width: 600px
-
-  align-items: left
-  justify-content: left
-  text-align: left
-
-  border: 1px solid hsl(219, 65%, 90%)
-  background-color: hsla(0, 0%, 100%, 0.11)
-  color: #32363C
-  font-size: 15px
-  text-transform: uppercase
-  letter-spacing: 1px
-
-  cursor: pointer
-  text-decoration: none
-
-  &:hover
-    background-color: rgba(86, 42, 110, 0.07)
-    border-color: #D9D9DB
-
 .section
   display: flex
   flex-grow: 1
@@ -180,6 +154,47 @@
     width: 100%
     margin: 0
 
+.projectButton
+  +regularCopy
+  display: flex
+  flex-direction: column
+  min-height: 100px
+  padding: 11px 16px
+  width: 70%
+  max-width: 800px
+
+  align-items: left
+  justify-content: left
+  text-align: left
+
+  border: 1px solid $ui-grey
+  border-top: none
+  background-color: $white
+  color: $black
+  font-size: 15px
+
+  cursor: pointer
+  text-decoration: none
+
+  &:first-of-type
+    border-top: 1px solid $ui-grey
+
+  &:hover
+    background-color: rgba($primary-accent, 1.0)
+    color: $white
+
+  .projectTop
+    display: flex
+    .projectLeft, .projectRight
+      display: inline-block
+
+    .projectLeft
+      .projectTitle
+        font-weight: bold
+      .projectDescription
+    .projectRight
+      margin-left: auto
+
 .projectsContainer
   width: 100%
   padding: 60px 0
@@ -188,11 +203,15 @@
 
   &.myProjectsContainer
     flex-shrink: 0
-    border-bottom: #D9D9DB
+    flex-grow: 1
+    align-items: center
+    background-color: $light-grey
+    border-bottom: $dark-grey
+
 
   &.preloadedProjectsContainer
-    background-color: #F0F0F0
-    border-bottom: #D9D9DB
+    background-color: #light-grey
+    border-bottom: $dark-grey
     flex-grow: 1
     flex-shrink: 0
 
@@ -207,8 +226,10 @@
 
     .projectListContainer
       margin-top: 20px
-      padding-left: 3%
       width: 100%
+      display: flex
+      flex-direction: column
+      align-items: center
 
 .watermark
   +montserrat

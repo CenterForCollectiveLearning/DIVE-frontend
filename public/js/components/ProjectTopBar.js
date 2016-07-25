@@ -126,7 +126,10 @@ export class ProjectTopBar extends Component {
               <div className={ styles.section }>
                 <span className={ styles.separator }>&#9002;</span>
                 { datasets.items.length == 1 &&
-                  <div>{ datasetSelector.title }</div>
+                  <div className={ styles.item }>
+                    <div className={ styles.label }>Dataset</div>
+                    <span className={ styles.value }>{ datasetSelector.title }</span>
+                  </div>
                 }
                 { datasets.items.length > 1 &&
                   <DropDownMenu
@@ -148,7 +151,7 @@ export class ProjectTopBar extends Component {
               <span className={ styles.separator }>&#9002;</span>
               <div className={ styles.item }>
                 <div className={ styles.label }>Mode</div>
-                <span className={ styles.projectCurrentPage }>
+                <span className={ styles.value + ' ' + styles.projectPage}>
                   { this._getCurrentPage() }
                 </span>
               </div>

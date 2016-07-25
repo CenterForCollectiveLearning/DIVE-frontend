@@ -10,14 +10,14 @@
 
   &.field
     font-weight: 500
-    color: #444444
+    color: $black
     text-transform: lowercase
 
     + .field:before
       content: ','
 
   &.operation, &.plain, &.transformation, &.tooMuchData
-    color: #6A6A6A
+    color: $black
 
 .fieldGroup
   &:first-child
@@ -29,12 +29,12 @@
 
   .fieldGroupLabel
     margin-top: 17px
-    margin-bottom: 10px
+    margin-bottom: 5px
 
-    font-size: 11px
-    font-weight: 500
-    color: $black
-    text-transform: uppercase
+    font-size: 12px
+    font-weight: 400
+    color: $white
+    text-transform: capitalize
 
 .sortGroup
   display: flex
@@ -231,13 +231,14 @@ div.conditionalCombinator
         align-content: flex-start
         flex-grow: 1
         margin-bottom: 5px
+        padding: 5px 10px
 
 .visualizationBlocksContainer
   display: flex
   flex-direction: column
   position: relative
 
-  padding: 15px
+  padding: 5px
 
   &.exact
     width: 50%
@@ -254,8 +255,8 @@ div.conditionalCombinator
 
   .starContainer
     position: absolute
-    top: 27px
-    right: 27px
+    top: 15px
+    right: 21px
     font-size: 13px
     color: orange
     cursor: pointer

@@ -19,13 +19,12 @@ $topBarHeight: 55px
   flex-direction: column
   position: relative
   min-width: 155px
-  background: $black
+  background: $sidebar-grey //  $black
 
   .logoContainer
     height: $topBarHeight
     min-height: $topBarHeight
     display: flex
-    flex-direction: row
     padding-bottom: 14px
     padding-top: 5px
     cursor: pointer
@@ -48,6 +47,8 @@ $topBarHeight: 55px
   display: flex
   flex-direction: row
   min-height: $topBarHeight
+  max-height: $topBarHeight
+  min-width: 800px
   flex-shrink: 0
   background-color: $white
   // border-bottom: 8px solid $light-grey
@@ -77,19 +78,21 @@ $topBarHeight: 55px
           margin-top: 10px
           max-height: 0px
           padding-bottom: 2px
-          margin-top: 11px
+          margin-top: 14px
           position: relative
           top: 10px
+
+        .value
+          font-size: 16px
+
+          &.projectPage
+            text-transform: capitalize
 
       span.separator
         padding: 0 14px
         position: relative
         top: 1px
         left: 7px
-
-      span.projectCurrentPage
-        text-transform: capitalize
-        padding-top: 2px
 
       .projectSelector, .datasetSelector  // Dropdowns
         height: $topBarHeight
@@ -108,6 +111,7 @@ $topBarHeight: 55px
 
         &:hover
           > div > div:first-of-type > div:first-child
+            color: $primary-accent
             text-decoration: underline
 
         > div > div:first-of-type  // .Select-control
@@ -140,13 +144,30 @@ $topBarHeight: 55px
           > span  // .Select-arrow-zone
             display: none
 
-        span.projectSelectorValue, span.datasetSelectorValue
-          +titleText
-          height: $topBarHeight
-          line-height: 50px
-          font-weight: 500
+          span.projectSelectorValue, span.datasetSelectorValue
+            +titleText
+            height: $topBarHeight
+            line-height: 50px
+            font-weight: 500
 
+        // Dropdown values
+        > div > div:nth-of-type(2)  // .Select-menu-outer
+          margin-top: -10px
+          margin-left: -10px
+          > div // Select-menu
+            display: inline-block
+            font-size: 16px
+            line-height: 20px
+            padding-right: 5px
+            // display: inline-block
+            // position: relative
+            // white-space: normal
+            // padding-left: 0px
+            // padding-right: 10px
 
+            > div  // .Select-option
+              // display: block
+              // height: 20px
 
   .userOptions
     display: flex
@@ -175,38 +196,3 @@ $topBarHeight: 55px
 
       .username
         font-weight: 600
-
-.projectSelectorContainer
-  display: flex
-  flex-direction: row
-  width: 400px
-  height: 50px
-  font-weight: 400 !important
-
-  .projectSelectorAction
-    padding-left: 11px
-    margin-top: 0
-    height: 50px
-
-    border: none
-    border-left: 1px solid rgba(255, 255, 255, 0.2)
-    border-radius: 0
-    line-height: 50px
-
-  .projectSelector
-    height: 50px
-
-    > div > div:first-of-type
-      height: 50px
-      border: none
-      border-radius: 0
-
-      > div:first-child
-        height: 50px
-        padding-left: 20px
-
-    span.projectSelectorValue
-      color: #414141
-      font-size: 31px
-      line-height: 50px
-      font-weight: 300

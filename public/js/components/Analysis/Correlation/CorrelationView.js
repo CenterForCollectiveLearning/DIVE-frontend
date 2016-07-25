@@ -115,7 +115,6 @@ export class CorrelationView extends Component {
     return (
       <div className={ styles.correlationViewContainer }>
         <HeaderBar
-          header="Correlation Analysis"
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>

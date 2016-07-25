@@ -156,9 +156,6 @@ export class SummaryView extends Component {
 
     return (
       <div className={ styles.summaryViewContainer }>
-        <HeaderBar
-          header="Summary Statistics"
-        />
         { summaryContent }
       </div>
     );

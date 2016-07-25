@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import styles from './Landing.sass';
 import { connect } from 'react-redux';
@@ -18,7 +19,7 @@ export class ProjectListPage extends Component {
   componentWillReceiveProps(nextProps) {
     const nextProjectId = nextProps.project.properties.id;
     const nextUserId = nextProps.userId;
-
+``
     if (this.props.project.properties.id != nextProjectId) {
       this.props.wipeProjectState();
       this.props.push(`/projects/${ nextProjectId }/datasets/upload`);
@@ -40,8 +41,10 @@ export class ProjectListPage extends Component {
   }
 
   render() {
-    const { projects, userId } = this.props;
+    const { projects, userId, user } = this.props;
     const { userProjects, preloadedProjects } = projects;
+
+    console.log(projects, user);
     return (
       <DocumentTitle title='DIVE | Projects'>
         <div className={ styles.centeredFill }>
@@ -64,8 +67,19 @@ export class ProjectListPage extends Component {
                   { projects.isFetching &&
                     <div className={ styles.watermark }>Fetching projects...</div>
                   }
-                  { userProjects.map((project) =>
-                    <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
+                  { userProjects.reverse().map((project) =>
+                    <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>
+                      <div className={ styles.projectTop }>
+                        <div className={ styles.projectLeft }>
+                          <div className={ styles.projectTitle }>{ project.title }</div>
+                          <div className={ styles.projectDescription }>{ project.description }</div>
+                        </div>
+                        <div className={ styles.projectRight }>
+                          <div className={ styles.projectCreationDate }>{ moment(project.creationDate).format('LLL') }</div>
+                          <div className={ styles.projectUpdateDate }>{ moment(project.updateDate).format('LLL') }</div>
+                        </div>
+                      </div>
+                    </a>
                   )}
                 </div>
               </div>
@@ -97,7 +111,7 @@ export class ProjectListPage extends Component {
 
 function mapStateToProps(state) {
   const { project, projects, user } = state;
-  return { project, projects, userId: user.id };
+  return { project, projects, user: user, userId: user.id };
 }
 
 export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, push })(ProjectListPage);

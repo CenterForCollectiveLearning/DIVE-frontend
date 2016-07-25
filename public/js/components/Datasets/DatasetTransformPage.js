@@ -25,7 +25,6 @@ export class DatasetTransformPage extends Component {
       mergeDatasetsModalOpen: false
     }
 
-    this.onSelectDataset = this.onSelectDataset.bind(this);
     this.onClickDeleteDataset = this.onClickDeleteDataset.bind(this);
   }
 

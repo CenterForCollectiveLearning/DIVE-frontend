@@ -119,9 +119,6 @@ export class ComparisonView extends Component {
 
     return (
       <div className={ styles.regressionViewContainer }>
-        <HeaderBar
-          header={ 'Comparison' }
-        />
         <div className={ styles.aggregationViewContainer }>
           { comparisonContent }
         </div>
