@@ -73,11 +73,11 @@ export default function regressionSelector(state = baseState, action) {
       return { ...state, regressionType: action.regressionType }
 
     case SELECT_REGRESSION_DEPENDENT_VARIABLE:
-      const independentVariables = state.fieldProperties
-        .filter((property) => property.id != action.dependentVariableId && !( property.generalType == 'c' && property.isUnique ) && !( property.generalType == 'c' && property.uniqueValues.length > 2 ))
-        .map((property) => property.id)
+      // const independentVariables = state.fieldProperties
+      //   .filter((property) => property.id != action.dependentVariableId && !( property.generalType == 'c' && property.isUnique ) && !( property.generalType == 'c' && property.uniqueValues.length > 2 ))
+      //   .map((property) => property.id)
 
-      return { ...state, dependentVariableId: action.dependentVariableId, independentVariableIds: independentVariables };
+      return { ...state, dependentVariableId: action.dependentVariableId };
 
     case SELECT_REGRESSION_INDEPENDENT_VARIABLE:
       var independentVariableIds = state.independentVariableIds.slice();
@@ -104,11 +104,11 @@ export default function regressionSelector(state = baseState, action) {
       return { ...state, interactionTermIds: interactionTermIds}
 
     case RECEIVE_FIELD_PROPERTIES:
-      const selectedIndependentVariables = action.fieldProperties
-        .filter((property) => property.id != state.dependentVariableId && !( property.generalType == 'c' && property.isUnique ) && !( property.generalType == 'c' && property.uniqueValues && property.uniqueValues.length > 2 ))
-        .map((property) => property.id);
+      // const selectedIndependentVariables = action.fieldProperties
+      //   .filter((property) => property.id != state.dependentVariableId && !( property.generalType == 'c' && property.isUnique ) && !( property.generalType == 'c' && property.uniqueValues && property.uniqueValues.length > 2 ))
+      //   .map((property) => property.id);
 
-      return { ...state, fieldProperties: action.fieldProperties, independentVariableIds: selectedIndependentVariables };
+      return { ...state, fieldProperties: action.fieldProperties };
 
     case REQUEST_RUN_REGRESSION:
       return { ...state, regressionResult: { ...state.regressionResult, loading: true } };

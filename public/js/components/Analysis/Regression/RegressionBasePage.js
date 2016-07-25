@@ -21,6 +21,7 @@ export class RegressionBasePage extends Component {
     }
 
     if(fieldProperties.items.length > 0 && !queriedDependentVariable) {
+      console.log('navigating within app')
       const dependentVariable = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c'));
 
       const queryParams = { 'dependent-variable': dependentVariable.id, 'regression-type': recommendRegressionType(dependentVariable.generalType) };
@@ -35,6 +36,7 @@ export class RegressionBasePage extends Component {
     const { query: nextQuery } = nextLocation;
 
     if (nextFieldProperties.items.length > 0 && nextFieldProperties.datasetId == nextParams.datasetId && !nextQuery['dependent-variable']) {
+      console.log('wait what case is this?')
       const dependentVariable = (nextFieldProperties.items.find((property) => property.generalType == 'q') || nextFieldProperties.items.find((property) => property.generalType == 'c'));
       
       const queryParams = { 'dependent-variable': dependentVariable.id, 'regression-type': recommendRegressionType(dependentVariable.generalType) };
