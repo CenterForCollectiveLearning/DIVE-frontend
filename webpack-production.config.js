@@ -28,6 +28,7 @@ module.exports = {
     }),
   ],
   module: {
+    noParse: /node_modules\/quill\/dist/,
     loaders: [
       { test: /\.js$/, loaders: ['imports?shim=es6-shim/es6-shim&sham=es6-shim/es6-sham', 'react-hot', 'babel'], exclude: /node_modules/ },
       { test: /\.css$/, loader: ExtractTextPlugin.extract('css-loader?module!cssnext-loader') },

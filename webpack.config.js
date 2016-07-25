@@ -44,16 +44,8 @@ module.exports = {
       { test: /\.sass$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?indentedSyntax&outputStyle=expanded&sourceMap' },
       { test: /\.less$/,  loader: "style!css!less" },
       { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url?limit=10000&minetype=application/font-woff" },
-      { test: /\.(svg|ttf|eot)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file" },
+      { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file" },
       { test: /\.png$/, loader: "url-loader?mimetype=image/png" },
-      // {
-      //   test: /\.(svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      //   loader: 'babel!svg-react' +
-      //     // removes xmlns tag from svg (see https://github.com/jhamlet/svg-react-loader/issues/25)
-      //     '!string-replace?search=%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22&replace=' +
-      //     // removes data-name attributes
-      //     '!string-replace?search=%20data-name%3D%22%5B%5Cw%5Cs_-%5D*%22&replace=&flags=ig'
-      // }
     ]
   },
   resolve: {
