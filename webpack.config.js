@@ -24,7 +24,6 @@ module.exports = {
     hot: true
   },
   externals: {
-    plottable: "Plottable"
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
