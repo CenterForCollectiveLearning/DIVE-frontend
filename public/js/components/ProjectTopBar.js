@@ -94,9 +94,6 @@ export class ProjectTopBar extends Component {
 
     const datasetId = paramDatasetId || datasetSelector.datasetId;
 
-    const filteredUserProjects = projects.userProjects.filter((p) =>
-      (p.id !== project.properties.id)
-    )
     const filteredDatasets = datasets.items.filter((d) =>
       (d.id !== datasetSelector.datasetId)
     )
@@ -106,10 +103,13 @@ export class ProjectTopBar extends Component {
         { project.properties.title && !project.properties.userProjects &&
           <div className={ styles.projectTopBarLeft}>
             <div className={ styles.section }>
-              { projects.userProjects.length == 1 &&
-                <div>{ project.properties.title }</div>
+              { ( project.properties.preloaded || projects.userProjects.length == 1) &&
+                <div className={ styles.item }>
+                  <div className={ styles.label }>Project</div>
+                  <div>{ project.properties.title }</div>
+                </div>
               }
-              { projects.userProjects.length > 1 &&
+              { ( !project.properties.preloaded && projects.userProjects.length > 1) &&
                 <DropDownMenu
                   className={ styles.projectSelector }
                   valueClassName={ styles.projectSelectorValue }
@@ -122,7 +122,7 @@ export class ProjectTopBar extends Component {
                   onChange={ this.onSelectProject } />
               }
             </div>
-            {datasets.items && datasets.items.length > 0 &&
+            { datasets.items && datasets.items.length > 0 &&
               <div className={ styles.section }>
                 <span className={ styles.separator }>&#9002;</span>
                 { datasets.items.length == 1 &&
