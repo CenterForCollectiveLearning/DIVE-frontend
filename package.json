@@ -79,5 +79,5 @@
     "start": "node buildenv && node server.js",
     "build": "webpack -p",
     "deploy": "npm run build && divshot push"
-  },
+  }
 }
