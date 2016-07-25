@@ -46,7 +46,7 @@ export default class AuthModal extends Component {
                   <div className={ styles.logoText }>
                     DIVE
                   </div>
-                  <Logo className={ styles.logo } />
+                  <img className={ styles.logo } src="../../assets/DIVE_logo_white.svg"/>
                 </div>
               </div>
             </div>

@@ -8,8 +8,6 @@ import { logoutUser } from '../../actions/AuthActions'
 import Link from '../Base/Link';
 import HomePage from './HomePage';
 
-var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
-
 export class LandingPage extends Component {
   componentWillMount() {
     const { user, push } = this.props;
@@ -46,7 +44,7 @@ export class LandingPage extends Component {
                 <div className={ styles.logoText }>
                   DIVE
                 </div>
-                <Logo className={ styles.logo } />
+                <img className={ styles.logo } src="../../assets/DIVE_logo_white.svg"/>
               </div>
               <div className={ styles.topRightControls }>
                 { user && user.username &&

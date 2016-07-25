@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import styles from './Landing.sass';
 import { connect } from 'react-redux';
@@ -81,7 +82,19 @@ export class HomePage extends Component {
                   <div className={ styles.watermark }>Fetching projects...</div>
                 }
                 { preloadedProjects.map((project) =>
-                  <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
+                  <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>
+                    <div className={ styles.projectTop }>
+                      <div className={ styles.projectLeft }>
+                        <div className={ styles.projectTitle }>{ project.title }</div>
+                        <div className={ styles.projectDescription }>{ project.description }</div>
+                      </div>
+                      <div className={ styles.projectRight }>
+                        <div className={ styles.projectCreationDate }>{ moment(project.creationDate).format('LLL') }</div>
+                        <div className={ styles.projectUpdateDate }>{ moment(project.updateDate).format('LLL') }</div>
+                      </div>
+                    </div>
+                  </a>
+                  )}
                 )}
               </div>
             </div>

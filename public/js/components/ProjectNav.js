@@ -12,8 +12,6 @@ import Tab from './Base/Tab';
 import TabGroup from './Base/TabGroup';
 import ProjectSettingsModal from './ProjectSettingsModal';
 
-var Logo = require('babel!svg-react!../../assets/DIVE_logo_white.svg?name=Logo');
-
 export class ProjectNav extends Component {
   constructor(props) {
     super(props);
@@ -96,7 +94,7 @@ export class ProjectNav extends Component {
           <div className={ styles.logoText }>
             DIVE
           </div>
-          <Logo className={ styles.logo } />
+          <img className={ styles.logo } src="../../assets/DIVE_logo_white.svg"/>
         </div>
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
           <TabGroup heading="1. DATASETS">
