@@ -175,7 +175,6 @@ class AuthPage extends Component {
               primary
               className={ styles.submitButton }
               disabled={ loginDisabled }
-              className={ styles.submit }
               onClick={ this.submit }
               minWidth={ 100 }
             >

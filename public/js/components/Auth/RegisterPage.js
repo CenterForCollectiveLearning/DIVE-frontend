@@ -178,7 +178,7 @@ class AuthPage extends Component {
               className={ styles.submitButton }
               minWidth={ 100 }
               disabled={ disabledRegister }
-              onClick={ this.submit.bind(this) }>
+              onClick={ this.submit }>
               Create your account
             </RaisedButton>
           </form>
