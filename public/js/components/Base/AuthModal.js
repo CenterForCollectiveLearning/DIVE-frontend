@@ -3,6 +3,9 @@ import baseStyles from './AuthModal.sass';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 
+import Logo from '../../../assets/DIVE_logo_white.svg?name=Logo';
+
+
 export default class AuthModal extends Component {
   constructor(props) {
     super(props);
@@ -44,7 +47,7 @@ export default class AuthModal extends Component {
                   <div className={ styles.logoText }>
                     DIVE
                   </div>
-                  <img className={ styles.logo } src="../../assets/DIVE_logo_white.svg"/>
+                  <Logo className={ styles.logo } />
                 </div>
               </div>
             </div>

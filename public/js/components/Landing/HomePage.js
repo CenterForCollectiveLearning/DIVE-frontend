@@ -9,8 +9,8 @@ import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectSt
 import RaisedButton from '../Base/RaisedButton';
 import Footer from './Footer';
 
-var MediaLabLogo = require('babel!svg-react!../../../assets/MIT_ML_Logo_K_RGB.svg?name=MediaLabLogo');
-var MacroConnectionsLogo = require('babel!svg-react!../../../assets/MacroConnections_Logo_K_RGB.svg?name=MacroConnectionsLogo');
+import MediaLabLogo from '../../../assets/MIT_ML_Logo_K_RGB.svg?name=MediaLabLogo';
+import MacroConnectionsLogo from '../../../assets/MacroConnections_Logo_K_RGB.svg?name=MacroConnectionsLogo';
 
 
 export class HomePage extends Component {

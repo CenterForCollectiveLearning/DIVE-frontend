@@ -14,7 +14,7 @@ import Tab from './Base/Tab';
 import TabGroup from './Base/TabGroup';
 import ProjectSettingsModal from './ProjectSettingsModal';
 
-var Logo = require('babel!svg-react!../../assets/DIVE_logo_white.svg?name=Logo');
+import Logo from '../../assets/DIVE_logo_white.svg?name=Logo';
 
 export class ProjectTopBar extends Component {
   constructor(props) {

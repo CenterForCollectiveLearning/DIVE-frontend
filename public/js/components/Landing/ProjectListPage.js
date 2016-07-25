@@ -9,6 +9,7 @@ import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectSt
 import RaisedButton from '../Base/RaisedButton';
 import Footer from './Footer';
 
+
 export class ProjectListPage extends Component {
   componentWillMount() {
     const { projects, userId } = this.props;
@@ -44,7 +45,6 @@ export class ProjectListPage extends Component {
     const { projects, userId, user } = this.props;
     const { userProjects, preloadedProjects } = projects;
 
-    console.log(projects, user);
     return (
       <DocumentTitle title='DIVE | Projects'>
         <div className={ styles.centeredFill }>

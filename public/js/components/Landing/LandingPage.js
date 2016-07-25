@@ -8,6 +8,9 @@ import { logoutUser } from '../../actions/AuthActions'
 import Link from '../Base/Link';
 import HomePage from './HomePage';
 
+import Logo from '../../../assets/DIVE_logo_white.svg?name=Logo';
+
+
 export class LandingPage extends Component {
   componentWillMount() {
     const { user, push } = this.props;
@@ -44,7 +47,7 @@ export class LandingPage extends Component {
                 <div className={ styles.logoText }>
                   DIVE
                 </div>
-                <img className={ styles.logo } src="../../assets/DIVE_logo_white.svg"/>
+                <Logo className={ styles.logo } />
               </div>
               <div className={ styles.topRightControls }>
                 { user && user.username &&
