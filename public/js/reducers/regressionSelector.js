@@ -115,6 +115,7 @@ export default function regressionSelector(state = baseState, action) {
 
     case RECEIVE_RUN_REGRESSION:
       return { ...state,
+        independentVariableIds: action.data.independentVariableIds,
         regressionResult: {
           exported: action.data.exported,
           exportedRegressionId: action.data.exportedRegressionId,

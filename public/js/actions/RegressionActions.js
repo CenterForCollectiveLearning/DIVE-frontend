@@ -99,6 +99,7 @@ function requestRunRegressionDispatcher(datasetId) {
 }
 
 function receiveRunRegressionDispatcher(params, json) {
+  console.log('receive regression info', json)
   return {
     type: RECEIVE_RUN_REGRESSION,
     data: json,
