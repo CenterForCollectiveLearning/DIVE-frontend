@@ -75,7 +75,6 @@ export default class RegressionTable extends Component {
         items: preview ? _.range(regressionResult.numColumns + 1).map((i) => <div></div>) : [ 'Variables', ..._.range(regressionResult.numColumns).map((i) => <div className={ styles.tableCell }>({ i + 1 })</div>)]
       },
       ...allRegressedFields.map(function (field) {
-        console.log('all regressed fields', field)
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,

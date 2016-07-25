@@ -41,8 +41,11 @@ export class RegressionView extends Component {
     const dependentVariableChanged = (nextProps.dependentVariableName != dependentVariableName);
     const dependentVariableExists = (nextProps.dependentVariableName != null);
     const interactionTermsChanged = nextProps.interactionTermIds != interactionTermIds;
+    const fromInitialState = independentVariableNames.length == 0 && nextProps.independentVariableNames.length > 0;
 
-    if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.regressionType && (dependentVariableChanged || independentVariablesChanged || regressionTypeChanged || interactionTermsChanged)) {
+    if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.regressionType && !fromInitialState && (dependentVariableChanged || independentVariablesChanged || regressionTypeChanged || interactionTermsChanged)) {
+      console.log('notInitialState', fromInitialState)
+      console.log('changing', nextProps.projectId, nextProps.datasetId, dependentVariableExists, nextProps.regressionType, dependentVariableChanged, independentVariablesChanged, regressionTypeChanged,interactionTermsChanged)
       runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames, nextProps.interactionTermIds);
     }
 
