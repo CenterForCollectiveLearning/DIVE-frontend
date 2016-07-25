@@ -3,8 +3,6 @@ import baseStyles from './AuthModal.sass';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 
-var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
-
 export default class AuthModal extends Component {
   constructor(props) {
     super(props);
