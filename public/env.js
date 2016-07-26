@@ -1,1 +1,1 @@
-window.__env = { API_URL: 'http://localhost:8081', NODE_ENV: 'development' };
+window.__env = { API_URL: 'http://localhost:8081', NODE_ENV: 'production' };

@@ -14,7 +14,6 @@ function getEntrySources(sources) {
 module.exports = {
   devtool: 'source-map',
   entry: getEntrySources([
-      'babel-polyfill',
       './public/js/index.js',
       './public/css/app.css'
   ]),
@@ -23,8 +22,6 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js',
     hot: true
-  },
-  externals: {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
