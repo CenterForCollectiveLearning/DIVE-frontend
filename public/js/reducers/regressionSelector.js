@@ -1,5 +1,6 @@
 import {
   SELECT_REGRESSION_TYPE,
+  SELECT_SELECTION_TYPE,
   SELECT_REGRESSION_MODE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
@@ -35,6 +36,7 @@ const baseConditional = {
 const baseState = {
   fieldProperties: [],
   regressionType: null,
+  selectionType: null,
   dependentVariableId: null,
   independentVariableIds: [],
   interactionTermIds: [], 
@@ -67,10 +69,14 @@ export default function regressionSelector(state = baseState, action) {
       const selectedRegressionModes = state.regressionModes.map((modeObject) =>
         new Object({ ...modeObject, selected: ( modeObject.id == action.selectedModeId )})
       )
-      return { ...state, regressionModes: selectedRegressionModes, selectedMode: action.selectedModeId, regressionResult: regressionResult }
+      return { ...state, regressionModes: selectedRegressionModes, selectedMode: action.selectedModeId, regressionResult: regressionResult };
 
     case SELECT_REGRESSION_TYPE:
-      return { ...state, regressionType: action.regressionType }
+      return { ...state, regressionType: action.regressionType };
+
+    case SELECT_SELECTION_TYPE:
+      console.log('in reducers', action)
+      return { ...state, selectionType: action.selectionType };
 
     case SELECT_REGRESSION_DEPENDENT_VARIABLE:
       return { ...state, dependentVariableId: action.dependentVariableId, independentVariableIds: [] };
@@ -96,7 +102,7 @@ export default function regressionSelector(state = baseState, action) {
       } else {
         interactionTermIds.push(selectedId);
       }
-      
+
       return { ...state, interactionTermIds: interactionTermIds};
 
     case RECEIVE_FIELD_PROPERTIES:

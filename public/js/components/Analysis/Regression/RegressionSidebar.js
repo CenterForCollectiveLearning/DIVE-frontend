@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectIndependentVariable, selectRegressionType, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm } from '../../../actions/RegressionActions';
+import { selectIndependentVariable, selectRegressionType, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectSelectionType } from '../../../actions/RegressionActions';
 import { createURL, createInteractionTermName, filterInteractionTermSelection } from '../../../helpers/helpers.js';
 
 import styles from '../Analysis.sass';
@@ -18,6 +18,13 @@ const regressionTypes = [
   { value: 'linear', label: 'Linear' },
   { value: 'logistic', label: 'Logistic' }
 ];
+
+const selectionTypes = [
+  { value: 'stepwise', label: 'Stepwise' },
+  { value: 'ridge', label: 'Ridge' },
+  { value: 'lasso', label: 'LASSO' },
+  { value: 'lars', label: 'Least Angle'}
+]
 
 export class RegressionSidebar extends Component {
   constructor(props) {
@@ -59,6 +66,10 @@ export class RegressionSidebar extends Component {
     push(createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
   }
 
+  onSelectSelectionType(selectionType) {
+    this.props.selectSelectionType(selectionType)
+  }
+
   onAddInteractionTerm(dropDownNumber, independentVariableId) {
     const interactionVariables = this.state.interactionVariables;
     interactionVariables[dropDownNumber] = independentVariableId;
@@ -90,6 +101,8 @@ export class RegressionSidebar extends Component {
       }
     }
 
+    var shownSelectionTypes = selectionTypes;
+
     return (
       <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
@@ -108,6 +121,14 @@ export class RegressionSidebar extends Component {
               valueMember="id"
               displayTextMember="name"
               onChange={ this.onSelectDependentVariable.bind(this) }/>
+          </SidebarGroup>
+        }
+        { fieldProperties.items.length != 0 &&
+          <SidebarGroup heading="Selection Method">
+            <DropDownMenu
+              value={ regressionSelector.selectionType }
+              options={ shownSelectionTypes }
+              onChange={ this.onSelectSelectionType.bind(this) } />
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
@@ -234,4 +255,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectRegressionType, selectIndependentVariable, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, push })(RegressionSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectRegressionType, selectSelectionType, selectIndependentVariable, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, push })(RegressionSidebar);

@@ -1,5 +1,6 @@
 import {
   SELECT_REGRESSION_TYPE,
+  SELECT_SELECTION_TYPE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
   SELECT_REGRESSION_INTERACTION_TERM,
@@ -24,6 +25,15 @@ export function selectRegressionType(selectedRegressionType) {
   return {
     type: SELECT_REGRESSION_TYPE,
     regressionType: selectedRegressionType,
+    selectedAt: Date.now()
+  }
+}
+
+export function selectSelectionType(selectionType) {
+  console.log('action', selectionType)
+  return {
+    type: SELECT_SELECTION_TYPE,
+    selectionType: selectionType,
     selectedAt: Date.now()
   }
 }
