@@ -93,15 +93,13 @@ export class GallerySidebar extends Component {
 
     return (
       <Sidebar>
-        { filteredSpecs.length > 0 &&
-          <SidebarGroup heading="Sort By">
-            <DropDownMenu
-              options={ gallerySelector.sortingFunctions }
-              valueMember="value"
-              displayTextMember="label"
-              onChange={ selectSortingFunction } />
-          </SidebarGroup>
-        }
+        <SidebarGroup heading="Sort By">
+          <DropDownMenu
+            options={ gallerySelector.sortingFunctions }
+            valueMember="value"
+            displayTextMember="label"
+            onChange={ selectSortingFunction } />
+        </SidebarGroup>
         { visualizationTypes.length > 1 &&
           <SidebarGroup heading="Filter Visualization type">
             <ToggleButtonGroup

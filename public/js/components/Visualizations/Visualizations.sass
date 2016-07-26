@@ -15,6 +15,11 @@
 
     + .field:before
       content: ','
+      font-weight: 400
+
+  &:nth-last-child(1)
+    .field:before
+      content: ', and'
 
   &.operation, &.plain, &.transformation, &.tooMuchData
     color: $black
@@ -33,7 +38,7 @@
 
     font-size: 12px
     font-weight: 400
-    color: $white
+    color: $small-caps-grey
     text-transform: capitalize
 
 .sortGroup
@@ -256,7 +261,7 @@ div.conditionalCombinator
   .starContainer
     position: absolute
     top: 15px
-    right: 21px
+    right: 18px
     font-size: 13px
     color: orange
     cursor: pointer
@@ -276,16 +281,20 @@ div.conditionalCombinator
 
 .visualizationBlock
   +block
+  padding: 0px
   display: flex
   flex-direction: column
 
   .header
-    margin-top: 1px
-    padding-right: 13px
-    padding-left: 13px
+    text-align: left
     font-size: 12px
     overflow: hidden
     text-overflow: ellipsis
+    padding-left: 15px
+    padding-top: 10px
+    padding-bottom: 10px
+    border-bottom: 1px solid $ui-grey
+    background-color: $header-light-grey
 
   .overflowText
     display: flex

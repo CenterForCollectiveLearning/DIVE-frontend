@@ -122,7 +122,7 @@ export class ProjectTopBar extends Component {
                   onChange={ this.onSelectProject } />
               }
             </div>
-            { datasets.items && datasets.items.length > 0 &&
+            { datasetSelector.datasetId &&
               <div className={ styles.section }>
                 <span className={ styles.separator }>&#9002;</span>
                 { datasets.items.length == 1 &&
