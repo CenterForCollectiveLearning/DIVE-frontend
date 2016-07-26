@@ -77,7 +77,7 @@ export default function regressionSelector(state = baseState, action) {
       //   .filter((property) => property.id != action.dependentVariableId && !( property.generalType == 'c' && property.isUnique ) && !( property.generalType == 'c' && property.uniqueValues.length > 2 ))
       //   .map((property) => property.id)
 
-      return { ...state, dependentVariableId: action.dependentVariableId };
+      return { ...state, dependentVariableId: action.dependentVariableId, independentVariableIds: [] };
 
     case SELECT_REGRESSION_INDEPENDENT_VARIABLE:
       var independentVariableIds = state.independentVariableIds.slice();
