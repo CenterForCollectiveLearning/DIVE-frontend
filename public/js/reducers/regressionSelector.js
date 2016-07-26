@@ -73,10 +73,6 @@ export default function regressionSelector(state = baseState, action) {
       return { ...state, regressionType: action.regressionType }
 
     case SELECT_REGRESSION_DEPENDENT_VARIABLE:
-      // const independentVariables = state.fieldProperties
-      //   .filter((property) => property.id != action.dependentVariableId && !( property.generalType == 'c' && property.isUnique ) && !( property.generalType == 'c' && property.uniqueValues.length > 2 ))
-      //   .map((property) => property.id)
-
       return { ...state, dependentVariableId: action.dependentVariableId, independentVariableIds: [] };
 
     case SELECT_REGRESSION_INDEPENDENT_VARIABLE:
@@ -100,14 +96,10 @@ export default function regressionSelector(state = baseState, action) {
       } else {
         interactionTermIds.push(selectedId);
       }
-
-      return { ...state, interactionTermIds: interactionTermIds}
+      
+      return { ...state, interactionTermIds: interactionTermIds};
 
     case RECEIVE_FIELD_PROPERTIES:
-      // const selectedIndependentVariables = action.fieldProperties
-      //   .filter((property) => property.id != state.dependentVariableId && !( property.generalType == 'c' && property.isUnique ) && !( property.generalType == 'c' && property.uniqueValues && property.uniqueValues.length > 2 ))
-      //   .map((property) => property.id);
-
       return { ...state, fieldProperties: action.fieldProperties };
 
     case REQUEST_RUN_REGRESSION:
