@@ -1,8 +1,9 @@
 $white: white
 $black: #212B33 // #333333 // #1B1B1B  // #2a2d33
 
-$left-sidebar-grey: #313F4E // $black // #3A3A41 // #A5A5A5
-$right-sidebar-grey: #CED9E0 // #3A3A41 // #A5A5A5
+$left-sidebar-grey: #313F4E
+$left-sidebar-separator-grey: rgba($white, 0.3)
+$right-sidebar-grey: #CED9E0
 
 $ui-font-grey: #333
 $ui-grey: #CFCFCF
@@ -96,11 +97,10 @@ $secondary-accent: #004491
   background: $light-grey // #F0F0F0
 
 =watermark
-  +smallCaps
+  +titleText
   display: flex
   flex-grow: 1
   justify-content: center
-  font-size: 15px
 
 =block
   padding: 11px

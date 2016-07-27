@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { fetchProjectIfNeeded, createAUID, logoutUser } from '../actions/ProjectActions.js';
+import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions.js';
+import { logoutUser } from '../actions/AuthActions';
 import styles from './App/App.sass';
 
 import DropDownMenu from './Base/DropDownMenu';
@@ -19,6 +20,7 @@ export class ProjectNav extends Component {
   constructor(props) {
     super(props);
 
+    this._logout = this._logout.bind(this);
     this._handleTabsChange = this._handleTabsChange.bind(this);
     this._onClickLogo = this._onClickLogo.bind(this);
     this.onSelectProject = this.onSelectProject.bind(this);
@@ -73,6 +75,10 @@ export class ProjectNav extends Component {
     this.props.push(`/projects`);
   }
 
+  _logout() {
+    const { logoutUser } = this.props;
+    logoutUser();
+  }
 
   onSelectProject(projectId) {
     window.location.href = `/projects/${ projectId }/datasets`;
@@ -120,13 +126,21 @@ export class ProjectNav extends Component {
             <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
           </TabGroup>
         </Tabs>
-        { this.state.projectSettingsModalOpen &&
-          <ProjectSettingsModal
-            projectName={ project.properties.title }
-            projectDescription={ project.properties.description }
-            projectId={ project.properties.id }
-            closeAction={ this.closeProjectSettingsModal.bind(this) }/>
-        }
+        <div className={ styles.bottom }>
+          <div className={ styles.userOptions }>
+            <img className={ styles.picture } src="/assets/images/blank_user.png"/>
+            <div className={ styles.logoutUser } onClick={ this._logout }>
+              <span className={ styles.username }>{ user.username }</span>
+            </div>
+          </div>
+          { this.state.projectSettingsModalOpen &&
+            <ProjectSettingsModal
+              projectName={ project.properties.title }
+              projectDescription={ project.properties.description }
+              projectId={ project.properties.id }
+              closeAction={ this.closeProjectSettingsModal.bind(this) }/>
+          }
+        </div>
       </div>
     );
   }

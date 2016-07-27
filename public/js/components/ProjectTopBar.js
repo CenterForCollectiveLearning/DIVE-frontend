@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import { selectDataset, fetchDatasets } from '../actions/DatasetActions';
 import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions';
-import { logoutUser } from '../actions/AuthActions';
+
 import styles from './App/App.sass';
 
 import DropDownMenu from './Base/DropDownMenu';
@@ -72,10 +72,7 @@ export class ProjectTopBar extends Component {
     }
   }
 
-  _logout() {
-    const { logoutUser } = this.props;
-    logoutUser();
-  }
+
 
   onSelectProject(projectId) {
     window.location.href = `/projects/${ projectId }/datasets`;
@@ -158,12 +155,7 @@ export class ProjectTopBar extends Component {
             </div>
           </div>
         }
-        <div className={ styles.userOptions }>
-          <img className={ styles.picture } src="/assets/images/blank_user.png"/>
-          <div className={ styles.logoutUser } onClick={ this._logout.bind(this) }>
-            Log out of <span className={ styles.username }>{ user.username }</span>
-          </div>
-        </div>
+
         { this.state.projectSettingsModalOpen &&
           <ProjectSettingsModal
             projectName={ project.properties.title }
@@ -198,7 +190,6 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   push,
-  logoutUser,
   fetchDatasets,
   selectDataset,
 })(ProjectTopBar);
