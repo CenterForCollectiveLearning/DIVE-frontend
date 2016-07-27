@@ -109,16 +109,7 @@ export class GalleryView extends Component {
                 { areFieldsSelected &&
                   <div className={ styles.blockSectionHeader }>
                     { areFieldsSelected &&
-                      <span>
-                        <div className={ styles.blockSectionHeaderTitle }>Exact Matches</div>
-                          Including {
-                            selectedFieldProperties.map((field) =>
-                              <span key={ `span-exact-match-title-${ field.name }`} className={ `${ styles.exactTitleField }`}>
-                                { field.name }
-                              </span>
-                            )
-                          }
-                      </span>
+                      <div className={ styles.blockSectionHeaderTitle }>Exact Matches</div>
                     }
                   </div>
                 }
@@ -142,13 +133,7 @@ export class GalleryView extends Component {
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
                   <div className={ styles.blockSectionHeaderTitle }>Close Matches</div>
-                  Including two or more of {
-                  selectedFieldProperties.map((field) =>
-                    <span key={ `span-close-match-title-${ field.name }`} className={ `${ styles.subsetTitleField }`}>
-                      { field.name }
-                    </span>
-                  )
-                }</div>
+                </div>
                 <div className={ styles.specs + ' ' + styles.subset }>
                   { subsetSpecs.map((spec) =>
                     <VisualizationBlock
@@ -170,13 +155,6 @@ export class GalleryView extends Component {
                 <div className={ styles.blockSectionHeader }>
                   <span>
                     <div className={ styles.blockSectionHeaderTitle }>Individual Matches</div>
-                    Including <strong>only</strong> {
-                      selectedFieldProperties.map((field) =>
-                        <span key={ `span-individual-match-title-${ field.name }`} className={ `${ styles.baselineTitleField }` }>
-                          { field.name }
-                        </span>
-                      )
-                    }
                   </span>
                 </div>
                 <div className={ styles.specs + ' ' + styles.baseline }>
@@ -199,13 +177,7 @@ export class GalleryView extends Component {
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
                   <div className={ styles.blockSectionHeaderTitle }>Expanded Matches</div>
-                  Including {
-                  selectedFieldProperties.map((field) =>
-                    <span key={ `span-expanded-match-title-${ field.name }`} className={ `${ styles.expandedTitleField }`}>
-                      { field.name }
-                    </span>
-                  )
-                } with other fields</div>
+                </div>
                 <div className={ styles.specs + ' ' + styles.expanded }>
                   { expandedSpecs.map((spec) =>
                     <VisualizationBlock

@@ -33,13 +33,11 @@
     margin-top: 7px
 
   .fieldGroupLabel
+    +smallCaps
     margin-top: 17px
     margin-bottom: 5px
 
-    font-size: 12px
-    font-weight: 400
-    color: $small-caps-grey
-    text-transform: capitalize
+    text-transform: uppercase
 
 .sortGroup
   display: flex
@@ -285,6 +283,10 @@ div.conditionalCombinator
   display: flex
   flex-direction: column
 
+  &:hover
+    box-shadow: 1px 2px 5px 1px rgba(0, 0, 0, 0.15)
+
+
   .header
     text-align: left
     font-size: 12px
@@ -306,7 +308,7 @@ div.conditionalCombinator
     min-height: 150px
 
   .visualization
-    padding: 11px 0 4px
+    padding: 11px 0 0px
 
     &.tree
       svg
