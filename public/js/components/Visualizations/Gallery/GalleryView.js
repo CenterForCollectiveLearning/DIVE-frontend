@@ -69,7 +69,7 @@ export class GalleryView extends Component {
 
 
   render() {
-    const { specs, filters, datasets, datasetSelector, filteredVisualizationTypes, gallerySelector, exportedSpecs, selectSortingFunction } = this.props;
+    const { specs, filters, datasets, fieldNameToColor, datasetSelector, filteredVisualizationTypes, gallerySelector, exportedSpecs, selectSortingFunction } = this.props;
 
     var selectedFieldProperties = gallerySelector.fieldProperties
       .filter((property) => property.selected);
@@ -91,13 +91,17 @@ export class GalleryView extends Component {
         <div className={ styles.innerSpecsContainer }>
           <HeaderBar
             header={
-              gallerySelector.title.map((construct, i) =>
-                <span
+              gallerySelector.title.map(function(construct, i) {
+                const style = (construct.type == 'field') ? {
+                  'backgroundColor': fieldNameToColor[construct.string]
+                } : {}
+
+                return <span
+                  style={ style }
                   key={ `construct-${ construct.type }-${ i }` }
-                  className={ `${ styles.headerFragment } ${ styles[construct.type] }` }>
-                  { construct.string }
-                </span>
-              )
+                  className={ `${ styles.headerFragment } ${ styles[construct.type] }` }
+                >{ construct.string }</span>
+              })
             }
           />
           <div className={ styles.specContainer }>
@@ -119,6 +123,7 @@ export class GalleryView extends Component {
                       key={ spec.id }
                       spec={ spec }
                       className='exact'
+                      fieldNameToColor={ fieldNameToColor }
                       filteredVisualizationTypes={ filteredVisualizationTypes }
                       exportedSpecs={ exportedSpecs }
                       onClick={ this.onClickVisualization.bind(this) }
@@ -140,6 +145,7 @@ export class GalleryView extends Component {
                       key={ spec.id }
                       spec={ spec }
                       className='subset'
+                      fieldNameToColor={ fieldNameToColor }
                       filteredVisualizationTypes={ filteredVisualizationTypes }
                       exportedSpecs={ exportedSpecs }
                       onClick={ this.onClickVisualization.bind(this) }
@@ -163,6 +169,7 @@ export class GalleryView extends Component {
                       key={ spec.id }
                       spec={ spec }
                       className='baseline'
+                      fieldNameToColor={ fieldNameToColor }
                       filteredVisualizationTypes={ filteredVisualizationTypes }
                       exportedSpecs={ exportedSpecs }
                       onClick={ this.onClickVisualization.bind(this) }
@@ -184,6 +191,7 @@ export class GalleryView extends Component {
                       key={ spec.id }
                       spec={ spec }
                       className='expanded'
+                      fieldNameToColor={ fieldNameToColor }
                       filteredVisualizationTypes={ filteredVisualizationTypes }
                       exportedSpecs={ exportedSpecs }
                       onClick={ this.onClickVisualization.bind(this) }
@@ -217,12 +225,13 @@ GalleryView.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, filters, specs, gallerySelector, datasets, datasetSelector, exportedSpecs } = state;
+  const { project, filters, specs, gallerySelector, fieldProperties, datasets, datasetSelector, exportedSpecs } = state;
   return {
     project,
     filters,
     specs,
     gallerySelector,
+    fieldNameToColor: fieldProperties.fieldNameToColor,
     datasets,
     datasetSelector,
     exportedSpecs

@@ -93,6 +93,12 @@ export class HomePage extends Component {
                       <div className={ styles.projectRight }>
                         <div className={ styles.projectCreationDate }>{ moment(project.creationDate).format('LLL') }</div>
                         <div className={ styles.projectUpdateDate }>{ moment(project.updateDate).format('LLL') }</div>
+                        { project.includedDatasets.map((dataset) =>
+                          <div className={ styles.projectUpdateDate } key={ `project-dataset-${ dataset.id }`}>{ dataset.title }</div>
+                        )}
+                        <div className={ styles.projectUpdateDate }>{ project.numDatasets }</div>
+                        <div className={ styles.projectUpdateDate }>{ project.numSpecs }</div>
+                        <div className={ styles.projectUpdateDate }>{ project.numDocuments }</div>
                       </div>
                     </div>
                   </a>

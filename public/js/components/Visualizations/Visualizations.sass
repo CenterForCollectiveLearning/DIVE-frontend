@@ -5,17 +5,15 @@
   overflow: hidden
 
 .headerFragment
+  margin-right: 2px
   &:first-child
     text-transform: capitalize
 
   &.field
-    font-weight: 500
-    color: $black
-    text-transform: lowercase
-
-    + .field:before
-      content: ','
-      font-weight: 400
+    color: $white
+    background-color: $primary-accent
+    border-radius: 2px
+    padding: 2px 4px
 
   &:nth-last-child(1)
     .field:before

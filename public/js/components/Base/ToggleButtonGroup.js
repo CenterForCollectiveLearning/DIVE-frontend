@@ -5,9 +5,10 @@ import styles from './ToggleButtonGroup.sass';
 
 export default class ToggleButtonGroup extends Component {
   render() {
-    const { className, buttonClassName, toggleItems, altTextMember, valueMember, displayTextMember, imageNameMember, imageNameSuffix, externalSelectedItems, separated, column, splitMenuItemsMember, selectMenuItem, onChange } = this.props;
+    const { className, buttonClassName, colorMember, toggleItems, altTextMember, valueMember, displayTextMember, imageNameMember, imageNameSuffix, externalSelectedItems, separated, column, splitMenuItemsMember, selectMenuItem, onChange } = this.props;
 
     const stringifiedExternalSelectedItems = externalSelectedItems ? externalSelectedItems.map((item) => `${item}`) : null;
+
     return (
       <div className={ styles.toggleButtonGroup + (column ? ' ' + styles.column : '') + (className ? ' ' + className : '') }>
         { toggleItems.map((item) =>
@@ -15,9 +16,10 @@ export default class ToggleButtonGroup extends Component {
             key={ `toggle-${item[valueMember]}` }
             className={ buttonClassName }
             altText={ altTextMember ? item[altTextMember] : item[displayTextMember] }
+            color={ colorMember ? item[colorMember] : null }
             content={ item[displayTextMember] }
             imageName={ imageNameMember ? `/assets/${item[imageNameMember]}${imageNameSuffix}` : null }
-            onChange={ onChange }            
+            onChange={ onChange }
             isDisabled={ item.disabled }
             isSelected={ item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) || false }
             separated={ separated }
@@ -37,6 +39,7 @@ ToggleButtonGroup.propTypes = {
   onChange: PropTypes.func.isRequired,
   valueMember: PropTypes.string.isRequired,
   altTextMember: PropTypes.string,
+  colorMember: PropTypes.string,
   displayTextMember: PropTypes.string.isRequired,
   splitMenuItemsMember: PropTypes.string,
   imageNameMember: PropTypes.string,

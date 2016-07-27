@@ -52,7 +52,7 @@ export default class Visualization extends Component {
         treemap: 400
       }
     }
-    const { data, bins, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
+    const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
 
     const labels = spec.meta.labels ? spec.meta.labels : {};
 
@@ -273,9 +273,17 @@ export default class Visualization extends Component {
       <div className={ containerClassName } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
           <div className={ headerClassName }>
-            { spec.meta.construction.map((construct, i) =>
-              <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>
-            )}
+            { spec.meta.construction.map(function(construct, i) {
+              const style = (construct.type == 'field') ? {
+                'backgroundColor': fieldNameToColor[construct.string]
+              } : {}
+
+              return <span
+                style={ style }
+                key={ `construct-${ construct.type }-${ i }` }
+                className={ `${styles.headerFragment} ${styles[construct.type]}`
+              }>{ construct.string }</span>
+            })}
             { (tooMuchDataToPreview || tooMuchDataToShowFull) &&
               <span className={ `${styles.headerFragment} ${styles.tooMuchData}` }>
                 ({ tooMuchDataString })
@@ -379,5 +387,6 @@ Visualization.defaultProps = {
   showHeader: false,
   visualizationTypes: [],
   sortOrders: [],
-  sortFields: []
+  sortFields: [],
+  fieldNameToColor: {}
 };

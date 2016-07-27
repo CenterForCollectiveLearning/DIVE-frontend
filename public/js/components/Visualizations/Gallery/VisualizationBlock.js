@@ -16,12 +16,13 @@ export default class VisualizationBlock extends Component {
   }
 
   render() {
-    const { spec, exportedSpecs, filteredVisualizationTypes, className } = this.props;
+    const { spec, exportedSpecs, fieldNameToColor, filteredVisualizationTypes, className } = this.props;
 
     return (
       <div className={ styles.visualizationBlocksContainer + ' ' + ( styles[className] || '') }>
         <Visualization
           visualizationTypes={ filteredVisualizationTypes }
+          fieldNameToColor={ fieldNameToColor ? fieldNameToColor : {} }
           spec={ spec }
           data={ spec.data.visualize }
           bins={ spec.data.bins }
@@ -38,6 +39,7 @@ export default class VisualizationBlock extends Component {
 
 VisualizationBlock.propTypes = {
   spec: PropTypes.object.isRequired,
+  fieldNameToColor: PropTypes.object,
   className: PropTypes.string,
   filteredVisualizationTypes: PropTypes.array.isRequired,
   exportedSpecs: PropTypes.object.isRequired,

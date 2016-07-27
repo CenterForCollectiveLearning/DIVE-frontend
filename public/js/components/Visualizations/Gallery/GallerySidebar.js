@@ -122,11 +122,13 @@ export class GallerySidebar extends Component {
                       id: item.id,
                       name: item.name,
                       selected: item.selected,
-                      disabled: item.isId
+                      disabled: item.isId,
+                      color: item.color
                     })
                   )}
                   displayTextMember="name"
                   valueMember="id"
+                  colorMember="color"
                   splitMenuItemsMember="values"
                   separated={ true }
                   selectMenuItem={ this.clickFieldPropertyValue }
@@ -137,9 +139,18 @@ export class GallerySidebar extends Component {
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Temporal</div>
                 <ToggleButtonGroup
-                  toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 't') }
+                  toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 't').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      selected: item.selected,
+                      disabled: item.isId,
+                      color: item.color
+                    })
+                  )}
                   displayTextMember="name"
                   valueMember="id"
+                  colorMember="color"
                   separated={ true }
                   selectMenuItem={ selectAggregationFunction }
                   onChange={ this.clickFieldProperty } />
@@ -154,11 +165,13 @@ export class GallerySidebar extends Component {
                       id: item.id,
                       name: item.name,
                       selected: item.selected,
-                      disabled: item.isId
+                      disabled: item.isId,
+                      color: item.color
                     })
                   )}
                   displayTextMember="name"
                   valueMember="id"
+                  colorMember="color"
                   splitMenuItemsMember="aggregations"
                   separated={ true }
                   selectMenuItem={ selectAggregationFunction }

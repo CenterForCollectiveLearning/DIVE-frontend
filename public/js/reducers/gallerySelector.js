@@ -101,7 +101,7 @@ export default function gallerySelector(state = baseState, action) {
     },
     {
       type: 'plain',
-      string: ' of'
+      string: 'of'
     }
   ];
 
@@ -173,7 +173,7 @@ export default function gallerySelector(state = baseState, action) {
         .filter((property) => property.selected)
         .map((property) =>
           new Object({
-            string: ` ${ property.name }`,
+            string: `${ property.name }`,
             type: 'field'
           })
       );
