@@ -133,6 +133,19 @@ export default function gallerySelector(state = baseState, action) {
       return { ...state, isFetching: true };
 
     case RECEIVE_FIELD_PROPERTIES:
+      var selectedPropertyStrings = action.fieldProperties
+        .filter((property) => property.selected)
+        .map((property) =>
+          new Object({
+            string: `${ property.name }`,
+            type: 'field'
+          })
+      );
+
+      var title = selectedPropertyStrings.length ?
+        [ ...titleVisualizationStrings, ...selectedPropertyStrings ]
+        : defaultTitle;
+
       return {
         ...state,
         isFetching: false,
@@ -141,6 +154,7 @@ export default function gallerySelector(state = baseState, action) {
         fieldProperties: action.fieldProperties,
         originalFieldProperties: action.fieldProperties,
         sortingFunctions: SORTING_FUNCTIONS,
+        title: title,
         updatedAt: action.receivedAt
       };
 
@@ -158,7 +172,7 @@ export default function gallerySelector(state = baseState, action) {
       return { ...state, specs: allSpecs.sort(defaultSortSpecs) };
 
     case SELECT_FIELD_PROPERTY:
-      const fieldProperties = state.fieldProperties.map((property) =>
+      var fieldProperties = state.fieldProperties.map((property) =>
         (property.id == action.selectedFieldPropertyId) ?
           new Object({
             ...property,
@@ -169,7 +183,7 @@ export default function gallerySelector(state = baseState, action) {
           : property
       );
 
-      const selectedPropertyStrings = fieldProperties
+      var selectedPropertyStrings = fieldProperties
         .filter((property) => property.selected)
         .map((property) =>
           new Object({
