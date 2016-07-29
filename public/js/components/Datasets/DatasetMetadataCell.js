@@ -26,12 +26,14 @@ export class DatasetMetadataCell extends Component {
   }
 
   render() {
-    const { projectId, datasetId, fieldProperty } = this.props;
+    const { projectId, datasetId, fieldProperty, color } = this.props;
     const { id, generalType, vizData, typeScores, isId, isChild, isUnique, stats, uniqueValues } = fieldProperty;
     this.state.isId = isId;
 
+    const colors = [ color ];
     const showTypeScores = false;
     var options = {
+      colors: colors,
       backgroundColor: 'transparent',
       headerColor: 'white',
       headerHeight: 0,
@@ -102,7 +104,7 @@ export class DatasetMetadataCell extends Component {
 
     const categoricalOptions = {
       ...options,
-      colors: ['#78C466'],
+      // colors: ['#78C466'],
       vAxis: {
         minValue: 0,
       }
@@ -113,7 +115,7 @@ export class DatasetMetadataCell extends Component {
       tooltip: {
         isHtml: true
       },
-      colors: ['#579AD6']
+      // colors: ['#579AD6']
     }
 
     const temporalOptions = {
@@ -121,7 +123,7 @@ export class DatasetMetadataCell extends Component {
       tooltip: {
         isHtml: true
       },
-      colors: ['#F3595C']
+      // colors: ['#F3595C']
     }
 
     let fieldContent;
@@ -235,7 +237,8 @@ export class DatasetMetadataCell extends Component {
 }
 
 DatasetMetadataCell.propTypes = {
-  fieldProperty: PropTypes.object
+  fieldProperty: PropTypes.object,
+  color: PropTypes.string
 }
 
 DatasetMetadataCell.defaultProps = {
