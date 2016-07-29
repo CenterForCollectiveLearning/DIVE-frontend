@@ -12,18 +12,8 @@ export default class Histogram extends Component {
 
     var finalData = data;
 
-    var hashElements;
-    if (labels && labels.x && labels.y) {
-      hashElements = [labels.x, labels.y];
-    } else {
-      hashElements = [finalData[0][0], finalData[0][1]];
-    }
-
-    const colors = getPalette(hashElements);
-
     const fullHistogramOptions = {
       ...options,
-      colors: colors,
       hAxis: {
         title: labels && labels.x ? labels.x : finalData[0][0],
         ticks: bins,

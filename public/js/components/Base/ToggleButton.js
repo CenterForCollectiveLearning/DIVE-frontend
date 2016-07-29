@@ -10,7 +10,7 @@ export default class ToggleButton extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.selectMenuItem = this.selectMenuItem.bind(this);
-  } 
+  }
 
   handleClick (event) {
     this.props.onChange(this.props.value);
@@ -46,6 +46,7 @@ export default class ToggleButton extends Component {
         + (this.props.splitMenu.length > 0 ? ' ' + styles.splitButton : '')}>
         <div
           data-selected={ this.props.isSelected ? true : undefined }
+          style={ this.props.color ? { 'borderLeft': `3px solid ${ this.props.color}` } : {} }
           className={
             styles.toggleButton + ' ' + styles.raisedButton
             + (this.props.isSelected ? ' ' + styles.selected : '')
@@ -53,7 +54,7 @@ export default class ToggleButton extends Component {
           }
           onClick={ this.handleClick }
           title={ this.props.altText }>
-          { this.props.imageName ? 
+          { this.props.imageName ?
             <img
               src={ this.props.imageName }
               alt={ this.props.altText } />
@@ -80,6 +81,7 @@ export default class ToggleButton extends Component {
 ToggleButton.propTypes = {
   className: PropTypes.string,
   altText: PropTypes.string,
+  color: PropTypes.string,
   content: PropTypes.any,
   imageName: PropTypes.string,
   onChange: PropTypes.func.isRequired,

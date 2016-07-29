@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
+import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectFieldPropertyValue, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
-import { selectVisualizationType } from '../../../actions/VisualizationActions';
+import { selectVisualizationType, selectSortingFunction } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
 import _ from 'underscore';
@@ -70,10 +71,35 @@ export class GallerySidebar extends Component {
   }
 
   render() {
-    const { visualizationTypes, datasetSelector, gallerySelector, filters, selectVisualizationType, selectFieldPropertyValue, selectFieldProperty, selectAggregationFunction } = this.props;
+    const {
+      visualizationTypes,
+      datasets,
+      datasetSelector,
+      gallerySelector,
+      filters,
+      filteredVisualizationTypes,
+      selectVisualizationType,
+      selectFieldPropertyValue,
+      selectFieldProperty,
+      selectAggregationFunction,
+      selectSortingFunction
+    } = this.props;
+
+    const filteredSpecs = gallerySelector.specs.filter((spec) =>
+      (filteredVisualizationTypes.length == 0) || filteredVisualizationTypes.some((filter) =>
+        spec.vizTypes.indexOf(filter) >= 0
+      )
+    );
 
     return (
       <Sidebar>
+        <SidebarGroup heading="Sort By">
+          <DropDownMenu
+            options={ gallerySelector.sortingFunctions }
+            valueMember="value"
+            displayTextMember="label"
+            onChange={ selectSortingFunction } />
+        </SidebarGroup>
         { visualizationTypes.length > 1 &&
           <SidebarGroup heading="Filter Visualization type">
             <ToggleButtonGroup
@@ -96,11 +122,13 @@ export class GallerySidebar extends Component {
                       id: item.id,
                       name: item.name,
                       selected: item.selected,
-                      disabled: item.isId
+                      disabled: item.isId,
+                      color: item.color
                     })
                   )}
                   displayTextMember="name"
                   valueMember="id"
+                  colorMember="color"
                   splitMenuItemsMember="values"
                   separated={ true }
                   selectMenuItem={ this.clickFieldPropertyValue }
@@ -111,9 +139,18 @@ export class GallerySidebar extends Component {
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Temporal</div>
                 <ToggleButtonGroup
-                  toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 't') }
+                  toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 't').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      selected: item.selected,
+                      disabled: item.isId,
+                      color: item.color
+                    })
+                  )}
                   displayTextMember="name"
                   valueMember="id"
+                  colorMember="color"
                   separated={ true }
                   selectMenuItem={ selectAggregationFunction }
                   onChange={ this.clickFieldProperty } />
@@ -128,11 +165,13 @@ export class GallerySidebar extends Component {
                       id: item.id,
                       name: item.name,
                       selected: item.selected,
-                      disabled: item.isId
+                      disabled: item.isId,
+                      color: item.color
                     })
                   )}
                   displayTextMember="name"
                   valueMember="id"
+                  colorMember="color"
                   splitMenuItemsMember="aggregations"
                   separated={ true }
                   selectMenuItem={ selectAggregationFunction }
@@ -152,13 +191,21 @@ GallerySidebar.propTypes = {
   gallerySelector: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
   queryFields: PropTypes.array.isRequired,
-  visualizationTypes: PropTypes.array.isRequired
+  visualizationTypes: PropTypes.array.isRequired,
+  filteredVisualizationTypes: PropTypes.array.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, gallerySelector, filters } = state;
+  const {
+    project,
+    datasets,
+    datasetSelector,
+    gallerySelector,
+    filters
+  } = state;
   return {
     project,
+    datasets,
     datasetSelector,
     gallerySelector,
     filters
@@ -171,5 +218,8 @@ export default connect(mapStateToProps, {
   selectFieldProperty,
   selectFieldPropertyValue,
   selectAggregationFunction,
+  selectSortingFunction,
+  fetchDatasets,
+  selectDataset,
   push
 })(GallerySidebar);

@@ -8,9 +8,10 @@ import CorrelationView from './CorrelationView';
 export class CorrelationPage extends Component {
   render() {
     return (
-      <div className={ `${ styles.fillContainer } ${ styles.summaryContainer }` }>
+      <div className={ `${ styles.fillContainer } ${ styles.correlationContainer }` }>
         <CorrelationView />
         <CorrelationSidebar />
+        { this.props.children }
       </div>
     );
   }

@@ -2,7 +2,7 @@
 @import '../../../css/flexbox.sass'
 
 .datasetPageContainer, .datasetContainer
-  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
+  background-color: $center-grey
   overflow: hidden
 
 .uploadingZone
@@ -11,16 +11,7 @@
   justify-content: center
 
 .watermark
-  +montserrat
-  display: flex
-
-  justify-content: center
-
-  text-transform: uppercase
-  font-weight: 500
-  letter-spacing: 1px
-  font-size: 16px
-  color: #999
+  +watermark
 
 .errorDescription
   display: flex
@@ -52,10 +43,10 @@
     justify-content: center
 
     span
+      color: #2a2d33
       font-size: 12px
-      letter-spacing: 1px
+      font-weight: 400
       line-height: 35px
-      text-transform: uppercase
 
 .cellContent
   display: flex
@@ -114,11 +105,12 @@
 .headerRowTable, .metadataRowTable
   .row
     .cell
-      background-color: rgba(243, 243, 243, 0.7)
+      background-color: white
       border: 1px solid #CCCCCC
       border-left-width: 0
       border-top-color: #C0C0C0
       border-bottom-color: #CDCDCD
+      border-bottom-width: 2px
 
       font-weight: 500
       padding: 5px 10px 4px
@@ -132,13 +124,14 @@
 .headerRowTable
   .row
     .cell
-      border-bottom: 0px
+      border-bottom: 1px solid $ui-line-grey
+      background-color: $ui-header-grey
 
 .metadataRowTable
   .row
     .cell
       position: relative
-      padding-top: 0px
+      padding-top: 5px
       font-weight: 400
       border-top: 0px
       height: 170px

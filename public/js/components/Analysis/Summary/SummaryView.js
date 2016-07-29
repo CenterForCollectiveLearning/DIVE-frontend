@@ -72,13 +72,6 @@ export class SummaryView extends Component {
     }
   }
 
-  clickDataset(datasetId) {
-    const { projectId, clearAnalysis, selectDataset, push } = this.props;
-    clearAnalysis();
-    selectDataset(projectId, datasetId);
-    push(`/projects/${ projectId }/datasets/${ datasetId }/analyze/summary`);
-  }
-
   render() {
     const { aggregationResult, summaryResult, oneDimensionComparisonResult, aggregationIndependentVariableNames, datasets, datasetId } = this.props;
 
@@ -163,22 +156,6 @@ export class SummaryView extends Component {
 
     return (
       <div className={ styles.summaryViewContainer }>
-        <HeaderBar
-          header="Summary Statistics"
-          actions={
-            datasets.items && datasets.items.length > 0 ?
-              <div className={ styles.headerControl }>
-                <DropDownMenu
-                  prefix="Dataset"
-                  width={ 240 }
-                  value={ parseInt(datasetId) }
-                  options={ datasets.items }
-                  valueMember="datasetId"
-                  displayTextMember="title"
-                  onChange={ this.clickDataset.bind(this) } />
-              </div>
-            : ''
-          }/>
         { summaryContent }
       </div>
     );

@@ -8,10 +8,13 @@ import {
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
+import { getFieldColorsPalette } from '../helpers/helpers'
+
 const baseState = {
   isFetching: false,
   loaded: false,
   items: [],
+  fieldNameToColor: {},
   interactionTerms: [],
   datasetId: null,
   updatedAt: 0
@@ -23,13 +26,21 @@ export default function fieldProperties(state=baseState, action) {
       return { ...state, isFetching: true };
 
     case RECEIVE_FIELD_PROPERTIES:
-      return { 
-        ...state, 
-        loaded: true, 
-        isFetching: false, 
-        interactionTerms: action.interactionTerms, 
-        items: action.fieldProperties, 
-        datasetId: action.datasetId, 
+      const fieldProperties = action.fieldProperties;
+      var fieldNameToColor = {};
+      for (var i in fieldProperties) {
+        var fieldProperty = fieldProperties[i];
+        fieldNameToColor[fieldProperty['name']] = fieldProperty['color'];
+      }
+
+      return {
+        ...state,
+        loaded: true,
+        isFetching: false,
+        fieldNameToColor: fieldNameToColor,
+        interactionTerms: action.interactionTerms,
+        items: action.fieldProperties,
+        datasetId: action.datasetId,
         updatedAt: action.receivedAt
       };
 

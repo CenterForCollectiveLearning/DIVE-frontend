@@ -94,18 +94,18 @@ export class ComposeView extends Component {
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
-                <RaisedButton icon altText="Delete document" onClick={ this.onClickDeleteDocument } disabled={ documents.items.length <= 1 }><i className="fa fa-trash"></i></RaisedButton>
+                <RaisedButton marginTop icon altText="Delete document" onClick={ this.onClickDeleteDocument } disabled={ documents.items.length <= 1 }><i className="fa fa-trash"></i></RaisedButton>
               </div>
               <div className={ styles.headerControl }>
-                <RaisedButton icon altText="New document" onClick={ this.onClickNewDocument }><i className="fa fa-file-o"></i></RaisedButton>
+                <RaisedButton marginTop icon altText="New document" onClick={ this.onClickNewDocument }><i className="fa fa-file-o"></i></RaisedButton>
               </div>
               <div className={ styles.headerControl }>
-                <RaisedButton onClick={ this.onClickShareDocument }>Share</RaisedButton>
+                <RaisedButton marginTop onClick={ this.onClickShareDocument }>Share</RaisedButton>
               </div>
               { !documents.isFetching && documents.items.length > 0 &&
                 <div className={ styles.headerControl + ' ' + styles.headerControlLong }>
                   <DropDownMenu
-                    prefix="Document"
+                    label="Document"
                     width={ 250 }
                     className={ styles.documentSelector }
                     value={ parseInt(composeSelector.documentId) }

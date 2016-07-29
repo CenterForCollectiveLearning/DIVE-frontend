@@ -70,13 +70,6 @@ export class ComparisonView extends Component {
     }
   }
 
-  clickDataset(datasetId) {
-    const { projectId, clearAnalysis, selectDataset, push } = this.props;
-    clearAnalysis();
-    selectDataset(projectId, datasetId);
-    push(`/projects/${ projectId }/datasets/${ datasetId }/analyze/regression`);
-  }
-
   render() {
     const { datasets, datasetId, numericalComparisonResult, independentVariableNames, dependentVariableNames, anovaResult, anovaBoxplotData, canRunNumericalComparisonDependent, canRunNumericalComparisonIndependent } = this.props;
     const atLeastTwoVariablesSelectedOfOneType = independentVariableNames.length >= 2 || dependentVariableNames.length >= 2;
@@ -126,26 +119,6 @@ export class ComparisonView extends Component {
 
     return (
       <div className={ styles.regressionViewContainer }>
-        <HeaderBar
-          header={ 'Comparison' }
-          actions={
-            <div className={ styles.headerControlRow }>
-              <div className={ styles.headerControl }>
-                { datasets.items && datasets.items.length > 0 ?
-                  <div className={ styles.headerControl }>
-                    <DropDownMenu
-                      prefix="Dataset"
-                      width={ 240 }
-                      value={ parseInt(datasetId) }
-                      options={ datasets.items }
-                      valueMember="datasetId"
-                      displayTextMember="title"
-                      onChange={ this.clickDataset.bind(this) } />
-                  </div>
-              : '' }
-            </div>
-          </div>
-        }/>
         <div className={ styles.aggregationViewContainer }>
           { comparisonContent }
         </div>

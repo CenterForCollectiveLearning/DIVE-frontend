@@ -5,7 +5,10 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
+import ProjectButton from '../Base/ProjectButton';
 import RaisedButton from '../Base/RaisedButton';
+import Footer from './Footer';
+
 
 export class ProjectListPage extends Component {
   componentWillMount() {
@@ -17,7 +20,7 @@ export class ProjectListPage extends Component {
   componentWillReceiveProps(nextProps) {
     const nextProjectId = nextProps.project.properties.id;
     const nextUserId = nextProps.userId;
-
+``
     if (this.props.project.properties.id != nextProjectId) {
       this.props.wipeProjectState();
       this.props.push(`/projects/${ nextProjectId }/datasets/upload`);
@@ -39,8 +42,9 @@ export class ProjectListPage extends Component {
   }
 
   render() {
-    const { projects, userId } = this.props;
+    const { projects, userId, user } = this.props;
     const { userProjects, preloadedProjects } = projects;
+
     return (
       <DocumentTitle title='DIVE | Projects'>
         <div className={ styles.centeredFill }>
@@ -57,34 +61,36 @@ export class ProjectListPage extends Component {
             <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
               <div className={ styles.projectTypeContainer }>
                 <div className={ styles.flexbox }>
-                  <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Your projects:</div>
+                  <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Your projects</div>
                 </div>
                 <div className={ styles.projectListContainer }>
                   { projects.isFetching &&
                     <div className={ styles.watermark }>Fetching projects...</div>
                   }
-                  { userProjects.slice(0, 6).map((project) =>
-                    <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
+                  { userProjects.reverse().map((project) =>
+                    <ProjectButton project={ project } key={ `project-button-id-${ project.id }` }/>
                   )}
                 </div>
               </div>
             </div>
           }
-          <div className={ styles.projectsContainer + ' ' + styles.preloadedProjectsContainer }>
-            <div className={ styles.projectTypeContainer }>
-              <div className={ styles.flexbox }>
-                <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Or explore preloaded projects:</div>
-              </div>
-              <div className={ styles.projectListContainer }>
-                { projects.isFetching &&
-                  <div className={ styles.watermark }>Fetching projects...</div>
-                }
-                { preloadedProjects.map((project) =>
-                  <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
-                )}
+          { preloadedProjects.length > 0 &&
+            <div className={ styles.projectsContainer + ' ' + styles.preloadedProjectsContainer }>
+              <div className={ styles.projectTypeContainer }>
+                <div className={ styles.flexbox }>
+                  <div className={ styles.secondaryCopy + ' ' + styles.emphasis }>Preloaded projects</div>
+                </div>
+                <div className={ styles.projectListContainer }>
+                  { projects.isFetching &&
+                    <div className={ styles.watermark }>Fetching projects...</div>
+                  }
+                  { preloadedProjects.map((project) =>
+                    <ProjectButton project={ project } key={ `project-button-id-${ project.id }` }/>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          }
         </div>
       </DocumentTitle>
     );
@@ -94,7 +100,7 @@ export class ProjectListPage extends Component {
 
 function mapStateToProps(state) {
   const { project, projects, user } = state;
-  return { project, projects, userId: user.id };
+  return { project, projects, user: user, userId: user.id };
 }
 
 export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, push })(ProjectListPage);

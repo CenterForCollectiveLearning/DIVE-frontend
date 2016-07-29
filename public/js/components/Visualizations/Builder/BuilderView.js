@@ -58,11 +58,11 @@ export class BuilderView extends Component {
   }
 
   render() {
-    const { visualization } = this.props;
+    const { visualization, fieldNameToColor } = this.props;
     const disabled = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
 
     return (
-      <VisualizationView visualization={ visualization }>
+      <VisualizationView visualization={ visualization } fieldNameToColor={ fieldNameToColor }>
         <div className={ styles.headerControlRow }>
           <div className={ styles.headerControl }>
             <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
@@ -93,10 +93,11 @@ BuilderView.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, visualization, gallerySelector } = state;
+  const { project, datasetSelector, fieldProperties, visualization, gallerySelector } = state;
   return {
     project,
     datasetSelector,
+    fieldNameToColor: fieldProperties.fieldNameToColor,
     visualization,
     gallerySelector
   }

@@ -8,7 +8,8 @@ import { logoutUser } from '../../actions/AuthActions'
 import Link from '../Base/Link';
 import HomePage from './HomePage';
 
-var Logo = require('babel!svg-react!../../../assets/DIVE_logo_white.svg?name=Logo');
+import Logo from '../../../assets/DIVE_logo_white.svg?name=Logo';
+
 
 export class LandingPage extends Component {
   componentWillMount() {
@@ -50,10 +51,10 @@ export class LandingPage extends Component {
               </div>
               <div className={ styles.topRightControls }>
                 { user && user.username &&
-                  <span>{ user.username }<span className={ styles.separater }> | </span><Link onClick={ this.props.logoutUser }>Sign out</Link></span>
+                  <span>{ user.username }<span className={ styles.separater }> | </span><Link onClick={ this.props.logoutUser }>Sign Out</Link></span>
                 }
                 { (!user || !user.username) &&
-                  <Link route="/login">Sign in</Link>
+                  <Link route="/login">Log In</Link>
                 }
               </div>
 

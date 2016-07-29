@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
+import { fetchDatasets } from '../../actions/DatasetActions';
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
@@ -16,10 +17,22 @@ export class DatasetUploadPage extends Component {
     this.onOpenClick = this.onOpenClick.bind(this);
   }
 
+  componentWillMount() {
+    const { project, datasets, params, fetchDatasets, fetchFieldPropertiesIfNeeded } = this.props;
+
+    if (project.properties.id && !datasets.fetchedAll && !datasets.isFetching) {
+      fetchDatasets(params.projectId, false);
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
-    const { datasetSelector, push, params } = nextProps;
+    const { project, datasets, datasetSelector, push, params, fetchDatasets } = nextProps;
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
       push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+    }
+
+    if (project.properties.id && !datasets.fetchedAll && !datasets.isFetching) {
+      fetchDatasets(params.projectId, false);
     }
   }
 
@@ -35,9 +48,6 @@ export class DatasetUploadPage extends Component {
     const { datasetSelector } = this.props;
     return (
       <div className={ styles.fillContainer }>
-        <HeaderBar
-          header="Upload Dataset"
-        />
         <div
           className={ styles.datasetUploadBox }>
           { datasetSelector.isUploading &&
@@ -67,13 +77,18 @@ export class DatasetUploadPage extends Component {
 
 DatasetUploadPage.propTypes = {
   project: PropTypes.object.isRequired,
+  datasets: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object
 };
 
 
 function mapStateToProps(state) {
-  const { project, datasetSelector } = state;
-  return { project, datasetSelector };
+  const { project, datasets, datasetSelector } = state;
+  return { project, datasets, datasetSelector };
 }
 
-export default connect(mapStateToProps, { uploadDataset, push })(DatasetUploadPage);
+export default connect(mapStateToProps, {
+  uploadDataset,
+  fetchDatasets,
+  push
+})(DatasetUploadPage);

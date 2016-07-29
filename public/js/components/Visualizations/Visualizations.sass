@@ -5,19 +5,28 @@
   overflow: hidden
 
 .headerFragment
+  margin-right: 3px
   &:first-child
     text-transform: capitalize
 
   &.field
+    color: $white
+    background-color: $primary-accent
+    border-radius: 2px
+    padding: 2px 4px
     font-weight: 500
-    color: #444444
-    text-transform: lowercase
 
-    + .field:before
-      content: ','
+    &.whiteFont
+      color: $white
+    &.blackFont
+      color: $black
+
+  &:nth-last-child(1)
+    .field:before
+      content: ', and'
 
   &.operation, &.plain, &.transformation, &.tooMuchData
-    color: #6A6A6A
+    color: $left-sidebar-grey
 
 .fieldGroup
   &:first-child
@@ -28,12 +37,10 @@
     margin-top: 7px
 
   .fieldGroupLabel
+    +smallCaps
     margin-top: 17px
-    margin-bottom: 10px
+    margin-bottom: 5px
 
-    font-size: 11px
-    font-weight: 500
-    color: #999
     text-transform: uppercase
 
 .sortGroup
@@ -117,11 +124,10 @@ div.conditionalCombinator
       margin-top: -6px
 
 .galleryContainer, .builderContainer
+  background-color: $center-grey
   display: flex
   flex-direction: row
   overflow: hidden
-
-  background: linear-gradient(to bottom right, #F8EEEE, #F1EDF6)
 
 .watermark
   +watermark
@@ -141,7 +147,7 @@ div.conditionalCombinator
   .chartsContainer
     +fillContainer
     padding: 10px
-    background-color: rgba(255, 255, 255, 0.1)
+    background-color: $white
 
   .innerVisualizationViewContainer
     +fillContainer
@@ -202,20 +208,18 @@ div.conditionalCombinator
       flex-grow: 1
 
       .blockSectionHeader
+        +smallCaps
         margin: 5px 15px 0
         padding-left: 8px
         padding-bottom: 3px
-        line-height: 18px
-        font-size: 12px
-        color: #666
-        font-weight: 300
-        border-bottom: 1px solid #CCCCCC
+        border-bottom: 1px solid $ui-line-grey
+        color: $black
 
         .blockSectionHeaderTitle
           text-transform: uppercase
-          color: #414141
+          color: $small-caps-grey
           font-weight: 600
-          font-size: 12px
+          font-size: 11px
 
         strong
           font-weight: 500
@@ -234,13 +238,14 @@ div.conditionalCombinator
         align-content: flex-start
         flex-grow: 1
         margin-bottom: 5px
+        padding: 5px 10px
 
 .visualizationBlocksContainer
   display: flex
   flex-direction: column
   position: relative
 
-  padding: 15px
+  padding: 5px
 
   &.exact
     width: 50%
@@ -254,12 +259,13 @@ div.conditionalCombinator
   &:hover .starContainer i
     opacity: 0.5
 
+
   .starContainer
     position: absolute
-    top: 27px
-    right: 27px
+    top: 15px
+    right: 18px
     font-size: 13px
-    color: orangered
+    color: orange
     cursor: pointer
 
     i
@@ -277,16 +283,24 @@ div.conditionalCombinator
 
 .visualizationBlock
   +block
+  padding: 0px
   display: flex
   flex-direction: column
 
+  &:hover
+    box-shadow: 1px 2px 5px 1px rgba(0, 0, 0, 0.15)
+
+
   .header
-    margin-top: 1px
-    padding-right: 13px
-    padding-left: 13px
-    font-size: 13px
+    text-align: left
+    font-size: 12px
     overflow: hidden
     text-overflow: ellipsis
+    padding-left: 15px
+    padding-top: 10px
+    padding-bottom: 10px
+    border-bottom: 1px solid $ui-line-grey
+    background-color: $ui-header-grey
 
   .overflowText
     display: flex
@@ -298,7 +312,7 @@ div.conditionalCombinator
     min-height: 150px
 
   .visualization
-    padding: 11px 0 4px
+    padding: 11px 0 0px
 
     &.tree
       svg

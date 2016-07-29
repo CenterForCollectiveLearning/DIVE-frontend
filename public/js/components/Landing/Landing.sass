@@ -5,6 +5,34 @@
   color: white
   overflow-y: auto
 
+  .header
+    display: flex
+    background-color: rgba(0, 0, 0, 0.75)
+    // position: fixed
+    width: 100%
+    padding: 5px 40px 0
+    height: 70px
+    min-height: 70px
+
+    .logoContainer
+      display: flex
+      flex-direction: row
+      padding-top: 4px
+      padding-right: 30px
+      cursor: pointer
+      opacity: 0.86
+
+      .logo
+        width: 30px
+        height: 38px
+        margin-left: 10px
+        margin-top: 7px
+
+      .logoText
+        font-size: 40px
+        font-weight: 600
+        margin-top: 4px
+
 .landingPageContent
   z-index: 10
   justify-content: center
@@ -17,8 +45,45 @@
     display: flex
     flex-direction: column
 
+.background
+  position: absolute
+
+  top: 0
+  left: 0
+  right: 0
+  height: 100vh
+
+  opacity: 0.95
+  background: black
+  background-size: cover
+  background-position: 50% 0%
+
+.videoContainer
+  margin-top: 40px
+  margin-bottom: -100px
   &:before
-    background: url("http://i.imgur.com/rqcfgEV.jpg") no-repeat
+    content: ''
+    width: 700px
+    height: 262px
+    position: absolute
+    background-color: rgba(0, 0, 0, 0.2)
+
+  .video
+    width: 700px
+
+.ctaBox
+  display: flex
+  // margin-top: 70px
+  padding-bottom: 0px
+  width: 100%
+
+  background-color: rgba(0, 0, 0, 0.75)
+
+  flex-direction: column
+  align-items: center
+  flex-shrink: 0
+  &:before
+    background: url(../../../assets/images/landing_background.png) no-repeat
     background-size: cover
     background-position: 50% 0%
     opacity: 0.7
@@ -31,66 +96,10 @@
     content: ""
     z-index: -1
 
-  &:after
-    content: ""
-    position: absolute
-    top: 0
-    left: 0
-    height: 100%
-    width: 100%
-    z-index: -1
-
-    opacity: 0.2
-    background-color: transparent
-    background-image: linear-gradient(0deg, transparent 24%, #646FB7 25%, #646FB7 26%, transparent 27%, transparent 74%, #646FB7 75%, #646FB7 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, #646FB7 25%, transparent 26%, transparent 74%, #646FB7 75%, transparent 76%, transparent)
-    background-size: 150px 50px
-
-.background
-  position: absolute
-  top: 0
-  left: 0
-  right: 0
-  height: 100vh
-
-  background: linear-gradient(to bottom right, #3A3147, #1A2E56)
-  background-size: cover
-  background-position: 50% 0%
-
-.header
-  display: flex
-  flex-direction: row
-  position: relative
-  width: 100%
-  padding: 25px 40px 0
-
-  .logoContainer
-    display: flex
-    flex-direction: row
-    padding-right: 30px
-    cursor: pointer
-    opacity: 0.86
-
-    .logo
-      width: 30px
-      height: 38px
-      margin-left: 10px
-      margin-top: 17px
-
-    .logoText
-      font-size: 44px
-      font-weight: 600
-      margin-top: 11px
-
-.ctaBox
-  display: flex
-
-  flex-direction: column
-  max-width: 800px
-  align-items: center
-  flex-shrink: 0
 
   .primaryCopy, .secondaryCopy
     font-family: 'Roboto Condensed', 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
+    text-align: center
 
   .primaryCopy
     display: flex
@@ -118,17 +127,12 @@
     margin: 15px auto
 
     .uploadButton
-      height: 67px
-      line-height: 67px
+      height: 50px
+      line-height: 50px
       font-weight: 600
 
-      background-color: hsl(10, 84%, 60%)
       padding: 0 60px
       font-size: 24px
-      border-radius: 40px
-
-      &:hover
-        background-color: hsl(10, 84%, 50%)
 
     .videoContainer
       height: 360px
@@ -138,32 +142,6 @@
       iframe
         border: none
 
-.projectButton
-  +montserrat
-  display: flex
-  width: 27%
-  min-height: 80px
-  padding: 11px 16px
-  margin: 0 3% 20px 0
-
-  align-items: center
-  justify-content: center
-  text-align: center
-
-  border: 1px solid hsl(219, 65%, 78%)
-  background-color: hsla(0, 0%, 100%, 0.11)
-  font-size: 15px
-  text-transform: uppercase
-  letter-spacing: 1px
-
-  cursor: pointer
-  color: white
-  text-decoration: none
-
-  &:hover
-    background-color: hsla(0, 0%, 100%, 0.15)
-    border-color: hsl(219, 65%, 90%)
-
 .section
   display: flex
   flex-grow: 1
@@ -171,52 +149,46 @@
   align-items: center
 
   h2
-    font-family: 'Roboto Condensed', 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
-    text-transform: uppercase
-    font-weight: 600
-    font-size: 26px
+    +landingHeader
 
     width: 100%
     margin: 0
-    padding-left: 8%
 
 .projectsContainer
-  margin-top: 100px
-  padding-bottom: 60px
   width: 100%
-  background: linear-gradient(rgba(58, 49, 71, 0), rgba(26, 46, 86, 1) 40%)
+  padding: 60px 0
+  background-color: white
+  border-bottom: 1px solid $ui-line-grey
 
   &.myProjectsContainer
-    background: none
-    padding-bottom: 0
-    margin-top: 50px
-    margin-bottom: -50px
     flex-shrink: 0
+    flex-grow: 1
+    align-items: center
+    background-color: $landing-grey-background
+    border-bottom: $ui-line-grey
 
   &.preloadedProjectsContainer
+    background-color: #light-grey
+    border-bottom: $ui-line-grey
     flex-grow: 1
     flex-shrink: 0
 
   .secondaryCopy
-    text-transform: uppercase
-    font-weight: 600
-    color: #DDD
+    +landingHeader
     font-size: 16px
 
   .projectTypeContainer
     display: flex
     flex-direction: column
     align-items: center
+    width: 100%
 
     .projectListContainer
-      display: flex
-      flex-direction: row
-      flex-wrap: wrap
-      justify-content: center
-
       margin-top: 20px
-      padding-left: 3%
       width: 100%
+      display: flex
+      flex-direction: column
+      align-items: center
 
 .watermark
   +montserrat
@@ -226,98 +198,82 @@
   font-size: 12px
 
 .topRightControls
-  +montserrat
   display: flex
   flex-grow: 1
   flex-direction: row-reverse
   align-items: center
   font-size: 12px
-  font-weight: 300
-  text-transform: uppercase
+  font-weight: 400
 
   .separater
     opacity: 0.5
     margin-left: 5px
     margin-right: 5px
 
-.textBox
-  display: flex
-  flex-direction: column
-  width: 47%
-  min-height: 100px
-  padding: 20px 3% 20px 0
-  border-radius: 2px
-  font-size: 18px
-  font-weight: 300
-
-  strong
-    display: inline-block
-    font-weight: 600
-
-  p
-    margin: 0 0 1em
-
-  a
-    text-decoration: none
-    color: hsla(220, 54%, 36%, 1)
-
-    &:hover, strong:hover
-      color: hsla(220, 54%, 40%, 1)
-      text-decoration: underline
-
 .spacer
   display: flex
   flex-grow: 1
 
 .aboutContainer
+  +regularCopy
   padding: 60px 0 70px
-  background-color: white
+  background-color: $ui-line-grey
+  border-bottom: 1px solid $ui-line-grey
   width: 100%
-
-  h2
-    color: #5A5A5A
 
   .aboutContent
     display: flex
-    width: 100%
-    padding-left: 8%
-    padding-bottom: 25px
-    color: #868686
+    margin-top: 20px
+    flex-direction: column
+    color: $black
+    align-items: center
 
-  .rightBox
-    width: 47%
-    padding-left: 3%
-
-    .mugshots
+    .textBox
       display: flex
-      flex-wrap: wrap
-      justify-content: center
+      flex-direction: row
 
-      .mugshotContainer
-        margin: 10px
-        width: 140px
+      .textBoxLeft, .textBoxRight
+        width: 250px
+
+      .textBoxRight
+        margin-left: 30px
+
+    .mugshotBox
+      .mugshots
         display: flex
-        flex-direction: column
+        flex-wrap: wrap
+        justify-content: center
 
-        .mugCaption
+        .mugshotContainer
+          margin: 10px
+          width: 140px
           display: flex
           flex-direction: column
-          text-align: center
-          margin-top: 10px
 
-          .mugCaptionRole
-            font-style: italic
-            font-size: 14px
-            color: #BBB
-            margin-top: 2px
+          .mugCaption
+            display: flex
+            flex-direction: column
+            text-align: center
 
-        img.mugshot
-          border-radius: 100px
-          width: 140px
-          height: 140px
-          overflow: hidden
+            .mugCaptionName
+              font-weight: 500
 
-  .footer
+            .mugCaptionRole
+              margin-top: 2px
+
+          img.mugshot
+            border-radius: 100px
+            width: 140px
+            height: 140px
+            overflow: hidden
+
+.footer
+  background-color: white
+  width: 100%
+  flex-direction: column
+  padding: 30px 0
+
+  .logos
     .macroConnectionsLogo, .mediaLabLogo
       max-height: 70px
       width: auto
@@ -325,117 +281,3 @@
 
     .macroConnectionsLogo
       padding-right: 40px
-
-.featuresContainer
-  .featureBlock
-    height: 500px
-    color: #333
-    flex-direction: row
-    overflow: hidden
-
-    &:nth-child(1)
-      background-color: white
-      margin-top: 40px
-
-    &:nth-child(2)
-      background-color: white
-      background-image: linear-gradient(0deg, white 65%, rgba(74, 119, 140, 0.15) 100%)
-      border-top: 1px solid rgba(74, 119, 140, 0.25)
-
-    &:nth-child(3)
-      background-color: #38587D
-
-      .featureCopy
-        .featureCopyHeader
-          color: #eee
-
-        .featureCopyBody
-          color: white
-
-    &.centerBlock
-      flex-direction: column-reverse
-
-      .featureCopy
-        height: auto
-
-        .featureCopyHeader
-          height: auto
-
-        .featureCopyBody
-          padding-top: 30px
-
-      .featureImage
-        width: 50%
-        max-height: 45%
-        overflow: hidden
-        align-items: flex-start
-
-    &.rightBlock
-      flex-direction: row-reverse
-
-      .featureImage
-        width: 35%
-        padding-right: 30px
-
-    &.leftBlock
-      .featureImage
-        width: 35%
-        padding-left: 30px
-
-    .featureImage
-      display: flex
-      justify-content: center
-      align-items: center
-
-      &.imageExploreVisualizations
-        img
-          width: 100%
-          max-width: 660px
-
-      &.imageCausalRelationships
-        img
-          width: 100%
-          max-width: 373px
-
-      &.imageEmbeddedVisualization
-        img
-          width: 100%
-          max-width: 360px
-
-    .featureCopy
-      display: flex
-      flex-direction: column
-      flex-grow: 1
-      align-items: center
-
-      height: 100%
-      padding-top: 70px
-      padding-bottom: 40px
-
-      .featureCopyHeader, .featureCopyBody
-        display: flex
-        flex-direction: column
-        max-width: 600px
-
-      .featureCopyHeader
-        height: 80px
-        padding-left: 20px
-        padding-right: 20px
-        justify-content: center
-
-        font-size: 22px
-        line-height: 28px
-        font-weight: 300
-        color: #666
-        text-align: center
-
-      .featureCopyBody
-        flex-grow: 1
-        font-weight: 300
-        color: #555
-        font-size: 16px
-        line-height: 22px
-        padding-top: 40px
-
-        > div
-          margin-bottom: 15px

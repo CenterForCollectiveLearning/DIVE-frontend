@@ -1,3 +1,5 @@
+@import '../../../css/mixins.sass'
+
 .raisedButton
   max-width: 160px
   overflow: hidden
@@ -7,24 +9,30 @@
   line-height: 35px
   padding: 0px 15px
 
-  font-weight: 500
   font-size: 12px
   text-align: center
-  color: #333
+  color: $black
 
-  background-color: transparent
+  background-color: $white
 
-  border: 1px solid #959595
+  border: 1px solid $ui-line-grey
   border-radius: 2px
 
   transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)
 
+  &.marginTop
+    margin-top: 15px
+
   &:hover
-    border-color: #666
+    border-color: $ui-line-grey
+    background-color: rgba($white, 0.7)
     cursor: pointer
 
   &:focus, &:active, &.selected
-    background-color: rgba(86, 42, 110, 0.1)
+    background-color: $white
+
+  &.submitButton
+    margin-top: 15px
 
   &.disabled
     pointer-events: none
@@ -32,18 +40,24 @@
     box-shadow: none
 
   &.primary
-    background-color: #0C83BA
+    background-color: $primary-accent
     border-width: 0
-    font-weight: 600
-    color: white
+    color: $white
     max-width: none
     text-transform: uppercase
 
+    font-family: 'Roboto Condensed', 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
+    height: 40px
+    line-height: 40px
+    font-weight: 600
+    padding: 0 40px
+    font-size: 20px
+
     &:hover
-      background-color: #0e94d2
+      background-color: $secondary-accent
 
     &:focus, &:active, &.selected
-      background-color: #0C83BA
+      background-color: $secondary-accent
       box-shadow: inset 1px 1px 2px 0 rgba(0, 0, 0, 0.28)
 
   &.fullWidth

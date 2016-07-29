@@ -1,8 +1,5 @@
-.link
-  font-weight: 500
-  display: inline-block
-  cursor: pointer
+@import '../../../css/mixins.sass'
 
-  &:hover
-    text-decoration: underline
-    cursor: pointer
+.link
+  +linkStyle(12px)
+  color: $white

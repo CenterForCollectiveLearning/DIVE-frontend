@@ -4,7 +4,6 @@ import styles from './App.sass';
 import { createAnonymousUserIfNeeded } from '../../actions/UserActions';
 import { connect } from 'react-redux';
 
-require("font-awesome-webpack");
 // this seems real dumb;
 require('react-select/less/select.less');
 require('../../../css/app.less');

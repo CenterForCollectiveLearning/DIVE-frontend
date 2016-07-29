@@ -2,90 +2,202 @@
 @import '../../../css/mixins.sass'
 @import '../Base/BlockingModal.sass'
 
-.header
-  display: flex
-  flex-direction: column
-  position: relative
-  min-width: 179px
-  background: linear-gradient(to bottom right, #3A3147, #1A2E56)
-
-.logoContainer
-  display: flex
-  flex-direction: row
-  padding-bottom: 14px
-  padding-top: 3px
-  cursor: pointer
-
-  .logo
-    width: 24px
-    height: 30px
-    margin-left: 6px
-    margin-top: 14px
-
-  .logoText
-    font-size: 31px
-    font-weight: 800
-    margin-top: 11px
-    margin-left: 22px
-    color: #FFFFFF
-
-.logoutUser
-  padding: 12px 24px
-  line-height: 24px
-
-.userStatus, .logoutUser
-  font-size: 12px
-  font-weight: 400
-  color: rgba(255, 255, 255, 0.7)
-
-  &:hover
-    cursor: pointer
-
-  .username
-    font-weight: 600
-
-.userStatus
-  margin-left: auto
-
 .appContainer, .projectContainer
   +maxHeight100NoOverflow
 
 .projectContainer
   flex-direction: row
 
-.projectSelectorContainer
+.projectRightContainer
+  +fillContainer
+  flex-direction: column
+
+$topBarHeight: 55px
+
+.projectSidebar
+  display: flex
+  flex-direction: column
+  position: relative
+  min-width: 155px
+  background: $left-sidebar-grey //  $black
+
+  .logoContainer
+    height: $topBarHeight
+    min-height: $topBarHeight
+    display: flex
+    padding-bottom: 14px
+    padding-top: 5px
+    cursor: pointer
+    background-color: $primary-accent
+
+    .logo
+      width: 24px
+      height: 30px
+      margin-left: 6px
+      margin-top: 7px
+
+    .logoText
+      font-size: 31px
+      font-weight: 800
+      margin-top: 4px
+      margin-left: 22px
+      color: $white
+
+  .bottom
+    margin-top: auto
+    // border-top: 1px solid $left-sidebar-separator-grey
+
+    .userOptions
+      display: flex
+      align-items: center
+      // background-color: rgba(255, 255, 255, 0.1)
+      padding-left: 15px
+
+      img.picture
+        border-radius: 30px
+        width: 30px
+        height: 30px
+        overflow: hidden
+
+      .logoutUser
+        padding: 12px 24px 12px 12px
+        line-height: 24px
+        color: $white
+
+      .userStatus, .logoutUser
+        font-size: 12px
+        font-weight: 400
+        color: $white
+
+        &:hover
+          cursor: pointer
+
+        .username
+          font-weight: 600
+
+.projectTopBar
   display: flex
   flex-direction: row
+  min-height: $topBarHeight
+  max-height: $topBarHeight
+  min-width: 800px
+  flex-shrink: 0
+  background-color: $white
+  // border-bottom: 8px solid $ui-line-grey
 
-  .projectSelector, .projectSelectorAction
-    background-color: rgba(28, 32, 40, 0.7)
+  .projectTopBarLeft
+    +titleText
+    color: $black
 
-    &:hover
-      background-color: rgba(28, 32, 40, 0.5)
+    display: flex
+    flex-direction: row
+    align-items: center
+    height: $topBarHeight
+    padding-left: 20px
+    line-height: 48px
 
-  .projectSelectorAction
-    padding-left: 11px
-    height: 33px
+    .section
+      display: flex
+      flex-direction: row
+      align-items: center
 
-    border: none
-    border-left: 1px solid rgba(255, 255, 255, 0.2)
-    border-radius: 0
-    line-height: 37px
+      .item
+        display: flex
+        flex-direction: column
+        .label
+          +smallCaps
+          line-height: 0px
+          margin-top: 10px
+          max-height: 0px
+          padding-bottom: 3px
+          margin-top: 11px
+          position: relative
+          top: 10px
 
-    color: rgba(255, 255, 255, 0.7)
+        .value
+          color: $left-sidebar-grey
+          font-size: 16px
 
-    &:hover
-      color: rgba(255, 255, 255, 0.5)
+          &.projectPage
+            text-transform: capitalize
 
-  .projectSelector
-    margin-bottom: 20px
+      span.separator
+        padding: 0 14px
+        position: relative
+        top: 1px
+        left: 7px
 
-    > div > div:first-of-type
-      border: none
-      border-radius: 0
+      .projectSelector, .datasetSelector  // Dropdowns
+        height: $topBarHeight
+        min-width: 50px
+        background-color: transparent
+        font-weight: 500
 
-      > div:first-child
-        padding-left: 24px
+        .dropDownLabel
+          line-height: 0px
+          margin-top: 10px
+          max-height: 0px
+          padding-bottom: 2px
+          margin-top: 9px
+          position: relative
+          top: 10px
 
-    span.projectSelectorValue
-      color: rgba(255, 255, 255, 0.8)
+        &:hover
+          > div > div:first-of-type > div:first-child
+            color: $primary-accent
+            text-decoration: underline
+
+        > div > div:first-of-type  // .Select-control
+          height: $topBarHeight
+          border: none
+          line-height: 0px
+          background-color: transparent
+
+          > div:first-child  // .Select-value
+            display: inline-block
+            height: $topBarHeight
+            position: relative
+            white-space: normal
+            padding-left: 0px
+            padding-right: 0px
+
+            > span  // .Select-value-label
+              display: block
+              height: $topBarHeight
+              > div  // .valueContainer
+                > span
+                  color: $primary-accent
+
+          > div:nth-child(2)  // .Select-input
+            position: absolute
+            top: 0
+            height: 0
+            width: 0
+
+          > span  // .Select-arrow-zone
+            display: none
+
+          span.projectSelectorValue, span.datasetSelectorValue
+            +titleText
+            height: $topBarHeight
+            line-height: 50px
+            font-weight: 500
+
+        // Dropdown values
+        > div > div:nth-of-type(2)  // .Select-menu-outer
+          margin-top: -10px
+          margin-left: -10px
+          > div // Select-menu
+            display: inline-block
+            font-size: 16px
+            line-height: 20px
+            padding-right: 5px
+            // display: inline-block
+            // position: relative
+            // white-space: normal
+            // padding-left: 0px
+            // padding-right: 10px
+
+            > div  // .Select-option
+              // display: block
+              // height: 20px

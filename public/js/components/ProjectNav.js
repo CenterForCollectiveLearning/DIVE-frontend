@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { fetchProjectIfNeeded, createAUID, logoutUser } from '../actions/ProjectActions.js';
+import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions.js';
+import { logoutUser } from '../actions/AuthActions';
 import styles from './App/App.sass';
 
 import DropDownMenu from './Base/DropDownMenu';
@@ -12,12 +13,14 @@ import Tab from './Base/Tab';
 import TabGroup from './Base/TabGroup';
 import ProjectSettingsModal from './ProjectSettingsModal';
 
-var Logo = require('babel!svg-react!../../assets/DIVE_logo_white.svg?name=Logo');
+import Logo from '../../assets/DIVE_logo_white.svg?name=Logo';
+
 
 export class ProjectNav extends Component {
   constructor(props) {
     super(props);
 
+    this._logout = this._logout.bind(this);
     this._handleTabsChange = this._handleTabsChange.bind(this);
     this._onClickLogo = this._onClickLogo.bind(this);
     this.onSelectProject = this.onSelectProject.bind(this);
@@ -95,32 +98,13 @@ export class ProjectNav extends Component {
     const datasetId = paramDatasetId || datasetSelector.datasetId;
 
     return (
-      <div className={ styles.header }>
+      <div className={ styles.projectSidebar }>
         <div className={ styles.logoContainer } onClick={ this._onClickLogo }>
           <div className={ styles.logoText }>
             DIVE
           </div>
           <Logo className={ styles.logo } />
         </div>
-        { project.properties.id && !project.properties.preloaded &&
-          <div className={ styles.projectSelectorContainer }>
-            <DropDownMenu
-              className={ styles.projectSelector }
-              valueClassName={ styles.projectSelectorValue }
-              value={ parseInt(project.properties.id) }
-              options={ projects.userProjects.length > 0 ? projects.userProjects : [] }
-              valueMember="id"
-              displayTextMember="title"
-              onChange={ this.onSelectProject } />
-            <RaisedButton
-              className={ styles.projectSelectorAction }
-              icon
-              altText="Project settings"
-              onClick={ this.onClickProjectSettings }>
-              <i className="fa fa-cog"></i>
-            </RaisedButton>
-          </div>
-        }
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
           <TabGroup heading="1. DATASETS">
             <Tab label="Upload" value="upload" route={ `datasets/upload` } />
@@ -130,7 +114,6 @@ export class ProjectNav extends Component {
           <TabGroup heading="2. VISUALIZATIONS">
             <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
             <Tab label="Build" value="builder" route={ `datasets/${ datasetId }/visualize/builder` } disabled={ true }/>
-            <Tab label="Starred" value="starred" route={ `datasets/${ datasetId }/visualize/starred` } disabled={ true }/>
           </TabGroup>
           <TabGroup heading="3. ANALYSIS">
             <Tab label="Summary" value="summary" route={ `datasets/${ datasetId }/analyze/summary` } disabled={ !datasetId }/>
@@ -143,16 +126,21 @@ export class ProjectNav extends Component {
             <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
           </TabGroup>
         </Tabs>
-        <div className={ styles.logoutUser } onClick={ this._logout.bind(this) }>
-          Log out of <span className={ styles.username }>{ user.username }</span>
+        <div className={ styles.bottom }>
+          <div className={ styles.userOptions }>
+            <img className={ styles.picture } src="/assets/images/blank_user.png"/>
+            <div className={ styles.logoutUser } onClick={ this._logout }>
+              <span className={ styles.username }>{ user.username }</span>
+            </div>
+          </div>
+          { this.state.projectSettingsModalOpen &&
+            <ProjectSettingsModal
+              projectName={ project.properties.title }
+              projectDescription={ project.properties.description }
+              projectId={ project.properties.id }
+              closeAction={ this.closeProjectSettingsModal.bind(this) }/>
+          }
         </div>
-        { this.state.projectSettingsModalOpen &&
-          <ProjectSettingsModal
-            projectName={ project.properties.title }
-            projectDescription={ project.properties.description }
-            projectId={ project.properties.id }
-            closeAction={ this.closeProjectSettingsModal.bind(this) }/>
-        }
       </div>
     );
   }

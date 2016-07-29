@@ -39,14 +39,6 @@ export class CorrelationView extends Component {
     clearAnalysis();
   }
 
-
-  clickDataset(datasetId) {
-    const { projectId, clearAnalysis, selectDataset, push } = this.props;
-    clearAnalysis();
-    selectDataset(projectId, datasetId);
-    push(`/projects/${ projectId }/datasets/${ datasetId }/analyze/correlation`);
-  }
-
   componentWillReceiveProps(nextProps) {
     const { projectId, datasetId, datasets, correlationVariableNames, getCorrelations, getCorrelationScatterplot, correlationResult } = this.props
 
@@ -90,7 +82,7 @@ export class CorrelationView extends Component {
     var correlationContent;
     if (twoCorrelationVariablesSelected ) {
       correlationContent =
-        <div>
+        <div className={ styles.correlationViewContainer }>
           <Card header={
               <span>Correlating {
                 correlationVariableNames.map((name, i) =>
@@ -121,9 +113,8 @@ export class CorrelationView extends Component {
     }
 
     return (
-      <div className={ styles.aggregationViewContainer }>
+      <div className={ styles.correlationViewContainer }>
         <HeaderBar
-          header="Correlation Analysis"
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
@@ -137,20 +128,6 @@ export class CorrelationView extends Component {
                   { !correlationResult.isSaving && correlationResult.exportedCorrelationId && <i className="fa fa-star"></i> }
                   { !correlationResult.exportedCorrelationId && <i className="fa fa-star-o"></i> }
                 </RaisedButton>
-              </div>
-              <div className={ styles.headerControl }>
-                { datasets.items && datasets.items.length > 0 ?
-                  <div className={ styles.headerControl }>
-                    <DropDownMenu
-                      prefix="Dataset"
-                      width={ 240 }
-                      value={ parseInt(datasetId) }
-                      options={ datasets.items }
-                      valueMember="datasetId"
-                      displayTextMember="title"
-                      onChange={ this.clickDataset.bind(this) } />
-                  </div>
-                : '' }
               </div>
             </div>
           }/>

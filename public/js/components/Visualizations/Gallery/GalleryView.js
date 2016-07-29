@@ -5,6 +5,7 @@ import { push } from 'react-router-redux';
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { clearVisualization, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
 import { fetchExportedVisualizationSpecs } from '../../../actions/ComposeActions';
+import { useWhiteFontFromBackgroundHex } from '../../../helpers/helpers';
 
 import styles from '../Visualizations.sass';
 
@@ -67,31 +68,18 @@ export class GalleryView extends Component {
     createExportedSpec(project.properties.id, specId, specData, [], {}, true);
   }
 
-  clickDataset(datasetId) {
-    const { gallerySelector, project, push, selectDataset } = this.props;
-    var selectedFieldPropertiesQueryString = gallerySelector.fieldProperties
-      .filter((property) => property.selected)
-      .map((property) => `fields%5B%5D=${ property.name }`);
-
-    if (selectedFieldPropertiesQueryString.length) {
-      selectedFieldPropertiesQueryString = selectedFieldPropertiesQueryString.reduce((a, b) => a + "&" + b);
-    }
-
-    selectDataset(project.properties.id, datasetId);
-    push(`/projects/${ project.properties.id }/datasets/${ datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
-  }
 
   render() {
-    const { specs, filters, datasets, datasetSelector, filteredVisualizationTypes, gallerySelector, exportedSpecs, selectSortingFunction } = this.props;
+    const { specs, filters, datasets, fieldNameToColor, datasetSelector, filteredVisualizationTypes, gallerySelector, exportedSpecs, selectSortingFunction } = this.props;
+
+    var selectedFieldProperties = gallerySelector.fieldProperties
+      .filter((property) => property.selected);
 
     const filteredSpecs = gallerySelector.specs.filter((spec) =>
       (filteredVisualizationTypes.length == 0) || filteredVisualizationTypes.some((filter) =>
         spec.vizTypes.indexOf(filter) >= 0
       )
     );
-
-    var selectedFieldProperties = gallerySelector.fieldProperties
-      .filter((property) => property.selected);
 
     const areFieldsSelected = selectedFieldProperties.length > 0;
     const baselineSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'baseline');
@@ -103,75 +91,46 @@ export class GalleryView extends Component {
       <div className={ styles.specsContainer }>
         <div className={ styles.innerSpecsContainer }>
           <HeaderBar
-            header="Explore"
-            subheader={
-              gallerySelector.title.map((construct, i) =>
-                <span
-                  key={ `construct-${ construct.type }-${ i }` }
-                  className={ `${ styles.headerFragment } ${ styles[construct.type] }` }>
-                  { construct.string }
-                </span>
-              )
-            }
-            actions={
-              <div className={ styles.headerControlRow }>
-                { filteredSpecs.length > 0 &&
-                  <div className={ styles.headerControl + ' ' + styles.headerControlLong }>
-                    <DropDownMenu
-                      prefix="Sort by"
-                      options={ gallerySelector.sortingFunctions }
-                      valueMember="value"
-                      displayTextMember="label"
-                      onChange={ selectSortingFunction } />
-                  </div>
-                }
-                { datasets.items && datasets.items.length > 0 &&
-                  <div className={ styles.headerControl }>
-                    <DropDownMenu
-                      prefix="Dataset"
-                      width={ 240 }
-                      value={ parseInt(datasetSelector.datasetId) }
-                      options={ datasets.items }
-                      valueMember="datasetId"
-                      displayTextMember="title"
-                      onChange={ this.clickDataset.bind(this) } />
-                  </div>
+            header={
+              gallerySelector.title.map(function(construct, i) {
+                var style = {};
+                var whiteFont = true;
+                if (construct.type == 'field') {
+                  var backgroundColor = fieldNameToColor[construct.string];
+                  whiteFont = useWhiteFontFromBackgroundHex(backgroundColor);
+                  style['backgroundColor'] = backgroundColor;
                 }
 
-              </div>
-            }/>
+                return <span
+                  style={ style }
+                  key={ `construct-${ construct.type }-${ i }` }
+                  className={
+                    `${styles.headerFragment} ${styles[construct.type]}`
+                    + ' ' + ( whiteFont ? styles.whiteFont : styles.blackFont )
+                }>{ construct.string }</span>
+              })
+            }
+          />
           <div className={ styles.specContainer }>
             { !specs.isFetching && filteredSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>
             }
             { exactSpecs.length > 0 &&
               <div className={ styles.specSection }>
-                <div className={ styles.blockSectionHeader }>
-                  { areFieldsSelected &&
-                    <span>
+                { areFieldsSelected &&
+                  <div className={ styles.blockSectionHeader }>
+                    { areFieldsSelected &&
                       <div className={ styles.blockSectionHeaderTitle }>Exact Matches</div>
-                        Including {
-                          selectedFieldProperties.map((field) =>
-                            <span key={ `span-exact-match-title-${ field.name }`} className={ `${ styles.exactTitleField }`}>
-                              { field.name }
-                            </span>
-                          )
-                        }
-                    </span>
-                  }
-                  { !areFieldsSelected &&
-                    <span>
-                      <div className={ styles.blockSectionHeaderTitle }>Default Matches</div>
-                      Summary of each field
-                    </span>
-                  }
-                </div>
+                    }
+                  </div>
+                }
                 <div className={ styles.specs + ' ' + styles.exact }>
                   { exactSpecs.map((spec) =>
                     <VisualizationBlock
                       key={ spec.id }
                       spec={ spec }
                       className='exact'
+                      fieldNameToColor={ fieldNameToColor }
                       filteredVisualizationTypes={ filteredVisualizationTypes }
                       exportedSpecs={ exportedSpecs }
                       onClick={ this.onClickVisualization.bind(this) }
@@ -186,19 +145,14 @@ export class GalleryView extends Component {
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
                   <div className={ styles.blockSectionHeaderTitle }>Close Matches</div>
-                  Including two or more of {
-                  selectedFieldProperties.map((field) =>
-                    <span key={ `span-close-match-title-${ field.name }`} className={ `${ styles.subsetTitleField }`}>
-                      { field.name }
-                    </span>
-                  )
-                }</div>
+                </div>
                 <div className={ styles.specs + ' ' + styles.subset }>
                   { subsetSpecs.map((spec) =>
                     <VisualizationBlock
                       key={ spec.id }
                       spec={ spec }
                       className='subset'
+                      fieldNameToColor={ fieldNameToColor }
                       filteredVisualizationTypes={ filteredVisualizationTypes }
                       exportedSpecs={ exportedSpecs }
                       onClick={ this.onClickVisualization.bind(this) }
@@ -214,13 +168,6 @@ export class GalleryView extends Component {
                 <div className={ styles.blockSectionHeader }>
                   <span>
                     <div className={ styles.blockSectionHeaderTitle }>Individual Matches</div>
-                    Including <strong>only</strong> {
-                      selectedFieldProperties.map((field) =>
-                        <span key={ `span-individual-match-title-${ field.name }`} className={ `${ styles.baselineTitleField }` }>
-                          { field.name }
-                        </span>
-                      )
-                    }
                   </span>
                 </div>
                 <div className={ styles.specs + ' ' + styles.baseline }>
@@ -229,6 +176,7 @@ export class GalleryView extends Component {
                       key={ spec.id }
                       spec={ spec }
                       className='baseline'
+                      fieldNameToColor={ fieldNameToColor }
                       filteredVisualizationTypes={ filteredVisualizationTypes }
                       exportedSpecs={ exportedSpecs }
                       onClick={ this.onClickVisualization.bind(this) }
@@ -243,19 +191,14 @@ export class GalleryView extends Component {
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
                   <div className={ styles.blockSectionHeaderTitle }>Expanded Matches</div>
-                  Including {
-                  selectedFieldProperties.map((field) =>
-                    <span key={ `span-expanded-match-title-${ field.name }`} className={ `${ styles.expandedTitleField }`}>
-                      { field.name }
-                    </span>
-                  )
-                } with other fields</div>
+                </div>
                 <div className={ styles.specs + ' ' + styles.expanded }>
                   { expandedSpecs.map((spec) =>
                     <VisualizationBlock
                       key={ spec.id }
                       spec={ spec }
                       className='expanded'
+                      fieldNameToColor={ fieldNameToColor }
                       filteredVisualizationTypes={ filteredVisualizationTypes }
                       exportedSpecs={ exportedSpecs }
                       onClick={ this.onClickVisualization.bind(this) }
@@ -289,12 +232,13 @@ GalleryView.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, filters, specs, gallerySelector, datasets, datasetSelector, exportedSpecs } = state;
+  const { project, filters, specs, gallerySelector, fieldProperties, datasets, datasetSelector, exportedSpecs } = state;
   return {
     project,
     filters,
     specs,
     gallerySelector,
+    fieldNameToColor: fieldProperties.fieldNameToColor,
     datasets,
     datasetSelector,
     exportedSpecs

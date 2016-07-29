@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from './Visualizations.sass';
 
-import { getPalette } from '../../helpers/helpers';
+import { getPalette, useWhiteFontFromBackgroundHex } from '../../helpers/helpers';
 
 import TreeMap from './Charts/TreeMap';
 import PieChart from './Charts/PieChart';
@@ -52,9 +52,10 @@ export default class Visualization extends Component {
         treemap: 400
       }
     }
-    const { data, bins, spec, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
+    const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
 
-    const labels = spec.meta.labels ? spec.meta.labels : {};
+    const { args, meta } = spec;
+    const labels = meta.labels ? meta.labels : {};
 
     var finalDataArray = data;
     var sortIndex;
@@ -97,17 +98,7 @@ export default class Visualization extends Component {
       finalDataArray = [ header, ...sortedDataPoints ];
     }
 
-    var hashElements;
-    if (labels && labels.x && labels.y) {
-      hashElements = [labels.x, labels.y];
-    } else {
-      hashElements = [finalDataArray[0][0], finalDataArray[0][1]];
-    }
-
-    const colors = getPalette(hashElements);
-
     var options = {
-      colors: colors,
       backgroundColor: 'transparent',
       headerColor: 'white',
       headerHeight: 0,
@@ -237,6 +228,19 @@ export default class Visualization extends Component {
       }
     }
 
+    var colors = [];
+    var primaryVariableKeys = ['aggField', 'binningField', 'fieldB'];
+    for (var i in primaryVariableKeys) {
+      var primaryVariableKey = primaryVariableKeys[i];
+      if (primaryVariableKey in args) {
+        colors.push(fieldNameToColor[args[primaryVariableKey].name]);
+      }
+    }
+
+    if (colors.length > 0) {
+      options['colors'] = colors;
+    }
+
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
 
     const tooMuchDataToPreview =
@@ -273,9 +277,23 @@ export default class Visualization extends Component {
       <div className={ containerClassName } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
           <div className={ headerClassName }>
-            { spec.meta.construction.map((construct, i) =>
-              <span key={ `construct-${ construct.type }-${ i }` } className={ `${styles.headerFragment} ${styles[construct.type]}` }>{ construct.string } </span>
-            )}
+            { spec.meta.construction.map(function(construct, i) {
+              var style = {};
+              var whiteFont = true;
+              if (construct.type == 'field') {
+                var backgroundColor = fieldNameToColor[construct.string];
+                whiteFont = useWhiteFontFromBackgroundHex(backgroundColor);
+                style['backgroundColor'] = backgroundColor;
+              }
+
+              return <span
+                style={ style }
+                key={ `construct-${ construct.type }-${ i }` }
+                className={
+                  `${styles.headerFragment} ${styles[construct.type]}`
+                  + ' ' + ( whiteFont ? styles.whiteFont : styles.blackFont )
+              }>{ construct.string }</span>
+            })}
             { (tooMuchDataToPreview || tooMuchDataToShowFull) &&
               <span className={ `${styles.headerFragment} ${styles.tooMuchData}` }>
                 ({ tooMuchDataString })
@@ -379,5 +397,6 @@ Visualization.defaultProps = {
   showHeader: false,
   visualizationTypes: [],
   sortOrders: [],
-  sortFields: []
+  sortFields: [],
+  fieldNameToColor: {}
 };

@@ -1,15 +1,21 @@
+@import '../../../css/mixins.sass'
+
 .dropDownMenu
+  .dropDownLabel
+    +smallCaps
+    padding-bottom: 2px
+
   > div // .Select
     width: 100%
 
     > div
-      &:first-of-type // .Select-control
+      &:first-of-type // .Select-value
         height: 33px
         line-height: 33px
 
-        background-color: transparent
+        background-color: $white
 
-        border: 1px solid #959595
+        border: 1px solid $ui-line-grey
         border-radius: 2px
 
         cursor: pointer
@@ -66,5 +72,5 @@
     color: #6D6D6D
 
   span.value
-    font-weight: 500
+    font-weight: 400
     color: #333
