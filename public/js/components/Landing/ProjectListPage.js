@@ -1,4 +1,3 @@
-import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import styles from './Landing.sass';
 import { connect } from 'react-redux';
@@ -6,6 +5,7 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
+import ProjectButton from '../Base/ProjectButton';
 import RaisedButton from '../Base/RaisedButton';
 import Footer from './Footer';
 
@@ -68,18 +68,7 @@ export class ProjectListPage extends Component {
                     <div className={ styles.watermark }>Fetching projects...</div>
                   }
                   { userProjects.reverse().map((project) =>
-                    <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>
-                      <div className={ styles.projectTop }>
-                        <div className={ styles.projectLeft }>
-                          <div className={ styles.projectTitle }>{ project.title }</div>
-                          <div className={ styles.projectDescription }>{ project.description }</div>
-                        </div>
-                        <div className={ styles.projectRight }>
-                          <div className={ styles.projectCreationDate }>{ moment(project.creationDate).format('LLL') }</div>
-                          <div className={ styles.projectUpdateDate }>{ moment(project.updateDate).format('LLL') }</div>
-                        </div>
-                      </div>
-                    </a>
+                    <ProjectButton project={ project } key={ `project-button-id-${ project.id }` }/>
                   )}
                 </div>
               </div>
@@ -96,7 +85,7 @@ export class ProjectListPage extends Component {
                     <div className={ styles.watermark }>Fetching projects...</div>
                   }
                   { preloadedProjects.map((project) =>
-                    <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>{ project.title }</a>
+                    <ProjectButton project={ project } key={ `project-button-id-${ project.id }` }/>
                   )}
                 </div>
               </div>

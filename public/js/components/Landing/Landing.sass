@@ -154,78 +154,22 @@
     width: 100%
     margin: 0
 
-.projectButton
-  +regularCopy
-  display: flex
-  flex-direction: column
-  min-height: 100px
-
-  width: 70%
-  max-width: 800px
-
-  align-items: left
-  justify-content: left
-  text-align: left
-
-  border: 1px solid $ui-grey
-  border-top: none
-  background-color: $white
-  color: $black
-  font-size: 15px
-
-  cursor: pointer
-  text-decoration: none
-
-  &:first-of-type
-    border-top: 1px solid $ui-grey
-
-  &:hover
-    .projectTop
-      background-color: rgba($primary-accent, 1.0)
-      color: $white
-
-  .projectTop
-    display: flex
-    width: 100%
-    background-color: $light-grey
-    border-bottom: 1px solid $ui-grey
-    padding: 11px 8px
-    .projectTitle
-      font-size: 14px
-      font-weight: bold
-
-  .projectBottom
-    +regularCopy
-    display: flex
-    padding: 11px 16px
-    .projectLeft, .projectRight
-      display: inline-block
-
-    .projectLeft
-      max-width: 60%
-
-      .projectDescription
-        overflow-y: auto
-    .projectRight
-      margin-left: auto
-
 .projectsContainer
   width: 100%
   padding: 60px 0
   background-color: white
-  border-bottom: 1px solid $dark-grey
+  border-bottom: 1px solid $ui-line-grey
 
   &.myProjectsContainer
     flex-shrink: 0
     flex-grow: 1
     align-items: center
-    background-color: $light-grey
-    border-bottom: $dark-grey
-
+    background-color: $landing-grey-background
+    border-bottom: $ui-line-grey
 
   &.preloadedProjectsContainer
     background-color: #light-grey
-    border-bottom: $dark-grey
+    border-bottom: $ui-line-grey
     flex-grow: 1
     flex-shrink: 0
 
@@ -273,8 +217,8 @@
 .aboutContainer
   +regularCopy
   padding: 60px 0 70px
-  background-color: $light-grey
-  border-bottom: 1px solid $dark-grey
+  background-color: $ui-line-grey
+  border-bottom: 1px solid $ui-line-grey
   width: 100%
 
   .aboutContent

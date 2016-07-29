@@ -5,7 +5,7 @@
   overflow: hidden
 
 .headerFragment
-  margin-right: 2px
+  margin-right: 3px
   &:first-child
     text-transform: capitalize
 
@@ -14,6 +14,7 @@
     background-color: $primary-accent
     border-radius: 2px
     padding: 2px 4px
+    font-weight: bold
 
   &:nth-last-child(1)
     .field:before
@@ -118,7 +119,7 @@ div.conditionalCombinator
       margin-top: -6px
 
 .galleryContainer, .builderContainer
-  +background
+  background-color: $center-grey
   display: flex
   flex-direction: row
   overflow: hidden
@@ -141,7 +142,7 @@ div.conditionalCombinator
   .chartsContainer
     +fillContainer
     padding: 10px
-    background-color: rgba(255, 255, 255, 0.1)
+    background-color: $white
 
   .innerVisualizationViewContainer
     +fillContainer
@@ -206,12 +207,12 @@ div.conditionalCombinator
         margin: 5px 15px 0
         padding-left: 8px
         padding-bottom: 3px
-        border-bottom: 1px solid #CCCCCC
+        border-bottom: 1px solid $ui-line-grey
         color: $black
 
         .blockSectionHeaderTitle
           text-transform: uppercase
-          color: #666
+          color: $small-caps-grey
           font-weight: 600
           font-size: 11px
 
@@ -293,8 +294,8 @@ div.conditionalCombinator
     padding-left: 15px
     padding-top: 10px
     padding-bottom: 10px
-    border-bottom: 1px solid $ui-grey
-    background-color: $header-light-grey
+    border-bottom: 1px solid $ui-line-grey
+    background-color: $ui-header-grey
 
   .overflowText
     display: flex

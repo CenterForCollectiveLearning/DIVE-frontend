@@ -1,4 +1,3 @@
-import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import styles from './Landing.sass';
 import { connect } from 'react-redux';
@@ -7,6 +6,7 @@ import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
 import RaisedButton from '../Base/RaisedButton';
+import ProjectButton from '../Base/ProjectButton';
 import Footer from './Footer';
 
 import MediaLabLogo from '../../../assets/MIT_ML_Logo_K_RGB.svg?name=MediaLabLogo';
@@ -82,27 +82,7 @@ export class HomePage extends Component {
                   <div className={ styles.watermark }>Fetching projects...</div>
                 }
                 { preloadedProjects.map((project) =>
-                  <a key={ `project-button-id-${ project.id }` } href={ `/projects/${ project.id }/datasets` } className={ styles.projectButton }>
-                    <div className={ styles.projectTop }>
-                      <div className={ styles.projectTitle }>{ project.title }</div>
-                    </div>
-                    <div className={ styles.projectBottom }>
-                      <div className={ styles.projectLeft }>
-                        <div className={ styles.projectDescription }>{ project.description }</div>
-                      </div>
-                      <div className={ styles.projectRight }>
-                        <div className={ styles.projectCreationDate }>{ moment(project.creationDate).format('LLL') }</div>
-                        <div className={ styles.projectUpdateDate }>{ moment(project.updateDate).format('LLL') }</div>
-                        { project.includedDatasets.map((dataset) =>
-                          <div className={ styles.projectUpdateDate } key={ `project-dataset-${ dataset.id }`}>{ dataset.title }</div>
-                        )}
-                        <div className={ styles.projectUpdateDate }>{ project.numDatasets }</div>
-                        <div className={ styles.projectUpdateDate }>{ project.numSpecs }</div>
-                        <div className={ styles.projectUpdateDate }>{ project.numDocuments }</div>
-                      </div>
-                    </div>
-                  </a>
-                  )}
+                  <ProjectButton project={ project } key={ `project-button-id-${ project.id }` }/>
                 )}
               </div>
             </div>
