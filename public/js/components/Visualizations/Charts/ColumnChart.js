@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from '../Visualizations.sass';
 
-import { getPalette } from '../../../helpers/helpers';
-
 var Chart = require('react-google-charts').Chart;
 
 export default class ColumnChart extends Component {
@@ -12,19 +10,9 @@ export default class ColumnChart extends Component {
 
     var finalData = data;
 
-    var hashElements;
-    if (labels && labels.x && labels.y) {
-      hashElements = [labels.x, labels.y];
-    } else {
-      hashElements = [finalData[0][0], finalData[0][1]];
-    }
-
-    const colors = getPalette(hashElements);
-
     const fullColumnChartOptions = {
       ...options,
-      intervals: { 'lineWidth': 2, 'barWidth': 0.25 },      
-      colors: colors,
+      intervals: { 'lineWidth': 2, 'barWidth': 0.25 },
       hAxis: {
         title: labels && labels.x ? labels.x : finalData[0][0],
         textStyle: {
@@ -73,7 +61,7 @@ ColumnChart.propTypes = {
   data: PropTypes.array.isRequired,
   isMinimalView: PropTypes.bool,
   options: PropTypes.object,
-  labels: PropTypes.object
+  labels: PropTypes.object,
 };
 
 ColumnChart.defaultProps = {
