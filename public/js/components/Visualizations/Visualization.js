@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from './Visualizations.sass';
 
-import { getPalette } from '../../helpers/helpers';
+import { getPalette, useWhiteFontFromBackgroundHex } from '../../helpers/helpers';
 
 import TreeMap from './Charts/TreeMap';
 import PieChart from './Charts/PieChart';
@@ -274,14 +274,20 @@ export default class Visualization extends Component {
         { showHeader && spec.meta &&
           <div className={ headerClassName }>
             { spec.meta.construction.map(function(construct, i) {
-              const style = (construct.type == 'field') ? {
-                'backgroundColor': fieldNameToColor[construct.string]
-              } : {}
+              var style = {};
+              var whiteFont = true;
+              if (construct.type == 'field') {
+                var backgroundColor = fieldNameToColor[construct.string];
+                whiteFont = useWhiteFontFromBackgroundHex(backgroundColor);
+                style['backgroundColor'] = backgroundColor;
+              }
 
               return <span
                 style={ style }
                 key={ `construct-${ construct.type }-${ i }` }
-                className={ `${styles.headerFragment} ${styles[construct.type]}`
+                className={
+                  `${styles.headerFragment} ${styles[construct.type]}`
+                  + ' ' + ( whiteFont ? styles.whiteFont : styles.blackFont )
               }>{ construct.string }</span>
             })}
             { (tooMuchDataToPreview || tooMuchDataToShowFull) &&

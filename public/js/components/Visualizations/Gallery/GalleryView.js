@@ -5,6 +5,7 @@ import { push } from 'react-router-redux';
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { clearVisualization, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
 import { fetchExportedVisualizationSpecs } from '../../../actions/ComposeActions';
+import { useWhiteFontFromBackgroundHex } from '../../../helpers/helpers';
 
 import styles from '../Visualizations.sass';
 
@@ -92,15 +93,21 @@ export class GalleryView extends Component {
           <HeaderBar
             header={
               gallerySelector.title.map(function(construct, i) {
-                const style = (construct.type == 'field') ? {
-                  'backgroundColor': fieldNameToColor[construct.string]
-                } : {}
+                var style = {};
+                var whiteFont = true;
+                if (construct.type == 'field') {
+                  var backgroundColor = fieldNameToColor[construct.string];
+                  whiteFont = useWhiteFontFromBackgroundHex(backgroundColor);
+                  style['backgroundColor'] = backgroundColor;
+                }
 
                 return <span
                   style={ style }
                   key={ `construct-${ construct.type }-${ i }` }
-                  className={ `${ styles.headerFragment } ${ styles[construct.type] }` }
-                >{ construct.string }</span>
+                  className={
+                    `${styles.headerFragment} ${styles[construct.type]}`
+                    + ' ' + ( whiteFont ? styles.whiteFont : styles.blackFont )
+                }>{ construct.string }</span>
               })
             }
           />

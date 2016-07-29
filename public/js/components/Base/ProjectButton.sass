@@ -21,6 +21,7 @@
   color: $black
   font-size: 12px
 
+
   cursor: pointer
   text-decoration: none
 
@@ -33,6 +34,8 @@
     display: flex
     .label
       +smallCaps
+      margin-right: 5px
+      padding-top: 2px
 
     .value
       font-size: 13px
@@ -54,9 +57,13 @@
       font-size: 14px
       font-weight: bold
 
+  .projectBottom
+    border-top: 1px solid $ui-line-grey
+
   .projectMiddle, .projectBottom
     +regularCopy
     display: flex
+
     padding: 11px 16px
     .projectLeft, .projectRight
       display: inline-block

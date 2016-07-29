@@ -18,7 +18,7 @@ const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);
 history.listen(location => amplitude.logEvent('Page View', { pathname: location.pathname }));
 
-if ((window.__env.NODE_ENV == 'STAGING' || window.__env.NODE_ENV == 'PRODUCTION') && window.localStorage['powerAuth'] != 'true') {
+if ((window.__env.NODE_ENV == 'PROTOTYPE' || window.__env.NODE_ENV == 'STAGING' || window.__env.NODE_ENV == 'PRODUCTION') && window.localStorage['powerAuth'] != 'true') {
   const password = prompt('Please enter your password to view this page.', '');
 
   if (password != "macro") {

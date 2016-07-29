@@ -33,6 +33,35 @@ export function shuffle(a) {
   return aShuffled;
 }
 
+
+// http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+function hexToRgb(hex) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
+// http://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
+export function useWhiteFontFromBackgroundHex(hex) {
+  var RGB = hexToRgb(hex);
+  var { r, g, b } = RGB;
+
+  if (( r * 0.299 + g * 0.587 + b * 0.114 ) > 186) {
+    return false
+  } else {
+    return true
+  }
+}
+
 export function shift(a, num) {
   var aShifted = a.slice();
   for (var i = num; i; i -= 1) {

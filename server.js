@@ -1,4 +1,4 @@
-var useExpress = (process.env.NODE_ENV == 'PRODUCTION' || process.env.NODE_ENV == 'STAGING');
+var useExpress = (process.env.NODE_ENV == 'PRODUCTION' || process.env.NODE_ENV == 'STAGING' || process.env.NODE_ENV == 'PROTOTYPE');
 
 if (useExpress) {
   var express = require('express');
