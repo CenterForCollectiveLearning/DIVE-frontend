@@ -63,12 +63,25 @@
       color: $black
       background-color: $white  // rgba(86, 42, 110, 0.07)
 
+    &:hover > .delete
+      display: block
+
     img
       padding: 3px
 
     &:hover
       color: $black
       background-color: $white  // ui-active-grey
+
+  .delete
+    float: right
+    text-align: center
+    width: 10%
+    display: none
+    color: rgba(161, 155, 155, 1)
+
+    &:hover
+      color: rgba(72, 69, 69, 1)
 
   .splitButton.textToggleButton
     display: flex

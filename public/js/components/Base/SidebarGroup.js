@@ -30,7 +30,8 @@ export default class SidebarGroup extends Component {
             <span className={ styles.collapseArrow }/>
           </div>
         }
-        <div className={ styles.sidebarGroupContent }>
+
+        <div className={ styles.sidebarGroupContent + (this.props.stacked ? ' ' + styles.stacked : '')}>
           { this.props.children }
         </div>
       </div>

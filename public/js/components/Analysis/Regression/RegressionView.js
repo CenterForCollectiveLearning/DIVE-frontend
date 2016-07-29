@@ -35,17 +35,18 @@ export class RegressionView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, regressionResult, runRegression, getContributionToRSquared, fetchDatasets } = this.props;
+    const { projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, regressionResult, runRegression, getContributionToRSquared, fetchDatasets } = this.props;
     const regressionTypeChanged = nextProps.regressionType != regressionType;
     const independentVariablesChanged = nextProps.independentVariableNames.length != independentVariableNames.length;
     const dependentVariableChanged = (nextProps.dependentVariableName != dependentVariableName);
     const dependentVariableExists = (nextProps.dependentVariableName != null);
+    const interactionTermsChanged = nextProps.interactionTermIds != interactionTermIds;
 
-    if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.regressionType && (dependentVariableChanged || independentVariablesChanged || regressionTypeChanged)) {
-      runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames);
+    if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.regressionType && (dependentVariableChanged || independentVariablesChanged || regressionTypeChanged || interactionTermsChanged)) {
+      runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames, nextProps.interactionTermIds);
     }
 
-    if (nextProps.projectId && nextProps.regressionResult.data && nextProps.regressionResult.data.id && (this.props.regressionResult.data == null || (nextProps.regressionResult.data.id != this.props.regressionResult.data.id))) {
+    if (nextProps.projectId && nextProps.regressionResult.data && nextProps.regressionResult.data.id && (regressionResult.data == null || (nextProps.regressionResult.data.id != regressionResult.data.id))) {
       getContributionToRSquared(nextProps.projectId, nextProps.regressionResult.data.id);
     }
   }
@@ -140,6 +141,7 @@ function mapStateToProps(state) {
     regressionType: regressionType,
     dependentVariableName: dependentVariableName,
     independentVariableNames: independentVariableNames,
+    interactionTermIds: regressionSelector.interactionTermIds,
     datasetId: datasetSelector.datasetId,
     regressionResult: regressionResult,
     contributionToRSquared: contributionToRSquared

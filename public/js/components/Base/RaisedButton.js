@@ -19,6 +19,7 @@ export default class RaisedButton extends Component {
           + (this.props.icon ? ' ' + styles.icon : '')
           + (this.props.disabled ? ' ' + styles.disabled : '')
           + (this.props.marginTop ? ' ' + styles.marginTop : '')
+          + (this.props.centered ? ' ' + styles.centered : '')
         }
         onClick={ this.props.onClick }>
         { this.props.label &&

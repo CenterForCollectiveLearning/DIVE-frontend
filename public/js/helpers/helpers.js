@@ -119,3 +119,23 @@ export function recommendRegressionType(dependentVariableType) {
   }
   return dvToType[dependentVariableType];
 }
+
+export function createInteractionTermName(array) {
+  return array.reduce((prev, curr, key) => {
+    if(key === 0) return curr;
+    return prev + ' * ' + curr;
+  })
+}
+
+export function filterInteractionTermSelection(item, alreadySelectedTerm, interactionTerms) {
+  var showVariable = true;
+  if(alreadySelectedTerm) {
+    for (var i=0; i < interactionTerms.length; i++) {
+      if(interactionTerms[i].variables.indexOf(item) > -1 && interactionTerms[i].variables.indexOf(alreadySelectedTerm) > -1){
+        showVariable = false;
+        break;
+      }
+    }
+  }
+  return showVariable;
+}

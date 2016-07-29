@@ -18,7 +18,7 @@ export default class RegressionTable extends Component {
 
   getCoefficientString(coefficient, pValue, enabled) {
     if (!enabled) {
-      return '×';
+      return '✓';
     }
 
     var pValueString = ''
@@ -83,7 +83,7 @@ export default class RegressionTable extends Component {
             if (!property) return '';
 
             if (preview) {
-              return 'X'
+              return '✓'
             } else {
               return (renderDataColumn(property, field.enabled));
             }
@@ -106,8 +106,6 @@ export default class RegressionTable extends Component {
         { name: 'BIC', prop: 'bic' }
       ]
     }
-
-    console.log('REGRESSION TYPE', regressionType)
 
     const additionalData = [
       {
