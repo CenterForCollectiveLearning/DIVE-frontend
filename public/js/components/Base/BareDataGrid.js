@@ -71,15 +71,18 @@ export default class BareDataGrid extends Component {
             <div className={ styles.innerGrid }>
               { data.map(function (row, i) {
                 if (row.isNested) {
-                  return row.items.map(function(actualRow, k) {
-                    return <div>
-                      <Row key={ `${ actualRow.rowClass }-${ i }-${ k }`} className={ actualRow.rowClass }>{
-                        actualRow.items.map((column, j) =>
-                          <Column key={ `${ row.rowClass }-${ i }-${ row.columnClass }-${ j }-${ k }`} className={ row.columnClass }>{ column }</Column>
-                        )
-                      }</Row>
-                    </div>
-                  })
+                  return <div>
+                    <div> { row.baseValue }</div>
+                    { row.items.map(function(actualRow, k) {
+                      return <div>
+                        <Row key={ `${ actualRow.rowClass }-${ i }-${ k }`} className={ actualRow.rowClass }>{
+                          actualRow.items.map((column, j) =>
+                            <Column key={ `${ row.rowClass }-${ i }-${ row.columnClass }-${ j }-${ k }`} className={ row.columnClass }>{ column }</Column>
+                          )
+                        }</Row>
+                      </div>
+                    }) }
+                  </div>
                 } else {
                   return <Row key={ `${ row.rowClass }-${ i }`} className={ row.rowClass }>{
                     row.items.map((column, j) =>
