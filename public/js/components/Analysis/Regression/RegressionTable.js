@@ -73,8 +73,8 @@ export default class RegressionTable extends Component {
       if ( field.values && field.values.length > 1 ) {
         return {
           isNested: true,
-          baseValue: field.formattedName,
-          items: field.values.map(function(fieldValue) {
+          parentName: field.formattedName,
+          children: field.values.map(function(fieldValue) {
             return new Object({
               rowClass: styles.dataRow,
               columnClass: styles.dataColumn,

@@ -27,6 +27,11 @@
   border-right-width: 0
   word-break: break-word
 
+
+  &.nestedRowLabel
+    align-items: flex-end
+    padding-right: 8px
+
   &:first-child
     border-left-width: 0px
 
@@ -38,3 +43,35 @@
   &:first-child
     .column
       border-top-width: 0px
+
+  .column
+    &.rowLabel
+      flex-direction: row
+      justify-content: flex-start
+      align-items: center
+
+.nestedRow
+  cursor: pointer
+
+  > .row:first-child
+    .column
+      border-top-width: 1px
+
+  .collapseArrow
+    cursor: pointer
+    margin-top: 3px
+    margin-left: auto
+    border-color: #999 transparent transparent
+    border-style: solid
+    border-width: 5px 5px 2.5px
+    display: inline-block
+    height: 0
+    width: 0
+
+  &.collapsed
+    .collapseArrow
+      -webkit-transform: rotate(90deg)
+      -moz-transform: rotate(90deg)
+      -ms-transform: rotate(90deg)
+      -o-transform: rotate(90deg)
+      transform: rotate(90deg)
