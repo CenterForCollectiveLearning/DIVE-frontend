@@ -48,15 +48,24 @@
     .values
       font-size: 12px
 
+  .pullLeft, .pullRight
+    display: inline-block
+
+  .pullRight
+    margin-left: auto
+
+
   .projectTop
     display: flex
     width: 100%
     background-color: $ui-header-grey
-    border-bottom: 1px solid $ui-line-grey
     padding: 11px 8px
     .projectTitle
       font-size: 14px
       font-weight: bold
+
+  .projectMiddle
+    border-top: 1px solid $ui-line-grey
 
   .projectBottom
     border-top: 1px solid $ui-line-grey
@@ -66,13 +75,3 @@
     display: flex
 
     padding: 11px 16px
-    .projectLeft, .projectRight
-      display: inline-block
-
-    .projectLeft
-      max-width: 60%
-
-      .projectDescription
-        overflow-y: auto
-    .projectRight
-      margin-left: auto
