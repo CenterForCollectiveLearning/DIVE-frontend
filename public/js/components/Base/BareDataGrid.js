@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import NestedRowComponent from './NestedRowComponent';
 import styles from './BareDataGrid.sass';
 
 export default class BareDataGrid extends Component {
@@ -67,13 +68,25 @@ export default class BareDataGrid extends Component {
           }
           { !this.state.loading &&
             <div className={ styles.innerGrid }>
-              { data.map((row, i) =>
-                <Row key={ `${ row.rowClass }-${ i }`} className={ row.rowClass }>{
-                  row.items.map((column, j) =>
-                    <Column key={ `${ row.rowClass }-${ i }-${ row.columnClass }-${ j }`} className={ row.columnClass }>{ column }</Column>
-                  )
-                }</Row>
-              )}
+              { data.map(function (row, i) {
+                if (row.isNested) {
+                  return <NestedRowComponent
+                    key={ i }
+                    i={ i }
+                    row={ row }
+                    columnWidth={ columnWidth }
+                    minimumColumnWidth={ minimumColumnWidth }
+                    nColumns={ nColumns }
+                    collapsed={ row.children.length > 3 }
+                  />
+                } else {
+                  return <Row key={ `${ row.rowClass }-${ i }`} className={ row.rowClass }>{
+                    row.items.map((column, j) =>
+                      <Column key={ `${ row.rowClass }-${ i }-${ row.columnClass }-${ j }`} className={ row.columnClass + ((j == 0) ? (' ' + styles.rowLabel) : '')}>{ column }</Column>
+                    )
+                  }</Row>
+                }
+              })}
             </div>
           }
         </div>

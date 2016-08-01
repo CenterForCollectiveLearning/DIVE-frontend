@@ -47,7 +47,7 @@ export default class RegressionTable extends Component {
 
       } else {
         // categorical fixed effects
-        return { ...field, formattedName: field.name, enabled: false };
+        return { ...field, formattedName: field.name, enabled: true };
 
       }
     });
@@ -68,14 +68,32 @@ export default class RegressionTable extends Component {
       );
     }
 
-    const baseData = [
-      {
-        rowClass: styles.tableHeaderRow,
-        columnClass: styles.tableHeaderColumn,
-        items: preview ? _.range(regressionResult.numColumns + 1).map((i) => <div></div>) : [ 'Variables', ..._.range(regressionResult.numColumns).map((i) => <div className={ styles.tableCell }>({ i + 1 })</div>)]
-      },
-      ...allRegressedFields.map(function (field) {
+    const regressionData = allRegressedFields.map(function(field) {
+
+      if ( field.values && field.values.length > 1 ) {
+        return {
+          isNested: true,
+          parentName: field.formattedName,
+          children: field.values.map(function(fieldValue) {
+            return new Object({
+              rowClass: styles.dataRow,
+              columnClass: styles.dataColumn,
+              items: [ ( preview ? '' : fieldValue ), ...regressionResult.regressionsByColumn.map(function (column) {
+                const property = column.regression.propertiesByField.find((property) => ((property.baseField == field.name) && (property.valueField == fieldValue)));
+                if (!property) return '';
+
+                if (preview) {
+                  return '✓'
+                } else {
+                  return (renderDataColumn(property, field.enabled));
+                }
+              }) ]
+            })
+          })
+        }
+      } else {
         return new Object({
+          isNested: false,
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
           items: [ ( preview ? '' : field.formattedName ), ...regressionResult.regressionsByColumn.map(function (column) {
@@ -89,9 +107,18 @@ export default class RegressionTable extends Component {
             }
           }) ]
         })
-      }),
+      }
+    });
 
+    const baseData = [
+      {
+        rowClass: styles.tableHeaderRow,
+        columnClass: styles.tableHeaderColumn,
+        items: preview ? _.range(regressionResult.numColumns + 1).map((i) => <div></div>) : [ 'Variables', ..._.range(regressionResult.numColumns).map((i) => <div className={ styles.tableCell }>({ i + 1 })</div>)]
+      },
+      ...regressionData
     ]
+
 
     const regressionMeasures = {
       linear: [
