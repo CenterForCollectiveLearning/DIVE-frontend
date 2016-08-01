@@ -22,6 +22,8 @@ export default class BareDataGrid extends Component {
   render() {
     const { data, id, tableClassName, containerClassName, preview } = this.props;
 
+    console.log('Data in BareDataGrid', data);
+
     const columnWidth = preview ? 0 : 200;
     const minimumColumnWidth = preview ? 0 : 105;
 
@@ -67,13 +69,25 @@ export default class BareDataGrid extends Component {
           }
           { !this.state.loading &&
             <div className={ styles.innerGrid }>
-              { data.map((row, i) =>
-                <Row key={ `${ row.rowClass }-${ i }`} className={ row.rowClass }>{
-                  row.items.map((column, j) =>
-                    <Column key={ `${ row.rowClass }-${ i }-${ row.columnClass }-${ j }`} className={ row.columnClass }>{ column }</Column>
-                  )
-                }</Row>
-              )}
+              { data.map(function (row, i) {
+                if (row.isNested) {
+                  return row.items.map(function(actualRow, k) {
+                    return <div>
+                      <Row key={ `${ actualRow.rowClass }-${ i }-${ k }`} className={ actualRow.rowClass }>{
+                        actualRow.items.map((column, j) =>
+                          <Column key={ `${ row.rowClass }-${ i }-${ row.columnClass }-${ j }-${ k }`} className={ row.columnClass }>{ column }</Column>
+                        )
+                      }</Row>
+                    </div>
+                  })
+                } else {
+                  return <Row key={ `${ row.rowClass }-${ i }`} className={ row.rowClass }>{
+                    row.items.map((column, j) =>
+                      <Column key={ `${ row.rowClass }-${ i }-${ row.columnClass }-${ j }`} className={ row.columnClass }>{ column }</Column>
+                    )
+                  }</Row>
+                }
+              })}
             </div>
           }
         </div>
