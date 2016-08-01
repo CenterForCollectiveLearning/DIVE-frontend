@@ -10,13 +10,22 @@ export default class ProjectButton extends Component {
     return (
       <a href={ `/projects/${ id }/datasets` } className={ styles.projectButton }>
         <div className={ styles.projectTop }>
-          <div className={ styles.projectTitle }>{ title }</div>
+          <div className={ styles.pullLeft }>
+            <div className={ styles.projectTitle }>{ title }</div>
+          </div>
+          <div className={ styles.pullRight }>
+            <i className="fa fa-cog"></i>
+          </div>
         </div>
+        { (description && description !== 'Project Description') &&
         <div className={ styles.projectMiddle }>
-          <div className={ styles.projectLeft }>
-            { (description !== 'Project Description') &&
+          <div className={ styles.pullLeft }>
               <div className={ styles.projectDescription }>{ description }</div>
-            }
+          </div>
+        </div>
+        }
+        <div className={ styles.projectMiddle }>
+          <div className={ styles.pullLeft }>
             <div className={ styles.metadata }>
               <div className={ styles.item }>
                 <span className={ styles.label }>Datasets</span>
@@ -32,7 +41,7 @@ export default class ProjectButton extends Component {
               </div>
             </div>
           </div>
-          <div className={ styles.projectRight }>
+          <div className={ styles.pullRight }>
             <div className={ styles.item }>
               <span className={ styles.label }>Created</span>
               <span className={ styles.value }>{ moment(creationDate).format('LLL') }</span>
