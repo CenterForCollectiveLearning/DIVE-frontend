@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
-import { runAggregation, runComparisonOneDimensional, getVariableAggregationStatistics } from '../../../actions/AggregationActions';
+import { runAggregation, runAggregationOneDimensional, getVariableAggregationStatistics } from '../../../actions/AggregationActions';
 import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import styles from '../Analysis.sass';
@@ -12,25 +12,25 @@ import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
 import DropDownMenu from '../../Base/DropDownMenu';
 import AggregationTable from './AggregationTable';
-import ComparisonTableOneD from './ComparisonTableOneD';
+import AggregationTableOneD from './AggregationTableOneD';
 
 export class AggregationView extends Component {
   componentWillMount() {
-    const { projectId, datasetId, datasets, datasetSelector, allComparisonVariableIds, getVariableAggregationStatistics } = this.props
+    const { projectId, datasetId, datasets, datasetSelector, allAggregationVariableIds, getVariableAggregationStatistics } = this.props
 
     if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(projectId);
     }
 
-    if (projectId && datasetId && allComparisonVariableIds.length) {
-      getVariableAggregationStatistics(projectId, datasetId, allComparisonVariableIds)
+    if (projectId && datasetId && allAggregationVariableIds.length) {
+      getVariableAggregationStatistics(projectId, datasetId, allAggregationVariableIds)
     }
 
     clearAnalysis();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, datasets, binningConfigX, binningConfigY, loadAggregation, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runComparisonOneDimensional, allComparisonVariableIds, getVariableAggregationStatistics, fetchDatasets } = this.props;
+    const { projectId, datasetId, datasets, binningConfigX, binningConfigY, loadAggregation, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runAggregationOneDimensional, allAggregationVariableIds, getVariableAggregationStatistics, fetchDatasets } = this.props;
     const aggregationIndependentVariablesChanged = nextProps.aggregationIndependentVariableNamesAndTypes.length != aggregationIndependentVariableNamesAndTypes.length;
     const aggregationVariableChanged = nextProps.aggregationVariableName != aggregationVariableName;
     const aggregationFunctionChanged = nextProps.aggregationFunction != aggregationFunction;
@@ -48,14 +48,14 @@ export class AggregationView extends Component {
       if (sideBarChanged) {
         if (oneIndependentVariableSelected) {
           const aggregationList = nextProps.aggregationVariableName? ['q', nextProps.aggregationVariableName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null;
-          runComparisonOneDimensional(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.aggregationIndependentVariableNamesAndTypes);
+          runAggregationOneDimensional(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.aggregationIndependentVariableNamesAndTypes);
         } else if (twoIndependentVariablesSelected) {
           const aggregationList = nextProps.aggregationVariableName ? ['q', nextProps.aggregationVariableName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null;
           runAggregation(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.aggregationIndependentVariableNamesAndTypes);
         }
       } else{
         if (noIndependentVariablesSelected && shouldLoadAggregation) {
-          getVariableAggregationStatistics(nextProps.projectId, nextProps.datasetId, nextProps.allComparisonVariableIds);
+          getVariableAggregationStatistics(nextProps.projectId, nextProps.datasetId, nextProps.allAggregationVariableIds);
         }
       }
     }
@@ -72,42 +72,42 @@ export class AggregationView extends Component {
   }
 
   render() {
-    const { aggregationResult, oneDimensionComparisonResult, aggregationIndependentVariableNames, datasets, datasetId } = this.props;
+    const { aggregationResult, oneDimensionAggregationResult, aggregationIndependentVariableNames, datasets, datasetId } = this.props;
 
-    const noComparisonVariablesSelected = aggregationIndependentVariableNames.length ==0;
-    const oneComparisonVariableSelected = aggregationIndependentVariableNames.length == 1;
-    const twoComparisonVariablesSelected = aggregationIndependentVariableNames.length == 2;
-    const oneDimensionDictHasElements = oneDimensionComparisonResult.data && oneDimensionComparisonResult.data.rows && oneDimensionComparisonResult.data.rows.length > 0;
+    const noAggregationVariablesSelected = aggregationIndependentVariableNames.length ==0;
+    const oneAggregationVariableSelected = aggregationIndependentVariableNames.length == 1;
+    const twoAggregationVariablesSelected = aggregationIndependentVariableNames.length == 2;
+    const oneDimensionDictHasElements = oneDimensionAggregationResult.data && oneDimensionAggregationResult.data.rows && oneDimensionAggregationResult.data.rows.length > 0;
     const aggregationDictHasElements = aggregationResult.data && aggregationResult.data.rows && aggregationResult.data.rows.length > 0;
 
     var aggregationContent = <div></div>;
 
-    if (noComparisonVariablesSelected ) {
+    if (noAggregationVariablesSelected ) {
       aggregationContent = <div className={ styles.watermark }>
         Please Select One or More Variables
       </div>
     }
 
-    else if (oneComparisonVariableSelected) {
+    else if (oneAggregationVariableSelected) {
       aggregationContent =
         <div className={ styles.aggregationViewContainer }>
           <Card header={
-            <span>Comparison Table: <span className={ styles.titleField }>{ aggregationIndependentVariableNames[0] }</span></span>
+            <span>Aggregation Table: <span className={ styles.titleField }>{ aggregationIndependentVariableNames[0] }</span></span>
           }>
-            { oneDimensionComparisonResult.loading &&
+            { oneDimensionAggregationResult.loading &&
               <div className={ styles.watermark }>
-                { oneDimensionComparisonResult.progress != null ? oneDimensionComparisonResult.progress : 'Calculating oneDimensionComparisonResult…' }
+                { oneDimensionAggregationResult.progress != null ? oneDimensionAggregationResult.progress : 'Calculating oneDimensionAggregationResult…' }
               </div>
             }
-            { (!oneDimensionComparisonResult.loading && oneDimensionDictHasElements) &&
-              <ComparisonTableOneD comparisonResult={ oneDimensionComparisonResult.data } comparisonVariableNames={ aggregationIndependentVariableNames }/>
+            { (!oneDimensionAggregationResult.loading && oneDimensionDictHasElements) &&
+              <AggregationTableOneD aggregationResult={ oneDimensionAggregationResult.data } aggregationVariableNames={ aggregationIndependentVariableNames }/>
             }
           </Card>
         </div>
       ;
     }
 
-    else if (twoComparisonVariablesSelected) {
+    else if (twoAggregationVariablesSelected) {
       aggregationContent =
         <div className={ styles.aggregationViewContainer }>
           <Card header={
@@ -145,15 +145,15 @@ export class AggregationView extends Component {
 
 function mapStateToProps(state) {
   const { project, datasets, aggregationSelector, datasetSelector, fieldProperties } = state;
-  const { aggregationResult, oneDimensionComparisonResult, binningConfigX, binningConfigY } = aggregationSelector;
+  const { aggregationResult, oneDimensionAggregationResult, binningConfigX, binningConfigY } = aggregationSelector;
 
-  const allComparisonVariableIds = fieldProperties.items.map((field) => field.id);
+  const allAggregationVariableIds = fieldProperties.items.map((field) => field.id);
 
   const aggregationVariable = fieldProperties.items.find((property) => property.id == aggregationSelector.aggregationVariableId);
   const aggregationVariableName = aggregationVariable ? aggregationVariable.name : null;
 
   const aggregationIndependentVariables = fieldProperties.items
-    .filter((property) => aggregationSelector.comparisonVariablesIds.indexOf(property.id) >= 0)
+    .filter((property) => aggregationSelector.aggregationVariablesIds.indexOf(property.id) >= 0)
 
   const aggregationIndependentVariableNames = aggregationIndependentVariables
     .map((field) => field.name);
@@ -192,8 +192,8 @@ function mapStateToProps(state) {
     weightVariableName: weightVariableName,
     aggregationIndependentVariableNames: aggregationIndependentVariableNames,
     aggregationIndependentVariableNamesAndTypes: aggregationIndependentVariableNamesAndTypes,
-    oneDimensionComparisonResult: oneDimensionComparisonResult,
-    allComparisonVariableIds: allComparisonVariableIds,
+    oneDimensionAggregationResult: oneDimensionAggregationResult,
+    allAggregationVariableIds: allAggregationVariableIds,
     loadAggregation: aggregationSelector.loadAggregation,
     binningConfigX: binningConfigX,
     binningConfigY: binningConfigY
@@ -203,7 +203,7 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   push,
   runAggregation,
-  runComparisonOneDimensional,
+  runAggregationOneDimensional,
   getVariableAggregationStatistics,
   selectDataset,
   fetchDatasets,

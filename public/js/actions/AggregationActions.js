@@ -7,10 +7,10 @@ import {
   RECEIVE_AGGREGATION,
   PROGRESS_AGGREGATION,
   ERROR_AGGREGATION,
-  REQUEST_ONE_D_COMPARISON,
-  RECEIVE_ONE_D_COMPARISON,
-  PROGRESS_ONE_D_COMPARISON,
-  ERROR_ONE_D_COMPARISON,
+  REQUEST_ONE_D_AGGREGATION,
+  RECEIVE_ONE_D_AGGREGATION,
+  PROGRESS_ONE_D_AGGREGATION,
+  ERROR_ONE_D_AGGREGATION,
   REQUEST_AGGREGATION_STATISTICS,
   RECEIVE_AGGREGATION_STATISTICS,
   SELECT_AGGREGATION_CONFIG_X,
@@ -24,7 +24,7 @@ import { fetch, pollForTask } from './api.js';
 export function selectAggregationIndependentVariable(selectedIndependentVariableId) {
   return {
     type: SELECT_AGGREGATION_INDEPENDENT_VARIABLE,
-    comparisonIndependentVariableId: selectedIndependentVariableId,
+    aggregationIndependentVariableId: selectedIndependentVariableId,
     selectedAt: Date.now()
   }
 }
@@ -32,7 +32,7 @@ export function selectAggregationIndependentVariable(selectedIndependentVariable
 export function selectAggregationVariable(selectedAggregationVariableId) {
   return {
     type: SELECT_AGGREGATION_AGGREGATION_VARIABLE,
-    comparisonAggregationVariableId: selectedAggregationVariableId,
+    aggregationAggregationVariableId: selectedAggregationVariableId,
     selectedAt: Date.now()
   }
 }
@@ -95,13 +95,13 @@ function errorAggregationDispatcher(json) {
   };
 }
 
-export function runAggregation(projectId, datasetId, aggregationVariable, comparisonVariables) {
+export function runAggregation(projectId, datasetId, aggregationVariable, aggregationVariables) {
   const params = {
     projectId: projectId,
     spec: {
       datasetId: datasetId,
       dependentVariable: aggregationVariable,
-      comparisonVariables: comparisonVariables
+      aggregationVariables: aggregationVariables
     }
   }
 
@@ -122,55 +122,55 @@ export function runAggregation(projectId, datasetId, aggregationVariable, compar
   };
 }
 
-function requestOneDComparisonDispatcher(datasetId) {
+function requestOneDAggregationDispatcher(datasetId) {
   return {
-    type: REQUEST_ONE_D_COMPARISON
+    type: REQUEST_ONE_D_AGGREGATION
   };
 }
 
-function receiveOneDComparisonDispatcher(params, json) {
+function receiveOneDAggregationDispatcher(params, json) {
   return {
-    type: RECEIVE_ONE_D_COMPARISON,
+    type: RECEIVE_ONE_D_AGGREGATION,
     data: json,
     receivedAt: Date.now()
   };
 }
 
-function progressOneDComparisonDispatcher(data) {
+function progressOneDAggregationDispatcher(data) {
   return {
-    type: PROGRESS_ONE_D_COMPARISON,
+    type: PROGRESS_ONE_D_AGGREGATION,
     progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
   };
 }
 
-function errorOneDComparisonDispatcher(json) {
+function errorOneDAggregationDispatcher(json) {
   return {
-    type: PROGRESS_ONE_D_COMPARISON,
-    progress: 'Error calculating one-dimension aggregation table, please check console.'
+    type: PROGRESS_ONE_D_AGGREGATION,
+    progress: 'Error calculating one dimensional aggregation table, please check console.'
   };
 }
 
-export function runComparisonOneDimensional(projectId, datasetId, aggregationVariable, comparisonVariables) {
+export function runAggregationOneDimensional(projectId, datasetId, aggregationVariable, aggregationVariables) {
   const params = {
     projectId: projectId,
     spec: {
       datasetId: datasetId,
       dependentVariable: aggregationVariable,
-      comparisonVariable: comparisonVariables[0]
+      aggregationVariable: aggregationVariables[0]
     }
   }
 
   return (dispatch) => {
-    dispatch(requestOneDComparisonDispatcher());
+    dispatch(requestOneDAggregationDispatcher());
     return fetch('/statistics/v1/one_dimensional_contingency_table', {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(function(json) {
         if (json.compute) {
-          dispatch(pollForTask(json.taskId, REQUEST_ONE_D_COMPARISON, params, receiveOneDComparisonDispatcher, progressOneDComparisonDispatcher, errorOneDComparisonDispatcher));
+          dispatch(pollForTask(json.taskId, REQUEST_ONE_D_AGGREGATION, params, receiveOneDAggregationDispatcher, progressOneDAggregationDispatcher, errorOneDAggregationDispatcher));
         } else {
-          dispatch(receiveOneDComparisonDispatcher(params, json));
+          dispatch(receiveOneDAggregationDispatcher(params, json));
         }
       })
   };

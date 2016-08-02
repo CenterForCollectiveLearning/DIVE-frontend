@@ -30,16 +30,18 @@ export class AggregationSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, aggregationSelector, selectAggregationIndependentVariable } = this.props;
-    const nonComparisonVariables = this.props.fieldProperties.items.filter((item) => this.props.aggregationSelector.comparisonVariablesIds.indexOf(item.id) < 0)
-    const aggregationOptions = [{'id': 'count', 'name' : 'count'}, ...nonComparisonVariables.filter((item) => item.generalType == 'q')]
-    const numComparisonVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q' && this.props.aggregationSelector.comparisonVariablesIds.indexOf(item.id) >= 0 )
-    const numQuantitative = numComparisonVariables.length;
-    const { selectBinningConfigX, selectBinningConfigY } = this.props;
+    const { fieldProperties, aggregationSelector, selectAggregationIndependentVariable, selectBinningConfigX, selectBinningConfigY } = this.props;
+    const { aggregationVariablesIds, aggregationVariableId } = aggregationSelector;
+
+    const nonAggregationVariables = fieldProperties.items.filter((item) => aggregationVariablesIds.indexOf(item.id) < 0)
+    const aggregationOptions = [{'id': 'count', 'name' : 'count'}, ...nonAggregationVariables.filter((item) => item.generalType == 'q')]
+    const numAggregationVariables = fieldProperties.items.filter((item) => item.generalType == 'q' && aggregationVariablesIds.indexOf(item.id) >= 0 )
+    const n_q = numAggregationVariables.length;
+
     return (
       <Sidebar>
         { this.props.fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Comparison Variables">
+          <SidebarGroup heading="Aggregation Variables">
             { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Categorical</div>
@@ -48,14 +50,14 @@ export class AggregationSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == aggregationSelector.aggregationVariableId) || ( item.generalType == 'c' && item.isUnique),
+                      disabled: (item.id == aggregationVariableId) || ( item.generalType == 'c' && item.isUnique),
                       color: item.color
                     })
                   )}
                   displayTextMember="name"
                   valueMember="id"
                   colorMember="color"
-                  externalSelectedItems={ aggregationSelector.comparisonVariablesIds }
+                  externalSelectedItems={ aggregationVariablesIds }
                   separated={ true }
                   onChange={ selectAggregationIndependentVariable } />
               </div>
@@ -68,14 +70,14 @@ export class AggregationSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == aggregationSelector.aggregationVariableId),
+                      disabled: (item.id == aggregationVariableId),
                       color: item.color
                     })
                   )}
                   valueMember="id"
                   colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ aggregationSelector.comparisonVariablesIds }
+                  externalSelectedItems={ aggregationVariablesIds }
                   separated={ true }
                   onChange={ selectAggregationIndependentVariable } />
               </div>
@@ -88,14 +90,14 @@ export class AggregationSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == aggregationSelector.aggregationVariableId),
+                      disabled: (item.id == aggregationVariableId),
                       color: item.color
                     })
                   )}
                   valueMember="id"
                   colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ aggregationSelector.comparisonVariablesIds }
+                  externalSelectedItems={ aggregationVariablesIds }
                   separated={ true }
                   onChange={ selectAggregationIndependentVariable } />
               </div>
@@ -132,17 +134,17 @@ export class AggregationSidebar extends Component {
               onChange={ this.props.selectAggregationWeightVariable }/>
           </SidebarGroup>
         }
-        { numQuantitative >= 1 &&
+        { n_q >= 1 &&
           <BinningSelector
             config={ this.props.aggregationSelector.binningConfigX }
             selectBinningConfig={ selectBinningConfigX }
-            name={ numComparisonVariables[0].name }/>
+            name={ numAggregationVariables[0].name }/>
         }
-        { numQuantitative == 2 &&
+        { n_q == 2 &&
           <BinningSelector
             config={ this.props.aggregationSelector.binningConfigY }
             selectBinningConfig={ selectBinningConfigY }
-            name={ numComparisonVariables[1].name }/>
+            name={ numAggregationVariables[1].name }/>
         }
 
       </Sidebar>

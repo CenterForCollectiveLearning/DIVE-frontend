@@ -14,7 +14,6 @@ export class CorrelationSidebar extends Component {
   componentWillMount(props) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
 
-    console.log((project.properties.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching));
     if (project.properties.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId)
     }

@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 import {
   SELECT_AGGREGATION_AGGREGATION_VARIABLE,
   SELECT_AGGREGATION_INDEPENDENT_VARIABLE,
@@ -9,10 +11,10 @@ import {
   RECEIVE_AGGREGATION,
   PROGRESS_AGGREGATION,
   ERROR_AGGREGATION,
-  REQUEST_ONE_D_COMPARISON,
-  RECEIVE_ONE_D_COMPARISON,
-  PROGRESS_ONE_D_COMPARISON,
-  ERROR_ONE_D_COMPARISON,
+  REQUEST_ONE_D_AGGREGATION,
+  RECEIVE_ONE_D_AGGREGATION,
+  PROGRESS_ONE_D_AGGREGATION,
+  ERROR_ONE_D_AGGREGATION,
   REQUEST_AGGREGATION_STATISTICS,
   RECEIVE_AGGREGATION_STATISTICS,
   PROGRESS_AGGREGATION_STATISTICS,
@@ -31,8 +33,8 @@ const baseConditional = {
 
 const baseState = {
   aggregationVariableId: 'count',
-  comparisonVariablesIds: [],
-  oneDimensionComparisonResult: {
+  aggregationVariablesIds: [],
+  oneDimensionAggregationResult: {
     loading: false,
     progress: null,
     error: null,
@@ -61,18 +63,50 @@ const baseState = {
 
 export default function aggregationSelector(state = baseState, action) {
   switch (action.type) {
+
+    case RECEIVE_FIELD_PROPERTIES:
+      // Default selection
+      let selectedAggregationVariablesIds;
+      var categoricalItemIds = action.fieldProperties.filter((item) => item.generalType == 'c').map((item) => item.id);
+      var quantitativeItemIds = action.fieldProperties.filter((item) => item.generalType == 'q').map((item) => item.id);
+      var n_c = categoricalItemIds.length;
+      var n_q = quantitativeItemIds.length;
+
+      if ((n_c >= 1) && (n_q >= 1)) {
+        selectedAggregationVariablesIds = [ _.sample(categoricalItemIds, 1)[0], _.sample(quantitativeItemIds, 1)[0] ]
+      } else {
+        if (n_c == 0) {
+          if (n_q == 1) {
+            selectedAggregationVariablesIds = _.sample(quantitativeItemIds, 1)
+          }
+          else if (n_q > 1) {
+            selectedAggregationVariablesIds = _.sample(quantitativeItemIds, 2)
+          }
+        }
+        else if (n_q == 0) {
+          if (n_c == 1) {
+            selectedAggregationVariablesIds = _.sample(categoricalItemIds, 1)
+          }
+          else if (n_c > 1) {
+            selectedAggregationVariablesIds = _.sample(categoricalItemIds, 2)
+          }
+        }
+      }
+
+      return { ...state, aggregationVariablesIds: selectedAggregationVariablesIds };
+
     case SELECT_AGGREGATION_AGGREGATION_VARIABLE:
-      return { ...state, aggregationVariableId: action.comparisonAggregationVariableId };
+      return { ...state, aggregationVariableId: action.aggregationAggregationVariableId };
 
     case SELECT_AGGREGATION_INDEPENDENT_VARIABLE:
-      var comparisonVariablesIds = state.comparisonVariablesIds.slice();
-      const selectedId = parseInt(action.comparisonIndependentVariableId);
-      if (state.comparisonVariablesIds.find((comparisonVariablesId) => comparisonVariablesId == selectedId)) {
-        comparisonVariablesIds = comparisonVariablesIds.filter((comparisonVariablesId) => comparisonVariablesId != selectedId);
+      var aggregationVariablesIds = state.aggregationVariablesIds.slice();
+      const selectedId = parseInt(action.aggregationIndependentVariableId);
+      if (state.aggregationVariablesIds.find((aggregationVariablesId) => aggregationVariablesId == selectedId)) {
+        aggregationVariablesIds = aggregationVariablesIds.filter((aggregationVariablesId) => aggregationVariablesId != selectedId);
       } else {
-        comparisonVariablesIds.push(selectedId);
+        aggregationVariablesIds.push(selectedId);
       }
-      return { ...state, comparisonVariablesIds: comparisonVariablesIds };
+      return { ...state, aggregationVariablesIds: aggregationVariablesIds };
 
     case RECEIVE_FIELD_PROPERTIES:
       return { ...state, loadAggregation: true };
@@ -92,20 +126,20 @@ export default function aggregationSelector(state = baseState, action) {
     case ERROR_AGGREGATION:
       return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, error: action.error } };
 
-    case REQUEST_ONE_D_COMPARISON:
-      return { ...state, oneDimensionComparisonResult: { ...state.oneDimensionComparisonResult, loading: true }}
+    case REQUEST_ONE_D_AGGREGATION:
+      return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: true }}
 
-    case RECEIVE_ONE_D_COMPARISON:
-      return { ...state, oneDimensionComparisonResult: { ...state.oneDimensionComparisonResult, loading: false, data: action.data } };
+    case RECEIVE_ONE_D_AGGREGATION:
+      return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: false, data: action.data } };
 
-    case PROGRESS_ONE_D_COMPARISON:
+    case PROGRESS_ONE_D_AGGREGATION:
       if (action.progress && action.progress.length){
-        return { ...state, oneDimensionComparisonResult: { ...state.oneDimensionComparisonResult, progress: action.progress} };
+        return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, progress: action.progress} };
       }
       return state;
 
-    case ERROR_ONE_D_COMPARISON:
-      return { ...state, oneDimensionComparisonResult: { ...state.oneDimensionComparisonResult, loading: false, error: action.error } };
+    case ERROR_ONE_D_AGGREGATION:
+      return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: false, error: action.error } };
 
     case REQUEST_AGGREGATION_STATISTICS:
       return { ...state, aggregationResult: { ...state.aggregationResult, loading: true }}
@@ -124,7 +158,6 @@ export default function aggregationSelector(state = baseState, action) {
 
     case ERROR_AGGREGATION_STATISTICS:
       return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, error: action.error } };
-
 
     case SELECT_AGGREGATION_AGGREGATION_FUNCTION:
       return { ...state, aggregationFunction: action.aggregationFunction};

@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 import {
   SELECT_COMPARISON_INDEPENDENT_VARIABLE,
   SELECT_COMPARISON_DEPENDENT_VARIABLE,
@@ -6,7 +8,8 @@ import {
   UPDATE_COMPARISON_INPUT,
   RECEIVE_ANOVA,
   RECEIVE_ANOVA_BOXPLOT_DATA,
-  SELECT_DATASET
+  SELECT_DATASET,
+  RECEIVE_FIELD_PROPERTIES
 } from '../constants/ActionTypes';
 
 const baseState = {
@@ -19,6 +22,37 @@ const baseState = {
 
 export default function comparisonSelector(state = baseState, action) {
   switch (action.type) {
+
+    case RECEIVE_FIELD_PROPERTIES:
+      // Default selection
+      var modifiedState = { ...state };
+
+      var categoricalItemIds = action.fieldProperties.filter((item) => item.generalType == 'c').map((item) => item.id);
+      var quantitativeItemIds = action.fieldProperties.filter((item) => item.generalType == 'q').map((item) => item.id);
+      var n_c = categoricalItemIds.length;
+      var n_q = quantitativeItemIds.length;
+
+      console.log(n_c, n_q);
+
+      if ((n_c >= 2) && (n_q >= 1)) {
+        modifiedState.independentVariablesIds = _.sample(categoricalItemIds, 1);
+        modifiedState.dependentVariablesIds = _.sample(quantitativeItemIds, 1);
+        console.log('here!');
+      } else {
+        if (n_c == 0) {
+          if (n_q >= 2) {
+            modifiedState.independentVariablesIds = _.sample(quantitativeItemIds, 2);
+          }
+        } else if (n_c == 1) {
+          if (n_q == 1) {
+            modifiedState.dependentVariablesIds = _.sample(categoricalItemIds, 1);
+            modifiedState.independentVariablesIds = _.sample(quantitativeItemIds, 1);
+          }
+        }
+      }
+
+      return modifiedState;
+
     case SELECT_COMPARISON_INDEPENDENT_VARIABLE:
       var independentVariablesIds = state.independentVariablesIds.slice();
       const selectedIdIndependent = parseInt(action.independentVariableId);
