@@ -1,10 +1,10 @@
 import {
-  SELECT_SUMMARY_AGGREGATION_VARIABLE,
-  SELECT_SUMMARY_INDEPENDENT_VARIABLE,
-  SELECT_SUMMARY_AGGREGATION_FUNCTION,
-  SELECT_SUMMARY_AGGREGATION_WEIGHT_VARIABLE,
-  SELECT_SUMMARY_CONFIG_X,
-  SELECT_SUMMARY_CONFIG_Y,
+  SELECT_AGGREGATION_AGGREGATION_VARIABLE,
+  SELECT_AGGREGATION_INDEPENDENT_VARIABLE,
+  SELECT_AGGREGATION_AGGREGATION_FUNCTION,
+  SELECT_AGGREGATION_AGGREGATION_WEIGHT_VARIABLE,
+  SELECT_AGGREGATION_CONFIG_X,
+  SELECT_AGGREGATION_CONFIG_Y,
   REQUEST_AGGREGATION,
   RECEIVE_AGGREGATION,
   PROGRESS_AGGREGATION,
@@ -13,10 +13,10 @@ import {
   RECEIVE_ONE_D_COMPARISON,
   PROGRESS_ONE_D_COMPARISON,
   ERROR_ONE_D_COMPARISON,
-  REQUEST_SUMMARY_STATISTICS,
-  RECEIVE_SUMMARY_STATISTICS,
-  PROGRESS_SUMMARY_STATISTICS,
-  ERROR_SUMMARY_STATISTICS,
+  REQUEST_AGGREGATION_STATISTICS,
+  RECEIVE_AGGREGATION_STATISTICS,
+  PROGRESS_AGGREGATION_STATISTICS,
+  ERROR_AGGREGATION_STATISTICS,
   WIPE_PROJECT_STATE,
   SELECT_DATASET,
   RECEIVE_FIELD_PROPERTIES
@@ -46,25 +46,25 @@ const baseState = {
   },
   aggregationFunction: 'SUM',
   weightVariableId: 'UNIFORM',
-  summaryResult: {},
+  aggregationResult: {},
   binningConfigX: {},
   binningConfigY: {},
-  summaryResult: {
+  aggregationResult: {
     loading: false,
     progress: null,
     error: null,
     data: null
   },
   conditionals: [ baseConditional ],
-  loadSummary: false
+  loadAggregation: false
 }
 
-export default function summarySelector(state = baseState, action) {
+export default function aggregationSelector(state = baseState, action) {
   switch (action.type) {
-    case SELECT_SUMMARY_AGGREGATION_VARIABLE:
+    case SELECT_AGGREGATION_AGGREGATION_VARIABLE:
       return { ...state, aggregationVariableId: action.comparisonAggregationVariableId };
 
-    case SELECT_SUMMARY_INDEPENDENT_VARIABLE:
+    case SELECT_AGGREGATION_INDEPENDENT_VARIABLE:
       var comparisonVariablesIds = state.comparisonVariablesIds.slice();
       const selectedId = parseInt(action.comparisonIndependentVariableId);
       if (state.comparisonVariablesIds.find((comparisonVariablesId) => comparisonVariablesId == selectedId)) {
@@ -75,7 +75,7 @@ export default function summarySelector(state = baseState, action) {
       return { ...state, comparisonVariablesIds: comparisonVariablesIds };
 
     case RECEIVE_FIELD_PROPERTIES:
-      return { ...state, loadSummary: true };
+      return { ...state, loadAggregation: true };
 
     case REQUEST_AGGREGATION:
       return { ...state, aggregationResult: { ...state.aggregationResult, loading: true }}
@@ -107,35 +107,35 @@ export default function summarySelector(state = baseState, action) {
     case ERROR_ONE_D_COMPARISON:
       return { ...state, oneDimensionComparisonResult: { ...state.oneDimensionComparisonResult, loading: false, error: action.error } };
 
-    case REQUEST_SUMMARY_STATISTICS:
-      return { ...state, summaryResult: { ...state.summaryResult, loading: true }}
+    case REQUEST_AGGREGATION_STATISTICS:
+      return { ...state, aggregationResult: { ...state.aggregationResult, loading: true }}
 
-    case RECEIVE_SUMMARY_STATISTICS:
-      return { ...state, summaryResult: { ...state.summaryResult, loading: false, data: action.data } };
+    case RECEIVE_AGGREGATION_STATISTICS:
+      return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, data: action.data } };
 
-    case RECEIVE_SUMMARY_STATISTICS:
-      return { ...state, summaryResult: { ...state.summaryResult, data: action.data } };
+    case RECEIVE_AGGREGATION_STATISTICS:
+      return { ...state, aggregationResult: { ...state.aggregationResult, data: action.data } };
 
-    case PROGRESS_SUMMARY_STATISTICS:
+    case PROGRESS_AGGREGATION_STATISTICS:
       if (action.progress && action.progress.length){
-        return { ...state, summaryResult: { ...state.summaryResult, progress: action.progress} };
+        return { ...state, aggregationResult: { ...state.aggregationResult, progress: action.progress} };
       }
       return state;
 
-    case ERROR_SUMMARY_STATISTICS:
-      return { ...state, summaryResult: { ...state.summaryResult, loading: false, error: action.error } };
+    case ERROR_AGGREGATION_STATISTICS:
+      return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, error: action.error } };
 
 
-    case SELECT_SUMMARY_AGGREGATION_FUNCTION:
+    case SELECT_AGGREGATION_AGGREGATION_FUNCTION:
       return { ...state, aggregationFunction: action.aggregationFunction};
 
-    case SELECT_SUMMARY_AGGREGATION_WEIGHT_VARIABLE:
+    case SELECT_AGGREGATION_AGGREGATION_WEIGHT_VARIABLE:
       return { ...state, weightVariableId: action.aggregationWeightVariableId }
 
-    case SELECT_SUMMARY_CONFIG_X:
+    case SELECT_AGGREGATION_CONFIG_X:
       return { ...state, binningConfigX: action.config }
 
-    case SELECT_SUMMARY_CONFIG_Y:
+    case SELECT_AGGREGATION_CONFIG_Y:
       return { ...state, binningConfigY: action.config }
 
     case WIPE_PROJECT_STATE:

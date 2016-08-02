@@ -120,10 +120,12 @@ export class RegressionSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique)
+                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
+                      color: item.color
                     })
                   )}
                   displayTextMember="name"
+                  colorMember="color"
                   valueMember="id"
                   externalSelectedItems={ regressionSelector.independentVariableIds }
                   separated={ true }
@@ -138,10 +140,12 @@ export class RegressionSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique)
+                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
+                      color: item.color
                     })
                   )}
                   valueMember="id"
+                  colorMember="color"
                   displayTextMember="name"
                   externalSelectedItems={ regressionSelector.independentVariableIds }
                   separated={ true }
@@ -156,10 +160,12 @@ export class RegressionSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique)
+                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
+                      color: item.color
                     })
                   )}
                   valueMember="id"
+                  colorMember="color"
                   displayTextMember="name"
                   externalSelectedItems={ regressionSelector.independentVariableIds }
                   separated={ true }
@@ -171,7 +177,7 @@ export class RegressionSidebar extends Component {
                 <div className={ styles.fieldGroupLabel }>Interaction Terms</div>
                 { fieldProperties.interactionTerms.length > 0 ?
                     <ToggleButtonGroup
-                      toggleItems={ fieldProperties.interactionTerms.map((item) => 
+                      toggleItems={ fieldProperties.interactionTerms.map((item) =>
                         new Object({
                           id: item.id,
                           name: createInteractionTermName(item.names)
@@ -193,18 +199,18 @@ export class RegressionSidebar extends Component {
               width='50%'
               margin='2px'
               value={ interactionVariables[0] }
-              options={ fieldProperties.items.filter((item) => 
+              options={ fieldProperties.items.filter((item) =>
                 item.id != parseInt(regressionSelector.dependentVariableId) && item.id != interactionVariables[1]
                   && filterInteractionTermSelection(item.id, interactionVariables[1], fieldProperties.interactionTerms))
               }
               valueMember="id"
               displayTextMember="name"
               onChange={this.onAddInteractionTerm.bind(this, 0)} />
-            <DropDownMenu 
+            <DropDownMenu
               width='50%'
               value={ interactionVariables[1] }
-              options={ fieldProperties.items.filter((item) => 
-                item.id != parseInt(regressionSelector.dependentVariableId) && item.id != interactionVariables[0] 
+              options={ fieldProperties.items.filter((item) =>
+                item.id != parseInt(regressionSelector.dependentVariableId) && item.id != interactionVariables[0]
                   && filterInteractionTermSelection(item.id, interactionVariables[0], fieldProperties.interactionTerms))
               }
               valueMember="id"

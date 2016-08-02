@@ -46,7 +46,7 @@ export class ProjectTopBar extends Component {
       "explore",
       "builder",
       "starred",
-      "summary",
+      "aggregation",
       "comparison",
       "correlation",
       "regression",

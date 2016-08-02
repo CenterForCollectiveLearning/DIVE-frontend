@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectBinningConfigX, selectBinningConfigY, selectSummaryIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable } from '../../../actions/SummaryActions';
+import { selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable } from '../../../actions/AggregationActions';
 import styles from '../Analysis.sass';
 
 import Sidebar from '../../Base/Sidebar';
@@ -11,7 +11,7 @@ import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 import BinningSelector from '../../Visualizations/Builder/BinningSelector';
 
-export class SummarySidebar extends Component {
+export class AggregationSidebar extends Component {
   componentWillMount(props) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
 
@@ -30,10 +30,10 @@ export class SummarySidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, summarySelector, selectSummaryIndependentVariable } = this.props;
-    const nonComparisonVariables = this.props.fieldProperties.items.filter((item) => this.props.summarySelector.comparisonVariablesIds.indexOf(item.id) < 0)
+    const { fieldProperties, aggregationSelector, selectAggregationIndependentVariable } = this.props;
+    const nonComparisonVariables = this.props.fieldProperties.items.filter((item) => this.props.aggregationSelector.comparisonVariablesIds.indexOf(item.id) < 0)
     const aggregationOptions = [{'id': 'count', 'name' : 'count'}, ...nonComparisonVariables.filter((item) => item.generalType == 'q')]
-    const numComparisonVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q' && this.props.summarySelector.comparisonVariablesIds.indexOf(item.id) >= 0 )
+    const numComparisonVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q' && this.props.aggregationSelector.comparisonVariablesIds.indexOf(item.id) >= 0 )
     const numQuantitative = numComparisonVariables.length;
     const { selectBinningConfigX, selectBinningConfigY } = this.props;
     return (
@@ -48,14 +48,16 @@ export class SummarySidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == summarySelector.aggregationVariableId) || ( item.generalType == 'c' && item.isUnique)
+                      disabled: (item.id == aggregationSelector.aggregationVariableId) || ( item.generalType == 'c' && item.isUnique),
+                      color: item.color
                     })
                   )}
                   displayTextMember="name"
                   valueMember="id"
-                  externalSelectedItems={ summarySelector.comparisonVariablesIds }
+                  colorMember="color"
+                  externalSelectedItems={ aggregationSelector.comparisonVariablesIds }
                   separated={ true }
-                  onChange={ selectSummaryIndependentVariable } />
+                  onChange={ selectAggregationIndependentVariable } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
@@ -66,14 +68,16 @@ export class SummarySidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == summarySelector.aggregationVariableId)
+                      disabled: (item.id == aggregationSelector.aggregationVariableId),
+                      color: item.color
                     })
                   )}
                   valueMember="id"
+                  colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ summarySelector.comparisonVariablesIds }
+                  externalSelectedItems={ aggregationSelector.comparisonVariablesIds }
                   separated={ true }
-                  onChange={ selectSummaryIndependentVariable } />
+                  onChange={ selectAggregationIndependentVariable } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
@@ -84,14 +88,16 @@ export class SummarySidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == summarySelector.aggregationVariableId)
+                      disabled: (item.id == aggregationSelector.aggregationVariableId),
+                      color: item.color
                     })
                   )}
                   valueMember="id"
+                  colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ summarySelector.comparisonVariablesIds }
+                  externalSelectedItems={ aggregationSelector.comparisonVariablesIds }
                   separated={ true }
-                  onChange={ selectSummaryIndependentVariable } />
+                  onChange={ selectAggregationIndependentVariable } />
               </div>
             }
           </SidebarGroup>
@@ -99,27 +105,27 @@ export class SummarySidebar extends Component {
         { this.props.fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Aggregate on">
             <DropDownMenu
-              value={ this.props.summarySelector.aggregationVariableId }
+              value={ this.props.aggregationSelector.aggregationVariableId }
               options= {aggregationOptions}
               valueMember="id"
               displayTextMember="name"
               onChange={ this.props.selectAggregationVariable }/>
           </SidebarGroup>
         }
-        { this.props.summarySelector.aggregationVariableId != 'count' &&
+        { this.props.aggregationSelector.aggregationVariableId != 'count' &&
           <SidebarGroup heading="By">
             <DropDownMenu
-              value={ this.props.summarySelector.aggregationFunction}
+              value={ this.props.aggregationSelector.aggregationFunction}
               options={ [{ 'id':'SUM', 'name':'sum' }, { 'id':'MEAN', 'name':'mean' }] }
               valueMember="id"
               displayTextMember="name"
               onChange={ this.props.selectAggregationFunction }/>
           </SidebarGroup>
         }
-        { this.props.summarySelector.aggregationFunction == 'MEAN' && this.props.summarySelector.aggregationVariableId != 'count' &&
+        { this.props.aggregationSelector.aggregationFunction == 'MEAN' && this.props.aggregationSelector.aggregationVariableId != 'count' &&
           <SidebarGroup heading="Weighted by:">
             <DropDownMenu
-              value={ this.props.summarySelector.weightVariableId}
+              value={ this.props.aggregationSelector.weightVariableId}
               options={ [{ 'id':'UNIFORM', 'name':'uniform' }, ...this.props.fieldProperties.items.filter((item) => item.generalType == 'q')] }
               valueMember="id"
               displayTextMember="name"
@@ -128,13 +134,13 @@ export class SummarySidebar extends Component {
         }
         { numQuantitative >= 1 &&
           <BinningSelector
-            config={ this.props.summarySelector.binningConfigX }
+            config={ this.props.aggregationSelector.binningConfigX }
             selectBinningConfig={ selectBinningConfigX }
             name={ numComparisonVariables[0].name }/>
         }
         { numQuantitative == 2 &&
           <BinningSelector
-            config={ this.props.summarySelector.binningConfigY }
+            config={ this.props.aggregationSelector.binningConfigY }
             selectBinningConfig={ selectBinningConfigY }
             name={ numComparisonVariables[1].name }/>
         }
@@ -144,21 +150,21 @@ export class SummarySidebar extends Component {
   }
 }
 
-SummarySidebar.propTypes = {
+AggregationSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  summarySelector: PropTypes.object.isRequired
+  aggregationSelector: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, fieldProperties, summarySelector } = state;
+  const { project, datasetSelector, fieldProperties, aggregationSelector } = state;
   return {
     project,
     datasetSelector,
     fieldProperties,
-    summarySelector
+    aggregationSelector
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectBinningConfigX, selectBinningConfigY, selectSummaryIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable })(SummarySidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable })(AggregationSidebar);

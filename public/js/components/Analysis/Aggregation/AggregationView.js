@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
-import { runAggregation, runComparisonOneDimensional, getVariableSummaryStatistics } from '../../../actions/SummaryActions';
+import { runAggregation, runComparisonOneDimensional, getVariableAggregationStatistics } from '../../../actions/AggregationActions';
 import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import styles from '../Analysis.sass';
@@ -13,30 +13,29 @@ import HeaderBar from '../../Base/HeaderBar';
 import DropDownMenu from '../../Base/DropDownMenu';
 import AggregationTable from './AggregationTable';
 import ComparisonTableOneD from './ComparisonTableOneD';
-import VariableSummaryCard from './VariableSummaryCard';
 
-export class SummaryView extends Component {
+export class AggregationView extends Component {
   componentWillMount() {
-    const { projectId, datasetId, datasets, datasetSelector, allComparisonVariableIds, getVariableSummaryStatistics } = this.props
+    const { projectId, datasetId, datasets, datasetSelector, allComparisonVariableIds, getVariableAggregationStatistics } = this.props
 
     if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(projectId);
     }
 
     if (projectId && datasetId && allComparisonVariableIds.length) {
-      getVariableSummaryStatistics(projectId, datasetId, allComparisonVariableIds)
+      getVariableAggregationStatistics(projectId, datasetId, allComparisonVariableIds)
     }
 
     clearAnalysis();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, datasets, binningConfigX, binningConfigY, loadSummary, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runComparisonOneDimensional, allComparisonVariableIds, getVariableSummaryStatistics, fetchDatasets } = this.props;
+    const { projectId, datasetId, datasets, binningConfigX, binningConfigY, loadAggregation, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runComparisonOneDimensional, allComparisonVariableIds, getVariableAggregationStatistics, fetchDatasets } = this.props;
     const aggregationIndependentVariablesChanged = nextProps.aggregationIndependentVariableNamesAndTypes.length != aggregationIndependentVariableNamesAndTypes.length;
     const aggregationVariableChanged = nextProps.aggregationVariableName != aggregationVariableName;
     const aggregationFunctionChanged = nextProps.aggregationFunction != aggregationFunction;
     const weightVariableChanged = nextProps.weightVariableName != weightVariableName;
-    const shouldLoadSummary = nextProps.loadSummary != loadSummary;
+    const shouldLoadAggregation = nextProps.loadAggregation != loadAggregation;
     const binningConfigsChanged = nextProps.binningConfigX != binningConfigX || nextProps.binningConfigY != binningConfigY
 
     const sideBarChanged = binningConfigsChanged || aggregationIndependentVariablesChanged || aggregationVariableChanged || aggregationFunctionChanged || weightVariableChanged;
@@ -55,8 +54,8 @@ export class SummaryView extends Component {
           runAggregation(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.aggregationIndependentVariableNamesAndTypes);
         }
       } else{
-        if (noIndependentVariablesSelected && shouldLoadSummary) {
-          getVariableSummaryStatistics(nextProps.projectId, nextProps.datasetId, nextProps.allComparisonVariableIds);
+        if (noIndependentVariablesSelected && shouldLoadAggregation) {
+          getVariableAggregationStatistics(nextProps.projectId, nextProps.datasetId, nextProps.allComparisonVariableIds);
         }
       }
     }
@@ -73,42 +72,24 @@ export class SummaryView extends Component {
   }
 
   render() {
-    const { aggregationResult, summaryResult, oneDimensionComparisonResult, aggregationIndependentVariableNames, datasets, datasetId } = this.props;
+    const { aggregationResult, oneDimensionComparisonResult, aggregationIndependentVariableNames, datasets, datasetId } = this.props;
 
     const noComparisonVariablesSelected = aggregationIndependentVariableNames.length ==0;
     const oneComparisonVariableSelected = aggregationIndependentVariableNames.length == 1;
     const twoComparisonVariablesSelected = aggregationIndependentVariableNames.length == 2;
     const oneDimensionDictHasElements = oneDimensionComparisonResult.data && oneDimensionComparisonResult.data.rows && oneDimensionComparisonResult.data.rows.length > 0;
     const aggregationDictHasElements = aggregationResult.data && aggregationResult.data.rows && aggregationResult.data.rows.length > 0;
-    const summaryDictHasElements = summaryResult.data && summaryResult.data.items && summaryResult.data.items.length > 0;
 
-    var summaryContent = <div></div>;
+    var aggregationContent = <div></div>;
 
     if (noComparisonVariablesSelected ) {
-      summaryContent =
-        <div>
-          { summaryResult.loading &&
-            <div className={ styles.watermark }>
-              { summaryResult.progress != null ? summaryResult.progress : 'Calculating summary…' }
-            </div>
-          }
-          { (!summaryResult.loading && summaryDictHasElements) && summaryResult.data.items.map((item, i) => {
-            const columnHeaders = (item.type == 'c') ? summaryResult.data.categoricalHeaders : summaryResult.data.numericalHeaders;
-            return (
-              <div className={ styles.summaryCardHolder } key={ `variable-summary-card-${ i }` }>
-              <VariableSummaryCard
-                variable={ item }
-                columnHeaders={ columnHeaders }/>
-              </div>
-            );
-          })}
-
-        </div>
-      ;
+      aggregationContent = <div className={ styles.watermark }>
+        Please Select One or More Variables
+      </div>
     }
 
     else if (oneComparisonVariableSelected) {
-      summaryContent =
+      aggregationContent =
         <div className={ styles.aggregationViewContainer }>
           <Card header={
             <span>Comparison Table: <span className={ styles.titleField }>{ aggregationIndependentVariableNames[0] }</span></span>
@@ -127,7 +108,7 @@ export class SummaryView extends Component {
     }
 
     else if (twoComparisonVariablesSelected) {
-      summaryContent =
+      aggregationContent =
         <div className={ styles.aggregationViewContainer }>
           <Card header={
             <span>Aggregation Table: {
@@ -156,23 +137,23 @@ export class SummaryView extends Component {
 
     return (
       <div className={ styles.summaryViewContainer }>
-        { summaryContent }
+        { aggregationContent }
       </div>
     );
   }
 }
 
 function mapStateToProps(state) {
-  const { project, datasets, summarySelector, datasetSelector, fieldProperties } = state;
-  const { aggregationResult, oneDimensionComparisonResult, binningConfigX, binningConfigY } = summarySelector;
+  const { project, datasets, aggregationSelector, datasetSelector, fieldProperties } = state;
+  const { aggregationResult, oneDimensionComparisonResult, binningConfigX, binningConfigY } = aggregationSelector;
 
   const allComparisonVariableIds = fieldProperties.items.map((field) => field.id);
 
-  const aggregationVariable = fieldProperties.items.find((property) => property.id == summarySelector.aggregationVariableId);
+  const aggregationVariable = fieldProperties.items.find((property) => property.id == aggregationSelector.aggregationVariableId);
   const aggregationVariableName = aggregationVariable ? aggregationVariable.name : null;
 
   const aggregationIndependentVariables = fieldProperties.items
-    .filter((property) => summarySelector.comparisonVariablesIds.indexOf(property.id) >= 0)
+    .filter((property) => aggregationSelector.comparisonVariablesIds.indexOf(property.id) >= 0)
 
   const aggregationIndependentVariableNames = aggregationIndependentVariables
     .map((field) => field.name);
@@ -197,7 +178,7 @@ function mapStateToProps(state) {
 
 
 
-  const weightVariable = fieldProperties.items.find((property) => property.id == summarySelector.weightVariableId);
+  const weightVariable = fieldProperties.items.find((property) => property.id == aggregationSelector.weightVariableId);
   const weightVariableName = weightVariable ? weightVariable.name : 'UNIFORM';
 
   return {
@@ -207,14 +188,13 @@ function mapStateToProps(state) {
     datasetId: datasetSelector.datasetId,
     aggregationResult: aggregationResult,
     aggregationVariableName: aggregationVariableName,
-    aggregationFunction: summarySelector.aggregationFunction,
+    aggregationFunction: aggregationSelector.aggregationFunction,
     weightVariableName: weightVariableName,
     aggregationIndependentVariableNames: aggregationIndependentVariableNames,
     aggregationIndependentVariableNamesAndTypes: aggregationIndependentVariableNamesAndTypes,
     oneDimensionComparisonResult: oneDimensionComparisonResult,
-    summaryResult: summarySelector.summaryResult,
     allComparisonVariableIds: allComparisonVariableIds,
-    loadSummary: summarySelector.loadSummary,
+    loadAggregation: aggregationSelector.loadAggregation,
     binningConfigX: binningConfigX,
     binningConfigY: binningConfigY
   };
@@ -224,8 +204,8 @@ export default connect(mapStateToProps, {
   push,
   runAggregation,
   runComparisonOneDimensional,
-  getVariableSummaryStatistics,
+  getVariableAggregationStatistics,
   selectDataset,
   fetchDatasets,
   clearAnalysis
-})(SummaryView);
+})(AggregationView);
