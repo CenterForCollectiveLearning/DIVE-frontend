@@ -22,10 +22,38 @@ import DropDownMenu from '../../Base/DropDownMenu';
 export class ComparisonView extends Component {
 
   componentWillMount() {
-    const { projectId, datasets, datasetSelector, fetchDatasets } = this.props;
+    const {
+      projectId,
+      datasets,
+      datasetId,
+      fetchDatasets,
+      independentVariableNamesAndTypes,
+      independentVariableNames,
+      dependentVariableNames,
+      runNumericalComparison,
+      runAnova,
+      getAnovaBoxplotData,
+      canRunNumericalComparisonDependent,
+      canRunNumericalComparisonIndependent
+    } = this.props;
 
-    if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
+    if (projectId && (!datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(projectId);
+    }
+
+    const independentVariablesChanged = independentVariableNames.length != independentVariableNames.length;
+    const dependentVariablesChanged = dependentVariableNames.length != dependentVariableNames.length;
+    const canRunAnova = dependentVariableNames.length && independentVariableNames.length
+
+    if (projectId && datasetId) {
+      if (canRunNumericalComparisonIndependent) {
+        runNumericalComparison(projectId, datasetId, independentVariableNames, true);
+      } else if (canRunNumericalComparisonDependent) {
+        runNumericalComparison(projectId, datasetId, dependentVariableNames, false);
+      } else if (canRunAnova) {
+        runAnova(projectId, datasetId, independentVariableNamesAndTypes, dependentVariableNames);
+        getAnovaBoxplotData(projectId, datasetId, independentVariableNamesAndTypes, dependentVariableNames);
+      }
     }
 
     clearAnalysis();

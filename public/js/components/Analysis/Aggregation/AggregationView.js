@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
-import { runAggregation, runAggregationOneDimensional, getVariableAggregationStatistics } from '../../../actions/AggregationActions';
+import { runAggregation, runAggregationOneDimensional } from '../../../actions/AggregationActions';
 import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import styles from '../Analysis.sass';
@@ -16,21 +16,43 @@ import AggregationTableOneD from './AggregationTableOneD';
 
 export class AggregationView extends Component {
   componentWillMount() {
-    const { projectId, datasetId, datasets, datasetSelector, allAggregationVariableIds, getVariableAggregationStatistics } = this.props
+    const {
+      projectId,
+      datasetId,
+      datasets,
+      datasetSelector,
+      aggregationIndependentVariableNamesAndTypes,
+      getVariableAggregationStatistics,
+      aggregationVariableName,
+      aggregationFunction,
+      weightVariableName,
+      runAggregation,
+      runAggregationOneDimensional,
+      allAggregationVariableIds,
+      fetchDatasets
+    } = this.props
 
     if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(projectId);
     }
 
-    if (projectId && datasetId && allAggregationVariableIds.length) {
-      getVariableAggregationStatistics(projectId, datasetId, allAggregationVariableIds)
+    const noIndependentVariablesSelected = aggregationIndependentVariableNamesAndTypes.length == 0;
+    const oneIndependentVariableSelected = aggregationIndependentVariableNamesAndTypes.length == 1;
+    const twoIndependentVariablesSelected = aggregationIndependentVariableNamesAndTypes.length == 2;
+
+    if (oneIndependentVariableSelected) {
+      const aggregationList = aggregationVariableName ? ['q', aggregationVariableName, [aggregationFunction, weightVariableName]] : null;
+      runAggregationOneDimensional(projectId, datasetId, aggregationList, aggregationIndependentVariableNamesAndTypes);
+    } else if (twoIndependentVariablesSelected) {
+      const aggregationList = aggregationVariableName ? ['q', aggregationVariableName, [aggregationFunction, weightVariableName]] : null;
+      runAggregation(projectId, datasetId, aggregationList, aggregationIndependentVariableNamesAndTypes);
     }
 
     clearAnalysis();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, datasets, binningConfigX, binningConfigY, loadAggregation, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runAggregationOneDimensional, allAggregationVariableIds, getVariableAggregationStatistics, fetchDatasets } = this.props;
+    const { projectId, datasetId, datasets, binningConfigX, binningConfigY, loadAggregation, aggregationIndependentVariableNamesAndTypes, aggregationVariableName, aggregationFunction, weightVariableName, runAggregation, runAggregationOneDimensional, allAggregationVariableIds, fetchDatasets } = this.props;
     const aggregationIndependentVariablesChanged = nextProps.aggregationIndependentVariableNamesAndTypes.length != aggregationIndependentVariableNamesAndTypes.length;
     const aggregationVariableChanged = nextProps.aggregationVariableName != aggregationVariableName;
     const aggregationFunctionChanged = nextProps.aggregationFunction != aggregationFunction;
@@ -52,10 +74,6 @@ export class AggregationView extends Component {
         } else if (twoIndependentVariablesSelected) {
           const aggregationList = nextProps.aggregationVariableName ? ['q', nextProps.aggregationVariableName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null;
           runAggregation(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.aggregationIndependentVariableNamesAndTypes);
-        }
-      } else{
-        if (noIndependentVariablesSelected && shouldLoadAggregation) {
-          getVariableAggregationStatistics(nextProps.projectId, nextProps.datasetId, nextProps.allAggregationVariableIds);
         }
       }
     }
@@ -168,7 +186,7 @@ function mapStateToProps(state) {
     });
 
   if (aggregationIndependentVariables.length == 2){
-    var var1= aggregationIndependentVariables[0]
+    var var1 = aggregationIndependentVariables[0]
     var var2 = aggregationIndependentVariables[1]
     if (var1.generalType == 'q' && var2.generalType == 'q'){
       aggregationIndependentVariableNamesAndTypes[0] = [var1.generalType, var1.name, binningConfigX]
@@ -204,7 +222,6 @@ export default connect(mapStateToProps, {
   push,
   runAggregation,
   runAggregationOneDimensional,
-  getVariableAggregationStatistics,
   selectDataset,
   fetchDatasets,
   clearAnalysis

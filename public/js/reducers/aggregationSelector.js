@@ -67,7 +67,7 @@ export default function aggregationSelector(state = baseState, action) {
     case RECEIVE_FIELD_PROPERTIES:
       // Default selection
       let selectedAggregationVariablesIds;
-      var categoricalItemIds = action.fieldProperties.filter((item) => item.generalType == 'c').map((item) => item.id);
+      var categoricalItemIds = action.fieldProperties.filter((item) => (item.generalType == 'c') && (!item.isId)).map((item) => item.id);
       var quantitativeItemIds = action.fieldProperties.filter((item) => item.generalType == 'q').map((item) => item.id);
       var n_c = categoricalItemIds.length;
       var n_q = quantitativeItemIds.length;
