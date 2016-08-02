@@ -14,7 +14,6 @@ export class CorrelationSidebar extends Component {
   componentWillMount(props) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
 
-    console.log((project.properties.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching));
     if (project.properties.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId)
     }
@@ -38,14 +37,17 @@ export class CorrelationSidebar extends Component {
           <SidebarGroup heading="Correlation Variables">
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
               <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Quantitative</div>
                 <ToggleButtonGroup
                   toggleItems={ quantitativeVariables.map((item) =>
                     new Object({
                       id: item.id,
-                      name: item.name
+                      name: item.name,
+                      color: item.color
                     })
                   )}
                   valueMember="id"
+                  colorMember="color"
                   displayTextMember="name"
                   externalSelectedItems={ correlationSelector.correlationVariableIds }
                   separated={ true }

@@ -6,21 +6,21 @@ import BareDataGrid from '../../Base/BareDataGrid';
 
 import { getRoundedString } from '../../../helpers/helpers';
 
-export default class ComparisonTableOneD extends Component {
+export default class AggregationTableOneD extends Component {
 
   render() {
-    const { comparisonResult, comparisonVariableNames } = this.props;
+    const { aggregationResult, aggregationVariableNames } = this.props;
 
     const data = [
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
         items: [
-          <div className={ styles.tableCell + ' ' + styles.comparisonTableHeaderCell }>{ comparisonVariableNames[0] }</div>,
-          <div className={ styles.tableCell + ' ' + styles.comparisonTableHeaderCell }>{ "Total" }</div>
+          <div className={ styles.tableCell + ' ' + styles.aggregationTableHeaderCell }>{ aggregationVariableNames[0] }</div>,
+          <div className={ styles.tableCell + ' ' + styles.aggregationTableHeaderCell }>{ "Total" }</div>
         ]
       },
-      ...comparisonResult.rows.map(function(row_object) {
+      ...aggregationResult.rows.map(function(row_object) {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumnOneD,
@@ -29,11 +29,11 @@ export default class ComparisonTableOneD extends Component {
       })
     ];
 
-    if (comparisonResult.columnTotal) {
+    if (aggregationResult.columnTotal) {
       data.push({
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
-        items: [ 'Column Total',  <div className={ styles.tableCell }>{ getRoundedString(comparisonResult.columnTotal, 2, true) }</div> ]
+        items: [ 'Column Total',  <div className={ styles.tableCell }>{ getRoundedString(aggregationResult.columnTotal, 2, true) }</div> ]
       })
     }
 
@@ -47,7 +47,7 @@ export default class ComparisonTableOneD extends Component {
   }
 }
 
-ComparisonTableOneD.propTypes = {
-  comparisonResult: PropTypes.object.isRequired,
-  comparisonVariableNames: PropTypes.array.isRequired,
+AggregationTableOneD.propTypes = {
+  aggregationResult: PropTypes.object.isRequired,
+  aggregationVariableNames: PropTypes.array.isRequired,
 }

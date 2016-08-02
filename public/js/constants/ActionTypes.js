@@ -5,7 +5,7 @@ export * from './FieldPropertiesActionTypes';
 export * from './RegressionActionTypes';
 export * from './VisualizationActionTypes';
 export * from './CorrelationActionTypes';
-export * from './SummaryActionTypes';
+export * from './AggregationActionTypes';
 export * from './UserActionTypes';
 export * from './ComposeActionTypes';
 

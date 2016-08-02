@@ -1,12 +1,15 @@
+@import '../../../css/mixins.sass'
+
 .gridContainer, .innerGrid, .outerGrid
   display: flex
   flex-direction: column
   font-size: 12px
-  color: #333
+  color: $black
+  background-color: $white
   flex-grow: 1
 
 .gridContainer
-  border: 1px solid #d8d8d8
+  border: 1px solid $ui-line-grey
   max-width: 100%
   overflow: auto
 
@@ -22,7 +25,7 @@
   justify-content: center
   text-align: center
 
-  border: 1px solid #D8D8D8
+  border: 1px solid $ui-line-grey
   border-bottom-width: 0
   border-right-width: 0
   word-break: break-word

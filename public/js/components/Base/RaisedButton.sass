@@ -1,6 +1,7 @@
 @import '../../../css/mixins.sass'
 
 .raisedButton
+  cursor: pointer
   max-width: 160px
   overflow: hidden
   text-overflow: ellipsis
@@ -13,7 +14,7 @@
   text-align: center
   color: $black
 
-  background-color: $white
+  background-color: transparent
 
   border: 1px solid $ui-line-grey
   border-radius: 2px
@@ -24,9 +25,7 @@
     margin-top: 15px
 
   &:hover
-    border-color: $ui-line-grey
-    background-color: rgba($white, 0.7)
-    cursor: pointer
+    background-color: $primary-accent-hover
 
   &:focus, &:active, &.selected
     background-color: $white
