@@ -78,7 +78,7 @@ export class ComposeView extends Component {
   }
 
   render() {
-    const { documents, composeSelector, selectedDocument, exportedSpecs, exportedRegressions, exportedCorrelations, saveDocumentTitle, selectComposeContent } = this.props;
+    const { documents, composeSelector, selectedDocument, fieldNameToColor, exportedSpecs, exportedRegressions, exportedCorrelations, saveDocumentTitle, selectComposeContent } = this.props;
     const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
 
     return (
@@ -94,18 +94,18 @@ export class ComposeView extends Component {
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
-                <RaisedButton marginTop icon altText="Delete document" onClick={ this.onClickDeleteDocument } disabled={ documents.items.length <= 1 }><i className="fa fa-trash"></i></RaisedButton>
+                <RaisedButton icon altText="Delete document" onClick={ this.onClickDeleteDocument } disabled={ documents.items.length <= 1 }><i className="fa fa-trash"></i></RaisedButton>
               </div>
               <div className={ styles.headerControl }>
-                <RaisedButton marginTop icon altText="New document" onClick={ this.onClickNewDocument }><i className="fa fa-file-o"></i></RaisedButton>
+                <RaisedButton icon altText="New document" onClick={ this.onClickNewDocument }><i className="fa fa-file-o"></i></RaisedButton>
               </div>
               <div className={ styles.headerControl }>
-                <RaisedButton marginTop onClick={ this.onClickShareDocument }>Share</RaisedButton>
+                <RaisedButton onClick={ this.onClickShareDocument }>Share</RaisedButton>
               </div>
               { !documents.isFetching && documents.items.length > 0 &&
                 <div className={ styles.headerControl + ' ' + styles.headerControlLong }>
                   <DropDownMenu
-                    label="Document"
+                    prefix="Document"
                     width={ 250 }
                     className={ styles.documentSelector }
                     value={ parseInt(composeSelector.documentId) }
@@ -124,6 +124,7 @@ export class ComposeView extends Component {
           exportedCorrelations={ exportedCorrelations }
           saveDocumentTitle={ saveDocumentTitle }
           selectedDocument={ selectedDocument }
+          fieldNameToColor={ fieldNameToColor }
           editable={ true }/>
       </div>
     );
@@ -137,14 +138,16 @@ ComposeView.propTypes = {
 }
 
 function mapStateToProps(state) {
-  const { project, composeSelector, exportedSpecs, exportedRegressions, exportedCorrelations, documents } = state;
+  const { project, fieldProperties, composeSelector, exportedSpecs, exportedRegressions, exportedCorrelations, documents } = state;
+
   return {
     projectId: (project.properties.id ? `${ project.properties.id }` : null),
     composeSelector,
     exportedSpecs,
     exportedRegressions,
     exportedCorrelations,
-    documents
+    documents,
+    fieldNameToColor: fieldProperties.fieldNameToColor,
   };
 }
 

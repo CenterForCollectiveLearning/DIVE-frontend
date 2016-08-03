@@ -37,7 +37,7 @@ export default class ComposeEditor extends Component {
   }
 
   render() {
-    const { selectedDocument, exportedSpecs, exportedRegressions, exportedCorrelations, updatedAt, editable, selectComposeContent } = this.props;
+    const { selectedDocument, exportedSpecs, exportedRegressions, fieldNameToColor, exportedCorrelations, updatedAt, editable, selectComposeContent } = this.props;
     if (!selectedDocument.blocks) {
       return (<div></div>);
     }
@@ -72,7 +72,9 @@ export default class ComposeEditor extends Component {
               exportedSpecs={ exportedSpecs }
               exportedCorrelations={ exportedCorrelations }
               exportedRegressions={ exportedRegressions }
-              selectComposeContent={ selectComposeContent } />
+              selectComposeContent={ selectComposeContent }
+              fieldNameToColor={ fieldNameToColor }
+            />
           }
         </div>
       </div>
@@ -86,5 +88,6 @@ ComposeEditor.propTypes = {
   exportedSpecs: PropTypes.object,
   exportedCorrelations: PropTypes.object,
   exportedRegressions: PropTypes.object,
+  fieldNameToColor: PropTypes.object,
   selectComposeContent: PropTypes.func
 };
