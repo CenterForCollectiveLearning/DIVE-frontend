@@ -10,6 +10,7 @@
 
 .projectRightContainer
   +fillContainer
+  background-color: $center-grey
   flex-direction: column
 
 $topBarHeight: 55px
@@ -19,6 +20,7 @@ $topBarHeight: 55px
   flex-direction: column
   position: relative
   min-width: 155px
+  max-width: 155px
   background: $left-sidebar-grey //  $black
 
   .logoContainer
@@ -83,6 +85,7 @@ $topBarHeight: 55px
   flex-shrink: 0
   background-color: $center-grey
   border-bottom: 1px solid $ui-line-grey
+  margin: 0 15px
 
   .projectTopBarLeft
     +titleText
@@ -92,7 +95,6 @@ $topBarHeight: 55px
     flex-direction: row
     align-items: center
     height: $topBarHeight
-    padding-left: 20px
     line-height: 48px
 
     .section
