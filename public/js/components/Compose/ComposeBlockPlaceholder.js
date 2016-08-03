@@ -59,7 +59,7 @@ export default class ComposeBlockPlaceholder extends Component {
 
   render() {
     const { phase } = this.state;
-    const { exportedSpecs, exportedCorrelations, exportedRegressions } = this.props;
+    const { exportedSpecs, exportedCorrelations, exportedRegressions, fieldNameToColor } = this.props;
     let content, header, action;
 
     switch(phase) {
@@ -73,7 +73,11 @@ export default class ComposeBlockPlaceholder extends Component {
         content =
           <div className={ styles.contentPreviewBlocksContainer }>
             { !exportedSpecs.isFetching && exportedSpecs.items.length > 0 && exportedSpecs.items.map((spec) =>
-              <ComposeVisualizationPreviewBlock onClick={ this.selectVisualization } spec={ spec } key={ spec.id }/>
+              <ComposeVisualizationPreviewBlock onClick={ this.selectVisualization }
+                spec={ spec }
+                key={ spec.id }
+                fieldNameToColor={ fieldNameToColor }
+              />
             )}
             { !exportedRegressions.isFetching && exportedRegressions.items.length > 0 && exportedRegressions.items.map((spec) =>
               <ComposeRegressionPreviewBlock onClick={ this.selectRegression } spec={ spec } key={ spec.id }/>
@@ -107,5 +111,6 @@ ComposeBlockPlaceholder.propTypes = {
   exportedSpecs: PropTypes.object,
   exportedCorrelations: PropTypes.object,
   exportedRegressions: PropTypes.object,
-  selectComposeContent: PropTypes.func
+  selectComposeContent: PropTypes.func,
+  fieldNameToColor: PropTypes.object
 };

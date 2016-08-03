@@ -14,13 +14,14 @@ export default class ComposeVisualizationPreviewBlock extends Component {
   }
 
   render() {
-    const { spec } = this.props;
+    const { spec, fieldNameToColor } = this.props;
 
     return (
       <div className={ styles.contentPreviewBlockContainer }
            onClick={ this.handleClick.bind(this) }>
         <Visualization
           headerClassName={ styles.visualizationPreviewBlockHeader }
+          fieldNameToColor={ fieldNameToColor }
           visualizationTypes={ spec.vizTypes }
           spec={ spec }
           data={ spec.data }
@@ -33,5 +34,6 @@ export default class ComposeVisualizationPreviewBlock extends Component {
 
 ComposeVisualizationPreviewBlock.propTypes = {
   spec: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  fieldNameToColor: PropTypes.object,
 };

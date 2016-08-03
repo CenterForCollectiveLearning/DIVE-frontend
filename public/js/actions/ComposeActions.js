@@ -103,7 +103,6 @@ function receiveExportedRegressionsDispatcher(params, json) {
 }
 
 export function fetchExportedCorrelations(projectId) {
-  console.log('Fetching correlations');
   return (dispatch) => {
     dispatch(requestExportedCorrelationsDispatcher());
     return fetch(`/exported_results/v1/exported_results?project_id=${projectId}&result_type=correlation`)
@@ -115,7 +114,6 @@ export function fetchExportedCorrelations(projectId) {
 }
 
 export function fetchExportedRegressions(projectId) {
-  console.log('Fetching regressions');
   return (dispatch) => {
     dispatch(requestExportedRegressionsDispatcher());
     return fetch(`/exported_results/v1/exported_results?project_id=${projectId}&result_type=regression`)
