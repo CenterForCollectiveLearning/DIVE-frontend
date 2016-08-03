@@ -50,6 +50,9 @@
 =======
 	__webpack_require__(19);
 	module.exports = __webpack_require__(631);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 
@@ -94289,6 +94292,9 @@
 
 /***/ },
 /* 631 */
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 /***/ function(module, exports) {
 

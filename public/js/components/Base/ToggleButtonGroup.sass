@@ -49,6 +49,9 @@
       min-width: 20px
       padding: 0 8px
 
+    &.textToggleButton .raisedButton.coloredBorder
+      padding-left: 0px
+
   .raisedButton.toggleButton
     padding: 0
     border-color: $ui-line-grey
@@ -60,7 +63,7 @@
     background-color: $center-grey // transparent
 
     &[data-selected]
-      color: $black
+      color: $white
       background-color: $primary-accent
 
     &:hover > .delete
@@ -69,8 +72,14 @@
     img
       padding: 3px
 
+    .coloredBorderLeft
+      float: left
+      height: 100%
+      border-left: 5px solid $primary-accent
+      padding-right: 8px
+
     &:hover
-      color: $black 
+      color: $white
       background-color: $primary-accent-hover
 
   .delete

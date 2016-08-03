@@ -46,22 +46,30 @@ export default class ToggleButton extends Component {
         + (this.props.splitMenu.length > 0 ? ' ' + styles.splitButton : '')}>
         <div
           data-selected={ this.props.isSelected ? true : undefined }
-          style={ this.props.color ? { 'borderLeft': `3px solid ${ this.props.color}` } : {} }
+
           className={
             styles.toggleButton + ' ' + styles.raisedButton
             + (this.props.isSelected ? ' ' + styles.selected : '')
             + (this.props.isDisabled ? ' ' + styles.disabled : '')
+            + (this.props.color ? ' ' + styles.coloredBorder : '')
           }
           onClick={ this.handleClick }
           title={ this.props.altText }>
+          {
+            this.props.color &&
+            <div
+              className={ styles.coloredBorderLeft}
+              style={ this.props.color ? { 'borderLeftColor': this.props.color } : {} }
+            />
+          }
           { this.props.imageName ?
             <img
               src={ this.props.imageName }
               alt={ this.props.altText } />
             : this.props.content
           }
-          { this.props.onDelete && 
-            <div className={styles.delete} onClick={ this.handleDelete }>x</div> 
+          { this.props.onDelete &&
+            <div className={styles.delete} onClick={ this.handleDelete }>x</div>
           }
         </div>
         { this.props.splitMenu.length > 0 &&
