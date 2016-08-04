@@ -13,6 +13,7 @@ import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
 import RaisedButton from '../../Base/RaisedButton';
 import DropDownMenu from '../../Base/DropDownMenu';
+import ColoredFieldItems from '../../Base/ColoredFieldItems';
 import CorrelationTable from './CorrelationTable';
 import CorrelationScatterplotCard from './CorrelationScatterplotCard';
 
@@ -84,16 +85,9 @@ export class CorrelationView extends Component {
       correlationContent =
         <div className={ styles.correlationViewContainer }>
           <Card header={
-              <span>Correlating {
-                correlationVariableNames.map((name, i) =>
-                  <span
-                    key={ `correlation-title-${ name }-${ i }` }
-                    className={ `${ styles.titleField }` }>
-                    { name }
-                  </span>
-                )}
-              </span>
-            }>
+              <span>Correlating <ColoredFieldItems fields={ correlationVariableNames } /></span>
+            }
+          >
             { correlationResult.loading &&
               <div className={ styles.watermark }>
                 { correlationResult.progress != null ? correlationResult.progress : 'Running correlations…' }
@@ -153,7 +147,7 @@ function mapStateToProps(state) {
     datasetId: datasetSelector.datasetId,
     correlationResult: correlationSelector.correlationResult,
     correlationVariableNames: correlationVariableNames,
-    correlationScatterplots: correlationScatterplots
+    correlationScatterplots: correlationScatterplots,
   }
 }
 

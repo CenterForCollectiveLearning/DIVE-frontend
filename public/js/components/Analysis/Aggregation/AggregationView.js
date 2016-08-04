@@ -11,6 +11,7 @@ import styles from '../Analysis.sass';
 import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
 import DropDownMenu from '../../Base/DropDownMenu';
+import ColoredFieldItems from '../../Base/ColoredFieldItems';
 import AggregationTable from './AggregationTable';
 import AggregationTableOneD from './AggregationTableOneD';
 
@@ -90,7 +91,7 @@ export class AggregationView extends Component {
   }
 
   render() {
-    const { aggregationResult, oneDimensionAggregationResult, aggregationIndependentVariableNames, datasets, datasetId } = this.props;
+    const { aggregationResult, oneDimensionAggregationResult, aggregationIndependentVariableNames, aggregationFunction, aggregationVariableId, aggregationVariableName, datasets, datasetId } = this.props;
 
     const noAggregationVariablesSelected = aggregationIndependentVariableNames.length ==0;
     const oneAggregationVariableSelected = aggregationIndependentVariableNames.length == 1;
@@ -99,6 +100,12 @@ export class AggregationView extends Component {
     const aggregationDictHasElements = aggregationResult.data && aggregationResult.data.rows && aggregationResult.data.rows.length > 0;
 
     var aggregationContent = <div></div>;
+
+    console.log(aggregationVariableId, (aggregationVariableId == 'count'));
+    var header = <span>
+      Aggregating <ColoredFieldItems fields={ aggregationIndependentVariableNames } />
+      { (aggregationVariableId == 'count') ? <span> by count</span> : <span> by { aggregationFunction.toLowerCase() } of <ColoredFieldItems fields={ [aggregationVariableName] } /></span>}
+    </span>;
 
     if (noAggregationVariablesSelected ) {
       aggregationContent = <div className={ styles.watermark }>
@@ -109,9 +116,9 @@ export class AggregationView extends Component {
     else if (oneAggregationVariableSelected) {
       aggregationContent =
         <div className={ styles.aggregationViewContainer }>
-          <Card header={
-            <span>Aggregation Table: <span className={ styles.titleField }>{ aggregationIndependentVariableNames[0] }</span></span>
-          }>
+          <Card
+            header={ header }
+          >
             { oneDimensionAggregationResult.loading &&
               <div className={ styles.watermark }>
                 { oneDimensionAggregationResult.progress != null ? oneDimensionAggregationResult.progress : 'Calculating oneDimensionAggregationResult…' }
@@ -128,18 +135,9 @@ export class AggregationView extends Component {
     else if (twoAggregationVariablesSelected) {
       aggregationContent =
         <div className={ styles.aggregationViewContainer }>
-          <Card header={
-            <span>Aggregation Table: {
-              aggregationIndependentVariableNames.map((name, i) =>
-                <span
-                  key={ `aggregation-title-${ name }-${ i }` }
-                  className={ `${ styles.titleField }` }>
-                  { name }
-                </span>
-              )
-            }
-            </span>
-          }>
+        <Card
+          header={ header }
+        >
             { aggregationResult.loading &&
               <div className={ styles.watermark }>
                 { aggregationResult.progress != null ? aggregationResult.progress : 'Calculating aggregationResult…' }
@@ -163,7 +161,7 @@ export class AggregationView extends Component {
 
 function mapStateToProps(state) {
   const { project, datasets, aggregationSelector, datasetSelector, fieldProperties } = state;
-  const { aggregationResult, oneDimensionAggregationResult, binningConfigX, binningConfigY } = aggregationSelector;
+  const { aggregationResult, oneDimensionAggregationResult, binningConfigX, binningConfigY, aggregationVariableId } = aggregationSelector;
 
   const allAggregationVariableIds = fieldProperties.items.map((field) => field.id);
 
@@ -206,6 +204,7 @@ function mapStateToProps(state) {
     datasetId: datasetSelector.datasetId,
     aggregationResult: aggregationResult,
     aggregationVariableName: aggregationVariableName,
+    aggregationVariableId: aggregationVariableId,
     aggregationFunction: aggregationSelector.aggregationFunction,
     weightVariableName: weightVariableName,
     aggregationIndependentVariableNames: aggregationIndependentVariableNames,

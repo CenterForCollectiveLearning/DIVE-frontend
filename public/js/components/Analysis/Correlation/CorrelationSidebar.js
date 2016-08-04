@@ -43,7 +43,8 @@ export class CorrelationSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      color: item.color
+                      color: item.color,
+                      disabled: item.isId
                     })
                   )}
                   valueMember="id"

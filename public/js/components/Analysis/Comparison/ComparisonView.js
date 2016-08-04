@@ -7,8 +7,6 @@ import styles from '../Analysis.sass';
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { runNumericalComparison, runAnova, getAnovaBoxplotData } from '../../../actions/ComparisonActions';
 import { clearAnalysis } from '../../../actions/AnalysisActions';
-import { useWhiteFontFromBackgroundHex, formatListWithCommas } from '../../../helpers/helpers';
-
 
 import Card from '../../Base/Card';
 import StatsTable from './StatsTable';
@@ -20,6 +18,7 @@ import AnovaBoxplotCard from './AnovaBoxplotCard';
 import HeaderBar from '../../Base/HeaderBar';
 import RaisedButton from '../../Base/RaisedButton';
 import DropDownMenu from '../../Base/DropDownMenu';
+import ColoredFieldItems from '../../Base/ColoredFieldItems';
 
 export class ComparisonView extends Component {
 
@@ -100,28 +99,6 @@ export class ComparisonView extends Component {
     }
   }
 
-  getColoredFieldSpans(fields) {
-    const { fieldNameToColor } = this.props;
-    const numFields = fields.length;
-    const rawColoredFieldSpans = fields.map(function(field, i) {
-      var backgroundColor = fieldNameToColor[field];
-      var whiteFont = useWhiteFontFromBackgroundHex(backgroundColor);
-      var style = {
-        backgroundColor: backgroundColor
-      }
-
-      return <span
-        style={ style }
-        key={ `field-name-${ field }-${ i }` }
-        className={
-          styles.coloredField
-          + ' ' + ( whiteFont ? styles.whiteFont : styles.blackFont )
-      }>{ field }</span>
-    });
-
-    return formatListWithCommas(rawColoredFieldSpans);
-  }
-
   render() {
     const { datasets, datasetId, fieldNameToColor, numericalComparisonResult, independentVariableNames, dependentVariableNames, anovaResult, anovaBoxplotData, canRunNumericalComparisonDependent, canRunNumericalComparisonIndependent } = this.props;
     const atLeastTwoVariablesSelectedOfOneType = independentVariableNames.length >= 2 || dependentVariableNames.length >= 2;
@@ -133,9 +110,9 @@ export class ComparisonView extends Component {
     let cardHeader;
     if (canShowNumericalComparison) {
       const numericalComparisonFields = canRunNumericalComparisonIndependent ? independentVariableNames : dependentVariableNames;
-      cardHeader = <span>Comparing Distributions of { this.getColoredFieldSpans(numericalComparisonFields) }</span>
+      cardHeader = <span>Comparing Distributions of <ColoredFieldItems fields={ numericalComparisonFields } /></span>
     } else if (anovaCanBeDisplayed) {
-      cardHeader = <span>ANOVA Table Comparing { this.getColoredFieldSpans(independentVariableNames) } by { this.getColoredFieldSpans(dependentVariableNames) }</span>
+      cardHeader = <span>ANOVA Table Comparing <ColoredFieldItems fields={ independentVariableNames } /> by <ColoredFieldItems fields={ dependentVariableNames } /></span>
     }
 
     var comparisonContent = <div></div>;
@@ -217,7 +194,6 @@ function mapStateToProps(state) {
     numericalComparisonResult: numericalComparisonResult,
     anovaResult: anovaResult,
     anovaBoxplotData: anovaBoxplotData,
-    fieldNameToColor: fieldProperties.fieldNameToColor
   };
 }
 
