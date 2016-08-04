@@ -11,6 +11,7 @@ import styles from '../Visualizations.sass';
 
 import HeaderBar from '../../Base/HeaderBar';
 import DropDownMenu from '../../Base/DropDownMenu';
+import ColoredFieldItems from '../../Base/ColoredFieldItems';
 import Visualization from '../Visualization';
 import VisualizationBlock from './VisualizationBlock';
 
@@ -56,6 +57,8 @@ export class GalleryView extends Component {
     if (project.properties.id && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {
       fetchExportedVisualizationSpecs(project.properties.id);
     }
+
+    clearVisualization();
   }
 
   onClickVisualization(specId) {
@@ -70,12 +73,13 @@ export class GalleryView extends Component {
 
 
   render() {
-    const { specs, filters, datasets, fieldNameToColor, datasetSelector, filteredVisualizationTypes, gallerySelector, exportedSpecs, selectSortingFunction } = this.props;
+    const { filters, datasets, fieldNameToColor, datasetSelector, filteredVisualizationTypes, gallerySelector, exportedSpecs, selectSortingFunction } = this.props;
+    const { specs, fieldProperties } = gallerySelector;
 
-    var selectedFieldProperties = gallerySelector.fieldProperties
-      .filter((property) => property.selected);
+    var selectedFieldProperties = fieldProperties
+      .filter((property) => property.selected).map((property) => property.name);
 
-    const filteredSpecs = gallerySelector.specs.filter((spec) =>
+    const filteredSpecs = specs.filter((spec) =>
       (filteredVisualizationTypes.length == 0) || filteredVisualizationTypes.some((filter) =>
         spec.vizTypes.indexOf(filter) >= 0
       )
@@ -87,28 +91,19 @@ export class GalleryView extends Component {
     const exactSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'exact');
     const expandedSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'expanded');
 
+    let pageHeader;
+    if (areFieldsSelected) {
+      pageHeader = <span>Visualizations of <ColoredFieldItems fields={ selectedFieldProperties } /></span>
+    } else {
+      pageHeader = <span>Default Recommended Visualizations</span>
+    }
+
     return (
       <div className={ styles.specsContainer }>
         <div className={ styles.innerSpecsContainer }>
           <HeaderBar
             header={
-              gallerySelector.title.map(function(construct, i) {
-                var style = {};
-                var whiteFont = true;
-                if (construct.type == 'field') {
-                  var backgroundColor = fieldNameToColor[construct.string];
-                  whiteFont = useWhiteFontFromBackgroundHex(backgroundColor);
-                  style['backgroundColor'] = backgroundColor;
-                }
-
-                return <span
-                  style={ style }
-                  key={ `construct-${ construct.type }-${ i }` }
-                  className={
-                    `${styles.headerFragment} ${styles[construct.type]}`
-                    + ' ' + ( whiteFont ? styles.whiteFont : styles.blackFont )
-                }>{ construct.string }</span>
-              })
+              pageHeader
             }
           />
           <div className={ styles.specContainer }>

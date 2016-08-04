@@ -31,7 +31,6 @@ const recommendationTypes = [
 ]
 
 const baseState = {
-  title: [],
   datasetId: null,
   recommendations: {
     types: recommendationTypes,
@@ -87,23 +86,23 @@ export default function gallerySelector(state = baseState, action) {
     }
   ];
 
-  const defaultTitle = [
-    {
-      type: 'plain',
-      string: 'Summary visualizations'
-    }
-  ];
-
-  const titleVisualizationStrings = [
-    {
-      type: 'plain',
-      string: 'Visualizations'
-    },
-    {
-      type: 'plain',
-      string: 'of'
-    }
-  ];
+  // const defaultTitle = [
+  //   {
+  //     type: 'plain',
+  //     string: 'Summary visualizations'
+  //   }
+  // ];
+  //
+  // const titleVisualizationStrings = [
+  //   {
+  //     type: 'plain',
+  //     string: 'Visualizations'
+  //   },
+  //   {
+  //     type: 'plain',
+  //     string: 'of'
+  //   }
+  // ];
 
   const sortSpecsByFunction = function(sortingFunction, specA, specB) {
     const scoreObjectSpecA = specA.scores.find((score) => score.type == sortingFunction);
@@ -142,19 +141,13 @@ export default function gallerySelector(state = baseState, action) {
           })
       );
 
-      var title = selectedPropertyStrings.length ?
-        [ ...titleVisualizationStrings, ...selectedPropertyStrings ]
-        : defaultTitle;
-
       return {
         ...state,
         isFetching: false,
-        title: defaultTitle,
         datasetId: action.datasetId,
         fieldProperties: action.fieldProperties,
         originalFieldProperties: action.fieldProperties,
         sortingFunctions: SORTING_FUNCTIONS,
-        title: title,
         updatedAt: action.receivedAt
       };
 
@@ -192,11 +185,7 @@ export default function gallerySelector(state = baseState, action) {
           })
       );
 
-      const title = selectedPropertyStrings.length ?
-        [ ...titleVisualizationStrings, ...selectedPropertyStrings ]
-        : defaultTitle;
-
-      return { ...state, fieldProperties: fieldProperties, title: title, specs: [], updatedAt: Date.now() };
+      return { ...state, fieldProperties: fieldProperties, specs: [], updatedAt: Date.now() };
 
     case SELECT_FIELD_PROPERTY_VALUE:
       const fieldPropertiesWithNewPropertyValue = state.fieldProperties.map((property) =>

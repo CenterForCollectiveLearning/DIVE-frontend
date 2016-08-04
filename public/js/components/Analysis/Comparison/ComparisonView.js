@@ -13,6 +13,7 @@ import StatsTable from './StatsTable';
 import NumericalComparisonText from './NumericalComparisonText'
 import AnovaTable from './AnovaTable';
 import AnovaText from './AnovaText';
+import PairwiseComparisonCard from './PairwiseComparisonCard';
 import AnovaBoxplotCard from './AnovaBoxplotCard';
 
 import HeaderBar from '../../Base/HeaderBar';
@@ -134,6 +135,11 @@ export class ComparisonView extends Component {
               anovaData={ anovaResult }
             />
           </Card>
+          { pairwiseComparisonData.length > 0 &&
+            <PairwiseComparisonCard
+              pairwiseComparisonData={ pairwiseComparisonData }
+            />
+          }
           { anovaBoxplotData.length > 0 &&
             <AnovaBoxplotCard
               anovaBoxplotData={ anovaBoxplotData }
