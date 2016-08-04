@@ -13,7 +13,7 @@ export default class RegressionTableCard extends Component {
 
     let tableCardHeader;
     if (dependentVariableName) {
-      tableCardHeader = <span>Explaning <ColoredFieldItems fields={[ dependentVariableName ]} /> in terms of <ColoredFieldItems fields={ independentVariableNames } /></span>
+      tableCardHeader = <span>Explaining <ColoredFieldItems fields={[ dependentVariableName ]} /> in terms of <ColoredFieldItems fields={ independentVariableNames } /></span>
     }
     return (
       <Card
