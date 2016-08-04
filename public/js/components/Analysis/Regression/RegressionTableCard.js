@@ -3,17 +3,22 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
+import ColoredFieldItems from '../../Base/ColoredFieldItems';
 import RegressionTable from './RegressionTable';
 import RegressionSummary from './RegressionSummary';
 
 export default class RegressionTableCard extends Component {
   render() {
     const { regressionType, dependentVariableName, independentVariableNames, regressionResult, contributionToRSquared } = this.props;
+
+    let tableCardHeader;
+    if (dependentVariableName) {
+      tableCardHeader = <span>Explaning <ColoredFieldItems fields={[ dependentVariableName ]} /> in terms of <ColoredFieldItems fields={ independentVariableNames } /></span>
+    }
     return (
       <Card
-        header={
-          <span>Explaining <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span>
-        }>
+        header={ tableCardHeader }
+      >
         <RegressionTable regressionType={ regressionType } regressionResult={ regressionResult }/>
         <RegressionSummary
           dependentVariableName={ dependentVariableName }
