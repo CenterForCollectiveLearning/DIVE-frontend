@@ -7,6 +7,8 @@ import styles from '../Analysis.sass';
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { runNumericalComparison, runAnova, getAnovaBoxplotData } from '../../../actions/ComparisonActions';
 import { clearAnalysis } from '../../../actions/AnalysisActions';
+import { useWhiteFontFromBackgroundHex, formatListWithCommas } from '../../../helpers/helpers';
+
 
 import Card from '../../Base/Card';
 import StatsTable from './StatsTable';
@@ -98,8 +100,30 @@ export class ComparisonView extends Component {
     }
   }
 
+  getColoredFieldSpans(fields) {
+    const { fieldNameToColor } = this.props;
+    const numFields = fields.length;
+    const rawColoredFieldSpans = fields.map(function(field, i) {
+      var backgroundColor = fieldNameToColor[field];
+      var whiteFont = useWhiteFontFromBackgroundHex(backgroundColor);
+      var style = {
+        backgroundColor: backgroundColor
+      }
+
+      return <span
+        style={ style }
+        key={ `field-name-${ field }-${ i }` }
+        className={
+          styles.coloredField
+          + ' ' + ( whiteFont ? styles.whiteFont : styles.blackFont )
+      }>{ field }</span>
+    });
+
+    return formatListWithCommas(rawColoredFieldSpans);
+  }
+
   render() {
-    const { datasets, datasetId, numericalComparisonResult, independentVariableNames, dependentVariableNames, anovaResult, anovaBoxplotData, canRunNumericalComparisonDependent, canRunNumericalComparisonIndependent } = this.props;
+    const { datasets, datasetId, fieldNameToColor, numericalComparisonResult, independentVariableNames, dependentVariableNames, anovaResult, anovaBoxplotData, canRunNumericalComparisonDependent, canRunNumericalComparisonIndependent } = this.props;
     const atLeastTwoVariablesSelectedOfOneType = independentVariableNames.length >= 2 || dependentVariableNames.length >= 2;
     const anovaResultNotEmpty = anovaResult && anovaResult.stats && anovaResult.stats.length > 0;
     const anovaCanBeDisplayed = independentVariableNames.length && dependentVariableNames.length && anovaResultNotEmpty;
@@ -108,9 +132,10 @@ export class ComparisonView extends Component {
 
     let cardHeader;
     if (canShowNumericalComparison) {
-      cardHeader = 'Numerical Comparison Statistics'
+      const numericalComparisonFields = canRunNumericalComparisonIndependent ? independentVariableNames : dependentVariableNames;
+      cardHeader = <span>Comparing Distributions of { this.getColoredFieldSpans(numericalComparisonFields) }</span>
     } else if (anovaCanBeDisplayed) {
-      cardHeader = `ANOVA Table Comparing ${ dependentVariableNames } by ${ independentVariableNames }`
+      cardHeader = <span>ANOVA Table Comparing { this.getColoredFieldSpans(independentVariableNames) } by { this.getColoredFieldSpans(dependentVariableNames) }</span>
     }
 
     var comparisonContent = <div></div>;
@@ -191,7 +216,8 @@ function mapStateToProps(state) {
     dependentVariableNames: dependentVariableNames,
     numericalComparisonResult: numericalComparisonResult,
     anovaResult: anovaResult,
-    anovaBoxplotData: anovaBoxplotData
+    anovaBoxplotData: anovaBoxplotData,
+    fieldNameToColor: fieldProperties.fieldNameToColor
   };
 }
 

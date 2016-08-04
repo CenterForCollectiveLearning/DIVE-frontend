@@ -1,3 +1,4 @@
+import React from 'react';
 import _ from 'underscore';
 
 export function getRoundedString(num, decimalPlaces=3, useFixed=false) {
@@ -138,4 +139,17 @@ export function filterInteractionTermSelection(item, alreadySelectedTerm, intera
     }
   }
   return showVariable;
+}
+
+export function formatListWithCommas(li) {
+  const numEles = li.length;
+  return li.map(function(ele, i) {
+    if (i == 0) {
+      return <span>{ ele }</span>
+    } else if (i > 0 && i < numEles - 1) {
+      return <span>, { ele }</span>
+    } else {
+      return <span> and { ele }</span>
+    }
+  })
 }

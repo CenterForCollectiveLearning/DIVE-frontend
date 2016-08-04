@@ -50,7 +50,7 @@ export class AggregationSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == aggregationVariableId) || ( item.generalType == 'c' && item.isUnique),
+                      disabled: (item.id == aggregationVariableId) || item.isId,
                       color: item.color
                     })
                   )}
@@ -90,7 +90,7 @@ export class AggregationSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == aggregationVariableId),
+                      disabled: (item.id == aggregationVariableId) || item.isId,
                       color: item.color
                     })
                   )}

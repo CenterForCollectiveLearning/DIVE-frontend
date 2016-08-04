@@ -7,10 +7,20 @@ export default class TabGroup extends Component {
 
     this.renderChildren = this.renderChildren.bind(this);
     this.handleClick = this.handleClick.bind(this);
+
+    this.state = {
+      collapsed: false
+    }
   }
 
   handleClick(i) {
     this.props.onChange(this.props.children[i]);
+  }
+
+  onClickCollapse() {
+    this.setState({
+        collapsed: !this.state.collapsed
+    });
   }
 
   renderChildren() {
@@ -35,6 +45,7 @@ export default class TabGroup extends Component {
   }
 
   render() {
+    const { collapsed } = this.state;
     return (
       <div className={ styles.tabGroup + ' ' + this.props.className }>
         <div className={ styles.tabGroupHeading }>
@@ -48,7 +59,7 @@ export default class TabGroup extends Component {
 
 TabGroup.propTypes = {
   children: PropTypes.node.isRequired,
-  value: PropTypes.string, 
+  value: PropTypes.string,
   heading: PropTypes.string,
   className: PropTypes.string,
   selectedClassName: PropTypes.string,
@@ -59,4 +70,3 @@ TabGroup.defaultProps = {
   className: "",
   selectedClassName: null
 }
-
