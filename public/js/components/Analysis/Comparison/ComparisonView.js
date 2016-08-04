@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import styles from '../Analysis.sass';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
-import { runNumericalComparison, runAnova, getAnovaBoxplotData } from '../../../actions/ComparisonActions';
+import { runNumericalComparison, runAnova, getAnovaBoxplotData, getPairwiseComparisonData } from '../../../actions/ComparisonActions';
 import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import Card from '../../Base/Card';
@@ -69,23 +69,33 @@ export class ComparisonView extends Component {
       runNumericalComparison,
       runAnova,
       getAnovaBoxplotData,
+      getPairwiseComparisonData,
       canRunNumericalComparisonDependent,
       canRunNumericalComparisonIndependent
     } = this.props;
 
-    const independentVariablesChanged = nextProps.independentVariableNames.length != independentVariableNames.length;
-    const dependentVariablesChanged = nextProps.dependentVariableNames.length != dependentVariableNames.length;
-    const sideBarChanged = independentVariablesChanged || dependentVariablesChanged
-    const canRunAnova = nextProps.dependentVariableNames.length && nextProps.independentVariableNames.length
+    const {
+      projectId: nextProjectId,
+      datasetId: nextDatasetId,
+      independentVariableNames: nextIndependentVariableNames,
+      dependentVariableNames: nextDependentVariableNames,
+      independentVariableNamesAndTypes: nextIndependentVariableNamesAndTypes
+    } = nextProps;
 
-    if (nextProps.projectId && nextProps.datasetId && sideBarChanged) {
+    const independentVariablesChanged = nextIndependentVariableNames.length != independentVariableNames.length;
+    const dependentVariablesChanged = nextDependentVariableNames.length != dependentVariableNames.length;
+    const sideBarChanged = independentVariablesChanged || dependentVariablesChanged
+    const canRunAnova = nextDependentVariableNames.length && nextIndependentVariableNames.length
+
+    if (nextProjectId && nextDatasetId && sideBarChanged) {
       if (nextProps.canRunNumericalComparisonIndependent) {
-        runNumericalComparison(nextProps.projectId, nextProps.datasetId, nextProps.independentVariableNames, true);
+        runNumericalComparison(nextProjectId, nextDatasetId, nextIndependentVariableNames, true);
       } else if (nextProps.canRunNumericalComparisonDependent) {
-        runNumericalComparison(nextProps.projectId, nextProps.datasetId, nextProps.dependentVariableNames, false);
+        runNumericalComparison(nextProjectId, nextDatasetId, nextDependentVariableNames, false);
       } else if (canRunAnova) {
-        runAnova(nextProps.projectId, nextProps.datasetId, nextProps.independentVariableNamesAndTypes, nextProps.dependentVariableNames);
-        getAnovaBoxplotData(nextProps.projectId, nextProps.datasetId, nextProps.independentVariableNamesAndTypes, nextProps.dependentVariableNames);
+        runAnova(nextProjectId, nextDatasetId, nextIndependentVariableNamesAndTypes, nextDependentVariableNames);
+        getAnovaBoxplotData(nextProjectId, nextDatasetId, nextIndependentVariableNamesAndTypes, nextDependentVariableNames);
+        getPairwiseComparisonData(nextProjectId, nextDatasetId, nextIndependentVariableNamesAndTypes, nextDependentVariableNames);
       }
     }
   }
@@ -101,7 +111,7 @@ export class ComparisonView extends Component {
   }
 
   render() {
-    const { datasets, datasetId, fieldNameToColor, numericalComparisonResult, independentVariableNames, dependentVariableNames, anovaResult, anovaBoxplotData, canRunNumericalComparisonDependent, canRunNumericalComparisonIndependent } = this.props;
+    const { datasets, datasetId, fieldNameToColor, numericalComparisonResult, independentVariableNames, dependentVariableNames, anovaResult, anovaBoxplotData, pairwiseComparisonData, canRunNumericalComparisonDependent, canRunNumericalComparisonIndependent } = this.props;
     const atLeastTwoVariablesSelectedOfOneType = independentVariableNames.length >= 2 || dependentVariableNames.length >= 2;
     const anovaResultNotEmpty = anovaResult && anovaResult.stats && anovaResult.stats.length > 0;
     const anovaCanBeDisplayed = independentVariableNames.length && dependentVariableNames.length && anovaResultNotEmpty;
@@ -135,7 +145,7 @@ export class ComparisonView extends Component {
               anovaData={ anovaResult }
             />
           </Card>
-          { pairwiseComparisonData.length > 0 &&
+          { pairwiseComparisonData.rows && pairwiseComparisonData.rows.length > 0 &&
             <PairwiseComparisonCard
               pairwiseComparisonData={ pairwiseComparisonData }
             />
@@ -165,7 +175,7 @@ export class ComparisonView extends Component {
 
 function mapStateToProps(state) {
   const { project, datasets, comparisonSelector, datasetSelector, fieldProperties } = state;
-  const { independentVariablesIds, numericalComparisonResult, anovaResult, anovaBoxplotData } = comparisonSelector;
+  const { independentVariablesIds, numericalComparisonResult, anovaResult, anovaBoxplotData, pairwiseComparisonData } = comparisonSelector;
 
   const independentVariableNames = fieldProperties.items
     .filter((property) => comparisonSelector.independentVariablesIds.indexOf(property.id) >= 0)
@@ -200,6 +210,7 @@ function mapStateToProps(state) {
     numericalComparisonResult: numericalComparisonResult,
     anovaResult: anovaResult,
     anovaBoxplotData: anovaBoxplotData,
+    pairwiseComparisonData: pairwiseComparisonData
   };
 }
 
@@ -207,6 +218,7 @@ export default connect(mapStateToProps, {
   runNumericalComparison,
   runAnova,
   getAnovaBoxplotData,
+  getPairwiseComparisonData,
   selectDataset,
   fetchDatasets,
   clearAnalysis

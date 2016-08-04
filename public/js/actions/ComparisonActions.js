@@ -8,6 +8,8 @@ import {
   RECEIVE_ANOVA,
   REQUEST_ANOVA_BOXPLOT_DATA,
   RECEIVE_ANOVA_BOXPLOT_DATA,
+  REQUEST_PAIRWISE_COMPARISON_DATA,
+  RECEIVE_PAIRWISE_COMPARISON_DATA,
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
@@ -141,5 +143,42 @@ export function getAnovaBoxplotData(projectId, datasetId, independentVariableNam
       headers: { 'Content-Type': 'application/json' }
     }).then(json => dispatch(receiveAnovaBoxplotDispatcher(json)))
       .catch(err => console.error("Error getting ANOVA boxplot: ", err));
+  };
+}
+
+function requestPairwiseComparisonDispatcher(datasetId) {
+  return {
+    type: REQUEST_PAIRWISE_COMPARISON_DATA
+  };
+}
+
+function receivePairwiseComparisonDispatcher(json) {
+  return {
+    type: RECEIVE_PAIRWISE_COMPARISON_DATA,
+    data: json,
+    receivedAt: Date.now()
+  };
+}
+
+
+export function getPairwiseComparisonData(projectId, datasetId, independentVariableNames, dependentVariableNames) {
+  console.log('Getting Pairwise Comparison');
+  const params = {
+    projectId: projectId,
+    spec: {
+      datasetId: datasetId,
+      independentVariables: independentVariableNames,
+      dependentVariables: dependentVariableNames,
+    }
+  }
+
+  return (dispatch) => {
+    dispatch(requestPairwiseComparisonDispatcher);
+    return fetch('/statistics/v1/pairwise_comparison', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(json => dispatch(receivePairwiseComparisonDispatcher(json)))
+      .catch(err => console.error("Error getting pairwise comparison: ", err));
   };
 }

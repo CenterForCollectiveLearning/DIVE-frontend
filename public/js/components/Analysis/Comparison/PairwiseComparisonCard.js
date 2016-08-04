@@ -5,63 +5,37 @@ import styles from '../Analysis.sass';
 import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
 
-import BoxPlot from '../../Visualizations/Charts/BoxPlot';
-import { getRoundedNum } from '../../../helpers/helpers';
+import BareDataGrid from '../../Base/BareDataGrid';
+import { getRoundedString } from '../../../helpers/helpers';
+
 
 export default class PairwiseComparisonCard extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
-    const { id, anovaBoxplotData } = this.props;
+    const { id, pairwiseComparisonData } = this.props;
 
-    const finalData = anovaBoxplotData;
-
-    var options = {
-      fontName: 'RobotoDraft',
-      fontFamily: 'RobotoDraft',
-      backgroundColor: 'transparent',
-      headerColor: 'white',
-      headerHeight: 0,
-      fontColor: "#333",
-      textStyle: {
-        color: "#333"
+    const data = [
+      {
+        rowClass: styles.tableHeaderRow,
+        columnClass: styles.tableHeaderColumn,
+        items: pairwiseComparisonData.columnHeaders
       },
-      height: '100%',
-      width: '100%',
-      chartArea: {
-        top: '5%',
-        width: '70%',
-        height: '80%'
-      },
-      hAxis: {
-        textStyle: {
-          color: "#333"
-        }
-      },
-      vAxis: {
-        textStyle: {
-          color: "#333"
-        }
-      },
-      vAxes: [
-        {
-          textStyle: {
-            color: "#333"
-          }
-        },
-        {
-          textStyle: {
-            color: "#333"
-          }
-        }
-      ]
-    };
+      ...pairwiseComparisonData.rows.map(function(object) {
+        return new Object({
+          rowClass: styles.dataRow,
+          columnClass: styles.dataColumn,
+          items: [ ...object.map((value) => <div className={ styles.dataCell }>{ getRoundedString(value) }</div>) ]
+        })
+      })
+    ];
 
     return (
-      <Card header={ <span>Boxplot of Group Distribution</span> }>
-        <div className={ styles.anovaBoxplotData }>
-          <BoxPlot
-            chartId={ `boxplot-${ id }` }
-            data={ finalData }
-            options={ options } />
+      <Card header={ <span>Pairwise Comparison with Tukey Post-hoc Test</span> }>
+        <div className={ styles.aggregationTable }>
+          <BareDataGrid data={ data }/>
         </div>
       </Card>
     );
@@ -70,5 +44,5 @@ export default class PairwiseComparisonCard extends Component {
 
 PairwiseComparisonCard.propTypes = {
   id: PropTypes.string,
-  anovaBoxplotData: PropTypes.array.isRequired
+  pairwiseComparisonData: PropTypes.object.isRequired
 }

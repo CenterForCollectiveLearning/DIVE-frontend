@@ -13,6 +13,7 @@ export default class HeaderBar extends Component {
       }>
         <div className={
           styles.headerText
+          + (header ? styles.hasHeaderText : '')
           + (textClassName ? ' ' + textClassName : '')
           + (subheader ? '' : ' ' + styles.singleLine)
         }>
