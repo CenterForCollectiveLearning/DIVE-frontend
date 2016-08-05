@@ -34,14 +34,11 @@
   flex-direction: row
   overflow: hidden
 
-.regressionViewContainer, .summaryViewContainer, .comparisonViewContainer, .correlationViewContainer
+.analysisViewContainer
+  +centerPaneWithSidebar
   background-color: $center-grey
   +fillContainer
   overflow-y: auto
-
-.summaryViewContainer
-  .summaryCardHolder
-    flex-grow: 1
 
 .summaryVariableContainer
   display: flex

@@ -152,7 +152,7 @@ export class AggregationView extends Component {
     }
 
     return (
-      <div className={ styles.summaryViewContainer }>
+      <div className={ styles.analysisViewContainer }>
         { aggregationContent }
       </div>
     );

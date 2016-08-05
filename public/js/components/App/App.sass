@@ -10,6 +10,7 @@
 
 .projectRightContainer
   +fillContainer
+  max-width: calc(100% - #{$left-sidebar-width})
   background-color: $center-grey
   flex-direction: column
 
@@ -19,8 +20,8 @@ $topBarHeight: 55px
   display: flex
   flex-direction: column
   position: relative
-  min-width: 155px
-  max-width: 155px
+  min-width: $left-sidebar-width
+  max-width: $left-sidebar-width
   background: $left-sidebar-grey //  $black
 
   .logoContainer

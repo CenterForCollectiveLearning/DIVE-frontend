@@ -164,10 +164,8 @@ export class ComparisonView extends Component {
     }
 
     return (
-      <div className={ styles.regressionViewContainer }>
-        <div className={ styles.aggregationViewContainer }>
-          { comparisonContent }
-        </div>
+      <div className={ styles.analysisViewContainer }>
+        { comparisonContent }
       </div>
     );
   }

@@ -26,6 +26,14 @@ $primary-accent: #007BD7 // #5499D8
 $primary-accent-hover: rgba(#5499D8, 0.5)
 $secondary-accent: #004491
 
+// Sizes
+$left-sidebar-width: 155px
+$right-sidebar-width: 264px
+$center-pane-width: calc(100% - #{$right-sidebar-width})
+
+=centerPaneWithSidebar
+  max-width: $center-pane-width
+
 =headerText
   color: $black
   font-size: 24px

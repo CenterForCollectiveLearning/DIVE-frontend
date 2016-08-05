@@ -88,7 +88,7 @@ export class RegressionView extends Component {
     }
 
     return (
-      <div className={ styles.regressionViewContainer }>
+      <div className={ styles.analysisViewContainer }>
         <HeaderBar
           actions={
             <div className={ styles.headerControlRow }>
