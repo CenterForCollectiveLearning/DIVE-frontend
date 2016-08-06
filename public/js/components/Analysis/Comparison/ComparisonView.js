@@ -55,6 +55,7 @@ export class ComparisonView extends Component {
       } else if (canRunAnova) {
         runAnova(projectId, datasetId, independentVariableNamesAndTypes, dependentVariableNames);
         getAnovaBoxplotData(projectId, datasetId, independentVariableNamesAndTypes, dependentVariableNames);
+        getPairwiseComparisonData(projectId, datasetId, independentVariableNamesAndTypes, dependentVariableNames);        
       }
     }
 
