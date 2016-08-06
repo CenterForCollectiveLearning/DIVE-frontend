@@ -4,7 +4,7 @@ if (useExpress) {
   var express = require('express');
   var path = require('path');
   var app = express();
-  var static_path = path.join(__dirname, 'public');
+  var static_path = path.join(__dirname, 'dist');
 
   app.use(express.static(static_path))
     .get('/*', function (req, res) {
@@ -22,7 +22,7 @@ if (useExpress) {
   var WebpackDevServer = require('webpack-dev-server');
 
   new WebpackDevServer(webpack(config), {
-    contentBase: './public',
+    contentBase: './dist',
     publicPath: config.output.publicPath,
     hot: true,
     quiet: false,

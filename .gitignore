@@ -2,7 +2,6 @@
 dist/**
 node_modules/
 node_modules_old/
-static/
 
 *.log
 .divshot-cache/
@@ -11,11 +10,11 @@ __/
 
 *.map
 
-public/*.eot
-public/*.ttf
-public/*.woff
-public/*.woff2
-public/*.svg
-public/bundle.js
-public/bundle.js.map
-public/app.css
+src/*.eot
+src/*.ttf
+src/*.woff
+src/*.woff2
+src/*.svg
+src/bundle.js
+src/bundle.js.map
+src/app.css

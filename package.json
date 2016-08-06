@@ -1,6 +1,5 @@
-
 {
-  "name": "dive-redux",
+  "name": "dive-frontend",
   "version": "0.1.1",
   "repository": {
     "type": "git",
@@ -70,10 +69,11 @@
     "whatwg-fetch": "^0.11.0"
   },
   "scripts": {
-    "postinstall": "webpack --config ./webpack-production.config.js",
-    "start": "node buildenv && node server.js",
-    "build": "webpack -p",
-    "deploy": "npm run build && divshot push"
+    "buildprod": "webpack --config ./webpack-production.config.js",
+    "start": "webpack -p && node buildenv && node server.js",
+    "build": "webpack -p"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "copy-webpack-plugin": "^3.0.1"
+  }
 }

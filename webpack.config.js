@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var devFlagPlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.DEBUG || 'false'))
@@ -14,11 +15,11 @@ function getEntrySources(sources) {
 module.exports = {
   devtool: 'source-map',
   entry: getEntrySources([
-      './public/js/index.js',
-      './public/css/app.css'
+      './src/js/index.js',
+      './src/css/app.css'
   ]),
   output: {
-    path: __dirname + '/public',
+    path: __dirname + '/dist',
     publicPath: '/',
     filename: 'bundle.js',
     hot: true
@@ -32,6 +33,10 @@ module.exports = {
       Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
       fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'
     }),
+    new CopyWebpackPlugin([
+      { from: './src/index.html', to: './index.html' },
+      { from: './src/assets', to: './assets'}
+    ])
   ],
   module: {
     noParse: /node_modules\/quill\/dist/,
