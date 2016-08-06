@@ -146,6 +146,12 @@
   &:not(:first-child)
     font-size: 13px
 
+.dataRow
+  .dataColumn
+    &:first-child
+      align-items: flex-start
+
+
 .dataRow, .footerRow
   .dataColumn, .footerColumn
     white-space: normal
@@ -164,11 +170,12 @@
     word-break: break-word
     padding: 8px
 
-.dataRow + .footerRow
-  border-top-width: 2px
-
 .footerRow
+  border-top: 1px solid $ui-line-grey
   background-color: #fbfbfb
+
+.footerRow ~ .footerRow
+  border-top: none
 
 .aggregationTable
   padding: 0 20px 20px
