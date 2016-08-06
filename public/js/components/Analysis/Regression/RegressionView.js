@@ -12,6 +12,7 @@ import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
 import RaisedButton from '../../Base/RaisedButton';
 import DropDownMenu from '../../Base/DropDownMenu';
+import ColoredFieldItems from '../../Base/ColoredFieldItems';
 import RegressionTableCard from './RegressionTableCard';
 import ContributionToRSquaredCard from './ContributionToRSquaredCard';
 
@@ -81,8 +82,13 @@ export class RegressionView extends Component {
       );
     }
 
+    let tableCardHeader;
+    if (dependentVariableName) {
+      tableCardHeader = <span>Explaining <ColoredFieldItems fields={[ dependentVariableName ]} /> in terms of <ColoredFieldItems fields={ independentVariableNames } /></span>
+    }
+
     return (
-      <div className={ styles.regressionViewContainer }>
+      <div className={ styles.analysisViewContainer }>
         <HeaderBar
           actions={
             <div className={ styles.headerControlRow }>
@@ -101,7 +107,7 @@ export class RegressionView extends Component {
           </div>
         }/>
         { regressionResult.loading &&
-          <Card header={ <span>Explaining <strong className={ styles.dependentVariableTitle }>{ dependentVariableName }</strong></span> }>
+          <Card header={ tableCardHeader }>
             <div className={ styles.watermark }>
               { regressionResult.progress != null ? regressionResult.progress : 'Running regressions…' }
             </div>

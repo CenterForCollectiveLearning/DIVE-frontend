@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'underscore';
 
 export function getRoundedString(num, decimalPlaces=3, useFixed=false) {
+  if (typeof num === 'string' || num instanceof String) {
+    return num;
+  }
   const roundedNum = getRoundedNum(num, decimalPlaces, useFixed);
   if (isNaN(roundedNum)) {
     return '';

@@ -44,14 +44,9 @@
   flex-direction: row
 
   &:first-child
+    border-bottom: 1px solid $ui-line-grey
     .column
       border-top-width: 0px
-
-  .column
-    &.rowLabel
-      flex-direction: row
-      justify-content: flex-start
-      align-items: center
 
 .nestedRow
   cursor: pointer
@@ -59,10 +54,19 @@
   > .row:first-child
     .column
       border-top-width: 1px
+      flex-direction: row
+      align-items: flex-start
+
+  .row
+    .column
+      align-items: flex-end !important
+
+  .row
+    border-bottom-width: 0px
 
   .collapseArrow
     cursor: pointer
-    margin-top: 3px
+    margin-top: 4px
     margin-left: auto
     border-color: #999 transparent transparent
     border-style: solid

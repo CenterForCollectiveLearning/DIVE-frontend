@@ -10,6 +10,7 @@ export default class HeaderBar extends Component {
       <div className={
         styles.headerBar
         + (className ? ' ' + className : '')
+        + (header ? ' ' + styles.hasHeaderText : '')
       }>
         <div className={
           styles.headerText

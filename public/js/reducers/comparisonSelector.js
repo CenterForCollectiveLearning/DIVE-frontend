@@ -8,6 +8,7 @@ import {
   UPDATE_COMPARISON_INPUT,
   RECEIVE_ANOVA,
   RECEIVE_ANOVA_BOXPLOT_DATA,
+  RECEIVE_PAIRWISE_COMPARISON_DATA,
   SELECT_DATASET,
   RECEIVE_FIELD_PROPERTIES
 } from '../constants/ActionTypes';
@@ -17,6 +18,7 @@ const baseState = {
   dependentVariablesIds: [],
   numericalComparisonResult: {},
   anovaBoxplotData: [],
+  pairwiseComparisonData: {},
   anovaResult: {}
 }
 
@@ -78,6 +80,9 @@ export default function comparisonSelector(state = baseState, action) {
 
     case RECEIVE_ANOVA_BOXPLOT_DATA:
       return { ...state, anovaBoxplotData: action.data };
+
+    case RECEIVE_PAIRWISE_COMPARISON_DATA:
+      return { ...state, pairwiseComparisonData: action.data };
 
     case UPDATE_COMPARISON_INPUT:
       var inputDict = state.inputsDict;

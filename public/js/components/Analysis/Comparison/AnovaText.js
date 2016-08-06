@@ -17,7 +17,7 @@ export default class AnovaText extends Component {
 
 
     const textParams = {
-      anovaType: ( dependentVariableNames.length > 1 ? 'two-way' : 'one-way' ),
+      anovaType: ( independentVariableNames.length > 1 ? 'two-way' : 'one-way' ),
       dependentVariableName: <strong>{ dependentVariableNames[0] }</strong>,
       independentVariableNames: independentVariableNamesString,
       rSquaredAdjustedText: <div className={ styles.rSquaredAdjust }><div className={ styles.r }>R</div><sup>2</sup></div>,
