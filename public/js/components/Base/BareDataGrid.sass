@@ -55,16 +55,18 @@
     .column
       border-top-width: 1px
       flex-direction: row
-      align-items: flex-start
+      align-items: center
 
   .row
-    .column
+    .column:first-child
       align-items: flex-end !important
 
   .row
     border-bottom-width: 0px
 
   .collapseArrow
+    position: relative
+    top: -4px
     cursor: pointer
     margin-top: 4px
     margin-left: auto

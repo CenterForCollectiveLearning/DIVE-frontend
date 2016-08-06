@@ -59,7 +59,7 @@ export class BuilderView extends Component {
 
   render() {
     const { visualization, fieldNameToColor } = this.props;
-    const disabled = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
+    const saved = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
 
     return (
       <VisualizationView visualization={ visualization } fieldNameToColor={ fieldNameToColor }>
@@ -74,7 +74,7 @@ export class BuilderView extends Component {
             </RaisedButton>
           </div>
           <div className={ styles.headerControl }>
-            <RaisedButton onClick={ this.saveVisualization } disabled={ disabled }>
+            <RaisedButton onClick={ this.saveVisualization } active={ saved }>
               { !visualization.isSaving && visualization.exportedSpecId && <i className="fa fa-star"></i> }
               { !visualization.exportedSpecId && <i className="fa fa-star-o"></i> }
             </RaisedButton>
