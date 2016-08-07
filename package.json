@@ -72,8 +72,8 @@
   },
   "scripts": {
     "start": "node buildenv && node server.js",
-    "build": "webpack --config ./webpack.config.js",
-    "build-production": "webpack -p --config webpack-production.config.js"
+    "build": "node buildenv && webpack --config ./webpack.config.js",
+    "build-production": "node buildenv && webpack -p --config webpack-production.config.js"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^3.0.1"
