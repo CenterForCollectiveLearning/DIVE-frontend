@@ -35,9 +35,9 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
       { from: './src/index.html', to: './index.html' },
-      { from: './src/404.html', to: './404.html' },      
+      { from: './src/404.html', to: './404.html' },
       { from: './src/assets', to: './assets'},
-      { from: './_redirects', to: './_redirects'}
+      { from: './_redirects' }
     ])
   ],
   module: {
