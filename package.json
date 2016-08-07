@@ -71,9 +71,9 @@
     "whatwg-fetch": "^0.11.0"
   },
   "scripts": {
-    "postinstall": "webpack --config ./webpack-production.config.js",
-    "start": "webpack -p && node buildenv && node server.js",
-    "build": "webpack -p"
+    "start": "node buildenv && node server.js",
+    "build": "webpack --config ./webpack.config.js",
+    "build-production": "webpack -p --config webpack-production.config.js"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^3.0.1"
