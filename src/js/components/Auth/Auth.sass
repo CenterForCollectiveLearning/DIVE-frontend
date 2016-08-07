@@ -1,0 +1,121 @@
+@import '../../../css/mixins.sass'
+
+
+.loginModal, .registerModal
+  display: flex
+  flex-shrink: 0
+  padding-bottom: 0px
+  width: 400px
+
+  .modalHeader
+    height: 30px
+    line-height: 40px
+    margin-bottom: 20px
+
+  .modalContent
+    display: flex
+    flex-direction: column
+
+.submitButton
+  margin-top: 15px
+
+.authForm
+  width: 100%
+
+  .authInputGroup
+    margin-top: 10px
+
+    &:first-of-type
+      margin-top: 0px
+
+    .authInputLabelAndError
+      display: flex
+      flex-direction: row
+      flex-grow: 1
+      flex-shrink: 0
+
+      .authInputLabel, .error
+        +regularText
+        margin-top: 0
+        margin-bottom: 5px
+
+      .error
+        margin-left: auto
+        color: #8E2323
+        display: flex
+
+    input[type="text"], input[type="password"]
+      height: 40px
+      background-image: url(../../../assets/images/auth_icons.png)
+      background-repeat: no-repeat
+      background-size: 40px 171px
+      box-sizing: border-box
+      padding-right: 40px
+
+      &.username
+        background-position: 100% -7%
+
+      &.usernameOrEmail, &.email
+        background-position: 100% 30%
+
+      &.password
+        background-position: 100% 67%
+
+      &::-webkit-input-placeholder
+         text-align: left
+
+      &:-moz-placeholder
+         text-align: left
+
+      &::-moz-placeholder
+         text-align: left
+
+      &:-ms-input-placeholder
+         text-align: left
+
+    .checkbox
+      height: 10px
+
+      input[type="checkbox"]
+        margin-top: 0px
+        margin-right: 5px
+        margin-left: 0px
+        float: left
+
+    .forgotPassword
+      +noSelect
+      +linkStyle(12px)
+      margin-top: -2px
+      margin-left: auto
+      // font-weight: normal
+      line-height: 18px
+
+.orSeparator
+  display: flex
+  flex-direction: row
+  font-size: 11px
+  font-weight: 500
+  color: $ui-line-grey
+  text-transform: uppercase
+  margin-top: 15px
+  margin-bottom: -20px
+  .or
+    display: flex
+    flex-grow: 1
+    line-height: 20px
+    align-items: center
+    justify-content: center
+
+
+.registerText, .loginText
+  +regularText
+  .registerLink, .loginLink
+    +linkStyle(12px)
+
+.footerLabel
+  display: flex
+  align-items: center
+  font-size: 13px
+
+  label.error
+    color: darkred

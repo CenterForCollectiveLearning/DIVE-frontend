@@ -1,0 +1,79 @@
+.selectGridContainer
+  display: flex
+  flex-direction: column
+
+  input
+    flex-shrink: 0
+    outline: none
+
+    margin-right: 10px
+    margin-left: 0
+
+    -webkit-appearance: none
+    border: 1px solid #979797
+    width: 14px
+    height: 14px
+
+    &.checked, &[checked]
+      background-color: #3497FF
+      border-color: #3497FF
+
+      &:after
+        display: flex
+        content: "✓"
+        width: 14px
+        text-align: center
+        height: 14px
+        justify-content: center
+        margin-left: -1px
+        font-weight: 500
+        margin-top: -1px
+        color: white
+
+      &.halfChecked:after
+        content: "–"
+
+.selectHeading
+  display: flex
+  align-items: center
+  height: 32px
+  padding-bottom: 10px
+
+  input
+    margin-left: 10px
+
+  label
+    font-weight: 600
+    font-size: 12px
+    color: #A4A4A4
+    text-transform: uppercase
+
+.selectGrid
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+
+.selectGridElement
+  display: flex
+  align-items: center
+
+  width: 201px
+  height: 38px
+
+  margin-left: -1px
+  margin-top: -1px
+  padding-left: 10px
+  padding-right: 10px
+
+  border: 1px solid #D0D0D0
+  font-weight: 500
+
+  &:hover
+    border-color: #AAA
+    z-index: 100
+
+  label
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+

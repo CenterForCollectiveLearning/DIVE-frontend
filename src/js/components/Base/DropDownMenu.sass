@@ -1,0 +1,76 @@
+@import '../../../css/mixins.sass'
+
+.dropDownMenu
+  .dropDownLabel
+    +smallCaps
+    padding-bottom: 2px
+
+  > div // .Select
+    width: 100%
+
+    > div
+      &:first-of-type // .Select-value
+        height: 33px
+        line-height: 33px
+
+        background-color: transparent
+
+        border: 1px solid $ui-line-grey
+        border-radius: 2px
+
+        cursor: pointer
+        width: 100%
+
+        &:hover
+          box-shadow: none
+          background-color: $primary-accent-hover
+
+        > div
+          &:first-child // .Select-placeholder
+            font-size: 12px
+            line-height: 34px
+            height: 33px
+            padding: 0 24px 0 12px
+
+          &:nth-child(2) // .Select-input
+            height: 0
+            width: 0
+
+        > span:last-child
+          width: 30px
+          padding-right: 0
+
+      &:nth-of-type(2) // .Select-menu-outer
+        background-color: white
+        border-bottom-left-radius: 2px
+        border-bottom-right-radius: 2px
+        border-bottom: 0
+        border-left: 0
+        border-right: 0
+        box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.01), 0px 2px 2px 0px rgba(0, 0, 0, 0.058), 0px 1px 5px 0px rgba(0, 0, 0, 0.034)
+
+        > div // .Select-menu
+          border-bottom-left-radius: 2px
+          border-bottom-right-radius: 2px
+
+          > div // .Select-option
+            font-size: 12px
+            font-weight: 400
+            padding: 9px 0 10px 12px
+            background-color: white
+
+            &:hover
+              background-color: whitesmoke
+
+.valueContainer
+  font-size: 12px
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+  span.prefix
+    +smallCaps
+    
+  span.value
+    font-weight: 400
+    color: #333

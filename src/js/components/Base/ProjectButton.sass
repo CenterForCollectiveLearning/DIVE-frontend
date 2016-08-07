@@ -1,0 +1,77 @@
+@import '../../../css/mixins.sass'
+
+.projectButton
+  +noSelect
+  +regularCopy
+  display: flex
+  flex-direction: column
+  min-height: 100px
+
+  width: 70%
+  max-width: 800px
+
+  align-items: left
+  justify-content: left
+  text-align: left
+
+  border: 1px solid $ui-line-grey
+  border-radius: 2px
+  margin-bottom: 10px
+  background-color: $white
+  color: $black
+  font-size: 12px
+
+
+  cursor: pointer
+  text-decoration: none
+
+  &:first-of-type
+    border-top: 1px solid $ui-line-grey
+
+  &:hover
+    box-shadow: 1px 2px 5px 1px rgba(0, 0, 0, 0.15)
+
+  .item
+    display: flex
+    .label
+      +smallCaps
+      margin-right: 5px
+      padding-top: 2px
+
+    .value
+      font-size: 13px
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+      font-weight: 600
+
+    .values
+      font-size: 12px
+
+  .pullLeft, .pullRight
+    display: inline-block
+
+  .pullRight
+    margin-left: auto
+
+
+  .projectTop
+    display: flex
+    width: 100%
+    background-color: $ui-header-grey
+    padding: 11px 8px
+    .projectTitle
+      font-size: 14px
+      font-weight: bold
+
+  .projectMiddle
+    border-top: 1px solid $ui-line-grey
+
+  .projectBottom
+    border-top: 1px solid $ui-line-grey
+
+  .projectMiddle, .projectBottom
+    +regularCopy
+    display: flex
+
+    padding: 11px 16px

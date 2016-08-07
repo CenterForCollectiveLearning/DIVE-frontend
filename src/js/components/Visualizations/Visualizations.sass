@@ -1,0 +1,385 @@
+@import '../../../css/mixins.sass'
+@import '../../../css/flexbox.sass'
+
+.visualizationsPageContainer
+  overflow: hidden
+
+.headerFragment
+  margin-right: 3px
+  &:first-child
+    text-transform: capitalize
+
+  &.field
+    color: $white
+    background-color: $primary-accent
+    border-radius: 2px
+    padding: 2px 4px
+    font-weight: 500
+
+    &.whiteFont
+      color: $white
+    &.blackFont
+      color: $black
+
+  &:nth-last-child(1)
+    .field:before
+      content: ', and'
+
+  &.operation, &.plain, &.transformation, &.tooMuchData
+    color: $left-sidebar-grey
+
+.fieldGroup
+  &:first-child
+    .fieldGroupLabel
+      margin-top: 0
+
+  + .fieldGroup
+    margin-top: 7px
+
+  .fieldGroupLabel
+    +smallCaps
+    margin-top: 17px
+    margin-bottom: 5px
+
+    text-transform: uppercase
+
+.sortGroup
+  display: flex
+
+  .sortFields
+    flex-grow: 1
+
+    + .sortOrder
+      margin-left: 8px
+      margin-top: 1px
+      flex-shrink: 0
+
+.conditionalInput
+  width: 80%
+  border-radius: 0
+  border-bottom-right-radius: 2px
+  border-top-width: 0
+  border-left-width: 0
+  text-align: right
+
+.conditionalDropdown
+  &.fieldDropdown
+    width: 100%
+
+    > div > div:first-of-type
+      border-top-left-radius: 2px
+      border-top-right-radius: 2px
+
+  &.operatorDropdown
+    width: 20%
+
+    > div > div:first-of-type
+      border-bottom-left-radius: 2px
+      border-top-width: 0
+
+  &.fieldValueDropdown
+    width: 80%
+
+    > div > div:first-of-type
+      border-bottom-right-radius: 2px
+      border-top-width: 0
+      border-left-width: 0
+
+  &.disabledDropdown
+    opacity: 0.5
+    pointer-events: none
+    cursor: default
+
+  > div > div:first-of-type
+    border-radius: 0
+
+div.conditionalCombinator
+  margin: 9px 0 8px
+  justify-content: center
+
+  div.conditionalCombinatorButton
+    flex-grow: 0
+    width: 50px
+
+    > div
+      font-size: 11px
+      color: #555
+      height: 30px
+      line-height: 30px
+
+.binningConfigContainer
+  display: flex
+
+  .binningConfigBlock
+    margin-top: 0
+
+    &:first-child
+      width: 60%
+
+    &:last-child
+      padding-left: 7px
+      width: 40%
+
+    .fieldGroupLabel
+      margin-top: -6px
+
+.galleryContainer, .builderContainer
+  background-color: $center-grey
+  display: flex
+  flex-direction: row
+  overflow: hidden
+
+.watermark
+  +watermark
+  padding: 200px 0 260px
+
+  &.watermarkNoSpacer
+    padding: 0
+
+
+.specsContainer, .visualizationViewContainer
+  +fillContainer
+  max-width: 100%
+  max-height: 100%
+  overflow-y: auto
+
+.visualizationViewContainer
+  .chartsContainer
+    +fillContainer
+    padding: 10px
+    background-color: $white
+
+  .innerVisualizationViewContainer
+    +fillContainer
+    overflow-y: auto
+
+  .visualizationContainer
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+
+    min-height: 400px
+    padding-bottom: 20px
+
+    .header
+      text-align: center
+      line-height: 44px
+
+    .visualization
+      +fillContainer
+      position: relative
+
+      > div:first-child
+        position: absolute
+        height: 100%
+        width: 100%
+
+      svg
+        flex-grow: 1
+
+    .overflowText
+      display: flex
+      flex-grow: 1
+      flex-direction: column
+      min-height: 150px
+
+      align-content: center
+      justify-content: center
+      text-align: center
+
+      color: #777
+
+.specsContainer
+  .innerSpecsContainer
+    display: block
+
+  .specContainer
+    display: flex
+    flex-direction: column
+    flex-wrap: wrap
+    align-content: flex-start
+    flex-grow: 1
+
+    .specSection
+      display: flex
+      flex-direction: column
+      flex-wrap: wrap
+      align-content: flex-start
+      flex-grow: 1
+
+      .blockSectionHeader
+        +smallCaps
+        margin: 5px 15px 0
+        padding-left: 8px
+        padding-bottom: 3px
+        border-bottom: 1px solid $ui-line-grey
+        color: $black
+
+        .blockSectionHeaderTitle
+          text-transform: uppercase
+          color: $small-caps-grey
+          font-weight: 600
+          font-size: 11px
+
+        strong
+          font-weight: 500
+
+        .exactTitleField, .subsetTitleField, .baselineTitleField, .expandedTitleField
+          + .exactTitleField:before
+            content: ' and '
+
+          + .subsetTitleField:before, + .expandedTitleField:before, + .baselineTitleField:before
+            content: ' or '
+
+      .specs
+        display: flex
+        flex-direction: row
+        flex-wrap: wrap
+        align-content: flex-start
+        flex-grow: 1
+        margin-bottom: 5px
+        padding: 5px 10px
+
+.visualizationBlocksContainer
+  display: flex
+  flex-direction: column
+  position: relative
+
+  padding: 5px
+
+  &.exact
+    width: 50%
+
+  &.subset, &.baseline
+    width: 33.33333%
+
+  &.expanded
+    width: 25%
+
+  &:hover .starContainer i
+    opacity: 0.5
+
+
+  .starContainer
+    position: absolute
+    top: 15px
+    right: 18px
+    font-size: 13px
+    color: orange
+    cursor: pointer
+
+    i
+      opacity: 0.5
+
+      &.starred
+        color: orange
+        opacity: 0.6
+
+    &:hover i
+      opacity: 1
+
+    &.starred:hover i
+      opacity: 0.8
+
+.visualizationBlock
+  +block
+  padding: 0px
+  display: flex
+  flex-direction: column
+  border: 1px solid transparent
+
+  &:hover
+    border-color: $primary-accent
+
+  .header
+    text-align: left
+    font-size: 12px
+    overflow: hidden
+    text-overflow: ellipsis
+    padding-left: 15px
+    padding-top: 10px
+    padding-bottom: 10px
+
+  .overflowText
+    display: flex
+    color: #999
+    align-content: center
+    justify-content: center
+    flex-grow: 1
+    flex-direction: column
+    min-height: 150px
+
+  .visualization
+    padding: 11px 0 0px
+
+    &.tree
+      svg
+        text
+          fill: rgba(0, 0, 0, 0)
+
+    svg
+      g
+        cursor: pointer!important
+
+.gridContainer
+  .grid
+    width: 100%
+    table-layout: fixed
+    border-collapse: collapse
+
+    th, td
+      padding: 0 10px
+      font-size: 13px
+      text-align: left
+      vertical-align: middle
+
+    th
+      background-color: #eee
+      border: 1px solid #ccc
+      border-bottom-width: 0
+      padding-top: 3px
+      padding-bottom: 3px
+      color: #222
+
+      font-size: 12px
+      font-weight: 500
+      height: 24px
+      line-height: 24px
+
+      overflow: hidden
+      text-overflow: ellipsis
+      word-break: break-word
+
+    td
+      overflow: hidden
+      white-space: nowrap
+      border: 1px solid #ccc
+      text-overflow: ellipsis
+      background-color: white
+      height: 29px
+      line-height: 29px
+
+
+.visualization
+  &.tree
+    svg
+      g
+        outline: none
+      text
+        fill: rgba(0, 0, 0, 0.4)
+        font-size: 16px
+
+    &.minimal
+      svg
+        pointer-events: none
+        g
+          outline: none
+          pointer-events: none
+
+  svg
+    g text[font-weight="bold"][text-anchor="middle"]
+      font-weight: 500
+
+    g:last-child
+      rect[stroke-width="5"], rect[stroke-width="4"], rect[stroke-width="3"]
+        display: none

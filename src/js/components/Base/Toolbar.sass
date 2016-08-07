@@ -1,0 +1,43 @@
+.toolbar
+  display: flex
+  flex-direction: row
+  align-items: center
+  min-height: 56px
+  background-color: #F6F6F6
+  color: #212121
+  padding: 0 16px
+  border-bottom: 1px solid #ddd
+
+  &.foreground
+    z-index: 100
+    box-shadow: 2px 0 5px 0 rgba(0, 0, 0, 0.16)
+
+  span
+    font-size: 14px
+    font-weight: 400
+
+  .leftActions
+    display: flex
+    flex-grow: 1
+    align-items: center
+
+    > div
+      display: flex
+      flex-grow: 1
+      align-items: center
+
+      > div, > span
+        margin-right: 10px
+
+  .rightActions
+    display: flex
+    flex-grow: 1
+
+    > div
+      display: flex
+      flex-grow: 1
+      flex-direction: row-reverse
+      align-items: center
+
+      > div
+        margin-left: 10px

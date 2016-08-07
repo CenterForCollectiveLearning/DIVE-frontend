@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var devFlagPlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.DEBUG || 'false'))
@@ -9,12 +10,12 @@ var devFlagPlugin = new webpack.DefinePlugin({
 module.exports = {
   devtool: 'source-map',
   entry: [
-    './public/js/index.js',
-    './public/css/app.css'
+    './src/js/index.js',
+    './src/css/app.css'
   ],
   output: {
-    path: path.join(__dirname, 'public'),
-    publicPath: '/public/',
+    path: path.join(__dirname, 'dist'),
+    publicPath: '/dist/',
     filename: 'bundle.js'
   },
   plugins: [
@@ -24,6 +25,10 @@ module.exports = {
       Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
       fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'
     }),
+    new CopyWebpackPlugin([
+      { from: './src/index.html', to: './index.html' },
+      { from: './src/assets', to: './assets'}
+    ])    
   ],
   module: {
     loaders: [
@@ -37,7 +42,7 @@ module.exports = {
         // removes xmlns tag from svg (see https://github.com/jhamlet/svg-react-loader/issues/25)
         '!string-replace?search=%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22&replace=' +
         // removes data-name attributes
-        '!string-replace?search=%20data-name%3D%22%5B%5Cw%5Cs_-%5D*%22&replace=&flags=ig' },      
+        '!string-replace?search=%20data-name%3D%22%5B%5Cw%5Cs_-%5D*%22&replace=&flags=ig' },
       { test: /\.png$/, loader: "url-loader?mimetype=image/png" },
     ]
   },

@@ -1,0 +1,145 @@
+@import '../../../css/mixins.sass'
+
+.blockingModalMask
+  display: flex
+  align-items: center
+  justify-content: center
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  z-index: 1000
+
+  background-color: rgba(0, 0, 0, 0.45)
+
+  &.blackBackground
+    background-color: rgba(0, 0, 0, 0.98)
+
+    &:before
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100vh
+      content: ""
+      z-index: -1
+      background: url(../../../assets/images/landing_background.png) no-repeat
+      background-size: cover
+      background-position: 50% 0%
+      opacity: 0.15
+
+  .blockingModalContainer
+    display: flex
+    z-index: 10
+    box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.46)
+    border-radius: 2px
+    overflow: visible
+    max-height: 90%
+    max-width: 670px
+
+  .blockingModal
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+    padding: 10px 10px 20px
+    min-height: 100px
+    min-width: 400px
+    border-radius: 2px
+    overflow: visible
+    background-color: #FAFAFA
+
+    color: #333
+
+    &.scrollable
+      .modalContent
+        overflow: hidden
+
+    .modalHeader
+      display: flex
+      padding: 0 10px
+      margin-bottom: 10px
+      font-size: 16px
+      font-weight: 400
+      min-height: 40px
+      line-height: 40px
+      color: #444444
+
+      .actions
+        display: flex
+        flex-direction: row-reverse
+        flex-grow: 1
+
+        .closeAction
+          color: #A1A1A1
+          font-weight: 500
+          cursor: pointer
+          padding-left: 5px
+          padding-right: 5px
+          margin-right: -5px
+
+          &:hover
+            color: #666
+
+    .modalContent
+      display: flex
+      background-color: transparent
+      border: none
+      padding: 0 10px
+      font-size: 14px
+      overflow: visible
+
+    .modalFooter
+      display: flex
+      margin: 20px 12px 0
+
+.footerContent
+  display: flex
+  flex-grow: 1
+
+.footerLabel
+  display: flex
+  align-items: center
+  font-size: 13px
+
+  label.error
+    color: darkred
+
+.rightActions
+  display: flex
+  flex-direction: row-reverse
+  flex-grow: 1
+
+  > div
+    margin-left: 6px
+
+.controlSection
+  width: 100%
+  max-width: 460px
+  display: flex
+  flex-direction: column
+  flex-grow: 1
+  flex-shrink: 0
+
+  &.shortControl
+    max-width: 260px
+
+  &.scrollableControl
+    margin-left: -10px
+    margin-right: -10px
+    padding-left: 10px
+    padding-right: 10px
+    max-width: none
+    width: auto
+    overflow: hidden
+    flex-shrink: 1
+
+  + .controlSection
+    margin-top: 16px
+
+  .label
+    +smallCaps
+    padding-bottom: 2px
+
+  input
+    max-width: 260px

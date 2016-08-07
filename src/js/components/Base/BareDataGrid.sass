@@ -1,0 +1,86 @@
+@import '../../../css/mixins.sass'
+
+.gridContainer, .innerGrid, .outerGrid
+  display: flex
+  flex-direction: column
+  font-size: 12px
+  color: $black
+  background-color: $white
+  flex-grow: 1
+
+.gridContainer
+  border: 1px solid $ui-line-grey
+  max-width: 100%
+  overflow: auto
+
+.column
+  display: flex
+  flex-direction: column
+  flex-grow: 1
+  flex-basis: 0
+  min-width: 105px
+
+  overflow: hidden
+  align-items: center
+  justify-content: center
+  text-align: center
+
+  border: 1px solid $ui-line-grey
+  border-bottom-width: 0
+  border-right-width: 0
+  word-break: break-word
+
+
+  &.nestedRowLabel
+    align-items: flex-end
+    padding-right: 8px
+
+  &:first-child
+    border-left-width: 0px
+
+.row
+  display: flex
+  flex-grow: 1
+  flex-direction: row
+
+  &:first-child
+    border-bottom: 1px solid $ui-line-grey
+    .column
+      border-top-width: 0px
+
+.nestedRow
+  cursor: pointer
+
+  > .row:first-child
+    .column
+      border-top-width: 1px
+      flex-direction: row
+      align-items: center
+
+  .row
+    .column:first-child
+      align-items: flex-end !important
+
+  .row
+    border-bottom-width: 0px
+
+  .collapseArrow
+    position: relative
+    top: -4px
+    cursor: pointer
+    margin-top: 4px
+    margin-left: auto
+    border-color: #999 transparent transparent
+    border-style: solid
+    border-width: 5px 5px 2.5px
+    display: inline-block
+    height: 0
+    width: 0
+
+  &.collapsed
+    .collapseArrow
+      -webkit-transform: rotate(90deg)
+      -moz-transform: rotate(90deg)
+      -ms-transform: rotate(90deg)
+      -o-transform: rotate(90deg)
+      transform: rotate(90deg)
