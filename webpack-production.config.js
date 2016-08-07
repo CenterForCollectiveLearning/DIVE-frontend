@@ -27,8 +27,9 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
       { from: './src/index.html', to: './index.html' },
-      { from: './src/assets', to: './assets'}
-    ])    
+      { from: './src/assets', to: './assets'},
+      { from: './src/_redirects', to: './_redirects'}      
+    ])
   ],
   module: {
     loaders: [
