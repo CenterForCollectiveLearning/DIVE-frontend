@@ -16,16 +16,23 @@ const loggerMiddleware = createLogger({
 });
 
 export default function configureStore(initialState) {
+  const middleware = [
+    debounce,
+    thunkMiddleware,
+    analyticsMiddleware,
+    routerMiddleware(browserHistory),
+    loggerMiddleware
+  ];
+
+  if (window.__env.NODE_ENV != "DEVELOPMENT") {
+    middleware.push(RavenMiddleware('https://34b21b0198eb43d4bebc0a35ddd11b5c@app.getsentry.com/75309'))
+  }
+
   const store = createStore(
     rootReducer,
     initialState,
     applyMiddleware(
-      debounce,
-      thunkMiddleware,
-      analyticsMiddleware,
-      routerMiddleware(browserHistory),
-      RavenMiddleware('https://34b21b0198eb43d4bebc0a35ddd11b5c@app.getsentry.com/75309'),
-      loggerMiddleware
+      ...middleware
     )
   );
 

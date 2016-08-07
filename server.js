@@ -29,6 +29,7 @@ if (useExpress) {
     historyApiFallback: {
       index: 'index.html'
     },
+    open: true,
     stats: { colors: true }
   }).listen(3009, '0.0.0.0', function (err, result) {
     if (err) { console.log(err) }

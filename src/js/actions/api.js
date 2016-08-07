@@ -12,8 +12,10 @@ function checkStatus(response) {
   } else {
     const statusText = response.statusText;
     var error = new Error(statusText)
-    Raven.captureException(error);
-    error.response = response
+    if (window.__env.NODE_ENV != "DEVELOPMENT") {
+      Raven.captureException(error);
+      error.response = response
+    }
     throw error
   }
 }
