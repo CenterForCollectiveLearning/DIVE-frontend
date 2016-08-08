@@ -74,7 +74,7 @@ export class RegressionView extends Component {
 
   render() {
     const { datasets, datasetId, regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames, regressionType } = this.props;
-    const disabled = (regressionResult.isSaving || (!regressionResult.isSaving && regressionResult.exportedRegressionId) || regressionResult.exported) ? true : false;
+    const saved = (regressionResult.isSaving || (!regressionResult.isSaving && regressionResult.exportedRegressionId) || regressionResult.exported) ? true : false;
 
     if ( !regressionResult.loading && (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0)) {
       return (
@@ -99,7 +99,7 @@ export class RegressionView extends Component {
                 </RaisedButton>
               </div>
               <div className={ styles.headerControl }>
-                <RaisedButton onClick={ this.saveRegression } disabled={ disabled }>
+                <RaisedButton onClick={ this.saveRegression } active={ saved }>
                   { !regressionResult.isSaving && regressionResult.exportedRegressionId && <i className="fa fa-star"></i> }
                   { !regressionResult.exportedRegressionId && <i className="fa fa-star-o"></i> }
                 </RaisedButton>

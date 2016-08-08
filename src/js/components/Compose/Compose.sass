@@ -26,17 +26,22 @@
       width: 100%
 
     .composeEditorContainer
+      position: relative
       flex-grow: 1
       flex-shrink: 0
       background-color: white
       width: 960px
-      box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.1)
       margin-top: 15px
       margin-bottom: 30px
       padding: 15px 10px 10px
 
 .editorHeader
   padding: 10px
+
+  .saveStatus
+    +smallCaps
+    position: absolute
+    right: 20px
 
   .editorHeaderText
     width: 100%
@@ -47,7 +52,7 @@
       color: #333
       background-color: transparent
       font-family: 'Source Sans Pro', sans-serif
-      font-size: 55px
+      font-size: 40px
       font-weight: 300
       line-height: 1
       padding-left: 11px
@@ -192,7 +197,7 @@
 
     .composeBlockHeaderText
       font-family: 'Source Sans Pro', sans-serif
-      font-size: 30px
+      font-size: 20px
       line-height: 1.2
       letter-spacing: -.02em
       color: rgba(0,0,0,.8)

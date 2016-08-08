@@ -141,7 +141,7 @@ export class ComposeBlock extends Component {
 
   getBlockContent() {
     const { exportedSpec, selectedBlockFormat } = this.state;
-    const { block, editable } = this.props;
+    const { block, editable, fieldNameToColor } = this.props;
 
     const spec = exportedSpec ? exportedSpec : block.spec;
 
@@ -157,6 +157,7 @@ export class ComposeBlock extends Component {
                     chartId={ `visualization-${ block.uuid }-${ spec.id }` }
                     editable={ editable }
                     onSave={ this.props.saveBlock }
+                    fieldNameToColor={ fieldNameToColor }
                     format={ selectedBlockFormat }
                     parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
                     spec={ spec } />;
@@ -335,7 +336,8 @@ ComposeBlock.propTypes = {
   exportedCorrelations: PropTypes.object.isRequired,
   editable: PropTypes.bool.isRequired,
   index: PropTypes.number.isRequired,
-  length: PropTypes.number.isRequired
+  length: PropTypes.number.isRequired,
+  fieldNameToColor: PropTypes.object
 };
 
 function mapStateToProps(state) {

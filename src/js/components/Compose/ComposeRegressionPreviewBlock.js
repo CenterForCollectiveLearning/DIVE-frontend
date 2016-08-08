@@ -17,7 +17,6 @@ export default class ComposeRegressionPreviewBlock extends Component {
   render() {
     const { spec } = this.props;
 
-    console.log('PREVIEW BLOCK', spec, spec.data);
     return (
       <div className={ styles.contentPreviewBlockContainer }
             onClick={ this.handleClick.bind(this) }>
