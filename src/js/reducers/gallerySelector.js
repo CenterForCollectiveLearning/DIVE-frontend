@@ -89,24 +89,6 @@ export default function gallerySelector(state = baseState, action) {
     }
   ];
 
-  // const defaultTitle = [
-  //   {
-  //     type: 'plain',
-  //     string: 'Summary visualizations'
-  //   }
-  // ];
-  //
-  // const titleVisualizationStrings = [
-  //   {
-  //     type: 'plain',
-  //     string: 'Visualizations'
-  //   },
-  //   {
-  //     type: 'plain',
-  //     string: 'of'
-  //   }
-  // ];
-
   const sortSpecsByFunction = function(sortingFunction, specA, specB) {
     const scoreObjectSpecA = specA.scores.find((score) => score.type == sortingFunction);
     const scoreObjectSpecB = specB.scores.find((score) => score.type == sortingFunction);
@@ -178,6 +160,8 @@ export default function gallerySelector(state = baseState, action) {
         return sortSpecsByFunction(selectedSortingFunction, specA, specB);
       };
 
+      console.log(action, action.specs, action.recommendationType);
+
       var allSpecs = action.specs;
       if (action.recommendationType.level && state.specs) {
         allSpecs = [ ...state.specs, ...allSpecs ];
@@ -191,7 +175,7 @@ export default function gallerySelector(state = baseState, action) {
           new Object({
             ...property,
             selected: !property.selected,
-            values: (!property.selected || property.generalType == 'q') ? property.values : property.values.map((value, i) => new Object({...value, selected: i == 0 })),
+            values: (!property.selected || property.generalType == 'q' || property.generalType == 't') ? property.values : property.values.map((value, i) => new Object({...value, selected: i == 0 })),
             aggregations: (!property.selected || property.generalType == 'c') ? property.aggregations : property.aggregations.map((aggregation, i) => new Object({...aggregation, selected: i == 0 }))
           })
           : property

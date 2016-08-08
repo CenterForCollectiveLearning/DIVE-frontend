@@ -2,9 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectIndependentVariable, selectDependentVariable } from '../../../actions/ComparisonActions';
+import { selectIndependentVariable, selectDependentVariable, selectConditional } from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
 
+import ConditionalSelector from '../../Base/ConditionalSelector';
 import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
@@ -29,7 +30,7 @@ export class ComparisonSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, comparisonSelector, selectIndependentVariable, selectDependentVariable } = this.props;
+    const { conditionals, fieldProperties, comparisonSelector, selectIndependentVariable, selectDependentVariable, selectConditional } = this.props;
     return (
       <Sidebar selectedTab="comparison">
         { fieldProperties.items.length != 0 &&
@@ -70,6 +71,18 @@ export class ComparisonSidebar extends Component {
               onChange={ selectDependentVariable } />
           </SidebarGroup>
         }
+        { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
+          <SidebarGroup heading="Filter by field">
+            { conditionals.items.map((conditional, i) =>
+              <div key={ `conditional-selector-${ i }` }>
+                <ConditionalSelector
+                  conditionalIndex={ i }
+                  fieldProperties={ fieldProperties.items }
+                  selectConditionalValue={ selectConditional }/>
+              </div>
+            )}
+          </SidebarGroup>
+        }
       </Sidebar>
     );
   }
@@ -83,13 +96,14 @@ ComparisonSidebar.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, fieldProperties, comparisonSelector } = state;
+  const { project, datasetSelector, fieldProperties, comparisonSelector, conditionals } = state;
   return {
     project,
+    conditionals,
     datasetSelector,
     fieldProperties,
     comparisonSelector
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, selectDependentVariable })(ComparisonSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, selectDependentVariable, selectConditional })(ComparisonSidebar);

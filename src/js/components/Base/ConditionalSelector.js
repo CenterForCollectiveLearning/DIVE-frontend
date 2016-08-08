@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 
-import styles from '../Visualizations.sass';
+import styles from './ConditionalSelector.sass';
 
-import Input from '../../Base/Input';
-import DropDownMenu from '../../Base/DropDownMenu';
-import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
+import Input from './Input';
+import DropDownMenu from './DropDownMenu';
+import ToggleButtonGroup from './ToggleButtonGroup';
 
 export default class ConditionalSelector extends Component {
   constructor(props) {

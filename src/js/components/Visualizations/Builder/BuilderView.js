@@ -27,14 +27,14 @@ export class BuilderView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { visualization, project, fetchSpecVisualizationIfNeeded } = this.props;
+    const { visualization, conditionals, project, fetchSpecVisualizationIfNeeded } = this.props;
 
     const exportingChanged = visualization.isExporting != nextProps.visualization.isExporting;
-    const conditionalsChanged = nextProps.visualization.conditionals != visualization.conditionals;
+    const conditionalsChanged = nextProps.conditionals.lastUpdated != conditionals.lastUpdated;
     const configChanged = nextProps.visualization.config != visualization.config;
 
     if (nextProps.project.properties.id && !visualization.isFetching && (!visualization.spec.id || conditionalsChanged || configChanged)) {
-      fetchSpecVisualizationIfNeeded(nextProps.project.properties.id, nextProps.specId, nextProps.visualization.conditionals, nextProps.visualization.config);
+      fetchSpecVisualizationIfNeeded(nextProps.project.properties.id, nextProps.specId, nextProps.conditionals.items, nextProps.visualization.config);
     }
 
     if (exportingChanged && !nextProps.visualization.isExporting && nextProps.visualization.shareWindow) {
@@ -43,8 +43,8 @@ export class BuilderView extends Component {
   }
 
   saveVisualization(saveAction = true) {
-    const { project, visualization, createExportedSpec } = this.props;
-    createExportedSpec(project.properties.id, visualization.spec.id, visualization.visualizationData, visualization.conditionals, visualization.config, saveAction);
+    const { project, visualization, createExportedSpec, conditionals } = this.props;
+    createExportedSpec(project.properties.id, visualization.spec.id, visualization.visualizationData, conditionals.items, visualization.config, saveAction);
   }
 
   onClickShare() {
@@ -93,13 +93,14 @@ BuilderView.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, fieldProperties, visualization, gallerySelector } = state;
+  const { project, conditionals, datasetSelector, fieldProperties, visualization, gallerySelector } = state;
   return {
     project,
     datasetSelector,
     fieldNameToColor: fieldProperties.fieldNameToColor,
     visualization,
-    gallerySelector
+    gallerySelector,
+    conditionals
   }
 }
 

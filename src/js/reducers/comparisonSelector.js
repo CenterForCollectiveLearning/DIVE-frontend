@@ -12,7 +12,7 @@ import {
   SELECT_DATASET,
   RECEIVE_FIELD_PROPERTIES,
   RECEIVE_SET_FIELD_IS_ID,
-  RECEIVE_SET_FIELD_TYPE,  
+  RECEIVE_SET_FIELD_TYPE
 } from '../constants/ActionTypes';
 
 const baseState = {
@@ -21,7 +21,7 @@ const baseState = {
   numericalComparisonResult: {},
   anovaBoxplotData: [],
   pairwiseComparisonData: {},
-  anovaResult: {}
+  anovaResult: {},
 }
 
 export default function comparisonSelector(state = baseState, action) {

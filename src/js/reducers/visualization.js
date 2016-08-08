@@ -9,18 +9,10 @@ import {
   SELECT_BUILDER_VISUALIZATION_TYPE,
   SELECT_BUILDER_SORT_FIELD,
   SELECT_BUILDER_SORT_ORDER,
-  SELECT_VISUALIZATION_CONDITIONAL,
   SELECT_VISUALIZATION_CONFIG,
   SET_SHARE_WINDOW,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
-
-const baseConditional = {
-  conditionalIndex: null,
-  fieldId: null,
-  operator: null,
-  value: null
-};
 
 const baseState = {
   tableData: [],
@@ -37,7 +29,6 @@ const baseState = {
   isSaving: false,
   isFetching: false,
   lastUpdated: null,
-  conditionals: [ baseConditional ],
   config: {}
 }
 
@@ -114,18 +105,6 @@ export default function visualization(state = baseState, action) {
 
     case SELECT_BUILDER_VISUALIZATION_TYPE:
       return { ...state, visualizationType: action.selectedType };
-
-    case SELECT_VISUALIZATION_CONDITIONAL:
-      var visualizationConditionals = state.conditionals.slice();
-      const conditionalExists = visualizationConditionals.find((conditional) => conditional.conditionalIndex == action.conditional.conditionalIndex);
-      if (conditionalExists) {
-        visualizationConditionals = visualizationConditionals.map((conditional) =>
-          (conditional.conditionalIndex == action.conditional.conditionalIndex) ? action.conditional : conditional
-        );
-      } else {
-        visualizationConditionals.push(action.conditional);
-      }
-      return { ...state, conditionals: visualizationConditionals, lastUpdated: Date.now() };
 
     case SELECT_VISUALIZATION_CONFIG:
       return { ...state, config: action.config, lastUpdated: Date.now() };

@@ -17,7 +17,7 @@ import {
   SELECT_SORTING_FUNCTION,
   SELECT_BUILDER_SORT_ORDER,
   SELECT_BUILDER_SORT_FIELD,
-  SELECT_VISUALIZATION_CONDITIONAL,
+  SELECT_CONDITIONAL,
   SELECT_VISUALIZATION_CONFIG,
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
@@ -97,7 +97,7 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommend
     'project_id': projectId,
     'dataset_id': datasetId,
     'field_agg_pairs': fieldAggPairs,
-    'recommendation_types': [selectedRecommendationType],
+    'recommendation_types': [ selectedRecommendationType ],
     'conditionals': conditionals
   };
 
@@ -187,7 +187,6 @@ function fetchSpecVisualization(projectId, specId, conditionals = [], config = n
   }
 
   const filteredConditionals = getFilteredConditionals(conditionals);
-
   if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
     params.conditionals = filteredConditionals;
   }
@@ -223,9 +222,9 @@ export function fetchSpecVisualizationIfNeeded(projectId, specId, conditionals, 
   };
 }
 
-export function selectVisualizationConditional(conditional) {
+export function selectConditional(conditional) {
   return {
-    type: SELECT_VISUALIZATION_CONDITIONAL,
+    type: SELECT_CONDITIONAL,
     conditional: conditional
   }
 }

@@ -10,16 +10,9 @@ import {
   RECEIVE_CREATED_SAVED_CORRELATION,
   WIPE_PROJECT_STATE,
   RECEIVE_SET_FIELD_IS_ID,
-  RECEIVE_SET_FIELD_TYPE,  
+  RECEIVE_SET_FIELD_TYPE,
   CLEAR_ANALYSIS
 } from '../constants/ActionTypes';
-
-const baseConditional = {
-  conditionalIndex: null,
-  fieldId: null,
-  operator: null,
-  value: null
-};
 
 const baseState = {
   correlationVariableIds: [],
@@ -31,7 +24,6 @@ const baseState = {
     error: null,
     data: null
   },
-  conditionals: [ baseConditional ],
   correlationScatterplots: []
 }
 
@@ -80,7 +72,7 @@ export default function correlationSelector(state = baseState, action) {
       };
 
     case RECEIVE_FIELD_PROPERTIES:
-      var allQuantitativeItemIds = action.fieldProperties.filter((item) => item.generalType == 'q').map((item) => item.id)
+      var allQuantitativeItemIds = action.fieldProperties.filter((item) => (item.generalType == 'q' && !item.isId)).map((item) => item.id)
       return { ...state, correlationVariableIds: allQuantitativeItemIds};
 
     case WIPE_PROJECT_STATE, CLEAR_ANALYSIS, SELECT_DATASET:

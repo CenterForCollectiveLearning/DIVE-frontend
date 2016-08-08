@@ -13,7 +13,7 @@ import {
   RECEIVE_CREATED_SAVED_REGRESSION,
   WIPE_PROJECT_STATE,
   RECEIVE_SET_FIELD_IS_ID,
-  RECEIVE_SET_FIELD_TYPE,  
+  RECEIVE_SET_FIELD_TYPE,
   CLEAR_ANALYSIS
 } from '../constants/ActionTypes';
 
@@ -26,13 +26,6 @@ const regressionModes = [ {
   label: 'Builder',
   selected: false
 }];
-
-const baseConditional = {
-  conditionalIndex: null,
-  fieldId: null,
-  operator: null,
-  value: null
-};
 
 const baseState = {
   fieldProperties: [],
@@ -52,7 +45,6 @@ const baseState = {
   },
   regressionModes: regressionModes,
   selectedMode: null,
-  conditionals: [ baseConditional ],
   contributionToRSquared: []
 }
 

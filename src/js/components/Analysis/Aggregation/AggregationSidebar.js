@@ -2,9 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable } from '../../../actions/AggregationActions';
+import { selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional } from '../../../actions/AggregationActions';
 import styles from '../Analysis.sass';
 
+import ConditionalSelector from '../../Base/ConditionalSelector';
 import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
@@ -30,7 +31,7 @@ export class AggregationSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, aggregationSelector, selectAggregationIndependentVariable, selectBinningConfigX, selectBinningConfigY } = this.props;
+    const { fieldProperties, aggregationSelector, selectAggregationIndependentVariable, selectBinningConfigX, selectBinningConfigY, conditionals, selectConditional } = this.props;
     const { aggregationVariablesIds, aggregationVariableId } = aggregationSelector;
 
     const nonAggregationVariables = fieldProperties.items.filter((item) => aggregationVariablesIds.indexOf(item.id) < 0)
@@ -146,7 +147,18 @@ export class AggregationSidebar extends Component {
             selectBinningConfig={ selectBinningConfigY }
             name={ numAggregationVariables[1].name }/>
         }
-
+        { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
+          <SidebarGroup heading="Filter by field">
+            { conditionals.items.map((conditional, i) =>
+              <div key={ `conditional-selector-${ i }` }>
+                <ConditionalSelector
+                  conditionalIndex={ i }
+                  fieldProperties={ fieldProperties.items }
+                  selectConditionalValue={ selectConditional }/>
+              </div>
+            )}
+          </SidebarGroup>
+        }
       </Sidebar>
     );
   }
@@ -156,17 +168,19 @@ AggregationSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  aggregationSelector: PropTypes.object.isRequired
+  aggregationSelector: PropTypes.object.isRequired,
+  conditionals: PropTypes.object
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, fieldProperties, aggregationSelector } = state;
+  const { project, conditionals, datasetSelector, fieldProperties, aggregationSelector } = state;
   return {
     project,
     datasetSelector,
     fieldProperties,
-    aggregationSelector
+    aggregationSelector,
+    conditionals
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable })(AggregationSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional })(AggregationSidebar);

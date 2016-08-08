@@ -22,16 +22,9 @@ import {
   WIPE_PROJECT_STATE,
   SELECT_DATASET,
   RECEIVE_SET_FIELD_IS_ID,
-  RECEIVE_SET_FIELD_TYPE,  
+  RECEIVE_SET_FIELD_TYPE,
   RECEIVE_FIELD_PROPERTIES
 } from '../constants/ActionTypes';
-
-const baseConditional = {
-  conditionalIndex: null,
-  fieldId: null,
-  operator: null,
-  value: null
-};
 
 const baseState = {
   aggregationVariableId: 'count',
@@ -59,7 +52,6 @@ const baseState = {
     error: null,
     data: null
   },
-  conditionals: [ baseConditional ],
   loadAggregation: false
 }
 
