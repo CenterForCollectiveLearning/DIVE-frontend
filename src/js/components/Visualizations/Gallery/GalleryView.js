@@ -73,13 +73,14 @@ export class GalleryView extends Component {
 
 
   render() {
-    const { filters, datasets, fieldNameToColor, datasetSelector, filteredVisualizationTypes, gallerySelector, exportedSpecs, selectSortingFunction } = this.props;
-    const { specs, fieldProperties } = gallerySelector;
+    const { filters, datasets, fieldNameToColor, datasetSelector, filteredVisualizationTypes, gallerySelector, specs, exportedSpecs, selectSortingFunction } = this.props;
+    const { fieldProperties } = gallerySelector;
+    const { isFetching, progress, loaded } = specs;
 
     var selectedFieldProperties = fieldProperties
       .filter((property) => property.selected).map((property) => property.name);
 
-    const filteredSpecs = specs.filter((spec) =>
+    const filteredSpecs = specs.items.filter((spec) =>
       (filteredVisualizationTypes.length == 0) || filteredVisualizationTypes.some((filter) =>
         spec.vizTypes.indexOf(filter) >= 0
       )
@@ -107,7 +108,10 @@ export class GalleryView extends Component {
             }
           />
           <div className={ styles.specContainer }>
-            { !specs.isFetching && filteredSpecs.length == 0 &&
+            { isFetching && filteredSpecs.length == 0 &&
+              <div className={ styles.watermark }>Loading visualizations</div>
+            }
+            { !isFetching && filteredSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>
             }
             { exactSpecs.length > 0 &&
@@ -158,7 +162,7 @@ export class GalleryView extends Component {
                 </div>
               </div>
             }
-            { !specs.isFetching && baselineSpecs.length > 1 && (selectedFieldProperties.length > 1 || selectedFieldProperties.length == 0)&&
+            { !isFetching && baselineSpecs.length > 1 && (selectedFieldProperties.length > 1 || selectedFieldProperties.length == 0)&&
               <div className={ styles.specSection }>
                 <div className={ styles.blockSectionHeader }>
                   <span>
@@ -204,9 +208,9 @@ export class GalleryView extends Component {
                 </div>
               </div>
             }
-            { specs.isFetching &&
+            { isFetching &&
               <div className={ styles.watermark }>
-                { specs.progress != null ? specs.progress : 'Fetching visualizations…' }
+                { progress != null ? progress : 'Fetching visualizations…' }
               </div>
             }
           </div>

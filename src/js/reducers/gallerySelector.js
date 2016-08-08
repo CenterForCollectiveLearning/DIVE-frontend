@@ -1,6 +1,7 @@
 import {
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES,
+  REQUEST_SPECS,
   RECEIVE_SPECS,
   SELECT_FIELD_PROPERTY,
   SELECT_FIELD_PROPERTY_VALUE,
@@ -150,6 +151,9 @@ export default function gallerySelector(state = baseState, action) {
         sortingFunctions: SORTING_FUNCTIONS,
         updatedAt: action.receivedAt
       };
+
+    case REQUEST_SPECS:
+      return { ...state, isFetching: true };
 
     case RECEIVE_SPECS:
       const selectedSortingFunction = state.sortingFunctions.find((func) => func.selected).value;
