@@ -85,12 +85,6 @@ export class ComposeView extends Component {
       <div className={ styles.composeViewContainer }>
         <HeaderBar
           className={ styles.headerBar }
-          header="Story Composer"
-          subheader={
-            <span className={ styles.saveStatus }>
-              { saveStatus }
-            </span>
-          }
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
@@ -125,6 +119,7 @@ export class ComposeView extends Component {
           saveDocumentTitle={ saveDocumentTitle }
           selectedDocument={ selectedDocument }
           fieldNameToColor={ fieldNameToColor }
+          saveStatus={ saveStatus }
           editable={ true }/>
       </div>
     );

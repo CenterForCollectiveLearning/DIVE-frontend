@@ -233,12 +233,17 @@ export default class Visualization extends Component {
     for (var i in primaryVariableKeys) {
       var primaryVariableKey = primaryVariableKeys[i];
       if (primaryVariableKey in args) {
-        colors.push(fieldNameToColor[args[primaryVariableKey].name]);
+        var fieldName = args[primaryVariableKey].name;
+        if (fieldName in fieldNameToColor) {
+          colors.push(fieldNameToColor[fieldName]);
+        }
       }
     }
 
     if (colors.length > 0) {
       options['colors'] = colors;
+    } else {
+      options['colors'] = [ '#007BD7' ]
     }
 
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);

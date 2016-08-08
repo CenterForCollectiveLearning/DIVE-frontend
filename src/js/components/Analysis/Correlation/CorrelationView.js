@@ -78,7 +78,7 @@ export class CorrelationView extends Component {
     const { correlationResult, correlationVariableNames, correlationScatterplots, datasets, datasetId } = this.props;
     const twoCorrelationVariablesSelected = correlationVariableNames.length >= 2;
     const correlationResultHasElements = correlationResult.data && correlationResult.data.rows && correlationResult.data.rows.length > 0;
-    const disabled = (correlationResult.isSaving || (!correlationResult.isSaving && correlationResult.exportedRegressionId) || correlationResult.exported) ? true : false;
+    const saved = (correlationResult.isSaving || (!correlationResult.isSaving && correlationResult.exportedRegressionId) || correlationResult.exported) ? true : false;
 
     var correlationContent;
     if (twoCorrelationVariablesSelected ) {
@@ -118,7 +118,7 @@ export class CorrelationView extends Component {
                 </RaisedButton>
               </div>
               <div className={ styles.headerControl }>
-                <RaisedButton onClick={ this.saveCorrelation } disabled={ disabled }>
+                <RaisedButton onClick={ this.saveCorrelation } active={ saved }>
                   { !correlationResult.isSaving && correlationResult.exportedCorrelationId && <i className="fa fa-star"></i> }
                   { !correlationResult.exportedCorrelationId && <i className="fa fa-star-o"></i> }
                 </RaisedButton>

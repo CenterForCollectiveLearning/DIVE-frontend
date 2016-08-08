@@ -27,7 +27,7 @@ export default class ComposeBlockVisualization extends Component {
   }
 
   render() {
-    const { chartId, spec, updatedAt, parentSize, format, editable } = this.props;
+    const { chartId, spec, updatedAt, parentSize, format, editable, fieldNameToColor } = this.props;
 
     const absoluteMaxWidth = parentSize ? parentSize[0] - 18 : 908;
     const isHalfWidthFormat = (format == BLOCK_FORMATS.TEXT_LEFT || format == BLOCK_FORMATS.TEXT_RIGHT);
@@ -41,6 +41,7 @@ export default class ComposeBlockVisualization extends Component {
       chartId={ `full-compose-visualization-${ chartId }-${ updatedAt }-${ this.state.resizeCounter }` }
       containerClassName={ styles.fullComposeVisualization }
       visualizationTypes={ spec.vizTypes }
+      fieldNameToColor={ fieldNameToColor }
       spec={ spec }
       data={ spec.data }
       isMinimalView={ false }
@@ -78,7 +79,8 @@ ComposeBlockVisualization.propTypes = {
   blockId: PropTypes.string.isRequired,
   chartId: PropTypes.string.isRequired,
   onSave: PropTypes.func.isRequired,
-  editable: PropTypes.bool.isRequired
+  editable: PropTypes.bool.isRequired,
+  fieldNameToColor: PropTypes.object,
 };
 
 function mapStateToProps(state) {

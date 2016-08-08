@@ -37,7 +37,7 @@ export default class ComposeEditor extends Component {
   }
 
   render() {
-    const { selectedDocument, exportedSpecs, exportedRegressions, fieldNameToColor, exportedCorrelations, updatedAt, editable, selectComposeContent } = this.props;
+    const { selectedDocument, exportedSpecs, saveStatus, exportedRegressions, fieldNameToColor, exportedCorrelations, updatedAt, editable, selectComposeContent } = this.props;
     if (!selectedDocument.blocks) {
       return (<div></div>);
     }
@@ -48,6 +48,7 @@ export default class ComposeEditor extends Component {
             styles.editorHeader
             + ( editable ? ' ' + styles.editable : '' )
           }>
+          { saveStatus && <span className={ styles.saveStatus }>{ saveStatus }</span> }
           <div className={ styles.editorHeaderText }>
             <Input
               className={ styles.documentTitle }
@@ -61,6 +62,7 @@ export default class ComposeEditor extends Component {
           { selectedDocument.blocks.map((block, i, blocks) =>
             <ComposeBlock
               key={ `compose-block-${ block.uuid }-${ i }` }
+              fieldNameToColor={ fieldNameToColor }
               block={ block }
               index={ i }
               length={ blocks.length }
@@ -89,5 +91,6 @@ ComposeEditor.propTypes = {
   exportedCorrelations: PropTypes.object,
   exportedRegressions: PropTypes.object,
   fieldNameToColor: PropTypes.object,
-  selectComposeContent: PropTypes.func
+  selectComposeContent: PropTypes.func,
+  saveStatus: PropTypes.bool
 };
