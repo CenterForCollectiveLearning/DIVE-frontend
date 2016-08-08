@@ -12,6 +12,8 @@ import {
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
   RECEIVE_CREATED_SAVED_REGRESSION,
   WIPE_PROJECT_STATE,
+  RECEIVE_SET_FIELD_IS_ID,
+  RECEIVE_SET_FIELD_TYPE,  
   CLEAR_ANALYSIS
 } from '../constants/ActionTypes';
 
@@ -37,7 +39,7 @@ const baseState = {
   regressionType: null,
   dependentVariableId: null,
   independentVariableIds: [],
-  interactionTermIds: [], 
+  interactionTermIds: [],
   regressionResult: {
     exported: false,
     exportedRegressionId: null,
@@ -109,6 +111,21 @@ export default function regressionSelector(state = baseState, action) {
         .map((property) => property.id);
 
       return { ...state, fieldProperties: action.fieldProperties, independentVariableIds: selectedIndependentVariables };
+
+    case RECEIVE_SET_FIELD_TYPE:
+      var fieldProperties = state.fieldProperties.slice().map((fieldProperty) =>
+        fieldProperty.id == action.fieldProperty.id ?
+          action.fieldProperty : fieldProperty
+      );
+
+      return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
+
+    case RECEIVE_SET_FIELD_IS_ID:
+      var fieldProperties = state.fieldProperties.slice().map((fieldProperty) =>
+        fieldProperty.id == action.fieldProperty.id ?
+          action.fieldProperty : fieldProperty
+      );
+      return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
 
     case REQUEST_RUN_REGRESSION:
       return { ...state, regressionResult: { ...state.regressionResult, loading: true } };

@@ -9,6 +9,8 @@ import {
   SELECT_SORTING_FUNCTION,
   SELECT_RECOMMENDATION_TYPE,
   WIPE_PROJECT_STATE,
+  RECEIVE_SET_FIELD_IS_ID,
+  RECEIVE_SET_FIELD_TYPE,
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
@@ -151,6 +153,21 @@ export default function gallerySelector(state = baseState, action) {
         sortingFunctions: SORTING_FUNCTIONS,
         updatedAt: action.receivedAt
       };
+
+    case RECEIVE_SET_FIELD_TYPE:
+      var fieldProperties = state.fieldProperties.slice().map((fieldProperty) =>
+        fieldProperty.id == action.fieldProperty.id ?
+          action.fieldProperty : fieldProperty
+      );
+
+      return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
+
+    case RECEIVE_SET_FIELD_IS_ID:
+      var fieldProperties = state.fieldProperties.slice().map((fieldProperty) =>
+        fieldProperty.id == action.fieldProperty.id ?
+          action.fieldProperty : fieldProperty
+      );
+      return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
 
     case REQUEST_SPECS:
       return { ...state, isFetching: true };
