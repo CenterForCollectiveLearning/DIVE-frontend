@@ -14,11 +14,19 @@ import {
   REQUEST_CREATE_SAVED_REGRESSION,
   RECEIVE_CREATED_SAVED_REGRESSION,
   REQUEST_CREATE_EXPORTED_REGRESSION,
-  RECEIVE_CREATED_EXPORTED_REGRESSION
+  RECEIVE_CREATED_EXPORTED_REGRESSION,
+  SELECT_CONDITIONAL
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
+
+export function selectConditional(conditional) {
+  return {
+    type: SELECT_CONDITIONAL,
+    conditional: conditional
+  }
+}
 
 export function selectRegressionType(selectedRegressionType) {
   return {
@@ -70,7 +78,7 @@ export function createInteractionTerm(projectId, datasetId, interactionTermIds) 
 export function deleteInteractionTerm(interaction_term_id) {
   return dispatch => {
     return fetch(`/statistics/v1/interaction_term?id=${ interaction_term_id }`, {
-      method: 'delete' 
+      method: 'delete'
     }).then(json => dispatch(receiveDeletedInteractionTerm(json)))
       .catch(err => console.error("Error deleting interaction term:", err));
   }
@@ -134,7 +142,7 @@ function receiveContributionToRSquaredDispatcher(json) {
   };
 }
 
-export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, interactionTermIds) {
+export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, conditionals=[]) {
   const params = {
     projectId: projectId,
     spec: {
@@ -144,6 +152,11 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
       independentVariables: independentVariableNames,
       interactionTerms: interactionTermIds
     }
+  }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
   }
 
   return (dispatch) => {
@@ -162,11 +175,25 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
   };
 }
 
-export function getContributionToRSquared(projectId, regressionId) {
+export function getContributionToRSquared(projectId, regressionId, conditionals=[]) {
+  const params = {
+    projectId: projectId,
+    regressionId: regressionId
+  }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
+  }
+
   return (dispatch) => {
     dispatch(requestContributionToRSquaredDispatcher());
-    return fetch(`/statistics/v1/contribution_to_r_squared/${regressionId}?projectId=${projectId}`)
-      .then(json => dispatch(receiveContributionToRSquaredDispatcher(json)));
+    return fetch('/statistics/v1/contribution_to_r_squared', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(json => dispatch(receiveContributionToRSquaredDispatcher(json)))
+      .catch(err => console.error("Error getting contribution to R-squared: ", err));
   };
 }
 
@@ -209,4 +236,3 @@ export function createExportedRegression(projectId, regressionId, data, conditio
       .catch(err => console.error("Error creating exported regressions: ", err));
   };
 }
-

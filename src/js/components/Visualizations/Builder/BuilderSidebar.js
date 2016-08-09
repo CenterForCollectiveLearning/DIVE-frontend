@@ -2,7 +2,8 @@ import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { selectBuilderVisualizationType, selectBuilderSortOrder, selectBuilderSortField, selectVisualizationConditional, selectVisualizationConfig } from '../../../actions/VisualizationActions';
+import { selectBuilderVisualizationType, selectBuilderSortOrder, selectBuilderSortField, selectVisualizationConfig } from '../../../actions/VisualizationActions';
+import { selectConditional } from '../../../actions/ConditionalsActions';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import styles from '../Visualizations.sass';
 
@@ -12,7 +13,7 @@ import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 import RaisedButton from '../../Base/RaisedButton';
 
-import ConditionalSelector from './ConditionalSelector';
+import ConditionalSelector from '../../Base/ConditionalSelector';
 import BinningSelector from './BinningSelector';
 
 export class BuilderSidebar extends Component {
@@ -37,7 +38,7 @@ export class BuilderSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectVisualizationConditional, selectVisualizationConfig, filters, visualization } = this.props;
+    const { conditionals, fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectConditional, selectVisualizationConfig, filters, visualization } = this.props;
 
     if (!visualization.lastUpdated) {
       return (<div></div>);
@@ -86,14 +87,18 @@ export class BuilderSidebar extends Component {
             config={ visualization.spec.config }
             selectBinningConfig={ selectVisualizationConfig } />
         }
-        { visualization.visualizationType &&
+        { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
           <SidebarGroup heading="Filter by field">
-            { visualization.conditionals.map((conditional, i) =>
+            { conditionals.items.map((conditional, i) =>
               <div key={ `conditional-selector-${ i }` }>
                 <ConditionalSelector
+                  fieldId={ conditional.fieldId }
+                  combinator={ conditional.combinator }
+                  operator={ conditional.operator }
+                  value={ conditional.value }
                   conditionalIndex={ i }
                   fieldProperties={ fieldProperties.items }
-                  selectConditionalValue={ selectVisualizationConditional }/>
+                  selectConditionalValue={ selectConditional }/>
               </div>
             )}
           </SidebarGroup>
@@ -111,9 +116,10 @@ BuilderSidebar.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, filters, visualization, fieldProperties } = state;
+  const { project, datasetSelector, filters, visualization, fieldProperties, conditionals } = state;
   return {
     project,
+    conditionals,
     datasetSelector,
     filters,
     visualization,
@@ -126,6 +132,6 @@ export default connect(mapStateToProps, {
   selectBuilderSortOrder,
   selectBuilderSortField,
   fetchFieldPropertiesIfNeeded,
-  selectVisualizationConditional,
+  selectConditional,
   selectVisualizationConfig
 })(BuilderSidebar);

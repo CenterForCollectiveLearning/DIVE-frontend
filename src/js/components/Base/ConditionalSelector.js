@@ -1,16 +1,21 @@
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 
-import styles from '../Visualizations.sass';
+import styles from './ConditionalSelector.sass';
 
-import Input from '../../Base/Input';
-import DropDownMenu from '../../Base/DropDownMenu';
-import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
+import { deleteConditional } from '../../actions/ConditionalActions'
+import Input from './Input';
+import DropDownMenu from './DropDownMenu';
+import ToggleButtonGroup from './ToggleButtonGroup';
+
+
 
 export default class ConditionalSelector extends Component {
   constructor(props) {
     super(props);
 
     this.updateConditional = this.updateConditional.bind(this);
+    this.onClickDelete = this.onClickDelete.bind(this);
 
     this.combinators = [
       {
@@ -58,11 +63,19 @@ export default class ConditionalSelector extends Component {
 
     this.state = {
       conditionalIndex: this.props.conditionalIndex,
+      fieldId: this.props.fieldId || this.props.fieldnull,
+      operator: this.props.operator || '==',
+      value: this.props.value || null,
+      combinator: this.props.combinator || 'and'
+    };
+
+    this.baseConditional = {
+      conditionalIndex: null,
       fieldId: null,
       operator: '==',
       value: null,
       combinator: 'and'
-    };
+    }
   }
 
   updateConditional(newProps, isDefaultValue = false) {
@@ -80,6 +93,12 @@ export default class ConditionalSelector extends Component {
     const value = selectedField.generalType == 'c' ? "ALL_VALUES" : "";
     const operator = "==";
     this.updateConditional({ fieldId: fieldId, value: value, operator: operator }, true);
+  }
+
+  onClickDelete() {
+    const { conditionalIndex, deleteConditional } = this.props;
+    deleteConditional(conditionalIndex);
+    this.state = this.baseConditional;
   }
 
   onSelectOperator(operator) {
@@ -127,7 +146,8 @@ export default class ConditionalSelector extends Component {
             onChange={ this.onSelectCombinator.bind(this) } />
         }
 
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+          <div className={ styles.deleteButton } onClick={ this.onClickDelete } />
           <DropDownMenu
             className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown + ' ' + styles.fieldDropdown }
             value={ fieldId }
@@ -174,5 +194,14 @@ export default class ConditionalSelector extends Component {
 ConditionalSelector.propTypes = {
   conditionalIndex: PropTypes.number.isRequired,
   fieldProperties: PropTypes.array.isRequired,
-  selectConditionalValue: PropTypes.func
+  selectConditionalValue: PropTypes.func,
+  conditional: PropTypes.object,
+  fieldId: PropTypes.number,
+  combinator: PropTypes.string,
+  operator: PropTypes.string,
+  value: PropTypes.any
 };
+
+function mapStateToProps(state) { return {} };
+
+export default connect(mapStateToProps, { deleteConditional })(ConditionalSelector);

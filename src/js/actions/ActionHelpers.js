@@ -48,7 +48,7 @@ export function formatTableData(columnNames, data) {
 
 export function getFilteredConditionals(conditionals) {
   const validConditionals = conditionals.filter((conditional) =>
-    conditional.conditionalIndex != null && conditional.value != "ALL_VALUES" && conditional.value != ""
+    conditional.fieldId && conditional.conditionalIndex != null && conditional.value != "ALL_VALUES" && conditional.value != "" && conditional.value != null
   );
 
   conditionals = null;

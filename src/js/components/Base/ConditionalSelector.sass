@@ -1,0 +1,77 @@
+@import '../../../css/mixins.sass'
+
+.conditionalInput
+  width: 80%
+  border-radius: 0
+  border-bottom-right-radius: 2px
+  border-top-width: 0
+  border-left-width: 0
+  text-align: right
+
+.deleteButton
+  position: absolute
+  cursor: pointer
+  top: 26px
+  right: -8px
+  background-color: #EBF2F6
+  border: 1px solid #CFCFCF
+  border-radius: 9px
+  width: 16px
+  height: 16px
+  z-index: 10
+  line-height: 14px
+  font-size: 12px
+  text-align: center
+  &:before
+    color: $ui-line-grey
+    content: '×'
+
+  &:hover
+    background-color: $red
+    color: $white
+
+
+.conditionalDropdown
+  &.fieldDropdown
+    width: 100%
+
+    > div > div:first-of-type
+      border-top-left-radius: 2px
+      border-top-right-radius: 2px
+
+  &.operatorDropdown
+    width: 20%
+
+    > div > div:first-of-type
+      border-bottom-left-radius: 2px
+      border-top-width: 0
+
+  &.fieldValueDropdown
+    width: 80%
+
+    > div > div:first-of-type
+      border-bottom-right-radius: 2px
+      border-top-width: 0
+      border-left-width: 0
+
+  &.disabledDropdown
+    opacity: 0.5
+    pointer-events: none
+    cursor: default
+
+  > div > div:first-of-type
+    border-radius: 0
+
+div.conditionalCombinator
+  margin: 9px 0 8px
+  justify-content: center
+
+  div.conditionalCombinatorButton
+    flex-grow: 0
+    width: 50px
+
+    > div
+      font-size: 11px
+      color: #555
+      height: 30px
+      line-height: 30px

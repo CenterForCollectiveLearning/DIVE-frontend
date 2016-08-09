@@ -10,10 +10,18 @@ import {
   RECEIVE_CREATED_SAVED_CORRELATION,
   REQUEST_CREATE_EXPORTED_CORRELATION,
   RECEIVE_CREATED_EXPORTED_CORRELATION,
+  SELECT_CONDITIONAL
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
+
+export function selectConditional(conditional) {
+  return {
+    type: SELECT_CONDITIONAL,
+    conditional: conditional
+  }
+}
 
 export function selectCorrelationVariable(selectedCorrelationVariable) {
   return {
@@ -51,13 +59,18 @@ function errorCorrelationDispatcher(json) {
   };
 }
 
-export function getCorrelations(projectId, datasetId, correlationVariables) {
+export function getCorrelations(projectId, datasetId, correlationVariables, conditionals=[]) {
   const params = {
     projectId: projectId,
     spec: {
       datasetId: datasetId,
       correlationVariables: correlationVariables
     }
+  }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
   }
 
   return (dispatch) => {
@@ -92,11 +105,26 @@ function receiveCorrelationScatterplotDispatcher(json) {
   };
 }
 
-export function getCorrelationScatterplot(projectId, correlationId) {
+export function getCorrelationScatterplot(projectId, correlationId, conditionals=[]) {
+
+  const params = {
+    projectId: projectId,
+    correlationId: correlationId
+  }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
+  }
+
   return (dispatch) => {
-    dispatch(requestCorrelationScatterplotDispatcher());
-    return fetch(`/statistics/v1/correlation_scatterplot/${correlationId}?projectId=${projectId}`)
-      .then(json => dispatch(receiveCorrelationScatterplotDispatcher(json)));
+    dispatch(requestCorrelationScatterplotDispatcher);
+    return fetch('/statistics/v1/correlation_scatterplot', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(json => dispatch(receiveCorrelationScatterplotDispatcher(json)))
+      .catch(err => console.error("Error getting correlation scatterplot: ", err));
   };
 }
 

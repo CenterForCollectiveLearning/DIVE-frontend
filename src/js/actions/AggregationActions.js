@@ -16,10 +16,19 @@ import {
   SELECT_AGGREGATION_CONFIG_X,
   SELECT_AGGREGATION_CONFIG_Y,
   PROGRESS_AGGREGATION_STATISTICS,
-  ERROR_AGGREGATION_STATISTICS
+  ERROR_AGGREGATION_STATISTICS,
+  SELECT_CONDITIONAL
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
+import { getFilteredConditionals } from './ActionHelpers.js'
+
+export function selectConditional(conditional) {
+  return {
+    type: SELECT_CONDITIONAL,
+    conditional: conditional
+  }
+}
 
 export function selectAggregationIndependentVariable(selectedIndependentVariableId) {
   return {
@@ -95,7 +104,7 @@ function errorAggregationDispatcher(json) {
   };
 }
 
-export function runAggregation(projectId, datasetId, aggregationVariable, aggregationVariables) {
+export function runAggregation(projectId, datasetId, aggregationVariable, aggregationVariables, conditionals=[]) {
   const params = {
     projectId: projectId,
     spec: {
@@ -103,6 +112,11 @@ export function runAggregation(projectId, datasetId, aggregationVariable, aggreg
       dependentVariable: aggregationVariable,
       aggregationVariables: aggregationVariables
     }
+  }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
   }
 
   return (dispatch) => {
@@ -150,7 +164,7 @@ function errorOneDAggregationDispatcher(json) {
   };
 }
 
-export function runAggregationOneDimensional(projectId, datasetId, aggregationVariable, aggregationVariables) {
+export function runAggregationOneDimensional(projectId, datasetId, aggregationVariable, aggregationVariables, conditionals=[]) {
   const params = {
     projectId: projectId,
     spec: {
@@ -158,6 +172,11 @@ export function runAggregationOneDimensional(projectId, datasetId, aggregationVa
       dependentVariable: aggregationVariable,
       aggregationVariable: aggregationVariables[0]
     }
+  }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
   }
 
   return (dispatch) => {

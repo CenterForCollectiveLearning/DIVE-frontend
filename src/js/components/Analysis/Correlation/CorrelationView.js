@@ -27,30 +27,33 @@ export class CorrelationView extends Component {
   }
 
   componentWillMount() {
-    const { projectId, datasetId, datasetSelector, datasets, correlationVariableNames, getCorrelations, fetchDatasets } = this.props
+    const { projectId, datasetId, datasetSelector, datasets, correlationVariableNames, getCorrelations, correlations, conditionals, fetchDatasets } = this.props
 
     if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(projectId);
     }
 
     if (projectId && datasetId && correlationVariableNames.length) {
-      getCorrelations(projectId, datasetId, correlationVariableNames)
+      getCorrelations(projectId, datasetId, correlationVariableNames, conditionals.items)
+      getCorrelationScatterplot(projectId, datasetId, correlationVariableNames, conditionals.items)
     }
 
     clearAnalysis();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, datasets, correlationVariableNames, getCorrelations, getCorrelationScatterplot, correlationResult } = this.props
+    const { projectId, datasetId, datasets, correlationVariableNames, getCorrelations, getCorrelationScatterplot, conditionals, correlationResult } = this.props
 
+    const conditionalsChanged = nextProps.conditionals.lastUpdated != conditionals.lastUpdated;
     const correlationVariableChanged = nextProps.correlationVariableNames.length != correlationVariableNames.length;
+    const sideBarChanged = correlationVariableChanged || conditionalsChanged;
     const twoVariablesSelected = nextProps.correlationVariableNames.length >= 2;
-    if (nextProps.projectId && nextProps.datasetId && correlationVariableChanged && twoVariablesSelected) {
-      getCorrelations(nextProps.projectId, nextProps.datasetId, nextProps.correlationVariableNames)
+    if (nextProps.projectId && nextProps.datasetId && conditionalsChanged && twoVariablesSelected) {
+      getCorrelations(nextProps.projectId, nextProps.datasetId, nextProps.correlationVariableNames, nextProps.conditionals.items)
     }
 
     if (nextProps.projectId && nextProps.correlationResult.data && nextProps.correlationResult.data.id && (this.props.correlationResult.data == null || (nextProps.correlationResult.data.id != this.props.correlationResult.data.id))) {
-      getCorrelationScatterplot(nextProps.projectId, nextProps.correlationResult.data.id);
+      getCorrelationScatterplot(nextProps.projectId, nextProps.correlationResult.data.id, nextProps.conditionals.items);
     }
   }
 
@@ -132,7 +135,7 @@ export class CorrelationView extends Component {
 }
 
 function mapStateToProps(state) {
-  const { project, datasets, correlationSelector, datasetSelector, fieldProperties } = state;
+  const { project, datasets, correlationSelector, datasetSelector, fieldProperties, conditionals } = state;
   const { correlationScatterplots } = correlationSelector;
 
   const correlationVariableNames = fieldProperties.items
@@ -140,6 +143,7 @@ function mapStateToProps(state) {
     .map((field) => field.name);
 
   return {
+    conditionals,
     datasets: datasets,
     datasetSelector: datasetSelector,
     project: project,

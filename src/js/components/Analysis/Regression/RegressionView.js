@@ -26,7 +26,7 @@ export class RegressionView extends Component {
   }
 
   componentWillMount() {
-    const { projectId, datasets, datasetSelector, fetchDatasets } = this.props;
+    const { projectId, datasets, conditionals, datasetSelector, fetchDatasets } = this.props;
 
     if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(projectId);
@@ -36,19 +36,22 @@ export class RegressionView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, regressionResult, runRegression, getContributionToRSquared, fetchDatasets } = this.props;
+    const { projectId, datasetId, conditionals, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, regressionResult, runRegression, getContributionToRSquared, fetchDatasets } = this.props;
+
+    const conditionalsChanged = nextProps.conditionals.lastUpdated != conditionals.lastUpdated;
     const regressionTypeChanged = nextProps.regressionType != regressionType;
     const independentVariablesChanged = nextProps.independentVariableNames.length != independentVariableNames.length;
     const dependentVariableChanged = (nextProps.dependentVariableName != dependentVariableName);
     const dependentVariableExists = (nextProps.dependentVariableName != null);
     const interactionTermsChanged = nextProps.interactionTermIds != interactionTermIds;
+    const sidebarChanged = conditionalsChanged || dependentVariableChanged || independentVariablesChanged || regressionTypeChanged || interactionTermsChanged;
 
-    if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.regressionType && (dependentVariableChanged || independentVariablesChanged || regressionTypeChanged || interactionTermsChanged)) {
-      runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames, nextProps.interactionTermIds);
+    if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.regressionType && sidebarChanged) {
+      runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames, nextProps.interactionTermIds, nextProps.conditionals.items);
     }
 
-    if (nextProps.projectId && nextProps.regressionResult.data && nextProps.regressionResult.data.id && (regressionResult.data == null || (nextProps.regressionResult.data.id != regressionResult.data.id))) {
-      getContributionToRSquared(nextProps.projectId, nextProps.regressionResult.data.id);
+    if (nextProps.projectId && nextProps.regressionResult.data && nextProps.regressionResult.data.id && (sidebarChanged || regressionResult.data == null || (nextProps.regressionResult.data.id != regressionResult.data.id))) {
+      getContributionToRSquared(nextProps.projectId, nextProps.regressionResult.data.id, nextProps.conditionals.items);
     }
   }
 
@@ -131,7 +134,7 @@ export class RegressionView extends Component {
 }
 
 function mapStateToProps(state) {
-  const { project, datasets, regressionSelector, datasetSelector, fieldProperties } = state;
+  const { project, datasets, conditionals, regressionSelector, datasetSelector, fieldProperties } = state;
   const { progress, error, regressionResult, contributionToRSquared, regressionType } = regressionSelector;
   const dependentVariable = fieldProperties.items.find((property) => property.id == regressionSelector.dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;
@@ -141,8 +144,9 @@ function mapStateToProps(state) {
     .map((independentVariable) => independentVariable.name);
 
   return {
-    datasets: datasets,
-    datasetSelector: datasetSelector,
+    conditionals,
+    datasets,
+    datasetSelector,
     projectId: project.properties.id,
     regressionType: regressionType,
     dependentVariableName: dependentVariableName,

@@ -2,9 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectCorrelationVariable } from '../../../actions/CorrelationActions';
+import { selectCorrelationVariable, selectConditional } from '../../../actions/CorrelationActions';
 import styles from '../Analysis.sass';
 
+import ConditionalSelector from '../../Base/ConditionalSelector';
 import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
@@ -29,7 +30,7 @@ export class CorrelationSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, selectCorrelationVariable, correlationSelector } = this.props;
+    const { fieldProperties, conditionals, selectCorrelationVariable, correlationSelector, selectConditional } = this.props;
     const quantitativeVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q')
     return (
       <Sidebar selectedTab="correlation">
@@ -57,7 +58,22 @@ export class CorrelationSidebar extends Component {
             }
           </SidebarGroup>
         }
-
+        { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
+          <SidebarGroup heading="Filter by field">
+            { conditionals.items.map((conditional, i) =>
+              <div key={ `conditional-selector-${ i }` }>
+                <ConditionalSelector
+                  fieldId={ conditional.fieldId }
+                  combinator={ conditional.combinator }
+                  operator={ conditional.operator }
+                  value={ conditional.value }
+                  conditionalIndex={ i }
+                  fieldProperties={ fieldProperties.items }
+                  selectConditionalValue={ selectConditional }/>
+              </div>
+            )}
+          </SidebarGroup>
+        }
 
       </Sidebar>
     );
@@ -68,17 +84,19 @@ CorrelationSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  correlationSelector: PropTypes.object.isRequired
+  correlationSelector: PropTypes.object.isRequired,
+  conditionals: PropTypes.object
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, fieldProperties, correlationSelector } = state;
+  const { project, datasetSelector, fieldProperties, correlationSelector, conditionals } = state;
   return {
     project,
     datasetSelector,
     fieldProperties,
-    correlationSelector
+    correlationSelector,
+    conditionals
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectCorrelationVariable })(CorrelationSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectCorrelationVariable, selectConditional })(CorrelationSidebar);

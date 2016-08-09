@@ -10,9 +10,19 @@ import {
   RECEIVE_ANOVA_BOXPLOT_DATA,
   REQUEST_PAIRWISE_COMPARISON_DATA,
   RECEIVE_PAIRWISE_COMPARISON_DATA,
+  SELECT_CONDITIONAL
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
+import { getFilteredConditionals } from './ActionHelpers.js'
+
+
+export function selectConditional(conditional) {
+  return {
+    type: SELECT_CONDITIONAL,
+    conditional: conditional
+  }
+}
 
 export function selectIndependentVariable(selectedVariableId) {
   return {
@@ -53,7 +63,7 @@ function receiveNumericalComparisonDispatcher(json) {
   };
 }
 
-export function runNumericalComparison(projectId, datasetId, independentVariableNames, independence) {
+export function runNumericalComparison(projectId, datasetId, independentVariableNames, independence, conditionals=[]) {
   const params = {
     projectId: projectId,
     spec: {
@@ -61,6 +71,11 @@ export function runNumericalComparison(projectId, datasetId, independentVariable
       variableNames: independentVariableNames,
       independence: independence
     }
+  }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
   }
 
   return (dispatch) => {
@@ -88,7 +103,7 @@ function receiveAnovaDispatcher(json) {
   };
 }
 
-export function runAnova(projectId, datasetId, independentVariableNames, dependentVariableNames) {
+export function runAnova(projectId, datasetId, independentVariableNames, dependentVariableNames, conditionals=[]) {
   const params = {
     projectId: projectId,
     spec: {
@@ -96,6 +111,11 @@ export function runAnova(projectId, datasetId, independentVariableNames, depende
       independentVariables: independentVariableNames,
       dependentVariables: dependentVariableNames,
     }
+  }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
   }
 
   return (dispatch) => {
@@ -124,8 +144,7 @@ function receiveAnovaBoxplotDispatcher(json) {
 }
 
 
-export function getAnovaBoxplotData(projectId, datasetId, independentVariableNames, dependentVariableNames) {
-  console.log('Getting ANOVA boxplot');
+export function getAnovaBoxplotData(projectId, datasetId, independentVariableNames, dependentVariableNames, conditionals=[]) {
   const params = {
     projectId: projectId,
     spec: {
@@ -133,6 +152,12 @@ export function getAnovaBoxplotData(projectId, datasetId, independentVariableNam
       independentVariables: independentVariableNames,
       dependentVariables: dependentVariableNames,
     }
+  }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
   }
 
   return (dispatch) => {
@@ -161,8 +186,7 @@ function receivePairwiseComparisonDispatcher(json) {
 }
 
 
-export function getPairwiseComparisonData(projectId, datasetId, independentVariableNames, dependentVariableNames) {
-  console.log('Getting Pairwise Comparison');
+export function getPairwiseComparisonData(projectId, datasetId, independentVariableNames, dependentVariableNames, conditionals=[]) {
   const params = {
     projectId: projectId,
     spec: {
@@ -170,6 +194,12 @@ export function getPairwiseComparisonData(projectId, datasetId, independentVaria
       independentVariables: independentVariableNames,
       dependentVariables: dependentVariableNames,
     }
+  }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
   }
 
   return (dispatch) => {

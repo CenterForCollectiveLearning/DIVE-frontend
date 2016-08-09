@@ -22,7 +22,7 @@ export default class SidebarGroup extends Component {
     const { collapsed } = this.state;
     return (
       <div className={ styles.sidebarGroup +
-        ( collapsed ? (' ' + styles.collapsed ) : '')
+        ( collapsed ? (' ' + styles.collapsed) : '')
       }>
         { this.props.heading &&
           <div className={ styles.sidebarGroupHeading } onClick={ this.onClickCollapse.bind(this) }>
@@ -31,7 +31,10 @@ export default class SidebarGroup extends Component {
           </div>
         }
 
-        <div className={ styles.sidebarGroupContent + (this.props.stacked ? ' ' + styles.stacked : '')}>
+        <div className={ styles.sidebarGroupContent +
+          ( this.props.className ? (' ' + this.props.className) : '') +
+          (this.props.stacked ? ' ' + styles.stacked : '')
+        }>
           { this.props.children }
         </div>
       </div>
@@ -40,11 +43,13 @@ export default class SidebarGroup extends Component {
 }
 
 SidebarGroup.propTypes = {
+  className: PropTypes.string,
   children: PropTypes.node,
   heading: PropTypes.string
 };
 
 SidebarGroup.defaultProps = {
+  className: "",
   heading: ""
 }
 

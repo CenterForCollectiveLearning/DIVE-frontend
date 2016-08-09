@@ -9,6 +9,8 @@ import {
   SELECT_SORTING_FUNCTION,
   SELECT_RECOMMENDATION_TYPE,
   WIPE_PROJECT_STATE,
+  RECEIVE_SET_FIELD_IS_ID,
+  RECEIVE_SET_FIELD_TYPE,
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
@@ -87,24 +89,6 @@ export default function gallerySelector(state = baseState, action) {
     }
   ];
 
-  // const defaultTitle = [
-  //   {
-  //     type: 'plain',
-  //     string: 'Summary visualizations'
-  //   }
-  // ];
-  //
-  // const titleVisualizationStrings = [
-  //   {
-  //     type: 'plain',
-  //     string: 'Visualizations'
-  //   },
-  //   {
-  //     type: 'plain',
-  //     string: 'of'
-  //   }
-  // ];
-
   const sortSpecsByFunction = function(sortingFunction, specA, specB) {
     const scoreObjectSpecA = specA.scores.find((score) => score.type == sortingFunction);
     const scoreObjectSpecB = specB.scores.find((score) => score.type == sortingFunction);
@@ -152,6 +136,21 @@ export default function gallerySelector(state = baseState, action) {
         updatedAt: action.receivedAt
       };
 
+    case RECEIVE_SET_FIELD_TYPE:
+      var fieldProperties = state.fieldProperties.slice().map((fieldProperty) =>
+        fieldProperty.id == action.fieldProperty.id ?
+          action.fieldProperty : fieldProperty
+      );
+
+      return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
+
+    case RECEIVE_SET_FIELD_IS_ID:
+      var fieldProperties = state.fieldProperties.slice().map((fieldProperty) =>
+        fieldProperty.id == action.fieldProperty.id ?
+          action.fieldProperty : fieldProperty
+      );
+      return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
+
     case REQUEST_SPECS:
       return { ...state, isFetching: true };
 
@@ -160,6 +159,8 @@ export default function gallerySelector(state = baseState, action) {
       const defaultSortSpecs = function (specA, specB) {
         return sortSpecsByFunction(selectedSortingFunction, specA, specB);
       };
+
+      console.log(action, action.specs, action.recommendationType);
 
       var allSpecs = action.specs;
       if (action.recommendationType.level && state.specs) {
@@ -174,7 +175,7 @@ export default function gallerySelector(state = baseState, action) {
           new Object({
             ...property,
             selected: !property.selected,
-            values: (!property.selected || property.generalType == 'q') ? property.values : property.values.map((value, i) => new Object({...value, selected: i == 0 })),
+            values: (!property.selected || property.generalType == 'q' || property.generalType == 't') ? property.values : property.values.map((value, i) => new Object({...value, selected: i == 0 })),
             aggregations: (!property.selected || property.generalType == 'c') ? property.aggregations : property.aggregations.map((aggregation, i) => new Object({...aggregation, selected: i == 0 }))
           })
           : property

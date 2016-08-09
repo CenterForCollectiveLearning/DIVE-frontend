@@ -2,7 +2,7 @@ import {
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
   REQUEST_CREATE_SAVED_SPEC,
-  SELECT_VISUALIZATION_CONDITIONAL,
+  SELECT_CONDITIONAL,
 } from '../constants/ActionTypes';
 
 export function analyticsMiddleware({ getState }){
@@ -20,7 +20,7 @@ export function analyticsMiddleware({ getState }){
         amplitude.logEvent('Visualization: Data Received');
         break;
 
-      case SELECT_VISUALIZATION_CONDITIONAL:
+      case SELECT_CONDITIONAL:
         amplitude.logEvent('Visualization: Selected Conditional');
         break;
     }
