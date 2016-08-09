@@ -8,7 +8,7 @@
   min-height: 100px
 
   width: 70%
-  max-width: 800px
+  max-width: 600px
 
   align-items: left
   justify-content: left
@@ -17,10 +17,10 @@
   border: 1px solid $ui-line-grey
   border-radius: 2px
   margin-bottom: 10px
+  padding:
   background-color: $white
   color: $black
   font-size: 12px
-
 
   cursor: pointer
   text-decoration: none
@@ -29,7 +29,7 @@
     border-top: 1px solid $ui-line-grey
 
   &:hover
-    box-shadow: 1px 2px 5px 1px rgba(0, 0, 0, 0.15)
+    border-color: $primary-accent
 
   .item
     display: flex
@@ -59,13 +59,11 @@
     display: flex
     width: 100%
     background-color: $ui-header-grey
-    padding: 11px 8px
+    padding: 12px 16px
+    border-bottom: 1px solid $ui-line-grey
     .projectTitle
       font-size: 14px
       font-weight: bold
-
-  .projectMiddle
-    border-top: 1px solid $ui-line-grey
 
   .projectBottom
     border-top: 1px solid $ui-line-grey
@@ -73,5 +71,5 @@
   .projectMiddle, .projectBottom
     +regularCopy
     display: flex
-
-    padding: 11px 16px
+    margin: 0 16px
+    padding: 11px 0
