@@ -66,6 +66,20 @@ export function useWhiteFontFromBackgroundHex(hex) {
   }
 }
 
+export function useWhiteFontFromBackgroundRGBString(RGB) {
+  var match = RGB.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+
+  var r = parseInt(match[1]);
+  var g = parseInt(match[2]);
+  var b = parseInt(match[3]);
+
+  if (( r * 0.299 + g * 0.587 + b * 0.114 ) > 186) {
+    return false
+  } else {
+    return true
+  }
+}
+
 export function shift(a, num) {
   var aShifted = a.slice();
   for (var i = num; i; i -= 1) {

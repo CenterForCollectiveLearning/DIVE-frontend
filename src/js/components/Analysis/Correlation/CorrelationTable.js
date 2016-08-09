@@ -6,7 +6,7 @@ import styles from '../Analysis.sass';
 import * as d3Scale from 'd3-scale';
 
 import BareDataGrid from '../../Base/BareDataGrid';
-import { getRoundedString } from '../../../helpers/helpers';
+import { getRoundedString, useWhiteFontFromBackgroundRGBString } from '../../../helpers/helpers';
 
 export default class CorrelationTable extends Component {
 
@@ -44,12 +44,14 @@ export default class CorrelationTable extends Component {
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
           items: [ ( preview ? '' : row.field ), ...row.data.map(function(column){
-            if (column[0] == null) { return "";}
+            if (column[0] == null) { return ""; }
+            var backgroundColor = backgroundColorScale(column[0]);
+            var whiteFont = useWhiteFontFromBackgroundRGBString(backgroundColor);
 
             return (renderDataColumn(
               column,
-              { backgroundColor: backgroundColorScale(column[0]),
-                color: fontColorScale(column[0]),
+              { backgroundColor: backgroundColor,
+                color: whiteFont ? 'white': 'black',
                 height: '100%'
               }
             ));

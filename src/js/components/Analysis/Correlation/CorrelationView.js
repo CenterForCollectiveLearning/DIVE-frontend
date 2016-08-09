@@ -32,7 +32,6 @@ export class CorrelationView extends Component {
     if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(projectId);
     }
-
     if (projectId && datasetId && correlationVariableNames.length) {
       getCorrelations(projectId, datasetId, correlationVariableNames, conditionals.items)
       getCorrelationScatterplot(projectId, datasetId, correlationVariableNames, conditionals.items)
@@ -48,7 +47,7 @@ export class CorrelationView extends Component {
     const correlationVariableChanged = nextProps.correlationVariableNames.length != correlationVariableNames.length;
     const sideBarChanged = correlationVariableChanged || conditionalsChanged;
     const twoVariablesSelected = nextProps.correlationVariableNames.length >= 2;
-    if (nextProps.projectId && nextProps.datasetId && conditionalsChanged && twoVariablesSelected) {
+    if (nextProps.projectId && nextProps.datasetId && sideBarChanged && twoVariablesSelected) {
       getCorrelations(nextProps.projectId, nextProps.datasetId, nextProps.correlationVariableNames, nextProps.conditionals.items)
     }
 
