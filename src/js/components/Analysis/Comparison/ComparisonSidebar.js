@@ -35,40 +35,88 @@ export class ComparisonSidebar extends Component {
       <Sidebar selectedTab="comparison">
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Independent Variables">
-            <ToggleButtonGroup
-              toggleItems={ fieldProperties.items.map((item) =>
-                new Object({
-                  id: item.id,
-                  name: item.name,
-                  disabled: (comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
-                  color: item.color
-                })
-              )}
-              valueMember="id"
-              colorMember="color"
-              displayTextMember="name"
-              externalSelectedItems={ comparisonSelector.independentVariablesIds }
-              separated={ true }
-              onChange={ selectIndependentVariable } />
+            { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Categorical</div>
+                <ToggleButtonGroup
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      disabled: (comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
+                      color: item.color
+                    })
+                  )}
+                  displayTextMember="name"
+                  valueMember="id"
+                  colorMember="color"
+                  externalSelectedItems={ comparisonSelector.independentVariablesIds }
+                  separated={ true }
+                  onChange={ selectIndependentVariable } />
+              </div>
+            }
+            { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Temporal</div>
+                <ToggleButtonGroup
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      disabled: (comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
+                      color: item.color
+                    })
+                  )}
+                  valueMember="id"
+                  colorMember="color"
+                  displayTextMember="name"
+                  externalSelectedItems={ comparisonSelector.independentVariablesIds }
+                  separated={ true }
+                  onChange={ selectIndependentVariable } />
+              </div>
+            }
+            { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
+              <div className={ styles.fieldGroup }>
+                <div className={ styles.fieldGroupLabel }>Quantitative</div>
+                <ToggleButtonGroup
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
+                    new Object({
+                      id: item.id,
+                      name: item.name,
+                      disabled: (comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
+                      color: item.color
+                    })
+                  )}
+                  valueMember="id"
+                  colorMember="color"
+                  displayTextMember="name"
+                  externalSelectedItems={ comparisonSelector.independentVariablesIds }
+                  separated={ true }
+                  onChange={ selectIndependentVariable } />
+              </div>
+            }
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Dependent Variables">
-            <ToggleButtonGroup
-              toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
-                new Object({
-                  id: item.id,
-                  name: item.name,
-                  disabled: (comparisonSelector.independentVariablesIds.indexOf(item.id) >= 0 || item.generalType == 'c' || item.isId),
-                  color: item.color
-                })
-              )}
-              valueMember="id"
-              colorMember="color"
-              displayTextMember="name"
-              externalSelectedItems={ comparisonSelector.dependentVariablesIds }
-              separated={ true }
-              onChange={ selectDependentVariable } />
+            <div className={ styles.fieldGroup }>
+              <div className={ styles.fieldGroupLabel }>Quantitative</div>
+              <ToggleButtonGroup
+                toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
+                  new Object({
+                    id: item.id,
+                    name: item.name,
+                    disabled: (comparisonSelector.independentVariablesIds.indexOf(item.id) >= 0 || item.generalType == 'c' || item.isId),
+                    color: item.color
+                  })
+                )}
+                valueMember="id"
+                colorMember="color"
+                displayTextMember="name"
+                externalSelectedItems={ comparisonSelector.dependentVariablesIds }
+                separated={ true }
+                onChange={ selectDependentVariable } />
+            </div>
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
@@ -76,6 +124,10 @@ export class ComparisonSidebar extends Component {
             { conditionals.items.map((conditional, i) =>
               <div key={ `conditional-selector-${ i }` }>
                 <ConditionalSelector
+                  fieldId={ conditional.fieldId }
+                  combinator={ conditional.combinator }
+                  operator={ conditional.operator }
+                  value={ conditional.value }
                   conditionalIndex={ i }
                   fieldProperties={ fieldProperties.items }
                   selectConditionalValue={ selectConditional }/>

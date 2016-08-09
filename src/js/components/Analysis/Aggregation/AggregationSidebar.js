@@ -152,6 +152,10 @@ export class AggregationSidebar extends Component {
             { conditionals.items.map((conditional, i) =>
               <div key={ `conditional-selector-${ i }` }>
                 <ConditionalSelector
+                  fieldId={ conditional.fieldId }
+                  combinator={ conditional.combinator }
+                  operator={ conditional.operator }
+                  value={ conditional.value }
                   conditionalIndex={ i }
                   fieldProperties={ fieldProperties.items }
                   selectConditionalValue={ selectConditional }/>

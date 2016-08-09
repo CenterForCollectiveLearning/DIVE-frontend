@@ -8,6 +8,29 @@
   border-left-width: 0
   text-align: right
 
+.deleteButton
+  position: absolute
+  cursor: pointer
+  top: 26px
+  right: -8px
+  background-color: #EBF2F6
+  border: 1px solid #CFCFCF
+  border-radius: 9px
+  width: 16px
+  height: 16px
+  z-index: 10
+  line-height: 14px
+  font-size: 12px
+  text-align: center
+  &:before
+    color: $ui-line-grey
+    content: '×'
+
+  &:hover
+    background-color: $red
+    color: $white
+
+
 .conditionalDropdown
   &.fieldDropdown
     width: 100%

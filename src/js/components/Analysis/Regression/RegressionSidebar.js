@@ -196,38 +196,46 @@ export class RegressionSidebar extends Component {
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
-          <div>
-          <SidebarGroup stacked={true} heading="Add Interaction Terms">
-            <DropDownMenu
-              width='50%'
-              margin='2px'
-              value={ interactionVariables[0] }
-              options={ fieldProperties.items.filter((item) =>
-                item.id != parseInt(regressionSelector.dependentVariableId) && item.id != interactionVariables[1]
-                  && filterInteractionTermSelection(item.id, interactionVariables[1], fieldProperties.interactionTerms))
-              }
-              valueMember="id"
-              displayTextMember="name"
-              onChange={this.onAddInteractionTerm.bind(this, 0)} />
-            <DropDownMenu
-              width='50%'
-              value={ interactionVariables[1] }
-              options={ fieldProperties.items.filter((item) =>
-                item.id != parseInt(regressionSelector.dependentVariableId) && item.id != interactionVariables[0]
-                  && filterInteractionTermSelection(item.id, interactionVariables[0], fieldProperties.interactionTerms))
-              }
-              valueMember="id"
-              displayTextMember="name"
-              onChange={this.onAddInteractionTerm.bind(this, 1)} />
+          <SidebarGroup
+            className={ styles.interactionTermsSidebarGroup }
+            stacked={ true }
+            heading="Add Interaction Terms"
+          >
+            <div className={ styles.sideBySideDropdowns }>
+              <DropDownMenu
+                width='50%'
+                margin='2px'
+                value={ interactionVariables[0] }
+                options={ fieldProperties.items.filter((item) =>
+                  item.id != parseInt(regressionSelector.dependentVariableId) && item.id != interactionVariables[1]
+                    && filterInteractionTermSelection(item.id, interactionVariables[1], fieldProperties.interactionTerms))
+                }
+                valueMember="id"
+                displayTextMember="name"
+                onChange={this.onAddInteractionTerm.bind(this, 0)} />
+              <DropDownMenu
+                width='50%'
+                value={ interactionVariables[1] }
+                options={ fieldProperties.items.filter((item) =>
+                  item.id != parseInt(regressionSelector.dependentVariableId) && item.id != interactionVariables[0]
+                    && filterInteractionTermSelection(item.id, interactionVariables[0], fieldProperties.interactionTerms))
+                }
+                valueMember="id"
+                displayTextMember="name"
+                onChange={this.onAddInteractionTerm.bind(this, 1)} />
+            </div>
+            <RaisedButton altText="Add" label="Add" centered={true} onClick={this.onCreateInteractionTerm.bind(this)}/>
           </SidebarGroup>
-          <RaisedButton altText="Add" label="Add" centered={true} onClick={this.onCreateInteractionTerm.bind(this)}/>
-          </div>
         }
         { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
           <SidebarGroup heading="Filter by field">
             { conditionals.items.map((conditional, i) =>
               <div key={ `conditional-selector-${ i }` }>
                 <ConditionalSelector
+                  fieldId={ conditional.fieldId }
+                  combinator={ conditional.combinator }
+                  operator={ conditional.operator }
+                  value={ conditional.value }
                   conditionalIndex={ i }
                   fieldProperties={ fieldProperties.items }
                   selectConditionalValue={ selectConditional }/>

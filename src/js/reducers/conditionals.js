@@ -1,5 +1,6 @@
 import {
   SELECT_CONDITIONAL,
+  DELETE_CONDITIONAL,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -12,7 +13,7 @@ const baseConditional = {
 
 const baseState = {
   lastUpdated: null,
-  items: [ baseConditional ],
+  items: [ baseConditional],
 }
 
 export default function conditionals(state = baseState, action) {
@@ -25,8 +26,13 @@ export default function conditionals(state = baseState, action) {
           (conditional.conditionalIndex == action.conditional.conditionalIndex) ? action.conditional : conditional
         );
       } else {
-        conditionals.push(action.conditional);
+        conditionals.splice(conditionals.length - 1, 0, action.conditional)
       }
+      return { ...state, items: conditionals, lastUpdated: Date.now() };
+
+    case DELETE_CONDITIONAL:
+      var conditionals = state.items.slice();
+      conditionals = conditionals.filter((conditional) => conditional.conditionalIndex != action.conditionalIndex);
       return { ...state, items: conditionals, lastUpdated: Date.now() };
 
     case WIPE_PROJECT_STATE:
