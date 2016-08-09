@@ -27,7 +27,8 @@ export class ProjectNav extends Component {
     this.onClickProjectSettings = this.onClickProjectSettings.bind(this);
 
     this.state = {
-      projectSettingsModalOpen: false
+      projectSettingsModalOpen: false,
+      secondaryNavOpen: false
     };
   }
 
@@ -67,6 +68,11 @@ export class ProjectNav extends Component {
 
     return "datasets";
   }
+
+  _toggleSecondaryNav() {
+    this.setState({ secondaryNavOpen: !this.state.secondaryNavOpen });
+  }
+
 
   _handleTabsChange(tab){
     this.props.push(`/projects/${ this.props.project.properties.id }/${ tab.props.route }`);
@@ -131,19 +137,33 @@ export class ProjectNav extends Component {
           </TabGroup>
         </Tabs>
         <div className={ styles.bottom }>
-          <div className={ styles.userOptions }>
-            <img className={ styles.picture } src="/assets/images/blank_user.png"/>
-            <div className={ styles.logoutUser } onClick={ this._logout }>
-              <span className={ styles.username }>{ user.username }</span>
+          { this.state.secondaryNavOpen &&
+            <div className={ styles.secondaryNav }>
+              <div className={ styles.secondaryNavItem } onClick={ this.onClickProjectSettings }>
+                Edit Project Properties
+              </div>
+              <div className={ styles.secondaryNavItem } onClick={ this._logout }>
+                Log out of <span className={ styles.username }>{ user.username }</span>
+              </div>
+              { this.state.projectSettingsModalOpen &&
+                <ProjectSettingsModal
+                  projectName={ project.properties.title }
+                  projectDescription={ project.properties.description }
+                  projectId={ project.properties.id }
+                  closeAction={ this.closeProjectSettingsModal.bind(this) }/>
+              }
             </div>
-          </div>
-          { this.state.projectSettingsModalOpen &&
-            <ProjectSettingsModal
-              projectName={ project.properties.title }
-              projectDescription={ project.properties.description }
-              projectId={ project.properties.id }
-              closeAction={ this.closeProjectSettingsModal.bind(this) }/>
           }
+          <div
+            className={
+              styles.secondaryNavToggle +
+              ( this.state.secondaryNavOpen ? (' ' + styles.secondaryNavOpen) : '')
+            }
+            onClick={ this._toggleSecondaryNav.bind(this) }
+          >
+              <span>{ user.username }</span>
+              { this.state.secondaryNavOpen ? <span className={ styles.chevron }>&#65088;</span> : <span className={ styles.chevron }>&#65087;</span> }
+          </div>
         </div>
       </div>
     );

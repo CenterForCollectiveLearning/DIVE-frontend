@@ -14,7 +14,61 @@
   background-color: $center-grey
   flex-direction: column
 
-$topBarHeight: 55px
+.projectSelectorAction
+  border: none
+  color: $white
+
+.secondaryNav, .secondaryNavToggle
+  background-color: $black
+  color: $white
+
+.secondaryNav
+  .secondaryNavItem
+    cursor: pointer
+    border-bottom: 1px solid $ui-line-grey
+    padding: 0 5px
+
+    height: 30px
+    line-height: 30px
+    font-size: 12px
+    font-weight: 400
+    padding-left: 10px
+    color: $white
+
+    &:hover
+      background-color: $primary-accent-hover
+      color: $white
+
+.secondaryNavToggle
+  +smallCaps
+  display: flex
+  flex-direction: row
+  flex-grow: 1
+  align-items: center
+  height: 30px
+  cursor: pointer
+  padding: 8px 15px
+  color: $white
+
+  &:hover
+    background-color: $primary-accent-hover
+
+  img.picture
+    border-radius: 30px
+    width: 30px
+    height: 30px
+    overflow: hidden
+
+  .chevron
+    margin-left: auto
+    margin-top: -12px
+    font-size: 16px
+
+  &.secondaryNavOpen
+    .chevron
+      height: 0
+      margin-top: -15px
+
 
 .projectSidebar
   display: flex
@@ -25,8 +79,8 @@ $topBarHeight: 55px
   background: $left-sidebar-grey //  $black
 
   .logoContainer
-    height: $topBarHeight
-    min-height: $topBarHeight
+    height: $top-bar-height
+    min-height: $top-bar-height
     display: flex
     padding-bottom: 14px
     padding-top: 5px
@@ -80,8 +134,8 @@ $topBarHeight: 55px
 .projectTopBar
   display: flex
   flex-direction: row
-  min-height: $topBarHeight
-  max-height: $topBarHeight
+  min-height: $top-bar-height
+  max-height: $top-bar-height
   min-width: 800px
   flex-shrink: 0
   background-color: $center-grey
@@ -95,7 +149,7 @@ $topBarHeight: 55px
     display: flex
     flex-direction: row
     align-items: center
-    height: $topBarHeight
+    height: $top-bar-height
     line-height: 48px
     padding-left: 8px
 
@@ -131,7 +185,7 @@ $topBarHeight: 55px
         left: 7px
 
       .projectSelector, .datasetSelector  // Dropdowns
-        height: $topBarHeight
+        height: $top-bar-height
         min-width: 50px
         background-color: transparent
         font-weight: 500
@@ -151,14 +205,14 @@ $topBarHeight: 55px
             text-decoration: underline
 
         > div > div:first-of-type  // .Select-control
-          height: $topBarHeight
+          height: $top-bar-height
           border: none
           line-height: 0px
           background-color: transparent
 
           > div:first-child  // .Select-value
             display: inline-block
-            height: $topBarHeight
+            height: $top-bar-height
             position: relative
             white-space: normal
             padding-left: 0px
@@ -166,7 +220,7 @@ $topBarHeight: 55px
 
             > span  // .Select-value-label
               display: block
-              height: $topBarHeight
+              height: $top-bar-height
               > div  // .valueContainer
                 > span
                   color: $primary-accent
@@ -182,7 +236,7 @@ $topBarHeight: 55px
 
           span.projectSelectorValue, span.datasetSelectorValue
             +titleText
-            height: $topBarHeight
+            height: $top-bar-height
             line-height: 50px
             font-weight: 500
 

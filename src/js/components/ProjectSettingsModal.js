@@ -44,7 +44,7 @@ class ProjectSettingsModal extends Component {
     const { closeAction } = this.props;
     const { projectName, projectDescription } = this.state;
 
-    var footer = 
+    var footer =
       <div className={ styles.footerContent }>
         <RaisedButton icon altText="Delete project" onClick={ this.onClickDeleteProject.bind(this) }>
           <i className="fa fa-trash"></i>
