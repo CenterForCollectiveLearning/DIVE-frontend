@@ -14,7 +14,7 @@ export default class ProjectButton extends Component {
             <div className={ styles.projectTitle }>{ title }</div>
           </div>
           <div className={ styles.pullRight }>
-            <i className="fa fa-cog"></i>
+            { !project.preloaded && <i className="fa fa-cog"></i> }
           </div>
         </div>
         { (description && description !== 'Project Description') &&
