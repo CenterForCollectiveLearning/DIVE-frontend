@@ -58,7 +58,7 @@ export class ProjectNav extends Component {
       return splitTabValue.length > 1 && _validTab(splitTabValue[1]) ? splitTabValue[1] : splitTabValue[0];
     });
 
-    const _lastPath = this.props.routes.slice().reverse().find((route) =>{
+    const _lastPath = this.props.routes.slice().reverse().find((route) => {
       return _validTab(_tabValue(route.path));
     });
 
@@ -102,7 +102,7 @@ export class ProjectNav extends Component {
   render() {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 
-    const datasetId = paramDatasetId || datasetSelector.datasetId;
+    const datasetId = paramDatasetId || datasetSelector.datasetId || (datasets.items.length > 0 && datasets.items[0].datasetId);
 
     return (
       <div className={ styles.projectSidebar }>

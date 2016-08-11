@@ -101,7 +101,7 @@ export class DatasetInspectPage extends Component {
               </div>
             }
           />
-          { dataset && dataset.details &&
+          { dataset && false && dataset.details &&
             <DatasetPropertiesPane dataset={ dataset } fieldProperties={ fieldProperties }/>
           }
           { dataset && dataset.details &&
