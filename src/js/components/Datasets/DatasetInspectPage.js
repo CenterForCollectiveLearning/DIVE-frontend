@@ -9,6 +9,7 @@ import styles from './Datasets.sass';
 import HeaderBar from '../Base/HeaderBar';
 import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
+import DatasetPropertiesPane from './DatasetPropertiesPane';
 import DatasetDataGrid from './DatasetDataGrid';
 import DatasetRow from './DatasetRow';
 import ReduceColumnsModal from './ReduceColumnsModal';
@@ -98,7 +99,9 @@ export class DatasetInspectPage extends Component {
             </div>
           }
         />
-
+        { dataset && dataset.details &&
+          <DatasetPropertiesPane dataset={ dataset } fieldProperties={ fieldProperties }/>
+        }
         { dataset && dataset.details &&
           <DatasetDataGrid dataset={ dataset } fieldProperties={ fieldProperties }/>
         }

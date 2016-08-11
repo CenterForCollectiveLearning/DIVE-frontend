@@ -33,7 +33,36 @@
     margin-left: 2px
     color: #6A6A6A
 
-  .rightActions
+  .headerRightActions
+    display: flex
+    flex-direction: row-reverse
+    flex-grow: 1
+    position: relative
+
+    .helperText
+      +regularText
+      position: absolute
+      top: 20px
+      right: 20px
+      z-index: 1000
+      background-color: $center-grey
+      border: 1px solid $ui-line-grey
+      width: 300px
+      padding: 12px 20px
+      display: table
+
+    .helperButton
+      position: absolute
+      bottom: 5px
+      cursor: pointer
+      color: $ui-line-grey
+      &:hover
+        color: $primary-accent
+
+    > div
+      margin-left: 10px
+
+  .pageRightActions
     display: flex
     flex-direction: row-reverse
     flex-grow: 1

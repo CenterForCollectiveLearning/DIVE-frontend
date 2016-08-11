@@ -3,8 +3,27 @@ import React, { Component, PropTypes } from 'react';
 import styles from './HeaderBar.sass';
 
 export default class HeaderBar extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showHelperText: true
+    }
+  }
+
+  _showHoverText() {
+    this.setState({ showHelperText: true });
+  }
+
+  _hideHoverText() {
+    // this.setState({ showHelperText: false });
+  }
+
+
   render() {
-    const { className, textClassName, header, subheader, actions } = this.props;
+    const { className, textClassName, header, subheader, actions, helperText } = this.props;
+    const { showHelperText } = this.state;
 
     return (
       <div className={
@@ -24,7 +43,19 @@ export default class HeaderBar extends Component {
             </div>
           }
         </div>
-        <div className={ styles.rightActions } >
+        <div className={ styles.headerRightActions }>
+          { helperText &&
+            <i
+              onMouseOut={ this._hideHoverText.bind(this) }
+              onMouseOver={ this._showHoverText.bind(this) }
+              className={'fa fa-question-circle' + ' ' + styles.helperButton }
+            />
+          }
+          { helperText && showHelperText &&
+            <div className={ styles.helperText }>{ helperText }</div>
+          }
+        </div>
+        <div className={ styles.pageRightActions } >
           { actions }
         </div>
       </div>
@@ -37,5 +68,6 @@ HeaderBar.propTypes = {
   subheader: PropTypes.any,
   actions: PropTypes.node,
   className: PropTypes.string,
-  textClassName: PropTypes.string
+  textClassName: PropTypes.string,
+  helperText: PropTypes.string
 };

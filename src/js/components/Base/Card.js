@@ -9,7 +9,7 @@ export default class Card extends Component {
     return (
       <div className={ styles.card }>
         { this.props.header &&
-          <HeaderBar header={ this.props.header } textClassName={ styles.cardHeader }/>
+          <HeaderBar header={ this.props.header } textClassName={ styles.cardHeader } helperText={ this.props.helperText }/>
         }
         { this.props.children }
       </div>
@@ -19,5 +19,6 @@ export default class Card extends Component {
 
 Card.propTypes = {
   header: PropTypes.any,
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  helperText: PropTypes.any
 };

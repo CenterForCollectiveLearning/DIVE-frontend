@@ -108,7 +108,9 @@ export class RegressionView extends Component {
                 </RaisedButton>
               </div>
           </div>
-        }/>
+        }
+
+      />
         { regressionResult.loading &&
           <Card header={ tableCardHeader }>
             <div className={ styles.watermark }>
