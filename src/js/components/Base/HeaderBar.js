@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import { HELPER_TEXT } from './HelperText'
 import styles from './HeaderBar.sass';
 
 export default class HeaderBar extends Component {
@@ -17,7 +18,7 @@ export default class HeaderBar extends Component {
   }
 
   _hideHoverText() {
-    // this.setState({ showHelperText: false });
+    this.setState({ showHelperText: false });
   }
 
 
@@ -52,7 +53,7 @@ export default class HeaderBar extends Component {
             />
           }
           { helperText && showHelperText &&
-            <div className={ styles.helperText }>{ helperText }</div>
+            <div className={ styles.helperText }>{ HELPER_TEXT[helperText] }</div>
           }
         </div>
         <div className={ styles.pageRightActions } >
