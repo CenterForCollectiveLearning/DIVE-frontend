@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import DocumentTitle from 'react-document-title';
 import { push } from 'react-router-redux';
 import { fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
@@ -89,61 +90,63 @@ export class DatasetTransformPage extends Component {
   }
 
   render() {
-    const { datasets, datasetSelector, fieldProperties, params, project } = this.props;
+    const { datasets, datasetSelector, fieldProperties, params, project, projectTitle } = this.props;
     const dataset = datasets.items.filter((dataset) =>
       dataset.datasetId == params.datasetId
     )[0];
 
     return (
-      <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
-        <HeaderBar
-          actions={
-            <div className={ styles.headerControlRow }>
-              <div className={ styles.headerControl }>
-                <RaisedButton icon onClick={ this.onClickDeleteDataset }>
-                  <i className="fa fa-trash"></i>
-                </RaisedButton>
+      <DocumentTitle title={ 'Transform' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
+        <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
+          <HeaderBar
+            actions={
+              <div className={ styles.headerControlRow }>
+                <div className={ styles.headerControl }>
+                  <RaisedButton icon onClick={ this.onClickDeleteDataset }>
+                    <i className="fa fa-trash"></i>
+                  </RaisedButton>
+                </div>
+                <div className={ styles.headerControl }>
+                  <RaisedButton label="Reduce columns" onClick={ this.openColumnReductionModal.bind(this) }/>
+                </div>
+                <div className={ styles.headerControl }>
+                  <RaisedButton label="Pivot" onClick={ this.openPivotModal.bind(this) }/>
+                </div>
+                <div className={ styles.headerControl }>
+                  <RaisedButton label="Combine datasets" onClick={ this.openMergeDatasetsModal.bind(this) }/>
+                </div>
               </div>
-              <div className={ styles.headerControl }>
-                <RaisedButton label="Reduce columns" onClick={ this.openColumnReductionModal.bind(this) }/>
-              </div>
-              <div className={ styles.headerControl }>
-                <RaisedButton label="Pivot" onClick={ this.openPivotModal.bind(this) }/>
-              </div>
-              <div className={ styles.headerControl }>
-                <RaisedButton label="Combine datasets" onClick={ this.openMergeDatasetsModal.bind(this) }/>
-              </div>
-            </div>
-          }
-        />
+            }
+          />
 
-        { dataset && dataset.details &&
-          <DatasetDataGrid dataset={ dataset } fieldProperties={ fieldProperties }/>
-        }
-        { dataset && dataset.details && this.state.reduceColumnsModalOpen &&
-          <ReduceColumnsModal
-            projectId={ params.projectId }
-            datasetId={ params.datasetId }
-            closeAction={ this.closeColumnReductionModal.bind(this) }
-            columnNames={ dataset.details.fieldNames }/>
-        }
-        { dataset && dataset.details && this.state.mergeDatasetsModalOpen &&
-          <MergeDatasetsModal
-            projectId={ params.projectId }
-            datasetId={ params.datasetId }
-            datasets={ datasets.items }
-            closeAction={ this.closeMergeDatasetsModal.bind(this) }
-            columnNames={ dataset.details.fieldNames }/>
-        }
-        { dataset && dataset.details && this.state.pivotModalOpen &&
-          <PivotModal
-            projectId={ params.projectId }
-            datasetId={ params.datasetId }
-            closeAction={ this.closePivotModal.bind(this) }
-            columnNames={ dataset.details.fieldNames }/>
-        }
-        { this.props.children }
-      </div>
+          { dataset && dataset.details &&
+            <DatasetDataGrid dataset={ dataset } fieldProperties={ fieldProperties }/>
+          }
+          { dataset && dataset.details && this.state.reduceColumnsModalOpen &&
+            <ReduceColumnsModal
+              projectId={ params.projectId }
+              datasetId={ params.datasetId }
+              closeAction={ this.closeColumnReductionModal.bind(this) }
+              columnNames={ dataset.details.fieldNames }/>
+          }
+          { dataset && dataset.details && this.state.mergeDatasetsModalOpen &&
+            <MergeDatasetsModal
+              projectId={ params.projectId }
+              datasetId={ params.datasetId }
+              datasets={ datasets.items }
+              closeAction={ this.closeMergeDatasetsModal.bind(this) }
+              columnNames={ dataset.details.fieldNames }/>
+          }
+          { dataset && dataset.details && this.state.pivotModalOpen &&
+            <PivotModal
+              projectId={ params.projectId }
+              datasetId={ params.datasetId }
+              closeAction={ this.closePivotModal.bind(this) }
+              columnNames={ dataset.details.fieldNames }/>
+          }
+          { this.props.children }
+        </div>
+      </DocumentTitle>
     );
   }
 }
@@ -158,7 +161,7 @@ DatasetTransformPage.propTypes = {
 
 function mapStateToProps(state) {
   const { project, datasets, datasetSelector, fieldProperties } = state;
-  return { project, datasets, datasetSelector, fieldProperties };
+  return { project, projectTitle: project.properties.title, datasets, datasetSelector, fieldProperties };
 }
 
 export default connect(mapStateToProps, {

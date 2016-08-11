@@ -78,7 +78,7 @@ export class ComposeBasePage extends Component {
 
   render() {
     const { selectedDocument, projectTitle } = this.props;
-    const composeTitle = 'COMPOSE' + ( projectTitle ? ` | ${ projectTitle }` : '' )
+    const composeTitle = 'Compose' + ( projectTitle ? ` | ${ projectTitle }` : '' )
     return (
       <DocumentTitle title={ composeTitle }>
         <div className={ `${ styles.fillContainer } ${ styles.composePageContainer }` }>

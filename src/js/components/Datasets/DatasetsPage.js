@@ -50,14 +50,11 @@ export class DatasetsPage extends Component {
 
   render() {
     const { projectTitle } = this.props;
-    const datasetsTitle = 'DATA' + ( projectTitle ? ` | ${ projectTitle }` : '' )
 
     return (
-      <DocumentTitle title={ datasetsTitle }>
-        <div className={ styles.fillContainer + ' ' + styles.datasetPageContainer }>
-          { this.props.children }
-        </div>
-      </DocumentTitle>
+      <div className={ styles.fillContainer + ' ' + styles.datasetPageContainer }>
+        { this.props.children }
+      </div>
     );
   }
 }

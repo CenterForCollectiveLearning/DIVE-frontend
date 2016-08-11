@@ -6,14 +6,10 @@ import styles from './Analysis.sass';
 
 export class AnalysisPage extends Component {
   render() {
-    const { projectTitle } = this.props;
-    const analysisTitle = 'ANALYSIS' + ( projectTitle ? ` | ${ projectTitle }` : '' )
     return (
-      <DocumentTitle title={ analysisTitle }>
-        <div className={ styles.fillContainer + ' ' + styles.analysisContainer }>
-          { this.props.children }
-        </div>
-      </DocumentTitle>
+      <div className={ styles.fillContainer + ' ' + styles.analysisContainer }>
+        { this.props.children }
+      </div>
     );
   }
 }
@@ -23,8 +19,7 @@ AnalysisPage.propTypes = {
 }
 
 function mapStateToProps(state) {
-  const { project } = state;
-  return { projectTitle: project.properties.title };
+  return {};
 }
 
 export default connect(mapStateToProps, { })(AnalysisPage);

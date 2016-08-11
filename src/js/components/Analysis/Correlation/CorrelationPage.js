@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import DocumentTitle from 'react-document-title';
 import styles from '../Analysis.sass';
 
 import CorrelationSidebar from './CorrelationSidebar';
@@ -7,18 +8,22 @@ import CorrelationView from './CorrelationView';
 
 export class CorrelationPage extends Component {
   render() {
+    const { projectTitle } = this.props;
     return (
-      <div className={ `${ styles.fillContainer } ${ styles.correlationContainer }` }>
-        <CorrelationView />
-        <CorrelationSidebar />
-        { this.props.children }
-      </div>
+      <DocumentTitle title={ 'Correlation' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
+        <div className={ `${ styles.fillContainer } ${ styles.correlationContainer }` }>
+          <CorrelationView />
+          <CorrelationSidebar />
+          { this.props.children }
+        </div>
+      </DocumentTitle>
     );
   }
 }
 
 function mapStateToProps(state) {
-  return {};
+  const { project } = state;
+  return { projectTitle: project.properties.title };
 }
 
 export default connect(mapStateToProps, { })(CorrelationPage);
