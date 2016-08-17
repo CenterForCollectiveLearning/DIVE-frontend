@@ -52,7 +52,7 @@ export class LandingPage extends Component {
               <div className={ styles.topRightControls }>
                 { user && user.username &&
                   <div className={ styles.linkContainer }>
-                    <Link route="/projects">Sample Projects</Link>
+                    <Link route="/preloaded">Preloaded Projects</Link>
                     <Link route="/projects">Your Projects</Link>
                     <div>{ user.username }<span className={ styles.separater }>|</span><Link onClick={ this.props.logoutUser }>Sign Out</Link></div>
                   </div>

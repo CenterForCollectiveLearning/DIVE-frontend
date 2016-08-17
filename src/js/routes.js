@@ -9,6 +9,7 @@ import LoginPage from './components/Auth/LoginPage';
 import RegisterPage from './components/Auth/RegisterPage';
 import LandingPage from './components/Landing/LandingPage';
 import ProjectListPage from './components/Landing/ProjectListPage';
+import PreloadedProjectListPage from './components/Landing/PreloadedProjectListPage';
 import FeaturesPage from './components/Landing/FeaturesPage';
 import App from './components/App/App';
 import ProjectsPage from './components/ProjectsPage';
@@ -51,8 +52,7 @@ export default (
     <IndexRoute component={ LandingPage }/>
     <Route path="/landing" component={ LandingPage }>
       <Route path="/projects" component={ ProjectListPage }/>
-      <Route path="/about" component={ AboutPage }/>
-      <Route path="/features" component={ FeaturesPage }/>
+      <Route path="/preloaded" component={ PreloadedProjectListPage }/>
     </Route>
 
     <Route path="/stories" component={ NarrativeBasePage }>

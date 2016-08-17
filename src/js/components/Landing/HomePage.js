@@ -72,9 +72,7 @@ export class HomePage extends Component {
           { (!projects.fetching && preloadedProjects.length > 0) &&
             <div className={ styles.section + ' ' + styles.projectsContainer }>
               <div className={ styles.innerSection + ' ' + styles.projectTypeContainer }>
-                <h2>
-                  Featured Projects
-                </h2>
+                <div className={ styles.sectionHeader }>Featured Projects</div>
                 <div className={ styles.projectListContainer }>
                   { projects.isFetching &&
                     <div className={ styles.watermark }>Fetching projects...</div>
@@ -88,9 +86,7 @@ export class HomePage extends Component {
           }
 
           <div className={ styles.section + ' ' + styles.aboutContainer }>
-            <h2>
-              About
-            </h2>
+            <div className={ styles.sectionHeader }>About</div>
             <div className={ styles.aboutContent }>
               <div className={ styles.textBox }>
                 <div className={ styles.textBoxLeft}>
