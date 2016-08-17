@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
+import DocumentTitle from 'react-document-title';
 import styles from '../Analysis.sass';
 
 import { createURL, recommendRegressionType } from '../../../helpers/helpers.js';
@@ -36,7 +37,7 @@ export class RegressionBasePage extends Component {
 
     if (nextFieldProperties.items.length > 0 && nextFieldProperties.datasetId == nextParams.datasetId && !nextQuery['dependent-variable']) {
       const dependentVariable = (nextFieldProperties.items.find((property) => property.generalType == 'q') || nextFieldProperties.items.find((property) => property.generalType == 'c'));
-      
+
       const queryParams = { 'dependent-variable': dependentVariable.id, 'regression-type': recommendRegressionType(dependentVariable.generalType) };
       replace(createURL(`/projects/${ nextParams.projectId }/datasets/${ nextParams.datasetId }/analyze/regression`, queryParams));
     }
@@ -45,8 +46,8 @@ export class RegressionBasePage extends Component {
       selectDependentVariable(nextQuery['dependent-variable']);
 
       if(!nextQuery['regressionType']) {
-        const regressionType = recommendRegressionType(nextFieldProperties.items.find((property) => property.id == nextQuery['dependent-variable']).generalType);        
-        
+        const regressionType = recommendRegressionType(nextFieldProperties.items.find((property) => property.id == nextQuery['dependent-variable']).generalType);
+
         const queryParams = { 'dependent-variable': nextQuery['dependent-variable'], 'regression-type': regressionType };
         replace(createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, queryParams));
       }
@@ -58,19 +59,22 @@ export class RegressionBasePage extends Component {
   }
 
   render() {
+    const { projectTitle } = this.props;
     return (
-      <div className={ `${ styles.fillContainer } ${ styles.regressionContainer }` }>
-        <RegressionView />
-        <RegressionSidebar />
-        { this.props.children }
-      </div>
+      <DocumentTitle title={ 'Regression' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
+        <div className={ `${ styles.fillContainer } ${ styles.regressionContainer }` }>
+          <RegressionView />
+          <RegressionSidebar />
+          { this.props.children }
+        </div>
+      </DocumentTitle>
     );
   }
 }
 
 function mapStateToProps(state) {
-  const { fieldProperties } = state;
-  return { fieldProperties };
+  const { fieldProperties, project } = state;
+  return { fieldProperties, projectTitle: project.properties.title };
 }
 
 export default connect(mapStateToProps, { replace, selectDependentVariable, selectRegressionType })(RegressionBasePage);

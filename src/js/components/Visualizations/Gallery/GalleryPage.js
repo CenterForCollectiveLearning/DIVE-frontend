@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import DocumentTitle from 'react-document-title';
 
 import { setGalleryQueryString } from '../../../actions/VisualizationActions';
 
@@ -71,6 +72,8 @@ class GalleryPage extends Component {
   }
 
   render() {
+    const { projectTitle } = this.props;
+
     var queryFields = [];
     if (this.props.location.query['fields[]']) {
       if (Array.isArray(this.props.location.query['fields[]'])) {
@@ -88,18 +91,20 @@ class GalleryPage extends Component {
       .map((visualizationTypeObject) => visualizationTypeObject.type);
 
     return (
-      <div className={ `${ styles.fillContainer } ${ styles.galleryContainer }` }>
-        <GalleryView filteredVisualizationTypes={ visualizationTypes } />
-        <GallerySidebar filteredVisualizationTypes={ visualizationTypes } visualizationTypes={ visualizationTypeObjects } queryFields={ queryFields }/>
-        { this.props.children }
-      </div>
+      <DocumentTitle title={ 'Explore' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
+        <div className={ `${ styles.fillContainer } ${ styles.galleryContainer }` }>
+          <GalleryView filteredVisualizationTypes={ visualizationTypes } />
+          <GallerySidebar filteredVisualizationTypes={ visualizationTypes } visualizationTypes={ visualizationTypeObjects } queryFields={ queryFields }/>
+          { this.props.children }
+        </div>
+      </DocumentTitle>
     );
   }
 }
 
 function mapStateToProps(state) {
-  const { filters, specs } = state;
-  return { filters, specs };
+  const { project, filters, specs } = state;
+  return { projectTitle: project.properties.title, filters, specs };
 }
 
 export default connect(mapStateToProps, { setGalleryQueryString })(GalleryPage);

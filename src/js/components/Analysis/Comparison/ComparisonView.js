@@ -140,7 +140,7 @@ export class ComparisonView extends Component {
     } else if (anovaCanBeDisplayed) {
       comparisonContent =
         <div>
-          <Card header={ <span>{ cardHeader }</span> }>
+          <Card header={ <span>{ cardHeader }</span> } helperText='anova' >
             <AnovaTable anovaData={ anovaResult } />
             <AnovaText
               dependentVariableNames={ dependentVariableNames }

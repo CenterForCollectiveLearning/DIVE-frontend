@@ -18,6 +18,7 @@ export default class RegressionTableCard extends Component {
     return (
       <Card
         header={ tableCardHeader }
+        helperText='regression'
       >
         <RegressionTable regressionType={ regressionType } regressionResult={ regressionResult }/>
         <RegressionSummary

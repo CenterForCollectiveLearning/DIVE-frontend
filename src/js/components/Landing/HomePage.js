@@ -64,34 +64,29 @@ export class HomePage extends Component {
                 onClick={ this._onUploadClick.bind(this) }
                 className={ styles.uploadButton + ' ' + styles.primary } />
             </div>
-            <div className={ styles.videoContainer }>
-              <img
-                className={ styles.video }
-                src='../../../assets/images/DIVE_screenshot.png'
-              />
+            <div className={ styles.video }>
+              <iframe src="https://player.vimeo.com/video/179173590" color="#007BD7" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
             </div>
           </div>
 
-          <div className={ styles.section + ' ' + styles.projectsContainer }>
-            <div className={ styles.innerSection + ' ' + styles.projectTypeContainer }>
-              <h2>
-                Featured Projects
-              </h2>
-              <div className={ styles.projectListContainer }>
-                { projects.isFetching &&
-                  <div className={ styles.watermark }>Fetching projects...</div>
-                }
-                { preloadedProjects.map((project) =>
-                  <ProjectButton project={ project } key={ `project-button-id-${ project.id }` }/>
-                )}
+          { (!projects.fetching && preloadedProjects.length > 0) &&
+            <div className={ styles.section + ' ' + styles.projectsContainer }>
+              <div className={ styles.innerSection + ' ' + styles.projectTypeContainer }>
+                <div className={ styles.sectionHeader }>Featured Projects</div>
+                <div className={ styles.projectListContainer }>
+                  { projects.isFetching &&
+                    <div className={ styles.watermark }>Fetching projects...</div>
+                  }
+                  { preloadedProjects.map((project) =>
+                    <ProjectButton project={ project } key={ `project-button-id-${ project.id }` }/>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          }
 
           <div className={ styles.section + ' ' + styles.aboutContainer }>
-            <h2>
-              About
-            </h2>
+            <div className={ styles.sectionHeader }>About</div>
             <div className={ styles.aboutContent }>
               <div className={ styles.textBox }>
                 <div className={ styles.textBoxLeft}>

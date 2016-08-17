@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import DocumentTitle from 'react-document-title';
 
 import { fetchDatasets } from '../../actions/DatasetActions';
 import { uploadDataset } from '../../actions/DatasetActions';
@@ -45,32 +46,34 @@ export class DatasetUploadPage extends Component {
   }
 
   render() {
-    const { datasetSelector } = this.props;
+    const { projectTitle, datasetSelector } = this.props;
     return (
-      <div className={ styles.fillContainer }>
-        <div
-          className={ styles.datasetUploadBox }>
-          { datasetSelector.isUploading &&
-            <div className={ styles.uploadingZone + ' ' + styles.centeredFill }>
-              { datasetSelector.progress &&
-                <div className={ styles.watermark }>{ datasetSelector.progress }</div>
-              }
-            </div>
-          }
-          { !datasetSelector.isUploading &&
-            <Dropzone ref="dropzone" className={ styles.dropzone + ' ' + styles.centeredFill } onDrop={ this.onDrop } disableClick={ true }>
-              { datasetSelector.uploadError &&
-                <div className={ styles.errorDescription + ' ' + styles.watermark }>
-                  { datasetSelector.uploadError }
-                  <div className={ styles.separater }></div>
-                </div>
-              }
-              <RaisedButton label="Select & upload a file" primary={ true } onClick={ this.onOpenClick } />
-              <span>or drop files here to upload</span>
-            </Dropzone>
-          }
+      <DocumentTitle title={ 'Upload' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
+        <div className={ styles.fillContainer }>
+          <div
+            className={ styles.datasetUploadBox }>
+            { datasetSelector.isUploading &&
+              <div className={ styles.uploadingZone + ' ' + styles.centeredFill }>
+                { datasetSelector.progress &&
+                  <div className={ styles.watermark }>{ datasetSelector.progress }</div>
+                }
+              </div>
+            }
+            { !datasetSelector.isUploading &&
+              <Dropzone ref="dropzone" className={ styles.dropzone + ' ' + styles.centeredFill } onDrop={ this.onDrop } disableClick={ true }>
+                { datasetSelector.uploadError &&
+                  <div className={ styles.errorDescription + ' ' + styles.watermark }>
+                    { datasetSelector.uploadError }
+                    <div className={ styles.separater }></div>
+                  </div>
+                }
+                <RaisedButton label="Select & upload a file" primary={ true } onClick={ this.onOpenClick } />
+                <span>or drop files here to upload</span>
+              </Dropzone>
+            }
+          </div>
         </div>
-      </div>
+      </DocumentTitle>
     );
   }
 }
@@ -84,7 +87,7 @@ DatasetUploadPage.propTypes = {
 
 function mapStateToProps(state) {
   const { project, datasets, datasetSelector } = state;
-  return { project, datasets, datasetSelector };
+  return { project, projectTitle: project.properties.title, datasets, datasetSelector };
 }
 
 export default connect(mapStateToProps, {

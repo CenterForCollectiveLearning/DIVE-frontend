@@ -56,7 +56,7 @@ export default class AnovaBoxplotCard extends Component {
     };
 
     return (
-      <Card header={ <span>Boxplot of Group Distribution</span> }>
+      <Card header={ <span>Boxplot of Group Distribution</span> } helperText='comparisonBoxplot'>
         <div className={ styles.anovaBoxplotData }>
           <BoxPlot
             chartId={ `boxplot-${ id }` }

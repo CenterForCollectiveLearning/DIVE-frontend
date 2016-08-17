@@ -33,7 +33,7 @@ export default class PairwiseComparisonCard extends Component {
     ];
 
     return (
-      <Card header={ <span>Pairwise Comparison with Tukey Post-hoc Test</span> }>
+      <Card header={ <span>Pairwise Comparison with Tukey Post-hoc Test</span> } helperText='pairwiseComparison'>
         <div className={ styles.aggregationTable }>
           <BareDataGrid data={ data }/>
         </div>

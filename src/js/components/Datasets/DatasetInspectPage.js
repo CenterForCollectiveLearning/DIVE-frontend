@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import DocumentTitle from 'react-document-title';
 import { push } from 'react-router-redux';
 import { fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
@@ -9,6 +10,7 @@ import styles from './Datasets.sass';
 import HeaderBar from '../Base/HeaderBar';
 import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
+import DatasetPropertiesPane from './DatasetPropertiesPane';
 import DatasetDataGrid from './DatasetDataGrid';
 import DatasetRow from './DatasetRow';
 import ReduceColumnsModal from './ReduceColumnsModal';
@@ -77,34 +79,38 @@ export class DatasetInspectPage extends Component {
   }
 
   render() {
-    const { datasets, datasetSelector, fieldProperties, params, project } = this.props;
+    const { datasets, datasetSelector, fieldProperties, params, project, projectTitle } = this.props;
     const dataset = datasets.items.filter((dataset) =>
       dataset.datasetId == params.datasetId
     )[0];
 
     return (
-      <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
-        <HeaderBar
-          actions={
-            <div className={ styles.headerControlRow }>
-              <div className={ styles.headerControl }>
-                <RaisedButton icon onClick={ this.onClickDeleteDataset }>
-                  <i className="fa fa-trash"></i>
-                </RaisedButton>
+      <DocumentTitle title={ 'Inspect' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
+        <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
+          <HeaderBar
+            actions={
+              <div className={ styles.headerControlRow }>
+                <div className={ styles.headerControl }>
+                  <RaisedButton icon onClick={ this.onClickDeleteDataset }>
+                    <i className="fa fa-trash"></i>
+                  </RaisedButton>
+                </div>
+                <div className={ styles.headerControl }>
+                  <RaisedButton label="Upload new dataset" onClick={ this.onClickUploadDataset } />
+                </div>
               </div>
-              <div className={ styles.headerControl }>
-                <RaisedButton label="Upload new dataset" onClick={ this.onClickUploadDataset } />
-              </div>
-            </div>
+            }
+          />
+          { dataset && false && dataset.details &&
+            <DatasetPropertiesPane dataset={ dataset } fieldProperties={ fieldProperties }/>
           }
-        />
+          { dataset && dataset.details &&
+            <DatasetDataGrid dataset={ dataset } fieldProperties={ fieldProperties }/>
+          }
 
-        { dataset && dataset.details &&
-          <DatasetDataGrid dataset={ dataset } fieldProperties={ fieldProperties }/>
-        }
-
-        { this.props.children }
-      </div>
+          { this.props.children }
+        </div>
+      </DocumentTitle>
     );
   }
 }
@@ -119,7 +125,7 @@ DatasetInspectPage.propTypes = {
 
 function mapStateToProps(state) {
   const { project, datasets, datasetSelector, fieldProperties } = state;
-  return { project, datasets, datasetSelector, fieldProperties };
+  return { project, projectTitle: project.properties.title, datasets, datasetSelector, fieldProperties };
 }
 
 export default connect(mapStateToProps, {

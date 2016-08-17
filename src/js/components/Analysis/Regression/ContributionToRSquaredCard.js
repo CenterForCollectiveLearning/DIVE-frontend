@@ -77,7 +77,7 @@ export default class ContributionToRSquaredCard extends Component {
     };
 
     return (
-      <Card header={ <span>Contribution to R<sup>2</sup></span> }>
+      <Card header={ <span>Contribution to R<sup>2</sup></span> } helperText='rsquared'>
         <div className={ styles.contributionToRSquared }>
           <ColumnChart
             chartId={ `bar-${ id }` }

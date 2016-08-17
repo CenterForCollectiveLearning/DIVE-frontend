@@ -93,20 +93,19 @@ export class GalleryView extends Component {
     const expandedSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'expanded');
 
     let pageHeader;
+    let helperText;
     if (areFieldsSelected) {
       pageHeader = <span>Visualizations of <ColoredFieldItems fields={ selectedFieldProperties } /></span>
+      helperText = 'exploreSelectedFields'
     } else {
       pageHeader = <span>Default Recommended Visualizations</span>
+      helperText = 'exploreDefault'
     }
 
     return (
       <div className={ styles.specsContainer }>
         <div className={ styles.innerSpecsContainer }>
-          <HeaderBar
-            header={
-              pageHeader
-            }
-          />
+          <HeaderBar header={ pageHeader } helperText={ helperText } />
           <div className={ styles.specContainer }>
             { isFetching && filteredSpecs.length == 0 &&
               <div className={ styles.watermark }>Loading visualizations</div>
@@ -117,11 +116,12 @@ export class GalleryView extends Component {
             { exactSpecs.length > 0 &&
               <div className={ styles.specSection }>
                 { areFieldsSelected &&
-                  <div className={ styles.blockSectionHeader }>
-                    { areFieldsSelected &&
-                      <div className={ styles.blockSectionHeaderTitle }>Exact Matches</div>
-                    }
-                  </div>
+                  <HeaderBar
+                    header='Exact Matches'
+                    helperText='exactMatches'
+                    className={ styles.blockSectionHeader }
+                    textClassName={ styles.blockSectionHeaderTitle }
+                  />
                 }
                 <div className={ styles.specs + ' ' + styles.exact }>
                   { exactSpecs.map((spec) =>
@@ -142,9 +142,12 @@ export class GalleryView extends Component {
             }
             { subsetSpecs.length > 0 &&
               <div className={ styles.specSection }>
-                <div className={ styles.blockSectionHeader }>
-                  <div className={ styles.blockSectionHeaderTitle }>Close Matches</div>
-                </div>
+                <HeaderBar
+                  header='Close Matches'
+                  helperText='closeMatches'
+                  className={ styles.blockSectionHeader }
+                  textClassName={ styles.blockSectionHeaderTitle }
+                />
                 <div className={ styles.specs + ' ' + styles.subset }>
                   { subsetSpecs.map((spec) =>
                     <VisualizationBlock

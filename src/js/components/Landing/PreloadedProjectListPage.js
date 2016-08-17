@@ -10,7 +10,7 @@ import RaisedButton from '../Base/RaisedButton';
 import Footer from './Footer';
 
 
-export class ProjectListPage extends Component {
+export class PreloadedProjectListPage extends Component {
   componentWillMount() {
     const { projects, userId } = this.props;
     this.props.fetchPreloadedProjects(userId);
@@ -57,18 +57,6 @@ export class ProjectListPage extends Component {
                 className={ styles.uploadButton } />
             </div>
           </div>
-          { userId && userProjects.length > 0 &&
-            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
-              <div className={ styles.projectListContainer }>
-                { projects.isFetching &&
-                  <div className={ styles.watermark }>Fetching projects...</div>
-                }
-                { userProjects.reverse().map((project) =>
-                  <ProjectButton project={ project } key={ `project-button-id-${ project.id }` }/>
-                )}
-              </div>
-            </div>
-          }
           { preloadedProjects.length > 0 &&
             <div className={ styles.projectsContainer + ' ' + styles.preloadedProjectsContainer }>
               <div className={ styles.projectListContainer }>
@@ -93,4 +81,4 @@ function mapStateToProps(state) {
   return { project, projects, user: user, userId: user.id };
 }
 
-export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, push })(ProjectListPage);
+export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, push })(PreloadedProjectListPage);

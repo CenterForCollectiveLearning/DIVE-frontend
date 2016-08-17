@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
-import DocumentTitle from 'react-document-title';
 import styles from './Visualizations.sass';
 
 export class VisualizationsPage extends Component {
@@ -18,21 +17,16 @@ export class VisualizationsPage extends Component {
   }
 
   render() {
-    const { projectTitle } = this.props;
-    const visualizationsTitle = 'VISUALIZE' + ( projectTitle ? ` | ${ projectTitle }` : '' )
     return (
-      <DocumentTitle title={ visualizationsTitle }>
-        <div className={ styles.fillContainer + ' ' + styles.visualizationsPageContainer }>
-          { this.props.children }
-        </div>
-      </DocumentTitle>
+      <div className={ styles.fillContainer + ' ' + styles.visualizationsPageContainer }>
+        { this.props.children }
+      </div>
     );
   }
 }
 
 function mapStateToProps(state) {
-  const { project } = state;
-  return { projectTitle: project.properties.title };
+  return {};
 }
 
 export default connect(mapStateToProps, { replace })(VisualizationsPage);
