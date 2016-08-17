@@ -20,7 +20,7 @@ export class ProjectListPage extends Component {
   componentWillReceiveProps(nextProps) {
     const nextProjectId = nextProps.project.properties.id;
     const nextUserId = nextProps.userId;
-``
+
     if (this.props.project.properties.id != nextProjectId) {
       this.props.wipeProjectState();
       this.props.push(`/projects/${ nextProjectId }/datasets/upload`);
