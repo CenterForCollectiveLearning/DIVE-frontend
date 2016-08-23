@@ -171,6 +171,10 @@ class AuthPage extends Component {
                 </div>
               </div>
             </div>
+            {
+              loginError &&
+              <div className={ styles.generalAuthError }>{ loginError }</div>
+            }
             <RaisedButton
               primary
               className={ styles.submitButton }

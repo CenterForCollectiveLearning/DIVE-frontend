@@ -22,9 +22,9 @@ class AuthPage extends Component {
     super(props);
 
     this.state = {
-      email: 'usedive@gmail.com',
+      email: '',
       username: '',
-      password: 'dive',
+      password: '',
       confirmPassword: '',
       emailAlreadyTaken: null,
       usernameAlreadyTaken: null,
@@ -109,6 +109,7 @@ class AuthPage extends Component {
     const { email, emailValid, username, usernameTooLong, usernameTooShort, password, confirmPassword, passwordMatching } = this.state;
     const disabledRegister = !email || !username || !password || !emailValid || usernameTooShort || usernameTooLong || !passwordMatching;
 
+    console.log(this.state);
     if (authRequired) {
       openModal();
     }
@@ -133,6 +134,10 @@ class AuthPage extends Component {
 
           <form className={ styles.authForm } onSubmit={ this.submit.bind(this) }>
             <div className={ styles.authInputGroup }>
+              { (email && email.length > 3 && !emailValid) &&
+                <div className={ styles.authInputError }>Invalid</div>
+              }
+              <div className={ styles.authInputError }>Invalid</div>
               <Input
                 type="text"
                 className={ styles.email }
@@ -144,6 +149,8 @@ class AuthPage extends Component {
             </div>
 
             <div className={ styles.authInputGroup }>
+              { (username && usernameTooShort) && <div className={ styles.authInputError }>Too Short</div> }
+              { (username && usernameTooLong) && <div className={ styles.authInputError }>Too Long</div> }
               <Input
                 type="text"
                 className={ styles.username }
@@ -165,6 +172,7 @@ class AuthPage extends Component {
             </div>
 
             <div className={ styles.authInputGroup }>
+              { (password && confirmPassword && !passwordMatching) && <div className={ styles.authInputError }>Not Matching</div> }
               <Input
                 type="password"
                 className={ styles.password }
@@ -194,7 +202,6 @@ AuthPage.propTypes = {
 
 function mapStateToProps(state) {
   const { user } = state;
-  console.log(user.error.register);
   return { registrationErrors: user.error.register, isAuthenticated: user.isAuthenticated };
 }
 
