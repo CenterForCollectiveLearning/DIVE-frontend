@@ -133,8 +133,9 @@ class AuthPage extends Component {
           }>
           <form className={ styles.authForm } >
             <div className={ styles.authInputGroup }>
-              <div className={ styles.authInputLabelAndError}>
-              </div>
+              { (loginError == 'E-mail not found' || loginError == 'Username not found') &&
+                <div className={ styles.authInputError }>Not found</div>
+              }
               <Input
                 className={ styles.usernameOrEmail }
                 type="text"
@@ -147,8 +148,9 @@ class AuthPage extends Component {
               />
             </div>
             <div className={ styles.authInputGroup }>
-              <div className={ styles.authInputLabelAndError}>
-              </div>
+              { (loginError == 'Incorrect credentials') &&
+                <div className={ styles.authInputError }>Incorrect</div>
+              }
               <Input
                 className={ styles.password }
                 type="password"
@@ -171,10 +173,6 @@ class AuthPage extends Component {
                 </div>
               </div>
             </div>
-            {
-              loginError &&
-              <div className={ styles.generalAuthError }>{ loginError }</div>
-            }
             <RaisedButton
               primary
               className={ styles.submitButton }
