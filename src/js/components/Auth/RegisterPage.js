@@ -5,6 +5,8 @@ import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/AuthActions';
 
+import zxcvbn from 'zxcvbn';
+
 import styles from './Auth.sass';
 
 import Input from '../Base/Input'
@@ -34,6 +36,9 @@ class AuthPage extends Component {
       emailTaken: null,
       usernameTaken: null,
       passwordMatching: null,
+      passwordScore: null,
+      passwordFeedbackWarning: '',
+      passwordFeedbackSuggestions: ''
     };
 
     this.submit = this.submit.bind(this);
@@ -90,7 +95,14 @@ class AuthPage extends Component {
   handlePasswordChange(e) {
     const password = e.target.value;
     this.sanitizeBackendErrors();
-    this.setState({ password: e.target.value });
+
+    const passwordTest = zxcvbn(password);
+    this.setState({
+      password: e.target.value,
+      passwordScore: passwordTest.score,
+      passwordFeedbackWarning: passwordTest.feedback.warning,
+      passwordFeedbackSuggestions: passwordTest.feedback.suggestions,
+    });
   }
 
   handleConfirmPasswordChange(e) {
@@ -121,7 +133,21 @@ class AuthPage extends Component {
 
   render() {
     const { authRequired } = this.props;
-    const { emailError, usernameError, email, emailValid, username, usernameTooLong, usernameTooShort, password, confirmPassword, passwordMatching } = this.state;
+    const {
+      emailError,
+      usernameError,
+      email,
+      emailValid,
+      username,
+      usernameTooLong,
+      usernameTooShort,
+      password,
+      confirmPassword,
+      passwordMatching,
+      passwordScore,
+      passwordFeedbackWarning,
+      passwordFeedbackSuggestions
+    } = this.state;
     const disabledRegister = !email || !username || !password || !emailValid || usernameTooShort || usernameTooLong || !passwordMatching;
 
     if (authRequired) {
@@ -184,6 +210,9 @@ class AuthPage extends Component {
             </div>
 
             <div className={ styles.authInputGroup }>
+              { (password && passwordScore <= 1) && <div className={ styles.authInputError + ' ' + styles.weak }>Weak</div> }
+              { (password && passwordScore == 2) && <div className={ styles.authInputError + ' ' + styles.good }>Good</div> }
+              { (password && passwordScore >= 3) && <div className={ styles.authInputError + ' ' + styles.strong }>Strong</div> }
               <Input
                 type="password"
                 className={ styles.password }
@@ -203,6 +232,7 @@ class AuthPage extends Component {
                 onSubmit={ this.submit }
               />
             </div>
+
             <RaisedButton
               primary
               className={ styles.submitButton }
