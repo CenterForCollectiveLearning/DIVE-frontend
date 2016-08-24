@@ -9,6 +9,7 @@ import { clearAnalysis } from '../../../actions/AnalysisActions';
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
+import Loader from '../../Base/Loader';
 import HeaderBar from '../../Base/HeaderBar';
 import RaisedButton from '../../Base/RaisedButton';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -113,9 +114,7 @@ export class RegressionView extends Component {
       />
         { regressionResult.loading &&
           <Card header={ tableCardHeader }>
-            <div className={ styles.watermark }>
-              { regressionResult.progress != null ? regressionResult.progress : 'Running regressions…' }
-            </div>
+            <Loader text={ regressionResult.progress != null ? regressionResult.progress : 'Running regressions…' } />
           </Card>
         }
         { (!regressionResult.loading && regressionResult.data) &&

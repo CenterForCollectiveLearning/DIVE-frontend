@@ -9,6 +9,7 @@ import { clearAnalysis } from '../../../actions/AnalysisActions';
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
+import Loader from '../../Base/Loader';
 import HeaderBar from '../../Base/HeaderBar';
 import DropDownMenu from '../../Base/DropDownMenu';
 import ColoredFieldItems from '../../Base/ColoredFieldItems';
@@ -121,9 +122,7 @@ export class AggregationView extends Component {
             header={ header }
           >
             { oneDimensionAggregationResult.loading &&
-              <div className={ styles.watermark }>
-                { oneDimensionAggregationResult.progress != null ? oneDimensionAggregationResult.progress : 'Calculating oneDimensionAggregationResult…' }
-              </div>
+              <Loader text={ oneDimensionAggregationResult.progress != null ? oneDimensionAggregationResult.progress : 'Calculating Aggregation Result…' } />
             }
             { (!oneDimensionAggregationResult.loading && oneDimensionDictHasElements) &&
               <AggregationTableOneD aggregationResult={ oneDimensionAggregationResult.data } aggregationVariableNames={ aggregationIndependentVariableNames }/>
@@ -140,9 +139,7 @@ export class AggregationView extends Component {
           header={ header }
         >
             { aggregationResult.loading &&
-              <div className={ styles.watermark }>
-                { aggregationResult.progress != null ? aggregationResult.progress : 'Calculating aggregationResult…' }
-              </div>
+              <Loader text={ aggregationResult.progress != null ? aggregationResult.progress : 'Calculating aggregation result…' } />
             }
             { (!aggregationResult.loading && aggregationDictHasElements) &&
               <AggregationTable aggregationResult={ aggregationResult.data } aggregationIndependentVariableNames={ aggregationIndependentVariableNames }/>

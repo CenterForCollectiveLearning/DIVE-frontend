@@ -8,6 +8,7 @@ import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
 import Dropzone from 'react-dropzone';
+import Loader from '../Base/Loader';
 import HeaderBar from '../Base/HeaderBar';
 import RaisedButton from '../Base/RaisedButton';
 
@@ -55,7 +56,7 @@ export class DatasetUploadPage extends Component {
             { datasetSelector.isUploading &&
               <div className={ styles.uploadingZone + ' ' + styles.centeredFill }>
                 { datasetSelector.progress &&
-                  <div className={ styles.watermark }>{ datasetSelector.progress }</div>
+                  <Loader text={ datasetSelector.progress } />
                 }
               </div>
             }

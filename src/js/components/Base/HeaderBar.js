@@ -9,7 +9,7 @@ export default class HeaderBar extends Component {
     super(props);
 
     this.state = {
-      showHelperText: true
+      showHelperText: false
     }
   }
 

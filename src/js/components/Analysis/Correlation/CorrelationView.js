@@ -10,6 +10,7 @@ import { clearAnalysis } from '../../../actions/AnalysisActions';
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
+import Loader from '../../Base/Loader';
 import HeaderBar from '../../Base/HeaderBar';
 import RaisedButton from '../../Base/RaisedButton';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -91,9 +92,7 @@ export class CorrelationView extends Component {
             }
           >
             { correlationResult.loading &&
-              <div className={ styles.watermark }>
-                { correlationResult.progress != null ? correlationResult.progress : 'Running correlations…' }
-              </div>
+              <Loader text={ correlationResult.progress != null ? correlationResult.progress : 'Running correlations…' } />
             }
             { (!correlationResult.loading && correlationResultHasElements) &&
               <CorrelationTable correlationResult={ correlationResult.data || {} } />

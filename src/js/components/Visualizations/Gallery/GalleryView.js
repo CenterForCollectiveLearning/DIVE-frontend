@@ -9,6 +9,7 @@ import { useWhiteFontFromBackgroundHex } from '../../../helpers/helpers';
 
 import styles from '../Visualizations.sass';
 
+import Loader from '../../Base/Loader';
 import HeaderBar from '../../Base/HeaderBar';
 import DropDownMenu from '../../Base/DropDownMenu';
 import ColoredFieldItems from '../../Base/ColoredFieldItems';
@@ -107,9 +108,6 @@ export class GalleryView extends Component {
         <div className={ styles.innerSpecsContainer }>
           <HeaderBar header={ pageHeader } helperText={ helperText } />
           <div className={ styles.specContainer }>
-            { isFetching && filteredSpecs.length == 0 &&
-              <div className={ styles.watermark }>Loading visualizations</div>
-            }
             { !isFetching && filteredSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>
             }
@@ -211,10 +209,9 @@ export class GalleryView extends Component {
                 </div>
               </div>
             }
+            <Loader text={ progress != null ? progress : 'Fetching visualizations…' } />
             { isFetching &&
-              <div className={ styles.watermark }>
-                { progress != null ? progress : 'Fetching visualizations…' }
-              </div>
+              <Loader text={ progress != null ? progress : 'Fetching visualizations…' } />
             }
           </div>
         </div>
