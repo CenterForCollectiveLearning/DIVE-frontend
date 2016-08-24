@@ -49,20 +49,33 @@ class AuthPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.setState({
+      emailError: nextProps.emailError,
+      usernameError: nextProps.usernameError,
+    });
     this.ensureNotLoggedIn(nextProps)
+  }
+
+  sanitizeBackendErrors() {
+    this.setState({
+      emailError: null,
+      usernameError: null,
+    })
   }
 
   handleEmailChange(e) {
     const email = e.target.value;
     const emailValid = validateEmail(email)
-     this.setState({
-       email: e.target.value,
-       emailValid: emailValid
-     });
+    this.sanitizeBackendErrors();
+    this.setState({
+      email: e.target.value,
+      emailValid: emailValid
+    });
   }
 
   handleUsernameChange(e) {
     const username = e.target.value;
+    this.sanitizeBackendErrors();
     this.setState({ username: username });
     if (username.length < 3) {
       this.setState({ usernameTooShort: true });
@@ -76,12 +89,14 @@ class AuthPage extends Component {
 
   handlePasswordChange(e) {
     const password = e.target.value;
+    this.sanitizeBackendErrors();
     this.setState({ password: e.target.value });
   }
 
   handleConfirmPasswordChange(e) {
     const confirmPassword = e.target.value;
     const passwordMatching = (confirmPassword == this.state.password)
+    this.sanitizeBackendErrors();
     this.setState({ passwordMatching: passwordMatching, confirmPassword: confirmPassword});
   }
 
@@ -105,11 +120,10 @@ class AuthPage extends Component {
   }
 
   render() {
-    const { authRequired, registrationErrors } = this.props;
-    const { email, emailValid, username, usernameTooLong, usernameTooShort, password, confirmPassword, passwordMatching } = this.state;
+    const { authRequired } = this.props;
+    const { emailError, usernameError, email, emailValid, username, usernameTooLong, usernameTooShort, password, confirmPassword, passwordMatching } = this.state;
     const disabledRegister = !email || !username || !password || !emailValid || usernameTooShort || usernameTooLong || !passwordMatching;
 
-    console.log(this.state);
     if (authRequired) {
       openModal();
     }
@@ -137,7 +151,12 @@ class AuthPage extends Component {
               { (email && email.length > 3 && !emailValid) &&
                 <div className={ styles.authInputError }>Invalid</div>
               }
-              <div className={ styles.authInputError }>Invalid</div>
+              { (email && email.length > 3 && !emailValid) &&
+                <div className={ styles.authInputError }>Invalid</div>
+              }
+              { emailError &&
+                <div className={ styles.authInputError }>Taken</div>
+              }
               <Input
                 type="text"
                 className={ styles.email }
@@ -151,6 +170,9 @@ class AuthPage extends Component {
             <div className={ styles.authInputGroup }>
               { (username && usernameTooShort) && <div className={ styles.authInputError }>Too Short</div> }
               { (username && usernameTooLong) && <div className={ styles.authInputError }>Too Long</div> }
+              { usernameError &&
+                <div className={ styles.authInputError }>Taken</div>
+              }
               <Input
                 type="text"
                 className={ styles.username }
@@ -202,7 +224,11 @@ AuthPage.propTypes = {
 
 function mapStateToProps(state) {
   const { user } = state;
-  return { registrationErrors: user.error.register, isAuthenticated: user.isAuthenticated };
+  return {
+    usernameError: user.error.register.username,
+    emailError: user.error.register.email,
+    isAuthenticated: user.isAuthenticated
+  };
 }
 
 export default connect(mapStateToProps, { registerUser, push })(AuthPage);
