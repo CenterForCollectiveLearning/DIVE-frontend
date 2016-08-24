@@ -21,6 +21,7 @@ class AuthPage extends Component {
     super(props);
 
     this.state = {
+      loginError: null,
       error: null,
       email: '',
       username: '',
@@ -34,7 +35,6 @@ class AuthPage extends Component {
     this.handleUsernameOrEmailChange = this.handleUsernameOrEmailChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleRememberMeChange = this.handleRememberMeChange.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
     this.submit = this.submit.bind(this);
   }
 
@@ -43,9 +43,19 @@ class AuthPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.setState({
+      loginError: nextProps.loginError
+    });
     this.ensureNotLoggedIn(nextProps);
   }
 
+  sanitizeBackendErrors() {
+    if (this.state.loginError) {
+      this.setState({
+        loginError: null
+      })
+    }
+  }
 
   closeLoginPage() {
     const { push } = this.props;
@@ -54,6 +64,7 @@ class AuthPage extends Component {
 
   handleUsernameOrEmailChange(e) {
     const value = e.target.value;
+    this.sanitizeBackendErrors();
     if (validateEmail(value)) {
       this.setState({
         email: value,
@@ -73,7 +84,8 @@ class AuthPage extends Component {
   }
 
   handlePasswordChange(e) {
-     this.setState({ password: e.target.value });
+    this.sanitizeBackendErrors();
+    this.setState({ password: e.target.value });
   }
 
   clickRegister() {
@@ -88,12 +100,6 @@ class AuthPage extends Component {
   validateForm() {
     const { email, username, password } = this.state;
     return (( email || username ) && (password && (password != null)))
-  }
-
-  handleKeyPress(e) {
-    if (e.key === 'Enter') {
-      console.log('Handling keypress');
-    }
   }
 
   ensureNotLoggedIn(props) {
@@ -111,8 +117,8 @@ class AuthPage extends Component {
   }
 
   render() {
-    const { authRequired, loginError } = this.props;
-    const { email, username, password } = this.state;
+    const { authRequired } = this.props;
+    const { email, username, password, loginError } = this.state;
     const loginDisabled = !this.validateForm();
 
     if (authRequired) {
@@ -133,22 +139,23 @@ class AuthPage extends Component {
           }>
           <form className={ styles.authForm } >
             <div className={ styles.authInputGroup }>
-              <div className={ styles.authInputLabelAndError}>
-              </div>
+              { (loginError == 'E-mail not found' || loginError == 'Username not found') &&
+                <div className={ styles.authInputError }>Not found</div>
+              }
               <Input
                 className={ styles.usernameOrEmail }
                 type="text"
                 placeholder="Username or E-mail"
                 autocomplete="on"
                 onChange={ this.handleUsernameOrEmailChange }
-                onKeyPress={ this.handleKeyPress }
                 autofocus={ true }
                 onSubmit={ this.submit }
               />
             </div>
             <div className={ styles.authInputGroup }>
-              <div className={ styles.authInputLabelAndError}>
-              </div>
+              { (loginError == 'Incorrect credentials') &&
+                <div className={ styles.authInputError }>Incorrect</div>
+              }
               <Input
                 className={ styles.password }
                 type="password"

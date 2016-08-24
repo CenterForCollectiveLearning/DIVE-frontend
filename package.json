@@ -68,7 +68,8 @@
     "webpack": "^1.12.1",
     "webpack-dev-server": "^1.11.0",
     "webpack-isomorphic-tools": "^0.8.8",
-    "whatwg-fetch": "^0.11.0"
+    "whatwg-fetch": "^0.11.0",
+    "zxcvbn": "^4.3.0"
   },
   "scripts": {
     "start": "node buildenv && node server.js",

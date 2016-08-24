@@ -22,11 +22,40 @@
 .authForm
   width: 100%
 
+  .generalAuthError
+    font-size: 12px
+    color: $red
+    margin-top: 15px
+
+  .authInputError
+    +smallCaps
+    position: absolute
+    background-color: #8E2323
+    right: 0px
+    color: white
+    height: 40px
+    padding: 0 10px
+    border-radius: 0 2px 2px 0
+    line-height: 41px
+
+  .weak
+    background-color: #8E2323
+
+  .good
+    background-color: #ffb400
+
+  .strong
+    background-color: #3fb34f
+
   .authInputGroup
+    position: relative
     margin-top: 10px
 
     &:first-of-type
       margin-top: 0px
+
+    &:last-of-type
+      margin-bottom: 15px
 
     .authInputLabelAndError
       display: flex
@@ -41,7 +70,7 @@
 
       .error
         margin-left: auto
-        color: #8E2323
+        color:
         display: flex
 
     input[type="text"], input[type="password"]

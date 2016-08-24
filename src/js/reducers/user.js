@@ -12,30 +12,34 @@ import {
 
 import cookie from 'react-cookie';
 
+const baseError = {
+  login: '',
+  logout: '',
+  register: {
+    email: null,
+    username: null
+  }
+};
+
 const baseState = {
   rememberToken: cookie.load('remember_token') || null,
   isAuthenticated: cookie.load('remember_token') ? true : false,
   username: cookie.load('username') || '',
   email: cookie.load('email') || '',
   id: cookie.load('user_id') || '',
-  error: {
-    login: '',
-    logout: '',
-    register: {
-      email: null,
-      username: null
-    }
-  },
+  error: baseError,
   success: {
     login: '',
     logout: '',
     register: ''
   },
   properties: {}
-}
+};
 
 export default function user(state = baseState, action) {
   switch (action.type) {
+    case REQUEST_LOGIN_USER:
+      return { ...state, error: baseError };
     case RECEIVE_LOGIN_USER:
       return { ...state,
         success: { login: action.message, register: '' },
