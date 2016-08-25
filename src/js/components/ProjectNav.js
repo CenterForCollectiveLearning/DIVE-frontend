@@ -11,7 +11,7 @@ import RaisedButton from './Base/RaisedButton';
 import Tabs from './Base/Tabs';
 import Tab from './Base/Tab';
 import TabGroup from './Base/TabGroup';
-import ProjectSettingsModal from './ProjectSettingsModal';
+import ProjectSettingsModal from './Base/ProjectSettingsModal';
 
 import Logo from '../../assets/DIVE_logo_white.svg?name=Logo';
 

@@ -3,7 +3,8 @@ import {
   RECEIVE_PROJECT,
   CREATE_PROJECT,
   CREATED_PROJECT,
-  SUBMIT_PROJECT,
+  UPDATE_PROJECT,
+  UPDATED_PROJECT,
   REQUEST_USER_PROJECTS,
   RECEIVE_USER_PROJECTS,
   REQUEST_PRELOADED_PROJECTS,
@@ -114,14 +115,14 @@ export function createProject(user_id, title, description) {
 function deleteProjectDispatcher(projectId) {
   return {
     type: DELETE_PROJECT,
-    projectId
+    projectId: projectId
   };
 }
 
 function deletedProjectDispatcher(projectId) {
   return {
     type: DELETED_PROJECT,
-    projectId
+    projectId: projectId.id
   };
 }
 
@@ -129,9 +130,18 @@ function goHome() {
   window.location.href = '/';
 }
 
+export function deleteProjectNoReturnHome(projectId) {
+  return dispatch => {
+    dispatch(deleteProjectDispatcher(projectId));
+    return fetch(`/projects/v1/projects/${ projectId }`, {
+      method: 'delete'
+    }).then(json => dispatch(deletedProjectDispatcher(json)))
+  }
+}
+
 export function deleteProject(projectId) {
   return dispatch => {
-    dispatch(deleteProjectDispatcher());
+    dispatch(deleteProjectDispatcher(projectId));
     return fetch(`/projects/v1/projects/${ projectId }`, {
       method: 'delete'
     }).then(json => dispatch(deletedProjectDispatcher(json)))
@@ -163,22 +173,30 @@ function fetchProject(projectId) {
   };
 }
 
-function submitProjectDispatcher(projectId) {
+function updateProjectDispatcher(projectId) {
   return {
-    type: SUBMIT_PROJECT,
+    type: UPDATE_PROJECT,
     projectId: projectId
   };
 }
 
-export function submitProject(projectId, params) {
+function updatedProjectDispatcher(json) {
+  return {
+    type: UPDATED_PROJECT,
+    projectProperties: json,
+    receivedAt: Date.now()
+  };
+}
+
+export function updateProject(projectId, params) {
   return dispatch => {
-    dispatch(submitProjectDispatcher(projectId));
+    dispatch(updateProjectDispatcher(projectId));
     return fetch('/projects/v1/projects/' + projectId, {
       method: 'put',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     })
-      .then(json => dispatch(receiveProjectDispatcher(json)));
+      .then(json => dispatch(updatedProjectDispatcher(json)));
   };
 }
 

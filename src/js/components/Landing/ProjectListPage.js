@@ -7,6 +7,7 @@ import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectSt
 
 import ProjectButton from '../Base/ProjectButton';
 import RaisedButton from '../Base/RaisedButton';
+import Loader from '../Base/Loader';
 import Footer from './Footer';
 
 
@@ -43,7 +44,7 @@ export class ProjectListPage extends Component {
 
   render() {
     const { projects, userId, user } = this.props;
-    const { userProjects, preloadedProjects } = projects;
+    const { userProjects, isFetchingUserProjects } = projects;
 
     return (
       <DocumentTitle title='DIVE | Projects'>
@@ -57,7 +58,7 @@ export class ProjectListPage extends Component {
                 className={ styles.uploadButton } />
             </div>
           </div>
-          { userId && userProjects.length > 0 &&
+          { !isFetchingUserProjects && userId && userProjects.length > 0 &&
             <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
               <div className={ styles.projectListContainer }>
                 { projects.isFetching &&
@@ -69,16 +70,16 @@ export class ProjectListPage extends Component {
               </div>
             </div>
           }
-          { preloadedProjects.length > 0 &&
-            <div className={ styles.projectsContainer + ' ' + styles.preloadedProjectsContainer }>
-              <div className={ styles.projectListContainer }>
-                { projects.isFetching &&
-                  <div className={ styles.watermark }>Fetching projects...</div>
-                }
-                { preloadedProjects.map((project) =>
-                  <ProjectButton project={ project } key={ `project-button-id-${ project.id }` }/>
-                )}
+          { !isFetchingUserProjects && userProjects.length == 0 &&
+            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+              <div className={ styles.watermark }>
+                You have no projects &#x2639;
               </div>
+            </div>
+          }
+          { isFetchingUserProjects && userId &&
+            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+              <Loader text='Loading your projects' />
             </div>
           }
         </div>
