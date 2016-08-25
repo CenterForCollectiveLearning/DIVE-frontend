@@ -15,7 +15,7 @@ export class LandingPage extends Component {
   componentWillMount() {
     const { user, push } = this.props;
     if (user.isAuthenticated) {
-      push('/projects')
+      // push('/projects')
     }
   }
   _onClickLogo(){

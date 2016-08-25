@@ -30,6 +30,7 @@ class AuthPage extends Component {
     };
 
     this.goHome = this.goHome.bind(this);
+    this.clickForgot = this.clickForgot.bind(this);
     this.clickRegister = this.clickRegister.bind(this);
     this.closeLoginPage = this.closeLoginPage.bind(this);
     this.handleUsernameOrEmailChange = this.handleUsernameOrEmailChange.bind(this);
@@ -93,6 +94,15 @@ class AuthPage extends Component {
     push('/register')
   }
 
+  clickRegister() {
+    const { push } = this.props;
+    push('/register')
+  }
+
+  clickForgot() {
+    alert('Functionality in progress');
+  }
+
   handleRememberMeChange(e) {
     this.setState({ rememberMe: !this.state.rememberMe });
   }
@@ -143,8 +153,8 @@ class AuthPage extends Component {
                 <div className={ styles.authInputError }>Not found</div>
               }
               <Input
-                className={ styles.usernameOrEmail }
                 type="text"
+                className={ styles.usernameOrEmail }
                 placeholder="Username or E-mail"
                 autocomplete="on"
                 onChange={ this.handleUsernameOrEmailChange }
@@ -174,7 +184,7 @@ class AuthPage extends Component {
                     onSubmit={ this.submit }
                   />
                   <span className={ styles.authInputLabel }>Remember Me</span>
-                  <span className={ styles.forgotPassword }>Forgot Password?</span>
+                  <span className={ styles.forgotPassword } onClick={ this.clickForgot }>Forgot Password?</span>
                 </div>
               </div>
             </div>

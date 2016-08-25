@@ -27,7 +27,6 @@ class AuthPage extends Component {
       email: '',
       username: '',
       password: '',
-      confirmPassword: '',
       emailAlreadyTaken: null,
       usernameAlreadyTaken: null,
       usernameTooShort: null,
@@ -42,6 +41,7 @@ class AuthPage extends Component {
     };
 
     this.submit = this.submit.bind(this);
+    this.validateForm = this.validateForm.bind(this);
   }
 
   closeRegistrationPage() {
@@ -87,8 +87,10 @@ class AuthPage extends Component {
     } else if (username.length > 65 ){
       this.setState({ usernameTooLong: true });
     } else {
-      this.setState({ usernameTooShort: false });
-      this.setState({ usernameTooLong: false });
+      this.setState({
+        usernameTooShort: false,
+        usernameTooLong: false
+      });
     }
   }
 
@@ -105,13 +107,6 @@ class AuthPage extends Component {
     });
   }
 
-  handleConfirmPasswordChange(e) {
-    const confirmPassword = e.target.value;
-    const passwordMatching = (confirmPassword == this.state.password)
-    this.sanitizeBackendErrors();
-    this.setState({ passwordMatching: passwordMatching, confirmPassword: confirmPassword});
-  }
-
   _clickLogin() {
     const { push } = this.props;
     push('/login')
@@ -125,10 +120,35 @@ class AuthPage extends Component {
     }
   };
 
+  validateForm() {
+    const {
+      emailError,
+      usernameError,
+      email,
+      emailValid,
+      username,
+      usernameTooLong,
+      usernameTooShort,
+      password
+    } = this.state;
+
+    const validForm = (email && username && password && emailValid) && !(emailError || usernameError || usernameTooShort || usernameTooLong);
+    return validForm;
+  }
+
   submit() {
     const { registerUser } = this.props;
-    const { email, username, password } = this.state;
-    registerUser(email, username, password);
+    const {
+      email,
+      username,
+      password
+    } = this.state;
+
+    const validForm = this.validateForm();
+
+    if (validForm) {
+      registerUser(email, username, password);
+    }
   }
 
   render() {
@@ -142,13 +162,11 @@ class AuthPage extends Component {
       usernameTooLong,
       usernameTooShort,
       password,
-      confirmPassword,
-      passwordMatching,
       passwordScore,
       passwordFeedbackWarning,
       passwordFeedbackSuggestions
     } = this.state;
-    const disabledRegister = !email || !username || !password || !emailValid || usernameTooShort || usernameTooLong || !passwordMatching;
+    const validForm = this.validateForm();
 
     if (authRequired) {
       openModal();
@@ -172,7 +190,7 @@ class AuthPage extends Component {
             </div>
           }>
 
-          <form className={ styles.authForm } onSubmit={ this.submit.bind(this) }>
+          <form className={ styles.authForm } onSubmit={ this.submit }>
             <div className={ styles.authInputGroup }>
               { (email && email.length > 3 && !emailValid) &&
                 <div className={ styles.authInputError }>Invalid</div>
@@ -188,6 +206,7 @@ class AuthPage extends Component {
                 className={ styles.email }
                 placeholder="E-mail Address"
                 autocomplete="on"
+                autofocus={ true }
                 onChange={ this.handleEmailChange.bind(this) }
                 onSubmit={ this.submit }
               />
@@ -222,22 +241,11 @@ class AuthPage extends Component {
               />
             </div>
 
-            <div className={ styles.authInputGroup }>
-              { (password && confirmPassword && !passwordMatching) && <div className={ styles.authInputError }>Not Matching</div> }
-              <Input
-                type="password"
-                className={ styles.password }
-                placeholder="Confirm Password"
-                onChange={ this.handleConfirmPasswordChange.bind(this) }
-                onSubmit={ this.submit }
-              />
-            </div>
-
             <RaisedButton
               primary
               className={ styles.submitButton }
               minWidth={ 100 }
-              disabled={ disabledRegister }
+              disabled={ !validForm }
               onClick={ this.submit }>
               Create your account
             </RaisedButton>

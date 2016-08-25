@@ -38,10 +38,14 @@ export class HomePage extends Component {
   }
 
   _onUploadClick() {
-    const userId = this.props.userId;
-    const projectTitle = 'Project Title';
-    const projectDescription = 'Project Description'
-    this.props.createProject(userId, projectTitle, projectDescription);
+    const { user, userId, push, createProject } = this.props;
+    if (user.isAuthenticated) {
+      const projectTitle = 'Project Title';
+      const projectDescription = 'Project Description'
+      createProject(userId, projectTitle, projectDescription);
+    } else {
+      push('/register')
+    }
   }
 
   render() {
@@ -89,14 +93,9 @@ export class HomePage extends Component {
             <div className={ styles.sectionHeader }>About</div>
             <div className={ styles.aboutContent }>
               <div className={ styles.textBox }>
-                <div className={ styles.textBoxLeft}>
-                  <p>DIVE automates data processing, lowering the barrier to understanding data so you can focus on interpreting results, not technical minutiae.</p>
-                  <p>DIVE makes visualizing your data ridiculously easy. We automatically show recommended visualizations first, based on effectiveness, expressiveness, and statistical properties like correlation, entropy, and gini.</p>
-                </div>
-                <div className={ styles.textBoxRight}>
-                  <p>Trying to answer a specific question? Just select which columns in your data you'd like to visualize, and pick a visualization style — we'll take care of the rest.</p>
-                  <p>DIVE was created by <a target="_blank" href="https://twitter.com/KevinZengHu">Kevin Hu</a> and <a target="_blank" href="https://twitter.com/cesifoti">César Hidalgo</a> in the <a target="_blank" href="http://macro.media.mit.edu">Macro Connections Group</a> at the <a target="_blank" href="http://media.mit.edu">MIT Media Lab</a>.</p>
-                </div>
+                <p>DIVE lowers the barrier to understanding data so you can focus on interpreting results, not technical minutiae. We automatically show recommended visualizations first, based on effectiveness, expressiveness, and statistical properties like correlation, entropy, and gini.</p>
+                <p>Trying to answer a specific question? Just select which columns in your data you'd like to visualize, and pick a visualization style — we'll take care of the rest.</p>
+                <p>DIVE was created by <a target="_blank" href="https://twitter.com/KevinZengHu">Kevin Hu</a> and <a target="_blank" href="https://twitter.com/cesifoti">César Hidalgo</a> in the <a target="_blank" href="http://macro.media.mit.edu">Macro Connections Group</a> at the <a target="_blank" href="http://media.mit.edu">MIT Media Lab</a>.</p>
               </div>
               <div className={ styles.mugshotBox }>
                 <div className={ styles.mugshots }>
@@ -141,7 +140,7 @@ export class HomePage extends Component {
 
 function mapStateToProps(state) {
   const { project, projects, user } = state;
-  return { project, projects, userId: user.id };
+  return { project, projects, user, userId: user.id };
 }
 
 export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, push })(HomePage);
