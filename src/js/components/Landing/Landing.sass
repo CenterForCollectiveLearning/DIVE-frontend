@@ -160,7 +160,7 @@
     border-bottom: $ui-line-grey
 
   &.preloadedProjectsContainer
-    background-color: #light-grey
+    background-color: $landing-grey-background
     border-bottom: $ui-line-grey
     flex-grow: 1
     flex-shrink: 0
@@ -280,3 +280,20 @@
 
     .macroConnectionsLogo
       padding-right: 40px
+
+.storyPage
+  flex-shrink: 0
+  .sectionHeader
+    text-align: start
+    width: 600px
+    padding-bottom: 8px
+    border-bottom: 1px solid black
+  .section
+    +storyCopy
+    border: none
+    &:nth-child(even)
+      background-color: $landing-grey-background
+
+    .sectionContent
+      width: 600px
+      max-width: 600px
