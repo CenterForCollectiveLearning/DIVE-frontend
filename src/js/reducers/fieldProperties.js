@@ -5,6 +5,7 @@ import {
   DELETED_INTERACTION_TERM,
   RECEIVE_SET_FIELD_TYPE,
   RECEIVE_SET_FIELD_IS_ID,
+  RECEIVE_SET_FIELD_COLOR,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -58,6 +59,14 @@ export default function fieldProperties(state=baseState, action) {
           action.fieldProperty : fieldProperty
       );
       return { ...state, items: fieldProperties, updatedAt: action.receivedAt };
+
+    case RECEIVE_SET_FIELD_COLOR:
+      var fieldProperties = state.items.slice().map((fieldProperty) =>
+        fieldProperty.id == action.fieldProperty.id ?
+          action.fieldProperty : fieldProperty
+      );
+      return { ...state, items: fieldProperties, updatedAt: action.receivedAt };
+
 
     case RECEIVE_CREATED_INTERACTION_TERM:
       const updatedInteractionTerms = state.interactionTerms.slice();

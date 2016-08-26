@@ -1,21 +1,64 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { ChromePicker } from 'react-color';
 
 import styles from './Datasets.sass';
 import DropDownMenu from '../Base/DropDownMenu';
 import ColumnChart from '../Visualizations/Charts/ColumnChart';
 import Histogram from '../Visualizations/Charts/Histogram';
-import { setFieldIsId } from '../../actions/FieldPropertiesActions';
+import { setFieldIsId, setFieldColor } from '../../actions/FieldPropertiesActions';
 import { numberWithCommas, getRoundedString } from '../../helpers/helpers.js';
 
 
-export class DatasetMetadataCell extends Component {
-  constructor (props) {
+class DatasetMetadataCell extends Component {
+  constructor(props) {
     super(props);
 
     this.state = {
-      isId: false
-    }
+      color: '#007BD7',
+      isId: false,
+      displayColorPicker: false
+    };
+
+    this.onColorPickerClick = this.onColorPickerClick.bind(this);
+    this.onColorPickerClose = this.onColorPickerClose.bind(this);
+    this.onColorPickerChange = this.onColorPickerChange.bind(this);
+    this.onIDCheckboxChange = this.onIDCheckboxChange.bind(this);
+  }
+
+  componentWillMount() {
+    const { fieldProperty, color } = this.props;
+    const { isId } = fieldProperty;
+
+    this.setState({
+      color: color,
+      isId: isId
+    })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { fieldProperty, color } = nextProps;
+    const { isId } = fieldProperty;
+
+    this.setState({
+      color: color,
+      isId: isId
+    })
+  }
+
+  onColorPickerClick() {
+    this.setState({ displayColorPicker: !this.state.displayColorPicker });
+  }
+
+  onColorPickerClose() {
+    this.setState({ displayColorPicker: false });
+  }
+
+  onColorPickerChange(color) {
+    const { projectId, fieldProperty, setFieldColor } = this.props;
+    const { id: fieldId } = fieldProperty;
+    this.setState({ color: color.hex });
+    setFieldColor( projectId, fieldId, this.state.color );
   }
 
   onIDCheckboxChange() {
@@ -26,9 +69,9 @@ export class DatasetMetadataCell extends Component {
   }
 
   render() {
-    const { projectId, datasetId, fieldProperty, color } = this.props;
-    const { id, generalType, vizData, typeScores, isId, isChild, isUnique, stats, uniqueValues } = fieldProperty;
-    this.state.isId = isId;
+    const { projectId, datasetId, fieldProperty } = this.props;
+    const { id, generalType, vizData, typeScores, isChild, isUnique, stats, uniqueValues } = fieldProperty;
+    const { color, isId } = this.state;
 
     const colors = [ color ];
     const showTypeScores = false;
@@ -112,17 +155,17 @@ export class DatasetMetadataCell extends Component {
 
     const quantitativeOptions = {
       ...options,
-      tooltip: {
-        isHtml: true
-      },
+      // tooltip: {
+      //   isHtml: true
+      // },
       // colors: ['#579AD6']
     }
 
     const temporalOptions = {
       ...options,
-      tooltip: {
-        isHtml: true
-      },
+      // tooltip: {
+      //   isHtml: true
+      // },
       // colors: ['#F3595C']
     }
 
@@ -132,7 +175,7 @@ export class DatasetMetadataCell extends Component {
         <div>
           { vizData &&
             <ColumnChart
-              chartId={ `field-bar-${ id }` }
+              chartId={ `field-bar-${ id }-${ color }` }
               data={ vizData['visualize'] }
               isMinimalView={ true }
               options={ categoricalOptions }
@@ -160,6 +203,7 @@ export class DatasetMetadataCell extends Component {
               onChange={ this.onIDCheckboxChange.bind(this, projectId, datasetId, id) }
             />
             <span>ID</span>
+            <div>Change Color</div>
           </div>
         </div>
     } else if ( generalType == 'q' ) {
@@ -167,7 +211,7 @@ export class DatasetMetadataCell extends Component {
         <div>
           { vizData &&
             <Histogram
-              chartId={ `field-hist-${ id }` }
+              chartId={ `field-hist-${ id }-${ color }` }
               data={ vizData['visualize'] }
               bins={ vizData['bins'] }
               isMinimalView={ true }
@@ -197,6 +241,7 @@ export class DatasetMetadataCell extends Component {
               onChange={ this.onIDCheckboxChange.bind(this, projectId, datasetId, id) }
             />
             <span>ID</span>
+            <div onClick={ this.onColorPickerClick }>Change Color</div>
           </div>
         </div>
     } else if ( generalType == 't' ) {
@@ -204,7 +249,7 @@ export class DatasetMetadataCell extends Component {
       <div>
         { vizData &&
           <Histogram
-            chartId={ `field-hist-time-${ id }` }
+            chartId={ `field-hist-time-${ id }-${ color }` }
             data={ vizData['visualize'] }
             bins={ vizData['bins'] }
             isMinimalView={ true }
@@ -225,12 +270,32 @@ export class DatasetMetadataCell extends Component {
             ) }
           </div>
         }
+
       </div>
     }
-
+    const popover = {
+      position: 'relative',
+      top: '30px',
+      zIndex: '2',
+    }
+    const cover = {
+      position: 'fixed',
+      top: '0px',
+      right: '0px',
+      bottom: '0px',
+      left: '0px',
+    }
     return (
+
       <div>
         { fieldContent }
+        { this.state.displayColorPicker ? <div style={ popover }>
+          <div style={ cover } onClick={ this.onColorPickerClose }/>
+          <ChromePicker
+            color={ color }
+            onChangeComplete={ this.onColorPickerChange }
+          />
+        </div> : null }
       </div>
     );
   }
@@ -246,10 +311,13 @@ DatasetMetadataCell.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  const { project } = state;
+  const { project, fieldProperties } = state;
   return {
-    projectId: project.properties.id,
+    projectId: project.properties.id
   };
 }
 
-export default connect(mapStateToProps, { setFieldIsId })(DatasetMetadataCell);
+export default connect(mapStateToProps, {
+  setFieldIsId,
+  setFieldColor
+})(DatasetMetadataCell);
