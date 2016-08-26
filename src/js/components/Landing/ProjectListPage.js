@@ -60,6 +60,7 @@ export class ProjectListPage extends Component {
           </div>
           { !isFetchingUserProjects && userId && userProjects.length > 0 &&
             <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+              <div className={ styles.projectListSidebar }></div>
               <div className={ styles.projectListContainer }>
                 { projects.isFetching &&
                   <div className={ styles.watermark }>Fetching projects...</div>
@@ -72,6 +73,7 @@ export class ProjectListPage extends Component {
           }
           { !isFetchingUserProjects && userProjects.length == 0 &&
             <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+              <div className={ styles.projectListSidebar }></div>
               <div className={ styles.watermark }>
                 You have no projects &#x2639;
               </div>
@@ -79,6 +81,7 @@ export class ProjectListPage extends Component {
           }
           { isFetchingUserProjects && userId &&
             <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+              <div className={ styles.projectListSidebar }></div>
               <Loader text='Loading your projects' />
             </div>
           }

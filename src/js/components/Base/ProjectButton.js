@@ -1,6 +1,7 @@
 import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import { deleteProjectNoReturnHome } from '../../actions/ProjectActions.js';
 
@@ -13,6 +14,7 @@ class ProjectButton extends Component {
   constructor(props) {
     super(props);
 
+    this.onClickProjectButton = this.onClickProjectButton.bind(this);
     this.onClickDeleteProject = this.onClickDeleteProject.bind(this);
     this.onClickProjectSettings = this.onClickProjectSettings.bind(this);
     this.closeProjectSettingsModal = this.closeProjectSettingsModal.bind(this)
@@ -23,8 +25,6 @@ class ProjectButton extends Component {
   }
 
   onClickProjectSettings(e) {
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
     this.setState({ projectSettingsModalOpen: true });
   }
 
@@ -32,9 +32,13 @@ class ProjectButton extends Component {
     this.setState({ projectSettingsModalOpen: false });
   }
 
+  onClickProjectButton() {
+    const { project } = this.props;
+    this.props.push(`/projects/${ project.id }/datasets`);
+  }
+
   onClickDeleteProject() {
     const { project, deleteProjectNoReturnHome } = this.props;
-    console.log('Deleting project', project.id)
     deleteProjectNoReturnHome(project.id);
   }
 
@@ -43,7 +47,7 @@ class ProjectButton extends Component {
     const { id, title, description, numDatasets, includedDatasets, numSpecs, numDocuments, creationDate, updateDate } = project;
 
     return (
-      <div className={ styles.projectButton }>
+      <div className={ styles.projectButton } onClick={ this.onClickProjectButton }>
         <div className={ styles.projectTop }>
           <div className={ styles.pullLeft }>
             <div className={ styles.projectTitle }>{ title }</div>
@@ -128,4 +132,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { deleteProjectNoReturnHome })(ProjectButton);
+export default connect(mapStateToProps, { deleteProjectNoReturnHome, push })(ProjectButton);
