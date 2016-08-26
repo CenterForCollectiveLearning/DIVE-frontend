@@ -12,7 +12,6 @@ import RaisedButton from './Base/RaisedButton';
 import Tabs from './Base/Tabs';
 import Tab from './Base/Tab';
 import TabGroup from './Base/TabGroup';
-import ProjectSettingsModal from './ProjectSettingsModal';
 
 import Logo from '../../assets/DIVE_logo_white.svg?name=Logo';
 
@@ -21,7 +20,6 @@ export class ProjectTopBar extends Component {
     super(props);
 
     this.onSelectProject = this.onSelectProject.bind(this);
-    this.onClickProjectSettings = this.onClickProjectSettings.bind(this);
     this.onSelectDataset = this.onSelectDataset.bind(this);
 
     this.state = {
@@ -72,19 +70,10 @@ export class ProjectTopBar extends Component {
     }
   }
 
-
-
   onSelectProject(projectId) {
     window.location.href = `/projects/${ projectId }/datasets`;
   }
 
-  onClickProjectSettings() {
-    this.setState({ projectSettingsModalOpen: true });
-  }
-
-  closeProjectSettingsModal() {
-    this.setState({ projectSettingsModalOpen: false });
-  }
 
   render() {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
@@ -154,14 +143,6 @@ export class ProjectTopBar extends Component {
               </div>
             </div>
           </div>
-        }
-
-        { this.state.projectSettingsModalOpen &&
-          <ProjectSettingsModal
-            projectName={ project.properties.title }
-            projectDescription={ project.properties.description }
-            projectId={ project.properties.id }
-            closeAction={ this.closeProjectSettingsModal.bind(this) }/>
         }
       </div>
     );

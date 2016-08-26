@@ -1,21 +1,63 @@
 import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+
+import { deleteProjectNoReturnHome } from '../../actions/ProjectActions.js';
+
 import styles from './ProjectButton.sass';
 
-export default class ProjectButton extends Component {
+import RaisedButton from './RaisedButton';
+import ProjectSettingsModal from './ProjectSettingsModal';
+
+class ProjectButton extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onClickProjectButton = this.onClickProjectButton.bind(this);
+    this.onClickDeleteProject = this.onClickDeleteProject.bind(this);
+    this.onClickProjectSettings = this.onClickProjectSettings.bind(this);
+    this.closeProjectSettingsModal = this.closeProjectSettingsModal.bind(this)
+
+    this.state = {
+      projectSettingsModalOpen: false,
+    };
+  }
+
+  onClickProjectSettings(e) {
+    this.setState({ projectSettingsModalOpen: true });
+  }
+
+  closeProjectSettingsModal() {
+    this.setState({ projectSettingsModalOpen: false });
+  }
+
+  onClickProjectButton() {
+    const { project } = this.props;
+    this.props.push(`/projects/${ project.id }/datasets`);
+  }
+
+  onClickDeleteProject() {
+    const { project, deleteProjectNoReturnHome } = this.props;
+    deleteProjectNoReturnHome(project.id);
+  }
+
   render() {
     const { project, className, format } = this.props;
     const { id, title, description, numDatasets, includedDatasets, numSpecs, numDocuments, creationDate, updateDate } = project;
 
     return (
-      <a href={ `/projects/${ id }/datasets` } className={ styles.projectButton }>
+      <div className={ styles.projectButton } onClick={ this.onClickProjectButton }>
         <div className={ styles.projectTop }>
           <div className={ styles.pullLeft }>
             <div className={ styles.projectTitle }>{ title }</div>
           </div>
-          <div className={ styles.pullRight }>
-            { !project.preloaded && <i className="fa fa-cog"></i> }
-          </div>
+          { !project.preloaded &&
+            <div className={ styles.pullRight }>
+              <RaisedButton icon={ true } onClick={ this.onClickProjectSettings }><i className="fa fa-cog" /></RaisedButton>
+              <RaisedButton icon={ true } onClick={ this.onClickDeleteProject }><i className="fa fa-trash" /></RaisedButton>
+            </div>
+          }
         </div>
         { (description && description !== 'Project Description') &&
         <div className={ styles.projectMiddle }>
@@ -64,7 +106,14 @@ export default class ProjectButton extends Component {
           </div>
         </div>
         }
-      </a>
+        { this.state.projectSettingsModalOpen &&
+          <ProjectSettingsModal
+            projectName={ title }
+            projectDescription={ description }
+            projectId={ id }
+            closeAction={ this.closeProjectSettingsModal }/>
+        }
+      </div>
     )
   }
 }
@@ -78,3 +127,9 @@ ProjectButton.propTypes = {
 ProjectButton.defaultProps = {
   format: 'list'
 }
+
+function mapStateToProps(state) {
+  return {};
+}
+
+export default connect(mapStateToProps, { deleteProjectNoReturnHome, push })(ProjectButton);

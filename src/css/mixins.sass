@@ -77,7 +77,7 @@ $center-pane-width: calc(100% - #{$right-sidebar-width})
   color: $black
 
   font-size: $font-size
-  font-weight: 500
+  font-weight: 600
   cursor: pointer
   text-decoration: none
 
@@ -97,14 +97,24 @@ $center-pane-width: calc(100% - #{$right-sidebar-width})
   color: $black
   font-size: $font-size
   a
-    +linkStyle(font-size)
+    +linkStyle($font-size)
 
 =regularCopy
-  $font-size: 14px
+  $font-size: 16px
+  line-height: 20px
   color: $black
   font-size: $font-size
   a
-    +linkStyle(font-size)
+    +linkStyle($font-size)
+
+=storyCopy
+  $font-size: 16px
+  font-family: Source Sans Pro
+  line-height: 20px
+  color: $black
+  font-size: $font-size
+  a
+    +linkStyle($font-size)
 
 =smallCaps
   +noSelect
@@ -115,6 +125,7 @@ $center-pane-width: calc(100% - #{$right-sidebar-width})
 
 =watermark
   +titleText
+  font-family: Source Sans Pro
   color: $small-caps-grey
   display: flex
   justify-content: center

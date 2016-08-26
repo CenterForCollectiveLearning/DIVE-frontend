@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { submitProject, deleteProject } from '../actions/ProjectActions.js';
-import styles from './App/App.sass';
+import { updateProject, deleteProject } from '../../actions/ProjectActions.js';
+import styles from '../App/App.sass';
 
-import BlockingModal from './Base/BlockingModal';
-import RaisedButton from './Base/RaisedButton';
-import Input from './Base/Input';
-import TextArea from './Base/TextArea';
+import BlockingModal from './BlockingModal';
+import RaisedButton from './RaisedButton';
+import Input from './Input';
+import TextArea from './TextArea';
 
 class ProjectSettingsModal extends Component {
   constructor(props) {
@@ -20,10 +20,10 @@ class ProjectSettingsModal extends Component {
   }
 
   submit() {
-    const { projectId, submitProject, closeAction } = this.props;
+    const { projectId, updateProject, closeAction } = this.props;
     const { projectName, projectDescription } = this.state;
 
-    submitProject(projectId, { title: projectName, description: projectDescription });
+    updateProject(projectId, { title: projectName, description: projectDescription });
     closeAction();
   }
 
@@ -96,4 +96,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { submitProject, deleteProject })(ProjectSettingsModal);
+export default connect(mapStateToProps, { updateProject, deleteProject })(ProjectSettingsModal);

@@ -3,6 +3,8 @@ import {
   REQUEST_USER_PROJECTS,
   RECEIVE_PROJECT,
   CREATED_PROJECT,
+  DELETED_PROJECT,
+  UPDATED_PROJECT,
   RECEIVE_PRELOADED_PROJECTS,
   RECEIVE_USER_PROJECTS
 } from '../constants/ActionTypes';
@@ -18,16 +20,24 @@ export default function projects(state = {
   switch (action.type) {
     case RECEIVE_PROJECT, CREATED_PROJECT:
       if (action.projectProperties.preloaded) {
-        const { preloadedProjects } = state;
-        var preloadedProjectsUpdated = preloadedProjects.filter((project) => project.id != action.projectProperties.id);
+        var preloadedProjectsUpdated = state.preloadedProjects.filter((project) => project.id != action.projectProperties.id);
         preloadedProjectsUpdated.push(action.projectProperties);
         return { ...state, preloadedProjects: preloadedProjectsUpdated };
       }
 
+      var userProjectsUpdated = state.userProjects.filter((project) => project.id != action.projectProperties.id);
+      userProjectsUpdated.push(action.projectProperties);
+      return { ...state, userProjects: userProjectsUpdated };
+
+    case UPDATED_PROJECT:
       const { userProjects } = state;
       var userProjectsUpdated = userProjects.filter((project) => project.id != action.projectProperties.id);
       userProjectsUpdated.push(action.projectProperties);
       return { ...state, userProjects: userProjectsUpdated };
+
+    case DELETED_PROJECT:
+      var updatedUserProjects = state.userProjects.filter((project) => project.id != action.projectId);
+      return { ...state, userProjects: updatedUserProjects };
 
     case REQUEST_PRELOADED_PROJECTS:
       return { ...state, isFetchingPreloadedProjects: true };

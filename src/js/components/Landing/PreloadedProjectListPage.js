@@ -7,6 +7,7 @@ import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectSt
 
 import ProjectButton from '../Base/ProjectButton';
 import RaisedButton from '../Base/RaisedButton';
+import Loader from '../Base/Loader';
 import Footer from './Footer';
 
 
@@ -43,7 +44,7 @@ export class PreloadedProjectListPage extends Component {
 
   render() {
     const { projects, userId, user } = this.props;
-    const { userProjects, preloadedProjects } = projects;
+    const { userProjects, preloadedProjects, isFetchingPreloadedProjects } = projects;
 
     return (
       <DocumentTitle title='DIVE | Projects'>
@@ -57,16 +58,28 @@ export class PreloadedProjectListPage extends Component {
                 className={ styles.uploadButton } />
             </div>
           </div>
-          { preloadedProjects.length > 0 &&
-            <div className={ styles.projectsContainer + ' ' + styles.preloadedProjectsContainer }>
+          { !isFetchingPreloadedProjects && preloadedProjects.length > 0 &&
+            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
               <div className={ styles.projectListContainer }>
                 { projects.isFetching &&
                   <div className={ styles.watermark }>Fetching projects...</div>
                 }
-                { preloadedProjects.map((project) =>
+                { preloadedProjects.reverse().map((project) =>
                   <ProjectButton project={ project } key={ `project-button-id-${ project.id }` }/>
                 )}
               </div>
+            </div>
+          }
+          { !isFetchingPreloadedProjects && preloadedProjects.length == 0 &&
+            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+              <div className={ styles.watermark }>
+                No preloaded projects exist &#x2639;
+              </div>
+            </div>
+          }
+          { isFetchingPreloadedProjects &&
+            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+              <Loader text='Loading Preloaded projects' />
             </div>
           }
         </div>

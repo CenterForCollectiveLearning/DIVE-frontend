@@ -209,7 +209,6 @@ export class GalleryView extends Component {
                 </div>
               </div>
             }
-            <Loader text={ progress != null ? progress : 'Fetching visualizations…' } />
             { isFetching &&
               <Loader text={ progress != null ? progress : 'Fetching visualizations…' } />
             }
