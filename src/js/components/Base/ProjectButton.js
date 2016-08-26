@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { deleteProjectNoReturnHome } from '../../actions/ProjectActions.js';
+import { deleteProjectNoReturnHome, wipeProjectState } from '../../actions/ProjectActions.js';
 
 import styles from './ProjectButton.sass';
 
@@ -33,8 +33,9 @@ class ProjectButton extends Component {
   }
 
   onClickProjectButton() {
-    const { project } = this.props;
-    this.props.push(`/projects/${ project.id }/datasets`);
+    const { project, wipeProjectState, push } = this.props;
+    wipeProjectState();
+    push(`/projects/${ project.id }/datasets`);
   }
 
   onClickDeleteProject() {
@@ -132,4 +133,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { deleteProjectNoReturnHome, push })(ProjectButton);
+export default connect(mapStateToProps, { deleteProjectNoReturnHome, wipeProjectState, push })(ProjectButton);

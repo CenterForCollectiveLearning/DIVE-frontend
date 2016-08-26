@@ -2,14 +2,17 @@ import {
   REQUEST_PROJECT,
   RECEIVE_PROJECT,
   CREATE_PROJECT,
-  CREATED_PROJECT
+  CREATED_PROJECT,
+  WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
-export default function project(state = {
+const baseState = {
   isFetching: false,
   loaded: false,
   properties: {}
-}, action) {
+};
+
+export default function project(state = baseState, action) {
   switch (action.type) {
     case REQUEST_PROJECT:
       return { ...state, isFetching: true, properties: { id: action.projectId } };
@@ -22,6 +25,9 @@ export default function project(state = {
 
     case CREATED_PROJECT:
       return { ...state, isFetching: false, properties: action.projectProperties };
+
+    case WIPE_PROJECT_STATE:
+      return baseState;
 
     default:
       return state;
