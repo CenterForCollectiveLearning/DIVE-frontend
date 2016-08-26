@@ -41,8 +41,8 @@ export default class DatasetDataGrid extends Component {
       const createMetadataCellContent = function(value, fieldProperty, context) {
         const color = fieldProperties.fieldNameToColor[fieldProperty.name] || null;
         return (
-          <span key={ `cell-content-${ value }` } title={ value } className={ styles.cellContent }>
-            <DatasetMetadataCell key={ `metadata-cell-${ value }` } fieldProperty={ fieldProperty } color={ color }/>
+          <span key={ `cell-content-${ fieldProperty.id }` } title={ value } className={ styles.cellContent }>
+            <DatasetMetadataCell key={ `metadata-cell-${ fieldProperty.id }` } fieldProperty={ fieldProperty } color={ color }/>
           </span>
         );
       };

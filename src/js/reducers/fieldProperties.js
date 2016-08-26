@@ -47,26 +47,33 @@ export default function fieldProperties(state=baseState, action) {
 
     case RECEIVE_SET_FIELD_TYPE:
       var fieldProperties = state.items.slice().map((fieldProperty) =>
-        fieldProperty.id == action.fieldProperty.id ?
-          action.fieldProperty : fieldProperty
+        fieldProperty.id == action.fieldProperty.id ? action.fieldProperty : fieldProperty
       );
 
       return { ...state, items: fieldProperties, updatedAt: action.receivedAt };
 
     case RECEIVE_SET_FIELD_IS_ID:
       var fieldProperties = state.items.slice().map((fieldProperty) =>
-        fieldProperty.id == action.fieldProperty.id ?
-          action.fieldProperty : fieldProperty
+        fieldProperty.id == action.fieldProperty.id ? action.fieldProperty : fieldProperty
       );
       return { ...state, items: fieldProperties, updatedAt: action.receivedAt };
 
     case RECEIVE_SET_FIELD_COLOR:
       var fieldProperties = state.items.slice().map((fieldProperty) =>
-        fieldProperty.id == action.fieldProperty.id ?
-          action.fieldProperty : fieldProperty
+        fieldProperty.id == action.fieldProperty.id ? action.fieldProperty : fieldProperty
       );
-      return { ...state, items: fieldProperties, updatedAt: action.receivedAt };
 
+      var fieldNameToColor = {};
+      for (var i in fieldProperties) {
+        var fieldProperty = fieldProperties[i];
+        fieldNameToColor[fieldProperty['name']] = fieldProperty['color'];
+      }
+      return {
+        ...state,
+        items: fieldProperties,
+        fieldNameToColor: fieldNameToColor,
+        updatedAt: action.receivedAt
+      };
 
     case RECEIVE_CREATED_INTERACTION_TERM:
       const updatedInteractionTerms = state.interactionTerms.slice();

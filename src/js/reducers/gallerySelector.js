@@ -11,6 +11,7 @@ import {
   WIPE_PROJECT_STATE,
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_TYPE,
+  RECEIVE_SET_FIELD_COLOR,
   SET_GALLERY_QUERY_STRING
 } from '../constants/ActionTypes';
 
@@ -136,11 +137,16 @@ export default function gallerySelector(state = baseState, action) {
         updatedAt: action.receivedAt
       };
 
-    case RECEIVE_SET_FIELD_TYPE:
+    case RECEIVE_SET_FIELD_TYPE, RECEIVE_SET_FIELD_IS_ID, RECEIVE_SET_FIELD_COLOR:
       var fieldProperties = state.fieldProperties.slice().map((fieldProperty) =>
-        fieldProperty.id == action.fieldProperty.id ?
-          action.fieldProperty : fieldProperty
+        fieldProperty.id == action.fieldProperty.id ? action.fieldProperty : fieldProperty
       );
+
+      var fieldNameToColor = {};
+      for (var i in fieldProperties) {
+        var fieldProperty = fieldProperties[i];
+        fieldNameToColor[fieldProperty['name']] = fieldProperty['color'];
+      }
 
       return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
 
@@ -159,8 +165,6 @@ export default function gallerySelector(state = baseState, action) {
       const defaultSortSpecs = function (specA, specB) {
         return sortSpecsByFunction(selectedSortingFunction, specA, specB);
       };
-
-      console.log(action, action.specs, action.recommendationType);
 
       var allSpecs = action.specs;
       if (action.recommendationType.level && state.specs) {
