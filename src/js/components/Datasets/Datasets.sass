@@ -140,6 +140,7 @@
       height: 170px
       overflow-x: hidden
       overflow-y: auto
+      overflow: visible
 
       div
         width: 100%
@@ -152,10 +153,23 @@
 
       .toggles
         position: absolute
-        bottom: 5px
+        display: flex
+        flex-direction: row
+        bottom: 5px33
 
-        input
-          margin-left: 0px
+        .left
+          input
+            margin-left: 0px
+
+        .right
+          .colorPickerButton
+            cursor: pointer
+            border: 1px solid $ui-line-grey
+            border-radius: 10px
+            width: 15px
+            height: 15px
+            margin-right: 20px
+            margin-left: auto
 
 .row
   display: flex

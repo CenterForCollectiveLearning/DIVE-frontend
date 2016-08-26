@@ -7,7 +7,9 @@ import {
   REQUEST_SET_FIELD_TYPE,
   RECEIVE_SET_FIELD_TYPE,
   REQUEST_SET_FIELD_IS_ID,
-  RECEIVE_SET_FIELD_IS_ID
+  RECEIVE_SET_FIELD_IS_ID,
+  REQUEST_SET_FIELD_COLOR,
+  RECEIVE_SET_FIELD_COLOR,
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
@@ -205,5 +207,36 @@ export function setFieldIsId(projectId, fieldId, fieldIsId) {
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(json => dispatch(receiveSetFieldIsIdDispatcher(json)));
+  };
+}
+
+function requestSetFieldColorDispatcher(projectId, fieldId, fieldColor) {
+  return {
+    type: REQUEST_SET_FIELD_COLOR,
+    fieldId: fieldId,
+    fieldColor: fieldColor
+  };
+}
+
+function receiveSetFieldColorDispatcher(fieldProperty) {
+  return {
+    type: RECEIVE_SET_FIELD_COLOR,
+    fieldProperty: fieldProperty
+  };
+}
+
+export function setFieldColor(projectId, fieldId, fieldColor) {
+  const params = {
+    project_id: projectId,
+    color: fieldColor
+  };
+
+  return (dispatch) => {
+    dispatch(requestSetFieldColorDispatcher(projectId, fieldId, fieldColor));
+    return fetch(`/datasets/v1/fields/${ fieldId }`, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(json => dispatch(receiveSetFieldColorDispatcher(json)));
   };
 }
