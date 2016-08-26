@@ -25,6 +25,8 @@ class ProjectButton extends Component {
   }
 
   onClickProjectSettings(e) {
+    e.stopPropagation()
+    e.preventDefault()
     this.setState({ projectSettingsModalOpen: true });
   }
 
@@ -38,8 +40,10 @@ class ProjectButton extends Component {
     push(`/projects/${ project.id }/datasets`);
   }
 
-  onClickDeleteProject() {
+  onClickDeleteProject(e) {
     const { project, deleteProjectNoReturnHome } = this.props;
+    e.stopPropagation()
+    e.preventDefault()    
     deleteProjectNoReturnHome(project.id);
   }
 
