@@ -33,17 +33,17 @@
         font-weight: 600
         margin-top: 4px
 
-.landingPageContent
-  z-index: 10
-  justify-content: center
-  align-items: center
-  position: relative
+  .landingPageContent
+    z-index: 10
+    justify-content: center
+    align-items: center
+    position: relative
 
-  flex-grow: 1
+    flex-grow: 1
 
-  &.landingPageProjects
-    display: flex
-    flex-direction: column
+    &.landingPageProjects
+      display: flex
+      flex-direction: column
 
 .background
   position: absolute
@@ -58,10 +58,6 @@
   background-size: cover
   background-position: 50% 0%
 
-.video
-  height: 360px
-  iframe
-    border: none
 
 .ctaBox
   display: flex
@@ -88,7 +84,6 @@
     content: ""
     z-index: -1
 
-
   .primaryCopy, .secondaryCopy
     font-family: 'Roboto Condensed', 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
     text-align: center
@@ -101,7 +96,7 @@
     margin: 30px auto 5px
 
     color: white
-    font-size: 39px
+    font-size: 38px
     font-weight: 600
     text-transform: uppercase
     letter-spacing: 1px
@@ -113,6 +108,7 @@
     letter-spacing: 0.78px
     font-size: 23px
     font-weight: 300
+    color: white
 
   .ctaContainer
     display: flex
@@ -126,25 +122,14 @@
       padding: 0 60px
       font-size: 24px
 
-    .videoContainer
-      height: 360px
-      width: 640px
-      background-color: #0F2762
+  .video
+    height: 360px
+    width: 640px
 
-      iframe
-        border: none
+    iframe
+      border: none
 
-.section
-  display: flex
-  flex-grow: 1
-  flex-direction: column
-  align-items: center
 
-.sectionHeader
-  +landingHeader
-
-  width: 100%
-  margin: 0
 
 .projectsContainer
   width: 100%
@@ -168,12 +153,6 @@
   .secondaryCopy
     +landingHeader
     font-size: 16px
-
-  // .projectTypeContainer
-  //   display: flex
-  //   flex-direction: column
-  //   align-items: center
-  //   width: 100%
 
   .projectListSidebar
     border-right: 1px solid $ui-line-grey
@@ -213,23 +192,7 @@
     margin-left: 5px
     margin-right: 5px
 
-.spacer
-  display: flex
-  flex-grow: 1
-
 .aboutContainer
-  +regularCopy
-  padding: 60px 0 70px
-  background-color: $ui-line-grey
-  border-bottom: 1px solid $ui-line-grey
-  width: 100%
-
-  .aboutContent
-    display: flex
-    margin-top: 20px
-    flex-direction: column
-    color: $black
-    align-items: center
 
     .textBox
       +storyCopy
@@ -255,7 +218,7 @@
             text-align: center
 
             .mugCaptionName
-              font-weight: 500
+              font-weight: 600
 
             .mugCaptionRole
               margin-top: 2px
@@ -267,6 +230,8 @@
             overflow: hidden
 
 .footer
+  display: flex
+  align-items: center
   background-color: white
   width: 100%
   flex-direction: column
@@ -281,19 +246,40 @@
     .macroConnectionsLogo
       padding-right: 40px
 
-.storyPage
-  flex-shrink: 0
-  .sectionHeader
-    text-align: start
-    width: 600px
-    padding-bottom: 8px
-    border-bottom: 1px solid black
+.sections
+  width: 100%
+
   .section
     +storyCopy
+    display: flex
+    flex-grow: 1
+    flex-direction: column
+    align-items: center
+    width: 100%
+    flex-shrink: 0
     border: none
+
+    .sectionHeader
+      +headerText
+      font-family: 'Roboto Condensed', 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
+      font-weight: 600
+      text-transform: uppercase
+      text-align: start
+      width: 700px
+      padding-bottom: 8px
+      border-bottom: 1px solid black
+
+    .sectionContent
+      width: 500px
+      max-width: 500px
+      text-align: justify
+
+  .contentSection
+    padding: 60px 0
+    background-color: $white
+
     &:nth-child(even)
       background-color: $landing-grey-background
 
-    .sectionContent
-      width: 600px
-      max-width: 600px
+      .sectionHeader
+        text-align: end

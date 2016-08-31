@@ -37,7 +37,6 @@
     .label
       +smallCaps
       margin-right: 5px
-      padding-top: 2px
 
     .value
       font-size: 13px
@@ -52,12 +51,10 @@
   .pullLeft, .pullRight
     display: inline-block
 
-  .pullRight
-    display: flex
-    margin-left: auto
 
-    > div:not(:first-of-type)
-      margin-left: 5px
+
+    // > div:not(:first-of-type)
+    //   margin-left: 5px
 
 
   .projectTop
@@ -70,11 +67,22 @@
       font-size: 14px
       font-weight: bold
 
+    .pullRight
+      display: flex
+      margin-left: auto     
+      > div:not(:first-of-type)
+        margin-left: 5px
+
   .projectBottom
     border-top: 1px solid $ui-line-grey
 
   .projectMiddle, .projectBottom
-    +regularCopy
+    font-size: 12px
     display: flex
     margin: 0 16px
     padding: 11px 0
+
+    .pullRight
+      display: flex
+      flex-direction: column
+      margin-left: auto

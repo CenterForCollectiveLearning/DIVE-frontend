@@ -15,9 +15,10 @@ export default class RaisedButton extends Component {
           styles.raisedButton
           + ' ' + this.props.className
           + (this.props.primary ? ' ' + styles.primary : '')
+          + (this.props.normalHeight ? ' ' + styles.normalHeight : '')
           + (this.props.fullWidth ? ' ' + styles.fullWidth : '')
           + (this.props.icon ? ' ' + styles.icon : '')
-          + (this.props.active ? ' ' + styles.active : '')          
+          + (this.props.active ? ' ' + styles.active : '')
           + (this.props.disabled ? ' ' + styles.disabled : '')
           + (this.props.marginTop ? ' ' + styles.marginTop : '')
           + (this.props.centered ? ' ' + styles.centered : '')
@@ -38,6 +39,7 @@ RaisedButton.propTypes = {
   label: PropTypes.string,
   onClick: PropTypes.func,
   primary: PropTypes.bool,
+  normalHeight: PropTypes.bool,
   children: PropTypes.node,
   icon: PropTypes.bool,
   marginTop: PropTypes.bool,
@@ -53,6 +55,7 @@ RaisedButton.defaultProps = {
   label: "",
   altText: null,
   primary: false,
+  normalHeight: false,
   icon: false,
   className: "",
   fullWidth: false,

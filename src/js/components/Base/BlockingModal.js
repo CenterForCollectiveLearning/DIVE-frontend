@@ -6,10 +6,12 @@ export default class BlockingModal extends Component {
     const styles = this.props.styles ? this.props.styles : baseStyles;
 
     return (
-      <div className={
-        styles.blockingModalMask
-        + (this.props.blackBackground ? ' ' + styles.blackBackground : '' )
-      }>
+      <div
+        className={
+          styles.blockingModalMask
+          + (this.props.blackBackground ? ' ' + styles.blackBackground : '' )
+        }
+      >
         <div className={ styles.blockingModalContainer }>
           <div className={
             styles.blockingModal
