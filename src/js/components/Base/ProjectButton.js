@@ -24,26 +24,29 @@ class ProjectButton extends Component {
     };
   }
 
+  closeProjectSettingsModal() {
+    this.setState({ projectSettingsModalOpen: false });
+  }
+
+  onClickProjectButton(e) {
+    const { project, wipeProjectState, push } = this.props;
+    const { projectSettingsModalOpen } = this.state;
+    if (!projectSettingsModalOpen) {
+      wipeProjectState();
+      push(`/projects/${ project.id }/datasets`);      
+    }
+  }
+
   onClickProjectSettings(e) {
     e.stopPropagation()
     e.preventDefault()
     this.setState({ projectSettingsModalOpen: true });
   }
 
-  closeProjectSettingsModal() {
-    this.setState({ projectSettingsModalOpen: false });
-  }
-
-  onClickProjectButton() {
-    const { project, wipeProjectState, push } = this.props;
-    wipeProjectState();
-    push(`/projects/${ project.id }/datasets`);
-  }
-
   onClickDeleteProject(e) {
     const { project, deleteProjectNoReturnHome } = this.props;
     e.stopPropagation()
-    e.preventDefault()    
+    e.preventDefault()
     deleteProjectNoReturnHome(project.id);
   }
 

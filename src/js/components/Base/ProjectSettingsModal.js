@@ -51,7 +51,7 @@ class ProjectSettingsModal extends Component {
         </RaisedButton>
 
         <div className={ styles.rightActions }>
-          <RaisedButton primary minWidth={ 100 } onClick={ this.submit.bind(this) }>Save</RaisedButton>
+          <RaisedButton primary normalHeight minWidth={ 100 } onClick={ this.submit.bind(this) }>Save</RaisedButton>
           <RaisedButton onClick={ closeAction }>Cancel</RaisedButton>
         </div>
       </div>;
