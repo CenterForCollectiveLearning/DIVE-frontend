@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { saveSvgAsPng } from 'save-svg-as-png';
 
 import { fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
@@ -42,6 +43,12 @@ export class BuilderView extends Component {
     }
   }
 
+  saveAs(format = 'svg') {
+    console.log('in saveAs');
+    const svg = document.getElementById('chart').getElementsByTagName('svg')[0];
+    saveSvgAsPng(svg, "chart.png");
+  }
+
   saveVisualization(saveAction = true) {
     const { project, visualization, createExportedSpec, conditionals } = this.props;
     createExportedSpec(project.properties.id, visualization.spec.id, visualization.visualizationData, conditionals.items, visualization.config, saveAction);
@@ -64,6 +71,11 @@ export class BuilderView extends Component {
     return (
       <VisualizationView visualization={ visualization } fieldNameToColor={ fieldNameToColor }>
         <div className={ styles.headerControlRow }>
+          <div className={ styles.headerControl }>
+            <RaisedButton label="SVG" onClick={ this.saveAs.bind(this, 'svg') } fullWidth={ true }/>
+            <RaisedButton label="PNG" onClick={ this.saveAs.bind(this, 'png') } fullWidth={ true }/>
+            <RaisedButton label="PDF" onClick={ this.saveAs.bind(this, 'pdf') } fullWidth={ true }/>
+          </div>
           <div className={ styles.headerControl }>
             <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
           </div>

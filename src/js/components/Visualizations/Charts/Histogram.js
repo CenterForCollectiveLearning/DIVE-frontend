@@ -58,7 +58,14 @@ export default class Histogram extends Component {
     const histogramOptions = isMinimalView ? options : fullHistogramOptions;
 
     return (
-      <Chart key={ chartId } chartType="ColumnChart" chartVersion="43" options={ histogramOptions } data={ finalData } graph_id={ chartId }/>
+      <Chart
+        key={ chartId }
+        graph_id='chart' // # { chartId }
+        chartType="ColumnChart"
+        chartVersion="43"
+        options={ histogramOptions }
+        data={ finalData }
+       />
     );
   }
 }

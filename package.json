@@ -59,6 +59,7 @@
     "redux-storage": "^1.2.3",
     "redux-thunk": "^2.0.1",
     "sass-loader": "^2.0.1",
+    "save-svg-as-png": "^1.0.3",
     "shelljs": "^0.5.3",
     "string-replace-loader": "^1.0.3",
     "style-loader": "^0.12.3",
