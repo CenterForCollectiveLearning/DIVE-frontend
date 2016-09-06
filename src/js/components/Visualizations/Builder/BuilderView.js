@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { saveSvgAsPng } from 'save-svg-as-png';
+import canvg from 'canvg-browser';
+import { saveAs } from 'file-saver';
 
 import { fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
@@ -43,10 +45,45 @@ export class BuilderView extends Component {
     }
   }
 
-  saveAs(format = 'svg') {
-    console.log('in saveAs');
-    const svg = document.getElementById('chart').getElementsByTagName('svg')[0];
-    saveSvgAsPng(svg, "chart.png");
+  saveAs(filename = 'test', format = 'png') {
+    let mimetype;
+    switch (format) {
+      case 'svg':
+        mimetype = 'image/svg+xml'
+        var svgElement = document.getElementById('chart').getElementsByTagName('svg')[0];
+        svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        svgElement.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+        var svgData = svgElement.outerHTML;
+        var svgBlob = new Blob([svgData], { type: 'application/svg+xml;' });
+        saveAs(svgBlob, `${ filename }.${ format }`);
+
+        break;
+      case 'png':
+        mimetype = 'image/png'
+        var svgElement = document.getElementById('chart').getElementsByTagName('svg')[0];
+        var canvasElement = document.getElementById('export-canvas');
+
+        var ctx = canvasElement.getContext('2d');
+        ctx.fillStyle = 'white';
+        console.log(canvasElement.width, canvasElement.height);
+        ctx.fillRect(0, 0, canvasElement.width, canvasElement.height);
+        ctx.drawImage(canvasElement, 0, 0)
+
+        canvg(canvasElement, svgElement.outerHTML)
+        // const dataUrl = canvasElement.toDataURL("image/png");
+        // saveAs(dataUrl);
+        canvasElement.toBlob(function(blob) {
+          saveAs(blob, `${ filename }.${ format }`);
+        }, mimetype);
+        break;
+      case 'pdf':
+        mimetype = 'application/pdf'
+        break;
+      default:
+        mimetype = 'image/png'
+    }
+
+    console.log('Saving visualization', format, mimetype);
   }
 
   saveVisualization(saveAction = true) {
@@ -67,14 +104,18 @@ export class BuilderView extends Component {
   render() {
     const { visualization, fieldNameToColor } = this.props;
     const saved = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
+    const fileName = 'test';
 
     return (
       <VisualizationView visualization={ visualization } fieldNameToColor={ fieldNameToColor }>
+        <div className={ styles.hidden }>
+          <canvas id="export-canvas"/>
+        </div>
         <div className={ styles.headerControlRow }>
           <div className={ styles.headerControl }>
-            <RaisedButton label="SVG" onClick={ this.saveAs.bind(this, 'svg') } fullWidth={ true }/>
-            <RaisedButton label="PNG" onClick={ this.saveAs.bind(this, 'png') } fullWidth={ true }/>
-            <RaisedButton label="PDF" onClick={ this.saveAs.bind(this, 'pdf') } fullWidth={ true }/>
+            <RaisedButton label="SVG" onClick={ this.saveAs.bind(this, fileName, 'svg') } fullWidth={ true }/>
+            <RaisedButton label="PNG" onClick={ this.saveAs.bind(this, fileName, 'png') } fullWidth={ true }/>
+            <RaisedButton label="PDF" onClick={ this.saveAs.bind(this, fileName, 'pdf') } fullWidth={ true }/>
           </div>
           <div className={ styles.headerControl }>
             <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
