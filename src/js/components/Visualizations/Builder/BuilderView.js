@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { saveSvgAsPng } from 'save-svg-as-png';
 import canvg from 'canvg-browser';
+import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
 
 import { fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
@@ -45,45 +45,49 @@ export class BuilderView extends Component {
     }
   }
 
-  saveAs(filename = 'test', format = 'png') {
-    let mimetype;
-    switch (format) {
-      case 'svg':
-        mimetype = 'image/svg+xml'
-        var svgElement = document.getElementById('chart').getElementsByTagName('svg')[0];
-        svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-        svgElement.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
-        var svgData = svgElement.outerHTML;
-        var svgBlob = new Blob([svgData], { type: 'application/svg+xml;' });
-        saveAs(svgBlob, `${ filename }.${ format }`);
+  saveAs(filetitle = 'test', format = 'png') {
+    const svgElement = document.querySelectorAll('*[id^="spec-"]')[0].getElementsByTagName('svg')[0];
+    svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    svgElement.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+    const svgData = svgElement.outerHTML;
+    const sourceCanvasElement = document.getElementById('export-canvas');
+    let destinationCanvas;
 
-        break;
-      case 'png':
-        mimetype = 'image/png'
-        var svgElement = document.getElementById('chart').getElementsByTagName('svg')[0];
-        var canvasElement = document.getElementById('export-canvas');
+    const filename = `${ filetitle }.${ format }`;
 
-        var ctx = canvasElement.getContext('2d');
-        ctx.fillStyle = 'white';
-        console.log(canvasElement.width, canvasElement.height);
-        ctx.fillRect(0, 0, canvasElement.width, canvasElement.height);
-        ctx.drawImage(canvasElement, 0, 0)
+    if (format == 'svg') {
+      var svgBlob = new Blob([svgData], { type: 'application/svg+xml;' });
+      saveAs(svgBlob, `${ filename }.${ format }`);
+      return;
+    }
+    if (format == 'png' || format == 'pdf') {
+      canvg(sourceCanvasElement, svgElement.outerHTML);
 
-        canvg(canvasElement, svgElement.outerHTML)
-        // const dataUrl = canvasElement.toDataURL("image/png");
-        // saveAs(dataUrl);
-        canvasElement.toBlob(function(blob) {
-          saveAs(blob, `${ filename }.${ format }`);
-        }, mimetype);
-        break;
-      case 'pdf':
-        mimetype = 'application/pdf'
-        break;
-      default:
-        mimetype = 'image/png'
+      destinationCanvas = document.createElement("canvas");
+      destinationCanvas.width = sourceCanvasElement.width;
+      destinationCanvas.height = sourceCanvasElement.height;
+
+      var destCtx = destinationCanvas.getContext('2d');
+      destCtx.fillStyle = "#FFFFFF";
+      destCtx.fillRect(0, 0, sourceCanvasElement.width, sourceCanvasElement.height);
+      destCtx.drawImage(sourceCanvasElement, 0, 0);
     }
 
-    console.log('Saving visualization', format, mimetype);
+    if (format == 'png') {
+      destinationCanvas.toBlob(function(blob) {
+        saveAs(blob, filename);
+      }, 'image/png');
+      return;
+    }
+
+    if (format == 'pdf') {
+      var imgData = destinationCanvas.toDataURL('image/jpeg', 1.0);
+
+      var pdf = new jsPDF('landscape');
+      pdf.addImage(imgData, 'JPEG', 0, 0);
+      pdf.save(filename);
+      return;
+    }
   }
 
   saveVisualization(saveAction = true) {

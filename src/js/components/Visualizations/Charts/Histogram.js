@@ -60,7 +60,7 @@ export default class Histogram extends Component {
     return (
       <Chart
         key={ chartId }
-        graph_id='chart' // # { chartId }
+        graph_id={ chartId }
         chartType="ColumnChart"
         chartVersion="43"
         options={ histogramOptions }
