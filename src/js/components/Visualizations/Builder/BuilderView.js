@@ -108,7 +108,8 @@ export class BuilderView extends Component {
   render() {
     const { visualization, fieldNameToColor } = this.props;
     const saved = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
-    const fileName = 'test';
+    const visualizationTitle = (visualization.spec.meta.desc || 'visualization');
+    const fileName = 'DIVE | ' + visualizationTitle.charAt(0).toUpperCase() + visualizationTitle.slice(1);
 
     return (
       <VisualizationView visualization={ visualization } fieldNameToColor={ fieldNameToColor }>
@@ -117,18 +118,16 @@ export class BuilderView extends Component {
         </div>
         <div className={ styles.headerControlRow }>
           <div className={ styles.headerControl }>
-            <RaisedButton label="SVG" onClick={ this.saveAs.bind(this, fileName, 'svg') } fullWidth={ true }/>
-            <RaisedButton label="PNG" onClick={ this.saveAs.bind(this, fileName, 'png') } fullWidth={ true }/>
-            <RaisedButton label="PDF" onClick={ this.saveAs.bind(this, fileName, 'pdf') } fullWidth={ true }/>
-          </div>
-          <div className={ styles.headerControl }>
             <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
           </div>
           <div className={ styles.headerControl }>
             <RaisedButton onClick={ this.onClickShare }>
               { visualization.isExporting && "Exporting..." }
-              { !visualization.isExporting && "Share" }
+              { !visualization.isExporting && "URL" }
             </RaisedButton>
+            <RaisedButton label="SVG" onClick={ this.saveAs.bind(this, fileName, 'svg') } fullWidth={ true }/>
+            <RaisedButton label="PNG" onClick={ this.saveAs.bind(this, fileName, 'png') } fullWidth={ true }/>
+            <RaisedButton label="PDF" onClick={ this.saveAs.bind(this, fileName, 'pdf') } fullWidth={ true }/>
           </div>
           <div className={ styles.headerControl }>
             <RaisedButton onClick={ this.saveVisualization } active={ saved }>
