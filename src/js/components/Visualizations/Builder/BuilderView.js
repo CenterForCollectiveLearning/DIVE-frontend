@@ -1,6 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import canvg from 'canvg-browser';
+import jsPDF from 'jspdf';
+import { saveAs } from 'file-saver';
 
 import { fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
@@ -42,6 +45,51 @@ export class BuilderView extends Component {
     }
   }
 
+  saveAs(filetitle = 'test', format = 'png') {
+    const svgElement = document.querySelectorAll('*[id^="spec-"]')[0].getElementsByTagName('svg')[0];
+    svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    svgElement.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+    const svgData = svgElement.outerHTML;
+    const sourceCanvasElement = document.getElementById('export-canvas');
+    let destinationCanvas;
+
+    const filename = `${ filetitle }.${ format }`;
+
+    if (format == 'svg') {
+      var svgBlob = new Blob([svgData], { type: 'application/svg+xml;' });
+      saveAs(svgBlob, `${ filename }.${ format }`);
+      return;
+    }
+    if (format == 'png' || format == 'pdf') {
+      canvg(sourceCanvasElement, svgElement.outerHTML);
+
+      destinationCanvas = document.createElement("canvas");
+      destinationCanvas.width = sourceCanvasElement.width;
+      destinationCanvas.height = sourceCanvasElement.height;
+
+      var destCtx = destinationCanvas.getContext('2d');
+      destCtx.fillStyle = "#FFFFFF";
+      destCtx.fillRect(0, 0, sourceCanvasElement.width, sourceCanvasElement.height);
+      destCtx.drawImage(sourceCanvasElement, 0, 0);
+    }
+
+    if (format == 'png') {
+      destinationCanvas.toBlob(function(blob) {
+        saveAs(blob, filename);
+      }, 'image/png');
+      return;
+    }
+
+    if (format == 'pdf') {
+      var imgData = destinationCanvas.toDataURL('image/jpeg', 1.0);
+
+      var pdf = new jsPDF('landscape');
+      pdf.addImage(imgData, 'JPEG', 0, 0);
+      pdf.save(filename);
+      return;
+    }
+  }
+
   saveVisualization(saveAction = true) {
     const { project, visualization, createExportedSpec, conditionals } = this.props;
     createExportedSpec(project.properties.id, visualization.spec.id, visualization.visualizationData, conditionals.items, visualization.config, saveAction);
@@ -60,9 +108,14 @@ export class BuilderView extends Component {
   render() {
     const { visualization, fieldNameToColor } = this.props;
     const saved = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
+    const visualizationTitle = (visualization.spec.meta.desc || 'visualization');
+    const fileName = 'DIVE | ' + visualizationTitle.charAt(0).toUpperCase() + visualizationTitle.slice(1);
 
     return (
       <VisualizationView visualization={ visualization } fieldNameToColor={ fieldNameToColor }>
+        <div className={ styles.hidden }>
+          <canvas id="export-canvas"/>
+        </div>
         <div className={ styles.headerControlRow }>
           <div className={ styles.headerControl }>
             <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
@@ -70,8 +123,11 @@ export class BuilderView extends Component {
           <div className={ styles.headerControl }>
             <RaisedButton onClick={ this.onClickShare }>
               { visualization.isExporting && "Exporting..." }
-              { !visualization.isExporting && "Share" }
+              { !visualization.isExporting && "URL" }
             </RaisedButton>
+            <RaisedButton label="SVG" onClick={ this.saveAs.bind(this, fileName, 'svg') } fullWidth={ true }/>
+            <RaisedButton label="PNG" onClick={ this.saveAs.bind(this, fileName, 'png') } fullWidth={ true }/>
+            <RaisedButton label="PDF" onClick={ this.saveAs.bind(this, fileName, 'pdf') } fullWidth={ true }/>
           </div>
           <div className={ styles.headerControl }>
             <RaisedButton onClick={ this.saveVisualization } active={ saved }>

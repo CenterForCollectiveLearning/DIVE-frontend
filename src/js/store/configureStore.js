@@ -19,12 +19,15 @@ export default function configureStore(initialState) {
   const middleware = [
     debounce,
     thunkMiddleware,
-    analyticsMiddleware,
     routerMiddleware(browserHistory),
-    loggerMiddleware
   ];
 
+  if (window.__env.NODE_ENV == "DEVELOPMENT") {
+    middleware.push(loggerMiddleware)
+  }
+
   if (window.__env.NODE_ENV != "DEVELOPMENT") {
+    middleware.push(analyticsMiddleware)
     middleware.push(RavenMiddleware('https://34b21b0198eb43d4bebc0a35ddd11b5c@app.getsentry.com/75309'))
   }
 
