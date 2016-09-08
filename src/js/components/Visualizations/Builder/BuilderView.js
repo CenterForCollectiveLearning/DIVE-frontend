@@ -108,8 +108,13 @@ export class BuilderView extends Component {
   render() {
     const { visualization, fieldNameToColor } = this.props;
     const saved = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
-    const visualizationTitle = (visualization.spec.meta.desc || 'visualization');
-    const fileName = 'DIVE | ' + visualizationTitle.charAt(0).toUpperCase() + visualizationTitle.slice(1);
+
+    let visualizationTitle;
+    let fileName;
+    if (visualization.spec && visualization.spec.meta) {
+      visualizationTitle = (visualization.spec.meta.desc || 'visualization');
+      fileName = 'DIVE | ' + visualizationTitle.charAt(0).toUpperCase() + visualizationTitle.slice(1);
+    }
 
     return (
       <VisualizationView visualization={ visualization } fieldNameToColor={ fieldNameToColor }>
