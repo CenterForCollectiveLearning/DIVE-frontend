@@ -106,11 +106,14 @@ export class ProjectNav extends Component {
 
     return (
       <div className={ styles.projectSidebar }>
-        <div className={ styles.logoContainer } onClick={ this._onClickLogo }>
-          <div className={ styles.logoText }>
-            DIVE
+        <div className={ styles.top }>
+          <div className={ styles.logoContainer } onClick={ this._onClickLogo }>
+            <div className={ styles.logoText }>
+              DIVE
+            </div>
+            <Logo className={ styles.logo } />            
           </div>
-          <Logo className={ styles.logo } />
+          <div className={ styles.projectTitle }>{ project.properties.title }</div>
         </div>
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
           <TabGroup heading="1. DATASETS">
