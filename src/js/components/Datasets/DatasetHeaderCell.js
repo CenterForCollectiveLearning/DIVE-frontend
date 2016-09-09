@@ -13,97 +13,102 @@ export class DatasetHeaderCell extends Component {
       fieldTypes: [
         {
           value: "integer",
-          label: "integer",
+          label: "Integer",
+          selected: false
+        },
+        {
+          value: "ordinal",
+          label: "Ordinal",
           selected: false
         },
         {
           value: "string",
-          label: "string",
+          label: "String",
           selected: false
         },
         {
           value: "decimal",
-          label: "decimal",
+          label: "Decimal",
           selected: false
         },
         {
           value: "boolean",
-          label: "boolean",
+          label: "Boolean",
           selected: false
         },
         {
           value: "text",
-          label: "text",
+          label: "Text",
           selected: false
         },
         {
           value: "url",
-          label: "url",
+          label: "Url",
           selected: false
         },
         {
           value: "latitude",
-          label: "latitude",
+          label: "Latitude",
           selected: false
         },
         {
           value: "longitude",
-          label: "longitude",
+          label: "Longitude",
           selected: false
         },
         {
           value: "city",
-          label: "city",
+          label: "City",
           selected: false
         },
         {
           value: "countryCode2",
-          label: "countryCode2",
+          label: "Country Code (2)",
           selected: false
         },
         {
           value: "countryCode3",
-          label: "countryCode3",
+          label: "Country Code (3)",
           selected: false
         },
         {
           value: "countryName",
-          label: "countryName",
+          label: "Country Name",
           selected: false
         },
         {
           value: "continentName",
-          label: "continentName",
+          label: "Continent Name",
           selected: false
         },
         {
           value: "datetime",
-          label: "datetime",
+          label: "Datetime",
           selected: false
         },
         {
           value: "date",
-          label: "date",
+          label: "Date",
           selected: false
         },
         {
           value: "time",
-          label: "time",
+          label: "Time",
           selected: false
         },
         {
           value: "year",
-          label: "year",
+          label: "Year",
           selected: false
         },
         {
           value: "month",
-          label: "month",
+          label: "Month",
           selected: false
         },
         {
           value: "day",
-          label: "day",
+          label: "Day",
           selected: false
         }
       ]
