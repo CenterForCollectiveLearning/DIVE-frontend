@@ -28,6 +28,7 @@ export class ProjectNav extends Component {
 
     this.state = {
       projectSettingsModalOpen: false,
+      feedbackModalOpen: false,
       secondaryNavOpen: false
     };
   }
@@ -73,6 +74,9 @@ export class ProjectNav extends Component {
     this.setState({ secondaryNavOpen: !this.state.secondaryNavOpen });
   }
 
+  _openFeedbackModal() {
+
+  }
 
   _handleTabsChange(tab){
     this.props.push(`/projects/${ this.props.project.properties.id }/${ tab.props.route }`);
@@ -137,6 +141,13 @@ export class ProjectNav extends Component {
           </TabGroup>
         </Tabs>
         <div className={ styles.bottom }>
+          <div
+            className={ styles.feedbackButton }
+            onClick={ this._openFeedbackModal.bind(this) }
+          >
+              <span>Give Feedback</span>
+              <span className={ styles.smile }>&#x263a;</span>
+          </div>
           { this.state.secondaryNavOpen &&
             <div className={ styles.secondaryNav }>
               <div className={ styles.secondaryNavItem } onClick={ this.onClickProjectSettings }>
