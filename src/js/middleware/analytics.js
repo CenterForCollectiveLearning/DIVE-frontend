@@ -9,19 +9,19 @@ export function analyticsMiddleware({ getState }){
   return (next) => (action) => {
     switch(action.type) {
       case REQUEST_CREATE_SAVED_SPEC:
-        amplitude.logEvent('Visualization: Saved');
+        window.amplitude.logEvent('Visualization: Saved');
         break;
 
       case REQUEST_VISUALIZATION_DATA:
-        amplitude.logEvent('Visualization: Data Requested');
+        window.amplitude.logEvent('Visualization: Data Requested');
         break;
 
       case RECEIVE_VISUALIZATION_DATA:
-        amplitude.logEvent('Visualization: Data Received');
+        window.amplitude.logEvent('Visualization: Data Received');
         break;
 
       case SELECT_CONDITIONAL:
-        amplitude.logEvent('Visualization: Selected Conditional');
+        window.amplitude.logEvent('Visualization: Selected Conditional');
         break;
     }
 
