@@ -16,7 +16,9 @@ EventPluginHub.injection.injectEventPluginsByName({ TapEventPlugin });
 
 const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);
-history.listen(location => amplitude.logEvent('Page View', { pathname: location.pathname }));
+
+console.log(window, window.amplitude);
+history.listen(location => window.amplitude.logEvent('Page View', { pathname: location.pathname }));
 
 ReactDOM.render(
   <Provider store={ store }>

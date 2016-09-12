@@ -91,7 +91,7 @@ export function loginUser(email, username, password, rememberMe) {
         );
       } else {
         response.json().then( json => {
-          amplitude.setUserId(json.user.email);
+          window.amplitude.setUserId(json.user.email);
           return dispatch(receiveLoginUserDispatcher(json));
         });
       }
@@ -176,8 +176,8 @@ export function logoutUser() {
         );
       } else {
         response.json().then( json => {
-          amplitude.setUserId(null);
-          amplitude.regenerateDeviceId();
+          window.amplitude.setUserId(null);
+          window.amplitude.regenerateDeviceId();
           return dispatch(receiveLogoutUserDispatcher(json))
         });
       }
