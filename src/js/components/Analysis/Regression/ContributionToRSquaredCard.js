@@ -35,8 +35,8 @@ export default class ContributionToRSquaredCard extends Component {
     const finalData = [ header, ...sortedDataPoints ];
 
     var options = {
-      fontName: 'RobotoDraft',
-      fontFamily: 'RobotoDraft',
+      fontName: 'Roboto',
+      fontFamily: 'Roboto',
       backgroundColor: 'transparent',
       headerColor: 'white',
       headerHeight: 0,

@@ -12,7 +12,7 @@ main {
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
-  font-family: 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;  
+  font-family: 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;  
 }
 
 * {
