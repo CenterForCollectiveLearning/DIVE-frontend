@@ -15,8 +15,8 @@ export default class AnovaBoxplotCard extends Component {
     const finalData = anovaBoxplotData;
 
     var options = {
-      fontName: 'RobotoDraft',
-      fontFamily: 'RobotoDraft',
+      fontName: 'Roboto',
+      fontFamily: 'Roboto',
       backgroundColor: 'transparent',
       headerColor: 'white',
       headerHeight: 0,

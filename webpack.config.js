@@ -49,7 +49,7 @@ module.exports = {
       { test: /\.sass$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?indentedSyntax&outputStyle=expanded&sourceMap' },
       { test: /\.less$/,  loader: "style!css!less" },
       { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url?limit=10000&minetype=application/font-woff" },
-      { test: /\.(ttf|eot)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file" },
+      { test: /\.(ttf|eot|ttf)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file" },
       { test: /\.svg(\?.*)?$/, loader: 'babel!svg-react' +
         // removes xmlns tag from svg (see https://github.com/jhamlet/svg-react-loader/issues/25)
         '!string-replace?search=%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22&replace=' +

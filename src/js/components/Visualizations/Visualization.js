@@ -102,8 +102,8 @@ export default class Visualization extends Component {
       backgroundColor: 'transparent',
       headerColor: 'white',
       headerHeight: 0,
-      fontName: 'RobotoDraft, Helvetica, Arial, sans-serif',
-      fontFamily: 'RobotoDraft, Helvetica, Arial, sans-serif',
+      fontName: 'Roboto, Helvetica, Arial, sans-serif',
+      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
       fontColor: "#333",
       textStyle: {
         color: "#333"

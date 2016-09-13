@@ -13,8 +13,8 @@ export default class CorrelationScatterplotCard extends Component {
     const { data } = this.props;
 
     var options = {
-      fontName: 'RobotoDraft',
-      fontFamily: 'RobotoDraft',
+      fontName: 'Roboto',
+      fontFamily: 'Roboto',
       backgroundColor: 'transparent',
       headerColor: 'white',
       headerHeight: 0,

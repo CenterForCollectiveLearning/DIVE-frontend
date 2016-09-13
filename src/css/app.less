@@ -1,66 +1,224 @@
+// Oswald
 @font-face {
-  font-family: 'montserrat';
-  src: url('/assets/montserrat/Montserrat-Medium.ttf') format('truetype');
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: 'montserrat';
-  src: url('/assets/montserrat/Montserrat-Light.ttf') format('truetype');
+  font-family: 'Oswald';
   font-weight: 300;
+  font-style: normal;
+  src: url('/assets/Oswald/Oswald-300/Oswald-300.eot');
+  src: url('/assets/Oswald/Oswald-300/Oswald-300.eot?#iefix') format('embedded-opentype'),
+       local('Oswald Light'),
+       local('Oswald-300'),
+       url('/assets/Oswald/Oswald-300/Oswald-300.woff2') format('woff2'),
+       url('/assets/Oswald/Oswald-300/Oswald-300.woff') format('woff'),
+       url('/assets/Oswald/Oswald-300/Oswald-300.ttf') format('truetype'),
+       url('/assets/Oswald/Oswald-300/Oswald-300.svg#Oswald') format('svg');
 }
 
 @font-face {
-  font-family: 'montserrat';
-  src: url('/assets/montserrat/Montserrat-UltraLight.ttf') format('truetype');
-  font-weight: 200;
+  font-family: 'Oswald';
+  font-weight: 400;
+  font-style: normal;
+  src: url('/assets/Oswald/Oswald-regular/Oswald-regular.eot');
+  src: url('/assets/Oswald/Oswald-regular/Oswald-regular.eot?#iefix') format('embedded-opentype'),
+       local('Oswald Regular'),
+       local('Oswald-regular'),
+       url('/assets/Oswald/Oswald-regular/Oswald-regular.woff2') format('woff2'),
+       url('/assets/Oswald/Oswald-regular/Oswald-regular.woff') format('woff'),
+       url('/assets/Oswald/Oswald-regular/Oswald-regular.ttf') format('truetype'),
+       url('/assets/Oswald/Oswald-regular/Oswald-regular.svg#Oswald') format('svg');
 }
 
+@font-face {
+  font-family: 'Oswald';
+  font-weight: 700;
+  font-style: normal;
+  src: url('/assets/Oswald/Oswald-700/Oswald-700.eot');
+  src: url('/assets/Oswald/Oswald-700/Oswald-700.eot?#iefix') format('embedded-opentype'),
+       local('Oswald Bold'),
+       local('Oswald-700'),
+       url('/assets/Oswald/Oswald-700/Oswald-700.woff2') format('woff2'),
+       url('/assets/Oswald/Oswald-700/Oswald-700.woff') format('woff'),
+       url('/assets/Oswald/Oswald-700/Oswald-700.ttf') format('truetype'),
+       url('/assets/Oswald/Oswald-700/Oswald-700.svg#Oswald') format('svg');
+}
+
+// Roboto
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 300;
+  font-style: normal;
+  src: url('/assets/fonts/Roboto/Roboto-300/Roboto-300.eot');
+  src: url('/assets/fonts/Roboto/Roboto-300/Roboto-300.eot?#iefix') format('embedded-opentype'),
+       local('Roboto Light'),
+       local('Roboto-300'),
+       url('/assets/fonts/Roboto/Roboto-300/Roboto-300.woff2') format('woff2'),
+       url('/assets/fonts/Roboto/Roboto-300/Roboto-300.woff') format('woff'),
+       url('/assets/fonts/Roboto/Roboto-300/Roboto-300.ttf') format('truetype'),
+       url('/assets/fonts/Roboto/Roboto-300/Roboto-300.svg#Roboto') format('svg');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 400;
+  font-style: normal;
+  src: url('/assets/fonts/Roboto/Roboto-regular/Roboto-regular.eot');
+  src: url('/assets/fonts/Roboto/Roboto-regular/Roboto-regular.eot?#iefix') format('embedded-opentype'),
+       local('Roboto'),
+       local('Roboto-regular'),
+       url('/assets/fonts/Roboto/Roboto-regular/Roboto-regular.woff2') format('woff2'),
+       url('/assets/fonts/Roboto/Roboto-regular/Roboto-regular.woff') format('woff'),
+       url('/assets/fonts/Roboto/Roboto-regular/Roboto-regular.ttf') format('truetype'),
+       url('/assets/fonts/Roboto/Roboto-regular/Roboto-regular.svg#Roboto') format('svg');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 500;
+  font-style: normal;
+  src: url('/assets/fonts/Roboto/Roboto-500/Roboto-500.eot');
+  src: url('/assets/fonts/Roboto/Roboto-500/Roboto-500.eot?#iefix') format('embedded-opentype'),
+       local('Roboto Medium'),
+       local('Roboto-500'),
+       url('/assets/fonts/Roboto/Roboto-500/Roboto-500.woff2') format('woff2'),
+       url('/assets/fonts/Roboto/Roboto-500/Roboto-500.woff') format('woff'),
+       url('/assets/fonts/Roboto/Roboto-500/Roboto-500.ttf') format('truetype'),
+       url('/assets/fonts/Roboto/Roboto-500/Roboto-500.svg#Roboto') format('svg');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 700;
+  font-style: normal;
+  src: url('/assets/fonts/Roboto/Roboto-700/Roboto-700.eot');
+  src: url('/assets/fonts/Roboto/Roboto-700/Roboto-700.eot?#iefix') format('embedded-opentype'),
+       local('Roboto Bold'),
+       local('Roboto-700'),
+       url('/assets/fonts/Roboto/Roboto-700/Roboto-700.woff2') format('woff2'),
+       url('/assets/fonts/Roboto/Roboto-700/Roboto-700.woff') format('woff'),
+       url('/assets/fonts/Roboto/Roboto-700/Roboto-700.ttf') format('truetype'),
+       url('/assets/fonts/Roboto/Roboto-700/Roboto-700.svg#Roboto') format('svg');
+}
+
+// Roboto Condensed
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-weight: 300;
+  font-style: normal;
+  src: url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-300/Roboto-Condensed-300.eot');
+  src: url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-300/Roboto-Condensed-300.eot?#iefix') format('embedded-opentype'),
+       local('Roboto Condensed Light'),
+       local('Roboto-Condensed-300'),
+       url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-300/Roboto-Condensed-300.woff2') format('woff2'),
+       url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-300/Roboto-Condensed-300.woff') format('woff'),
+       url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-300/Roboto-Condensed-300.ttf') format('truetype'),
+       url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-300/Roboto-Condensed-300.svg#RobotoCondensed') format('svg');
+}
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-weight: 400;
+  font-style: normal;
+  src: url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-regular/Roboto-Condensed-regular.eot');
+  src: url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-regular/Roboto-Condensed-regular.eot?#iefix') format('embedded-opentype'),
+       local('Roboto Condensed'),
+       local('Roboto-Condensed-regular'),
+       url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-regular/Roboto-Condensed-regular.woff2') format('woff2'),
+       url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-regular/Roboto-Condensed-regular.woff') format('woff'),
+       url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-regular/Roboto-Condensed-regular.ttf') format('truetype'),
+       url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-regular/Roboto-Condensed-regular.svg#RobotoCondensed') format('svg');
+}
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-weight: 700;
+  font-style: normal;
+  src: url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-700/Roboto-Condensed-700.eot');
+  src: url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-700/Roboto-Condensed-700.eot?#iefix') format('embedded-opentype'),
+       local('Roboto Condensed Bold'),
+       local('Roboto-Condensed-700'),
+       url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-700/Roboto-Condensed-700.woff2') format('woff2'),
+       url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-700/Roboto-Condensed-700.woff') format('woff'),
+       url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-700/Roboto-Condensed-700.ttf') format('truetype'),
+       url('/assets/fonts/Roboto-Condensed/Roboto-Condensed-700/Roboto-Condensed-700.svg#RobotoCondensed') format('svg');
+}
+
+// Montserrat
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 400;
+  font-style: normal;
+  src: url('/assets/fonts/Montserrat/Montserrat-regular/Montserrat-regular.eot');
+  src: url('/assets/fonts/Montserrat/Montserrat-regular/Montserrat-regular.eot?#iefix') format('embedded-opentype'),
+       local('Montserrat-Regular'),
+       local('Montserrat-regular'),
+       url('/assets/fonts/Montserrat/Montserrat-regular/Montserrat-regular.woff2') format('woff2'),
+       url('/assets/fonts/Montserrat/Montserrat-regular/Montserrat-regular.woff') format('woff'),
+       url('/assets/fonts/Montserrat/Montserrat-regular/Montserrat-regular.ttf') format('truetype'),
+       url('/assets/fonts/Montserrat/Montserrat-regular/Montserrat-regular.svg#Montserrat') format('svg');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 700;
+  font-style: normal;
+  src: url('/assets/fonts/Montserrat/Montserrat-700/Montserrat-700.eot');
+  src: url('/assets/fonts/Montserrat/Montserrat-700/Montserrat-700.eot?#iefix') format('embedded-opentype'),
+       local('Montserrat-Bold'),
+       local('Montserrat-700'),
+       url('/assets/fonts/Montserrat/Montserrat-700/Montserrat-700.woff2') format('woff2'),
+       url('/assets/fonts/Montserrat/Montserrat-700/Montserrat-700.woff') format('woff'),
+       url('/assets/fonts/Montserrat/Montserrat-700/Montserrat-700.ttf') format('truetype'),
+       url('/assets/fonts/Montserrat/Montserrat-700/Montserrat-700.svg#Montserrat') format('svg');
+}
+
+
+
+// cmu
 @font-face {
   font-family: 'Computer Modern Serif';
-  src: url('/assets/cmu/cmunrm.ttf') format('truetype');
+  src: url('/assets/fonts/cmu/cmunrm.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Computer Modern Serif';
-  src: url('/assets/cmu/cmunbx.ttf') format('truetype');
+  src: url('/assets/fonts/cmu/cmunbx.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Computer Modern Serif';
-  src: url('/assets/cmu/cmunbx.ttf') format('truetype');
+  src: url('/assets/fonts/cmu/cmunbx.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Computer Modern Serif';
-  src: url('/assets/cmu/cmunti.ttf') format('truetype');
+  src: url('/assets/fonts/cmu/cmunti.ttf') format('truetype');
   font-weight: normal;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Computer Modern Serif';
-  src: url('/assets/cmu/cmunbi.ttf') format('truetype');
+  src: url('/assets/fonts/cmu/cmunbi.ttf') format('truetype');
   font-weight: 500;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Computer Modern Serif';
-  src: url('/assets/cmu/cmunbi.ttf') format('truetype');
+  src: url('/assets/fonts/cmu/cmunbi.ttf') format('truetype');
   font-weight: bold;
   font-style: italic;
 }
 
 
 .cmu {
-  font-family: 'Computer Modern Serif', 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;
+  font-family: 'Computer Modern Serif', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;
 }
 
 .Select.is-focused:not(.is-open) > .Select-control {

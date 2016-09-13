@@ -80,8 +80,8 @@ class DatasetMetadataCell extends Component {
       backgroundColor: 'transparent',
       headerColor: 'white',
       headerHeight: 0,
-      fontName: 'RobotoDraft',
-      fontFamily: 'RobotoDraft',
+      fontName: 'Roboto',
+      fontFamily: 'Roboto',
       fontColor: "#333",
       textStyle: {
         color: "#333"
