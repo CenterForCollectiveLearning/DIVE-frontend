@@ -35,18 +35,28 @@
 
 .fieldGroup
   &:first-child
-    .fieldGroupLabel
-      margin-top: 0
+    .fieldGroupHeading
+      margin-top: 17px
+      padding-bottom: 5px
+      padding-bottom: 5px
+      display: flex
 
   + .fieldGroup
     margin-top: 7px
 
-  .fieldGroupLabel
-    +smallCaps
-    margin-top: 17px
-    margin-bottom: 5px
+  .fieldGroupHeading
+    .fieldGroupLabel
+      +smallCaps
+      text-transform: uppercase
 
-    text-transform: uppercase
+    .fieldGroupOptions
+      +smallCaps
+      margin-left: auto
+
+      i
+        &:hover, &:active
+          cursor: pointer
+          color: $primary-accent
 
 .sortGroup
   display: flex
@@ -217,9 +227,12 @@
   &.expanded
     width: 25%
 
+  @media (max-width: 700px)
+    &.exact, &.subset, &.baseline, &.expanded
+      width: 100%
+
   &:hover .starContainer i
     opacity: 0.5
-
 
   .starContainer
     position: absolute

@@ -115,7 +115,13 @@ export class GallerySidebar extends Component {
           <SidebarGroup heading="Find Visualizations by Field">
             { gallerySelector.fieldProperties.filter((property) => property.generalType == 'c').length > 0 &&
               <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Categorical</div>
+                <div className={ styles.fieldGroupHeading }>
+                  <div className={ styles.fieldGroupLabel }>Categorical</div>
+                  <div className={ styles.fieldGroupOptions }>
+                    <i className="fa fa-sort-alpha-asc" />
+                    <i className="fa fa-sort-amount-asc" />
+                  </div>
+                </div>
                 <ToggleButtonGroup
                   toggleItems={ gallerySelector.fieldProperties.filter((property) => property.generalType == 'c').map((item) =>
                     new Object({
@@ -126,6 +132,8 @@ export class GallerySidebar extends Component {
                       color: item.color
                     })
                   )}
+                  sortField="name"
+                  sortOrder={ -1 }
                   displayTextMember="name"
                   valueMember="id"
                   colorMember="color"

@@ -61,8 +61,10 @@ function revokeTasks(taskIds) {
   return isomorphicFetch(completeUrl, options).then(response => response.json());
 }
 
-export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval=400, limit=300, counter=0) {
+export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval=400, limit=100, counter=0) {
   const otherTasks = taskManager.addTask(taskId, taskType);
+  console.log(`POLLING FOR TASK ${ taskType }: (${ counter }/${ limit })`);
+  console.log('Other tasks', otherTasks);
   if (otherTasks.length) {
     revokeTasks(otherTasks);
   }
