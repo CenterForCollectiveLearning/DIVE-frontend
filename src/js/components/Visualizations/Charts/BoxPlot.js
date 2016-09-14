@@ -10,32 +10,53 @@ export default class BoxPlot extends Component {
   render() {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options, labels } = this.props;
 
-    var finalData = data;
+    var firstRow = [
+      data[0][0],
+      '',
+      {id: 'bottom',  type:'number', role:'interval' },
+      {id: 'firstQuartile',  type:'number', role:'interval' },
+      {id: 'median',  type:'number', role:'interval' },
+      {id: 'mean',  type:'number', role:'interval' },
+      {id: 'thirdQuartile',  type:'number', role:'interval' },
+      {id: 'top',  type:'number', role:'interval' }
+    ];
+
+    const finalData=[ firstRow, ...data.slice(1) ];
+
+    console.log(finalData)
 
     const fullBoxPlotOptions = {
       ...options,
-      series: {
-        0: {type: "candlesticks"},
-        1: {type: "line", lineWidth: 0, pointSize: 1, color: 'black' },
-        2: {type: "line", lineWidth: 0, pointSize: 1, color: 'black' },
+      lineWidth: 0,
+      series: [{'color': '#D3362D'}],
+      hAxis: {
+        gridlines: {color: '#fff'}
       },
-      legend: {
-        position: 'none'
+      intervals: {
+        barWidth: 1,
+        boxWidth: 1,
+        lineWidth: 2,
+        style: 'boxes'
       },
-      candlestick: {
-        fallingColor: {
-          fill: 'none'
+      interval: {
+        'top': {
+          style: 'bars',
+          fillOpacity: 1,
+          color: '#777'
         },
-        risingColor: {
-          fill: 'none'
-        },
-      }
+        'bottom': {
+          style: 'bars',
+          fillOpacity: 1,
+          color: '#777'
+        }
+      },
+      legend: { position: 'none' },
     };
 
     const boxPlotOptions = isMinimalView ? options : fullBoxPlotOptions;
 
     return (
-      <Chart chartType="CandlestickChart" chartVersion="43" options={ boxPlotOptions } data={ finalData } graph_id={ chartId }/>
+      <Chart chartType="LineChart" chartVersion="43" options={ boxPlotOptions } data={ finalData } graph_id={ chartId }/>
     );
   }
 }
