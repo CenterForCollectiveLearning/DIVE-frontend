@@ -1,15 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 
-import styles from '../Visualizations.sass';
-
 import { fullOptions, minimalOptions } from '../VisualizationOptions';
-import { getPalette } from '../../../helpers/helpers';
+import styles from '../Visualizations.sass';
 
 var Chart = require('react-google-charts').Chart;
 
 export default class BoxPlot extends Component {
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, colors, labels } = this.props;
+    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, colors, labels, additionalOptions } = this.props;
 
     // Data
     var firstRow = [
@@ -70,7 +68,18 @@ export default class BoxPlot extends Component {
           style: 'points',
         }
       },
+      legend: {
+        position: 'none'
+      }
     };
+
+    if (isMinimalView) {
+      options.intervals.lineWidth = 1;
+    } else {
+
+    }
+
+    options = { ...options, ...additionalOptions }
 
     return (
       <Chart chartType="LineChart" chartVersion="43" options={ options } data={ finalData } graph_id={ chartId }/>
@@ -82,14 +91,14 @@ BoxPlot.propTypes = {
   chartId: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   isMinimalView: PropTypes.bool,
-  options: PropTypes.object,
+  additionalOptions: PropTypes.object,
   labels: PropTypes.object,
-  colors: PropTypes.object
+  colors: PropTypes.array
 };
 
 BoxPlot.defaultProps = {
   isMinimalView: false,
-  options: {},
+  additionalOptions: {},
   labels: {},
   colors: [ '#007BD7' ]
 };

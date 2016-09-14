@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import styles from '../Visualizations.sass';
 
 var Chart = require('react-google-charts').Chart;
@@ -7,7 +8,7 @@ var Chart = require('react-google-charts').Chart;
 export default class TreeMap extends Component {
 
   render() {
-    const { data, generatingProcedure, isMinimalView, chartId, parent, options } = this.props;
+    const { data, generatingProcedure, isMinimalView, chartId, parent, colors, labels } = this.props;
 
     // Adding in dummy parent value
     const headerRow = data[0];
@@ -31,7 +32,13 @@ export default class TreeMap extends Component {
       `;
     }
 
-    const treeMapOptions = {
+    var options = isMinimalView ? minimalOptions : fullOptions;
+    // Viz Options
+    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
+    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
+    options.colors = colors;
+
+    options = {
       ...options,
       minColor: '#F3595C',
       maxColor: '#78C466',
@@ -48,7 +55,7 @@ export default class TreeMap extends Component {
     }
 
     return (
-      <Chart chartType="TreeMap" chartVersion="43" options={ treeMapOptions } data={ dataWithParent } graph_id={ chartId }/>
+      <Chart chartType="TreeMap" chartVersion="43" options={ options } data={ dataWithParent } graph_id={ chartId }/>
     );
   }
 }
@@ -58,10 +65,14 @@ TreeMap.propTypes = {
   data: PropTypes.array.isRequired,
   parent: PropTypes.string.isRequired,
   isMinimalView: PropTypes.bool,
-  options: PropTypes.object
+  options: PropTypes.object,
+  labels: PropTypes.object,
+  colors: PropTypes.array
 };
 
 TreeMap.defaultProps = {
   isMinimalView: false,
-  options: {}
+  options: {},
+  labels: {},
+  colors: [ '#007BD7' ]
 };

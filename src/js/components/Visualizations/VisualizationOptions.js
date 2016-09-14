@@ -12,13 +12,13 @@ export const MAX_ELEMENTS = {
 }
 
 // Properties shared by both full and minimal options
-var baseOptions = {
+const baseOptions = {
   backgroundColor: 'transparent',
   fontName: 'Roboto, Helvetica, Arial, sans-serif',
   fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
 }
 
-export var fullOptions = {
+export const fullOptions = {
   ...baseOptions,
   headerColor: 'white',
   headerHeight: 0,
@@ -75,7 +75,7 @@ export var fullOptions = {
   ]
 };
 
-export var minimalOptions = {
+export const minimalOptions = {
   ...baseOptions,
   axisTitlesPosition: 'none',
   chartArea: {
@@ -86,6 +86,7 @@ export var minimalOptions = {
   },
   enableInteractivity: false,
   fontSize: 0,
+  headerHeight: 0,
   hAxis: {
     baselineColor: 'transparent',
     textPosition: 'none',
@@ -134,38 +135,3 @@ export var minimalOptions = {
     }
   ]
 };
-//
-// export var minimalBoxplotOptions = {
-//   ...options,
-//   lineWidth: 0,
-//   hAxis: {
-//     gridlines: {color: '#fff'}
-//   },
-//   intervals: {
-//     barWidth: 1,
-//     boxWidth: 1,
-//     lineWidth: 2,
-//     style: 'boxes'
-//   },
-//   interval: {
-//     'top': {
-//       style: 'bars',
-//       fillOpacity: 1,
-//       color: '#777'
-//     },
-//     'bottom': {
-//       style: 'bars',
-//       fillOpacity: 1,
-//       color: '#777'
-//     },
-//     'mean': {
-//       style: 'points',
-//     },
-//     'minimum': {
-//       style: 'points',
-//     },
-//     'maximum': {
-//       style: 'points',
-//     }
-//   }
-// }

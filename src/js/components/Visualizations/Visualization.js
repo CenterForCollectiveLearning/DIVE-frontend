@@ -60,10 +60,6 @@ export default class Visualization extends Component {
       }
     }
 
-    // options.hAxis.title = labels && labels.x ? labels.x : finalDataArray[0][0]
-    // options.vAxis.title = labels && labels.y ? labels.y : finalDataArray[0][1]
-    // options.colors = (colors.length > 0) ? colors : [ '#007BD7' ];
-
     // Sorting fields
     var finalDataArray = data;
     let sortIndex;

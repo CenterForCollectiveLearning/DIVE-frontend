@@ -153,7 +153,7 @@ export class ComparisonView extends Component {
               pairwiseComparisonData={ pairwiseComparisonData }
             />
           }
-          { anovaBoxplotData.length > 0 &&
+          { anovaBoxplotData && anovaBoxplotData.data &&
             <AnovaBoxplotCard
               anovaBoxplotData={ anovaBoxplotData }
             />
