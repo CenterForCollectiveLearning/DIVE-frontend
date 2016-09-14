@@ -11,6 +11,7 @@ import StackedColumnChart from './Charts/StackedColumnChart';
 import ScatterChart from './Charts/ScatterChart';
 import LineChart from './Charts/LineChart';
 import Histogram from './Charts/Histogram';
+import BoxPlot from './Charts/BoxPlot';
 
 export default class Visualization extends Component {
   constructor(props) {
@@ -98,6 +99,7 @@ export default class Visualization extends Component {
       finalDataArray = [ header, ...sortedDataPoints ];
     }
 
+    let minimalBoxplotOptions;
     var options = {
       backgroundColor: 'transparent',
       headerColor: 'white',
@@ -158,6 +160,23 @@ export default class Visualization extends Component {
         }
       ]
     };
+    var colors = [];
+    var primaryVariableKeys = ['aggField', 'binningField', 'fieldB'];
+    for (var i in primaryVariableKeys) {
+      var primaryVariableKey = primaryVariableKeys[i];
+      if (primaryVariableKey in args) {
+        var fieldName = args[primaryVariableKey].name;
+        if (fieldName in fieldNameToColor) {
+          colors.push(fieldNameToColor[fieldName]);
+        }
+      }
+    }
+
+    if (colors.length > 0) {
+      options['colors'] = colors;
+    } else {
+      options['colors'] = [ '#007BD7' ]
+    }
 
     if (isMinimalView) {
       options = {
@@ -219,6 +238,41 @@ export default class Visualization extends Component {
           }
         ]
       };
+
+      minimalBoxplotOptions = {
+        ...options,
+        lineWidth: 0,
+        hAxis: {
+          gridlines: {color: '#fff'}
+        },
+        intervals: {
+          barWidth: 1,
+          boxWidth: 1,
+          lineWidth: 2,
+          style: 'boxes'
+        },
+        interval: {
+          'top': {
+            style: 'bars',
+            fillOpacity: 1,
+            color: '#777'
+          },
+          'bottom': {
+            style: 'bars',
+            fillOpacity: 1,
+            color: '#777'
+          },
+          'mean': {
+            style: 'points',
+          },
+          'minimum': {
+            style: 'points',
+          },
+          'maximum': {
+            style: 'points',
+          }
+        }
+      }
     } else {
       options = {
         ...options,
@@ -228,23 +282,7 @@ export default class Visualization extends Component {
       }
     }
 
-    var colors = [];
-    var primaryVariableKeys = ['aggField', 'binningField', 'fieldB'];
-    for (var i in primaryVariableKeys) {
-      var primaryVariableKey = primaryVariableKeys[i];
-      if (primaryVariableKey in args) {
-        var fieldName = args[primaryVariableKey].name;
-        if (fieldName in fieldNameToColor) {
-          colors.push(fieldNameToColor[fieldName]);
-        }
-      }
-    }
 
-    if (colors.length > 0) {
-      options['colors'] = colors;
-    } else {
-      options['colors'] = [ '#007BD7' ]
-    }
 
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
 
@@ -311,6 +349,14 @@ export default class Visualization extends Component {
             + (isMinimalView ? ' ' + styles.minimal : '')
             + (visualizationClassName ? ' ' + visualizationClassName : '')
           }>
+            { (validVisualizationTypes[0] == 'box') &&
+              <BoxPlot
+                chartId={ `spec-box-${ chartId }` }
+                data={ finalDataArray }
+                labels={ labels }
+                options={ minimalBoxplotOptions }
+                isMinimalView={ isMinimalView }/>
+            }
             { (validVisualizationTypes[0] == 'hist') &&
               <Histogram
                 chartId={ `spec-hist-${ chartId }` }
