@@ -2,14 +2,16 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from '../Visualizations.sass';
 
+import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import { getPalette } from '../../../helpers/helpers';
 
 var Chart = require('react-google-charts').Chart;
 
 export default class BoxPlot extends Component {
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options, labels } = this.props;
+    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, colors, labels } = this.props;
 
+    // Data
     var firstRow = [
       data[0][0],
       // { label: 'Minimum', type: 'number', role: 'data'},
@@ -32,16 +34,15 @@ export default class BoxPlot extends Component {
 
     const finalData = [ firstRow, ...data.slice(1).map((row) => row.concat(row.slice(1))) ];
 
-    const fullBoxPlotOptions = {
+    var options = isMinimalView ? minimalOptions : fullOptions;
+    // Viz Options
+    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
+    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
+    options.colors = colors;
+
+    options = {
       ...options,
-      backgroundColor: 'transparent',
       lineWidth: 0,
-      chartArea: {
-        top: '5%',
-        height: '78%',
-        left: '15%',
-        width: '80%'
-      },
       intervals: {
         barWidth: 1,
         boxWidth: 1,
@@ -69,13 +70,10 @@ export default class BoxPlot extends Component {
           style: 'points',
         }
       },
-      legend: { position: 'none' },
     };
 
-    const boxPlotOptions = isMinimalView ? options : fullBoxPlotOptions;
-
     return (
-      <Chart chartType="LineChart" chartVersion="43" options={ boxPlotOptions } data={ finalData } graph_id={ chartId }/>
+      <Chart chartType="LineChart" chartVersion="43" options={ options } data={ finalData } graph_id={ chartId }/>
     );
   }
 }
@@ -85,11 +83,13 @@ BoxPlot.propTypes = {
   data: PropTypes.array.isRequired,
   isMinimalView: PropTypes.bool,
   options: PropTypes.object,
-  labels: PropTypes.object
+  labels: PropTypes.object,
+  colors: PropTypes.object
 };
 
 BoxPlot.defaultProps = {
   isMinimalView: false,
   options: {},
-  labels: {}
+  labels: {},
+  colors: [ '#007BD7' ]
 };

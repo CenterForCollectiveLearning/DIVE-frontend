@@ -11,17 +11,12 @@ export const MAX_ELEMENTS = {
   }
 }
 
-// Properties shared by both full and minimal options
-var baseOptions = {
+export var options = {
   backgroundColor: 'transparent',
-  fontName: 'Roboto, Helvetica, Arial, sans-serif',
-  fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-}
-
-export var fullOptions = {
-  ...baseOptions,
   headerColor: 'white',
   headerHeight: 0,
+  fontName: 'Roboto, Helvetica, Arial, sans-serif',
+  fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
   fontColor: "#333",
   textStyle: {
     color: "#333"
@@ -38,7 +33,7 @@ export var fullOptions = {
     }
   },
   hAxis: {
-      titleTextStyle: {
+    titleTextStyle: {
       color: "#333",
       italic: false,
       bold: true
@@ -75,8 +70,7 @@ export var fullOptions = {
   ]
 };
 
-export var minimalOptions = {
-  ...baseOptions,
+var minimalOptions = {
   axisTitlesPosition: 'none',
   chartArea: {
     left: 0,
@@ -134,38 +128,3 @@ export var minimalOptions = {
     }
   ]
 };
-//
-// export var minimalBoxplotOptions = {
-//   ...options,
-//   lineWidth: 0,
-//   hAxis: {
-//     gridlines: {color: '#fff'}
-//   },
-//   intervals: {
-//     barWidth: 1,
-//     boxWidth: 1,
-//     lineWidth: 2,
-//     style: 'boxes'
-//   },
-//   interval: {
-//     'top': {
-//       style: 'bars',
-//       fillOpacity: 1,
-//       color: '#777'
-//     },
-//     'bottom': {
-//       style: 'bars',
-//       fillOpacity: 1,
-//       color: '#777'
-//     },
-//     'mean': {
-//       style: 'points',
-//     },
-//     'minimum': {
-//       style: 'points',
-//     },
-//     'maximum': {
-//       style: 'points',
-//     }
-//   }
-// }

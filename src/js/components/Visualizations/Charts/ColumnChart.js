@@ -1,20 +1,26 @@
 import React, { Component, PropTypes } from 'react';
 
+import { fullOptions, minimalOptions } from '../VisualizationOptions';
+
 import styles from '../Visualizations.sass';
 
 var Chart = require('react-google-charts').Chart;
 
 export default class ColumnChart extends Component {
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options, labels } = this.props;
+    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, colors, labels } = this.props;
 
     var finalData = data;
 
-    const fullColumnChartOptions = {
+    var options = isMinimalView ? minimalOptions : fullOptions;
+    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
+    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
+    options.colors = colors;
+
+    options = {
       ...options,
       intervals: { 'lineWidth': 2, 'barWidth': 0.25 },
       hAxis: {
-        title: labels && labels.x ? labels.x : finalData[0][0],
         textStyle: {
           color: '#888'
         },
@@ -33,7 +39,6 @@ export default class ColumnChart extends Component {
       ],
       vAxis: {
         minValue: 0,
-        title: labels && labels.y ? labels.y : finalData[0][1],
         textStyle: {
           color: '#888'
         },
@@ -48,10 +53,8 @@ export default class ColumnChart extends Component {
       }
     };
 
-    const columnChartOptions = isMinimalView ? options : fullColumnChartOptions;
-
     return (
-      <Chart chartType="ColumnChart" chartVersion="43" options={ columnChartOptions } data={ finalData } graph_id={ chartId }/>
+      <Chart chartType="ColumnChart" chartVersion="43" options={ options } data={ finalData } graph_id={ chartId }/>
     );
   }
 }
@@ -62,10 +65,12 @@ ColumnChart.propTypes = {
   isMinimalView: PropTypes.bool,
   options: PropTypes.object,
   labels: PropTypes.object,
+  colors: PropTypes.object
 };
 
 ColumnChart.defaultProps = {
   isMinimalView: false,
   options: {},
-  labels: {}
+  labels: {},
+  colors: [ '#007BD7' ]
 };
