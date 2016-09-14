@@ -12,11 +12,16 @@ export default class BoxPlot extends Component {
 
     var firstRow = [
       data[0][0],
-      '',
+      { label: 'Q1 - 1.5IQR', type: 'number', role: 'data'},
+      { label: 'Q1', type: 'number', role: 'data'},
+      { label: 'Median', type: 'number', role: 'data'},
+      { label: 'Mean', type: 'number', role: 'data'},
+      { label: 'Q3', type: 'number', role: 'data'},
+      { label: 'Q3 + 1.5IQR', type: 'number', role: 'data'},                  
       {id: 'bottom',  type:'number', role:'interval' },
       {id: 'firstQuartile',  type:'number', role:'interval' },
-      {id: 'median',  type:'number', role:'interval' },
-      {id: 'mean',  type:'number', role:'interval' },
+      {id: 'median', label: 'Median', type:'number', role:'interval' },
+      {id: 'mean', type:'number', role:'interval' },
       {id: 'thirdQuartile',  type:'number', role:'interval' },
       {id: 'top',  type:'number', role:'interval' }
     ];
