@@ -26,7 +26,7 @@ export class HomePage extends Component {
 
     if (this.props.project.properties.id != nextProjectId) {
       this.props.wipeProjectState();
-      this.props.push(`/projects/${ nextProjectId }/datasets/upload`);
+      this.props.push(`/project/${ nextProjectId }/dataset/upload`);
     }
 
     if (this.props.userId != nextUserId) {

@@ -65,7 +65,7 @@ export class GalleryView extends Component {
 
   onClickVisualization(specId) {
     const { project, datasetSelector, push } = this.props;
-    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/builder/${ specId }`);
+    push(`/project/${ project.properties.id }/dataset/${ datasetSelector.datasetId }/visualize/builder/${ specId }`);
   }
 
   saveVisualization(specId, specData) {

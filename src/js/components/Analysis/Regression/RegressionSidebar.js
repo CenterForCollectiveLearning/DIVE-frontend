@@ -50,14 +50,14 @@ export class RegressionSidebar extends Component {
     const { project, datasetSelector, fieldProperties, push } = this.props;
 
     const queryParams = { 'dependent-variable': dependentVariable };
-    push(createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
+    push(createURL(`/project/${ project.properties.id }/dataset/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
   }
 
   onSelectRegressionType(regressionType) {
     const { project, datasetSelector, regressionSelector, push } = this.props;
 
     const queryParams = { 'dependent-variable': regressionSelector.dependentVariableId, 'regression-type': regressionType };
-    push(createURL(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
+    push(createURL(`/project/${ project.properties.id }/dataset/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
   }
 
   onAddInteractionTerm(dropDownNumber, independentVariableId) {

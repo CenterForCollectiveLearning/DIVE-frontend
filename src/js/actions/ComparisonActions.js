@@ -17,6 +17,10 @@ import { fetch } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
 
 
+export function getInitialState() {
+  
+}
+
 export function selectConditional(conditional) {
   return {
     type: SELECT_CONDITIONAL,

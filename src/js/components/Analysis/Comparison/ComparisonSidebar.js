@@ -1,9 +1,14 @@
+import _ from 'underscore';
+
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { selectIndependentVariables, selectDependentVariables, selectConditional } from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
+
+import { createURL, setQueryString } from '../../../helpers/helpers';
 
 import ConditionalSelector from '../../Base/ConditionalSelector';
 import Sidebar from '../../Base/Sidebar';
@@ -12,25 +17,107 @@ import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 
 export class ComparisonSidebar extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onClickIndependentVariable = this.onClickIndependentVariable.bind(this)
+    this.onClickDependentVariable = this.onClickDependentVariable.bind(this)
+  }
+
   componentWillMount(props) {
-    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
+    const {
+      project,
+      datasetSelector,
+      fieldProperties,
+      fetchFieldPropertiesIfNeeded,
+      queryDependentVariablesIds,
+      queryIndependentVariablesIds,
+      selectIndependentVariables,
+      selectDependentVariables
+    } = this.props;
 
     if (project.properties.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId)
+      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId);
+    }
+
+    // Selecting based on initial query string
+    if (queryDependentVariablesIds.length) {
+      selectDependentVariables(queryDependentVariablesIds);
+    }
+    if (queryIndependentVariablesIds.length) {
+      selectIndependentVariables(queryIndependentVariablesIds);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = nextProps;
-    const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
+    const {
+      datasetSelector,
+      queryDependentVariablesIds,
+      queryIndependentVariablesIds,
+      selectIndependentVariables,
+      selectDependentVariables
+    } = this.props;
 
-    if (project.properties.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId)
+    const datasetIdChanged = nextProps.datasetSelector.datasetId != datasetSelector.datasetId;
+    if (nextProps.project.properties.id && nextProps.datasetSelector.datasetId && (datasetIdChanged || !nextProps.fieldProperties.items.length) && !nextProps.fieldProperties.fetching) {
+      nextProps.fetchFieldPropertiesIfNeeded(nextProps.project.properties.id, nextProps.datasetSelector.datasetId)
+    }
+
+    // Handling query string changes
+    const queryIndependentVariablesIdsChanged = _.union(_.difference(nextProps.queryIndependentVariablesIds, queryIndependentVariablesIds), _.difference(queryIndependentVariablesIds, nextProps.queryIndependentVariablesIds));
+    if (queryIndependentVariablesIdsChanged.length) {
+      selectIndependentVariables(queryIndependentVariablesIdsChanged)
+    }
+
+    const queryDependentVariablesIdsChanged = _.union(_.difference(nextProps.queryDependentVariablesIds, queryDependentVariablesIds), _.difference(queryDependentVariablesIds, nextProps.queryDependentVariablesIds));
+    if (queryDependentVariablesIdsChanged.length) {
+      selectDependentVariables(queryDependentVariablesIdsChanged)
     }
   }
 
+  onClickIndependentVariable(selectedField) {
+    const { project, datasetSelector, comparisonSelector, push } = this.props;
+    const { dependentVariablesIds, independentVariablesIds } = comparisonSelector;
+    selectedField = parseInt(selectedField);
+
+    // TODO Abstract this
+    const existingFields = independentVariablesIds.slice();
+    var newFields = independentVariablesIds.slice();
+    if (existingFields.find((existingField) => existingField == selectedField)) {  // If selected field in existing fields, remove
+      newFields = newFields.filter((existingField) => existingField != selectedField);
+    } else {  // Else add
+      newFields.push(selectedField);
+    }
+
+    push(createURL(`/project/${ project.properties.id }/dataset/${ datasetSelector.datasetId }/analyze/comparison`, {
+      dependentVariablesIds: dependentVariablesIds,
+      independentVariablesIds: newFields
+    }));
+  }
+
+  onClickDependentVariable(selectedField) {
+    const { project, datasetSelector, comparisonSelector, push } = this.props;
+    const { dependentVariablesIds, independentVariablesIds } = comparisonSelector;
+    selectedField = parseInt(selectedField);
+
+    const existingFields = dependentVariablesIds.slice();
+    var newFields = dependentVariablesIds.slice();
+    if (existingFields.find((existingField) => existingField == selectedField)) {  // If selected field in existing fields, remove
+      newFields = newFields.filter((existingField) => existingField != selectedField);
+    } else {  // Else add
+      newFields.push(selectedField);
+    }
+
+    push(createURL(`/project/${ project.properties.id }/dataset/${ datasetSelector.datasetId }/analyze/comparison`, {
+      dependentVariablesIds: newFields,
+      independentVariablesIds: independentVariablesIds
+    }));
+  }
+
   render() {
-    const { conditionals, fieldProperties, comparisonSelector, selectIndependentVariables, selectDependentVariables, selectConditional } = this.props;
+    const { conditionals, fieldProperties, comparisonSelector, selectConditional } = this.props;
+    const { dependentVariablesIds, independentVariablesIds } = comparisonSelector;
+
     return (
       <Sidebar selectedTab="comparison">
         { fieldProperties.items.length != 0 &&
@@ -43,16 +130,16 @@ export class ComparisonSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
+                      disabled: (dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
                       color: item.color
                     })
                   )}
                   displayTextMember="name"
                   valueMember="id"
                   colorMember="color"
-                  externalSelectedItems={ comparisonSelector.independentVariablesIds }
+                  externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariables } />
+                  onChange={ this.onClickIndependentVariable } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
@@ -63,16 +150,16 @@ export class ComparisonSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
+                      disabled: (dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
                       color: item.color
                     })
                   )}
                   valueMember="id"
                   colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ comparisonSelector.independentVariablesIds }
+                  externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariables } />
+                  onChange={ this.onClickDependentVariable } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
@@ -83,16 +170,16 @@ export class ComparisonSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
+                      disabled: (dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
                       color: item.color
                     })
                   )}
                   valueMember="id"
                   colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ comparisonSelector.independentVariablesIds }
+                  externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariables } />
+                  onChange={ this.onClickIndependentVariable } />
               </div>
             }
           </SidebarGroup>
@@ -106,16 +193,16 @@ export class ComparisonSidebar extends Component {
                   new Object({
                     id: item.id,
                     name: item.name,
-                    disabled: (comparisonSelector.independentVariablesIds.indexOf(item.id) >= 0 || item.generalType == 'c' || item.isId),
+                    disabled: (independentVariablesIds.indexOf(item.id) >= 0 || item.generalType == 'c' || item.isId),
                     color: item.color
                   })
                 )}
                 valueMember="id"
                 colorMember="color"
                 displayTextMember="name"
-                externalSelectedItems={ comparisonSelector.dependentVariablesIds }
+                externalSelectedItems={ dependentVariablesIds }
                 separated={ true }
-                onChange={ selectDependentVariables } />
+                onChange={ this.onClickDependentVariable } />
             </div>
           </SidebarGroup>
         }
@@ -144,7 +231,9 @@ ComparisonSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  comparisonSelector: PropTypes.object.isRequired
+  comparisonSelector: PropTypes.object.isRequired,
+  queryDependentVariablesIds: PropTypes.array.isRequired,
+  queryIndependentVariablesIds: PropTypes.array.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -158,4 +247,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariables, selectDependentVariables, selectConditional })(ComparisonSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariables, selectDependentVariables, selectConditional, push })(ComparisonSidebar);

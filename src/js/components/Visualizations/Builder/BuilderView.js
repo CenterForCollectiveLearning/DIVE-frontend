@@ -41,7 +41,7 @@ export class BuilderView extends Component {
     }
 
     if (exportingChanged && !nextProps.visualization.isExporting && nextProps.visualization.shareWindow) {
-      nextProps.visualization.shareWindow.location.href = `/share/projects/${ nextProps.project.properties.id }/visualizations/${ nextProps.visualization.exportedSpecId }`;
+      nextProps.visualization.shareWindow.location.href = `/share/project/${ nextProps.project.properties.id }/visualizations/${ nextProps.visualization.exportedSpecId }`;
     }
   }
 
@@ -102,7 +102,7 @@ export class BuilderView extends Component {
 
   onClickGallery() {
     const { project, datasetSelector, gallerySelector, push } = this.props;
-    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ gallerySelector.queryString }`);
+    push(`/project/${ project.properties.id }/dataset/${ datasetSelector.datasetId }/visualize/explore${ gallerySelector.queryString }`);
   }
 
   render() {

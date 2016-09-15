@@ -1,5 +1,40 @@
 import React from 'react';
 import _ from 'underscore';
+import {
+  SET_QUERY_STRING
+} from '../constants/ActionTypes';
+
+function getQueryStringFromObject(queryObject) {
+  var queryString = '';
+
+  Object.keys(queryObject).forEach(
+    function (key, index, array) {
+      const value = queryObject[key];
+      console.log(key, value);
+      if (typeof value != 'undefined' && value !== null) {
+        var fieldString = '';
+        if (Array.isArray(value)) {
+          if (value.length > 0) {
+            fieldString = `&${ key }=${ value.join(',') }`;
+          }
+        } else {
+          fieldString = `&${ key }=${ value }`;
+        }
+        queryString = queryString + fieldString;
+      }
+    }
+  );
+  queryString = queryString.replace('&', '?');
+  return queryString;
+}
+
+export function setQueryString(query) {
+  const queryString = getQueryStringFromObject(query);
+  return {
+    type: SET_QUERY_STRING,
+    queryString: queryString
+  }
+}
 
 export function handleFieldSelection(existingFields, selectedFields) {
   var newFields = existingFields.slice();
@@ -129,17 +164,8 @@ export function getPalette(hashElements) {
   return colors;
 }
 
-function camelCaseToDash( myStr ) {
-  return myStr.replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase();
-}
-
 export function createURL(base, queryObj) {
-  return Object.keys(queryObj).reduce((prev, curr, index) => {
-    const param = camelCaseToDash(curr) + '=' + queryObj[curr];
-
-    if(index === 0) return prev + param;
-    return prev + '&' + param;
-  }, base + '?')
+  return base + getQueryStringFromObject(queryObj)
 }
 
 export function recommendRegressionType(dependentVariableType) {

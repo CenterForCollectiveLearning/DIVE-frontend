@@ -61,14 +61,14 @@ export default (
       <Route path=":documentId" component={ NarrativePage }/>
     </Route>
 
-    <Route path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }>
-      <Route path="datasets" component={ DatasetsPage }>
+    <Route path="/project/:projectId" component={ requireAuthentication(ProjectsPage) }>
+      <Route path="dataset" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>
         <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>
         <Route path=":datasetId/transform" component={ DatasetTransformPage }/>
       </Route>
 
-      <Route path="datasets/:datasetId" component={ DatasetsPage }>
+      <Route path="dataset/:datasetId" component={ DatasetsPage }>
         <Route path="visualize" component={ VisualizationsPage }>
           <Route path="explore" component={ GalleryBasePage }/>
           <Route path="builder/:specId" component={ BuilderPage }/>
@@ -86,6 +86,6 @@ export default (
         <Route path=":documentId" component={ ComposePage }/>
       </Route>
     </Route>
-    <Route path="/share/projects/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>
+    <Route path="/share/project/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>
   </Route>
 );

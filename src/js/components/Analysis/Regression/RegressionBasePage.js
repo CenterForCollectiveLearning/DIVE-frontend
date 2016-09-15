@@ -26,7 +26,7 @@ export class RegressionBasePage extends Component {
       const dependentVariable = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c'));
 
       const queryParams = { 'dependent-variable': dependentVariable.id, 'regression-type': recommendRegressionType(dependentVariable.generalType) };
-      replace(createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, queryParams));
+      replace(createURL(`/project/${ params.projectId }/dataset/${ params.datasetId }/analyze/regression`, queryParams));
     }
   }
 
@@ -40,7 +40,7 @@ export class RegressionBasePage extends Component {
       const dependentVariable = (nextFieldProperties.items.find((property) => property.generalType == 'q') || nextFieldProperties.items.find((property) => property.generalType == 'c'));
 
       const queryParams = { 'dependent-variable': dependentVariable.id, 'regression-type': recommendRegressionType(dependentVariable.generalType) };
-      replace(createURL(`/projects/${ nextParams.projectId }/datasets/${ nextParams.datasetId }/analyze/regression`, queryParams));
+      replace(createURL(`/project/${ nextParams.projectId }/dataset/${ nextParams.datasetId }/analyze/regression`, queryParams));
     }
 
     if(nextQuery['dependent-variable'] && (query['dependent-variable'] != nextQuery['dependent-variable'])) {
@@ -50,7 +50,7 @@ export class RegressionBasePage extends Component {
         const regressionType = recommendRegressionType(nextFieldProperties.items.find((property) => property.id == nextQuery['dependent-variable']).generalType);
 
         const queryParams = { 'dependent-variable': nextQuery['dependent-variable'], 'regression-type': regressionType };
-        replace(createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, queryParams));
+        replace(createURL(`/project/${ params.projectId }/dataset/${ params.datasetId }/analyze/regression`, queryParams));
       }
     }
 

@@ -32,7 +32,7 @@ export class ProjectTopBar extends Component {
     const { pathname, query } = location;
     const remainingRoute = routes.slice(3).map((e) => e.path).join('/');
     selectDataset(project.properties.id, datasetId);
-    push(`/projects/${ project.properties.id }/datasets/${ datasetId }/${ remainingRoute }`);
+    push(`/project/${ project.properties.id }/dataset/${ datasetId }/${ remainingRoute }`);
   }
 
   _getCurrentPage(){
@@ -71,7 +71,7 @@ export class ProjectTopBar extends Component {
   }
 
   onSelectProject(projectId) {
-    window.location.href = `/projects/${ projectId }/datasets`;
+    window.location.href = `/project/${ projectId }/dataset`;
   }
 
 

@@ -75,7 +75,7 @@ export class ProjectNav extends Component {
 
 
   _handleTabsChange(tab){
-    this.props.push(`/projects/${ this.props.project.properties.id }/${ tab.props.route }`);
+    this.props.push(`/project/${ this.props.project.properties.id }/${ tab.props.route }`);
   }
 
   _onClickLogo(){
@@ -88,7 +88,7 @@ export class ProjectNav extends Component {
   }
 
   onSelectProject(projectId) {
-    window.location.href = `/projects/${ projectId }/datasets`;
+    window.location.href = `/project/${ projectId }/dataset`;
   }
 
   onClickProjectSettings() {
@@ -117,22 +117,22 @@ export class ProjectNav extends Component {
         </div>
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
           <TabGroup heading="1. DATASETS">
-            <Tab label="Upload" value="upload" route={ `datasets/upload` } />
+            <Tab label="Upload" value="upload" route={ `dataset/upload` } />
             <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
             <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } disabled={ !datasets.items.length }/>
             <Tab label="Clean" value="clean" route={ `datasets${ datasetId ? `/${ datasetId }/clean` : '/combine' }` } disabled={ true }/>
           </TabGroup>
           <TabGroup heading="2. VISUALIZATIONS">
-            <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
-            <Tab label="Build" value="builder" route={ `datasets/${ datasetId }/visualize/builder` } disabled={ true }/>
+            <Tab label="Explore" value="explore" route={ `dataset/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
+            <Tab label="Build" value="builder" route={ `dataset/${ datasetId }/visualize/builder` } disabled={ true }/>
           </TabGroup>
           <TabGroup heading="3. ANALYSIS">
-            <Tab label="Aggregation" value="aggregation" route={ `datasets/${ datasetId }/analyze/aggregation` } disabled={ !datasetId }/>
-            <Tab label="Comparison" value="comparison" route={ `datasets/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>
-            <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
-            <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
-            <Tab label="Clustering" value="clustering" route={ `datasets/${ datasetId }/analyze/clustering` } disabled={ true }/>
-            <Tab label="Time Series" value="timeseries" route={ `datasets/${ datasetId }/analyze/timeseries` } disabled={ true }/>
+            <Tab label="Aggregation" value="aggregation" route={ `dataset/${ datasetId }/analyze/aggregation` } disabled={ !datasetId }/>
+            <Tab label="Comparison" value="comparison" route={ `dataset/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>
+            <Tab label="Correlation" value="correlation" route={ `dataset/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
+            <Tab label="Regression" value="regression" route={ `dataset/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
+            <Tab label="Clustering" value="clustering" route={ `dataset/${ datasetId }/analyze/clustering` } disabled={ true }/>
+            <Tab label="Time Series" value="timeseries" route={ `dataset/${ datasetId }/analyze/timeseries` } disabled={ true }/>
           </TabGroup>
           <TabGroup heading="4. STORIES">
             <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>

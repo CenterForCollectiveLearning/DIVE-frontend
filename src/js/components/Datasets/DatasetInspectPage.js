@@ -55,16 +55,16 @@ export class DatasetInspectPage extends Component {
 
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
       if (datasetSelector.datasetId) {
-        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+        push(`/project/${ params.projectId }/dataset/${ datasetSelector.datasetId }/inspect`);
       } else {
-        push(`/projects/${ params.projectId }/datasets/upload`);
+        push(`/project/${ params.projectId }/dataset/upload`);
       }
     }
   }
 
   onSelectDataset(selectedValue) {
     if (selectedValue) {
-      this.props.push(`/projects/${ this.props.project.properties.id }/datasets/${ selectedValue }/inspect`);
+      this.props.push(`/project/${ this.props.project.properties.id }/dataset/${ selectedValue }/inspect`);
     }
   }
 
@@ -75,7 +75,7 @@ export class DatasetInspectPage extends Component {
   }
 
   onClickUploadDataset() {
-    this.props.push(`/projects/${ this.props.project.properties.id }/datasets/upload`);
+    this.props.push(`/project/${ this.props.project.properties.id }/dataset/upload`);
   }
 
   render() {

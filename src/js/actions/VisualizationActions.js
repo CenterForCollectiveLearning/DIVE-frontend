@@ -19,7 +19,7 @@ import {
   SELECT_BUILDER_SORT_FIELD,
   SELECT_CONDITIONAL,
   SELECT_VISUALIZATION_CONFIG,
-  SET_GALLERY_QUERY_STRING
+  SET_QUERY_STRING
 } from '../constants/ActionTypes';
 
 import _ from 'underscore';
@@ -287,28 +287,5 @@ export function setShareWindow(shareWindow) {
   return {
     type: SET_SHARE_WINDOW,
     shareWindow: shareWindow
-  }
-}
-
-export function setGalleryQueryString(query) {
-  var queryString = '';
-
-  Object.keys(query).forEach(
-    function (key, index, array) {
-      var fieldString = '';
-      if (Array.isArray(query[key])) {
-        fieldString = `&${ key }=${ query[key].join(',') }`;
-      } else {
-        fieldString = `&${ key }=${ query[key] }`;
-      }
-      queryString = queryString + fieldString;
-    }
-  );
-
-  queryString = queryString.replace('&', '?');
-
-  return {
-    type: SET_GALLERY_QUERY_STRING,
-    queryString: queryString
   }
 }

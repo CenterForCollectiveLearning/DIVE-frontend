@@ -29,32 +29,32 @@ const baseState = {
 export default function comparisonSelector(state = baseState, action) {
   switch (action.type) {
 
-    case RECEIVE_FIELD_PROPERTIES:
-      // Default selection
-      var modifiedState = { ...state };
-
-      var categoricalItemIds = action.fieldProperties.filter((item) => ((item.generalType == 'c') && (!item.isId))).map((item) => item.id);
-      var quantitativeItemIds = action.fieldProperties.filter((item) => ((item.generalType == 'q') && (!item.isId))).map((item) => item.id);
-      var n_c = categoricalItemIds.length;
-      var n_q = quantitativeItemIds.length;
-
-      if ((n_c >= 2) && (n_q >= 1)) {
-        modifiedState.independentVariablesIds = _.sample(categoricalItemIds, 1);
-        modifiedState.dependentVariablesIds = _.sample(quantitativeItemIds, 1);
-      } else {
-        if (n_c == 0) {
-          if (n_q >= 2) {
-            modifiedState.independentVariablesIds = _.sample(quantitativeItemIds, 2);
-          }
-        } else if (n_c == 1) {
-          if (n_q >= 1) {
-            modifiedState.dependentVariablesIds = _.sample(quantitativeItemIds, 1);
-            modifiedState.independentVariablesIds = _.sample(categoricalItemIds, 1);
-          }
-        }
-      }
-
-      return modifiedState;
+    // case RECEIVE_FIELD_PROPERTIES:
+    //   // Default selection
+    //   var modifiedState = { ...state };
+    //
+    //   var categoricalItemIds = action.fieldProperties.filter((item) => ((item.generalType == 'c') && (!item.isId))).map((item) => item.id);
+    //   var quantitativeItemIds = action.fieldProperties.filter((item) => ((item.generalType == 'q') && (!item.isId))).map((item) => item.id);
+    //   var n_c = categoricalItemIds.length;
+    //   var n_q = quantitativeItemIds.length;
+    //
+    //   if ((n_c >= 2) && (n_q >= 1)) {
+    //     modifiedState.independentVariablesIds = _.sample(categoricalItemIds, 1);
+    //     modifiedState.dependentVariablesIds = _.sample(quantitativeItemIds, 1);
+    //   } else {
+    //     if (n_c == 0) {
+    //       if (n_q >= 2) {
+    //         modifiedState.independentVariablesIds = _.sample(quantitativeItemIds, 2);
+    //       }
+    //     } else if (n_c == 1) {
+    //       if (n_q >= 1) {
+    //         modifiedState.dependentVariablesIds = _.sample(quantitativeItemIds, 1);
+    //         modifiedState.independentVariablesIds = _.sample(categoricalItemIds, 1);
+    //       }
+    //     }
+    //   }
+    //
+    //   return modifiedState;
 
     case SELECT_COMPARISON_INDEPENDENT_VARIABLES:
       var independentVariablesIds = state.independentVariablesIds.slice();

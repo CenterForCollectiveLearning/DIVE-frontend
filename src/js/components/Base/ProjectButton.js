@@ -33,7 +33,7 @@ class ProjectButton extends Component {
     const { projectSettingsModalOpen } = this.state;
     if (!projectSettingsModalOpen) {
       wipeProjectState();
-      push(`/projects/${ project.id }/datasets`);      
+      push(`/project/${ project.id }/dataset`);      
     }
   }
 

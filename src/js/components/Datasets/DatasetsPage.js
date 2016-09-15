@@ -17,9 +17,9 @@ export class DatasetsPage extends Component {
         fetchDatasets(project.properties.id);
       } else if (datasetSelector.loaded) {
         if (datasetSelector.datasetId) {
-          push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+          push(`/project/${ params.projectId }/dataset/${ datasetSelector.datasetId }/inspect`);
         } else {
-          push(`/projects/${ params.projectId }/datasets/upload`);
+          push(`/project/${ params.projectId }/dataset/upload`);
         }
       }
     } else {
@@ -40,9 +40,9 @@ export class DatasetsPage extends Component {
         fetchDatasets(params.projectId);
       } else if (datasets.loaded && params.projectId == datasetSelector.projectId) {
         if (datasetSelector.datasetId && params.projectId == datasetSelector.projectId) {
-          push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+          push(`/project/${ params.projectId }/dataset/${ datasetSelector.datasetId }/inspect`);
         } else {
-          push(`/projects/${ params.projectId }/datasets/upload`);
+          push(`/project/${ params.projectId }/dataset/upload`);
         }
       }
     }

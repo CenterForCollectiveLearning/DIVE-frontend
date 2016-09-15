@@ -57,7 +57,7 @@ export class ComposeView extends Component {
   onSelectDocument(documentId) {
     const { projectId, push } = this.props;
     if (documentId) {
-      push(`/projects/${ projectId }/compose/${ documentId }`);
+      push(`/project/${ projectId }/compose/${ documentId }`);
     }
   }
 
@@ -70,7 +70,7 @@ export class ComposeView extends Component {
     const { projectId, documents, composeSelector, deleteDocument, push } = this.props;
     deleteDocument(projectId, composeSelector.documentId);
     const nextDocId = documents.items.find((doc) => doc.id != composeSelector.documentId).id;
-    push(`/projects/${ projectId }/compose/${ nextDocId }`);
+    push(`/project/${ projectId }/compose/${ nextDocId }`);
   }
 
   onClickShareDocument() {

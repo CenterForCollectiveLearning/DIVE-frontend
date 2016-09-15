@@ -21,7 +21,7 @@ function requestFieldPropertiesDispatcher() {
   };
 }
 
-function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFieldPropertyNames) {
+function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFieldPropertyIds) {
 
   const AGGREGATIONS = [
     {
@@ -57,7 +57,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
     .map((property) =>
       new Object({
         ...property,
-        selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
+        selected: selectedFieldPropertyIds.indexOf(property.id) >= 0,
         values: property.uniqueValues ? [allValuesMenuItem, ...property.uniqueValues.map((value, i) =>
           new Object({
             selected: false,
@@ -73,7 +73,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
       .map((property) =>
         new Object({
           ...property,
-          selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
+          selected: selectedFieldPropertyIds.indexOf(property.id) >= 0,
           aggregations: AGGREGATIONS
         })
       );
@@ -84,7 +84,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
     .map((property) =>
       new Object({
         ...property,
-        selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
+        selected: selectedFieldPropertyIds.indexOf(property.id) >= 0,
         aggregations: AGGREGATIONS
       })
     );

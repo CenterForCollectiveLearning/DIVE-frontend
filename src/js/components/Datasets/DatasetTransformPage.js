@@ -52,9 +52,9 @@ export class DatasetTransformPage extends Component {
 
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
       if (datasetSelector.datasetId) {
-        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/transform`);
+        push(`/project/${ params.projectId }/dataset/${ datasetSelector.datasetId }/transform`);
       } else {
-        push(`/projects/${ params.projectId }/datasets/upload`);
+        push(`/project/${ params.projectId }/dataset/upload`);
       }
     }
   }

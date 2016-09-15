@@ -30,7 +30,7 @@ export class DatasetUploadPage extends Component {
   componentWillReceiveProps(nextProps) {
     const { project, datasets, datasetSelector, push, params, fetchDatasets } = nextProps;
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+      push(`/project/${ params.projectId }/dataset/${ datasetSelector.datasetId }/inspect`);
     }
 
     if (project.properties.id && !datasets.fetchedAll && !datasets.isFetching) {

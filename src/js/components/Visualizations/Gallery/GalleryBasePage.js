@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 
-import { setGalleryQueryString } from '../../../actions/VisualizationActions';
+import { setQueryString } from '../../../helpers/helpers';
 
 import styles from '../Visualizations.sass';
 import GallerySidebar from './GallerySidebar';
@@ -23,18 +23,17 @@ class GalleryBasePage extends Component {
   }
 
   componentWillMount() {
-    this.props.setGalleryQueryString(this.props.location.query);
+    this.props.setQueryString(this.props.location.query);
     this.setState({
       uniqueSpecVisualizationTypes: this.getUniqueSpecVisualizationTypes(this.props.specs)
     }, () => this.updateVisualizationTypes(this.props.filters.visualizationTypes));
   }
 
   componentWillReceiveProps(nextProps) {
-    const { location, specs, filters, setGalleryQueryString } = nextProps;
+    const { location, specs, filters, setQueryString } = nextProps;
 
     if (location.query !== this.props.location.query) {
-      console.log('Setting gallery query string', location.query);
-      setGalleryQueryString(location.query);
+      setQueryString(location.query);
     }
 
     if (specs.updatedAt != this.props.specs.updatedAt || filters.updatedAt != this.props.filters.updatedAt) {
@@ -75,7 +74,7 @@ class GalleryBasePage extends Component {
   render() {
     const { projectTitle, location } = this.props;
     const locationQueryFields = this.props.location.query['fields'];
-    const queryFields = locationQueryFields ? locationQueryFields.split(',') : [];
+    const queryFields = locationQueryFields ? locationQueryFields.split(',').map((idString) => parseInt(idString)) : [];
 
     const visualizationTypeObjects = this.state.visualizationTypes;
     const filteredVisualizationTypes = visualizationTypeObjects
@@ -101,4 +100,4 @@ function mapStateToProps(state) {
   return { projectTitle: project.properties.title, filters, specs };
 }
 
-export default connect(mapStateToProps, { setGalleryQueryString })(GalleryBasePage);
+export default connect(mapStateToProps, { setQueryString })(GalleryBasePage);
