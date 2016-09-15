@@ -8,7 +8,7 @@ import styles from '../Visualizations.sass';
 import GallerySidebar from './GallerySidebar';
 import GalleryView from './GalleryView';
 
-class GalleryPage extends Component {
+class GalleryBasePage extends Component {
   constructor(props) {
     super(props);
 
@@ -33,6 +33,7 @@ class GalleryPage extends Component {
     const { location, specs, filters, setGalleryQueryString } = nextProps;
 
     if (location.query !== this.props.location.query) {
+      console.log('Setting gallery query string', location.query);
       setGalleryQueryString(location.query);
     }
 
@@ -72,16 +73,9 @@ class GalleryPage extends Component {
   }
 
   render() {
-    const { projectTitle } = this.props;
-
-    var queryFields = [];
-    if (this.props.location.query['fields[]']) {
-      if (Array.isArray(this.props.location.query['fields[]'])) {
-        queryFields = this.props.location.query['fields[]'];
-      } else {
-        queryFields = [this.props.location.query['fields[]']];
-      }
-    }
+    const { projectTitle, location } = this.props;
+    const locationQueryFields = this.props.location.query['fields'];
+    const queryFields = locationQueryFields ? locationQueryFields.split(',') : [];
 
     const visualizationTypeObjects = this.state.visualizationTypes;
     const filteredVisualizationTypes = visualizationTypeObjects
@@ -107,4 +101,4 @@ function mapStateToProps(state) {
   return { projectTitle: project.properties.title, filters, specs };
 }
 
-export default connect(mapStateToProps, { setGalleryQueryString })(GalleryPage);
+export default connect(mapStateToProps, { setGalleryQueryString })(GalleryBasePage);

@@ -1,6 +1,6 @@
 import {
-  SELECT_COMPARISON_INDEPENDENT_VARIABLE,
-  SELECT_COMPARISON_DEPENDENT_VARIABLE,
+  SELECT_COMPARISON_INDEPENDENT_VARIABLES,
+  SELECT_COMPARISON_DEPENDENT_VARIABLES,
   REQUEST_NUMERICAL_COMPARISON,
   RECEIVE_NUMERICAL_COMPARISON,
   UPDATE_COMPARISON_INPUT,
@@ -24,18 +24,18 @@ export function selectConditional(conditional) {
   }
 }
 
-export function selectIndependentVariable(selectedVariableId) {
+export function selectIndependentVariables(selectedVariableIds) {
   return {
-    type: SELECT_COMPARISON_INDEPENDENT_VARIABLE,
-    independentVariableId: selectedVariableId,
+    type: SELECT_COMPARISON_INDEPENDENT_VARIABLES,
+    independentVariableIds: selectedVariableIds,
     selectedAt: Date.now()
   }
 }
 
-export function selectDependentVariable(selectedVariableId) {
+export function selectDependentVariables(selectedVariableIds) {
   return {
-    type: SELECT_COMPARISON_DEPENDENT_VARIABLE,
-    dependentVariableId: selectedVariableId,
+    type: SELECT_COMPARISON_DEPENDENT_VARIABLES,
+    dependentVariableIds: selectedVariableIds,
     selectedAt: Date.now()
   }
 }

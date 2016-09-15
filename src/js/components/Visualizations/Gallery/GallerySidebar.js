@@ -25,6 +25,13 @@ export class GallerySidebar extends Component {
   componentWillMount() {
     const { project, datasetSelector, gallerySelector, fetchFieldPropertiesIfNeeded, queryFields } = this.props;
 
+    // TODO Remove, never true
+    if (queryFields.length && gallerySelector.fieldProperties.length > 0) {
+      queryFields.forEach((queryFieldId) =>
+        selectFieldProperty(gallerySelector.fieldProperties.find((property) => property.id == queryFieldId).id)
+      );
+    }
+
     if (project.properties.id && datasetSelector.datasetId && (gallerySelector.datasetId != datasetSelector.datasetId) && !gallerySelector.isFetching) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId, queryFields);
     }
@@ -33,14 +40,16 @@ export class GallerySidebar extends Component {
   componentDidUpdate(previousProps) {
     const { project, datasetSelector, gallerySelector, fetchFieldPropertiesIfNeeded, queryFields, selectFieldProperty } = this.props;
 
+    console.log('previousProps Query', previousProps.queryFields)
     const projectChanged = (previousProps.project.properties.id !== project.properties.id);
     const datasetChanged = (previousProps.datasetSelector.datasetId !== datasetSelector.datasetId);
 
     const queryFieldsChanged = _.union(_.difference(previousProps.queryFields, queryFields), _.difference(queryFields, previousProps.queryFields));
 
     if (queryFieldsChanged.length) {
-      queryFieldsChanged.forEach((queryFieldName) =>
-        selectFieldProperty(gallerySelector.fieldProperties.find((property) => property.name == queryFieldName).id)
+      console.log('queryFieldsChanged', queryFieldsChanged, previousProps.queryFields, queryFields);
+      queryFieldsChanged.forEach((queryFieldId) =>
+        selectFieldProperty(gallerySelector.fieldProperties.find((property) => property.id == queryFieldId).id)
       );
     }
 
@@ -51,15 +60,18 @@ export class GallerySidebar extends Component {
 
   clickFieldProperty(fieldPropertyId) {
     const { gallerySelector, project, datasetSelector, push } = this.props;
-    var selectedFieldPropertiesQueryString = gallerySelector.fieldProperties
+
+    var selectedFieldPropertiesIds = gallerySelector.fieldProperties
       .filter((property) => (!property.selected && property.id == fieldPropertyId) || (property.selected && property.id != fieldPropertyId))
-      .map((property) => `fields%5B%5D=${ property.name }`);
+      .map((property) => property.id )
 
-    if (selectedFieldPropertiesQueryString.length) {
-      selectedFieldPropertiesQueryString = selectedFieldPropertiesQueryString.reduce((a, b) => a + "&" + b);
+
+    if (selectedFieldPropertiesIds.length > 0 ) {
+      var selectedFieldPropertiesQueryString = ( selectedFieldPropertiesIds.length > 0 ) ? ('fields=' + selectedFieldPropertiesIds.join(',')) : '';
+      push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
+    } else {
+      push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore`);
     }
-
-    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
   }
 
   clickFieldPropertyValue(fieldPropertyId, fieldPropertyValueId) {

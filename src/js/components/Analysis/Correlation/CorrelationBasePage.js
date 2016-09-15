@@ -6,7 +6,7 @@ import styles from '../Analysis.sass';
 import CorrelationSidebar from './CorrelationSidebar';
 import CorrelationView from './CorrelationView';
 
-export class CorrelationPage extends Component {
+export class CorrelationBasePage extends Component {
   render() {
     const { projectTitle } = this.props;
     return (
@@ -26,4 +26,4 @@ function mapStateToProps(state) {
   return { projectTitle: project.properties.title };
 }
 
-export default connect(mapStateToProps, { })(CorrelationPage);
+export default connect(mapStateToProps, { })(CorrelationBasePage);

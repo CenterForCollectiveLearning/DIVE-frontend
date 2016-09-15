@@ -13,7 +13,7 @@ export default class ToggleButton extends Component {
   }
 
   handleClick (event) {
-    this.props.onChange(this.props.value);
+    this.props.onChange([ this.props.value ]);
   }
 
   handleDelete (event) {

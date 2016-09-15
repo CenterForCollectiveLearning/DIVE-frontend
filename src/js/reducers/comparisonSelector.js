@@ -1,8 +1,8 @@
 import _ from 'underscore';
 
 import {
-  SELECT_COMPARISON_INDEPENDENT_VARIABLE,
-  SELECT_COMPARISON_DEPENDENT_VARIABLE,
+  SELECT_COMPARISON_INDEPENDENT_VARIABLES,
+  SELECT_COMPARISON_DEPENDENT_VARIABLES,
   WIPE_PROJECT_STATE,
   RECEIVE_NUMERICAL_COMPARISON,
   UPDATE_COMPARISON_INPUT,
@@ -14,6 +14,8 @@ import {
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_TYPE
 } from '../constants/ActionTypes';
+
+import { handleFieldSelection } from '../helpers/helpers';
 
 const baseState = {
   independentVariablesIds: [],
@@ -36,8 +38,6 @@ export default function comparisonSelector(state = baseState, action) {
       var n_c = categoricalItemIds.length;
       var n_q = quantitativeItemIds.length;
 
-      console.log('In receive field properties', n_c, n_q);
-
       if ((n_c >= 2) && (n_q >= 1)) {
         modifiedState.independentVariablesIds = _.sample(categoricalItemIds, 1);
         modifiedState.dependentVariablesIds = _.sample(quantitativeItemIds, 1);
@@ -56,25 +56,17 @@ export default function comparisonSelector(state = baseState, action) {
 
       return modifiedState;
 
-    case SELECT_COMPARISON_INDEPENDENT_VARIABLE:
+    case SELECT_COMPARISON_INDEPENDENT_VARIABLES:
       var independentVariablesIds = state.independentVariablesIds.slice();
-      const selectedIdIndependent = parseInt(action.independentVariableId);
-      if (state.independentVariablesIds.find((independentVariablesId) => independentVariablesId == selectedIdIndependent)) {
-        independentVariablesIds = independentVariablesIds.filter((independentVariablesId) => independentVariablesId != selectedIdIndependent);
-      } else {
-        independentVariablesIds.push(selectedIdIndependent);
-      }
-      return { ...state, independentVariablesIds: independentVariablesIds };
+      const selectedIndependentVariableIds = action.independentVariableIds.map((id) => parseInt(id));
 
-    case SELECT_COMPARISON_DEPENDENT_VARIABLE:
+      return { ...state, independentVariablesIds: handleFieldSelection(independentVariablesIds, selectedIndependentVariableIds) };
+
+    case SELECT_COMPARISON_DEPENDENT_VARIABLES:
       var dependentVariablesIds = state.dependentVariablesIds.slice();
-      const selectedIdDependent = parseInt(action.dependentVariableId);
-      if (state.dependentVariablesIds.find((dependentVariablesId) => dependentVariablesId == selectedIdDependent)) {
-        dependentVariablesIds = dependentVariablesIds.filter((dependentVariablesId) => dependentVariablesId != selectedIdDependent);
-      } else {
-        dependentVariablesIds.push(selectedIdDependent);
-      }
-      return { ...state, dependentVariablesIds: dependentVariablesIds };
+      const selectedDependentVariableIds = action.dependentVariableIds.map((id) => parseInt(id));
+
+      return { ...state, dependentVariablesIds: handleFieldSelection(dependentVariablesIds, selectedDependentVariableIds) };
 
     case RECEIVE_NUMERICAL_COMPARISON:
       return { ...state, numericalComparisonResult: action.data };

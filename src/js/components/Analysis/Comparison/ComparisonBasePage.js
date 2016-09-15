@@ -4,29 +4,42 @@ import { replace } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import styles from '../Analysis.sass';
 
-import { createURL, recommendRegressionType } from '../../../helpers/helpers.js';
-import { selectDependentVariable, selectRegressionType } from '../../../actions/RegressionActions';
+import { selectDependentVariables, selectIndependentVariables } from '../../../actions/ComparisonActions';
 
-import RegressionSidebar from './RegressionSidebar';
-import RegressionView from './RegressionView';
+import ComparisonSidebar from './ComparisonSidebar';
+import ComparisonView from './ComparisonView';
 
-
-export class RegressionBasePage extends Component {
-
+export class ComparisonBasePage extends Component {
   componentWillMount() {
-    const { fieldProperties, params, replace, location, selectDependentVariable, selectRegressionType } = this.props;
-    const { 'dependent-variable': queriedDependentVariable, 'regression-type': queriedRegressionType } = location.query;
+    const {
+      fieldProperties,
+      params,
+      replace,
+      location,
+      selectDependentVariables,
+      selectIndependentVariables,
+    } = this.props;
 
-    if(queriedDependentVariable && queriedRegressionType) {
-      selectDependentVariable(queriedDependentVariable);
-      selectRegressionType(queriedRegressionType);
+    const {
+      dependentVariables: queriedDependentVariables,
+      independentVariables: queriedIndependentVariables,
+    } = location.query;
+
+    // Parsing passed state
+    if(queriedDependentVariables && queriedIndependentVariables) {
+      selectDependentVariables(queriedDependentVariables);
+      selectIndependentVariables(queriedIndependentVariables);
     }
 
-    if(fieldProperties.items.length > 0 && !queriedDependentVariable) {
-      const dependentVariable = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c'));
+    // Initial recommended state
+    if(fieldProperties.items.length > 0 && queriedDependentVariables.length == 0 && queriedIndependentVariables.length == 0) {
+      const dependentVariables = [ (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c')).map((fieldProperty) => fieldProperty.id) ]
 
-      const queryParams = { 'dependent-variable': dependentVariable.id, 'regression-type': recommendRegressionType(dependentVariable.generalType) };
-      replace(createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, queryParams));
+      const queryParams = {
+        dependentVariables: dependentVariables,
+        independentVariables: independentVariables,
+      };
+      replace(createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/comparison`, queryParams));
     }
   }
 
@@ -53,20 +66,15 @@ export class RegressionBasePage extends Component {
         replace(createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, queryParams));
       }
     }
-
-    if(query['regression-type'] != nextQuery['regression-type'] && nextQuery['regression-type']) {
-      selectRegressionType(nextQuery['regression-type']);
-    }
   }
 
   render() {
     const { projectTitle } = this.props;
     return (
-      <DocumentTitle title={ 'Regression' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
-        <div className={ `${ styles.fillContainer } ${ styles.regressionContainer }` }>
-          <RegressionView />
-          <RegressionSidebar />
-          { this.props.children }
+      <DocumentTitle title={ 'Comparison' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
+        <div className={ `${ styles.fillContainer } ${ styles.summaryContainer }` }>
+          <ComparisonView />
+          <ComparisonSidebar />
         </div>
       </DocumentTitle>
     );
@@ -75,7 +83,14 @@ export class RegressionBasePage extends Component {
 
 function mapStateToProps(state) {
   const { fieldProperties, project } = state;
-  return { fieldProperties, projectTitle: project.properties.title };
+  return {
+    fieldProperties,
+    projectTitle: project.properties.title
+  };
 }
 
-export default connect(mapStateToProps, { replace, selectDependentVariable, selectRegressionType })(RegressionBasePage);
+export default connect(mapStateToProps, {
+  replace,
+  selectDependentVariables,
+  selectIndependentVariables
+})(ComparisonBasePage);

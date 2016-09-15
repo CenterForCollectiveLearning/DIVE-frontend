@@ -100,11 +100,11 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
   };
 }
 
-export function fetchFieldProperties(projectId, datasetId, selectedFieldPropertyNames) {
+export function fetchFieldProperties(projectId, datasetId, selectedFieldPropertyIds) {
   return dispatch => {
     dispatch(requestFieldPropertiesDispatcher());
     return fetch(`/field_properties/v1/field_properties?project_id=${projectId}&dataset_id=${datasetId}`)
-      .then(json => dispatch(receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFieldPropertyNames)));
+      .then(json => dispatch(receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFieldPropertyIds)));
   };
 }
 
@@ -116,10 +116,10 @@ function shouldFetchFieldProperties(state) {
   return true;
 }
 
-export function fetchFieldPropertiesIfNeeded(projectId, datasetId, selectedFieldPropertyNames=[]) {
+export function fetchFieldPropertiesIfNeeded(projectId, datasetId, selectedFieldPropertyIds=[]) {
   return (dispatch, getState) => {
     if (shouldFetchFieldProperties(getState())) {
-      return dispatch(fetchFieldProperties(projectId, datasetId, selectedFieldPropertyNames));
+      return dispatch(fetchFieldProperties(projectId, datasetId, selectedFieldPropertyIds));
     }
   };
 }

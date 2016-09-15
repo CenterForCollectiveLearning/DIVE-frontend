@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectIndependentVariable, selectDependentVariable, selectConditional } from '../../../actions/ComparisonActions';
+import { selectIndependentVariables, selectDependentVariables, selectConditional } from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
 
 import ConditionalSelector from '../../Base/ConditionalSelector';
@@ -30,7 +30,7 @@ export class ComparisonSidebar extends Component {
   }
 
   render() {
-    const { conditionals, fieldProperties, comparisonSelector, selectIndependentVariable, selectDependentVariable, selectConditional } = this.props;
+    const { conditionals, fieldProperties, comparisonSelector, selectIndependentVariables, selectDependentVariables, selectConditional } = this.props;
     return (
       <Sidebar selectedTab="comparison">
         { fieldProperties.items.length != 0 &&
@@ -52,7 +52,7 @@ export class ComparisonSidebar extends Component {
                   colorMember="color"
                   externalSelectedItems={ comparisonSelector.independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariable } />
+                  onChange={ selectIndependentVariables } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
@@ -72,7 +72,7 @@ export class ComparisonSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ comparisonSelector.independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariable } />
+                  onChange={ selectIndependentVariables } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
@@ -92,7 +92,7 @@ export class ComparisonSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ comparisonSelector.independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariable } />
+                  onChange={ selectIndependentVariables } />
               </div>
             }
           </SidebarGroup>
@@ -115,7 +115,7 @@ export class ComparisonSidebar extends Component {
                 displayTextMember="name"
                 externalSelectedItems={ comparisonSelector.dependentVariablesIds }
                 separated={ true }
-                onChange={ selectDependentVariable } />
+                onChange={ selectDependentVariables } />
             </div>
           </SidebarGroup>
         }
@@ -158,4 +158,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, selectDependentVariable, selectConditional })(ComparisonSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariables, selectDependentVariables, selectConditional })(ComparisonSidebar);

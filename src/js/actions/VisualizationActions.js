@@ -294,15 +294,12 @@ export function setGalleryQueryString(query) {
   var queryString = '';
 
   Object.keys(query).forEach(
-    function (fullKey, index, array) {
-      const key = fullKey.slice(0, -2);
+    function (key, index, array) {
       var fieldString = '';
-      if (Array.isArray(query[fullKey])) {
-        query[fullKey].forEach((c, i, a) =>
-          fieldString = fieldString + `&${ key }[]=${ c }`
-        )
+      if (Array.isArray(query[key])) {
+        fieldString = `&${ key }=${ query[key].join(',') }`;
       } else {
-        fieldString = `&${ key }[]=${ query[fullKey] }`;
+        fieldString = `&${ key }=${ query[key] }`;
       }
       queryString = queryString + fieldString;
     }

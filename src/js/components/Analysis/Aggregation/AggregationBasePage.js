@@ -3,17 +3,17 @@ import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import styles from '../Analysis.sass';
 
-import ComparisonSidebar from './ComparisonSidebar';
-import ComparisonView from './ComparisonView';
+import AggregationSidebar from './AggregationSidebar';
+import AggregationView from './AggregationView';
 
-export class ComparisonPage extends Component {
+export class AggregationBasePage extends Component {
   render() {
     const { projectTitle } = this.props;
     return (
-      <DocumentTitle title={ 'Comparison' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
+      <DocumentTitle title={ 'Aggregation' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.summaryContainer }` }>
-          <ComparisonView />
-          <ComparisonSidebar />
+          <AggregationView />
+          <AggregationSidebar />
         </div>
       </DocumentTitle>
     );
@@ -25,4 +25,4 @@ function mapStateToProps(state) {
   return { projectTitle: project.properties.title };
 }
 
-export default connect(mapStateToProps, { })(ComparisonPage);
+export default connect(mapStateToProps, { })(AggregationBasePage);

@@ -1,6 +1,19 @@
 import React from 'react';
 import _ from 'underscore';
 
+export function handleFieldSelection(existingFields, selectedFields) {
+  var newFields = existingFields.slice();
+
+  for (let selectedField of selectedFields) {
+    if (existingFields.find((existingField) => existingField == selectedField)) {  // If selected field in existing fields, remove
+      newFields = newFields.filter((existingField) => existingField != selectedField);
+    } else {  // Else add
+      newFields.push(selectedField);
+    }
+  }
+  return newFields;
+}
+
 export function getRoundedString(num, decimalPlaces=3, useFixed=false) {
   if (typeof num === 'string' || num instanceof String) {
     return num;
