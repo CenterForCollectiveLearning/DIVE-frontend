@@ -19,7 +19,7 @@ const baseState = {
   independentVariablesIds: [],
   dependentVariablesIds: [],
   numericalComparisonResult: {},
-  anovaBoxplotData: [],
+  anovaBoxplotData: {},
   pairwiseComparisonData: {},
   anovaResult: {},
 }

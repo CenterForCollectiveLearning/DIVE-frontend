@@ -15,6 +15,13 @@ const visualizationTypes = [
     disabled: false
   },
   {
+    type: "box",
+    imageName: "box",
+    label: "Boxplot",
+    selected: false,
+    disabled: false
+  },
+  {
     type: "bar",
     imageName: "bar",
     label: "Bar",

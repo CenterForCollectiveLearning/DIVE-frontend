@@ -10,58 +10,19 @@ import { getRoundedNum } from '../../../helpers/helpers';
 
 export default class AnovaBoxplotCard extends Component {
   render() {
-    const { id, anovaBoxplotData } = this.props;
-
-    const finalData = anovaBoxplotData;
-
-    var options = {
-      fontName: 'Roboto',
-      fontFamily: 'Roboto',
-      backgroundColor: 'transparent',
-      headerColor: 'white',
-      headerHeight: 0,
-      fontColor: "#333",
-      textStyle: {
-        color: "#333"
-      },
-      height: '100%',
-      width: '100%',
-      chartArea: {
-        top: '5%',
-        width: '70%',
-        height: '80%'
-      },
-      hAxis: {
-        textStyle: {
-          color: "#333"
-        }
-      },
-      vAxis: {
-        textStyle: {
-          color: "#333"
-        }
-      },
-      vAxes: [
-        {
-          textStyle: {
-            color: "#333"
-          }
-        },
-        {
-          textStyle: {
-            color: "#333"
-          }
-        }
-      ]
-    };
+    const { id, anovaBoxplotData, colors } = this.props;
+    const data = anovaBoxplotData.data.visualize;
+    const labels = anovaBoxplotData.meta.labels;
 
     return (
       <Card header={ <span>Boxplot of Group Distribution</span> } helperText='comparisonBoxplot'>
-        <div className={ styles.anovaBoxplotData }>
+        <div className={ styles.anovaBoxplot }>
           <BoxPlot
-            chartId={ `boxplot-${ id }` }
-            data={ finalData }
-            options={ options } />
+            chartId={ `anova-boxplot-${ id }` }
+            data={ data }
+            labels={ labels }
+            isMinimalView={ false }
+          />
         </div>
       </Card>
     );
@@ -70,5 +31,5 @@ export default class AnovaBoxplotCard extends Component {
 
 AnovaBoxplotCard.propTypes = {
   id: PropTypes.string,
-  anovaBoxplotData: PropTypes.array.isRequired
+  anovaBoxplotData: PropTypes.object.isRequired
 }

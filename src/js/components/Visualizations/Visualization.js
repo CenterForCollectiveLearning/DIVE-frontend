@@ -4,6 +4,7 @@ import styles from './Visualizations.sass';
 
 import { getPalette, useWhiteFontFromBackgroundHex } from '../../helpers/helpers';
 
+import { MAX_ELEMENTS } from './VisualizationOptions';
 import TreeMap from './Charts/TreeMap';
 import PieChart from './Charts/PieChart';
 import ColumnChart from './Charts/ColumnChart';
@@ -11,6 +12,7 @@ import StackedColumnChart from './Charts/StackedColumnChart';
 import ScatterChart from './Charts/ScatterChart';
 import LineChart from './Charts/LineChart';
 import Histogram from './Charts/Histogram';
+import BoxPlot from './Charts/BoxPlot';
 
 export default class Visualization extends Component {
   constructor(props) {
@@ -40,26 +42,27 @@ export default class Visualization extends Component {
   }
 
   render() {
-    const MAX_ELEMENTS = {
-      preview: {
-        all: 2000,
-        scatter: 500,
-        treemap: 200
-      },
-      full: {
-        all: 3000,
-        scatter: 1000,
-        treemap: 400
+    const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
+    const { args, meta } = spec;
+    const chartId = `${ this.props.chartId || spec.id }-${ sortIndex }`;
+    const labels = meta.labels || {};
+
+    // Mutating options
+    var colors = [];
+    var primaryVariableKeys = [ 'aggField', 'boxedField', 'binningField', 'fieldB' ];
+    for (var i in primaryVariableKeys) {
+      var primaryVariableKey = primaryVariableKeys[i];
+      if (primaryVariableKey in args) {
+        var fieldName = args[primaryVariableKey].name;
+        if (fieldName in fieldNameToColor) {
+          colors.push(fieldNameToColor[fieldName]);
+        }
       }
     }
-    const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
 
-    const { args, meta } = spec;
-    const labels = meta.labels ? meta.labels : {};
-
+    // Sorting fields
     var finalDataArray = data;
-    var sortIndex;
-
+    let sortIndex;
     if (sortFields.length && sortOrders.length) {
       var sortField, sortOrder;
 
@@ -98,154 +101,7 @@ export default class Visualization extends Component {
       finalDataArray = [ header, ...sortedDataPoints ];
     }
 
-    var options = {
-      backgroundColor: 'transparent',
-      headerColor: 'white',
-      headerHeight: 0,
-      fontName: 'Roboto, Helvetica, Arial, sans-serif',
-      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-      fontColor: "#333",
-      textStyle: {
-        color: "#333"
-      },
-      chartArea: {
-        top: '5%',
-        height: '78%',
-        left: '15%',
-        width: '80%'
-      },
-      legend: {
-        textStyle: {
-          color: "#333"
-        }
-      },
-      hAxis: {
-        title: labels && labels.x ? labels.x : finalDataArray[0][0],
-        titleTextStyle: {
-          color: "#333",
-          italic: false,
-          bold: true
-        },
-        textStyle: {
-          color: "#777",
-          italic: false
-        }
-      },
-      vAxis: {
-        title: labels && labels.y ? labels.y : finalDataArray[0][1],
-        titleTextStyle: {
-          color: "#333",
-          italic: false,
-          bold: true
-        },
-        textStyle: {
-          color: "#777",
-          italic: false
-        }
-      },
-      vAxes: [
-        {
-          textStyle: {
-            color: "#777",
-            italic: false
-          }
-        },
-        {
-          textStyle: {
-            color: "#777",
-            italic: false
-          }
-        }
-      ]
-    };
-
-    if (isMinimalView) {
-      options = {
-        ...options,
-        axisTitlesPosition: 'none',
-        chartArea: {
-          left: 0,
-          top: 0,
-          width: '100%',
-          height: '100%'
-        },
-        enableInteractivity: false,
-        fontSize: 0,
-        hAxis: {
-          baselineColor: 'transparent',
-          textPosition: 'none',
-          gridlines: {
-            count: 0,
-            color: 'transparent'
-          },
-        },
-        height: 140,
-        highlightOnMouseOver: false,
-        hintOpacity: 0,
-        legend: {
-          position: 'none'
-        },
-        pointSize: 2,
-        showTooltips: false,
-        textStyle: {
-          color: 'transparent',
-          fontSize: 0
-        },
-        tooltip: {
-          trigger: 'none'
-        },
-        vAxis: {
-          baselineColor: 'transparent',
-          textPosition: 'none',
-          gridlines: {
-            count: 0,
-            color: 'transparent'
-          }
-        },
-        vAxes: [
-          {
-            baselineColor: 'transparent',
-            textPosition: 'none',
-            gridlines: {
-              count: 0
-            }
-          },
-          {
-            baselineColor: 'transparent',
-            textPosition: 'none',
-            gridlines: {
-              count: 0
-            }
-          }
-        ]
-      };
-    } else {
-      options = {
-        ...options,
-        pointSize: 5,
-        width: '100%',
-        height: '100%'
-      }
-    }
-
-    var colors = [];
-    var primaryVariableKeys = ['aggField', 'binningField', 'fieldB'];
-    for (var i in primaryVariableKeys) {
-      var primaryVariableKey = primaryVariableKeys[i];
-      if (primaryVariableKey in args) {
-        var fieldName = args[primaryVariableKey].name;
-        if (fieldName in fieldNameToColor) {
-          colors.push(fieldNameToColor[fieldName]);
-        }
-      }
-    }
-
-    if (colors.length > 0) {
-      options['colors'] = colors;
-    } else {
-      options['colors'] = [ '#007BD7' ]
-    }
-
+    // Handle max elements
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
 
     const tooMuchDataToPreview =
@@ -275,8 +131,6 @@ export default class Visualization extends Component {
         </div>
       );
     }
-
-    const chartId = `${ this.props.chartId || spec.id }-${ sortIndex }`;
 
     return (
       <div className={ containerClassName } onClick={ this.handleClick }>
@@ -311,53 +165,61 @@ export default class Visualization extends Component {
             + (isMinimalView ? ' ' + styles.minimal : '')
             + (visualizationClassName ? ' ' + visualizationClassName : '')
           }>
+            { (validVisualizationTypes[0] == 'box') &&
+              <BoxPlot
+                chartId={ `spec-box-${ chartId }` }
+                data={ finalDataArray }
+                colors={ colors }
+                labels={ labels }
+                isMinimalView={ isMinimalView }/>
+            }
             { (validVisualizationTypes[0] == 'hist') &&
               <Histogram
                 chartId={ `spec-hist-${ chartId }` }
                 data={ finalDataArray }
                 bins={ bins }
+                colors={ colors }
                 labels={ labels }
-                options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { (validVisualizationTypes[0] == 'bar') &&
               <ColumnChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
+                colors={ colors }
                 labels={ labels }
-                options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { (validVisualizationTypes[0] == 'stackedbar' ) &&
               <StackedColumnChart
                 chartId={ `spec-stackedbar-${ chartId }` }
                 data={ finalDataArray }
+                colors={ colors }
                 labels={ labels }
-                options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { (validVisualizationTypes[0] == 'scatter' ) &&
               <ScatterChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
+                colors={ colors }
                 labels={ labels }
-                options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { (validVisualizationTypes[0] == 'line' ) &&
               <LineChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
+                colors={ colors }
                 labels={ labels }
-                options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { validVisualizationTypes[0] == 'pie' &&
               <PieChart
                 chartId={ `spec-pie-${ chartId }` }
                 data={ finalDataArray }
+                colors={ colors }
                 labels={ labels }
-                options={ options }
                 isMinimalView={ isMinimalView }/>
             }
             { validVisualizationTypes[0] == 'tree' &&
@@ -365,8 +227,8 @@ export default class Visualization extends Component {
                 chartId={ `spec-tree-${ chartId }` }
                 parent={ spec.meta.desc }
                 data={ finalDataArray }
+                colors={ colors }
                 labels={ labels }
-                options={ options }
                 isMinimalView={ isMinimalView }/>
             }
           </div>
