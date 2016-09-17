@@ -5,7 +5,7 @@ export const MAX_ELEMENTS = {
     treemap: 200
   },
   full: {
-    all: 3000,
+    all: 3009,
     scatter: 1000,
     treemap: 400
   }

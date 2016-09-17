@@ -21,6 +21,7 @@ To run the server with the dev-tools enabled, run:
 ```bash
 $ export API_URL=http://localhost:8081
 $ export NODE_ENV=DEVELOPMENT
+$ npm build
 $ DEBUG=true npm start
 ```
 

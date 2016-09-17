@@ -49,7 +49,7 @@ export default class Visualization extends Component {
 
     // Mutating options
     var colors = [];
-    var primaryVariableKeys = [ 'aggField', 'boxedField', 'binningField', 'fieldB' ];
+    var primaryVariableKeys = [ 'aggField', 'aggFieldA', 'boxedField', 'binningField', 'fieldA', 'fieldB' ];
     for (var i in primaryVariableKeys) {
       var primaryVariableKey = primaryVariableKeys[i];
       if (primaryVariableKey in args) {
@@ -59,6 +59,7 @@ export default class Visualization extends Component {
         }
       }
     }
+    colors = colors.length != 0 ? colors : [ '#007BD7' ];
 
     // Sorting fields
     var finalDataArray = data;
