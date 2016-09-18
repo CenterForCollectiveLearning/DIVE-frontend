@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from './Visualizations.sass';
 
-import { getPalette, useWhiteFontFromBackgroundHex } from '../../helpers/helpers';
+import { getPalette, useWhiteFontFromBackgroundHex, naturalSort } from '../../helpers/helpers';
 
 import { MAX_ELEMENTS } from './VisualizationOptions';
 import TreeMap from './Charts/TreeMap';
@@ -88,15 +88,16 @@ export default class Visualization extends Component {
         if (Array.isArray(bValue)) {
           bValue = (bValue[0] + bValue[1]) / 2
         }
-        if (aValue < bValue) {
-          return sortIndex * -1;
-        }
-        else if (aValue > bValue) {
-          return sortIndex;
-        }
-        else {
-          return 0;
-        }
+        return sortIndex * naturalSort(aValue, bValue);
+        // if (aValue < bValue) {
+        //   return sortIndex * -1;
+        // }
+        // else if (aValue > bValue) {
+        //   return sortIndex;
+        // }
+        // else {
+        //   return 0;
+        // }
       });
 
       finalDataArray = [ header, ...sortedDataPoints ];
