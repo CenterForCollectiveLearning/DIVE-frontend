@@ -47,6 +47,8 @@ export default class Visualization extends Component {
     const chartId = `${ this.props.chartId || spec.id }-${ sortIndex }`;
     const labels = meta.labels || {};
 
+    console.log('Rendering visualizations');
+
     // Mutating options
     var colors = [];
     var primaryVariableKeys = [ 'aggField', 'aggFieldA', 'boxedField', 'binningField', 'fieldA', 'fieldB' ];
