@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
-import { push } from 'react-router-redux';
+import { push, replace } from 'react-router-redux';
 import { fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 
@@ -26,10 +26,6 @@ export class DatasetInspectPage extends Component {
       pivotModalOpen: false,
       mergeDatasetsModalOpen: false
     }
-
-    this.onSelectDataset = this.onSelectDataset.bind(this);
-    this.onClickUploadDataset = this.onClickUploadDataset.bind(this);
-    this.onClickDeleteDataset = this.onClickDeleteDataset.bind(this);
   }
 
   componentWillMount() {
@@ -43,7 +39,7 @@ export class DatasetInspectPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, params, datasetSelector, datasets, fetchDataset, fetchDatasets, fetchFieldPropertiesIfNeeded, push } = nextProps;
+    const { project, params, datasetSelector, datasets, fetchDataset, fetchDatasets, fetchFieldPropertiesIfNeeded, replace } = nextProps;
     if (project.properties.id !== this.props.project.properties.id || (!datasets.fetchedAll && !datasets.isFetching)) {
       fetchDatasets(project.properties.id, false);
     }
@@ -55,27 +51,27 @@ export class DatasetInspectPage extends Component {
 
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
       if (datasetSelector.datasetId) {
-        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+        replace(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
       } else {
-        push(`/projects/${ params.projectId }/datasets/upload`);
+        replace(`/projects/${ params.projectId }/datasets/upload`);
       }
     }
   }
 
-  onSelectDataset(selectedValue) {
+  onSelectDataset = (selectedValue) => {
     if (selectedValue) {
-      this.props.push(`/projects/${ this.props.project.properties.id }/datasets/${ selectedValue }/inspect`);
+      this.props.replace(`/projects/${ this.props.project.properties.id }/datasets/${ selectedValue }/inspect`);
     }
   }
 
-  onClickDeleteDataset() {
+  onClickDeleteDataset = () => {
     const { deleteDataset, datasetSelector, project } = this.props;
 
     deleteDataset(project.properties.id, datasetSelector.datasetId);
   }
 
-  onClickUploadDataset() {
-    this.props.push(`/projects/${ this.props.project.properties.id }/datasets/upload`);
+  onClickUploadDataset = () => {
+    this.props.replace(`/projects/${ this.props.project.properties.id }/datasets/upload`);
   }
 
   render() {
@@ -133,5 +129,6 @@ export default connect(mapStateToProps, {
   fetchDataset,
   fetchDatasets,
   fetchFieldPropertiesIfNeeded,
-  push
+  push,
+  replace
 })(DatasetInspectPage);

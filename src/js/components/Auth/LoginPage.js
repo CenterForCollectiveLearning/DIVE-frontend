@@ -28,15 +28,6 @@ class AuthPage extends Component {
       password: '',
       rememberMe: true
     };
-
-    this.goHome = this.goHome.bind(this);
-    this.clickForgot = this.clickForgot.bind(this);
-    this.clickRegister = this.clickRegister.bind(this);
-    this.closeLoginPage = this.closeLoginPage.bind(this);
-    this.handleUsernameOrEmailChange = this.handleUsernameOrEmailChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handleRememberMeChange = this.handleRememberMeChange.bind(this);
-    this.submit = this.submit.bind(this);
   }
 
   componentWillMount() {
@@ -50,7 +41,7 @@ class AuthPage extends Component {
     this.ensureNotLoggedIn(nextProps);
   }
 
-  sanitizeBackendErrors() {
+  sanitizeBackendErrors = () => {
     if (this.state.loginError) {
       this.setState({
         loginError: null
@@ -58,12 +49,12 @@ class AuthPage extends Component {
     }
   }
 
-  closeLoginPage() {
+  closeLoginPage = () => {
     const { push } = this.props;
     push('/')
   }
 
-  handleUsernameOrEmailChange(e) {
+  handleUsernameOrEmailChange = (e) => {
     const value = e.target.value;
     this.sanitizeBackendErrors();
     if (validateEmail(value)) {
@@ -79,35 +70,35 @@ class AuthPage extends Component {
     }
   }
 
-  goHome() {
+  goHome = () => {
     const { push } = this.props;
     push('/')
   }
 
-  handlePasswordChange(e) {
+  handlePasswordChange = (e) => {
     this.sanitizeBackendErrors();
     this.setState({ password: e.target.value });
   }
 
-  clickRegister() {
+  clickRegister = () => {
     const { push } = this.props;
     push('/register')
   }
 
-  clickRegister() {
+  clickRegister = () => {
     const { push } = this.props;
     push('/register')
   }
 
-  clickForgot() {
+  clickForgot = () => {
     alert('Functionality in progress');
   }
 
-  handleRememberMeChange(e) {
+  handleRememberMeChange = (e) => {
     this.setState({ rememberMe: !this.state.rememberMe });
   }
 
-  validateForm() {
+  validateForm = () => {
     const { email, username, password } = this.state;
     return (( email || username ) && (password && (password != null)))
   }
@@ -120,7 +111,7 @@ class AuthPage extends Component {
     }
   };
 
-  submit() {
+  submit = () => {
     const { loginUser } = this.props;
     const { email, username, password, rememberMe } = this.state;
     loginUser(email, username, password, rememberMe);

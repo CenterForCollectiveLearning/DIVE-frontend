@@ -12,9 +12,6 @@ export class ConditionalSelector extends Component {
   constructor(props) {
     super(props);
 
-    this.updateConditional = this.updateConditional.bind(this);
-    this.onClickDelete = this.onClickDelete.bind(this);
-
     this.combinators = [
       {
         value: 'and',
@@ -76,7 +73,7 @@ export class ConditionalSelector extends Component {
     }
   }
 
-  updateConditional(newProps, isDefaultValue = false) {
+  updateConditional = (newProps, isDefaultValue = false) => {
     const conditional = { ...this.state, ...newProps };
 
     this.setState(conditional);
@@ -86,34 +83,34 @@ export class ConditionalSelector extends Component {
     }
   }
 
-  onSelectField(fieldId) {
+  onSelectField = (fieldId) => {
     const selectedField = this.props.fieldProperties.find((item) => item.id == fieldId);
     const value = selectedField.generalType == 'c' ? "ALL_VALUES" : "";
     const operator = "==";
     this.updateConditional({ fieldId: fieldId, value: value, operator: operator }, true);
   }
 
-  onClickDelete() {
+  onClickDelete = () => {
     const { conditionalIndex, deleteConditional } = this.props;
     deleteConditional(conditionalIndex);
     this.state = this.baseConditional;
   }
 
-  onSelectOperator(operator) {
+  onSelectOperator = (operator) => {
     this.updateConditional({ operator: operator });
   }
 
-  onSelectCombinator(combinator) {
+  onSelectCombinator = (combinator) => {
     this.updateConditional({ combinator: combinator });
   }
 
-  onSelectFieldValue(fieldValue) {
+  onSelectFieldValue = (fieldValue) => {
     if (fieldValue != ""){
       this.updateConditional({ value: fieldValue });
     }
   }
 
-  onTypeFieldValue(e) {
+  onTypeFieldValue = (e) => {
     if (e.target.value != ""){
       this.updateConditional({ value: Number.parseInt(e.target.value) });
     }
@@ -141,7 +138,7 @@ export class ConditionalSelector extends Component {
             toggleItems={ combinators }
             valueMember="value"
             displayTextMember="label"
-            onChange={ this.onSelectCombinator.bind(this) } />
+            onChange={ this.onSelectCombinator } />
         }
 
         <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
@@ -152,7 +149,7 @@ export class ConditionalSelector extends Component {
             options={ fieldProperties }
             valueMember="id"
             displayTextMember="name"
-            onChange={ this.onSelectField.bind(this) }/>
+            onChange={ this.onSelectField }/>
 
           <div style={{ display: 'flex' }}>
             <DropDownMenu
@@ -162,7 +159,7 @@ export class ConditionalSelector extends Component {
               width="20%"
               valueMember="value"
               displayTextMember="label"
-              onChange={ this.onSelectOperator.bind(this) }/>
+              onChange={ this.onSelectOperator }/>
 
             { (!selectedField || selectedField.generalType == 'c') &&
               <DropDownMenu
@@ -172,14 +169,14 @@ export class ConditionalSelector extends Component {
                 width="80%"
                 valueMember="value"
                 displayTextMember="label"
-                onChange={ this.onSelectFieldValue.bind(this) }/>
+                onChange={ this.onSelectFieldValue }/>
             }
             { selectedField && (selectedField.generalType == 'q' || selectedField.generalType == 't') &&
               <Input
                 className={ styles.conditionalInput + (fieldId == null ? ' ' + styles.disabledInput : '') }
                 placeholder={ `${ value }` }
                 type="text"
-                onChange={ this.onTypeFieldValue.bind(this) }/>
+                onChange={ this.onTypeFieldValue }/>
             }
           </div>
         </div>
