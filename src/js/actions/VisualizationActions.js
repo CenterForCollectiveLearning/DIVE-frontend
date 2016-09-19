@@ -176,6 +176,7 @@ function receiveSpecVisualizationDispatcher(json) {
     tableData: json.visualization.table ? formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data) : [],
     bins: json.visualization.bins,
     visualizationData: json.visualization.visualize,
+    sampleSize: json.visualization.count,
     receivedAt: Date.now()
   };
 }

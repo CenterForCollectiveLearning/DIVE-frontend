@@ -27,8 +27,9 @@ export class BuilderSidebar extends Component {
 
   componentDidUpdate(previousProps) {
     const { project, visualization, datasetSelector, fieldProperties, selectBuilderVisualizationType, fetchFieldPropertiesIfNeeded } = this.props;
+    const { visualizationType } = visualization;
 
-    if (visualization.spec.id && !visualization.visualizationType) {
+    if (visualization.spec.id && !visualizationType) {
       selectBuilderVisualizationType(visualization.spec.vizTypes[0]);
     }
 
@@ -39,6 +40,7 @@ export class BuilderSidebar extends Component {
 
   render() {
     const { conditionals, fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectConditional, selectVisualizationConfig, filters, visualization } = this.props;
+    const { visualizationType } = visualization;
 
     if (!visualization.lastUpdated) {
       return (<div></div>);
@@ -47,12 +49,12 @@ export class BuilderSidebar extends Component {
     const visualizationTypes = filters.visualizationTypes.filter((visualizationType) =>
       (visualization.spec.vizTypes.indexOf(visualizationType.type) > -1)
     ).map((visualizationType) =>
-      new Object({ ...visualizationType, selected: visualizationType.type == visualization.visualizationType })
+      new Object({ ...visualizationType, selected: visualizationType.type == visualizationType })
     );
 
     return (
       <Sidebar>
-        { visualization.visualizationType && visualizationTypes.length > 1 &&
+        { visualizationType && visualizationTypes.length > 1 &&
           <SidebarGroup heading="Visualization type">
             <ToggleButtonGroup
               toggleItems={ visualizationTypes }
@@ -63,7 +65,7 @@ export class BuilderSidebar extends Component {
               onChange={ selectBuilderVisualizationType } />
           </SidebarGroup>
         }
-        { (visualization.visualizationType == 'bar') &&
+        { (visualizationType == 'bar' || visualizationType == 'box') &&
           <SidebarGroup heading="Sort by">
             <div className={ styles.sortGroup }>
               <ToggleButtonGroup
@@ -71,6 +73,7 @@ export class BuilderSidebar extends Component {
                 toggleItems={ visualization.sortFields }
                 valueMember="id"
                 displayTextMember="name"
+                separated={ (visualization.sortFields.length > 3) }
                 onChange={ selectBuilderSortField } />
               <ToggleButtonGroup
                 className={ styles.sortOrder }
@@ -82,7 +85,7 @@ export class BuilderSidebar extends Component {
             </div>
           </SidebarGroup>
         }
-        { visualization.visualizationType == 'hist' &&
+        { visualizationType == 'hist' &&
           <BinningSelector
             config={ visualization.spec.config }
             selectBinningConfig={ selectVisualizationConfig } />
