@@ -84,7 +84,6 @@ export default class ColumnChart extends Component {
 ColumnChart.propTypes = {
   chartId: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
-  bins: PropTypes.array.isRequired,
   isMinimalView: PropTypes.bool,
   additionalOptions: PropTypes.object,
   labels: PropTypes.object,
