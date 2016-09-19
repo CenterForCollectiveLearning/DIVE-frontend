@@ -36,6 +36,8 @@ export default function comparisonSelector(state = baseState, action) {
       var n_c = categoricalItemIds.length;
       var n_q = quantitativeItemIds.length;
 
+      console.log('In receive field properties', n_c, n_q);
+
       if ((n_c >= 2) && (n_q >= 1)) {
         modifiedState.independentVariablesIds = _.sample(categoricalItemIds, 1);
         modifiedState.dependentVariablesIds = _.sample(quantitativeItemIds, 1);

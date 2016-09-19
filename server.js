@@ -1,8 +1,5 @@
 var useExpress = (process.env.NODE_ENV == 'PRODUCTION' || process.env.NODE_ENV == 'STAGING' || process.env.NODE_ENV == 'PROTOTYPE');
 
-var host = '0.0.0.0';
-var port = 3009;
-
 if (useExpress) {
   var express = require('express');
   var path = require('path');
@@ -16,7 +13,7 @@ if (useExpress) {
       });
     }).listen(process.env.PORT || 8080, function (err) {
       if (err) { console.log(err) };
-      console.log(`>>> Listening at ${ host }:${ port }`);
+      console.log('Listening at 0.0.0.0:8080');
     });
 
 } else {
@@ -27,17 +24,15 @@ if (useExpress) {
   new WebpackDevServer(webpack(config), {
     contentBase: './dist',
     publicPath: config.output.publicPath,
-    compress: true,
     hot: true,
     quiet: false,
-    noInfo: false,
     historyApiFallback: {
       index: 'index.html'
     },
     open: true,
     stats: { colors: true }
-  }).listen(port, host, function (err, result) {
+  }).listen(3009, '0.0.0.0', function (err, result) {
     if (err) { console.log(err) }
-    console.log(`>>> Listening at ${ host }:${ port }`);
+    console.log('Listening at 0.0.0.0:3009');
   });
 }

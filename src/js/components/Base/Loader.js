@@ -5,6 +5,7 @@ import styles from './Loader.sass';
 export default class Loader extends Component {
   render() {
     const { text } = this.props;
+    console.log(text);
     return (
       <div className={ styles.loader }>
         <div className={ styles.square }/>

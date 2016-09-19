@@ -82,3 +82,9 @@ ComposeBlockVisualization.propTypes = {
   editable: PropTypes.bool.isRequired,
   fieldNameToColor: PropTypes.object,
 };
+
+function mapStateToProps(state) {
+  return {};
+}
+
+export default connect(mapStateToProps, {})(ComposeBlockVisualization);
