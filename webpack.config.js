@@ -5,6 +5,8 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var host = '0.0.0.0';
 var port = 3009;
 
+var path = require("path");
+
 var devFlagPlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.DEBUG || 'false'))
 });
@@ -16,6 +18,7 @@ function getEntrySources(sources) {
 }
 
 module.exports = {
+  cache: true,
   devtool: 'cheap-module-eval-source-map',
   quiet: false,
   stats: {
@@ -33,7 +36,7 @@ module.exports = {
       './src/css/app.css'
   ]),
   output: {
-    path: __dirname + '/dist',
+    path: path.join(__dirname, '/dist'),
     publicPath: '/',
     filename: 'bundle.js',
     hot: true
@@ -58,7 +61,10 @@ module.exports = {
     noParse: /node_modules\/quill\/dist/,
     loaders: [
       { test: require.resolve("react"), loader: "imports?shim=es6-shim/es6-shim&sham=es6-shim/es6-sham" },
-      { test: /\.js$/, loader: 'babel', exclude: /node_modules/ },
+      { test: /\.js$/, loader: 'babel',
+        cacheDirectory: true,
+        include: [ path.join(__dirname, 'src/js') ],
+        exclude: /node_modules/ },
       { test: /\.css$/, loader: ExtractTextPlugin.extract('css-loader?module!cssnext-loader') },
       { test: /\.sass$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?indentedSyntax&outputStyle=expanded&sourceMap' },
       { test: /\.less$/,  loader: "style!css!less" },
