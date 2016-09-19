@@ -17,19 +17,17 @@ import BoxPlot from './Charts/BoxPlot';
 export default class Visualization extends Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleResize = this.handleResize.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     window.addEventListener('resize', this.handleResize);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     window.removeEventListener('resize', this.handleResize);
   }
 
-  handleResize() {
+  handleResize = () => {
     this.forceUpdate();
   }
 
@@ -89,15 +87,6 @@ export default class Visualization extends Component {
           bValue = (bValue[0] + bValue[1]) / 2
         }
         return sortIndex * naturalSort(aValue, bValue);
-        // if (aValue < bValue) {
-        //   return sortIndex * -1;
-        // }
-        // else if (aValue > bValue) {
-        //   return sortIndex;
-        // }
-        // else {
-        //   return 0;
-        // }
       });
 
       finalDataArray = [ header, ...sortedDataPoints ];

@@ -9,6 +9,22 @@ import BoxPlot from '../../Visualizations/Charts/BoxPlot';
 import { getRoundedNum } from '../../../helpers/helpers';
 
 export default class AnovaBoxplotCard extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount = () => {
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount = () => {
+    window.removeEventListener('resize', this.handleResize);
+  }
+
+  handleResize = () => {
+    this.forceUpdate();
+  }
+
   render() {
     const { id, anovaBoxplotData, colors } = this.props;
     const data = anovaBoxplotData.data.visualize;
