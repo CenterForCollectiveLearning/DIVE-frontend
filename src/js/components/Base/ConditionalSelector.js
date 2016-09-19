@@ -8,9 +8,7 @@ import Input from './Input';
 import DropDownMenu from './DropDownMenu';
 import ToggleButtonGroup from './ToggleButtonGroup';
 
-
-
-export default class ConditionalSelector extends Component {
+export class ConditionalSelector extends Component {
   constructor(props) {
     super(props);
 
