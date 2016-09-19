@@ -55,7 +55,14 @@ export default class TreeMap extends Component {
     }
 
     return (
-      <Chart chartType="TreeMap" chartVersion="43" options={ options } data={ dataWithParent } graph_id={ chartId }/>
+      <Chart
+        chartType="TreeMap"
+        options={ options }
+        data={ dataWithParent }
+        graph_id={ chartId }
+        width={ "100%" }
+        height={ "100%" }
+      />
     );
   }
 }

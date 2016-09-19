@@ -44,7 +44,7 @@ export default class Visualization extends Component {
   render() {
     const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
     const { args, meta } = spec;
-    const chartId = `${ this.props.chartId || spec.id }-${ sortIndex }`;
+    const chartId = `${ this.props.chartId || spec.id  }${ ( sortIndex ? '-' + sortIndex : '') }`;
     const labels = meta.labels || {};
 
     // Mutating options

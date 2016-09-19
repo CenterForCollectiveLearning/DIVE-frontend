@@ -66,10 +66,17 @@ export default class ColumnChart extends Component {
     options = {
       ...options,
       ...additionalOptions
-    }    
+    }
 
     return (
-      <Chart chartType="ColumnChart" chartVersion="43" options={ options } data={ finalData } graph_id={ chartId }/>
+      <Chart
+        chartType="ColumnChart"
+        options={ options }
+        data={ finalData }
+        graph_id={ chartId }
+        width={ "100%" }
+        height={ "100%" }
+      />
     );
   }
 }

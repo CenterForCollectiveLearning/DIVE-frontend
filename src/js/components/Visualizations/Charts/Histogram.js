@@ -71,11 +71,12 @@ export default class Histogram extends Component {
     return (
       <Chart
         chartType="ColumnChart"
-        chartVersion="43"
         key={ chartId }
         graph_id={ chartId }
         options={ options }
         data={ finalData }
+        width={ "100%" }
+        height={ "100%" }
        />
     );
   }

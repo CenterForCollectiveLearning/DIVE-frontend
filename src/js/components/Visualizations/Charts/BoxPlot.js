@@ -82,7 +82,14 @@ export default class BoxPlot extends Component {
     options = { ...options, ...additionalOptions }
 
     return (
-      <Chart chartType="LineChart" chartVersion="43" options={ options } data={ finalData } graph_id={ chartId }/>
+      <Chart
+        chartType="LineChart"
+        options={ options }
+        data={ finalData }
+        graph_id={ chartId }
+        width={ "100%" }
+        height={ "100%" }
+      />
     );
   }
 }

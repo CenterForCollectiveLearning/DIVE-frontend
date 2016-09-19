@@ -34,9 +34,10 @@ export default class ScatterChart extends Component {
         key={ chartId }
         graph_id={ chartId }
         chartType="ScatterChart"
-        chartVersion="43"
         options={ options }
         data={ data }
+        width={ "100%" }
+        height={ "100%" }
        />
     );
   }
