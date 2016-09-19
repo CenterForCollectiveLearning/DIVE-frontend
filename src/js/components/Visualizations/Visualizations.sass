@@ -9,6 +9,13 @@
   max-height: 0
   overflow: hidden
 
+.headerText
+  display: flex
+  flex-direction: row
+  width: 100%
+  .right
+    margin-left: auto
+
 .headerFragment
   margin-right: 3px
   &:first-child
@@ -106,6 +113,9 @@
   .innerVisualizationViewContainer
     +fillContainer
     overflow-y: auto
+
+  .tableContainer
+    padding: 0 25px
 
   .visualizationContainer
     display: flex
