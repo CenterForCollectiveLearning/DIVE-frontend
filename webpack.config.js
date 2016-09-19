@@ -1,11 +1,10 @@
+var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var host = '0.0.0.0';
 var port = 3009;
-
-var path = require("path");
 
 var devFlagPlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.DEBUG || 'false'))

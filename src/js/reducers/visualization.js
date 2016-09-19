@@ -57,7 +57,6 @@ export default function visualization(state = baseState, action) {
       return { ...state, isFetching: true };
 
     case RECEIVE_VISUALIZATION_DATA:
-      console.log(action, action.visualizationData);
       const headers = action.visualizationData[0].filter((header) =>
         (typeof header === 'string' || header instanceof String)
       );
