@@ -14,31 +14,36 @@ class ProjectButton extends Component {
   constructor(props) {
     super(props);
 
+    this.onClickProjectButton = this.onClickProjectButton.bind(this);
+    this.onClickDeleteProject = this.onClickDeleteProject.bind(this);
+    this.onClickProjectSettings = this.onClickProjectSettings.bind(this);
+    this.closeProjectSettingsModal = this.closeProjectSettingsModal.bind(this)
+
     this.state = {
       projectSettingsModalOpen: false,
     };
   }
 
-  closeProjectSettingsModal = () => {
+  closeProjectSettingsModal() {
     this.setState({ projectSettingsModalOpen: false });
   }
 
-  onClickProjectButton = (e) => {
+  onClickProjectButton(e) {
     const { project, wipeProjectState, push } = this.props;
     const { projectSettingsModalOpen } = this.state;
     if (!projectSettingsModalOpen) {
       wipeProjectState();
-      push(`/projects/${ project.id }/datasets`);
+      push(`/projects/${ project.id }/datasets`);      
     }
   }
 
-  onClickProjectSettings = (e) => {
+  onClickProjectSettings(e) {
     e.stopPropagation()
     e.preventDefault()
     this.setState({ projectSettingsModalOpen: true });
   }
 
-  onClickDeleteProject = (e) => {
+  onClickDeleteProject(e) {
     const { project, deleteProjectNoReturnHome } = this.props;
     e.stopPropagation()
     e.preventDefault()
