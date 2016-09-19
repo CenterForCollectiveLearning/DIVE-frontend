@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
+import { fetchDatasets } from '../../../actions/DatasetActions';
 import { clearVisualization, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
 import { fetchExportedVisualizationSpecs } from '../../../actions/ComposeActions';
 import { useWhiteFontFromBackgroundHex } from '../../../helpers/helpers';
@@ -249,7 +249,6 @@ export default connect(mapStateToProps, {
   fetchSpecs,
   fetchExportedVisualizationSpecs,
   fetchDatasets,
-  selectDataset,
   clearVisualization,
   selectSortingFunction,
   createExportedSpec

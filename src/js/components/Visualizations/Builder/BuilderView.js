@@ -5,6 +5,7 @@ import canvg from 'canvg-browser';
 import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
 
+import { fetchDatasets } from '../../../actions/DatasetActions';
 import { fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
@@ -22,7 +23,11 @@ export class BuilderView extends Component {
   }
 
   componentWillMount() {
-    const { project, specId, visualization, fetchSpecVisualizationIfNeeded } = this.props;
+    const { project, datasetSelector, datasets, specId, visualization, fetchSpecVisualizationIfNeeded } = this.props;
+
+    if (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
+      fetchDatasets(project.properties.id);
+    }
 
     if (project.properties.id && !visualization.spec.id) {
       fetchSpecVisualizationIfNeeded(project.properties.id, specId);
@@ -30,11 +35,16 @@ export class BuilderView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { visualization, conditionals, project, fetchSpecVisualizationIfNeeded } = this.props;
+    const { visualization, conditionals, datasets, datasetSelector, project, fetchSpecVisualizationIfNeeded, fetchDatasets } = this.props;
 
     const exportingChanged = visualization.isExporting != nextProps.visualization.isExporting;
     const conditionalsChanged = nextProps.conditionals.lastUpdated != conditionals.lastUpdated;
     const configChanged = nextProps.visualization.config != visualization.config;
+    const projectChanged = (nextProps.project.properties.id !== project.properties.id);
+
+    if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
+      fetchDatasets(project.properties.id);
+    }
 
     if (nextProps.project.properties.id && !visualization.isFetching && (!visualization.spec.id || conditionalsChanged || configChanged)) {
       fetchSpecVisualizationIfNeeded(nextProps.project.properties.id, nextProps.specId, nextProps.conditionals.items, nextProps.visualization.config);
@@ -154,15 +164,22 @@ BuilderView.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, conditionals, datasetSelector, fieldProperties, visualization, gallerySelector } = state;
+  const { project, conditionals, datasets, datasetSelector, fieldProperties, visualization, gallerySelector } = state;
   return {
     project,
-    datasetSelector,
     fieldNameToColor: fieldProperties.fieldNameToColor,
     visualization,
     gallerySelector,
-    conditionals
+    conditionals,
+    datasets,
+    datasetSelector,
   }
 }
 
-export default connect(mapStateToProps, { push, fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow })(BuilderView);
+export default connect(mapStateToProps, {
+  push,
+  fetchSpecVisualizationIfNeeded,
+  createExportedSpec,
+  setShareWindow,
+  fetchDatasets,
+})(BuilderView);
