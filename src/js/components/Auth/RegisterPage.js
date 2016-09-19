@@ -39,9 +39,6 @@ class AuthPage extends Component {
       passwordFeedbackWarning: '',
       passwordFeedbackSuggestions: ''
     };
-
-    this.submit = this.submit.bind(this);
-    this.validateForm = this.validateForm.bind(this);
   }
 
   closeRegistrationPage() {
@@ -61,14 +58,14 @@ class AuthPage extends Component {
     this.ensureNotLoggedIn(nextProps)
   }
 
-  sanitizeBackendErrors() {
+  sanitizeBackendErrors = () => {
     this.setState({
       emailError: null,
       usernameError: null,
     })
   }
 
-  handleEmailChange(e) {
+  handleEmailChange = (e) => {
     const email = e.target.value;
     const emailValid = validateEmail(email)
     this.sanitizeBackendErrors();
@@ -78,7 +75,7 @@ class AuthPage extends Component {
     });
   }
 
-  handleUsernameChange(e) {
+  handleUsernameChange = (e) => {
     const username = e.target.value;
     this.sanitizeBackendErrors();
     this.setState({ username: username });
@@ -94,7 +91,7 @@ class AuthPage extends Component {
     }
   }
 
-  handlePasswordChange(e) {
+  handlePasswordChange = (e) => {
     const password = e.target.value;
     this.sanitizeBackendErrors();
 
@@ -107,7 +104,7 @@ class AuthPage extends Component {
     });
   }
 
-  _clickLogin() {
+  _clickLogin = () => {
     const { push } = this.props;
     push('/login')
   }
@@ -120,7 +117,7 @@ class AuthPage extends Component {
     }
   };
 
-  validateForm() {
+  validateForm = () => {
     const {
       emailError,
       usernameError,
@@ -136,7 +133,7 @@ class AuthPage extends Component {
     return validForm;
   }
 
-  submit() {
+  submit = () => {
     const { registerUser } = this.props;
     const {
       email,
@@ -176,7 +173,7 @@ class AuthPage extends Component {
       <DocumentTitle title='DIVE | Register'>
         <AuthModal
           scrollable
-          closeAction={ this.closeRegistrationPage.bind(this) }
+          closeAction={ this.closeRegistrationPage }
           className={ styles.registerModal }
           blackBackground={ true }
           heading={
@@ -185,7 +182,7 @@ class AuthPage extends Component {
           footer={
             <div className={ styles.footerContent }>
               <div className={ styles.loginText }>
-                Already registered? <span className={ styles.loginLink } onClick={ this._clickLogin.bind(this) }>Click here to login</span>.
+                Already registered? <span className={ styles.loginLink } onClick={ this._clickLogin }>Click here to login</span>.
               </div>
             </div>
           }>
@@ -207,7 +204,7 @@ class AuthPage extends Component {
                 placeholder="E-mail Address"
                 autocomplete="on"
                 autofocus={ true }
-                onChange={ this.handleEmailChange.bind(this) }
+                onChange={ this.handleEmailChange }
                 onSubmit={ this.submit }
               />
             </div>
@@ -223,7 +220,7 @@ class AuthPage extends Component {
                 className={ styles.username }
                 placeholder="Username"
                 autocomplete="on"
-                onChange={ this.handleUsernameChange.bind(this) }
+                onChange={ this.handleUsernameChange }
                 onSubmit={ this.submit }
               />
             </div>
@@ -236,7 +233,7 @@ class AuthPage extends Component {
                 type="password"
                 className={ styles.password }
                 placeholder="Password"
-                onChange={ this.handlePasswordChange.bind(this) }
+                onChange={ this.handlePasswordChange }
                 onSubmit={ this.submit }
               />
             </div>

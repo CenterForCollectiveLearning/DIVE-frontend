@@ -78,9 +78,3 @@ ComposeBlockRegression.propTypes = {
   onSave: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired
 };
-
-function mapStateToProps(state) {
-  return {};
-}
-
-export default connect(mapStateToProps, {})(ComposeBlockRegression);
