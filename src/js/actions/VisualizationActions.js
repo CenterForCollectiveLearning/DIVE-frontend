@@ -47,16 +47,16 @@ const specLevelToAction = [
     fail: FAILED_RECEIVE_EXACT_SPECS
   },
   {
-    request: REQUEST_INDIVIDUAL_SPECS,
-    progress: PROGRESS_INDIVIDUAL_SPECS,
-    receive: RECEIVE_INDIVIDUAL_SPECS,
-    fail: FAILED_RECEIVE_INDIVIDUAL_SPECS
-  },
-  {
     request: REQUEST_SUBSET_SPECS,
     progress: PROGRESS_SUBSET_SPECS,
     receive: RECEIVE_SUBSET_SPECS,
     fail: FAILED_RECEIVE_SUBSET_SPECS
+  },
+  {
+    request: REQUEST_INDIVIDUAL_SPECS,
+    progress: PROGRESS_INDIVIDUAL_SPECS,
+    receive: RECEIVE_INDIVIDUAL_SPECS,
+    fail: FAILED_RECEIVE_INDIVIDUAL_SPECS
   },
   {
     request: REQUEST_EXPANDED_SPECS,

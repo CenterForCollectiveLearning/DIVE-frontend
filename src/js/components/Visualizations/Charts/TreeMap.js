@@ -40,7 +40,7 @@ export default class TreeMap extends Component {
 
     options = {
       ...options,
-      minColor: '#FFFFFF',
+      minColor: '#EEEEEE',
       maxColor: colors[0],
       textStyle: {
         ...options.textStyle,

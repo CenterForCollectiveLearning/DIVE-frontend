@@ -24,7 +24,7 @@ import {
 const recommendationTypes = [
   {
     id: 'exact',
-    level: 0
+    level: 0,
   },
   {
     id: 'subset',
@@ -43,7 +43,7 @@ const recommendationTypes = [
 const recommendationTypesToLevel = {
   exact: 0,
   subset: 1,
-  level: 2,
+  individual: 2,
   expanded: 3
 }
 
@@ -59,7 +59,26 @@ const baseState = {
   isFetching: false,
   isFetchingSpecLevel: [ false, false, false, false ],
   loadedSpecLevel: [ false, false, false, false ],
+  isValidSpecLevel: [ false, false, false, false ],
   updatedAt: 0
+}
+
+function getValidSpecLevelsFromNumFields(numSelectedFields) {
+  var isValidSpecLevel = [ false, false, false, false ];
+  if (numSelectedFields == 0) {
+    isValidSpecLevel[0] = true;  // Exact
+  }
+  if (numSelectedFields >= 1) {
+    isValidSpecLevel[2] = true;  // Individual
+    isValidSpecLevel[3] = true  // Expanded
+  }
+  if (numSelectedFields >= 2) {
+    isValidSpecLevel[0] = true;  // Exact
+  }
+  if (numSelectedFields >= 3) {
+    isValidSpecLevel[1] = true;  // Subset
+  }
+  return isValidSpecLevel;
 }
 
 export default function gallerySelector(state = baseState, action) {
@@ -127,20 +146,14 @@ export default function gallerySelector(state = baseState, action) {
 
   switch (action.type) {
     case RECEIVE_FIELD_PROPERTIES:
-      var selectedPropertyStrings = action.fieldProperties
-        .filter((property) => property.selected)
-        .map((property) =>
-          new Object({
-            string: `${ property.name }`,
-            type: 'field'
-          })
-      );
-
+      var numSelectedFields = action.fieldProperties.filter((property) => property.selected).length;
+      var isValidSpecLevel = getValidSpecLevelsFromNumFields(numSelectedFields);
       return {
         ...state,
         datasetId: action.datasetId,
         fieldProperties: action.fieldProperties,
         originalFieldProperties: action.fieldProperties,
+        isValidSpecLevel: isValidSpecLevel,
         sortingFunctions: SORTING_FUNCTIONS,
         updatedAt: action.receivedAt
       };
@@ -158,13 +171,6 @@ export default function gallerySelector(state = baseState, action) {
         fieldNameToColor[fieldProperty['name']] = fieldProperty['color'];
       }
 
-      return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
-
-    case RECEIVE_SET_FIELD_IS_ID:
-      var fieldProperties = state.fieldProperties.slice().map((fieldProperty) =>
-        fieldProperty.id == action.fieldProperty.id ?
-          action.fieldProperty : fieldProperty
-      );
       return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
 
     case REQUEST_EXACT_SPECS:
@@ -196,7 +202,6 @@ export default function gallerySelector(state = baseState, action) {
         return sortSpecsByFunction(selectedSortingFunction, specA, specB);
       };
 
-      console.log('RECEIVE_SPECS level:', action.recommendationType.level, action.specs);
       var allSpecs = action.specs;
       if (action.recommendationType.level && state.specs) {
         allSpecs = [ ...state.specs, ...allSpecs ];
@@ -221,20 +226,16 @@ export default function gallerySelector(state = baseState, action) {
           : property
       );
 
-      var selectedPropertyStrings = fieldProperties
-        .filter((property) => property.selected)
-        .map((property) =>
-          new Object({
-            string: `${ property.name }`,
-            type: 'field'
-          })
-      );
+      var selectedProperties = fieldProperties.filter((property) => property.selected);
+      var numSelectedFields = selectedProperties.length;
+      var isValidSpecLevel = getValidSpecLevelsFromNumFields(numSelectedFields);
 
       return {
         ...state,
         fieldProperties: fieldProperties,
         isFetchingSpecLevel: [ false, false, false, false ],
         loadedSpecLevel: [ false, false, false, false ],
+        isValidSpecLevel: isValidSpecLevel,
         specs: [],
         updatedAt: Date.now()
       };

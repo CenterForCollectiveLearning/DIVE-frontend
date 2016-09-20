@@ -41,11 +41,8 @@ export default function specs(state=baseState, action) {
     case RECEIVE_INDIVIDUAL_SPECS:
     case RECEIVE_SUBSET_SPECS:
     case RECEIVE_EXPANDED_SPECS:
-      var allSpecs = action.specs;
-      if (action.recommendationType.level && state.items) {
-        allSpecs = [ ...state.items, ...allSpecs ];
-      }
-      return { ...state, isFetching: false, items: allSpecs, recommendationLevel: action.recommendationType.level, updatedAt: action.receivedAt, loaded: true, progress: null, error: null };
+      var newSpecs = [ ...state.items, ...action.specs ];
+      return { ...state, isFetching: false, items: newSpecs, recommendationLevel: action.recommendationType.level, updatedAt: action.receivedAt, loaded: true, progress: null, error: null };
 
     case FAILED_RECEIVE_SPECS:
       return { ...state, isFetching: false, loaded: true, error: action.error };

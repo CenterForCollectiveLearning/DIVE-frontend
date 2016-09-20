@@ -35,7 +35,6 @@ export default class TaskManager {
     }
 
     this.setState({ currentTasks: tasks });
-    // console.log('Tasks after adding task', taskId, tasks);
     return otherTasks;
   }
 
@@ -47,7 +46,7 @@ export default class TaskManager {
 
   removeTasks(taskIds) {
     var tasks = this.state.currentTasks.slice();
-    tasks = tasks.filter((task) => taskIds.indexOf(task.id) == -1);
+    tasks = tasks.filter((task) => taskIds.indexOf(task.id) > -1);
     this.setState({ currentTasks: tasks });
   }
 }
