@@ -20,33 +20,28 @@ export class ProjectNav extends Component {
   constructor(props) {
     super(props);
 
-    this._logout = this._logout.bind(this);
-    this._handleTabsChange = this._handleTabsChange.bind(this);
-    this._onClickLogo = this._onClickLogo.bind(this);
-    this.onSelectProject = this.onSelectProject.bind(this);
-    this.onClickProjectSettings = this.onClickProjectSettings.bind(this);
-
     this.state = {
       projectSettingsModalOpen: false,
       secondaryNavOpen: false
     };
   }
 
-  _getSelectedTab(){
+  _getSelectedTab = () => {
     const tabList = [
-      "upload",
-      "inspect",
-      "transform",
-      "explore",
-      "builder",
-      "starred",
-      "aggregation",
-      "comparison",
-      "correlation",
-      "regression",
-      "timeseries",
-      "compose",
-      "saved"
+      'upload',
+      'inspect',
+      'transform',
+      'explore',
+      'builder',
+      'starred',
+      'aggregation',
+      'comparison',
+      'correlation',
+      'regression',
+      'segmentation',
+      'timeseries',
+      'compose',
+      'saved'
     ];
 
     const _validTab = ((tabValue) =>
@@ -69,33 +64,33 @@ export class ProjectNav extends Component {
     return "datasets";
   }
 
-  _toggleSecondaryNav() {
+  _toggleSecondaryNav = () => {
     this.setState({ secondaryNavOpen: !this.state.secondaryNavOpen });
   }
 
 
-  _handleTabsChange(tab){
+  _handleTabsChange = (tab) => {
     this.props.push(`/projects/${ this.props.project.properties.id }/${ tab.props.route }`);
   }
 
-  _onClickLogo(){
+  _onClickLogo = () =>{
     this.props.push(`/projects`);
   }
 
-  _logout() {
+  _logout = () => {
     const { logoutUser } = this.props;
     logoutUser();
   }
 
-  onSelectProject(projectId) {
+  onSelectProject = (projectId) => {
     window.location.href = `/projects/${ projectId }/datasets`;
   }
 
-  onClickProjectSettings() {
+  onClickProjectSettings = () => {
     this.setState({ projectSettingsModalOpen: true });
   }
 
-  closeProjectSettingsModal() {
+  closeProjectSettingsModal = () => {
     this.setState({ projectSettingsModalOpen: false });
   }
 
@@ -111,11 +106,11 @@ export class ProjectNav extends Component {
             <div className={ styles.logoText }>
               DIVE
             </div>
-            <Logo className={ styles.logo } />            
+            <Logo className={ styles.logo } />
           </div>
           <div className={ styles.projectTitle }>{ project.properties.title }</div>
         </div>
-        <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange.bind(this) }>
+        <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange }>
           <TabGroup heading="1. DATASETS">
             <Tab label="Upload" value="upload" route={ `datasets/upload` } />
             <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
@@ -131,8 +126,7 @@ export class ProjectNav extends Component {
             <Tab label="Comparison" value="comparison" route={ `datasets/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>
             <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
             <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
-            <Tab label="Clustering" value="clustering" route={ `datasets/${ datasetId }/analyze/clustering` } disabled={ true }/>
-            <Tab label="Time Series" value="timeseries" route={ `datasets/${ datasetId }/analyze/timeseries` } disabled={ true }/>
+            <Tab label="Segmentation" value="segmentation" route={ `datasets/${ datasetId }/analyze/segmentation` } disabled={ !datasetId }/>            
           </TabGroup>
           <TabGroup heading="4. STORIES">
             <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>
@@ -153,7 +147,7 @@ export class ProjectNav extends Component {
                   projectName={ project.properties.title }
                   projectDescription={ project.properties.description }
                   projectId={ project.properties.id }
-                  closeAction={ this.closeProjectSettingsModal.bind(this) }/>
+                  closeAction={ this.closeProjectSettingsModal }/>
               }
             </div>
           }
@@ -162,7 +156,7 @@ export class ProjectNav extends Component {
               styles.secondaryNavToggle +
               ( this.state.secondaryNavOpen ? (' ' + styles.secondaryNavOpen) : '')
             }
-            onClick={ this._toggleSecondaryNav.bind(this) }
+            onClick={ this._toggleSecondaryNav }
           >
               <span>{ user.username }</span>
               { this.state.secondaryNavOpen ? <span className={ styles.chevron }>&#65088;</span> : <span className={ styles.chevron }>&#65087;</span> }
