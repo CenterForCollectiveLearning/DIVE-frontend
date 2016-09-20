@@ -1,8 +1,21 @@
 import {
-  REQUEST_SPECS,
+  REQUEST_EXACT_SPECS,
+  PROGRESS_EXACT_SPECS,
+  RECEIVE_EXACT_SPECS,
+  FAILED_RECEIVE_EXACT_SPECS,
+  REQUEST_INDIVIDUAL_SPECS,
+  PROGRESS_INDIVIDUAL_SPECS,
+  RECEIVE_INDIVIDUAL_SPECS,
+  FAILED_RECEIVE_INDIVIDUAL_SPECS,
+  REQUEST_SUBSET_SPECS,
+  PROGRESS_SUBSET_SPECS,
+  RECEIVE_SUBSET_SPECS,
+  FAILED_RECEIVE_SUBSET_SPECS,
+  REQUEST_EXPANDED_SPECS,
+  PROGRESS_EXPANDED_SPECS,
+  RECEIVE_EXPANDED_SPECS,
+  FAILED_RECEIVE_EXPANDED_SPECS,
   PROGRESS_SPECS,
-  RECEIVE_SPECS,
-  FAILED_RECEIVE_SPECS,
   SELECT_RECOMMENDATION_TYPE,
   SELECT_VISUALIZATION_TYPE,
   SELECT_BUILDER_VISUALIZATION_TYPE,
@@ -26,9 +39,37 @@ import _ from 'underscore';
 import { fetch, pollForTask } from './api.js';
 import { formatVisualizationTableData, getFilteredConditionals } from './ActionHelpers.js'
 
-function requestSpecsDispatcher() {
+const specLevelToAction = [
+  {
+    request: REQUEST_EXACT_SPECS,
+    progress: PROGRESS_EXACT_SPECS,
+    receive: RECEIVE_EXACT_SPECS,
+    fail: FAILED_RECEIVE_EXACT_SPECS
+  },
+  {
+    request: REQUEST_INDIVIDUAL_SPECS,
+    progress: PROGRESS_INDIVIDUAL_SPECS,
+    receive: RECEIVE_INDIVIDUAL_SPECS,
+    fail: FAILED_RECEIVE_INDIVIDUAL_SPECS
+  },
+  {
+    request: REQUEST_SUBSET_SPECS,
+    progress: PROGRESS_SUBSET_SPECS,
+    receive: RECEIVE_SUBSET_SPECS,
+    fail: FAILED_RECEIVE_SUBSET_SPECS
+  },
+  {
+    request: REQUEST_EXPANDED_SPECS,
+    progress: PROGRESS_EXPANDED_SPECS,
+    receive: RECEIVE_EXPANDED_SPECS,
+    fail: FAILED_RECEIVE_EXPANDED_SPECS
+  },
+]
+
+function requestSpecsDispatcher(selectedRecommendationLevel) {
   return {
-    type: REQUEST_SPECS
+    type: specLevelToAction[selectedRecommendationLevel].request,
+    selectedRecommendationLevel: selectedRecommendationLevel
   };
 }
 
@@ -51,7 +92,7 @@ function receiveSpecsDispatcher(params, json) {
   if (json && !json.error) {
     return {
       ...params,
-      type: RECEIVE_SPECS,
+      type: specLevelToAction[recommendationLevel].receive,
       specs: json.map((spec) => new Object({ ...spec, recommendationLevel })),
       receivedAt: Date.now()
     };
@@ -59,7 +100,7 @@ function receiveSpecsDispatcher(params, json) {
 
   return {
     ...params,
-    type: FAILED_RECEIVE_SPECS,
+    type: specLevelToAction[selectedRecommendationLevel].fail,
     specs: [],
     receivedAt: Date.now(),
     error: (json && json.error) ? json.error : "Error retrieving visualizations."
@@ -69,6 +110,7 @@ function receiveSpecsDispatcher(params, json) {
 export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommendationType = null) {
   const selectedFieldProperties = fieldProperties.filter((property) => property.selected);
   const selectedRecommendationType = recommendationType ? recommendationType.id : null;
+  const selectedRecommendationLevel = recommendationType ? recommendationType.level : null;
 
   const fieldAggPairs = selectedFieldProperties
     .map((property) =>
@@ -102,7 +144,7 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommend
   };
 
   return dispatch => {
-    dispatch(requestSpecsDispatcher());
+    dispatch(requestSpecsDispatcher(selectedRecommendationLevel));
 
     return fetch(`/specs/v1/specs`, {
       method: 'post',
@@ -111,7 +153,7 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommend
     }).then(function(json) {
         const dispatchParams = { project_id: projectId, dataset_id: datasetId, recommendationType: recommendationType };
         if (json.compute) {
-          dispatch(pollForTask(json.taskId, REQUEST_SPECS, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher, errorSpecsDispatcher));
+          dispatch(pollForTask(json.taskId, specLevelToAction[selectedRecommendationLevel].request, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher, errorSpecsDispatcher));
         } else {
           dispatch(receiveSpecsDispatcher(dispatchParams, json.result));
         }

@@ -1,7 +1,13 @@
 import {
-  REQUEST_SPECS,
+  REQUEST_EXACT_SPECS,
+  REQUEST_INDIVIDUAL_SPECS,
+  REQUEST_SUBSET_SPECS,
+  REQUEST_EXPANDED_SPECS,
   PROGRESS_SPECS,
-  RECEIVE_SPECS,
+  RECEIVE_EXACT_SPECS,
+  RECEIVE_INDIVIDUAL_SPECS,
+  RECEIVE_SUBSET_SPECS,
+  RECEIVE_EXPANDED_SPECS,
   FAILED_RECEIVE_SPECS,
   SELECT_FIELD_PROPERTY,
   WIPE_PROJECT_STATE
@@ -19,7 +25,10 @@ const baseState = {
 
 export default function specs(state=baseState, action) {
   switch (action.type) {
-    case REQUEST_SPECS:
+    case REQUEST_EXACT_SPECS:
+    case REQUEST_INDIVIDUAL_SPECS:
+    case REQUEST_SUBSET_SPECS:
+    case REQUEST_EXPANDED_SPECS:
       return { ...state, loaded: false, isFetching: true, progress: null, error: null };
 
     case PROGRESS_SPECS:
@@ -28,7 +37,10 @@ export default function specs(state=baseState, action) {
       }
       return state;
 
-    case RECEIVE_SPECS:
+    case RECEIVE_EXACT_SPECS:
+    case RECEIVE_INDIVIDUAL_SPECS:
+    case RECEIVE_SUBSET_SPECS:
+    case RECEIVE_EXPANDED_SPECS:
       var allSpecs = action.specs;
       if (action.recommendationType.level && state.items) {
         allSpecs = [ ...state.items, ...allSpecs ];

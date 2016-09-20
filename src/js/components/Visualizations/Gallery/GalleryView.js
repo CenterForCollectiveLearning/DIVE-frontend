@@ -1,4 +1,4 @@
-
+import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -28,10 +28,10 @@ export class GalleryView extends Component {
     }
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && notLoadedAndNotFetching) {
-      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendations.types[0]);
+      for (var level of [ 0, 1, 2, 3 ]) {
+        fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendationTypes[level]);
+      }
     }
-
-    clearVisualization();
   }
 
   componentDidUpdate(previousProps) {
@@ -46,21 +46,31 @@ export class GalleryView extends Component {
     }
 
     const fieldPropertiesSelected = gallerySelector.fieldProperties.find((prop) => prop.selected) != undefined;
-    const specRecommendationLevelIncreasedLessThanMaxLevel = specs.recommendationLevel > previousProps.specs.recommendationLevel && specs.recommendationLevel < gallerySelector.recommendations.maxLevel;
 
-    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && !specs.isFetching) {
-      if (datasetChanged || gallerySelectorChanged || notLoadedAndNotFetching) {
-        fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendations.types[specs.recommendationLevel == null ? 0 : specs.recommendationLevel]);
-      } else if (fieldPropertiesSelected && (specRecommendationLevelIncreasedLessThanMaxLevel || (specs.recommendationLevel != null && previousProps.specs.recommendationLevel == null))) {
-        fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendations.types[specs.recommendationLevel == null ? 0 : specs.recommendationLevel + 1]);
+    const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = gallerySelector;
+
+    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length) {
+      for (var i in isFetchingSpecLevel) {
+        const levelFetchingOrLoaded = isFetchingSpecLevel[i] || loadedSpecLevel[i];
+        if (!levelFetchingOrLoaded) {
+          fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendationTypes[i]);
+        }
       }
     }
+
+    // const specRecommendationLevelIncreasedLessThanMaxLevel = specs.recommendationLevel > previousProps.specs.recommendationLevel && specs.recommendationLevel < gallerySelector.recommendations.maxLevel;
+
+    // if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && !specs.isFetching) {
+    //   if (datasetChanged || gallerySelectorChanged || notLoadedAndNotFetching) {
+    //     fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendations.types[specs.recommendationLevel == null ? 0 : specs.recommendationLevel]);
+    //   } else if (fieldPropertiesSelected && (specRecommendationLevelIncreasedLessThanMaxLevel || (specs.recommendationLevel != null && previousProps.specs.recommendationLevel == null))) {
+    //     fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendations.types[specs.recommendationLevel == null ? 0 : specs.recommendationLevel + 1]);
+    //   }
+    // }
 
     if (project.properties.id && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {
       fetchExportedVisualizationSpecs(project.properties.id);
     }
-
-    clearVisualization();
   }
 
   onClickVisualization = (specId) => {

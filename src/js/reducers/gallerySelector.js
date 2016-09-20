@@ -1,8 +1,14 @@
 import {
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES,
-  REQUEST_SPECS,
-  RECEIVE_SPECS,
+  REQUEST_EXACT_SPECS,
+  REQUEST_INDIVIDUAL_SPECS,
+  REQUEST_SUBSET_SPECS,
+  REQUEST_EXPANDED_SPECS,
+  RECEIVE_EXACT_SPECS,
+  RECEIVE_INDIVIDUAL_SPECS,
+  RECEIVE_SUBSET_SPECS,
+  RECEIVE_EXPANDED_SPECS,
   SELECT_FIELD_PROPERTY,
   SELECT_FIELD_PROPERTY_VALUE,
   SELECT_AGGREGATION_FUNCTION,
@@ -34,19 +40,25 @@ const recommendationTypes = [
   }
 ]
 
+const recommendationTypesToLevel = {
+  exact: 0,
+  subset: 1,
+  level: 2,
+  expanded: 3
+}
+
 const baseState = {
   datasetId: null,
-  recommendations: {
-    types: recommendationTypes,
-    currentLevel: 0,
-    maxLevel: 3
-  },
   fieldProperties: [],
   originalFieldProperties: [],
+  recommendationTypesToLevel: recommendationTypesToLevel,
+  recommendationTypes: recommendationTypes,
   specs: [],
   sortingFunctions: [],
   queryString: "",
   isFetching: false,
+  isFetchingSpecLevel: [ false, false, false, false ],
+  loadedSpecLevel: [ false, false, false, false ],
   updatedAt: 0
 }
 
@@ -114,9 +126,6 @@ export default function gallerySelector(state = baseState, action) {
   };
 
   switch (action.type) {
-    case REQUEST_FIELD_PROPERTIES:
-      return { ...state, isFetching: true };
-
     case RECEIVE_FIELD_PROPERTIES:
       var selectedPropertyStrings = action.fieldProperties
         .filter((property) => property.selected)
@@ -129,7 +138,6 @@ export default function gallerySelector(state = baseState, action) {
 
       return {
         ...state,
-        isFetching: false,
         datasetId: action.datasetId,
         fieldProperties: action.fieldProperties,
         originalFieldProperties: action.fieldProperties,
@@ -137,7 +145,9 @@ export default function gallerySelector(state = baseState, action) {
         updatedAt: action.receivedAt
       };
 
-    case RECEIVE_SET_FIELD_TYPE, RECEIVE_SET_FIELD_IS_ID, RECEIVE_SET_FIELD_COLOR:
+    case RECEIVE_SET_FIELD_TYPE:
+    case RECEIVE_SET_FIELD_IS_ID:
+    case RECEIVE_SET_FIELD_COLOR:
       var fieldProperties = state.fieldProperties.slice().map((fieldProperty) =>
         fieldProperty.id == action.fieldProperty.id ? action.fieldProperty : fieldProperty
       );
@@ -157,21 +167,47 @@ export default function gallerySelector(state = baseState, action) {
       );
       return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
 
-    case REQUEST_SPECS:
-      return { ...state, isFetching: true };
+    case REQUEST_EXACT_SPECS:
+    case REQUEST_INDIVIDUAL_SPECS:
+    case REQUEST_SUBSET_SPECS:
+    case REQUEST_EXPANDED_SPECS:
+      var { isFetchingSpecLevel: requestIsFetchingSpecLevel } = state;
+      requestIsFetchingSpecLevel[action.selectedRecommendationLevel] = true;
 
-    case RECEIVE_SPECS:
+      return {
+        ...state,
+        isFetchingSpecLevel: requestIsFetchingSpecLevel,
+        isFetching: true
+      };
+
+    case RECEIVE_EXACT_SPECS:
+    case RECEIVE_INDIVIDUAL_SPECS:
+    case RECEIVE_SUBSET_SPECS:
+    case RECEIVE_EXPANDED_SPECS:
+      var {
+        isFetchingSpecLevel: receiveIsFetchingSpecLevel,
+        loadedSpecLevel: receiveLoadedSpecLevel
+      } = state;
+      receiveIsFetchingSpecLevel[action.recommendationType.level] = false;
+      receiveLoadedSpecLevel[action.recommendationType.level] = true;
+
       const selectedSortingFunction = state.sortingFunctions.find((func) => func.selected).value;
       const defaultSortSpecs = function (specA, specB) {
         return sortSpecsByFunction(selectedSortingFunction, specA, specB);
       };
 
+      console.log('RECEIVE_SPECS level:', action.recommendationType.level, action.specs);
       var allSpecs = action.specs;
       if (action.recommendationType.level && state.specs) {
         allSpecs = [ ...state.specs, ...allSpecs ];
       }
 
-      return { ...state, specs: allSpecs.sort(defaultSortSpecs) };
+      return {
+        ...state,
+        isFetchingSpecLevel: receiveIsFetchingSpecLevel,
+        loadedSpecLevel: receiveLoadedSpecLevel,
+        specs: allSpecs.sort(defaultSortSpecs)
+      };
 
     case SELECT_FIELD_PROPERTY:
       var fieldProperties = state.fieldProperties.map((property) =>
@@ -194,7 +230,14 @@ export default function gallerySelector(state = baseState, action) {
           })
       );
 
-      return { ...state, fieldProperties: fieldProperties, specs: [], updatedAt: Date.now() };
+      return {
+        ...state,
+        fieldProperties: fieldProperties,
+        isFetchingSpecLevel: [ false, false, false, false ],
+        loadedSpecLevel: [ false, false, false, false ],
+        specs: [],
+        updatedAt: Date.now()
+      };
 
     case SELECT_FIELD_PROPERTY_VALUE:
       const fieldPropertiesWithNewPropertyValue = state.fieldProperties.map((property) =>
@@ -205,7 +248,13 @@ export default function gallerySelector(state = baseState, action) {
           : property
       );
 
-      return { ...state, fieldProperties: fieldPropertiesWithNewPropertyValue, updatedAt: Date.now() };
+      return {
+        ...state,
+        fieldProperties: fieldPropertiesWithNewPropertyValue,
+        isFetchingSpecLevel: falseList,
+        loadedSpecLevel: falseList,
+        updatedAt: Date.now()
+      };
 
     case SELECT_AGGREGATION_FUNCTION:
       const fieldPropertiesWithNewAggregationValue = state.fieldProperties.map((property) =>

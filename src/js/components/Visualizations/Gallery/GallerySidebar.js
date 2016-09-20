@@ -39,7 +39,6 @@ export class GallerySidebar extends Component {
     const queryFieldsChanged = _.union(_.difference(previousProps.queryFields, queryFields), _.difference(queryFields, previousProps.queryFields));
 
     if (queryFieldsChanged.length) {
-      console.log('FIELDS CHANGED', queryFieldsChanged, previousProps.queryFields, queryFields);
       queryFieldsChanged.forEach((queryFieldName) =>
         selectFieldProperty(gallerySelector.fieldProperties.find((property) => property.name == queryFieldName).id)
       );

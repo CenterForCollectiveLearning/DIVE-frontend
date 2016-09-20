@@ -73,7 +73,9 @@ export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, prog
       .then(response => response.json())
       .then(function(data) {
         if (data.state == 'SUCCESS') {
+          console.log('Success, removing task', taskId, taskManager.getAllTasks());
           taskManager.removeTask(taskId);
+          console.log('After removing task:', taskManager.getAllTasks());
           dispatch(dispatcher(dispatcherParams, data.result));
         } else if (data.state == 'FAILURE') {
           taskManager.removeTask(taskId);
@@ -88,7 +90,8 @@ export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, prog
           if (progressDispatcher && data.currentTask) {
             dispatch(progressDispatcher(data));
           }
-          if (taskManager.getTasks(taskId).length > 0) {
+          // console.log(taskId, taskManager.getTasksByID(taskId));
+          if (taskManager.getTasksByID(taskId).length > 0) {
             setTimeout(function() { dispatch(pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval, limit, counter + 1)) }, interval);
           }
         }

@@ -9,7 +9,11 @@ export default class TaskManager {
     this.state = { ...this.state, ...newState };
   }
 
-  getTasks(taskIds) {
+  getAllTasks() {
+    return this.state.currentTasks;
+  }
+
+  getTasksByID(taskIds) {
     var tasks = this.state.currentTasks;
 
     if (taskIds) {
@@ -31,12 +35,13 @@ export default class TaskManager {
     }
 
     this.setState({ currentTasks: tasks });
+    // console.log('Tasks after adding task', taskId, tasks);
     return otherTasks;
   }
 
   removeTask(taskId) {
     var tasks = this.state.currentTasks.slice();
-    tasks = tasks.filter((task) => task.id == taskId);
+    tasks = tasks.filter((task) => task.id != taskId);
     this.setState({ currentTasks: tasks });
   }
 
