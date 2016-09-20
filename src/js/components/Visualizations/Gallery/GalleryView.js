@@ -79,8 +79,9 @@ export class GalleryView extends Component {
 
   render() {
     const { filters, datasets, fieldNameToColor, datasetSelector, filteredVisualizationTypes, gallerySelector, specs, exportedSpecs, selectSortingFunction } = this.props;
-    const { fieldProperties, isFetchingSpecLevel, isValidSpecLevel } = gallerySelector;
-    const { isFetching, progress, loaded } = specs;
+    const { fieldProperties, isFetchingSpecLevel, isValidSpecLevel, loadedSpecLevel } = gallerySelector;
+    const { progress, loaded } = specs;
+    const isFetching = _.any(isFetchingSpecLevel);
 
     var selectedFieldProperties = fieldProperties
       .filter((property) => property.selected).map((property) => property.name);
@@ -96,11 +97,6 @@ export class GalleryView extends Component {
     const subsetSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'subset');
     const exactSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'exact');
     const expandedSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'expanded');
-
-    console.log('baseline:', baselineSpecs.length);
-    console.log('subset:', subsetSpecs.length);
-    console.log('exact:', exactSpecs.length);
-    console.log('expanded:', expandedSpecs.length);
 
     let pageHeader;
     let helperText;
@@ -120,7 +116,7 @@ export class GalleryView extends Component {
             { !isFetching && filteredSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>
             }
-            { isValidSpecLevel[0] &&
+            { isValidSpecLevel[0] && !(loadedSpecLevel[0] && exactSpecs.length == 0) &&
               <div className={ styles.specSection }>
                 { areFieldsSelected &&
                   <HeaderBar
@@ -130,6 +126,7 @@ export class GalleryView extends Component {
                     textClassName={ styles.blockSectionHeaderTitle }
                   />
                 }
+                { isFetchingSpecLevel[0] && <Loader /> }
                 { exactSpecs.length > 0 &&
                   <div className={ styles.specs + ' ' + styles.exact }>
                     { exactSpecs.map((spec) =>
@@ -149,7 +146,7 @@ export class GalleryView extends Component {
                }
               </div>
             }
-            { isValidSpecLevel[1] &&
+            { isValidSpecLevel[1] && !(loadedSpecLevel[1] && subsetSpecs.length == 0) &&
               <div className={ styles.specSection }>
                 <HeaderBar
                   header={ 'Subset Matches' + ( subsetSpecs.length ? ` (${ subsetSpecs.length })` : '' ) }
@@ -157,6 +154,7 @@ export class GalleryView extends Component {
                   className={ styles.blockSectionHeader }
                   textClassName={ styles.blockSectionHeaderTitle }
                 />
+                { isFetchingSpecLevel[1] && <Loader /> }
                 { subsetSpecs.length > 0 &&
                   <div className={ styles.specs + ' ' + styles.subset }>
                     { subsetSpecs.map((spec) =>
@@ -176,7 +174,7 @@ export class GalleryView extends Component {
                 }
               </div>
             }
-            { isValidSpecLevel[2] &&
+            { isValidSpecLevel[2] && !(loadedSpecLevel[2] && baselineSpecs.length == 0) &&
               <div className={ styles.specSection }>
                 <HeaderBar
                   header={ 'Individual Matches' + ( baselineSpecs.length ? ` (${ baselineSpecs.length })` : '' ) }
@@ -184,7 +182,8 @@ export class GalleryView extends Component {
                   className={ styles.blockSectionHeader }
                   textClassName={ styles.blockSectionHeaderTitle }
                 />
-                { !isFetching && baselineSpecs.length > 0 && (selectedFieldProperties.length > 1 || selectedFieldProperties.length == 0) &&
+                { isFetchingSpecLevel[2] && <Loader /> }
+                { baselineSpecs.length > 0 &&
                   <div className={ styles.specs + ' ' + styles.baseline }>
                     { baselineSpecs.map((spec) =>
                       <VisualizationBlock
@@ -203,7 +202,7 @@ export class GalleryView extends Component {
                 }
               </div>
             }
-            { isValidSpecLevel[3] &&
+            { isValidSpecLevel[3] && !(loadedSpecLevel[3] && expandedSpecs.length == 0) &&
               <div className={ styles.specSection }>
                 <HeaderBar
                   header={ 'Expanded Matches' + ( expandedSpecs.length ? ` (${ expandedSpecs.length })` : '' ) }
@@ -211,28 +210,29 @@ export class GalleryView extends Component {
                   className={ styles.blockSectionHeader }
                   textClassName={ styles.blockSectionHeaderTitle }
                 />
+                { isFetchingSpecLevel[3] && <Loader /> }
                 { expandedSpecs.length > 0 &&
-                <div className={ styles.specs + ' ' + styles.expanded }>
-                  { expandedSpecs.map((spec) =>
-                    <VisualizationBlock
-                      key={ spec.id }
-                      spec={ spec }
-                      className='expanded'
-                      fieldNameToColor={ fieldNameToColor }
-                      filteredVisualizationTypes={ filteredVisualizationTypes }
-                      exportedSpecs={ exportedSpecs }
-                      onClick={ this.onClickVisualization }
-                      saveVisualization={ this.saveVisualization }
-                      />
-                    )
-                  }
-                </div>
+                  <div className={ styles.specs + ' ' + styles.expanded }>
+                    { expandedSpecs.map((spec) =>
+                      <VisualizationBlock
+                        key={ spec.id }
+                        spec={ spec }
+                        className='expanded'
+                        fieldNameToColor={ fieldNameToColor }
+                        filteredVisualizationTypes={ filteredVisualizationTypes }
+                        exportedSpecs={ exportedSpecs }
+                        onClick={ this.onClickVisualization }
+                        saveVisualization={ this.saveVisualization }
+                        />
+                      )
+                    }
+                  </div>
                 }
               </div>
             }
-            { isFetching &&
+            {/* isFetching &&
               <Loader text={ progress != null ? progress : 'Fetching visualizations…' } />
-            }
+            */}
           </div>
         </div>
       </div>
