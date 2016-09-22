@@ -13,7 +13,6 @@ import {
 } from '../constants/ActionTypes';
 import rootReducer from '../reducers/index';
 import RavenMiddleware from 'redux-raven-middleware';
-import throttleActions from 'redux-throttle-actions';
 
 import createHistory from 'history/lib/createBrowserHistory';
 
@@ -26,13 +25,7 @@ export default function configureStore(initialState) {
   const middleware = [
     debounce,
     thunkMiddleware,
-    routerMiddleware(browserHistory),
-    throttleActions([
-      REQUEST_EXACT_SPECS,
-      REQUEST_INDIVIDUAL_SPECS,
-      REQUEST_SUBSET_SPECS,
-      REQUEST_EXPANDED_SPECS
-    ], 500)
+    routerMiddleware(browserHistory)
   ];
 
   if (window.__env.NODE_ENV !== "PRODUCTION") {

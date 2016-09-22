@@ -53,7 +53,7 @@ export class GalleryView extends Component {
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length) {
       for (var i in isFetchingSpecLevel) {
-        if (!(isFetchingSpecLevel[i] || loadedSpecLevel[i]) && gallerySelector.isValidSpecLevel[i]) {
+        if (!isFetchingSpecLevel[i] && !loadedSpecLevel[i] && gallerySelector.isValidSpecLevel[i]) {
           fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendationTypes[i]);
         }
       }

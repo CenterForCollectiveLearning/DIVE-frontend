@@ -33,19 +33,16 @@ export default class TaskManager {
     }
 
     this.setTasks(tasks);
-    // console.log('Adding task of type', taskType, taskId, tasks);
     return otherTaskIds;
   }
 
   removeTask(taskId) {
     var remainingTasks = this.currentTasks.filter((task) => task.id != taskId);
-    // console.log('Removing task', taskId, remainingTasks);
     this.setTasks(remainingTasks);
   }
 
   removeTasks(taskIds) {
     var remainingTasks = this.currentTasks.filter((task) => taskIds.indexOf(task.id) == -1);
-    // console.log('Removing TASKS', taskIds, remainingTasks);
     this.setTasks(remainingTasks);
   }
 }

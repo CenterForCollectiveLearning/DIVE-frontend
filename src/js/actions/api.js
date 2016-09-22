@@ -61,11 +61,8 @@ function revokeTasks(taskIds) {
 }
 
 export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval=600, limit=300, counter=0) {
-  // console.log('Adding task', taskId, 'of type', taskType, taskManager.getAllTasks());
   const otherTasks = taskManager.addTask(taskId, taskType);
   if (otherTasks.length) {
-    console.log('Revoking tasks due to adding', taskId, otherTasks);
-    // console.log('Revoking other tasks of same type', taskType, otherTasks);
     revokeTasks(otherTasks);
   }
   const completeUrl = API_URL + `/tasks/v1/result/${ taskId }`;
@@ -75,7 +72,6 @@ export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, prog
     return isomorphicFetch(completeUrl, {})
       .then(response => response.json())
       .then(function(data) {
-        // console.log('Data from request', data);
         if (data.state == 'SUCCESS') {
           taskManager.removeTask(taskId);
           dispatch(dispatcher(dispatcherParams, data.result));
@@ -95,7 +91,7 @@ export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, prog
           if (progressDispatcher && data.hasOwnProperty('currentTask')) {
             dispatch(progressDispatcher(data));
           }
-          if (taskManager.getTasksByID(taskId).length > 0) {
+          if (taskManager.getTasksByID(taskId)) {
             setTimeout(function() { dispatch(pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval, limit, counter + 1)) }, interval);
           } else {
             console.log('Not polling because taskId not in taskManager:', taskId, taskManager.getAllTasks());
