@@ -1,4 +1,6 @@
 import { default as isomorphicFetch } from 'isomorphic-fetch';
+import { REQUEST_ONE_D_AGGREGATION, REQUEST_AGGREGATION } from '../constants/ActionTypes';
+
 
 import TaskManager from './TaskManager';
 
@@ -61,8 +63,16 @@ function revokeTasks(taskIds) {
 }
 
 export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval=600, limit=300, counter=0) {
+  const aggregationActionTypes = [ REQUEST_ONE_D_AGGREGATION, REQUEST_AGGREGATION ];
+
+  console.log(taskType, aggregationActionTypes.indexOf(taskType))
+  if (aggregationActionTypes.indexOf( taskType ) > -1) {
+    taskType = REQUEST_AGGREGATION
+  }
+  console.log(taskType)
   const otherTasks = taskManager.addTask(taskId, taskType);
   if (otherTasks.length) {
+    console.log('Revoking tasks', otherTasks);
     revokeTasks(otherTasks);
   }
   const completeUrl = API_URL + `/tasks/v1/result/${ taskId }`;

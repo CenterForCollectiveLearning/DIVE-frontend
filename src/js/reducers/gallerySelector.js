@@ -22,7 +22,8 @@ import {
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_TYPE,
   RECEIVE_SET_FIELD_COLOR,
-  SET_GALLERY_QUERY_STRING
+  SET_GALLERY_QUERY_STRING,
+  SELECT_RECOMMENDATION_MODE
 } from '../constants/ActionTypes';
 
 const recommendationTypes = [
@@ -51,12 +52,27 @@ const recommendationTypesToLevel = {
   expanded: 3
 }
 
+const recommendationModes = [
+  {
+    id: 'regular',
+    name: 'Regular',
+    selected: true
+  },
+  {
+    id: 'expanded',
+    name: 'Expanded',
+    selected: false
+  }
+]
+
 const baseState = {
   datasetId: null,
   fieldProperties: [],
   originalFieldProperties: [],
   recommendationTypesToLevel: recommendationTypesToLevel,
   recommendationTypes: recommendationTypes,
+  recommendationModes: recommendationModes,
+  selectedRecommendationMode: 'regular',
   specs: [],
   sortingFunctions: [],
   queryString: "",
@@ -64,17 +80,20 @@ const baseState = {
   isFetchingSpecLevel: [ false, false, false, false ],
   loadedSpecLevel: [ false, false, false, false ],
   isValidSpecLevel: [ false, false, false, false ],
+  allowExpandedSpecs: false,
   updatedAt: 0
 }
 
-function getValidSpecLevelsFromNumFields(numSelectedFields) {
+function getValidSpecLevelsFromNumFields(numSelectedFields, selectedRecommendationMode) {
   var isValidSpecLevel = [ false, false, false, false ];
   if (numSelectedFields == 0) {
     isValidSpecLevel[0] = true;  // Exact
   }
   if (numSelectedFields >= 1) {
     isValidSpecLevel[2] = true;  // Individual
-    isValidSpecLevel[3] = true  // Expanded
+    if (selectedRecommendationMode == 'expanded') {
+      isValidSpecLevel[3] = true  // Expanded
+    }
   }
   if (numSelectedFields >= 2) {
     isValidSpecLevel[0] = true;  // Exact
@@ -149,9 +168,32 @@ export default function gallerySelector(state = baseState, action) {
   };
 
   switch (action.type) {
+    case SELECT_RECOMMENDATION_MODE:
+      var numSelectedFields = state.fieldProperties.filter((property) => property.selected).length;
+      var isValidSpecLevel = getValidSpecLevelsFromNumFields(numSelectedFields, action.selectedRecommendationModeId);
+
+      var recommendationModes = state.recommendationModes.map((recommendationModeObject) =>
+        (recommendationModeObject.id == action.selectedRecommendationModeId) ?
+          new Object({
+            ...recommendationModeObject,
+            selected: true
+          })
+          : new Object({
+            ...recommendationModeObject,
+            selected: false
+          })
+      );
+      return {
+        ...state,
+        selectedRecommendationMode: action.selectedRecommendationModeId,
+        isValidSpecLevel: isValidSpecLevel,
+        recommendationModes: recommendationModes
+      }
+
+
     case RECEIVE_FIELD_PROPERTIES:
       var numSelectedFields = action.fieldProperties.filter((property) => property.selected).length;
-      var isValidSpecLevel = getValidSpecLevelsFromNumFields(numSelectedFields);
+      var isValidSpecLevel = getValidSpecLevelsFromNumFields(numSelectedFields, state.selectedRecommendationMode);
       return {
         ...state,
         datasetId: action.datasetId,
@@ -268,7 +310,7 @@ export default function gallerySelector(state = baseState, action) {
 
       var selectedProperties = fieldProperties.filter((property) => property.selected);
       var numSelectedFields = selectedProperties.length;
-      var isValidSpecLevel = getValidSpecLevelsFromNumFields(numSelectedFields);
+      var isValidSpecLevel = getValidSpecLevelsFromNumFields(numSelectedFields, state.selectedRecommendationMode);
 
       return {
         ...state,

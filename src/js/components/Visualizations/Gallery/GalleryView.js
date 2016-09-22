@@ -79,7 +79,7 @@ export class GalleryView extends Component {
 
   render() {
     const { filters, datasets, fieldNameToColor, datasetSelector, filteredVisualizationTypes, gallerySelector, specs, exportedSpecs, selectSortingFunction } = this.props;
-    const { fieldProperties, isFetchingSpecLevel, isValidSpecLevel, loadedSpecLevel, progressByLevel } = gallerySelector;
+    const { fieldProperties, isFetchingSpecLevel, isValidSpecLevel, loadedSpecLevel, progressByLevel, selectedRecommendationMode } = gallerySelector;
     const isFetching = _.any(isFetchingSpecLevel);
 
     var selectedFieldProperties = fieldProperties
@@ -128,9 +128,9 @@ export class GalleryView extends Component {
                 { isFetchingSpecLevel[0] && <Loader text={ progressByLevel[0] }/> }
                 { exactSpecs.length > 0 &&
                   <div className={ styles.specs + ' ' + styles.exact }>
-                    { exactSpecs.map((spec) =>
+                    { exactSpecs.map((spec, i) =>
                       <VisualizationBlock
-                        key={ spec.id }
+                        key={ `${ spec.id }-${ i }` }
                         spec={ spec }
                         className='exact'
                         fieldNameToColor={ fieldNameToColor }
@@ -233,9 +233,6 @@ export class GalleryView extends Component {
                 }
               </div>
             }
-            {/* isFetching &&
-              <Loader text={ progress != null ? progress : 'Fetching visualizations…' } />
-            */}
           </div>
         </div>
       </div>

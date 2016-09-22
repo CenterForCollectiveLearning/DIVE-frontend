@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectFieldPropertyValue, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
-import { selectVisualizationType, selectSortingFunction } from '../../../actions/VisualizationActions';
+import { selectRecommendationMode, selectVisualizationType, selectSortingFunction } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
 import _ from 'underscore';
@@ -17,9 +17,6 @@ import DropDownMenu from '../../Base/DropDownMenu';
 export class GallerySidebar extends Component {
   constructor(props) {
     super(props);
-
-    this.clickFieldProperty = this.clickFieldProperty.bind(this);
-    this.clickFieldPropertyValue = this.clickFieldPropertyValue.bind(this);
   }
 
   componentWillMount() {
@@ -49,7 +46,7 @@ export class GallerySidebar extends Component {
     }
   }
 
-  clickFieldProperty(fieldPropertyId) {
+  clickFieldProperty = (fieldPropertyId) => {
     const { gallerySelector, project, datasetSelector, push } = this.props;
     var selectedFieldPropertiesQueryString = gallerySelector.fieldProperties
       .filter((property) => (!property.selected && property.id == fieldPropertyId) || (property.selected && property.id != fieldPropertyId))
@@ -62,7 +59,12 @@ export class GallerySidebar extends Component {
     push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
   }
 
-  clickFieldPropertyValue(fieldPropertyId, fieldPropertyValueId) {
+  clickRecommendationMode = (recommendationModeId) => {
+    const { selectRecommendationMode } = this.props;
+    selectRecommendationMode(recommendationModeId);
+  }
+
+  clickFieldPropertyValue = (fieldPropertyId, fieldPropertyValueId) => {
     const selectedProperty = this.props.gallerySelector.fieldProperties.find((property) => (property.id == fieldPropertyId));
     if (!selectedProperty.selected) {
       this.clickFieldProperty(fieldPropertyId);
@@ -93,6 +95,14 @@ export class GallerySidebar extends Component {
 
     return (
       <Sidebar>
+        <SidebarGroup heading="Recommendation Mode">
+          <ToggleButtonGroup
+            toggleItems={ gallerySelector.recommendationModes }
+            displayTextMember="name"
+            valueMember="id"
+            separated={ false }
+            onChange={ this.clickRecommendationMode } />
+        </SidebarGroup>
         <SidebarGroup heading="Sort By">
           <DropDownMenu
             options={ gallerySelector.sortingFunctions }
@@ -218,6 +228,7 @@ export default connect(mapStateToProps, {
   selectFieldProperty,
   selectFieldPropertyValue,
   selectAggregationFunction,
+  selectRecommendationMode,
   selectSortingFunction,
   fetchDatasets,
   selectDataset,

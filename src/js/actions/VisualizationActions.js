@@ -32,7 +32,8 @@ import {
   SELECT_BUILDER_SORT_FIELD,
   SELECT_CONDITIONAL,
   SELECT_VISUALIZATION_CONFIG,
-  SET_GALLERY_QUERY_STRING
+  SET_GALLERY_QUERY_STRING,
+  SELECT_RECOMMENDATION_MODE
 } from '../constants/ActionTypes';
 
 import _ from 'underscore';
@@ -65,6 +66,13 @@ const specLevelToAction = [
     fail: FAILED_RECEIVE_EXPANDED_SPECS
   },
 ]
+
+export function selectRecommendationMode(selectedRecommendationModeId) {
+  return {
+    type: SELECT_RECOMMENDATION_MODE,
+    selectedRecommendationModeId: selectedRecommendationModeId
+  };
+}
 
 function requestSpecsDispatcher(selectedRecommendationLevel) {
   return {
