@@ -53,6 +53,7 @@
     "redux-raven-middleware": "^0.3.0",
     "redux-router": "^2.0.0",
     "redux-storage": "^1.2.3",
+    "redux-throttle-actions": "^1.1.0",
     "redux-thunk": "^2.0.1",
     "save-svg-as-png": "^1.0.3",
     "shelljs": "^0.5.3",
