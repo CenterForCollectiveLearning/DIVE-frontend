@@ -1,22 +1,20 @@
 export default class TaskManager {
   constructor() {
-    this.state = {
-      currentTasks: []
-    };
-  }
-
-  setState(newState) {
-    this.state = { ...this.state, ...newState };
+    this.currentTasks = [];
   }
 
   getAllTasks() {
-    return this.state.currentTasks;
+    return this.currentTasks;
+  }
+
+  setTasks(tasks) {
+    this.currentTasks = tasks;
   }
 
   getTasksByID(taskIds) {
-    var tasks = this.state.currentTasks;
+    var tasks = this.currentTasks;
 
-    if (taskIds) {
+    if (taskIds.length > 0) {
       tasks = tasks.filter((task) => (taskIds.indexOf(task.id) != -1));
     }
 
@@ -24,9 +22,9 @@ export default class TaskManager {
   }
 
   addTask(taskId, taskType) {
-    var tasks = this.state.currentTasks.slice();
+    var tasks = this.currentTasks;
 
-    const otherTasks = tasks
+    const otherTaskIds = tasks
       .filter((task) => ((task.id != taskId) && (task.type == taskType)))
       .map((task) => task.id);
 
@@ -34,19 +32,20 @@ export default class TaskManager {
        tasks.push({ id: taskId, type: taskType });
     }
 
-    this.setState({ currentTasks: tasks });
-    return otherTasks;
+    this.setTasks(tasks);
+    // console.log('Adding task of type', taskType, taskId, tasks);
+    return otherTaskIds;
   }
 
   removeTask(taskId) {
-    var tasks = this.state.currentTasks.slice();
-    tasks = tasks.filter((task) => task.id != taskId);
-    this.setState({ currentTasks: tasks });
+    var remainingTasks = this.currentTasks.filter((task) => task.id != taskId);
+    // console.log('Removing task', taskId, remainingTasks);
+    this.setTasks(remainingTasks);
   }
 
   removeTasks(taskIds) {
-    var tasks = this.state.currentTasks.slice();
-    tasks = tasks.filter((task) => taskIds.indexOf(task.id) > -1);
-    this.setState({ currentTasks: tasks });
+    var remainingTasks = this.currentTasks.filter((task) => taskIds.indexOf(task.id) == -1);
+    // console.log('Removing TASKS', taskIds, remainingTasks);
+    this.setTasks(remainingTasks);
   }
 }

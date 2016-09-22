@@ -9,6 +9,10 @@ import {
   RECEIVE_INDIVIDUAL_SPECS,
   RECEIVE_SUBSET_SPECS,
   RECEIVE_EXPANDED_SPECS,
+  PROGRESS_EXACT_SPECS,
+  PROGRESS_INDIVIDUAL_SPECS,
+  PROGRESS_SUBSET_SPECS,
+  PROGRESS_EXPANDED_SPECS,
   SELECT_FIELD_PROPERTY,
   SELECT_FIELD_PROPERTY_VALUE,
   SELECT_AGGREGATION_FUNCTION,
@@ -56,7 +60,7 @@ const baseState = {
   specs: [],
   sortingFunctions: [],
   queryString: "",
-  isFetching: false,
+  progressByLevel: [ null, null, null, null ],
   isFetchingSpecLevel: [ false, false, false, false ],
   loadedSpecLevel: [ false, false, false, false ],
   isValidSpecLevel: [ false, false, false, false ],
@@ -186,6 +190,48 @@ export default function gallerySelector(state = baseState, action) {
         isFetching: true
       };
 
+    case PROGRESS_EXACT_SPECS:
+      if (action.progress && action.progress.length){
+        var newProgress = state.progressByLevel.slice();
+        newProgress[0] = action.progress;
+        return { ...state, progressByLevel: newProgress};
+      }
+      return state;
+    case PROGRESS_SUBSET_SPECS:
+      if (action.progress && action.progress.length){
+        var newProgress = state.progressByLevel.slice();
+        newProgress[1] = action.progress;
+        return { ...state, progressByLevel: newProgress};
+      }
+      return state;
+    case PROGRESS_INDIVIDUAL_SPECS:
+      if (action.progress && action.progress.length){
+        var newProgress = state.progressByLevel.slice();
+        newProgress[2] = action.progress;
+        return { ...state, progressByLevel: newProgress};
+      }
+      return state;
+    case PROGRESS_EXPANDED_SPECS:
+      if (action.progress && action.progress.length){
+        var newProgress = state.progressByLevel.slice();
+        newProgress[3] = action.progress;
+        return { ...state, progressByLevel: newProgress};
+      }
+      return state;
+
+    case REQUEST_EXACT_SPECS:
+    case REQUEST_INDIVIDUAL_SPECS:
+    case REQUEST_SUBSET_SPECS:
+    case REQUEST_EXPANDED_SPECS:
+      var { isFetchingSpecLevel: requestIsFetchingSpecLevel } = state;
+      requestIsFetchingSpecLevel[action.selectedRecommendationLevel] = true;
+
+      return {
+        ...state,
+        isFetchingSpecLevel: requestIsFetchingSpecLevel,
+        isFetching: true
+      };
+
     case RECEIVE_EXACT_SPECS:
     case RECEIVE_INDIVIDUAL_SPECS:
     case RECEIVE_SUBSET_SPECS:
@@ -202,16 +248,10 @@ export default function gallerySelector(state = baseState, action) {
         return sortSpecsByFunction(selectedSortingFunction, specA, specB);
       };
 
-      var allSpecs = action.specs;
-      if (action.recommendationType.level && state.specs) {
-        allSpecs = [ ...state.specs, ...allSpecs ];
-      }
-
       return {
         ...state,
         isFetchingSpecLevel: receiveIsFetchingSpecLevel,
-        loadedSpecLevel: receiveLoadedSpecLevel,
-        specs: allSpecs.sort(defaultSortSpecs)
+        loadedSpecLevel: receiveLoadedSpecLevel
       };
 
     case SELECT_FIELD_PROPERTY:
@@ -233,40 +273,13 @@ export default function gallerySelector(state = baseState, action) {
       return {
         ...state,
         fieldProperties: fieldProperties,
+        progressByLevel: [ null, null, null, null ],
         isFetchingSpecLevel: [ false, false, false, false ],
         loadedSpecLevel: [ false, false, false, false ],
         isValidSpecLevel: isValidSpecLevel,
         specs: [],
         updatedAt: Date.now()
       };
-
-    case SELECT_FIELD_PROPERTY_VALUE:
-      const fieldPropertiesWithNewPropertyValue = state.fieldProperties.map((property) =>
-        (property.id == action.selectedFieldPropertyId) ?
-          new Object({ ...property, values: property.values.map((valueObject) =>
-            new Object({ ...valueObject, selected: valueObject.value == action.selectedFieldPropertyValueId }))
-          })
-          : property
-      );
-
-      return {
-        ...state,
-        fieldProperties: fieldPropertiesWithNewPropertyValue,
-        isFetchingSpecLevel: falseList,
-        loadedSpecLevel: falseList,
-        updatedAt: Date.now()
-      };
-
-    case SELECT_AGGREGATION_FUNCTION:
-      const fieldPropertiesWithNewAggregationValue = state.fieldProperties.map((property) =>
-        (property.id == action.selectedFieldPropertyId) ?
-          new Object({ ...property, aggregations: property.aggregations.map((aggregationObject) =>
-            new Object({ ...aggregationObject, selected: aggregationObject.value == action.selectedFieldPropertyValueId }))
-          })
-          : property
-      );
-
-      return { ...state, fieldProperties: fieldPropertiesWithNewAggregationValue, updatedAt: Date.now() };
 
     case SELECT_SORTING_FUNCTION:
       const sortingFunctions = state.sortingFunctions.map((func) =>

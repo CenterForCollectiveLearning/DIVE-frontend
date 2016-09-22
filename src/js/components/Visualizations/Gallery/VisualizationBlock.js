@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Visualizations.sass';
 
 import Visualization from '../Visualization';
+import { getRoundedString } from '../../../helpers/helpers';
 
 export default class VisualizationBlock extends Component {
   onClick() {
@@ -16,7 +17,7 @@ export default class VisualizationBlock extends Component {
   }
 
   render() {
-    const { spec, exportedSpecs, fieldNameToColor, filteredVisualizationTypes, className } = this.props;
+    const { spec, exportedSpecs, fieldNameToColor, filteredVisualizationTypes, className, showStats } = this.props;
 
     return (
       <div className={ styles.visualizationBlocksContainer + ' ' + ( styles[className] || '') }>
@@ -32,6 +33,16 @@ export default class VisualizationBlock extends Component {
         <div className={ styles.starContainer } onClick={ this.saveVisualization.bind(this) }>
           <i className={ exportedSpecs.items.find((exportedSpec) => exportedSpec.specId == spec.id) ? 'fa fa-star ' + styles.starred : 'fa fa-star-o' }></i>
         </div>
+        { showStats &&
+          <div className={ styles.stats }>
+             { spec.scores.filter((score) => score.score !== null).map((score) =>
+               <div>
+                  <span className={ styles.type }>{ score.type }</span>:
+                  <span className={ styles.value }>{ getRoundedString(score.score) }</span>
+               </div>
+             )}
+          </div>
+        }
       </div>
     );
   }
@@ -44,5 +55,6 @@ VisualizationBlock.propTypes = {
   filteredVisualizationTypes: PropTypes.array.isRequired,
   exportedSpecs: PropTypes.object.isRequired,
   saveVisualization: PropTypes.func.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  showStats: PropTypes.bool
 };

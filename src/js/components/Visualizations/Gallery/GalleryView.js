@@ -79,8 +79,7 @@ export class GalleryView extends Component {
 
   render() {
     const { filters, datasets, fieldNameToColor, datasetSelector, filteredVisualizationTypes, gallerySelector, specs, exportedSpecs, selectSortingFunction } = this.props;
-    const { fieldProperties, isFetchingSpecLevel, isValidSpecLevel, loadedSpecLevel } = gallerySelector;
-    const { progress, loaded } = specs;
+    const { fieldProperties, isFetchingSpecLevel, isValidSpecLevel, loadedSpecLevel, progressByLevel } = gallerySelector;
     const isFetching = _.any(isFetchingSpecLevel);
 
     var selectedFieldProperties = fieldProperties
@@ -126,7 +125,7 @@ export class GalleryView extends Component {
                     textClassName={ styles.blockSectionHeaderTitle }
                   />
                 }
-                { isFetchingSpecLevel[0] && <Loader /> }
+                { isFetchingSpecLevel[0] && <Loader text={ progressByLevel[0] }/> }
                 { exactSpecs.length > 0 &&
                   <div className={ styles.specs + ' ' + styles.exact }>
                     { exactSpecs.map((spec) =>
@@ -139,7 +138,8 @@ export class GalleryView extends Component {
                         exportedSpecs={ exportedSpecs }
                         onClick={ this.onClickVisualization }
                         saveVisualization={ this.saveVisualization }
-                        />
+                        showStats={ true }
+                      />
                       )
                     }
                   </div>
@@ -154,7 +154,7 @@ export class GalleryView extends Component {
                   className={ styles.blockSectionHeader }
                   textClassName={ styles.blockSectionHeaderTitle }
                 />
-                { isFetchingSpecLevel[1] && <Loader /> }
+                { isFetchingSpecLevel[1] && <Loader text={ progressByLevel[1] }/> }
                 { subsetSpecs.length > 0 &&
                   <div className={ styles.specs + ' ' + styles.subset }>
                     { subsetSpecs.map((spec) =>
@@ -167,7 +167,8 @@ export class GalleryView extends Component {
                         exportedSpecs={ exportedSpecs }
                         onClick={ this.onClickVisualization }
                         saveVisualization={ this.saveVisualization }
-                        />
+                        showStats={ true }
+                      />
                       )
                     }
                   </div>
@@ -182,7 +183,7 @@ export class GalleryView extends Component {
                   className={ styles.blockSectionHeader }
                   textClassName={ styles.blockSectionHeaderTitle }
                 />
-                { isFetchingSpecLevel[2] && <Loader /> }
+                { isFetchingSpecLevel[2] && <Loader text={ progressByLevel[2] }/> }
                 { baselineSpecs.length > 0 &&
                   <div className={ styles.specs + ' ' + styles.baseline }>
                     { baselineSpecs.map((spec) =>
@@ -195,7 +196,8 @@ export class GalleryView extends Component {
                         exportedSpecs={ exportedSpecs }
                         onClick={ this.onClickVisualization }
                         saveVisualization={ this.saveVisualization }
-                        />
+                        showStats={ true }
+                      />
                       )
                     }
                   </div>
@@ -210,7 +212,7 @@ export class GalleryView extends Component {
                   className={ styles.blockSectionHeader }
                   textClassName={ styles.blockSectionHeaderTitle }
                 />
-                { isFetchingSpecLevel[3] && <Loader /> }
+                { isFetchingSpecLevel[3] && <Loader text={ progressByLevel[3] }/> }
                 { expandedSpecs.length > 0 &&
                   <div className={ styles.specs + ' ' + styles.expanded }>
                     { expandedSpecs.map((spec) =>
@@ -223,7 +225,8 @@ export class GalleryView extends Component {
                         exportedSpecs={ exportedSpecs }
                         onClick={ this.onClickVisualization }
                         saveVisualization={ this.saveVisualization }
-                        />
+                        showStats={ true }
+                      />
                       )
                     }
                   </div>

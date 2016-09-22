@@ -57,42 +57,49 @@ function revokeTasks(taskIds) {
   };
 
   taskManager.removeTasks(taskIds);
-
   return isomorphicFetch(completeUrl, options).then(response => response.json());
 }
 
-export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval=400, limit=300, counter=0) {
+export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval=600, limit=300, counter=0) {
+  // console.log('Adding task', taskId, 'of type', taskType, taskManager.getAllTasks());
   const otherTasks = taskManager.addTask(taskId, taskType);
   if (otherTasks.length) {
+    console.log('Revoking tasks due to adding', taskId, otherTasks);
+    // console.log('Revoking other tasks of same type', taskType, otherTasks);
     revokeTasks(otherTasks);
   }
   const completeUrl = API_URL + `/tasks/v1/result/${ taskId }`;
+  console.log('Polling', taskId, taskType);
 
   return dispatch => {
     return isomorphicFetch(completeUrl, {})
       .then(response => response.json())
       .then(function(data) {
+        // console.log('Data from request', data);
         if (data.state == 'SUCCESS') {
-          console.log('Success, removing task', taskId, taskManager.getAllTasks());
           taskManager.removeTask(taskId);
-          console.log('After removing task:', taskManager.getAllTasks());
           dispatch(dispatcher(dispatcherParams, data.result));
         } else if (data.state == 'FAILURE') {
           taskManager.removeTask(taskId);
-          console.error(data.error);
           Raven.captureException(new Error(data.error));
+          dispatch(errorDispatcher(data));
+        } else if (data.state == 'REVOKED') {
+          console.log('REVOKED', taskId);
+          taskManager.removeTask(taskId);
           dispatch(errorDispatcher(data));
         } else if (counter > limit) {
           revokeTasks(taskId).then((revokeData) => {
             dispatch(dispatcher(dispatcherParams, { ...data.result, error: 'Took too long to get visualizations.' }));
           });
         } else {
-          if (progressDispatcher && data.currentTask) {
+          if (progressDispatcher && data.hasOwnProperty('currentTask')) {
             dispatch(progressDispatcher(data));
           }
-          // console.log(taskId, taskManager.getTasksByID(taskId));
           if (taskManager.getTasksByID(taskId).length > 0) {
             setTimeout(function() { dispatch(pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval, limit, counter + 1)) }, interval);
+          } else {
+            console.log('Not polling because taskId not in taskManager:', taskId, taskManager.getAllTasks());
+            taskManager.removeTask(taskId);
           }
         }
       });

@@ -3,7 +3,10 @@ import {
   REQUEST_INDIVIDUAL_SPECS,
   REQUEST_SUBSET_SPECS,
   REQUEST_EXPANDED_SPECS,
-  PROGRESS_SPECS,
+  PROGRESS_EXACT_SPECS,
+  PROGRESS_INDIVIDUAL_SPECS,
+  PROGRESS_SUBSET_SPECS,
+  PROGRESS_EXPANDED_SPECS,
   RECEIVE_EXACT_SPECS,
   RECEIVE_INDIVIDUAL_SPECS,
   RECEIVE_SUBSET_SPECS,
@@ -25,18 +28,6 @@ const baseState = {
 
 export default function specs(state=baseState, action) {
   switch (action.type) {
-    case REQUEST_EXACT_SPECS:
-    case REQUEST_INDIVIDUAL_SPECS:
-    case REQUEST_SUBSET_SPECS:
-    case REQUEST_EXPANDED_SPECS:
-      return { ...state, loaded: false, isFetching: true, progress: null, error: null };
-
-    case PROGRESS_SPECS:
-      if (action.progress && action.progress.length){
-        return { ...state, loaded: false, progress: action.progress };
-      }
-      return state;
-
     case RECEIVE_EXACT_SPECS:
     case RECEIVE_INDIVIDUAL_SPECS:
     case RECEIVE_SUBSET_SPECS:

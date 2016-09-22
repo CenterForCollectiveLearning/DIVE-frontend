@@ -73,18 +73,22 @@ function requestSpecsDispatcher(selectedRecommendationLevel) {
   };
 }
 
-function progressSpecsDispatcher(data) {
-  return {
-    type: PROGRESS_SPECS,
-    progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
-  };
+function progressSpecsDispatcherWrapper(selectedRecommendationLevel) {
+  return (data) => {
+    return {
+      type: specLevelToAction[selectedRecommendationLevel].progress,
+      progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
+    };
+  }
 }
 
-function errorSpecsDispatcher(data) {
-  return {
-    type: PROGRESS_SPECS,
-    progress: 'Error processing visualizations, please check console.'
-  };
+function errorSpecsDispatcherWrapper(selectedRecommendationLevel) {
+  return (data) => {
+    return {
+      type: specLevelToAction[selectedRecommendationLevel].progress,
+      progress:'Error processing visualizations, please check console.'
+    };
+  }
 }
 
 function receiveSpecsDispatcher(params, json) {
@@ -100,7 +104,7 @@ function receiveSpecsDispatcher(params, json) {
 
   return {
     ...params,
-    type: specLevelToAction[selectedRecommendationLevel].fail,
+    type: specLevelToAction[recommendationLevel].fail,
     specs: [],
     receivedAt: Date.now(),
     error: (json && json.error) ? json.error : "Error retrieving visualizations."
@@ -142,6 +146,9 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommend
     'recommendation_types': [ selectedRecommendationType ],
     'conditionals': conditionals
   };
+
+  const progressSpecsDispatcher = progressSpecsDispatcherWrapper(selectedRecommendationLevel);
+  const errorSpecsDispatcher = errorSpecsDispatcherWrapper(selectedRecommendationLevel);
 
   return dispatch => {
     dispatch(requestSpecsDispatcher(selectedRecommendationLevel));
