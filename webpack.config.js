@@ -18,7 +18,7 @@ function getEntrySources(sources) {
 
 module.exports = {
   cache: true,
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'source-map',
   quiet: false,
   stats: {
     // Config for minimal console.log mess.

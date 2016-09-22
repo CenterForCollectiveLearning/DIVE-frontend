@@ -25,6 +25,8 @@ export class BuilderView extends Component {
   componentWillMount() {
     const { project, datasetSelector, datasets, specId, visualization, fetchSpecVisualizationIfNeeded } = this.props;
 
+    console.log('Will mount Builder', specId);
+
     if (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(project.properties.id);
     }

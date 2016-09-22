@@ -1,4 +1,4 @@
-
+import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -28,7 +28,9 @@ export class GalleryView extends Component {
     }
 
     if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && notLoadedAndNotFetching) {
-      fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendations.types[0]);
+      for (var level of [ 0, 1, 2, 3 ]) {
+        fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendationTypes[level]);
+      }
     }
 
     clearVisualization();
@@ -40,19 +42,20 @@ export class GalleryView extends Component {
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
     const gallerySelectorChanged = (gallerySelector.updatedAt !== previousProps.gallerySelector.updatedAt);
     const projectChanged = (previousProps.project.properties.id !== project.properties.id);
+    const fieldPropertiesSelected = gallerySelector.fieldProperties.find((prop) => prop.selected) != undefined;
+    const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = gallerySelector;
 
     if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
       fetchDatasets(project.properties.id);
     }
 
-    const fieldPropertiesSelected = gallerySelector.fieldProperties.find((prop) => prop.selected) != undefined;
-    const specRecommendationLevelIncreasedLessThanMaxLevel = specs.recommendationLevel > previousProps.specs.recommendationLevel && specs.recommendationLevel < gallerySelector.recommendations.maxLevel;
+    const numFields = gallerySelector.fieldProperties.filter((property) => property.selected).length;
 
-    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && !specs.isFetching) {
-      if (datasetChanged || gallerySelectorChanged || notLoadedAndNotFetching) {
-        fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendations.types[specs.recommendationLevel == null ? 0 : specs.recommendationLevel]);
-      } else if (fieldPropertiesSelected && (specRecommendationLevelIncreasedLessThanMaxLevel || (specs.recommendationLevel != null && previousProps.specs.recommendationLevel == null))) {
-        fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendations.types[specs.recommendationLevel == null ? 0 : specs.recommendationLevel + 1]);
+    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length) {
+      for (var i in isFetchingSpecLevel) {
+        if (!(isFetchingSpecLevel[i] || loadedSpecLevel[i]) && gallerySelector.isValidSpecLevel[i]) {
+          fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendationTypes[i]);
+        }
       }
     }
 
@@ -76,8 +79,8 @@ export class GalleryView extends Component {
 
   render() {
     const { filters, datasets, fieldNameToColor, datasetSelector, filteredVisualizationTypes, gallerySelector, specs, exportedSpecs, selectSortingFunction } = this.props;
-    const { fieldProperties } = gallerySelector;
-    const { isFetching, progress, loaded } = specs;
+    const { fieldProperties, isFetchingSpecLevel, isValidSpecLevel, loadedSpecLevel, progressByLevel } = gallerySelector;
+    const isFetching = _.any(isFetchingSpecLevel);
 
     var selectedFieldProperties = fieldProperties
       .filter((property) => property.selected).map((property) => property.name);
@@ -112,107 +115,127 @@ export class GalleryView extends Component {
             { !isFetching && filteredSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>
             }
-            { exactSpecs.length > 0 &&
+            { isValidSpecLevel[0] && !(loadedSpecLevel[0] && exactSpecs.length == 0) &&
               <div className={ styles.specSection }>
                 { areFieldsSelected &&
                   <HeaderBar
-                    header='Exact Matches'
+                    header={ 'Exact Matches' + ( exactSpecs.length ? ` (${ exactSpecs.length })` : '' ) }
                     helperText='exactMatches'
                     className={ styles.blockSectionHeader }
                     textClassName={ styles.blockSectionHeaderTitle }
                   />
                 }
-                <div className={ styles.specs + ' ' + styles.exact }>
-                  { exactSpecs.map((spec) =>
-                    <VisualizationBlock
-                      key={ spec.id }
-                      spec={ spec }
-                      className='exact'
-                      fieldNameToColor={ fieldNameToColor }
-                      filteredVisualizationTypes={ filteredVisualizationTypes }
-                      exportedSpecs={ exportedSpecs }
-                      onClick={ this.onClickVisualization }
-                      saveVisualization={ this.saveVisualization }
+                { isFetchingSpecLevel[0] && <Loader text={ progressByLevel[0] }/> }
+                { exactSpecs.length > 0 &&
+                  <div className={ styles.specs + ' ' + styles.exact }>
+                    { exactSpecs.map((spec) =>
+                      <VisualizationBlock
+                        key={ spec.id }
+                        spec={ spec }
+                        className='exact'
+                        fieldNameToColor={ fieldNameToColor }
+                        filteredVisualizationTypes={ filteredVisualizationTypes }
+                        exportedSpecs={ exportedSpecs }
+                        onClick={ this.onClickVisualization }
+                        saveVisualization={ this.saveVisualization }
+                        showStats={ true }
                       />
-                    )
-                  }
-                </div>
+                      )
+                    }
+                  </div>
+               }
               </div>
             }
-            { subsetSpecs.length > 0 &&
+            { isValidSpecLevel[1] && !(loadedSpecLevel[1] && subsetSpecs.length == 0) &&
               <div className={ styles.specSection }>
                 <HeaderBar
-                  header='Close Matches'
+                  header={ 'Subset Matches' + ( subsetSpecs.length ? ` (${ subsetSpecs.length })` : '' ) }
                   helperText='closeMatches'
                   className={ styles.blockSectionHeader }
                   textClassName={ styles.blockSectionHeaderTitle }
                 />
-                <div className={ styles.specs + ' ' + styles.subset }>
-                  { subsetSpecs.map((spec) =>
-                    <VisualizationBlock
-                      key={ spec.id }
-                      spec={ spec }
-                      className='subset'
-                      fieldNameToColor={ fieldNameToColor }
-                      filteredVisualizationTypes={ filteredVisualizationTypes }
-                      exportedSpecs={ exportedSpecs }
-                      onClick={ this.onClickVisualization }
-                      saveVisualization={ this.saveVisualization }
+                { isFetchingSpecLevel[1] && <Loader text={ progressByLevel[1] }/> }
+                { subsetSpecs.length > 0 &&
+                  <div className={ styles.specs + ' ' + styles.subset }>
+                    { subsetSpecs.map((spec) =>
+                      <VisualizationBlock
+                        key={ spec.id }
+                        spec={ spec }
+                        className='subset'
+                        fieldNameToColor={ fieldNameToColor }
+                        filteredVisualizationTypes={ filteredVisualizationTypes }
+                        exportedSpecs={ exportedSpecs }
+                        onClick={ this.onClickVisualization }
+                        saveVisualization={ this.saveVisualization }
+                        showStats={ true }
                       />
-                    )
-                  }
-                </div>
+                      )
+                    }
+                  </div>
+                }
               </div>
             }
-            { !isFetching && baselineSpecs.length > 1 && (selectedFieldProperties.length > 1 || selectedFieldProperties.length == 0)&&
+            { isValidSpecLevel[2] && !(loadedSpecLevel[2] && baselineSpecs.length == 0) &&
               <div className={ styles.specSection }>
-                <div className={ styles.blockSectionHeader }>
-                  <span>
-                    <div className={ styles.blockSectionHeaderTitle }>Individual Matches</div>
-                  </span>
-                </div>
-                <div className={ styles.specs + ' ' + styles.baseline }>
-                  { baselineSpecs.map((spec) =>
-                    <VisualizationBlock
-                      key={ spec.id }
-                      spec={ spec }
-                      className='baseline'
-                      fieldNameToColor={ fieldNameToColor }
-                      filteredVisualizationTypes={ filteredVisualizationTypes }
-                      exportedSpecs={ exportedSpecs }
-                      onClick={ this.onClickVisualization }
-                      saveVisualization={ this.saveVisualization }
+                <HeaderBar
+                  header={ 'Individual Matches' + ( baselineSpecs.length ? ` (${ baselineSpecs.length })` : '' ) }
+                  helperText='individualMatches'
+                  className={ styles.blockSectionHeader }
+                  textClassName={ styles.blockSectionHeaderTitle }
+                />
+                { isFetchingSpecLevel[2] && <Loader text={ progressByLevel[2] }/> }
+                { baselineSpecs.length > 0 &&
+                  <div className={ styles.specs + ' ' + styles.baseline }>
+                    { baselineSpecs.map((spec) =>
+                      <VisualizationBlock
+                        key={ spec.id }
+                        spec={ spec }
+                        className='baseline'
+                        fieldNameToColor={ fieldNameToColor }
+                        filteredVisualizationTypes={ filteredVisualizationTypes }
+                        exportedSpecs={ exportedSpecs }
+                        onClick={ this.onClickVisualization }
+                        saveVisualization={ this.saveVisualization }
+                        showStats={ true }
                       />
-                    )
-                  }
-                </div>
+                      )
+                    }
+                  </div>
+                }
               </div>
             }
-            { expandedSpecs.length > 0 &&
+            { isValidSpecLevel[3] && !(loadedSpecLevel[3] && expandedSpecs.length == 0) &&
               <div className={ styles.specSection }>
-                <div className={ styles.blockSectionHeader }>
-                  <div className={ styles.blockSectionHeaderTitle }>Expanded Matches</div>
-                </div>
-                <div className={ styles.specs + ' ' + styles.expanded }>
-                  { expandedSpecs.map((spec) =>
-                    <VisualizationBlock
-                      key={ spec.id }
-                      spec={ spec }
-                      className='expanded'
-                      fieldNameToColor={ fieldNameToColor }
-                      filteredVisualizationTypes={ filteredVisualizationTypes }
-                      exportedSpecs={ exportedSpecs }
-                      onClick={ this.onClickVisualization }
-                      saveVisualization={ this.saveVisualization }
+                <HeaderBar
+                  header={ 'Expanded Matches' + ( expandedSpecs.length ? ` (${ expandedSpecs.length })` : '' ) }
+                  helperText='expandedMatches'
+                  className={ styles.blockSectionHeader }
+                  textClassName={ styles.blockSectionHeaderTitle }
+                />
+                { isFetchingSpecLevel[3] && <Loader text={ progressByLevel[3] }/> }
+                { expandedSpecs.length > 0 &&
+                  <div className={ styles.specs + ' ' + styles.expanded }>
+                    { expandedSpecs.map((spec) =>
+                      <VisualizationBlock
+                        key={ spec.id }
+                        spec={ spec }
+                        className='expanded'
+                        fieldNameToColor={ fieldNameToColor }
+                        filteredVisualizationTypes={ filteredVisualizationTypes }
+                        exportedSpecs={ exportedSpecs }
+                        onClick={ this.onClickVisualization }
+                        saveVisualization={ this.saveVisualization }
+                        showStats={ true }
                       />
-                    )
-                  }
-                </div>
+                      )
+                    }
+                  </div>
+                }
               </div>
             }
-            { isFetching &&
+            {/* isFetching &&
               <Loader text={ progress != null ? progress : 'Fetching visualizations…' } />
-            }
+            */}
           </div>
         </div>
       </div>

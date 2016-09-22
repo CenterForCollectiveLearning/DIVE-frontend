@@ -23,6 +23,7 @@ import GalleryPage from './components/Visualizations/Gallery/GalleryPage';
 import BuilderPage from './components/Visualizations/Builder/BuilderPage';
 import AnalysisPage from './components/Analysis/AnalysisPage';
 import RegressionBasePage from './components/Analysis/Regression/RegressionBasePage';
+import SegmentationPage from './components/Analysis/Segmentation/SegmentationPage';
 import AggregationPage from './components/Analysis/Aggregation/AggregationPage';
 import CorrelationPage from './components/Analysis/Correlation/CorrelationPage';
 import ComparisonPage from './components/Analysis/Comparison/ComparisonPage';
@@ -73,13 +74,12 @@ export default (
           <Route path="explore" component={ GalleryPage }/>
           <Route path="builder/:specId" component={ BuilderPage }/>
         </Route>
-        <Route path="aggregation" component={ AggregationPage }/>
-        <Route path="comparison" component={ ComparisonPage }/>
         <Route path="analyze" component={ AnalysisPage }>
           <Route path="regression" component={ RegressionBasePage }/>
           <Route path="aggregation" component={ AggregationPage }/>
           <Route path="correlation" component={ CorrelationPage }/>
           <Route path="comparison" component={ ComparisonPage }/>
+          <Route path="segmentation" component={ SegmentationPage }/>          
         </Route>
       </Route>
       <Route path="compose" component={ ComposeBasePage }>

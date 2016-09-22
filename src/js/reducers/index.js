@@ -22,6 +22,7 @@ import projects from './projects';
 import regressionSelector from './regressionSelector';
 import specs from './specs';
 import aggregationSelector from './aggregationSelector';
+import segmentationSelector from './segmentationSelector';
 import transformSelector from './transformSelector';
 import user from './user';
 import visualization from './visualization';
@@ -48,6 +49,7 @@ const rootReducer = combineReducers({
   regressionSelector,
   specs,
   aggregationSelector,
+  segmentationSelector,
   transformSelector,
   user,
   visualization,
