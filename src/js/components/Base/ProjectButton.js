@@ -7,6 +7,7 @@ import { deleteProjectNoReturnHome, wipeProjectState } from '../../actions/Proje
 
 import styles from './ProjectButton.sass';
 
+import Input from './Input';
 import RaisedButton from './RaisedButton';
 import ProjectSettingsModal from './ProjectSettingsModal';
 
@@ -14,9 +15,22 @@ class ProjectButton extends Component {
   constructor(props) {
     super(props);
 
+    const { project } = this.props;
+    const { title } = project;
+
+    // this.saveProjectTitle = _.debounce(saveProjectTitle, 800);
+
     this.state = {
+      title: title,
+      editableProjectTitle: true,
       projectSettingsModalOpen: false,
     };
+  }
+
+  onTitleChange = (e) => {
+    const title = e.target.value;
+    this.setState({ title: title });
+    // this.saveDocumentTitle(this.props.selectedDocument.id, title);
   }
 
   closeProjectSettingsModal = () => {
@@ -45,15 +59,25 @@ class ProjectButton extends Component {
     deleteProjectNoReturnHome(project.id);
   }
 
+  onClickProjectTitle = (e) => {
+    this.setState({ editableProjectTitle: !this.state.editableProjectTitle });
+  }
+
   render() {
     const { project, className, format } = this.props;
-    const { id, title, description, numDatasets, includedDatasets, numSpecs, numDocuments, creationDate, updateDate } = project;
+    const { id, description, numDatasets, includedDatasets, numSpecs, numDocuments, creationDate, updateDate } = project;
+    const { projectSettingsModalOpen, editableProjectTitle, title } = this.state;
 
     return (
-      <div className={ styles.projectButton } onClick={ this.onClickProjectButton }>
+      <div className={ styles.projectButton }>
         <div className={ styles.projectTop }>
           <div className={ styles.pullLeft }>
-            <div className={ styles.projectTitle }>{ title }</div>
+            { !editableProjectTitle &&
+              <div className={ styles.projectTitle } onClick={ this.clickProjectTitle }>{ title }</div>
+            }
+            { editableProjectTitle &&
+              <input className={ styles.projectTitle } onChange={ this.onTitleChange } value={ title }/>
+            }
           </div>
           { !project.preloaded &&
             <div className={ styles.pullRight }>
@@ -109,7 +133,7 @@ class ProjectButton extends Component {
           </div>
         </div>
         }
-        { this.state.projectSettingsModalOpen &&
+        { projectSettingsModalOpen &&
           <ProjectSettingsModal
             projectName={ title }
             projectDescription={ description }
