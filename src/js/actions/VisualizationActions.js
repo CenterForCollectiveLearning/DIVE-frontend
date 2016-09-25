@@ -22,6 +22,7 @@ import {
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
   CLEAR_VISUALIZATION,
+  CLICK_VISUALIZATION,
   REQUEST_CREATE_SAVED_SPEC,
   RECEIVE_CREATED_SAVED_SPEC,
   REQUEST_CREATE_EXPORTED_SPEC,
@@ -66,6 +67,17 @@ const specLevelToAction = [
     fail: FAILED_RECEIVE_EXPANDED_SPECS
   },
 ]
+
+export function updateVisualizationStats(projectId, specId, type='click') {
+  return (dispatch) => {
+    dispatch(requestUpdateVisualizationStats());
+    return fetch(`/visualization/v1/stats?project_id=${projectId}&type=click`)
+      .then(function(json) {
+        const dispatchParams = {};
+        dispatch(receiveUpdateVisualizationStats(dispatchParams, json.result))
+      });
+  };
+}
 
 export function selectRecommendationMode(selectedRecommendationModeId) {
   return {

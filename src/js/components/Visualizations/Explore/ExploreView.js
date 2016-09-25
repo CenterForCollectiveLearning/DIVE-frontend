@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { fetchDatasets } from '../../../actions/DatasetActions';
-import { clearVisualization, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
+import { clearVisualization, updateVisualizationStats, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
 import { fetchExportedVisualizationSpecs } from '../../../actions/ComposeActions';
 import { useWhiteFontFromBackgroundHex } from '../../../helpers/helpers';
 
@@ -67,7 +67,8 @@ export class ExploreView extends Component {
   }
 
   onClickVisualization = (specId) => {
-    const { project, datasetSelector, push } = this.props;
+    const { project, datasetSelector, push, updateVisualizationStats } = this.props;
+    updateVisualizationStats(project.properties.id, specId, 'click');
     push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore/${ specId }`);
   }
 
@@ -270,6 +271,7 @@ export default connect(mapStateToProps, {
   fetchExportedVisualizationSpecs,
   fetchDatasets,
   clearVisualization,
+  updateVisualizationStats,
   selectSortingFunction,
   createExportedSpec
 })(ExploreView);
