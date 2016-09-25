@@ -31,7 +31,7 @@ export default class StackedColumnChart extends Component {
     }
 
     return (
-      <Chart chartType="ColumnChart" chartVersion="43" options={ stackedColumnChartOptions } data = { data } graph_id={ chartId }/>
+      <Chart chartType="ColumnChart" options={ stackedColumnChartOptions } data = { data } graph_id={ chartId }/>
     );
   }
 }

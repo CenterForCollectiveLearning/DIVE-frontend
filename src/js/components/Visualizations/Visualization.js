@@ -6,6 +6,7 @@ import { getPalette, useWhiteFontFromBackgroundHex, naturalSort } from '../../he
 
 import { MAX_ELEMENTS } from './VisualizationOptions';
 import TreeMap from './Charts/TreeMap';
+import ColorGrid from './Charts/ColorGrid';
 import PieChart from './Charts/PieChart';
 import ColumnChart from './Charts/ColumnChart';
 import StackedColumnChart from './Charts/StackedColumnChart';
@@ -183,6 +184,14 @@ export default class Visualization extends Component {
             }
             { (validVisualizationTypes[0] == 'stackedbar' ) &&
               <StackedColumnChart
+                chartId={ `spec-stackedbar-${ chartId }` }
+                data={ finalDataArray }
+                colors={ colors }
+                labels={ labels }
+                isMinimalView={ isMinimalView }/>
+            }
+            { (validVisualizationTypes[0] == 'grid' ) &&
+              <ColorGrid
                 chartId={ `spec-stackedbar-${ chartId }` }
                 data={ finalDataArray }
                 colors={ colors }

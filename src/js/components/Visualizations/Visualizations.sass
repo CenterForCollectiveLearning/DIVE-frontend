@@ -4,6 +4,49 @@
 .visualizationsPageContainer
   overflow: hidden
 
+
+.colorGrid
+  margin: 0 20px 10px
+  background-color: white
+
+  .dataRow
+    .dataColumn
+      &:first-child
+        align-items: flex-start
+
+  .dataRow, .footerRow
+    .dataColumn, .footerColumn
+      white-space: normal
+      text-overflow: ellipsis
+      overflow: hidden
+      word-break: break-word
+
+      &:first-child
+        background-color: #F6F6F6
+        font-weight: 500
+
+    .dataColumnOneD
+      white-space: normal
+      text-overflow: ellipsis
+      overflow: hidden
+      word-break: break-word
+      padding: 8px
+
+  .tableHeaderColumn
+    background-color: #F6F6F6
+    font-weight: 500
+    padding: 8px
+    
+  .dataCell, .textCell
+    width: 100%
+    padding: 4px
+
+    > div
+      display: flex
+      padding: 4px
+      justify-content: center
+
+
 .hidden
   max-width: 0
   max-height: 0
