@@ -92,5 +92,5 @@ ComposeEditor.propTypes = {
   exportedRegressions: PropTypes.object,
   fieldNameToColor: PropTypes.object,
   selectComposeContent: PropTypes.func,
-  saveStatus: PropTypes.bool
+  saveStatus: PropTypes.string
 };

@@ -21,6 +21,8 @@ import {
   MOVE_COMPOSE_BLOCK,
   REQUEST_SAVE_DOCUMENT,
   RECEIVE_SAVE_DOCUMENT,
+  REQUEST_EXPORT_POWERPOINT,
+  RECEIVE_EXPORT_POWERPOINT,
   SET_DOCUMENT_TITLE,
   SAVE_BLOCK
 } from '../constants/ActionTypes';
@@ -28,6 +30,39 @@ import {
 import _ from 'underscore'
 
 import { fetch, pollForTask } from './api.js';
+
+function requestExportPowerpointDispatcher() {
+  return {
+    type: REQUEST_EXPORT_POWERPOINT
+  };
+}
+
+function receiveExportPowerpointDispatcher(params, json) {
+  if (json && !json.error) {
+    return {
+      ...params,
+      type: RECEIVE_EXPORT_POWERPOINT,
+      powerpoint: powerpoint,
+      receivedAt: Date.now()
+    };
+  }
+}
+
+export function exportStoryToPowerpoint(story) {
+  const params = {
+    content: []
+  }
+
+  return (dispatch) => {
+    dispatch(requestExportPowerpointDispatcher);
+    return fetch('/export/v1/powerpoint', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(json => dispatch(receiveExportPowerpointDispatcher(json)))
+      .catch(err => console.error("Error exporting powerpoint:", err));
+  };
+}
 
 export function selectComposeContent(contentType, contentId, title) {
   return {
