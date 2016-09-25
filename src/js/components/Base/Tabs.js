@@ -9,15 +9,19 @@ export default class Tabs extends Component {
   }
 
   renderChildren() {
+    const { children, value, onChange, selectedClassName, className } = this.props;
+    const childrenAsArray = Array.isArray(children) ? children : [ children ];
+
     var i = -1;
-    return React.Children.map(this.props.children, function (child){
+    return React.Children.map(children, function (child){
       i++;
 
+      console.log(child);
       return React.cloneElement(child, {
-        value: this.props.value,
-        selectedClassName: this.props.selectedClassName,
-        onChange: this.props.onChange ? this.props.onChange : null
-      });      
+        value: value,
+        selectedClassName: selectedClassName,
+        onChange: onChange ? onChange : null
+      });
     }, this);
   }
 
@@ -32,7 +36,7 @@ export default class Tabs extends Component {
 
 Tabs.propTypes = {
   children: PropTypes.node.isRequired,
-  value: PropTypes.string, 
+  value: PropTypes.string,
   onChange: PropTypes.func,
   className: PropTypes.string,
   selectedClassName: PropTypes.string

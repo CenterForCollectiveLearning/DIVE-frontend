@@ -2,7 +2,7 @@ import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { selectBuilderVisualizationType, selectBuilderSortOrder, selectBuilderSortField, selectVisualizationConfig } from '../../../actions/VisualizationActions';
+import { selectSingleVisualizationVisualizationType, selectSingleVisualizationSortOrder, selectSingleVisualizationSortField, selectVisualizationConfig } from '../../../actions/VisualizationActions';
 import { selectConditional } from '../../../actions/ConditionalsActions';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import styles from '../Visualizations.sass';
@@ -16,7 +16,7 @@ import RaisedButton from '../../Base/RaisedButton';
 import ConditionalSelector from '../../Base/ConditionalSelector';
 import BinningSelector from './BinningSelector';
 
-export class BuilderSidebar extends Component {
+export class SingleVisualizationSidebar extends Component {
 
   componentWillMount() {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
@@ -26,11 +26,11 @@ export class BuilderSidebar extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { project, visualization, datasetSelector, fieldProperties, selectBuilderVisualizationType, fetchFieldPropertiesIfNeeded } = this.props;
+    const { project, visualization, datasetSelector, fieldProperties, selectSingleVisualizationVisualizationType, fetchFieldPropertiesIfNeeded } = this.props;
     const { visualizationType } = visualization;
 
     if (visualization.spec.id && !visualizationType) {
-      selectBuilderVisualizationType(visualization.spec.vizTypes[0]);
+      selectSingleVisualizationVisualizationType(visualization.spec.vizTypes[0]);
     }
 
     if (project.properties.id && !fieldProperties.isFetching && fieldProperties.items.length == 0) {
@@ -39,7 +39,7 @@ export class BuilderSidebar extends Component {
   }
 
   render() {
-    const { conditionals, fieldProperties, selectBuilderVisualizationType, selectBuilderSortField, selectBuilderSortOrder, selectConditional, selectVisualizationConfig, filters, visualization } = this.props;
+    const { conditionals, fieldProperties, selectSingleVisualizationVisualizationType, selectSingleVisualizationSortField, selectSingleVisualizationSortOrder, selectConditional, selectVisualizationConfig, filters, visualization } = this.props;
     const { visualizationType } = visualization;
 
     if (!visualization.lastUpdated) {
@@ -62,7 +62,7 @@ export class BuilderSidebar extends Component {
               valueMember="type"
               imageNameMember="imageName"
               imageNameSuffix=".chart.svg"
-              onChange={ selectBuilderVisualizationType } />
+              onChange={ selectSingleVisualizationVisualizationType } />
           </SidebarGroup>
         }
         { (visualizationType == 'bar' || visualizationType == 'box') &&
@@ -74,14 +74,14 @@ export class BuilderSidebar extends Component {
                 valueMember="id"
                 displayTextMember="name"
                 separated={ (visualization.sortFields.length > 3) }
-                onChange={ selectBuilderSortField } />
+                onChange={ selectSingleVisualizationSortField } />
               <ToggleButtonGroup
                 className={ styles.sortOrder }
                 toggleItems={ visualization.sortOrders.map((sortOrder) => new Object({...sortOrder, icon: <i className={ sortOrder.iconName }></i> })) }
                 valueMember="id"
                 displayTextMember="icon"
                 altTextMember="name"
-                onChange={ selectBuilderSortOrder } />
+                onChange={ selectSingleVisualizationSortOrder } />
             </div>
           </SidebarGroup>
         }
@@ -111,7 +111,7 @@ export class BuilderSidebar extends Component {
   }
 }
 
-BuilderSidebar.propTypes = {
+SingleVisualizationSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
@@ -131,10 +131,10 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  selectBuilderVisualizationType,
-  selectBuilderSortOrder,
-  selectBuilderSortField,
+  selectSingleVisualizationVisualizationType,
+  selectSingleVisualizationSortOrder,
+  selectSingleVisualizationSortField,
   fetchFieldPropertiesIfNeeded,
   selectConditional,
   selectVisualizationConfig
-})(BuilderSidebar);
+})(SingleVisualizationSidebar);

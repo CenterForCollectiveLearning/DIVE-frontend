@@ -16,7 +16,7 @@ import ProjectSettingsModal from './Base/ProjectSettingsModal';
 import Logo from '../../assets/DIVE_logo_white.svg?name=Logo';
 
 
-export class ProjectNav extends Component {
+export class ProjectSidebar extends Component {
   constructor(props) {
     super(props);
 
@@ -32,7 +32,6 @@ export class ProjectNav extends Component {
       'inspect',
       'transform',
       'explore',
-      'builder',
       'starred',
       'aggregation',
       'comparison',
@@ -70,6 +69,7 @@ export class ProjectNav extends Component {
 
 
   _handleTabsChange = (tab) => {
+    console.log(tab)
     this.props.push(`/projects/${ this.props.project.properties.id }/${ tab.props.route }`);
   }
 
@@ -119,14 +119,13 @@ export class ProjectNav extends Component {
           </TabGroup>
           <TabGroup heading="2. VISUALIZATIONS">
             <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
-            <Tab label="Build" value="builder" route={ `datasets/${ datasetId }/visualize/builder` } disabled={ true }/>
           </TabGroup>
           <TabGroup heading="3. ANALYSIS">
             <Tab label="Aggregation" value="aggregation" route={ `datasets/${ datasetId }/analyze/aggregation` } disabled={ !datasetId }/>
             <Tab label="Comparison" value="comparison" route={ `datasets/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>
             <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
             <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
-            <Tab label="Segmentation" value="segmentation" route={ `datasets/${ datasetId }/analyze/segmentation` } disabled={ !datasetId }/>            
+            <Tab label="Segmentation" value="segmentation" route={ `datasets/${ datasetId }/analyze/segmentation` } disabled={ !datasetId }/>
           </TabGroup>
           <TabGroup heading="4. STORIES">
             <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>
@@ -167,15 +166,6 @@ export class ProjectNav extends Component {
   }
 }
 
-ProjectNav.propTypes = {
-  paramDatasetId: PropTypes.string,
-  project: PropTypes.object,
-  projects: PropTypes.object,
-  user: PropTypes.object,
-  datasetSelector: PropTypes.object,
-  routes: PropTypes.array
-};
-
 function mapStateToProps(state) {
   const { project, projects, user, datasets, datasetSelector } = state;
   return {
@@ -187,4 +177,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { push, logoutUser })(ProjectNav);
+export default connect(mapStateToProps, { push, logoutUser })(ProjectSidebar);

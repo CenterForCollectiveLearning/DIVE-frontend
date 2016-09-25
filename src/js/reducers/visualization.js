@@ -6,9 +6,9 @@ import {
   RECEIVE_CREATED_EXPORTED_SPEC,
   REQUEST_CREATE_SAVED_SPEC,
   RECEIVE_CREATED_SAVED_SPEC,
-  SELECT_BUILDER_VISUALIZATION_TYPE,
-  SELECT_BUILDER_SORT_FIELD,
-  SELECT_BUILDER_SORT_ORDER,
+  SELECT_SINGLE_VISUALIZATION_VISUALIZATION_TYPE,
+  SELECT_SINGLE_VISUALIZATION_SORT_FIELD,
+  SELECT_SINGLE_VISUALIZATION_SORT_ORDER,
   SELECT_VISUALIZATION_CONFIG,
   SET_SHARE_WINDOW,
   WIPE_PROJECT_STATE
@@ -87,7 +87,7 @@ export default function visualization(state = baseState, action) {
         isFetching: false
       };
 
-    case SELECT_BUILDER_SORT_ORDER:
+    case SELECT_SINGLE_VISUALIZATION_SORT_ORDER:
       const sortOrders = state.sortOrders.map((order) =>
         new Object({
           ...order,
@@ -96,7 +96,7 @@ export default function visualization(state = baseState, action) {
       );
       return { ...state, sortOrders: sortOrders };
 
-    case SELECT_BUILDER_SORT_FIELD:
+    case SELECT_SINGLE_VISUALIZATION_SORT_FIELD:
       const sortFields = state.sortFields.map((field) =>
         new Object({
           ...field,
@@ -105,7 +105,7 @@ export default function visualization(state = baseState, action) {
       );
       return { ...state, sortFields: sortFields };
 
-    case SELECT_BUILDER_VISUALIZATION_TYPE:
+    case SELECT_SINGLE_VISUALIZATION_VISUALIZATION_TYPE:
       return { ...state, visualizationType: action.selectedType };
 
     case SELECT_VISUALIZATION_CONFIG:

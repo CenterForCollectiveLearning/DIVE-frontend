@@ -2,13 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 
-import { setGalleryQueryString } from '../../../actions/VisualizationActions';
+import { setExploreQueryString } from '../../../actions/VisualizationActions';
 
 import styles from '../Visualizations.sass';
-import GallerySidebar from './GallerySidebar';
-import GalleryView from './GalleryView';
+import ExploreSidebar from './ExploreSidebar';
+import ExploreView from './ExploreView';
 
-class GalleryPage extends Component {
+class ExplorePage extends Component {
   constructor(props) {
     super(props);
 
@@ -23,17 +23,17 @@ class GalleryPage extends Component {
   }
 
   componentWillMount() {
-    this.props.setGalleryQueryString(this.props.location.query);
+    this.props.setExploreQueryString(this.props.location.query);
     this.setState({
       uniqueSpecVisualizationTypes: this.getUniqueSpecVisualizationTypes(this.props.specs)
     }, () => this.updateVisualizationTypes(this.props.filters.visualizationTypes));
   }
 
   componentWillReceiveProps(nextProps) {
-    const { location, specs, filters, setGalleryQueryString } = nextProps;
+    const { location, specs, filters, setExploreQueryString } = nextProps;
 
     if (location.query !== this.props.location.query) {
-      setGalleryQueryString(location.query);
+      setExploreQueryString(location.query);
     }
 
     if (specs.updatedAt != this.props.specs.updatedAt || filters.updatedAt != this.props.filters.updatedAt) {
@@ -93,8 +93,8 @@ class GalleryPage extends Component {
     return (
       <DocumentTitle title={ 'Explore' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.galleryContainer }` }>
-          <GalleryView filteredVisualizationTypes={ visualizationTypes } />
-          <GallerySidebar filteredVisualizationTypes={ visualizationTypes } visualizationTypes={ visualizationTypeObjects } queryFields={ queryFields }/>
+          <ExploreView filteredVisualizationTypes={ visualizationTypes } />
+          <ExploreSidebar filteredVisualizationTypes={ visualizationTypes } visualizationTypes={ visualizationTypeObjects } queryFields={ queryFields }/>
           { this.props.children }
         </div>
       </DocumentTitle>
@@ -107,4 +107,4 @@ function mapStateToProps(state) {
   return { projectTitle: project.properties.title, filters, specs };
 }
 
-export default connect(mapStateToProps, { setGalleryQueryString })(GalleryPage);
+export default connect(mapStateToProps, { setExploreQueryString })(ExplorePage);

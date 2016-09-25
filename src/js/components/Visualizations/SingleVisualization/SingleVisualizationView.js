@@ -13,19 +13,17 @@ import VisualizationView from '../VisualizationView';
 import BareDataGrid from '../../Base/BareDataGrid';
 import RaisedButton from '../../Base/RaisedButton';
 
-export class BuilderView extends Component {
+export class SingleVisualizationView extends Component {
   constructor(props) {
     super(props);
 
     this.saveVisualization = this.saveVisualization.bind(this);
     this.onClickShare = this.onClickShare.bind(this);
-    this.onClickGallery = this.onClickGallery.bind(this);
+    this.onClickExplore = this.onClickExplore.bind(this);
   }
 
   componentWillMount() {
     const { project, datasetSelector, datasets, specId, visualization, fetchSpecVisualizationIfNeeded } = this.props;
-
-    console.log('Will mount Builder', specId);
 
     if (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(project.properties.id);
@@ -112,9 +110,9 @@ export class BuilderView extends Component {
     this.saveVisualization(false);
   }
 
-  onClickGallery() {
-    const { project, datasetSelector, gallerySelector, push } = this.props;
-    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ gallerySelector.queryString }`);
+  onClickExplore() {
+    const { project, datasetSelector, exploreSelector, push } = this.props;
+    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ exploreSelector.queryString }`);
   }
 
   render() {
@@ -135,7 +133,7 @@ export class BuilderView extends Component {
         </div>
         <div className={ styles.headerControlRow }>
           <div className={ styles.headerControl }>
-            <RaisedButton label="Back to Gallery" onClick={ this.onClickGallery } fullWidth={ true }/>
+            <RaisedButton label="Back to Explore" onClick={ this.onClickExplore } fullWidth={ true }/>
           </div>
           <div className={ styles.headerControl }>
             <RaisedButton onClick={ this.onClickShare }>
@@ -158,20 +156,20 @@ export class BuilderView extends Component {
   }
 }
 
-BuilderView.propTypes = {
+SingleVisualizationView.propTypes = {
   project: PropTypes.object.isRequired,
   visualization: PropTypes.object.isRequired,
-  gallerySelector: PropTypes.object.isRequired,
+  exploreSelector: PropTypes.object.isRequired,
   specId: PropTypes.string
 };
 
 function mapStateToProps(state) {
-  const { project, conditionals, datasets, datasetSelector, fieldProperties, visualization, gallerySelector } = state;
+  const { project, conditionals, datasets, datasetSelector, fieldProperties, visualization, exploreSelector } = state;
   return {
     project,
     fieldNameToColor: fieldProperties.fieldNameToColor,
     visualization,
-    gallerySelector,
+    exploreSelector,
     conditionals,
     datasets,
     datasetSelector,
@@ -184,4 +182,4 @@ export default connect(mapStateToProps, {
   createExportedSpec,
   setShareWindow,
   fetchDatasets,
-})(BuilderView);
+})(SingleVisualizationView);
