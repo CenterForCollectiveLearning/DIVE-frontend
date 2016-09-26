@@ -13,9 +13,6 @@ export default class LineChart extends Component {
     var finalData = data;
 
     var options = isMinimalView ? minimalOptions : fullOptions;
-    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
-    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
-    options.colors = colors;
 
     options = {
       ...options,
@@ -30,6 +27,10 @@ export default class LineChart extends Component {
       ...options,
       ...additionalOptions
     }
+
+    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
+    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
+    options.colors = colors;
 
     return (
       <Chart

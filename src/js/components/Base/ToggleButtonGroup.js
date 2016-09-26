@@ -5,7 +5,7 @@ import styles from './ToggleButtonGroup.sass';
 
 export default class ToggleButtonGroup extends Component {
   render() {
-    const { className, buttonClassName, colorMember, toggleItems, altTextMember, valueMember, displayTextMember, imageNameMember, imageNameSuffix, externalSelectedItems, separated, column, splitMenuItemsMember, selectMenuItem, onChange, onDelete } = this.props;
+    const { className, buttonClassName, colorMember, toggleItems, altTextMember, valueMember, displayTextMember, imageNameMember, imageNameSuffix, externalSelectedItems, separated, column, splitMenuItemsMember, selectMenuItem, onChange, onDelete, expand } = this.props;
 
     const stringifiedExternalSelectedItems = externalSelectedItems ? externalSelectedItems.map((item) => `${item}`) : null;
 
@@ -14,7 +14,7 @@ export default class ToggleButtonGroup extends Component {
         { toggleItems.map((item) =>
           <ToggleButton
             key={ `toggle-${item[valueMember]}` }
-            className={ buttonClassName }
+            className={ buttonClassName + ( expand ? (' ' + styles.expand) : '')}
             altText={ altTextMember ? item[altTextMember] : item[displayTextMember] }
             color={ colorMember ? item[colorMember] : null }
             content={ item[displayTextMember] }
@@ -47,11 +47,13 @@ ToggleButtonGroup.propTypes = {
   imageNameSuffix: PropTypes.string,
   selectMenuItem: PropTypes.func,
   separated: PropTypes.bool,
+  expand: PropTypes.bool,
   column: PropTypes.bool,
   externalSelectedItems: PropTypes.array,
   onDelete: PropTypes.func
 };
 
 ToggleButtonGroup.defaultProps = {
-  column: false
+  column: false,
+  expand: true
 }

@@ -25,8 +25,11 @@
 
   .toggleButtonContainer
     display: flex
-    flex-grow: 1
+    flex-grow: 0
     max-width: 50%
+
+    &.expand
+      flex-grow: 1
 
     &:first-child, &:first-child .raisedButton.toggleButton
       border-top-left-radius: 2px
