@@ -115,6 +115,7 @@ export class GallerySidebar extends Component {
             <ToggleButtonGroup
               toggleItems={ visualizationTypes }
               displayTextMember="label"
+              expand={ false }
               valueMember="type"
               imageNameMember="imageName"
               imageNameSuffix=".chart.svg"

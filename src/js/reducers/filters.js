@@ -29,6 +29,13 @@ const visualizationTypes = [
     disabled: false
   },
   {
+    type: "grid",
+    imageName: "grid",
+    label: "Grid",
+    selected: false,
+    disabled: false
+  },
+  {
     type: "hist",
     imageName: "hist",
     label: "Histogram",
