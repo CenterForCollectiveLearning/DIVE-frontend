@@ -63,12 +63,12 @@ export class GalleryView extends Component {
     clearVisualization();
   }
 
-  onClickVisualization(specId) {
+  onClickVisualization = (specId) => {
     const { project, datasetSelector, push } = this.props;
     push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/builder/${ specId }`);
   }
 
-  saveVisualization(specId, specData) {
+  saveVisualization = (specId, specData) => {
     const { project, createExportedSpec } = this.props;
     createExportedSpec(project.properties.id, specId, specData, [], {}, true);
   }
@@ -131,8 +131,8 @@ export class GalleryView extends Component {
                       fieldNameToColor={ fieldNameToColor }
                       filteredVisualizationTypes={ filteredVisualizationTypes }
                       exportedSpecs={ exportedSpecs }
-                      onClick={ this.onClickVisualization.bind(this) }
-                      saveVisualization={ this.saveVisualization.bind(this) }
+                      onClick={ this.onClickVisualization }
+                      saveVisualization={ this.saveVisualization }
                       />
                     )
                   }
@@ -156,8 +156,8 @@ export class GalleryView extends Component {
                       fieldNameToColor={ fieldNameToColor }
                       filteredVisualizationTypes={ filteredVisualizationTypes }
                       exportedSpecs={ exportedSpecs }
-                      onClick={ this.onClickVisualization.bind(this) }
-                      saveVisualization={ this.saveVisualization.bind(this) }
+                      onClick={ this.onClickVisualization }
+                      saveVisualization={ this.saveVisualization }
                       />
                     )
                   }
@@ -180,8 +180,8 @@ export class GalleryView extends Component {
                       fieldNameToColor={ fieldNameToColor }
                       filteredVisualizationTypes={ filteredVisualizationTypes }
                       exportedSpecs={ exportedSpecs }
-                      onClick={ this.onClickVisualization.bind(this) }
-                      saveVisualization={ this.saveVisualization.bind(this) }
+                      onClick={ this.onClickVisualization }
+                      saveVisualization={ this.saveVisualization }
                       />
                     )
                   }
@@ -202,8 +202,8 @@ export class GalleryView extends Component {
                       fieldNameToColor={ fieldNameToColor }
                       filteredVisualizationTypes={ filteredVisualizationTypes }
                       exportedSpecs={ exportedSpecs }
-                      onClick={ this.onClickVisualization.bind(this) }
-                      saveVisualization={ this.saveVisualization.bind(this) }
+                      onClick={ this.onClickVisualization }
+                      saveVisualization={ this.saveVisualization }
                       />
                     )
                   }
