@@ -20,11 +20,11 @@ export default class Visualization extends Component {
     super(props);
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     window.addEventListener('resize', this.handleResize);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     window.removeEventListener('resize', this.handleResize);
   }
 
@@ -32,7 +32,7 @@ export default class Visualization extends Component {
     this.forceUpdate();
   }
 
-  handleClick = (event) => {
+  handleClick(event) {
     const { onClick, spec } = this.props;
 
     if (onClick) {

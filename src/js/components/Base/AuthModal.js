@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Logo from '../../../assets/DIVE_logo_white.svg?name=Logo';
 
 
-export class AuthModal extends Component {
+export default class AuthModal extends Component {
   constructor(props) {
     super(props);
 
