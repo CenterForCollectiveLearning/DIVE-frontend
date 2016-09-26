@@ -1,23 +1,26 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { ChromePicker } from 'react-color';
 
 import styles from './Datasets.sass';
+import FieldTypes from '../../constants/FieldTypes';
+import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
 import ColumnChart from '../Visualizations/Charts/ColumnChart';
 import Histogram from '../Visualizations/Charts/Histogram';
-import { setFieldIsId, setFieldColor } from '../../actions/FieldPropertiesActions';
+import { setFieldIsId, setFieldColor, setFieldType } from '../../actions/FieldPropertiesActions';
 import { numberWithCommas, getRoundedString } from '../../helpers/helpers.js';
 
-
-class DatasetMetadataCell extends Component {
+class DatasetDataRow extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       color: '#007BD7',
       isId: false,
-      displayColorPicker: false
+      displayColorPicker: false,
+      fieldTypes: FieldTypes
     };
   }
 
@@ -29,6 +32,10 @@ class DatasetMetadataCell extends Component {
       color: color,
       isId: isId
     })
+  }
+
+  onSelectFieldType = (fieldType) => {
+    this.props.setFieldType(this.props.projectId, this.props.fieldProperty.id, fieldType);
   }
 
   onColorPickerClick = () => {
@@ -53,27 +60,43 @@ class DatasetMetadataCell extends Component {
     setFieldIsId( projectId, fieldId, this.state.isId );
   }
 
+  onClickVisualizeField = (name) => {
+    const { projectId, datasetId, push } = this.props;
+    push(`/projects/${ projectId }/datasets/${ datasetId }/visualize/explore?fields[]=${ name }`);
+  }
+
   render() {
     const { projectId, datasetId, fieldProperty } = this.props;
-    const { id, generalType, vizData, typeScores, isChild, isUnique, stats, uniqueValues } = fieldProperty;
-    const { color, isId } = this.state;
+    const { id, generalType, type, vizData, typeScores, isChild, isUnique, stats, uniqueValues, numNa, name } = fieldProperty;
+    const { color, isId, fieldTypes } = this.state;
 
     const colors = [ color ];
     const showTypeScores = false;
+
     const additionalOptions = {
-      height: 70,
+      width: 250,
+      height: 80,
       chartArea: {
         left: 0,
         top: 0,
-        width: '100%',
-        height: 70
+        width: 250,
+        height: 80
       },
     };
-  
+
     let fieldContent;
     if ( generalType == 'c' ) {
       fieldContent =
-        <div>
+        <div className={ styles.metadata }>
+          <div className={ styles.name }>{ name }</div>
+          <div className={ styles.type }>
+            <DropDownMenu
+              className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
+              valueClassName={ styles.fieldTypeValue }
+              value={ fieldProperty.type }
+              options={ this.state.fieldTypes }
+              onChange={ this.onSelectFieldType.bind(this) } />
+          </div>
           { vizData &&
             <ColumnChart
               chartId={ `field-bar-${ id }` }
@@ -85,9 +108,10 @@ class DatasetMetadataCell extends Component {
           }
           { stats &&
             <div className={ styles.statistics }>
-              <div><span className={ styles.field }>Unique Values</span>: { getRoundedString(stats.unique) } ({ getRoundedString((stats.unique / stats.count) * 100) }%) </div>
-              <div><span className={ styles.field }>Most Frequent</span>: { stats.top }</div>
-              <div><span className={ styles.field }>Most Occurrences</span>: { getRoundedString(stats.freq) }</div>
+              { numNa !== null && <div className={ styles.statistic }><div className={ styles.field }>Null</div><div className={ styles.value }>{ `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }</div></div> }
+              <div className={ styles.statistic }><div className={ styles.field }>Unique Values</div><div className={ styles.value }>{ `${ getRoundedString(stats.unique) } (${ getRoundedString((stats.unique / stats.count) * 100) }%)` }</div></div>
+              <div className={ styles.statistic }><div className={ styles.field }>Most Frequent</div><div className={ styles.value }>{ stats.top }</div></div>
+              <div className={ styles.statistic }><div className={ styles.field }>Most Occurrences</div><div className={ styles.value }>{ getRoundedString(stats.freq) }</div></div>
             </div>
           }
           { typeScores && showTypeScores &&
@@ -117,7 +141,16 @@ class DatasetMetadataCell extends Component {
         </div>
     } else if ( generalType == 'q' ) {
       fieldContent =
-        <div>
+        <div className={ styles.metadata }>
+          <div className={ styles.name }>{ name }</div>
+          <div className={ styles.type }>
+            <DropDownMenu
+              className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
+              valueClassName={ styles.fieldTypeValue }
+              value={ fieldProperty.type }
+              options={ this.state.fieldTypes }
+              onChange={ this.onSelectFieldType.bind(this) } />
+          </div>
           { vizData &&
             <Histogram
               chartId={ `field-hist-${ id }` }
@@ -130,10 +163,11 @@ class DatasetMetadataCell extends Component {
           }
           { stats &&
             <div className={ styles.statistics }>
-              <div><span className={ styles.field }>Mean</span>: { getRoundedString(stats.mean) }</div>
-              <div><span className={ styles.field }>Median</span>: { getRoundedString(stats['50%']) }</div>
-              <div><span className={ styles.field }>Range</span>: { getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div>
-              <div><span className={ styles.field }>Std</span>: { getRoundedString(stats.std) }</div>
+              { numNa !== null && <div className={ styles.statistic }><div className={ styles.field }>Null</div><div className={ styles.value }>{ `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }</div></div> }
+              <div className={ styles.statistic }><div className={ styles.field }>Mean</div><div className={ styles.value }>{ getRoundedString(stats.mean) }</div></div>
+              <div className={ styles.statistic }><div className={ styles.field }>Median</div><div className={ styles.value }>{ getRoundedString(stats['50%']) }</div></div>
+              <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div></div>
+              <div className={ styles.statistic }><div className={ styles.field }>Std</div><div className={ styles.value }>{ getRoundedString(stats.std) }</div></div>
             </div>
           }
           { typeScores && showTypeScores &&
@@ -163,7 +197,16 @@ class DatasetMetadataCell extends Component {
         </div>
     } else if ( generalType == 't' ) {
       fieldContent =
-      <div>
+      <div className={ styles.metadata }>
+        <div className={ styles.name }>{ name }</div>
+        <div className={ styles.type }>
+          <DropDownMenu
+            className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
+            valueClassName={ styles.fieldTypeValue }
+            value={ fieldProperty.type }
+            options={ this.state.fieldTypes }
+            onChange={ this.onSelectFieldType.bind(this) } />
+        </div>
         { vizData &&
           <Histogram
             chartId={ `field-hist-time-${ id }` }
@@ -176,7 +219,7 @@ class DatasetMetadataCell extends Component {
         }
         { stats &&
           <div className={ styles.statistics }>
-            <div><span className={ styles.field }>Range</span>: { getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div>
+            <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div></div>
           </div>
         }
         { typeScores && showTypeScores &&
@@ -206,51 +249,37 @@ class DatasetMetadataCell extends Component {
       </div>
     }
 
-    const popover = {
-      position: 'relative',
-      top: '30px',
-      zIndex: '2',
-    }
-    const cover = {
-      position: 'fixed',
-      top: '0px',
-      right: '0px',
-      bottom: '0px',
-      left: '0px',
-    }
     return (
-
-      <div>
+      <div className={ styles.datasetDataRow }>
         { fieldContent }
-        { this.state.displayColorPicker ? <div style={ popover }>
-          <div style={ cover } onClick={ this.onColorPickerClose }/>
-          <ChromePicker
-            color={ color }
-            onChangeComplete={ this.onColorPickerChange }
-          />
-        </div> : null }
+        <div className={ styles.actions }>
+          <RaisedButton onClick={ () => this.onClickVisualizeField(name) }>Visualize</RaisedButton>
+        </div>
       </div>
     );
   }
 }
 
-DatasetMetadataCell.propTypes = {
+DatasetDataRow.propTypes = {
   fieldProperty: PropTypes.object,
   color: PropTypes.string
 }
 
-DatasetMetadataCell.defaultProps = {
+DatasetDataRow.defaultProps = {
   fieldProperty: {}
 }
 
 function mapStateToProps(state) {
-  const { project } = state;
+  const { project, datasetSelector } = state;
   return {
-    projectId: project.properties.id
+    projectId: project.properties.id,
+    datasetId: datasetSelector.datasetId
   };
 }
 
 export default connect(mapStateToProps, {
   setFieldIsId,
-  setFieldColor
-})(DatasetMetadataCell);
+  setFieldColor,
+  setFieldType,
+  push
+})(DatasetDataRow);

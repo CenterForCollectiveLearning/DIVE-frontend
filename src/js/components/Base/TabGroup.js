@@ -14,7 +14,10 @@ export default class TabGroup extends Component {
   }
 
   handleClick(i) {
-    this.props.onChange(this.props.children[i]);
+  const { children } = this.props;
+  const childrenAsArray = Array.isArray(children) ? children : [ children ];
+
+  this.props.onChange(childrenAsArray[i]);
   }
 
   onClickCollapse() {
@@ -24,8 +27,11 @@ export default class TabGroup extends Component {
   }
 
   renderChildren() {
+    const { children } = this.props;
+    const childrenAsArray = Array.isArray(children) ? children : [ children ];
+
     var i = -1;
-    return React.Children.map(this.props.children, function (child){
+    return React.Children.map(children, function (child){
       i++;
 
       if (child.props.value == this.props.value){

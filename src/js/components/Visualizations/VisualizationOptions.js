@@ -111,6 +111,7 @@ export const minimalOptions = {
     trigger: 'none'
   },
   vAxis: {
+    minValue: 0,
     baselineColor: 'transparent',
     textPosition: 'none',
     gridlines: {

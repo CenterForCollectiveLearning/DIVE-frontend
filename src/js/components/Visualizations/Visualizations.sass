@@ -4,6 +4,84 @@
 .visualizationsPageContainer
   overflow: hidden
 
+
+.colorGrid
+  height: 100%
+  padding: 0 15px
+  .columnFieldLabel, .rowFieldLabel
+    font-size: 13px
+    color: #555
+    font-weight: 600
+    text-transform: uppercase
+
+  .columnFieldLabel
+    display: flex
+    align-items: center
+    justify-content: center
+    margin: 10px 0
+
+  .gridWithRowFieldLabel
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: center
+
+  .rowFieldLabel
+    transform: rotate(-90deg)
+    margin-left: -40px
+    width: 40px
+
+  .dataRow
+    .dataColumn
+      &:first-child
+        align-items: flex-start
+
+  .dataRow, .footerRow
+    .dataColumn, .footerColumn
+      white-space: normal
+      text-overflow: ellipsis
+      overflow: hidden
+      word-break: break-word
+
+      &:first-child
+        background-color: #F6F6F6
+        font-weight: 500
+
+    .dataColumnOneD
+      white-space: normal
+      text-overflow: ellipsis
+      overflow: hidden
+      word-break: break-word
+      padding: 8px
+
+  .dataColumn, .footerColumn
+    &:first-child
+      padding: 8px
+
+    &:not(:first-child)
+      font-size: 13px
+
+  .dataRow
+    .dataColumn
+      &:first-child
+        align-items: flex-start
+
+
+  .tableHeaderColumn
+    background-color: #F6F6F6
+    font-weight: 500
+    padding: 8px
+
+  .dataCell, .textCell
+    width: 100%
+    padding: 4px
+
+    > div
+      display: flex
+      padding: 4px
+      justify-content: center
+
+
 .hidden
   max-width: 0
   max-height: 0
@@ -84,7 +162,7 @@
     .fieldGroupLabel
       margin-top: -6px
 
-.galleryContainer, .builderContainer
+.galleryContainer, .SingleVisualizationContainer
   background-color: $center-grey
   display: flex
   flex-direction: row
@@ -116,6 +194,7 @@
 
   .tableContainer
     padding: 0 25px
+    overflow: scroll
 
   .visualizationContainer
     display: flex
@@ -258,6 +337,9 @@
   display: flex
   flex-direction: column
   border: 1px solid transparent
+  max-height: 187px
+  height: 187px
+  overflow: hidden
 
   &:hover
     border-color: $primary-accent
@@ -270,6 +352,7 @@
     padding-left: 15px
     padding-top: 10px
     padding-bottom: 10px
+    min-height: 35px
 
   .overflowText
     display: flex
@@ -281,6 +364,7 @@
     min-height: 150px
 
   .visualization
+    height: 100%
     padding: 11px 0 0px
 
     &.tree
@@ -291,6 +375,13 @@
     svg
       g
         cursor: pointer!important
+
+.stats
+  padding: 10px 15px
+  background-color: white
+  +smallCaps
+  .value
+    margin-left: 4px
 
 .gridContainer
   .grid
@@ -303,6 +394,8 @@
       font-size: 13px
       text-align: left
       vertical-align: middle
+      min-width: 50px
+      width: 50px
 
     th
       background-color: #eee

@@ -22,8 +22,8 @@ const regressionModes = [ {
   label: 'Automated',
   selected: false,
 }, {
-  id: 'builder',
-  label: 'Builder',
+  id: 'SingleVisualization',
+  label: 'SingleVisualization',
   selected: false
 }];
 
@@ -41,7 +41,7 @@ const baseState = {
     error: null,
     data: null
   },
-  builderSpec: {
+  SingleVisualizationSpec: {
   },
   regressionModes: regressionModes,
   selectedMode: null,
@@ -52,7 +52,7 @@ export default function regressionSelector(state = baseState, action) {
   switch (action.type) {
     case SELECT_REGRESSION_MODE:
       var regressionResult;
-      if (action.selectedModeId == 'builder') {
+      if (action.selectedModeId == 'SingleVisualization') {
         regressionResult = baseState.regressionResult;
       } else {
         regressionResult = state.regressionResult;

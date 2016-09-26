@@ -5,7 +5,7 @@ import { fetchProjectIfNeeded, fetchUserProjects } from '../actions/ProjectActio
 
 import styles from './App/App.sass';
 
-import ProjectNav from './ProjectNav';
+import ProjectSidebar from './ProjectSidebar';
 import ProjectTopBar from './ProjectTopBar';
 
 export class ProjectsPage extends Component {
@@ -38,7 +38,7 @@ export class ProjectsPage extends Component {
     return (
       <DocumentTitle title={ documentTitle }>
         <div className={ styles.fillContainer + ' ' + styles.projectContainer }>
-          <ProjectNav paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
+          <ProjectSidebar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
           <div className={ styles.projectRightContainer }>
             <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
             { this.props.children }

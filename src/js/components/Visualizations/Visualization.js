@@ -6,6 +6,7 @@ import { getPalette, useWhiteFontFromBackgroundHex, naturalSort } from '../../he
 
 import { MAX_ELEMENTS } from './VisualizationOptions';
 import TreeMap from './Charts/TreeMap';
+import ColorGrid from './Charts/ColorGrid';
 import PieChart from './Charts/PieChart';
 import ColumnChart from './Charts/ColumnChart';
 import StackedColumnChart from './Charts/StackedColumnChart';
@@ -43,7 +44,28 @@ export default class Visualization extends Component {
     const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
     const { args, meta } = spec;
     const chartId = `${ this.props.chartId || spec.id  }${ ( sortIndex ? '-' + sortIndex : '') }`;
-    const labels = meta.labels || {};
+    const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
+    const defaultVisualizationType = validVisualizationTypes[0];
+
+    var labels = {};
+    if (defaultVisualizationType == 'grid') {
+      if ('fieldA' in spec.args) {
+        labels = {
+          x: spec.args.fieldA.name,
+          y: spec.args.fieldB.name,
+        }
+      }
+      if ('groupedFieldA' in spec.args) {
+        labels = {
+          x: spec.args.groupedFieldA.name,
+          y: spec.args.groupedFieldB.name,
+        }
+      }
+    } else {
+      if (meta.labels) {
+        labels = meta.labels;
+      }
+    }
 
     // Mutating options
     var colors = [];
@@ -93,20 +115,21 @@ export default class Visualization extends Component {
     }
 
     // Handle max elements
-    const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
 
     const tooMuchDataToPreview =
       (isMinimalView &&
         (data.length > MAX_ELEMENTS.preview.all ||
-          (validVisualizationTypes[0] == 'tree' && data.length > MAX_ELEMENTS.preview.treemap)
+          (defaultVisualizationType == 'tree' && data.length > MAX_ELEMENTS.preview.treemap)
         )
       );
     const tooMuchDataToShowFull =
       (!isMinimalView &&
         (data.length > MAX_ELEMENTS.full.all ||
-          (validVisualizationTypes[0] == 'tree' && data.length > MAX_ELEMENTS.full.treemap)
+          (defaultVisualizationType == 'tree' && data.length > MAX_ELEMENTS.full.treemap)
         )
       );
+
+
 
     var tooMuchDataString = '';
     if (tooMuchDataToPreview || tooMuchDataToShowFull) {
@@ -152,11 +175,11 @@ export default class Visualization extends Component {
           </div>
         }
         <div className={ styles.visualization
-            + ' ' + styles[validVisualizationTypes[0]]
+            + ' ' + styles[defaultVisualizationType]
             + (isMinimalView ? ' ' + styles.minimal : '')
             + (visualizationClassName ? ' ' + visualizationClassName : '')
           }>
-            { (validVisualizationTypes[0] == 'box') &&
+            { (defaultVisualizationType == 'box') &&
               <BoxPlot
                 chartId={ `spec-box-${ chartId }` }
                 data={ finalDataArray }
@@ -164,7 +187,7 @@ export default class Visualization extends Component {
                 labels={ labels }
                 isMinimalView={ isMinimalView }/>
             }
-            { (validVisualizationTypes[0] == 'hist') &&
+            { (defaultVisualizationType == 'hist') &&
               <Histogram
                 chartId={ `spec-hist-${ chartId }` }
                 data={ finalDataArray }
@@ -173,7 +196,7 @@ export default class Visualization extends Component {
                 labels={ labels }
                 isMinimalView={ isMinimalView }/>
             }
-            { (validVisualizationTypes[0] == 'bar') &&
+            { (defaultVisualizationType == 'bar') &&
               <ColumnChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
@@ -181,7 +204,7 @@ export default class Visualization extends Component {
                 labels={ labels }
                 isMinimalView={ isMinimalView }/>
             }
-            { (validVisualizationTypes[0] == 'stackedbar' ) &&
+            { (defaultVisualizationType == 'stackedbar' ) &&
               <StackedColumnChart
                 chartId={ `spec-stackedbar-${ chartId }` }
                 data={ finalDataArray }
@@ -189,7 +212,15 @@ export default class Visualization extends Component {
                 labels={ labels }
                 isMinimalView={ isMinimalView }/>
             }
-            { (validVisualizationTypes[0] == 'scatter' ) &&
+            { (defaultVisualizationType == 'grid' ) &&
+              <ColorGrid
+                chartId={ `spec-stackedbar-${ chartId }` }
+                data={ finalDataArray }
+                colors={ colors }
+                labels={ labels }
+                isMinimalView={ isMinimalView }/>
+            }
+            { (defaultVisualizationType == 'scatter' ) &&
               <ScatterChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
@@ -197,7 +228,7 @@ export default class Visualization extends Component {
                 labels={ labels }
                 isMinimalView={ isMinimalView }/>
             }
-            { (validVisualizationTypes[0] == 'line' ) &&
+            { (defaultVisualizationType == 'line' ) &&
               <LineChart
                 chartId={ `spec-bar-${ chartId }` }
                 data={ finalDataArray }
@@ -205,7 +236,7 @@ export default class Visualization extends Component {
                 labels={ labels }
                 isMinimalView={ isMinimalView }/>
             }
-            { validVisualizationTypes[0] == 'pie' &&
+            { defaultVisualizationType == 'pie' &&
               <PieChart
                 chartId={ `spec-pie-${ chartId }` }
                 data={ finalDataArray }
@@ -213,7 +244,7 @@ export default class Visualization extends Component {
                 labels={ labels }
                 isMinimalView={ isMinimalView }/>
             }
-            { validVisualizationTypes[0] == 'tree' &&
+            { defaultVisualizationType == 'tree' &&
               <TreeMap
                 chartId={ `spec-tree-${ chartId }` }
                 parent={ spec.meta.desc }

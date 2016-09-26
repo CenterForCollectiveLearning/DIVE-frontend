@@ -6,10 +6,25 @@ import {
   RECEIVE_UPLOAD_DATASET,
   RECEIVE_DATASET,
   RECEIVE_DATASETS,
+  SELECT_DATASET_LAYOUT_TYPE,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
+const layoutTypes = [
+  {
+    id: 'list',
+    label: 'List',
+    selected: true
+  },
+  {
+    id: 'table',
+    label: 'Table',
+    selected: false
+  }
+]
+
 const baseState = {
+  layoutTypes: layoutTypes,
   datasetId: null,
   title: null,
   loaded: false,
@@ -24,7 +39,7 @@ export default function datasetSelector(state = baseState, action) {
     case SELECT_DATASET:
       return { ...state, datasetId: action.datasetId, projectId: action.projectId };
 
-    case DELETED_DATASET:    
+    case DELETED_DATASET:
       return { ...state, datasetId: null };
 
     case REQUEST_UPLOAD_DATASET:
@@ -47,6 +62,23 @@ export default function datasetSelector(state = baseState, action) {
         return { ...state, datasetId: state.datasetId || action.datasets[0].datasetId, title: state.title || action.datasets[0].title, loaded: true, projectId: action.projectId };
       }
       return { ...state, loaded: true, projectId: action.projectId };
+
+    case SELECT_DATASET_LAYOUT_TYPE:
+      var layoutTypes = state.layoutTypes.map((layoutTypeObject) =>
+        (layoutTypeObject.id == action.layoutType) ?
+          new Object({
+            ...layoutTypeObject,
+            selected: true
+          })
+          : new Object({
+            ...layoutTypeObject,
+            selected: false
+          })
+      );
+      return {
+        ...state,
+        layoutTypes: layoutTypes,
+      }
 
     case WIPE_PROJECT_STATE:
       return baseState;

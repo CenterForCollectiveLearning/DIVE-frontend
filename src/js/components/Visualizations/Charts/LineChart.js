@@ -13,9 +13,6 @@ export default class LineChart extends Component {
     var finalData = data;
 
     var options = isMinimalView ? minimalOptions : fullOptions;
-    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
-    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
-    options.colors = colors;
 
     options = {
       ...options,
@@ -31,14 +28,19 @@ export default class LineChart extends Component {
       ...additionalOptions
     }
 
+    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
+    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
+    options.colors = colors;
+
     return (
       <Chart
         chartType="LineChart"
-        chartVersion="43"
         options={ options }
         data = { finalData }
         key={ chartId }
         graph_id={ chartId }
+        width={ "100%" }
+        height={ "100%" }
       />
     );
   }
@@ -49,13 +51,13 @@ LineChart.propTypes = {
   data: PropTypes.array.isRequired,
   isMinimalView: PropTypes.bool,
   additionalOptions: PropTypes.object,
-  labels: PropTypes.object
+  labels: PropTypes.object,
+  colors: PropTypes.array
 };
 
 LineChart.defaultProps = {
   isMinimalView: false,
   additionalOptions: {},
-  options: {},
   labels: {},
   colors: [ '#007BD7' ]
 };

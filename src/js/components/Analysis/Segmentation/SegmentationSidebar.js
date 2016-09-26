@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional } from '../../../actions/AggregationActions';
+import { selectBinningConfigX, selectBinningConfigY, selectSegmentationIndependentVariable, selectSegmentationVariable, selectSegmentationFunction, selectSegmentationWeightVariable, selectConditional } from '../../../actions/SegmentationActions';
 import styles from '../Analysis.sass';
 
 import ConditionalSelector from '../../Base/ConditionalSelector';
@@ -12,7 +12,7 @@ import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 import BinningSelector from '../../Visualizations/SingleVisualization/BinningSelector';
 
-export class AggregationSidebar extends Component {
+export class SegmentationSidebar extends Component {
   componentWillMount(props) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
 
@@ -31,18 +31,18 @@ export class AggregationSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, aggregationSelector, selectAggregationIndependentVariable, selectBinningConfigX, selectBinningConfigY, conditionals, selectConditional } = this.props;
-    const { aggregationVariablesIds, aggregationVariableId } = aggregationSelector;
+    const { fieldProperties, segmentationSelector, selectSegmentationIndependentVariable, selectBinningConfigX, selectBinningConfigY, conditionals, selectConditional } = this.props;
+    const { segmentationVariablesIds, segmentationVariableId } = segmentationSelector;
 
-    const nonAggregationVariables = fieldProperties.items.filter((item) => aggregationVariablesIds.indexOf(item.id) < 0)
-    const aggregationOptions = [{'id': 'count', 'name' : 'count'}, ...nonAggregationVariables.filter((item) => item.generalType == 'q')]
-    const numAggregationVariables = fieldProperties.items.filter((item) => item.generalType == 'q' && aggregationVariablesIds.indexOf(item.id) >= 0 )
-    const n_q = numAggregationVariables.length;
+    const nonSegmentationVariables = fieldProperties.items.filter((item) => segmentationVariablesIds.indexOf(item.id) < 0)
+    const segmentationOptions = [{'id': 'count', 'name' : 'count'}, ...nonSegmentationVariables.filter((item) => item.generalType == 'q')]
+    const numSegmentationVariables = fieldProperties.items.filter((item) => item.generalType == 'q' && segmentationVariablesIds.indexOf(item.id) >= 0 )
+    const n_q = numSegmentationVariables.length;
 
     return (
       <Sidebar>
         { this.props.fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Aggregation Variables">
+          <SidebarGroup heading="Segmentation Variables">
             { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Categorical</div>
@@ -51,16 +51,16 @@ export class AggregationSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == aggregationVariableId) || item.isId,
+                      disabled: (item.id == segmentationVariableId) || item.isId,
                       color: item.color
                     })
                   )}
                   displayTextMember="name"
                   valueMember="id"
                   colorMember="color"
-                  externalSelectedItems={ aggregationVariablesIds }
+                  externalSelectedItems={ segmentationVariablesIds }
                   separated={ true }
-                  onChange={ selectAggregationIndependentVariable } />
+                  onChange={ selectSegmentationIndependentVariable } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
@@ -71,16 +71,16 @@ export class AggregationSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == aggregationVariableId),
+                      disabled: (item.id == segmentationVariableId),
                       color: item.color
                     })
                   )}
                   valueMember="id"
                   colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ aggregationVariablesIds }
+                  externalSelectedItems={ segmentationVariablesIds }
                   separated={ true }
-                  onChange={ selectAggregationIndependentVariable } />
+                  onChange={ selectSegmentationIndependentVariable } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
@@ -91,16 +91,16 @@ export class AggregationSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == aggregationVariableId) || item.isId,
+                      disabled: (item.id == segmentationVariableId) || item.isId,
                       color: item.color
                     })
                   )}
                   valueMember="id"
                   colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ aggregationVariablesIds }
+                  externalSelectedItems={ segmentationVariablesIds }
                   separated={ true }
-                  onChange={ selectAggregationIndependentVariable } />
+                  onChange={ selectSegmentationIndependentVariable } />
               </div>
             }
           </SidebarGroup>
@@ -108,44 +108,44 @@ export class AggregationSidebar extends Component {
         { this.props.fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Aggregate on">
             <DropDownMenu
-              value={ this.props.aggregationSelector.aggregationVariableId }
-              options= {aggregationOptions}
+              value={ this.props.segmentationSelector.segmentationVariableId }
+              options= {segmentationOptions}
               valueMember="id"
               displayTextMember="name"
-              onChange={ this.props.selectAggregationVariable }/>
+              onChange={ this.props.selectSegmentationVariable }/>
           </SidebarGroup>
         }
-        { this.props.aggregationSelector.aggregationVariableId != 'count' &&
+        { this.props.segmentationSelector.segmentationVariableId != 'count' &&
           <SidebarGroup heading="By">
             <DropDownMenu
-              value={ this.props.aggregationSelector.aggregationFunction}
+              value={ this.props.segmentationSelector.segmentationFunction}
               options={ [{ 'id':'SUM', 'name':'sum' }, { 'id':'MEAN', 'name':'mean' }] }
               valueMember="id"
               displayTextMember="name"
-              onChange={ this.props.selectAggregationFunction }/>
+              onChange={ this.props.selectSegmentationFunction }/>
           </SidebarGroup>
         }
-        { this.props.aggregationSelector.aggregationFunction == 'MEAN' && this.props.aggregationSelector.aggregationVariableId != 'count' &&
+        { this.props.segmentationSelector.segmentationFunction == 'MEAN' && this.props.segmentationSelector.segmentationVariableId != 'count' &&
           <SidebarGroup heading="Weighted by:">
             <DropDownMenu
-              value={ this.props.aggregationSelector.weightVariableId}
+              value={ this.props.segmentationSelector.weightVariableId}
               options={ [{ 'id':'UNIFORM', 'name':'uniform' }, ...this.props.fieldProperties.items.filter((item) => item.generalType == 'q')] }
               valueMember="id"
               displayTextMember="name"
-              onChange={ this.props.selectAggregationWeightVariable }/>
+              onChange={ this.props.selectSegmentationWeightVariable }/>
           </SidebarGroup>
         }
         { n_q >= 1 &&
           <BinningSelector
-            config={ this.props.aggregationSelector.binningConfigX }
+            config={ this.props.segmentationSelector.binningConfigX }
             selectBinningConfig={ selectBinningConfigX }
-            name={ numAggregationVariables[0].name }/>
+            name={ numSegmentationVariables[0].name }/>
         }
         { n_q == 2 &&
           <BinningSelector
-            config={ this.props.aggregationSelector.binningConfigY }
+            config={ this.props.segmentationSelector.binningConfigY }
             selectBinningConfig={ selectBinningConfigY }
-            name={ numAggregationVariables[1].name }/>
+            name={ numSegmentationVariables[1].name }/>
         }
         { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
           <SidebarGroup heading="Filter by field">
@@ -168,23 +168,23 @@ export class AggregationSidebar extends Component {
   }
 }
 
-AggregationSidebar.propTypes = {
+SegmentationSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  aggregationSelector: PropTypes.object.isRequired,
+  segmentationSelector: PropTypes.object.isRequired,
   conditionals: PropTypes.object
 };
 
 function mapStateToProps(state) {
-  const { project, conditionals, datasetSelector, fieldProperties, aggregationSelector } = state;
+  const { project, conditionals, datasetSelector, fieldProperties, segmentationSelector } = state;
   return {
     project,
     datasetSelector,
     fieldProperties,
-    aggregationSelector,
+    segmentationSelector,
     conditionals
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional })(AggregationSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectBinningConfigX, selectBinningConfigY, selectSegmentationIndependentVariable, selectSegmentationVariable, selectSegmentationFunction, selectSegmentationWeightVariable, selectConditional })(SegmentationSidebar);

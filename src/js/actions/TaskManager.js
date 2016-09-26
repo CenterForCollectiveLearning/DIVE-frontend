@@ -1,18 +1,20 @@
 export default class TaskManager {
   constructor() {
-    this.state = {
-      currentTasks: []
-    };
+    this.currentTasks = [];
   }
 
-  setState(newState) {
-    this.state = { ...this.state, ...newState };
+  getAllTasks() {
+    return this.currentTasks;
   }
 
-  getTasks(taskIds) {
-    var tasks = this.state.currentTasks;
+  setTasks(tasks) {
+    this.currentTasks = tasks;
+  }
 
-    if (taskIds) {
+  getTasksByID(taskIds) {
+    var tasks = this.currentTasks;
+
+    if (taskIds.length > 0) {
       tasks = tasks.filter((task) => (taskIds.indexOf(task.id) != -1));
     }
 
@@ -20,9 +22,9 @@ export default class TaskManager {
   }
 
   addTask(taskId, taskType) {
-    var tasks = this.state.currentTasks.slice();
+    var tasks = this.currentTasks;
 
-    const otherTasks = tasks
+    const otherTaskIds = tasks
       .filter((task) => ((task.id != taskId) && (task.type == taskType)))
       .map((task) => task.id);
 
@@ -30,19 +32,17 @@ export default class TaskManager {
        tasks.push({ id: taskId, type: taskType });
     }
 
-    this.setState({ currentTasks: tasks });
-    return otherTasks;
+    this.setTasks(tasks);
+    return otherTaskIds;
   }
 
   removeTask(taskId) {
-    var tasks = this.state.currentTasks.slice();
-    tasks = tasks.filter((task) => task.id == taskId);
-    this.setState({ currentTasks: tasks });
+    var remainingTasks = this.currentTasks.filter((task) => task.id != taskId);
+    this.setTasks(remainingTasks);
   }
 
   removeTasks(taskIds) {
-    var tasks = this.state.currentTasks.slice();
-    tasks = tasks.filter((task) => taskIds.indexOf(task.id) == -1);
-    this.setState({ currentTasks: tasks });
+    var remainingTasks = this.currentTasks.filter((task) => taskIds.indexOf(task.id) == -1);
+    this.setTasks(remainingTasks);
   }
 }

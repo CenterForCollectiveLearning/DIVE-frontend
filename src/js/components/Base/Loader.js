@@ -5,7 +5,7 @@ import styles from './Loader.sass';
 export default class Loader extends Component {
   render() {
     const { text } = this.props;
-    console.log(text);
+    const parsedText = (Array.isArray(text)) ? text[0] : text;
     return (
       <div className={ styles.loader }>
         <div className={ styles.square }/>
@@ -18,7 +18,7 @@ export default class Loader extends Component {
 }
 
 Loader.propTypes = {
-  text: PropTypes.string
+  text: PropTypes.any
 };
 
 Loader.defaultProps = {

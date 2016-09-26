@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
-import { push } from 'react-router-redux';
-import { fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
+import { push, replace } from 'react-router-redux';
+import { fetchDataset, fetchDatasets, deleteDataset, selectLayoutType } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 
 import styles from './Datasets.sass';
@@ -10,7 +10,9 @@ import styles from './Datasets.sass';
 import HeaderBar from '../Base/HeaderBar';
 import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
+import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import DatasetPropertiesPane from './DatasetPropertiesPane';
+import DatasetDataList from './DatasetDataList';
 import DatasetDataGrid from './DatasetDataGrid';
 import DatasetRow from './DatasetRow';
 import ReduceColumnsModal from './ReduceColumnsModal';
@@ -20,16 +22,6 @@ import MergeDatasetsModal from './MergeDatasetsModal';
 export class DatasetInspectPage extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      reduceColumnsModalOpen: false,
-      pivotModalOpen: false,
-      mergeDatasetsModalOpen: false
-    }
-
-    this.onSelectDataset = this.onSelectDataset.bind(this);
-    this.onClickUploadDataset = this.onClickUploadDataset.bind(this);
-    this.onClickDeleteDataset = this.onClickDeleteDataset.bind(this);
   }
 
   componentWillMount() {
@@ -68,7 +60,12 @@ export class DatasetInspectPage extends Component {
     }
   }
 
-  onClickDeleteDataset() {
+  onClickLayoutType = (layoutType) => {
+    const { selectLayoutType } = this.props;
+    selectLayoutType(layoutType);
+  }
+
+  onClickDeleteDataset = () => {
     const { deleteDataset, datasetSelector, project } = this.props;
 
     deleteDataset(project.properties.id, datasetSelector.datasetId);
@@ -80,6 +77,9 @@ export class DatasetInspectPage extends Component {
 
   render() {
     const { datasets, datasetSelector, fieldProperties, params, project, projectTitle } = this.props;
+    const { layoutTypes } = datasetSelector;
+    const selectedLayoutType = layoutTypes.find((e) => e.selected).id;
+    console.log(selectedLayoutType);
     const dataset = datasets.items.filter((dataset) =>
       dataset.datasetId == params.datasetId
     )[0];
@@ -96,6 +96,15 @@ export class DatasetInspectPage extends Component {
                   </RaisedButton>
                 </div>
                 <div className={ styles.headerControl }>
+                  <ToggleButtonGroup
+                    toggleItems={ datasetSelector.layoutTypes }
+                    valueMember="id"
+                    displayTextMember="label"
+                    expand={ false }
+                    separated={ false }
+                    onChange={ this.onClickLayoutType } />
+                </div>
+                <div className={ styles.headerControl }>
                   <RaisedButton label="Upload new dataset" onClick={ this.onClickUploadDataset } />
                 </div>
               </div>
@@ -104,10 +113,12 @@ export class DatasetInspectPage extends Component {
           { dataset && false && dataset.details &&
             <DatasetPropertiesPane dataset={ dataset } fieldProperties={ fieldProperties }/>
           }
-          { dataset && dataset.details &&
+          { dataset && dataset.details && ( selectedLayoutType == 'table' ) &&
             <DatasetDataGrid dataset={ dataset } fieldProperties={ fieldProperties }/>
           }
-
+          { dataset && dataset.details && ( selectedLayoutType == 'list' ) &&
+            <DatasetDataList dataset={ dataset } fieldProperties={ fieldProperties }/>
+          }
           { this.props.children }
         </div>
       </DocumentTitle>
@@ -133,5 +144,7 @@ export default connect(mapStateToProps, {
   fetchDataset,
   fetchDatasets,
   fetchFieldPropertiesIfNeeded,
-  push
+  selectLayoutType,
+  push,
+  replace
 })(DatasetInspectPage);

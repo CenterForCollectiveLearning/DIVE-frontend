@@ -13,7 +13,19 @@ function getEntrySources(sources) {
 }
 
 module.exports = {
+  cache: true,
   devtool: 'source-map',
+  quiet: false,
+  stats: {
+    // Config for minimal console.log mess.
+    assets: false,
+    colors: true,
+    version: false,
+    hash: false,
+    timings: false,
+    chunks: false,
+    chunkModules: false
+  },
   entry: getEntrySources([
       './src/js/index.js',
       './src/css/app.css'
