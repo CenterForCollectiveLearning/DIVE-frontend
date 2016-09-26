@@ -68,7 +68,7 @@ export class ExploreView extends Component {
 
   onClickVisualization = (specId) => {
     const { project, datasetSelector, push, updateVisualizationStats } = this.props;
-    updateVisualizationStats(project.properties.id, specId, 'click');
+    // updateVisualizationStats(project.properties.id, specId, 'click');
     push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore/${ specId }`);
   }
 

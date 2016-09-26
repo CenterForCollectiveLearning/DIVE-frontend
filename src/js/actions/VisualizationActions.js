@@ -68,13 +68,34 @@ const specLevelToAction = [
   },
 ]
 
+function requestUpdateVisualizationStatsDispatcher(selectedRecommendationLevel) {
+  return {
+    type: specLevelToAction[selectedRecommendationLevel].request,
+    selectedRecommendationLevel: selectedRecommendationLevel
+  };
+}
+
+function receiveUpdateVisualizationStatsDispatcher(json) {
+  return {
+    type: RECEIVE_VISUALIZATION_DATA,
+    spec: json.spec,
+    exported: json.exported,
+    exportedSpecId: json.exportedSpecId,
+    tableData: json.visualization.table ? formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data) : [],
+    bins: json.visualization.bins,
+    visualizationData: json.visualization.visualize,
+    sampleSize: json.visualization.count,
+    receivedAt: Date.now()
+  };
+}
+
 export function updateVisualizationStats(projectId, specId, type='click') {
   return (dispatch) => {
-    dispatch(requestUpdateVisualizationStats());
+    dispatch(requestUpdateVisualizationStatsDispatcher());
     return fetch(`/visualization/v1/stats?project_id=${projectId}&type=click`)
       .then(function(json) {
         const dispatchParams = {};
-        dispatch(receiveUpdateVisualizationStats(dispatchParams, json.result))
+        dispatch(receiveUpdateVisualizationStatsDispatcher(dispatchParams, json.result))
       });
   };
 }

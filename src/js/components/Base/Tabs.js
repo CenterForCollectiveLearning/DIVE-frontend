@@ -16,7 +16,6 @@ export default class Tabs extends Component {
     return React.Children.map(children, function (child){
       i++;
 
-      console.log(child);
       return React.cloneElement(child, {
         value: value,
         selectedClassName: selectedClassName,

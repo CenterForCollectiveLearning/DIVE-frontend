@@ -34,10 +34,6 @@ export default class ColorGrid extends Component {
       )
     }
 
-
-    console.log(parsedTableHeader)
-    console.log(parsedTableRows);
-
     const allValues = tableRows.reduce(function(previousValue, currentValue) {
       return [...previousValue, ...currentValue.slice(1) ];
     }, []);
