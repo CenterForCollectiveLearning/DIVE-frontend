@@ -20,10 +20,15 @@ export class ExploreSidebar extends Component {
   }
 
   componentWillMount() {
-    const { project, datasetSelector, exploreSelector, fetchFieldPropertiesIfNeeded, queryFields } = this.props;
-
+    const { project, datasetSelector, exploreSelector, fetchFieldPropertiesIfNeeded, queryFields, selectFieldProperty } = this.props;
     if (project.properties.id && datasetSelector.datasetId && (exploreSelector.datasetId != datasetSelector.datasetId) && !exploreSelector.isFetching) {
       fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId, queryFields);
+    }
+
+    if (exploreSelector.fieldProperties.length && queryFields.length) {
+      queryFields.forEach((queryFieldName) =>
+        selectFieldProperty(exploreSelector.fieldProperties.find((property) => property.name == queryFieldName).id)
+      );
     }
   }
 
