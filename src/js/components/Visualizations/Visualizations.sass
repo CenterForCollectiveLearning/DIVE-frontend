@@ -6,8 +6,27 @@
 
 
 .colorGrid
-  margin: 0 20px 10px
-  background-color: white
+  .columnFieldLabel, .rowFieldLabel
+    font-size: 13px
+    color: #555
+    font-weight: 600
+    text-transform: uppercase
+
+  .columnFieldLabel
+    display: flex
+    align-items: center
+    justify-content: center
+    margin: 10px 0
+
+  .gridWithRowFieldLabel
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: center
+
+  .rowFieldLabel
+    transform: rotate(-90deg)
+    margin-left: -40px
 
   .dataRow
     .dataColumn
@@ -36,7 +55,7 @@
     background-color: #F6F6F6
     font-weight: 500
     padding: 8px
-    
+
   .dataCell, .textCell
     width: 100%
     padding: 4px

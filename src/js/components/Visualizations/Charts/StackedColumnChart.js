@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import styles from '../Visualizations.sass';
 
 var Chart = require('react-google-charts').Chart;
@@ -9,7 +10,8 @@ export default class StackedColumnChart extends Component {
   render() {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options } = this.props;
 
-    const stackedColumnChartOptions = {
+    var options = isMinimalView ? minimalOptions : fullOptions;
+    options = {
       ...options,
       hAxis: {
         title: data[0][0],
@@ -29,6 +31,16 @@ export default class StackedColumnChart extends Component {
         }
       }
     }
+
+    options = {
+      ...options,
+      ...additionalOptions,
+    }
+
+    options.hAxis.title = labels && labels.x ? labels.x : data[0][0];
+    options.vAxis.title = labels && labels.y ? labels.y : data[0][1];
+    options.colors = colors;
+
 
     return (
       <Chart chartType="ColumnChart" options={ stackedColumnChartOptions } data = { data } graph_id={ chartId }/>

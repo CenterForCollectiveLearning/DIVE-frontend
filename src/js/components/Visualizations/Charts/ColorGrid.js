@@ -12,24 +12,48 @@ var Chart = require('react-google-charts').Chart;
 export default class ColorGrid extends Component {
 
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options } = this.props;
-
-    console.log('Rendering ColorGrid');
-    console.log(data);
-
-    const backgroundColorScale = d3Scale.scaleLinear().domain([-1, 0, 1]).range(['red', 'white', 'green']);
-    const fontColorScale = d3Scale.scaleThreshold().domain([-1, 0, 1]).range(['white', 'black', 'white']);
-    const rowFieldName = data[0][0];
-    const tableHeader = data[0];  // Skip first value
-    const tableRows = data.slice(1);
+    const { data, fieldNames, generatingProcedure, isMinimalView, additionalOptions, colors, labels } = this.props;
     const preview = isMinimalView;
+
+    var tableHeader = data[0];  // Skip first value
+    var tableRows = data.slice(1);
+
+    // Parse out fields included for error bars in stacked bar
+    var errorBarIndices = [];
+    tableHeader.forEach(function(e, i) {
+      if (typeof e === 'object') {
+        errorBarIndices.push(i);
+      }
+    });
+
+    var parsedTableHeader = tableHeader.filter((e, i) => errorBarIndices.indexOf(i) == -1);
+    var parsedTableRows = tableRows;
+    if ( errorBarIndices.length ) {
+      parsedTableRows = tableRows.map((row) =>
+        row.filter((e, i) => errorBarIndices.indexOf(i) == -1)
+      )
+    }
+
+
+    console.log(parsedTableHeader)
+    console.log(parsedTableRows);
+
+    const allValues = tableRows.reduce(function(previousValue, currentValue) {
+      return [...previousValue, ...currentValue.slice(1) ];
+    }, []);
+
+    // Calibrate scales
+    const min = Math.min(...allValues)
+    const max = Math.max(...allValues)
+    const backgroundColorScale = d3Scale.scaleLinear().domain([min, max]).range(['white', colors[0]]);
+    const fontColorScale = d3Scale.scaleThreshold().domain([min, max]).range(['black', 'white']);
 
     const renderDataColumn = function(property, customStyles={}) {
       return (
         <div style={ customStyles } className={ styles.dataCell }>
           { !preview &&
             <div className={ styles.value }>
-              { getRoundedString(property, 2, true) }
+              { getRoundedString(property, 3, true) }
             </div>
           }
       </div>
@@ -40,14 +64,14 @@ export default class ColorGrid extends Component {
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
-        items: preview ? _.range(tableHeader + 1).map((i) => <div></div>) : [...tableHeader.map((column) => <div className={ styles.tableCell }>{ column }</div>) ]
+        items: preview ? _.range(parsedTableHeader.length + 1).map((i) => <div></div>) : [...parsedTableHeader.map((column) => <div className={ styles.tableCell }>{ column }</div>) ]
       },
-      ...tableRows.map(function(row) {
+      ...parsedTableRows.map(function(row) {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
-          items: [ ...row.map(function(value){
-            if (value == null) { return ""; }
+          items: [ ( preview ? '' : row[0] ), ...row.slice(1).map(function(value){
+            if (value === null) { return ''; }
             var backgroundColor = backgroundColorScale(value);
             var whiteFont = useWhiteFontFromBackgroundRGBString(backgroundColor);
 
@@ -63,11 +87,20 @@ export default class ColorGrid extends Component {
       })
     ];
 
-    console.log(finalTableData)
-
     return (
       <div className={ styles.colorGrid }>
-        <BareDataGrid data={ finalTableData } preview={ preview }/>
+        { isMinimalView &&
+          <BareDataGrid data={ finalTableData } preview={ preview }/>
+        }
+        { !isMinimalView &&
+          <div>
+            <div className={ styles.columnFieldLabel }>{ labels.x }</div>
+            <div className={ styles.gridWithRowFieldLabel }>
+              <div className={ styles.rowFieldLabel }>{ labels.y }</div>
+              <BareDataGrid data={ finalTableData } preview={ preview }/>
+            </div>
+          </div>
+        }
       </div>
     );
   }
@@ -77,10 +110,14 @@ ColorGrid.propTypes = {
   chartId: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   isMinimalView: PropTypes.bool,
-  options: PropTypes.object
+  additionalOptions: PropTypes.object,
+  labels: PropTypes.object,
+  colors: PropTypes.array
 };
 
 ColorGrid.defaultProps = {
   isMinimalView: false,
-  options: {}
+  additionalOptions: {},
+  labels: {},
+  colors: [ '#007BD7' ]
 };
