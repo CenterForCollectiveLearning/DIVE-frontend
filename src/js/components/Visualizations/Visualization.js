@@ -47,29 +47,25 @@ export default class Visualization extends Component {
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
     const defaultVisualizationType = validVisualizationTypes[0];
 
-    // var labels = {};
-    // if (defaultVisualizationType == 'grid') {
-    //   console.log(spec);
-    //   if ('fieldA' in spec.args) {
-    //     labels = {
-    //       x: spec.args.fieldA.name,
-    //       y: spec.args.fieldB.name,
-    //     }
-    //   }
-    //   if ('groupedFieldA' in spec.args) {
-    //     labels = {
-    //       x: spec.args.groupedFieldA.name,
-    //       y: spec.args.groupedFieldB.name,
-    //     }
-    //   }
-    // } else {
-    //   if (meta.labels) {
-    //     labels = meta.labels;
-    //   }
-    // }
-    // console.log(labels);
-
-    const labels = meta.labels || {};
+    var labels = {};
+    if (defaultVisualizationType == 'grid') {
+      if ('fieldA' in spec.args) {
+        labels = {
+          x: spec.args.fieldA.name,
+          y: spec.args.fieldB.name,
+        }
+      }
+      if ('groupedFieldA' in spec.args) {
+        labels = {
+          x: spec.args.groupedFieldA.name,
+          y: spec.args.groupedFieldB.name,
+        }
+      }
+    } else {
+      if (meta.labels) {
+        labels = meta.labels;
+      }
+    }
 
     // Mutating options
     var colors = [];

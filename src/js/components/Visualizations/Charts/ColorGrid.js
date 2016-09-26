@@ -64,7 +64,7 @@ export default class ColorGrid extends Component {
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
-        items: preview ? _.range(parsedTableHeader.length + 1).map((i) => <div></div>) : [...parsedTableHeader.map((column) => <div className={ styles.tableCell }>{ column }</div>) ]
+        items: preview ? _.range(parsedTableHeader.length).map((i) => <div></div>) : [...parsedTableHeader.map((column) => <div className={ styles.tableCell }>{ column }</div>) ]
       },
       ...parsedTableRows.map(function(row) {
         return new Object({

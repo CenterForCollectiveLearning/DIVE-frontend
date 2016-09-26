@@ -6,6 +6,8 @@
 
 
 .colorGrid
+  height: 100%
+  padding: 0 15px
   .columnFieldLabel, .rowFieldLabel
     font-size: 13px
     color: #555
@@ -50,6 +52,19 @@
       overflow: hidden
       word-break: break-word
       padding: 8px
+
+  .dataColumn, .footerColumn
+    &:first-child
+      padding: 8px
+
+    &:not(:first-child)
+      font-size: 13px
+
+  .dataRow
+    .dataColumn
+      &:first-child
+        align-items: flex-start
+
 
   .tableHeaderColumn
     background-color: #F6F6F6
@@ -178,6 +193,7 @@
 
   .tableContainer
     padding: 0 25px
+    overflow: scroll
 
   .visualizationContainer
     display: flex
@@ -320,6 +336,9 @@
   display: flex
   flex-direction: column
   border: 1px solid transparent
+  max-height: 187px
+  height: 187px
+  overflow: hidden
 
   &:hover
     border-color: $primary-accent
@@ -332,6 +351,7 @@
     padding-left: 15px
     padding-top: 10px
     padding-bottom: 10px
+    min-height: 35px
 
   .overflowText
     display: flex
@@ -343,6 +363,7 @@
     min-height: 150px
 
   .visualization
+    height: 100%
     padding: 11px 0 0px
 
     &.tree
@@ -372,6 +393,8 @@
       font-size: 13px
       text-align: left
       vertical-align: middle
+      min-width: 50px
+      width: 50px
 
     th
       background-color: #eee
