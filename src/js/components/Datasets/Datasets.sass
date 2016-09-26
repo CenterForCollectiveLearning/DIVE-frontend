@@ -28,15 +28,21 @@
       div.metadata
         border-bottom: 1px solid $ui-line-grey
       div.actions
-        max-height: 100px
+        max-height: 80px
         transition: max-height 0s
+
+    div.type
+      display: flex
+      flex-direction: column
+      justify-content: center
+      margin-right: 30px
 
     div.metadata
       display: flex
       flex-direction: row
 
       div.name, div.type
-        line-height: 100px
+        line-height: 80px
         text-overflow: ellipsis
 
       div.name
@@ -44,7 +50,7 @@
         min-width: 200px
 
       div.type
-        min-width: 100px
+        min-width: 80px
 
       div.statistics
         +smallCaps
@@ -55,13 +61,15 @@
           flex-direction: column
           justify-content: center
           text-align: center
-          white-space: nowrap
+          white-space: wrap
           padding: 0 15px
-          min-width: 100px
+          min-width: 130px
+          width: 130px
 
           .field
           .value
-            font-size: 18px
+            color: $secondary-accent
+            font-size: 14px
 
       div.toggles
         display: flex
@@ -83,6 +91,7 @@
 
 .datasetPageContainer, .datasetContainer
   background-color: $center-grey
+  overflow: scroll
 
 .uploadingZone
   background-color: #FDFDFD
@@ -144,7 +153,7 @@
     white-space: nowrap
 
 .datasetPropertiesPane
-  height: 100px
+  height: 80px
 
 .gridContainer
   display: flex

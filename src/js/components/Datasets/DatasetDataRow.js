@@ -4,10 +4,12 @@ import { push } from 'react-router-redux';
 import { ChromePicker } from 'react-color';
 
 import styles from './Datasets.sass';
+import FieldTypes from '../../constants/FieldTypes';
 import RaisedButton from '../Base/RaisedButton';
+import DropDownMenu from '../Base/DropDownMenu';
 import ColumnChart from '../Visualizations/Charts/ColumnChart';
 import Histogram from '../Visualizations/Charts/Histogram';
-import { setFieldIsId, setFieldColor } from '../../actions/FieldPropertiesActions';
+import { setFieldIsId, setFieldColor, setFieldType } from '../../actions/FieldPropertiesActions';
 import { numberWithCommas, getRoundedString } from '../../helpers/helpers.js';
 
 class DatasetDataRow extends Component {
@@ -17,7 +19,8 @@ class DatasetDataRow extends Component {
     this.state = {
       color: '#007BD7',
       isId: false,
-      displayColorPicker: false
+      displayColorPicker: false,
+      fieldTypes: FieldTypes
     };
   }
 
@@ -29,6 +32,10 @@ class DatasetDataRow extends Component {
       color: color,
       isId: isId
     })
+  }
+
+  onSelectFieldType = (fieldType) => {
+    this.props.setFieldType(this.props.projectId, this.props.fieldProperty.id, fieldType);
   }
 
   onColorPickerClick = () => {
@@ -60,20 +67,20 @@ class DatasetDataRow extends Component {
 
   render() {
     const { projectId, datasetId, fieldProperty } = this.props;
-    const { id, generalType, type, vizData, typeScores, isChild, isUnique, stats, uniqueValues, name } = fieldProperty;
-    const { color, isId } = this.state;
+    const { id, generalType, type, vizData, typeScores, isChild, isUnique, stats, uniqueValues, numNa, name } = fieldProperty;
+    const { color, isId, fieldTypes } = this.state;
 
     const colors = [ color ];
     const showTypeScores = false;
 
     const additionalOptions = {
-      width: 200,
-      height: 100,
+      width: 250,
+      height: 80,
       chartArea: {
         left: 0,
         top: 0,
-        width: '100%',
-        height: 100
+        width: 250,
+        height: 80
       },
     };
 
@@ -82,7 +89,14 @@ class DatasetDataRow extends Component {
       fieldContent =
         <div className={ styles.metadata }>
           <div className={ styles.name }>{ name }</div>
-          <div className={ styles.type }>{ type }</div>
+          <div className={ styles.type }>
+            <DropDownMenu
+              className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
+              valueClassName={ styles.fieldTypeValue }
+              value={ fieldProperty.type }
+              options={ this.state.fieldTypes }
+              onChange={ this.onSelectFieldType.bind(this) } />
+          </div>
           { vizData &&
             <ColumnChart
               chartId={ `field-bar-${ id }` }
@@ -94,6 +108,7 @@ class DatasetDataRow extends Component {
           }
           { stats &&
             <div className={ styles.statistics }>
+              { numNa !== null && <div className={ styles.statistic }><div className={ styles.field }>Null</div><div className={ styles.value }>{ `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }</div></div> }
               <div className={ styles.statistic }><div className={ styles.field }>Unique Values</div><div className={ styles.value }>{ `${ getRoundedString(stats.unique) } (${ getRoundedString((stats.unique / stats.count) * 100) }%)` }</div></div>
               <div className={ styles.statistic }><div className={ styles.field }>Most Frequent</div><div className={ styles.value }>{ stats.top }</div></div>
               <div className={ styles.statistic }><div className={ styles.field }>Most Occurrences</div><div className={ styles.value }>{ getRoundedString(stats.freq) }</div></div>
@@ -128,7 +143,14 @@ class DatasetDataRow extends Component {
       fieldContent =
         <div className={ styles.metadata }>
           <div className={ styles.name }>{ name }</div>
-          <div className={ styles.type }>{ type }</div>
+          <div className={ styles.type }>
+            <DropDownMenu
+              className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
+              valueClassName={ styles.fieldTypeValue }
+              value={ fieldProperty.type }
+              options={ this.state.fieldTypes }
+              onChange={ this.onSelectFieldType.bind(this) } />
+          </div>
           { vizData &&
             <Histogram
               chartId={ `field-hist-${ id }` }
@@ -141,6 +163,7 @@ class DatasetDataRow extends Component {
           }
           { stats &&
             <div className={ styles.statistics }>
+              { numNa !== null && <div className={ styles.statistic }><div className={ styles.field }>Null</div><div className={ styles.value }>{ `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }</div></div> }
               <div className={ styles.statistic }><div className={ styles.field }>Mean</div><div className={ styles.value }>{ getRoundedString(stats.mean) }</div></div>
               <div className={ styles.statistic }><div className={ styles.field }>Median</div><div className={ styles.value }>{ getRoundedString(stats['50%']) }</div></div>
               <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div></div>
@@ -176,7 +199,14 @@ class DatasetDataRow extends Component {
       fieldContent =
       <div className={ styles.metadata }>
         <div className={ styles.name }>{ name }</div>
-        <div className={ styles.type }>{ type }</div>
+        <div className={ styles.type }>
+          <DropDownMenu
+            className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
+            valueClassName={ styles.fieldTypeValue }
+            value={ fieldProperty.type }
+            options={ this.state.fieldTypes }
+            onChange={ this.onSelectFieldType.bind(this) } />
+        </div>
         { vizData &&
           <Histogram
             chartId={ `field-hist-time-${ id }` }
@@ -250,5 +280,6 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   setFieldIsId,
   setFieldColor,
+  setFieldType,
   push
 })(DatasetDataRow);
