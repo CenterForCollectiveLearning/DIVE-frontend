@@ -11,6 +11,7 @@ import HeaderBar from '../Base/HeaderBar';
 import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
 import DatasetPropertiesPane from './DatasetPropertiesPane';
+import DatasetDataList from './DatasetDataList';
 import DatasetDataGrid from './DatasetDataGrid';
 import DatasetRow from './DatasetRow';
 import ReduceColumnsModal from './ReduceColumnsModal';
@@ -22,9 +23,7 @@ export class DatasetInspectPage extends Component {
     super(props);
 
     this.state = {
-      reduceColumnsModalOpen: false,
-      pivotModalOpen: false,
-      mergeDatasetsModalOpen: false
+      layout: 'list',
     }
   }
 
@@ -76,6 +75,7 @@ export class DatasetInspectPage extends Component {
 
   render() {
     const { datasets, datasetSelector, fieldProperties, params, project, projectTitle } = this.props;
+    const { layout } = this.state;
     const dataset = datasets.items.filter((dataset) =>
       dataset.datasetId == params.datasetId
     )[0];
@@ -100,8 +100,11 @@ export class DatasetInspectPage extends Component {
           { dataset && false && dataset.details &&
             <DatasetPropertiesPane dataset={ dataset } fieldProperties={ fieldProperties }/>
           }
-          { dataset && dataset.details &&
+          { dataset && dataset.details && ( layout == 'table' ) &&
             <DatasetDataGrid dataset={ dataset } fieldProperties={ fieldProperties }/>
+          }
+          { dataset && dataset.details && ( layout == 'list' ) &&
+            <DatasetDataList dataset={ dataset } fieldProperties={ fieldProperties }/>
           }
 
           { this.props.children }

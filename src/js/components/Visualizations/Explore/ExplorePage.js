@@ -16,10 +16,6 @@ class ExplorePage extends Component {
       uniqueSpecVisualizationTypes: [],
       visualizationTypes: []
     }
-
-    this.getUniqueSpecVisualizationTypes = this.getUniqueSpecVisualizationTypes.bind(this);
-    this.getFilteredVisualizationTypes = this.getFilteredVisualizationTypes.bind(this);
-    this.updateVisualizationTypes = this.updateVisualizationTypes.bind(this);
   }
 
   componentWillMount() {
@@ -43,13 +39,13 @@ class ExplorePage extends Component {
     }
   }
 
-  updateVisualizationTypes(visualizationTypes) {
+  updateVisualizationTypes = (visualizationTypes) => {
     this.setState({
       visualizationTypes: this.getFilteredVisualizationTypes(visualizationTypes)
     });
   }
 
-  getUniqueSpecVisualizationTypes(specs) {
+  getUniqueSpecVisualizationTypes = (specs) => {
     const allSpecVisualizationTypes = specs.items
       .map((s) => s.vizTypes);
 
@@ -61,7 +57,7 @@ class ExplorePage extends Component {
     return [];
   }
 
-  getFilteredVisualizationTypes(visualizationTypes) {
+  getFilteredVisualizationTypes = (visualizationTypes) => {
     return visualizationTypes
       .map((filter) =>
         new Object({
