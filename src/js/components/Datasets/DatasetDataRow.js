@@ -219,7 +219,7 @@ class DatasetDataRow extends Component {
         }
         { stats &&
           <div className={ styles.statistics }>
-            <div className={ styles.statistic }><div clasName={ styles.field }>Range</div>: { getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div>
+            <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div></div>
           </div>
         }
         { typeScores && showTypeScores &&
