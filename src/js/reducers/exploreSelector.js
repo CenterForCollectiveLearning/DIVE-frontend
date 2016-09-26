@@ -22,7 +22,7 @@ import {
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_TYPE,
   RECEIVE_SET_FIELD_COLOR,
-  SET_GALLERY_QUERY_STRING,
+  SET_EXPLORE_QUERY_STRING,
   SELECT_RECOMMENDATION_MODE
 } from '../constants/ActionTypes';
 
@@ -104,7 +104,7 @@ function getValidSpecLevelsFromNumFields(numSelectedFields, selectedRecommendati
   return isValidSpecLevel;
 }
 
-export default function gallerySelector(state = baseState, action) {
+export default function exploreSelector(state = baseState, action) {
 
   const SORTING_FUNCTIONS = [
     {
@@ -353,7 +353,7 @@ export default function gallerySelector(state = baseState, action) {
     case WIPE_PROJECT_STATE:
       return baseState;
 
-    case SET_GALLERY_QUERY_STRING:
+    case SET_EXPLORE_QUERY_STRING:
       return {
         ...state, queryString: action.queryString
       }

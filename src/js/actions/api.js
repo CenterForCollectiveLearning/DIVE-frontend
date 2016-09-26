@@ -65,18 +65,14 @@ function revokeTasks(taskIds) {
 export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval=600, limit=300, counter=0) {
   const aggregationActionTypes = [ REQUEST_ONE_D_AGGREGATION, REQUEST_AGGREGATION ];
 
-  console.log(taskType, aggregationActionTypes.indexOf(taskType))
   if (aggregationActionTypes.indexOf( taskType ) > -1) {
     taskType = REQUEST_AGGREGATION
   }
-  console.log(taskType)
   const otherTasks = taskManager.addTask(taskId, taskType);
   if (otherTasks.length) {
-    console.log('Revoking tasks', otherTasks);
     revokeTasks(otherTasks);
   }
   const completeUrl = API_URL + `/tasks/v1/result/${ taskId }`;
-  console.log('Polling', taskId, taskType);
 
   return dispatch => {
     return isomorphicFetch(completeUrl, {})
@@ -90,7 +86,6 @@ export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, prog
           Raven.captureException(new Error(data.error));
           dispatch(errorDispatcher(data));
         } else if (data.state == 'REVOKED') {
-          console.log('REVOKED', taskId);
           taskManager.removeTask(taskId);
           dispatch(errorDispatcher(data));
         } else if (counter > limit) {

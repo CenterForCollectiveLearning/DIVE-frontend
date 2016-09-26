@@ -16,7 +16,7 @@ import exportedRegression from './exportedRegression';
 import exportedRegressions from './exportedRegressions';
 import fieldProperties from './fieldProperties';
 import filters from './filters';
-import gallerySelector from './gallerySelector';
+import exploreSelector from './exploreSelector';
 import project from './project';
 import projects from './projects';
 import regressionSelector from './regressionSelector';
@@ -35,6 +35,7 @@ const rootReducer = combineReducers({
   datasets,
   datasetSelector,
   documents,
+  exploreSelector,
   exportedSpec,
   exportedSpecs,
   exportedCorrelation,
@@ -43,7 +44,6 @@ const rootReducer = combineReducers({
   exportedRegressions,
   fieldProperties,
   filters,
-  gallerySelector,
   project,
   projects,
   regressionSelector,

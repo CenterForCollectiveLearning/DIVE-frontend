@@ -19,30 +19,26 @@ export class ProjectTopBar extends Component {
   constructor(props) {
     super(props);
 
-    this.onSelectProject = this.onSelectProject.bind(this);
-    this.onSelectDataset = this.onSelectDataset.bind(this);
-
     this.state = {
       projectSettingsModalOpen: false
     };
   }
 
-  onSelectDataset(datasetId) {
-    const { gallerySelector, project, push, selectDataset, routes } = this.props;
+  onSelectDataset = (datasetId) => {
+    const { exploreSelector, project, push, selectDataset, routes } = this.props;
     const { pathname, query } = location;
     const remainingRoute = routes.slice(3).map((e) => e.path).join('/');
     selectDataset(project.properties.id, datasetId);
     push(`/projects/${ project.properties.id }/datasets/${ datasetId }/${ remainingRoute }`);
   }
 
-  _getCurrentPage(){
+  _getCurrentPage = () => {
     const { routes } = this.props;
     const tabList = [
       "upload",
       "inspect",
       "transform",
       "explore",
-      "builder",
       "starred",
       "aggregation",
       "comparison",
@@ -148,15 +144,6 @@ export class ProjectTopBar extends Component {
     );
   }
 }
-
-ProjectTopBar.propTypes = {
-  paramDatasetId: PropTypes.string,
-  project: PropTypes.object,
-  projects: PropTypes.object,
-  user: PropTypes.object,
-  datasetSelector: PropTypes.object,
-  routes: PropTypes.array
-};
 
 function mapStateToProps(state) {
   const { project, projects, user, datasets, datasetSelector } = state;

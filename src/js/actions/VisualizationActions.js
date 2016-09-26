@@ -18,21 +18,22 @@ import {
   PROGRESS_SPECS,
   SELECT_RECOMMENDATION_TYPE,
   SELECT_VISUALIZATION_TYPE,
-  SELECT_BUILDER_VISUALIZATION_TYPE,
+  SELECT_SINGLE_VISUALIZATION_VISUALIZATION_TYPE,
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
   CLEAR_VISUALIZATION,
+  CLICK_VISUALIZATION,
   REQUEST_CREATE_SAVED_SPEC,
   RECEIVE_CREATED_SAVED_SPEC,
   REQUEST_CREATE_EXPORTED_SPEC,
   RECEIVE_CREATED_EXPORTED_SPEC,
   SET_SHARE_WINDOW,
   SELECT_SORTING_FUNCTION,
-  SELECT_BUILDER_SORT_ORDER,
-  SELECT_BUILDER_SORT_FIELD,
+  SELECT_SINGLE_VISUALIZATION_SORT_ORDER,
+  SELECT_SINGLE_VISUALIZATION_SORT_FIELD,
   SELECT_CONDITIONAL,
   SELECT_VISUALIZATION_CONFIG,
-  SET_GALLERY_QUERY_STRING,
+  SET_EXPLORE_QUERY_STRING,
   SELECT_RECOMMENDATION_MODE
 } from '../constants/ActionTypes';
 
@@ -66,6 +67,38 @@ const specLevelToAction = [
     fail: FAILED_RECEIVE_EXPANDED_SPECS
   },
 ]
+
+function requestUpdateVisualizationStatsDispatcher(selectedRecommendationLevel) {
+  return {
+    type: specLevelToAction[selectedRecommendationLevel].request,
+    selectedRecommendationLevel: selectedRecommendationLevel
+  };
+}
+
+function receiveUpdateVisualizationStatsDispatcher(json) {
+  return {
+    type: RECEIVE_VISUALIZATION_DATA,
+    spec: json.spec,
+    exported: json.exported,
+    exportedSpecId: json.exportedSpecId,
+    tableData: json.visualization.table ? formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data) : [],
+    bins: json.visualization.bins,
+    visualizationData: json.visualization.visualize,
+    sampleSize: json.visualization.count,
+    receivedAt: Date.now()
+  };
+}
+
+export function updateVisualizationStats(projectId, specId, type='click') {
+  return (dispatch) => {
+    dispatch(requestUpdateVisualizationStatsDispatcher());
+    return fetch(`/visualization/v1/stats?project_id=${projectId}&type=click`)
+      .then(function(json) {
+        const dispatchParams = {};
+        dispatch(receiveUpdateVisualizationStatsDispatcher(dispatchParams, json.result))
+      });
+  };
+}
 
 export function selectRecommendationMode(selectedRecommendationModeId) {
   return {
@@ -190,23 +223,23 @@ export function selectVisualizationType(selectedType) {
   }
 }
 
-export function selectBuilderSortField(selectedSortFieldId) {
+export function selectSingleVisualizationSortField(selectedSortFieldId) {
   return {
-    type: SELECT_BUILDER_SORT_FIELD,
+    type: SELECT_SINGLE_VISUALIZATION_SORT_FIELD,
     selectedSortFieldId: selectedSortFieldId
   }
 }
 
-export function selectBuilderSortOrder(selectedSortOrderId) {
+export function selectSingleVisualizationSortOrder(selectedSortOrderId) {
   return {
-    type: SELECT_BUILDER_SORT_ORDER,
+    type: SELECT_SINGLE_VISUALIZATION_SORT_ORDER,
     selectedSortOrderId: selectedSortOrderId
   }
 }
 
-export function selectBuilderVisualizationType(selectedType) {
+export function selectSingleVisualizationVisualizationType(selectedType) {
   return {
-    type: SELECT_BUILDER_VISUALIZATION_TYPE,
+    type: SELECT_SINGLE_VISUALIZATION_VISUALIZATION_TYPE,
     selectedType: selectedType
   }
 }
@@ -348,7 +381,7 @@ export function setShareWindow(shareWindow) {
   }
 }
 
-export function setGalleryQueryString(query) {
+export function setExploreQueryString(query) {
   var queryString = '';
 
   Object.keys(query).forEach(
@@ -369,7 +402,7 @@ export function setGalleryQueryString(query) {
   queryString = queryString.replace('&', '?');
 
   return {
-    type: SET_GALLERY_QUERY_STRING,
+    type: SET_EXPLORE_QUERY_STRING,
     queryString: queryString
   }
 }

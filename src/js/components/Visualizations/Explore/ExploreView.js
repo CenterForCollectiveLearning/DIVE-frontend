@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { fetchDatasets } from '../../../actions/DatasetActions';
-import { clearVisualization, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
+import { clearVisualization, updateVisualizationStats, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
 import { fetchExportedVisualizationSpecs } from '../../../actions/ComposeActions';
 import { useWhiteFontFromBackgroundHex } from '../../../helpers/helpers';
 
@@ -17,19 +17,19 @@ import ColoredFieldItems from '../../Base/ColoredFieldItems';
 import Visualization from '../Visualization';
 import VisualizationBlock from './VisualizationBlock';
 
-export class GalleryView extends Component {
+export class ExploreView extends Component {
 
   componentWillMount() {
-    const { datasetSelector, datasets, project, specs, gallerySelector, clearVisualization, fetchSpecs, fetchDatasets } = this.props;
+    const { datasetSelector, datasets, project, specs, exploreSelector, clearVisualization, fetchSpecs, fetchDatasets } = this.props;
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
 
     if (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(project.properties.id);
     }
 
-    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length && notLoadedAndNotFetching) {
+    if (project.properties.id && datasetSelector.datasetId && exploreSelector.fieldProperties.length && notLoadedAndNotFetching) {
       for (var level of [ 0, 1, 2, 3 ]) {
-        fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendationTypes[level]);
+        fetchSpecs(project.properties.id, datasetSelector.datasetId, exploreSelector.fieldProperties, exploreSelector.recommendationTypes[level]);
       }
     }
 
@@ -37,24 +37,24 @@ export class GalleryView extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { datasetSelector, datasets, project, specs, gallerySelector, exportedSpecs, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = this.props;
+    const { datasetSelector, datasets, project, specs, exploreSelector, exportedSpecs, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = this.props;
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
-    const gallerySelectorChanged = (gallerySelector.updatedAt !== previousProps.gallerySelector.updatedAt);
+    const exploreSelectorChanged = (exploreSelector.updatedAt !== previousProps.exploreSelector.updatedAt);
     const projectChanged = (previousProps.project.properties.id !== project.properties.id);
-    const fieldPropertiesSelected = gallerySelector.fieldProperties.find((prop) => prop.selected) != undefined;
-    const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = gallerySelector;
+    const fieldPropertiesSelected = exploreSelector.fieldProperties.find((prop) => prop.selected) != undefined;
+    const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = exploreSelector;
 
     if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
       fetchDatasets(project.properties.id);
     }
 
-    const numFields = gallerySelector.fieldProperties.filter((property) => property.selected).length;
+    const numFields = exploreSelector.fieldProperties.filter((property) => property.selected).length;
 
-    if (project.properties.id && datasetSelector.datasetId && gallerySelector.fieldProperties.length) {
+    if (project.properties.id && datasetSelector.datasetId && exploreSelector.fieldProperties.length) {
       for (var i in isFetchingSpecLevel) {
-        if (!isFetchingSpecLevel[i] && !loadedSpecLevel[i] && gallerySelector.isValidSpecLevel[i]) {
-          fetchSpecs(project.properties.id, datasetSelector.datasetId, gallerySelector.fieldProperties, gallerySelector.recommendationTypes[i]);
+        if (!isFetchingSpecLevel[i] && !loadedSpecLevel[i] && exploreSelector.isValidSpecLevel[i]) {
+          fetchSpecs(project.properties.id, datasetSelector.datasetId, exploreSelector.fieldProperties, exploreSelector.recommendationTypes[i]);
         }
       }
     }
@@ -67,8 +67,9 @@ export class GalleryView extends Component {
   }
 
   onClickVisualization = (specId) => {
-    const { project, datasetSelector, push } = this.props;
-    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/builder/${ specId }`);
+    const { project, datasetSelector, push, updateVisualizationStats } = this.props;
+    // updateVisualizationStats(project.properties.id, specId, 'click');
+    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore/${ specId }`);
   }
 
   saveVisualization = (specId, specData) => {
@@ -78,8 +79,8 @@ export class GalleryView extends Component {
 
 
   render() {
-    const { filters, datasets, fieldNameToColor, datasetSelector, filteredVisualizationTypes, gallerySelector, specs, exportedSpecs, selectSortingFunction } = this.props;
-    const { fieldProperties, isFetchingSpecLevel, isValidSpecLevel, loadedSpecLevel, progressByLevel, selectedRecommendationMode } = gallerySelector;
+    const { filters, datasets, fieldNameToColor, datasetSelector, filteredVisualizationTypes, exploreSelector, specs, exportedSpecs, selectSortingFunction } = this.props;
+    const { fieldProperties, isFetchingSpecLevel, isValidSpecLevel, loadedSpecLevel, progressByLevel, selectedRecommendationMode } = exploreSelector;
     const isFetching = _.any(isFetchingSpecLevel);
 
     var selectedFieldProperties = fieldProperties
@@ -103,7 +104,7 @@ export class GalleryView extends Component {
       pageHeader = <span>Visualizations of <ColoredFieldItems fields={ selectedFieldProperties } /></span>
       helperText = 'exploreSelectedFields'
     } else {
-      pageHeader = <span>Default Recommended Visualizations</span>
+      pageHeader = <span>Default Descriptive Visualizations</span>
       helperText = 'exploreDefault'
     }
 
@@ -240,10 +241,10 @@ export class GalleryView extends Component {
   }
 }
 
-GalleryView.propTypes = {
+ExploreView.propTypes = {
   project: PropTypes.object.isRequired,
   specs: PropTypes.object.isRequired,
-  gallerySelector: PropTypes.object.isRequired,
+  exploreSelector: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   filteredVisualizationTypes: PropTypes.array.isRequired,
@@ -251,12 +252,12 @@ GalleryView.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, filters, specs, gallerySelector, fieldProperties, datasets, datasetSelector, exportedSpecs } = state;
+  const { project, filters, specs, exploreSelector, fieldProperties, datasets, datasetSelector, exportedSpecs } = state;
   return {
     project,
     filters,
     specs,
-    gallerySelector,
+    exploreSelector,
     fieldNameToColor: fieldProperties.fieldNameToColor,
     datasets,
     datasetSelector,
@@ -270,6 +271,7 @@ export default connect(mapStateToProps, {
   fetchExportedVisualizationSpecs,
   fetchDatasets,
   clearVisualization,
+  updateVisualizationStats,
   selectSortingFunction,
   createExportedSpec
-})(GalleryView);
+})(ExploreView);

@@ -3,6 +3,7 @@ import {
   RECEIVE_PROJECT,
   CREATE_PROJECT,
   CREATED_PROJECT,
+  UPDATED_PROJECT,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -25,6 +26,9 @@ export default function project(state = baseState, action) {
 
     case CREATED_PROJECT:
       return { ...state, isFetching: false, properties: action.projectProperties };
+
+    case UPDATED_PROJECT:
+      return { ...state, properties: action.projectProperties };
 
     case WIPE_PROJECT_STATE:
       return baseState;
