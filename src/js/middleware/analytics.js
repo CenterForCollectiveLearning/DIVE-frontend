@@ -23,7 +23,7 @@ import {
   SELECT_SORTING_FUNCTION,
   SELECT_RECOMMENDATION_TYPE,
   RECEIVE_CREATED_EXPORTED_SPEC,
-  REQUEST_CREATE_SAVED_SPEC,
+  RECEIVE_CREATED_SAVED_SPEC,
   SELECT_CONDITIONAL,
   SELECT_VISUALIZATION_TYPE,
   SELECT_AGGREGATION_AGGREGATION_VARIABLE,  // Aggregation
@@ -126,10 +126,10 @@ export function analyticsMiddleware({ getState }){
       case RECEIVE_EXPANDED_SPECS:
         window.amplitude.logEvent('[VISUALIZATION] Received Expanded Specs');
         break;
-      case REQUEST_CREATE_EXPORTED_SPEC:
+      case RECEIVE_CREATED_EXPORTED_SPEC:
         window.amplitude.logEvent('[VISUALIZATION] Exported Spec');
         break;
-      case REQUEST_CREATE_SAVED_SPEC:
+      case RECEIVE_CREATED_SAVED_SPEC:
         window.amplitude.logEvent('[VISUALIZATION] Saved Spec');
         break;
       case RECEIVE_VISUALIZATION_DATA:
