@@ -14,17 +14,21 @@ export class ProjectsPage extends Component {
     if (params.projectId) {
       fetchProjectIfNeeded(params.projectId);
     }
+    if (user.id && user.email) {
+      window.amplitude.setuserid(`${ user.id }: ${ user.email }`);
+    }
 
     if (user.id && !projects.isFetchingUserProjects && !projects.userProjectsLoaded) {
       fetchUserProjects(user.id);
-      if (user.id && user.email) {
-        window.amplitude.setuserid(`${ user.id }: ${ user.email }`);
-      }
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { user, projects, fetchUserProjects } = nextProps;
+
+    if (user.id && user.email) {
+      window.amplitude.setuserid(`${ user.id }: ${ user.email }`);
+    }
 
     if (user.id && !projects.isFetchingUserProjects && !projects.userProjectsLoaded) {
       fetchUserProjects(user.id);
