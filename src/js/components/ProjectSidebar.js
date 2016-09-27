@@ -67,9 +67,7 @@ export class ProjectSidebar extends Component {
     this.setState({ secondaryNavOpen: !this.state.secondaryNavOpen });
   }
 
-
   _handleTabsChange = (tab) => {
-    console.log(tab)
     this.props.push(`/projects/${ this.props.project.properties.id }/${ tab.props.route }`);
   }
 

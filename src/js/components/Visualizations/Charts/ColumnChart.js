@@ -71,6 +71,7 @@ export default class ColumnChart extends Component {
 
     return (
       <Chart
+        loader={ <div className={ styles.renderChartText }>Rendering Chart...</div> }
         chartType="ColumnChart"
         options={ options }
         data={ finalData }

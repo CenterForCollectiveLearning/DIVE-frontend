@@ -17,8 +17,8 @@ export class ProjectsPage extends Component {
 
     if (user.id && !projects.isFetchingUserProjects && !projects.userProjectsLoaded) {
       fetchUserProjects(user.id);
-      if (user.email) {
-        window.amplitude.setUserId(user.email);
+      if (user.id && user.email) {
+        window.amplitude.setuserid(`${ user.id }: ${ user.email }`);
       }
     }
   }

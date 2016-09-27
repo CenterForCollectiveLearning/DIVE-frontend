@@ -38,6 +38,7 @@ export default class ScatterChart extends Component {
         data={ data }
         width={ "100%" }
         height={ "100%" }
+        loader={ <div className={ styles.renderChartText }>Rendering Chart...</div> }
        />
     );
   }
