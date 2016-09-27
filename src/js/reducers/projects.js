@@ -18,7 +18,8 @@ export default function projects(state = {
   userProjects: []
 }, action) {
   switch (action.type) {
-    case RECEIVE_PROJECT, CREATED_PROJECT:
+    case RECEIVE_PROJECT:
+    case CREATED_PROJECT:
       if (action.projectProperties.preloaded) {
         var preloadedProjectsUpdated = state.preloadedProjects.filter((project) => project.id != action.projectProperties.id);
         preloadedProjectsUpdated.push(action.projectProperties);

@@ -19,11 +19,6 @@ class DatasetMetadataCell extends Component {
       isId: false,
       displayColorPicker: false
     };
-
-    this.onColorPickerClick = this.onColorPickerClick.bind(this);
-    this.onColorPickerClose = this.onColorPickerClose.bind(this);
-    this.onColorPickerChange = this.onColorPickerChange.bind(this);
-    this.onIDCheckboxChange = this.onIDCheckboxChange.bind(this);
   }
 
   componentWillMount() {
@@ -36,32 +31,22 @@ class DatasetMetadataCell extends Component {
     })
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   const { fieldProperty, color } = nextProps;
-  //   const { isId } = fieldProperty;
-  //
-  //   // this.setState({
-  //   //   color: color,
-  //   //   isId: isId
-  //   // })
-  // }
-
-  onColorPickerClick() {
+  onColorPickerClick = () => {
     this.setState({ displayColorPicker: !this.state.displayColorPicker });
   }
 
-  onColorPickerClose() {
+  onColorPickerClose = () => {
     this.setState({ displayColorPicker: false });
   }
 
-  onColorPickerChange(color) {
+  onColorPickerChange = (color) => {
     const { projectId, fieldProperty, setFieldColor } = this.props;
     const { id: fieldId } = fieldProperty;
     this.setState({ color: color.hex });
     setFieldColor( projectId, fieldId, color.hex );
   }
 
-  onIDCheckboxChange() {
+  onIDCheckboxChange = () => {
     const { projectId, fieldProperty, setFieldIsId } = this.props;
     const { id: fieldId } = fieldProperty;
     this.state.isId = !this.state.isId;
@@ -75,25 +60,7 @@ class DatasetMetadataCell extends Component {
 
     const colors = [ color ];
     const showTypeScores = false;
-    var options = {
-      colors: colors,
-      backgroundColor: 'transparent',
-      headerColor: 'white',
-      headerHeight: 0,
-      fontName: 'RobotoDraft',
-      fontFamily: 'RobotoDraft',
-      fontColor: "#333",
-      textStyle: {
-        color: "#333"
-      },
-      showTooltips: false,
-      legend: {
-        textStyle: {
-          color: "#333"
-        }
-      },
-      axisTitlesPosition: 'none',
-      width: '100%',
+    const additionalOptions = {
       height: 70,
       chartArea: {
         left: 0,
@@ -101,84 +68,8 @@ class DatasetMetadataCell extends Component {
         width: '100%',
         height: 70
       },
-      fontSize: 0,
-      hAxis: {
-        baselineColor: 'transparent',
-        textPosition: 'none',
-        gridlines: {
-          count: 0,
-          color: 'transparent'
-        },
-      },
-      highlightOnMouseOver: false,
-      hintOpacity: 0,
-      legend: {
-        position: 'none'
-      },
-      textStyle: {
-        color: 'transparent',
-        fontSize: 0
-      },
-
-      vAxis: {
-        baselineColor: 'transparent',
-        textPosition: 'none',
-        gridlines: {
-          count: 0,
-          color: 'transparent'
-        }
-      },
-      vAxes: [
-        {
-          baselineColor: 'transparent',
-          textPosition: 'none',
-          gridlines: {
-            count: 0
-          }
-        },
-        {
-          baselineColor: 'transparent',
-          textPosition: 'none',
-          gridlines: {
-            count: 0
-          }
-        }
-      ]
     };
-
-    const categoricalOptions = {
-      ...options,
-      // colors: ['#78C466'],
-      tooltip: {
-        trigger: 'none'
-      },
-      vAxis: {
-        minValue: 0,
-      }
-    }
-
-    const quantitativeOptions = {
-      ...options,
-      tooltip: {
-        trigger: 'none'
-      },
-      // tooltip: {
-      //   isHtml: true
-      // },
-      // colors: ['#579AD6']
-    }
-
-    const temporalOptions = {
-      ...options,
-      tooltip: {
-        trigger: 'none'
-      },
-      // tooltip: {
-      //   isHtml: true
-      // },
-      // colors: ['#F3595C']
-    }
-
+  
     let fieldContent;
     if ( generalType == 'c' ) {
       fieldContent =
@@ -188,7 +79,8 @@ class DatasetMetadataCell extends Component {
               chartId={ `field-bar-${ id }` }
               data={ vizData['visualize'] }
               isMinimalView={ true }
-              options={ categoricalOptions }
+              colors={ colors }
+              additionalOptions={ additionalOptions }
             />
           }
           { stats &&
@@ -232,7 +124,8 @@ class DatasetMetadataCell extends Component {
               data={ vizData['visualize'] }
               bins={ vizData['bins'] }
               isMinimalView={ true }
-              options={ quantitativeOptions }
+              colors={ colors }
+              additionalOptions={ additionalOptions }
             />
           }
           { stats &&
@@ -277,7 +170,8 @@ class DatasetMetadataCell extends Component {
             data={ vizData['visualize'] }
             bins={ vizData['bins'] }
             isMinimalView={ true }
-            options={ temporalOptions }
+            colors={ colors }
+            additionalOptions={ additionalOptions }
           />
         }
         { stats &&

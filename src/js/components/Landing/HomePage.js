@@ -56,10 +56,10 @@ export class HomePage extends Component {
         <div className={ styles.centeredFill }>
           <div className={ styles.ctaBox }>
             <div className={ styles.primaryCopy }>
-              <span>Turn Data into Stories in Minutes</span>
+              <span>Turn Data into Stories</span>
             </div>
             <div className={ styles.secondaryCopy }>
-              Easy, powerful data visualizations and analysis. Create visual stories in seconds.
+              Easy, fast, and powerful data visualization and analysis.
             </div>
             <div className={ styles.ctaContainer }>
               <RaisedButton
@@ -69,7 +69,7 @@ export class HomePage extends Component {
                 className={ styles.uploadButton + ' ' + styles.primary } />
             </div>
             <div className={ styles.video }>
-              <iframe src="https://player.vimeo.com/video/179173590" color="#007BD7" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+              <iframe src="https://player.vimeo.com/video/179173590" color="#007BD7" width="640" height="360" frameBorder="0" allowFullScreen />
             </div>
           </div>
           <div className={ styles.sections + ' ' + styles.fillContainer }>

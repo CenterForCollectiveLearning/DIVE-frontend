@@ -10,7 +10,7 @@ import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
-import BinningSelector from '../../Visualizations/Builder/BinningSelector';
+import BinningSelector from '../../Visualizations/SingleVisualization/BinningSelector';
 
 export class AggregationSidebar extends Component {
   componentWillMount(props) {

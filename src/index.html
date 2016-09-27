@@ -6,15 +6,7 @@
 
     <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="/app.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,600,700,400italic" />
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,200italic,300italic,400italic,600,600italic,700italic,700' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Oswald:300,400,700' rel='stylesheet' type='text/css'>
-
-    <script type="text/javascript" src="http://gabelerner.github.io/canvg/rgbcolor.js"></script>
-    <script type="text/javascript" src="http://gabelerner.github.io/canvg/StackBlur.js"></script>
-    <script type="text/javascript" src="http://gabelerner.github.io/canvg/canvg.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type='text/css' />
   </head>
   <body>
     <main id="main"></main>
@@ -31,12 +23,13 @@
         for(var l=0;l<p.length;l++){i(c,p[l])}n.Revenue=c;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId"];
         function v(e){function t(t){e[t]=function(){e._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
         }}for(var n=0;n<d.length;n++){t(d[n])}}v(n);e.amplitude=n})(window,document);
-        amplitude.init("64911db01ed752a1f955348ddd0e2276");
+        window.amplitude.init("64911db01ed752a1f955348ddd0e2276");
       } else {
         window.amplitude = {
-          logEvent: (event) => {},
-          setUserId: (id) => {},
-          regenerateDeviceId: () => {}
+          logEvent: function(event) { return; },
+          setUserId: function(id) { return; },
+          setUserProperties: function(userProperties) { return; },
+          regenerateDeviceId: function() { return; }
         };
       }
     </script>

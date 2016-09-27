@@ -19,7 +19,7 @@ const baseState = {
   independentVariablesIds: [],
   dependentVariablesIds: [],
   numericalComparisonResult: {},
-  anovaBoxplotData: [],
+  anovaBoxplotData: {},
   pairwiseComparisonData: {},
   anovaResult: {},
 }
@@ -35,8 +35,6 @@ export default function comparisonSelector(state = baseState, action) {
       var quantitativeItemIds = action.fieldProperties.filter((item) => ((item.generalType == 'q') && (!item.isId))).map((item) => item.id);
       var n_c = categoricalItemIds.length;
       var n_q = quantitativeItemIds.length;
-
-      console.log('In receive field properties', n_c, n_q);
 
       if ((n_c >= 2) && (n_q >= 1)) {
         modifiedState.independentVariablesIds = _.sample(categoricalItemIds, 1);

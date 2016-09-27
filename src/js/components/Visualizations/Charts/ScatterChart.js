@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import styles from '../Visualizations.sass';
 
 var Chart = require('react-google-charts').Chart;
@@ -7,9 +8,11 @@ var Chart = require('react-google-charts').Chart;
 export default class ScatterChart extends Component {
 
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options, labels } = this.props;
+    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, colors, labels, additionalOptions } = this.props;
 
-    const scatterChartOptions = {
+    var options = isMinimalView ? minimalOptions : fullOptions;
+
+    options = {
       ...options,
       legend: {
         ...options.legend,
@@ -17,14 +20,25 @@ export default class ScatterChart extends Component {
       }
     }
 
+    options = {
+      ...options,
+      ...additionalOptions,
+    }
+
+    options.hAxis.title = labels && labels.x ? labels.x : data[0][0];
+    options.vAxis.title = labels && labels.y ? labels.y : data[0][1];
+    options.colors = colors;
+
     return (
       <Chart
         key={ chartId }
         graph_id={ chartId }
         chartType="ScatterChart"
-        chartVersion="43"
-        options={ scatterChartOptions }
+        options={ options }
         data={ data }
+        width={ "100%" }
+        height={ "100%" }
+        loader={ <div className={ styles.renderChartText }>Rendering Chart...</div> }
        />
     );
   }
@@ -34,11 +48,14 @@ ScatterChart.propTypes = {
   chartId: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   isMinimalView: PropTypes.bool,
-  options: PropTypes.object
+  additionalOptions: PropTypes.object,
+  labels: PropTypes.object,
+  colors: PropTypes.array
 };
 
 ScatterChart.defaultProps = {
   isMinimalView: false,
-  options: {},
-  labels: {}
+  additionalOptions: {},
+  labels: {},
+  colors: [ '#007BD7' ]
 };

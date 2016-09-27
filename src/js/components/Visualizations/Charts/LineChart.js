@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import styles from '../Visualizations.sass';
 
 var Chart = require('react-google-charts').Chart;
@@ -7,47 +8,41 @@ var Chart = require('react-google-charts').Chart;
 export default class LineChart extends Component {
 
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options, labels } = this.props;
+    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, additionalOptions, colors, labels } = this.props;
 
     var finalData = data;
 
-    const lineChartOptions = {
+    var options = isMinimalView ? minimalOptions : fullOptions;
+
+    options = {
       ...options,
       intervals: { style: 'boxes' },
       pointSize: 0,
-      hAxis: {
-        title: labels && labels.x ? labels.x : finalData[0][0],
-        textStyle: {
-          color: '#888'
-        },
-        titleTextStyle: {
-          color: '#333',
-          bold: true,
-          italic: false
-        },
-        format: ''
-      },
-      vAxis: {
-        minValue: 0,
-        title: labels && labels.y ? labels.y : finalData[0][1],
-        textStyle: {
-          color: '#888'
-        },
-        titleTextStyle: {
-          color: '#333',
-          bold: true,
-          italic: false
-        },
-        format: 'short'
-      },
       legend: {
-        ...options.legend,
         position: 'none'
       }
     }
 
+    options = {
+      ...options,
+      ...additionalOptions
+    }
+
+    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
+    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
+    options.colors = colors;
+
     return (
-      <Chart chartType="LineChart" chartVersion="43" options={ lineChartOptions } data = { finalData } graph_id={ chartId }/>
+      <Chart
+        chartType="LineChart"
+        options={ options }
+        data = { finalData }
+        key={ chartId }
+        graph_id={ chartId }
+        width={ "100%" }
+        height={ "100%" }
+        loader={ <div className={ styles.renderChartText }>Rendering Chart...</div> }
+      />
     );
   }
 }
@@ -56,12 +51,14 @@ LineChart.propTypes = {
   chartId: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   isMinimalView: PropTypes.bool,
-  options: PropTypes.object,
-  labels: PropTypes.object
+  additionalOptions: PropTypes.object,
+  labels: PropTypes.object,
+  colors: PropTypes.array
 };
 
 LineChart.defaultProps = {
   isMinimalView: false,
-  options: {},
-  labels: {}
+  additionalOptions: {},
+  labels: {},
+  colors: [ '#007BD7' ]
 };

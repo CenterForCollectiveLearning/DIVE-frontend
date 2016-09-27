@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import styles from '../Visualizations.sass';
 
 var Chart = require('react-google-charts').Chart;
@@ -7,9 +8,12 @@ var Chart = require('react-google-charts').Chart;
 export default class StackedColumnChart extends Component {
 
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, options } = this.props;
+    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, additionalOptions, colors, labels } = this.props;
 
-    const stackedColumnChartOptions = {
+    var finalData = data;
+
+    var options = isMinimalView ? minimalOptions : fullOptions;
+    options = {
       ...options,
       hAxis: {
         title: data[0][0],
@@ -30,8 +34,25 @@ export default class StackedColumnChart extends Component {
       }
     }
 
+    options = {
+      ...options,
+      ...additionalOptions,
+    }
+
+    options.hAxis.title = labels && labels.x ? labels.x : data[0][0];
+    options.vAxis.title = labels && labels.y ? labels.y : data[0][1];
+    options.colors = colors;
+
     return (
-      <Chart chartType="ColumnChart" chartVersion="43" options={ stackedColumnChartOptions } data = { data } graph_id={ chartId }/>
+      <Chart
+        chartType="ColumnChart"
+        options={ options }
+        data = { data }
+        graph_id={ chartId }
+        width={ "100%" }
+        height={ "100%" }
+        loader={ <div className={ styles.renderChartText }>Rendering Chart...</div> }
+      />
     );
   }
 }
@@ -40,10 +61,14 @@ StackedColumnChart.propTypes = {
   chartId: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   isMinimalView: PropTypes.bool,
-  options: PropTypes.object
+  additionalOptions: PropTypes.object,
+  labels: PropTypes.object,
+  colors: PropTypes.array
 };
 
 StackedColumnChart.defaultProps = {
   isMinimalView: false,
-  options: {}
+  additionalOptions: {},
+  labels: {},
+  colors: [ '#007BD7' ]
 };

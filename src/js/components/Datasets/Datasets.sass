@@ -1,9 +1,98 @@
 @import '../../../css/mixins.sass'
 @import '../../../css/flexbox.sass'
 
+.datasetDataList
+  display: flex
+  flex-direction: column
+  margin: 40px
+  border-radius: 3px
+
+  .datasetDataRow
+    border: 1px solid $ui-line-grey
+    margin-top: -1px
+    background-color: white
+    padding: 0 20px
+
+    &:first-child
+      border-top-right-radius: 3px
+      border-top-left-radius: 3px
+    &:last-child
+      border-bottom-right-radius: 3px
+      border-bottom-left-radius: 3px
+
+    &:hover
+      cursor: pointer
+      border-color: $primary-accent
+      z-index: 10
+
+      div.metadata
+        border-bottom: 1px solid $ui-line-grey
+      div.actions
+        max-height: 80px
+        transition: max-height 0s
+
+    div.type
+      display: flex
+      flex-direction: column
+      justify-content: center
+      margin-right: 30px
+
+    div.metadata
+      display: flex
+      flex-direction: row
+
+      div.name, div.type
+        line-height: 80px
+        text-overflow: ellipsis
+
+      div.name
+        font-weight: bold
+        min-width: 200px
+
+      div.type
+        min-width: 80px
+
+      div.statistics
+        +smallCaps
+        display: flex
+
+        div.statistic
+          display: flex
+          flex-direction: column
+          justify-content: center
+          text-align: center
+          white-space: wrap
+          padding: 0 15px
+          min-width: 130px
+          width: 130px
+
+          .field
+          .value
+            color: $secondary-accent
+            font-size: 14px
+
+      div.toggles
+        +smallCaps
+        display: flex
+        .left
+          display: flex
+          flex-direction: column
+          justify-content: center
+
+    div.actions
+      +smallCaps
+      max-height: 0
+      overflow: hidden
+      transition: max-height 0.5s
+
+      > div
+        margin: 10px 0
+
+
+
 .datasetPageContainer, .datasetContainer
   background-color: $center-grey
-  overflow: hidden
+  overflow: scroll
 
 .uploadingZone
   background-color: #FDFDFD
@@ -65,7 +154,7 @@
     white-space: nowrap
 
 .datasetPropertiesPane
-  height: 100px
+  height: 80px
 
 .gridContainer
   display: flex

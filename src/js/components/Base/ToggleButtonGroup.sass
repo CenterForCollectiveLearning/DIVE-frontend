@@ -25,8 +25,11 @@
 
   .toggleButtonContainer
     display: flex
-    flex-grow: 1
+    flex-grow: 0
     max-width: 50%
+
+    &.expand
+      flex-grow: 1
 
     &:first-child, &:first-child .raisedButton.toggleButton
       border-top-left-radius: 2px
@@ -59,6 +62,7 @@
     border-radius: 0
     margin-left: -1px
     margin-top: -1px
+    flex-shrink: 0
     flex-grow: 1
     background-color: $center-grey // transparent
 
@@ -75,7 +79,7 @@
       display: block
 
     img
-      padding: 3px
+      padding: 3px 2px
 
     .coloredBorderLeft
       float: left

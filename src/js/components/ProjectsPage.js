@@ -5,7 +5,7 @@ import { fetchProjectIfNeeded, fetchUserProjects } from '../actions/ProjectActio
 
 import styles from './App/App.sass';
 
-import ProjectNav from './ProjectNav';
+import ProjectSidebar from './ProjectSidebar';
 import ProjectTopBar from './ProjectTopBar';
 
 export class ProjectsPage extends Component {
@@ -14,17 +14,23 @@ export class ProjectsPage extends Component {
     if (params.projectId) {
       fetchProjectIfNeeded(params.projectId);
     }
+    if (user.id) {
+      window.amplitude.setUserId(user.id);
+      window.amplitude.setUserProperties({ email: user.email, username: user.username });
+    }
 
     if (user.id && !projects.isFetchingUserProjects && !projects.userProjectsLoaded) {
       fetchUserProjects(user.id);
-      if (user.email) {
-        amplitude.setUserId(user.email);
-      }
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { user, projects, fetchUserProjects } = nextProps;
+
+    if (user.id) {
+      window.amplitude.setUserId(user.id);
+      window.amplitude.setUserProperties({ email: user.email, username: user.username });
+    }
 
     if (user.id && !projects.isFetchingUserProjects && !projects.userProjectsLoaded) {
       fetchUserProjects(user.id);
@@ -38,7 +44,7 @@ export class ProjectsPage extends Component {
     return (
       <DocumentTitle title={ documentTitle }>
         <div className={ styles.fillContainer + ' ' + styles.projectContainer }>
-          <ProjectNav paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
+          <ProjectSidebar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
           <div className={ styles.projectRightContainer }>
             <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
             { this.props.children }
