@@ -15,7 +15,7 @@ export class ProjectsPage extends Component {
       fetchProjectIfNeeded(params.projectId);
     }
     if (user.id) {
-      window.amplitude.setuserid(`${ user.id }: ${ user.email }`);
+      window.amplitude.setUserId(`${ user.id }: ${ user.email }`);
     }
 
     if (user.id && !projects.isFetchingUserProjects && !projects.userProjectsLoaded) {
@@ -27,7 +27,7 @@ export class ProjectsPage extends Component {
     const { user, projects, fetchUserProjects } = nextProps;
 
     if (user.id) {
-      window.amplitude.setuserid(`${ user.id }: ${ user.email }`);
+      window.amplitude.setUserId(`${ user.id }: ${ user.email }`);
     }
 
     if (user.id && !projects.isFetchingUserProjects && !projects.userProjectsLoaded) {
