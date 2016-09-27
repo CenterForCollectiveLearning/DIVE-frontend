@@ -215,3 +215,22 @@ export function fetchProjectIfNeeded(projectId) {
     }
   }
 }
+
+export function submitFeedback(projectId, userId, userEmail, username, type, description) {
+  const params = {
+    project_id: projectId,
+    user_id: userId,
+    user_email: userEmail,
+    username: username,
+    type: type,
+    description: description
+  }
+  return (dispatch, getState) => {
+    dispatch(requestSubmitFeedbackDispatcher(projectId, type, description))
+    return fetch('/feedback/v1/feedback/' + projectId, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    })
+  }
+}
