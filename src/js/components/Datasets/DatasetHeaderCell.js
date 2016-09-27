@@ -10,7 +10,6 @@ export class DatasetHeaderCell extends Component {
   constructor (props) {
     super(props);
 
-    console.log('field types constants', FieldTypes);
     this.state = {
       fieldTypes: FieldTypes
     };

@@ -79,7 +79,6 @@ export class DatasetInspectPage extends Component {
     const { datasets, datasetSelector, fieldProperties, params, project, projectTitle } = this.props;
     const { layoutTypes } = datasetSelector;
     const selectedLayoutType = layoutTypes.find((e) => e.selected).id;
-    console.log(selectedLayoutType);
     const dataset = datasets.items.filter((dataset) =>
       dataset.datasetId == params.datasetId
     )[0];

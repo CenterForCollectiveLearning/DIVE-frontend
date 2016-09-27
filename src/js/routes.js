@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { Route, IndexRoute } from 'react-router';
 import { push } from 'react-router-redux';
 import { UserAuthWrapper } from 'redux-auth-wrapper';
@@ -32,6 +31,7 @@ import ComposeBasePage from './components/Compose/ComposeBasePage';
 import ComposePage from './components/Compose/ComposePage';
 import NarrativeBasePage from './components/Compose/NarrativeBasePage';
 import NarrativePage from './components/Compose/NarrativePage';
+
 
 const requireAuthentication = UserAuthWrapper({
   authSelector: state => state.user,
