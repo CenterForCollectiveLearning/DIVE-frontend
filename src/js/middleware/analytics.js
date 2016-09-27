@@ -88,10 +88,7 @@ export function analyticsMiddleware({ getState }){
         window.amplitude.logEvent('[DATASETS] Received Upload Dataset');
         break;
       case RECEIVE_DATASET:
-        window.amplitude.logEvent('[DATASETS]');
-        break;
-      case RECEIVE_DATASETS:
-        window.amplitude.logEvent('[DATASETS]');
+        window.amplitude.logEvent('[DATASETS] Received Inspect Dataset');
         break;
       case SELECT_DATASET_LAYOUT_TYPE:
         window.amplitude.logEvent('[DATASETS] Changed Dataset Layout Type');
