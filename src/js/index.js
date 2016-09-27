@@ -30,7 +30,7 @@ const history = syncHistoryWithStore(browserHistory, store);
 
 history.listen(function(location) {
   const fullPath = location.pathname + location.search;
-  window.amplitude.logEvent(`[Page View] ${ fullPath }`, { pathname: fullPath });
+  window.amplitude.logEvent('Page View', { pathname: fullPath });
   window.ReactGA.set({ page: fullPath });
   window.ReactGA.pageview(fullPath);
 });
