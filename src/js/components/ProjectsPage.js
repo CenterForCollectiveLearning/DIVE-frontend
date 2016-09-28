@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import { fetchProjectIfNeeded, fetchUserProjects } from '../actions/ProjectActions.js';
+import { closeFeedbackModal } from '../actions/FeedbackActions.js';
 
 import styles from './App/App.sass';
 
@@ -52,10 +53,11 @@ export class ProjectsPage extends Component {
 
   closeFeedbackModal = () => {
     this.setState({ feedbackModalOpen: false });
+    this.props.closeFeedbackModal();
   }
 
   render() {
-    const { project, user } = this.props;
+    const { project, user, feedback } = this.props;
     const documentTitle = project.properties.title ? `DIVE | ${ project.properties.title }`: 'DIVE';
 
     return (
@@ -77,6 +79,7 @@ export class ProjectsPage extends Component {
             <FeedbackModal
               user={ user }
               project={ project }
+              feedback={ feedback }
               closeAction={ this.closeFeedbackModal }/>
           }
         </div>
@@ -93,12 +96,17 @@ ProjectsPage.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { projects, project, user } = state;
+  const { projects, project, feedback, user } = state;
   return {
     projects,
     project,
+    feedback,
     user
   };
 }
 
-export default connect(mapStateToProps, { fetchProjectIfNeeded, fetchUserProjects })(ProjectsPage);
+export default connect(mapStateToProps, {
+  fetchProjectIfNeeded,
+  fetchUserProjects,
+  closeFeedbackModal
+})(ProjectsPage);

@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { updateProject, deleteProject, submitFeedback } from '../../actions/ProjectActions.js';
+import { updateProject, deleteProject } from '../../actions/ProjectActions.js';
+import { submitFeedback, closeFeedbackModal } from '../../actions/FeedbackActions.js';
 import styles from '../App/App.sass';
 
 import DropDownMenu from './DropDownMenu';
@@ -20,12 +21,10 @@ class FeedbackModal extends Component {
     };
   }
 
-  submit = (type) => {
-    const { project, user, closeAction } = this.props;
+  submit = () => {
+    const { project, user, closeAction, submitFeedback } = this.props;
     const { feedbackType, description } = this.state;
-
-    submitFeedback(project.properties.id, user.id, user.email, user.username, feedbackType, description)
-    // closeAction();
+    submitFeedback(project.properties.id, user.id, user.email, user.username, feedbackType, description);
   }
 
   selectFeedbackType = (feedbackType) => {
@@ -37,10 +36,10 @@ class FeedbackModal extends Component {
   }
     // Or contact us directly: <a href="mailto:dive@media.mit.edu?Subject=DIVE%20Feedback" target="_top">dive@media.mit.edu</a>
   render() {
-    const { closeAction } = this.props;
+    const { closeAction, feedback } = this.props;
     const { feedbackType, description } = this.state;
 
-    var footer =
+    var footer = feedback.received ? null :
       <div className={ styles.footerContent }>
         <div className={ styles.rightActions }>
           <RaisedButton primary normalHeight minWidth={ 100 } onClick={ this.submit }>Submit</RaisedButton>
@@ -51,33 +50,42 @@ class FeedbackModal extends Component {
       <BlockingModal
         scrollable={ false }
         closeAction={ this.props.closeAction }
-        heading="Help Us Make DIVE Better"
+        heading={ feedback.received ? "Thank you for your feedback!" : "Help Us Make DIVE Better" }
         footer={ footer }>
-        <div className={ styles.fillContainer }>
-          <div className={ styles.controlSection }>
-            <div className={ styles.label }>Category</div>
-            <DropDownMenu
-              value={ feedbackType }
-              options={[
-                { id: 'bug', name: 'Bug'},
-                { id: 'feature', name: 'Feature Request'},
-                { id: 'idea', name: 'Idea'},
-                { id: 'complaint', name: 'Complaint'},
-                { id: 'compliment', name: 'Compliment'},
-              ]}
-              valueMember="id"
-              displayTextMember="name"
-              onChange={ this.selectFeedbackType }/>
+          { feedback.received &&
+            <div className={ styles.fillContainer }>
+              <div className={ styles.receivedFeedbackContainer }>
+                <i className="fa fa-check-circle"></i>
+              </div>
+            </div>
+          }
+          { !feedback.received &&
+            <div className={ styles.fillContainer }>
+              <div className={ styles.controlSection }>
+                <div className={ styles.label }>Category</div>
+                <DropDownMenu
+                  value={ feedbackType }
+                  options={[
+                    { id: 'bug', name: 'Bug'},
+                    { id: 'feature', name: 'Feature Request'},
+                    { id: 'idea', name: 'Idea'},
+                    { id: 'complaint', name: 'Complaint'},
+                    { id: 'compliment', name: 'Compliment'},
+                  ]}
+                  valueMember="id"
+                  displayTextMember="name"
+                  onChange={ this.selectFeedbackType }/>
+            </div>
+            <div className={ styles.controlSection }>
+              <div className={ styles.label }>Description</div>
+              <TextArea
+                type="textarea"
+                placeholder={ description }
+                value={ description }
+                onChange={ this.enteredFeedbackDescription }/>
+            </div>
           </div>
-          <div className={ styles.controlSection }>
-            <div className={ styles.label }>Description</div>
-            <TextArea
-              type="textarea"
-              placeholder={ description }
-              value={ description }
-              onChange={ this.enteredFeedbackDescription }/>
-          </div>
-        </div>
+        }
       </BlockingModal>
     );
   }
@@ -86,11 +94,12 @@ class FeedbackModal extends Component {
 FeedbackModal.propTypes = {
   closeAction: PropTypes.func,
   user: PropTypes.object,
-  project: PropTypes.object
+  project: PropTypes.object,
+  feedback: PropTypes.object
 };
 
 function mapStateToProps(state) {
-  return { submitFeedback };
+  return {};
 }
 
-export default connect(mapStateToProps, { updateProject, deleteProject })(FeedbackModal);
+export default connect(mapStateToProps, { updateProject, deleteProject, submitFeedback })(FeedbackModal);
