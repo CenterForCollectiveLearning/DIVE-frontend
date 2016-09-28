@@ -192,37 +192,42 @@
       display: flex
       cursor: pointer
       span.username
-      span.chevron
-        height: 0
-        margin-top: 4px
-        padding-left: 4px
+        &:after
+          content: "︿"
+          font-weight: bold
+          padding-left: 4px
+          position: relative
+          top: -3px
 
     .userOptionsMenu
       position: absolute
       top: 40px
+      padding-top: 15px
       opacity: 0
       user-select: none
       pointer-events: none
       right: 35px
-      padding-top: 15px
       display: flex
       flex-direction: column
-      background-color: $black
-      border: 1px solid $ui-line-grey
 
       > div
         padding: 8px 15px
-        border-bottom: 1px solid $ui-line-grey
-        &:last-child
-          border-bottom-width: 0px
+        margin-top: -1px
+        border: 1px solid $ui-line-grey
+        background-color: $black
+
         &:hover
           background-color: $primary-accent
+          z-index: 10
 
     &:hover
       .userOptionsMenu
         opacity: 1
         pointer-events: auto
         user-select: text
+      span.username:after
+        content: "﹀"
+        top: 3px
 
   .separater
     opacity: 0.5

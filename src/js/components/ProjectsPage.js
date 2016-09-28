@@ -7,8 +7,17 @@ import styles from './App/App.sass';
 
 import ProjectSidebar from './ProjectSidebar';
 import ProjectTopBar from './ProjectTopBar';
+import FeedbackModal from './Base/FeedbackModal';
 
 export class ProjectsPage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      feedbackModalOpen: true,
+    };
+  }
+
   componentDidMount() {
     const { params, user, projects, fetchProjectIfNeeded, fetchUserProjects } = this.props;
     if (params.projectId) {
@@ -37,8 +46,16 @@ export class ProjectsPage extends Component {
     }
   }
 
+  openFeedbackModal = () => {
+    this.setState({ feedbackModalOpen: true });
+  }
+
+  closeFeedbackModal = () => {
+    this.setState({ feedbackModalOpen: false });
+  }
+
   render() {
-    const { project } = this.props;
+    const { project, user } = this.props;
     const documentTitle = project.properties.title ? `DIVE | ${ project.properties.title }`: 'DIVE';
 
     return (
@@ -49,6 +66,19 @@ export class ProjectsPage extends Component {
             <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
             { this.props.children }
           </div>
+          <div
+            className={ styles.feedbackButton }
+            onClick={ this.openFeedbackModal }
+          >
+              <span>Give Feedback</span>
+              <span className={ styles.smile }>&#x263a;</span>
+          </div>
+          { this.state.feedbackModalOpen &&
+            <FeedbackModal
+              user={ user }
+              project={ project }
+              closeAction={ this.closeFeedbackModal }/>
+          }
         </div>
       </DocumentTitle>
     );

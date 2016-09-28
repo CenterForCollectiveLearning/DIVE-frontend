@@ -20,11 +20,11 @@ class FeedbackModal extends Component {
     };
   }
 
-  submit = () => {
+  submit = (type) => {
     const { project, user, closeAction } = this.props;
     const { feedbackType, description } = this.state;
 
-    submitFeedback(project.properties.id, user.id, user.email, user.username, type, description)
+    submitFeedback(project.properties.id, user.id, user.email, user.username, feedbackType, description)
     // closeAction();
   }
 

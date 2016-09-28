@@ -12,7 +12,6 @@ import Tabs from './Base/Tabs';
 import Tab from './Base/Tab';
 import TabGroup from './Base/TabGroup';
 import ProjectSettingsModal from './Base/ProjectSettingsModal';
-import FeedbackModal from './Base/FeedbackModal';
 
 import Logo from '../../assets/DIVE_logo_white.svg?name=Logo';
 
@@ -23,7 +22,6 @@ export class ProjectSidebar extends Component {
 
     this.state = {
       projectSettingsModalOpen: false,
-      feedbackModalOpen: true,
       secondaryNavOpen: false
     };
   }
@@ -94,13 +92,7 @@ export class ProjectSidebar extends Component {
     this.setState({ projectSettingsModalOpen: false });
   }
 
-  openFeedbackModal = () => {
-    this.setState({ feedbackModalOpen: true });
-  }
 
-  closeFeedbackModal = () => {
-    this.setState({ feedbackModalOpen: false });
-  }
 
   render() {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
@@ -141,19 +133,6 @@ export class ProjectSidebar extends Component {
           </TabGroup>
         </Tabs>
         <div className={ styles.bottom }>
-          <div
-            className={ styles.feedbackButton }
-            onClick={ this.openFeedbackModal }
-          >
-              <span>Give Feedback</span>
-              <span className={ styles.smile }>&#x263a;</span>
-          </div>
-          { this.state.feedbackModalOpen &&
-            <FeedbackModal
-              user={ user }
-              project={ project }
-              closeAction={ this.closeFeedbackModal }/>
-          }
           { this.state.secondaryNavOpen &&
             <div className={ styles.secondaryNav }>
               <div className={ styles.secondaryNavItem } onClick={ this.onClickProjectSettings }>

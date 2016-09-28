@@ -73,7 +73,6 @@ export class LandingPage extends Component {
                     <div className={ styles.userOptions + ( this.state.userOptionsOpen ? ' ' + styles.open : '' )} >
                       <div className={ styles.usernameAndChevron }>
                         <span className={ styles.username }>{ user.username }</span>
-                        { this.state.userOptionsOpen ? <span className={ styles.chevron }>&#65088;</span> : <span className={ styles.chevron }>&#65087;</span> }
                         <div className={ styles.userOptionsMenu }>
                           <Link route="/settings">Settings</Link>
                           <Link onClick={ this.props.logoutUser }>Sign Out</Link>
