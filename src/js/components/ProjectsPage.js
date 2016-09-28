@@ -15,7 +15,7 @@ export class ProjectsPage extends Component {
     super(props);
 
     this.state = {
-      feedbackModalOpen: true,
+      feedbackModalOpen: false,
     };
   }
 
