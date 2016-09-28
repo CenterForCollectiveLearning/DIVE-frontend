@@ -92,6 +92,8 @@ export class ProjectSidebar extends Component {
     this.setState({ projectSettingsModalOpen: false });
   }
 
+
+
   render() {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 

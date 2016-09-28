@@ -187,6 +187,48 @@
     &:not(:first-of-type)
       margin-left: 15px
 
+  .userOptions
+    .usernameAndChevron
+      display: flex
+      cursor: pointer
+      span.username
+        &:after
+          content: "︿"
+          font-weight: bold
+          padding-left: 4px
+          position: relative
+          top: -3px
+
+    .userOptionsMenu
+      position: absolute
+      top: 40px
+      padding-top: 15px
+      opacity: 0
+      user-select: none
+      pointer-events: none
+      right: 35px
+      display: flex
+      flex-direction: column
+
+      > div
+        padding: 8px 15px
+        margin-top: -1px
+        border: 1px solid $ui-line-grey
+        background-color: $black
+
+        &:hover
+          background-color: $primary-accent
+          z-index: 10
+
+    &:hover
+      .userOptionsMenu
+        opacity: 1
+        pointer-events: auto
+        user-select: text
+      span.username:after
+        content: "﹀"
+        top: 3px
+
   .separater
     opacity: 0.5
     margin-left: 5px
