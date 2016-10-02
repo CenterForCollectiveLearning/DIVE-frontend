@@ -2,6 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 var devFlagPlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.DEBUG || 'false'))
@@ -30,7 +31,16 @@ module.exports = {
       { from: './src/404.html', to: './404.html' },
       { from: './src/assets', to: './assets'},
       { from: './_redirects' }
-    ])
+    ]),
+  //   new webpack.optimize.UglifyJsPlugin({
+	// 		compress: {
+	// 			warnings: false
+	// 		}
+	// 	}),
+    new OptimizeCssAssetsPlugin({
+      cssProcessorOptions: { discardComments: { removeAll: true } },
+      canPrint: false
+   })
   ],
   module: {
     loaders: [
