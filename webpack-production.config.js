@@ -32,11 +32,11 @@ module.exports = {
       { from: './src/assets', to: './assets'},
       { from: './_redirects' }
     ]),
-  //   new webpack.optimize.UglifyJsPlugin({
-	// 		compress: {
-	// 			warnings: false
-	// 		}
-	// 	}),
+    new webpack.optimize.UglifyJsPlugin({
+			compress: {
+				warnings: false
+			}
+		}),
     new OptimizeCssAssetsPlugin({
       cssProcessorOptions: { discardComments: { removeAll: true } },
       canPrint: false
