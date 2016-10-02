@@ -13,7 +13,11 @@ export class ColoredFieldItems extends Component {
       var style = {}
       if (fieldNameToColor && field in fieldNameToColor) {
         var backgroundColor = fieldNameToColor[field];
-        var whiteFont = useWhiteFontFromBackgroundHex(backgroundColor);
+        var whiteFont=false;
+        try {
+          whiteFont = useWhiteFontFromBackgroundHex(backgroundColor);
+        } catch (e) {
+        }
         style['backgroundColor'] = backgroundColor
       }
 
