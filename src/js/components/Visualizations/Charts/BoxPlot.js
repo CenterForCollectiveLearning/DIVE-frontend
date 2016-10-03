@@ -34,9 +34,6 @@ export default class BoxPlot extends Component {
 
     var options = isMinimalView ? minimalOptions : fullOptions;
     // Viz Options
-    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
-    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
-    options.colors = colors;
 
     options = {
       ...options,
@@ -75,14 +72,18 @@ export default class BoxPlot extends Component {
 
     if (isMinimalView) {
       options.intervals.lineWidth = 1;
-    } else {
-
     }
 
     options = { ...options, ...additionalOptions }
 
+    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
+    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
+    options.colors = colors;
+
+
     return (
       <Chart
+        loader={ <div className={ styles.renderChartText }>Rendering Chart...</div> }
         chartType="LineChart"
         options={ options }
         data={ finalData }

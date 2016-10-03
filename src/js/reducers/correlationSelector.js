@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 import {
   SELECT_DATASET,
   SELECT_CORRELATION_VARIABLE,
@@ -29,6 +31,21 @@ const baseState = {
 
 export default function correlationSelector(state = baseState, action) {
   switch (action.type) {
+    case RECEIVE_FIELD_PROPERTIES:
+      var quantitativeItemIds = action.fieldProperties.filter((item) => (item.generalType == 'q' && !item.isId)).map((item) => item.id)
+
+      var n_q = quantitativeItemIds.length;
+      var selectedVariableIds = [];
+
+      if (n_q >= 3) {
+        selectedVariableIds = _.sample(quantitativeItemIds, 3);
+      } else if (n_q == 2) {
+        selectedVariableIds = _.sample(quantitativeItemIds, 2);
+      } else if (n_q == 1) {
+        selectedVariableIds = _.sample(quantitativeItemIds, 1);
+      }
+
+      return { ...state, correlationVariableIds: selectedVariableIds};
 
     case SELECT_CORRELATION_VARIABLE:
       var correlationVariableIds = state.correlationVariableIds.slice();
@@ -71,9 +88,6 @@ export default function correlationSelector(state = baseState, action) {
         }
       };
 
-    case RECEIVE_FIELD_PROPERTIES:
-      var allQuantitativeItemIds = action.fieldProperties.filter((item) => (item.generalType == 'q' && !item.isId)).map((item) => item.id)
-      return { ...state, correlationVariableIds: allQuantitativeItemIds};
 
     case WIPE_PROJECT_STATE, CLEAR_ANALYSIS, SELECT_DATASET:
       return baseState;

@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 import {
   SELECT_REGRESSION_TYPE,
   SELECT_REGRESSION_MODE,
@@ -22,8 +24,8 @@ const regressionModes = [ {
   label: 'Automated',
   selected: false,
 }, {
-  id: 'builder',
-  label: 'Builder',
+  id: 'SingleVisualization',
+  label: 'SingleVisualization',
   selected: false
 }];
 
@@ -41,7 +43,7 @@ const baseState = {
     error: null,
     data: null
   },
-  builderSpec: {
+  SingleVisualizationSpec: {
   },
   regressionModes: regressionModes,
   selectedMode: null,
@@ -50,9 +52,33 @@ const baseState = {
 
 export default function regressionSelector(state = baseState, action) {
   switch (action.type) {
+    case RECEIVE_FIELD_PROPERTIES:
+      // Default selection
+      var modifiedState = { ...state, fieldProperties: action.fieldProperties };
+
+      var categoricalItemIds = action.fieldProperties
+        .filter((item) => (item.generalType == 'c') && (!item.isId) && (item.id != state.dependentVariableId) && !( item.generalType == 'c' && item.isUnique ) && !( item.generalType == 'c' && item.uniqueValues && item.uniqueValues.length > 2 ))
+        .map((item) => item.id);
+      var quantitativeItemIds = action.fieldProperties
+        .filter((item) => (item.generalType == 'q') && (!item.isId) && (item.id != state.dependentVariableId) && !( item.generalType == 'c' && item.isUnique ) && !( item.generalType == 'c' && item.uniqueValues && item.uniqueValues.length > 2 ))
+        .map((item) => item.id);
+
+      var n_c = categoricalItemIds.length;
+      var n_q = quantitativeItemIds.length;
+
+      if (n_q >= 3) {
+        modifiedState.independentVariableIds = _.sample(quantitativeItemIds, 3)
+      } else if (n_q == 2) {
+        modifiedState.independentVariableIds = _.sample(quantitativeItemIds, 2)
+      } else if (n_q == 1) {
+        modifiedState.independentVariableIds = _.sample(quantitativeItemIds, 1)
+      }
+
+      return modifiedState;
+
     case SELECT_REGRESSION_MODE:
       var regressionResult;
-      if (action.selectedModeId == 'builder') {
+      if (action.selectedModeId == 'SingleVisualization') {
         regressionResult = baseState.regressionResult;
       } else {
         regressionResult = state.regressionResult;
@@ -96,13 +122,6 @@ export default function regressionSelector(state = baseState, action) {
       }
 
       return { ...state, interactionTermIds: interactionTermIds}
-
-    case RECEIVE_FIELD_PROPERTIES:
-      const selectedIndependentVariables = action.fieldProperties
-        .filter((property) => property.id != state.dependentVariableId && !( property.generalType == 'c' && property.isUnique ) && !( property.generalType == 'c' && property.uniqueValues && property.uniqueValues.length > 2 ))
-        .map((property) => property.id);
-
-      return { ...state, fieldProperties: action.fieldProperties, independentVariableIds: selectedIndependentVariables };
 
     case RECEIVE_SET_FIELD_TYPE:
       var fieldProperties = state.fieldProperties.slice().map((fieldProperty) =>

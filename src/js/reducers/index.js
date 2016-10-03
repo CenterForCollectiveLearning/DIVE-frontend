@@ -16,12 +16,14 @@ import exportedRegression from './exportedRegression';
 import exportedRegressions from './exportedRegressions';
 import fieldProperties from './fieldProperties';
 import filters from './filters';
-import gallerySelector from './gallerySelector';
+import feedback from './feedback';
+import exploreSelector from './exploreSelector';
 import project from './project';
 import projects from './projects';
 import regressionSelector from './regressionSelector';
 import specs from './specs';
 import aggregationSelector from './aggregationSelector';
+import segmentationSelector from './segmentationSelector';
 import transformSelector from './transformSelector';
 import user from './user';
 import visualization from './visualization';
@@ -34,20 +36,22 @@ const rootReducer = combineReducers({
   datasets,
   datasetSelector,
   documents,
+  exploreSelector,
   exportedSpec,
   exportedSpecs,
   exportedCorrelation,
   exportedCorrelations,
   exportedRegression,
   exportedRegressions,
+  feedback,
   fieldProperties,
   filters,
-  gallerySelector,
   project,
   projects,
   regressionSelector,
   specs,
   aggregationSelector,
+  segmentationSelector,
   transformSelector,
   user,
   visualization,

@@ -6,6 +6,7 @@ export * from './RegressionActionTypes';
 export * from './VisualizationActionTypes';
 export * from './CorrelationActionTypes';
 export * from './AggregationActionTypes';
+export * from './SegmentationActionTypes';
 export * from './UserActionTypes';
 export * from './ComposeActionTypes';
 

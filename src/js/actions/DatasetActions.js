@@ -10,11 +10,19 @@ import {
   RECEIVE_UPLOAD_DATASET,
   PROGRESS_TRANSFORM,
   REQUEST_REDUCE_DATASET_COLUMNS,
-  REQUEST_MERGE_DATASETS
+  REQUEST_MERGE_DATASETS,
+  SELECT_DATASET_LAYOUT_TYPE
 } from '../constants/ActionTypes';
 
 import { fetch, httpRequest, pollForTask } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
+
+export function selectLayoutType(layoutType) {
+  return {
+    type: SELECT_DATASET_LAYOUT_TYPE,
+    layoutType: layoutType
+  };
+}
 
 export function selectDataset(projectId, datasetId) {
   return {
@@ -56,9 +64,10 @@ function requestUploadDatasetDispatcher() {
 }
 
 function progressUploadDatasetDispatcher(event) {
+  const percent = event.loaded ? ( ' ' + Math.round(event.loaded / event.total * 100) + '%') : ''
   return {
     type: PROGRESS_UPLOAD_DATASET,
-    progress: `Uploading dataset… ${ Math.round(event.loaded / event.total * 100) }%`
+    progress: `Uploading dataset…${ percent }`
   }
 }
 

@@ -1,4 +1,6 @@
 import { default as isomorphicFetch } from 'isomorphic-fetch';
+import { REQUEST_ONE_D_AGGREGATION, REQUEST_AGGREGATION } from '../constants/ActionTypes';
+
 
 import TaskManager from './TaskManager';
 
@@ -57,11 +59,15 @@ function revokeTasks(taskIds) {
   };
 
   taskManager.removeTasks(taskIds);
-
   return isomorphicFetch(completeUrl, options).then(response => response.json());
 }
 
-export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval=400, limit=300, counter=0) {
+export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval=600, limit=300, counter=0) {
+  const aggregationActionTypes = [ REQUEST_ONE_D_AGGREGATION, REQUEST_AGGREGATION ];
+
+  if (aggregationActionTypes.indexOf( taskType ) > -1) {
+    taskType = REQUEST_AGGREGATION
+  }
   const otherTasks = taskManager.addTask(taskId, taskType);
   if (otherTasks.length) {
     revokeTasks(otherTasks);
@@ -77,19 +83,24 @@ export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, prog
           dispatch(dispatcher(dispatcherParams, data.result));
         } else if (data.state == 'FAILURE') {
           taskManager.removeTask(taskId);
-          console.error(data.error);
           Raven.captureException(new Error(data.error));
+          dispatch(errorDispatcher(data));
+        } else if (data.state == 'REVOKED') {
+          taskManager.removeTask(taskId);
           dispatch(errorDispatcher(data));
         } else if (counter > limit) {
           revokeTasks(taskId).then((revokeData) => {
             dispatch(dispatcher(dispatcherParams, { ...data.result, error: 'Took too long to get visualizations.' }));
           });
         } else {
-          if (progressDispatcher && data.currentTask) {
+          if (progressDispatcher && data.hasOwnProperty('currentTask')) {
             dispatch(progressDispatcher(data));
           }
-          if (taskManager.getTasks(taskId).length > 0) {
+          if (taskManager.getTasksByID(taskId)) {
             setTimeout(function() { dispatch(pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval, limit, counter + 1)) }, interval);
+          } else {
+            console.log('Not polling because taskId not in taskManager:', taskId, taskManager.getAllTasks());
+            taskManager.removeTask(taskId);
           }
         }
       });

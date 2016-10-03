@@ -12,9 +12,6 @@ export default class ColumnChart extends Component {
     var finalData = data;
 
     var options = isMinimalView ? minimalOptions : fullOptions;
-    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
-    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
-    options.colors = colors;
 
 
     if (isMinimalView) {
@@ -68,8 +65,13 @@ export default class ColumnChart extends Component {
       ...additionalOptions
     }
 
+    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
+    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
+    options.colors = colors;
+
     return (
       <Chart
+        loader={ <div className={ styles.renderChartText }>Rendering Chart...</div> }
         chartType="ColumnChart"
         options={ options }
         data={ finalData }

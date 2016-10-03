@@ -5,6 +5,12 @@ import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import { analyticsMiddleware } from '../middleware/analytics';
 import debounce from 'redux-debounced';
+import {
+    REQUEST_EXACT_SPECS,
+    REQUEST_INDIVIDUAL_SPECS,
+    REQUEST_SUBSET_SPECS,
+    REQUEST_EXPANDED_SPECS
+} from '../constants/ActionTypes';
 import rootReducer from '../reducers/index';
 import RavenMiddleware from 'redux-raven-middleware';
 
@@ -19,7 +25,7 @@ export default function configureStore(initialState) {
   const middleware = [
     debounce,
     thunkMiddleware,
-    routerMiddleware(browserHistory),
+    routerMiddleware(browserHistory)
   ];
 
   if (window.__env.NODE_ENV == "DEVELOPMENT") {

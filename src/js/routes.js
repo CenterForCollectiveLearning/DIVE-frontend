@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { Route, IndexRoute } from 'react-router';
 import { push } from 'react-router-redux';
 import { UserAuthWrapper } from 'redux-auth-wrapper';
@@ -19,10 +18,11 @@ import DatasetUploadPage from './components/Datasets/DatasetUploadPage';
 import DatasetInspectPage from './components/Datasets/DatasetInspectPage';
 import DatasetTransformPage from './components/Datasets/DatasetTransformPage';
 import VisualizationsPage from './components/Visualizations/VisualizationsPage';
-import GalleryPage from './components/Visualizations/Gallery/GalleryPage';
-import BuilderPage from './components/Visualizations/Builder/BuilderPage';
+import ExplorePage from './components/Visualizations/Explore/ExplorePage';
+import SingleVisualizationPage from './components/Visualizations/SingleVisualization/SingleVisualizationPage';
 import AnalysisPage from './components/Analysis/AnalysisPage';
 import RegressionBasePage from './components/Analysis/Regression/RegressionBasePage';
+import SegmentationPage from './components/Analysis/Segmentation/SegmentationPage';
 import AggregationPage from './components/Analysis/Aggregation/AggregationPage';
 import CorrelationPage from './components/Analysis/Correlation/CorrelationPage';
 import ComparisonPage from './components/Analysis/Comparison/ComparisonPage';
@@ -31,6 +31,7 @@ import ComposeBasePage from './components/Compose/ComposeBasePage';
 import ComposePage from './components/Compose/ComposePage';
 import NarrativeBasePage from './components/Compose/NarrativeBasePage';
 import NarrativePage from './components/Compose/NarrativePage';
+
 
 const requireAuthentication = UserAuthWrapper({
   authSelector: state => state.user,
@@ -70,16 +71,15 @@ export default (
 
       <Route path="datasets/:datasetId" component={ DatasetsPage }>
         <Route path="visualize" component={ VisualizationsPage }>
-          <Route path="explore" component={ GalleryPage }/>
-          <Route path="builder/:specId" component={ BuilderPage }/>
+          <Route path="explore" component={ ExplorePage }/>
+          <Route path="explore/:specId" component={ SingleVisualizationPage }/>
         </Route>
-        <Route path="aggregation" component={ AggregationPage }/>
-        <Route path="comparison" component={ ComparisonPage }/>
         <Route path="analyze" component={ AnalysisPage }>
           <Route path="regression" component={ RegressionBasePage }/>
           <Route path="aggregation" component={ AggregationPage }/>
           <Route path="correlation" component={ CorrelationPage }/>
           <Route path="comparison" component={ ComparisonPage }/>
+          <Route path="segmentation" component={ SegmentationPage }/>
         </Route>
       </Route>
       <Route path="compose" component={ ComposeBasePage }>

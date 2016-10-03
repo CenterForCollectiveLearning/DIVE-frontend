@@ -11,10 +11,6 @@ export default class ScatterChart extends Component {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, colors, labels, additionalOptions } = this.props;
 
     var options = isMinimalView ? minimalOptions : fullOptions;
-    // Viz Options
-    options.hAxis.title = labels && labels.x ? labels.x : data[0][0];
-    options.vAxis.title = labels && labels.y ? labels.y : data[0][1];
-    options.colors = colors;
 
     options = {
       ...options,
@@ -29,6 +25,10 @@ export default class ScatterChart extends Component {
       ...additionalOptions,
     }
 
+    options.hAxis.title = labels && labels.x ? labels.x : data[0][0];
+    options.vAxis.title = labels && labels.y ? labels.y : data[0][1];
+    options.colors = colors;
+
     return (
       <Chart
         key={ chartId }
@@ -38,6 +38,7 @@ export default class ScatterChart extends Component {
         data={ data }
         width={ "100%" }
         height={ "100%" }
+        loader={ <div className={ styles.renderChartText }>Rendering Chart...</div> }
        />
     );
   }
