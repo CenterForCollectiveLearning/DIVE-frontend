@@ -5,8 +5,6 @@ import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/AuthActions';
 
-import zxcvbn from 'zxcvbn';
-
 import styles from './Auth.sass';
 
 import Input from '../Base/Input'
