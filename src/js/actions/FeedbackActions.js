@@ -32,15 +32,14 @@ export function closeFeedbackModal() {
   }
 }
 
-export function submitFeedback(projectId, userId, userEmail, username, feedbackType, description, path) {
+export function submitFeedback(projectId, userId, userEmail, username, feedbackType, description) {
   const params = {
     project_id: projectId,
     user_id: userId,
     user_email: userEmail,
     username: username,
     feedback_type: feedbackType,
-    description: description,
-    path: path,
+    description: description
   };
 
   return (dispatch) => {
