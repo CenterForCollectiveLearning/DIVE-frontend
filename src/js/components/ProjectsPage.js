@@ -57,7 +57,7 @@ export class ProjectsPage extends Component {
   }
 
   render() {
-    const { project, user, feedback } = this.props;
+    const { project, user, feedback, location } = this.props;
     const documentTitle = project.properties.title ? `DIVE | ${ project.properties.title }`: 'DIVE';
 
     return (
@@ -80,6 +80,7 @@ export class ProjectsPage extends Component {
               user={ user }
               project={ project }
               feedback={ feedback }
+              location={ location }
               closeAction={ this.closeFeedbackModal }/>
           }
         </div>

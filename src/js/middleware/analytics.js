@@ -65,7 +65,8 @@ import {
   REMOVE_COMPOSE_CONTENT,
   MOVE_COMPOSE_BLOCK,
   SELECT_DOCUMENT,
-  SET_DOCUMENT_TITLE
+  SET_DOCUMENT_TITLE,
+  RECEIVE_SEND_FEEDBACK  // Feedback
 } from '../constants/ActionTypes';
 
 export function analyticsMiddleware({ getState }){
@@ -260,6 +261,10 @@ export function analyticsMiddleware({ getState }){
         break;
       case SET_DOCUMENT_TITLE:
         window.amplitude.logEvent('[COMPOSE] Set Document Title');
+        break;
+
+      case RECEIVE_SEND_FEEDBACK:
+        window.amplitude.logEvent('Successfully Sent Feedback');
         break;
 
     }
