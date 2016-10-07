@@ -32,9 +32,10 @@ import {
   SELECT_SINGLE_VISUALIZATION_SORT_ORDER,
   SELECT_SINGLE_VISUALIZATION_SORT_FIELD,
   SELECT_CONDITIONAL,
-  SELECT_VISUALIZATION_CONFIG,
+  SELECT_VISUALIZATION_BINNING_CONFIG,
   SET_EXPLORE_QUERY_STRING,
-  SELECT_RECOMMENDATION_MODE
+  SELECT_RECOMMENDATION_MODE,
+  SELECT_VISUALIZATION_CONFIG
 } from '../constants/ActionTypes';
 
 import _ from 'underscore';
@@ -320,10 +321,20 @@ export function selectConditional(conditional) {
   }
 }
 
-export function selectVisualizationConfig(config) {
+export function selectVisualizationBinningConfig(config) {
+  return {
+    type: SELECT_VISUALIZATION_BINNING_CONFIG,
+    config: config
+  }
+}
+
+export function selectVisualizationConfig(key, value) {
+  console.log("selectVisualizationConfig");
+  console.log(key, value);
   return {
     type: SELECT_VISUALIZATION_CONFIG,
-    config: config
+    key: key,
+    value: value
   }
 }
 

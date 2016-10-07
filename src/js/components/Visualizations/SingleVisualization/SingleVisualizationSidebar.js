@@ -2,7 +2,7 @@ import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { selectSingleVisualizationVisualizationType, selectSingleVisualizationSortOrder, selectSingleVisualizationSortField, selectVisualizationConfig } from '../../../actions/VisualizationActions';
+import { selectSingleVisualizationVisualizationType, selectSingleVisualizationSortOrder, selectSingleVisualizationSortField, selectVisualizationBinningConfig, selectVisualizationConfig } from '../../../actions/VisualizationActions';
 import { selectConditional } from '../../../actions/ConditionalsActions';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import styles from '../Visualizations.sass';
@@ -39,7 +39,7 @@ export class SingleVisualizationSidebar extends Component {
   }
 
   render() {
-    const { conditionals, fieldProperties, selectSingleVisualizationVisualizationType, selectSingleVisualizationSortField, selectSingleVisualizationSortOrder, selectConditional, selectVisualizationConfig, filters, visualization } = this.props;
+    const { conditionals, fieldProperties, selectSingleVisualizationVisualizationType, selectSingleVisualizationSortField, selectSingleVisualizationSortOrder, selectConditional, selectVisualizationBinningConfig, selectVisualizationConfig, filters, visualization } = this.props;
     const { visualizationType } = visualization;
 
     if (!visualization.lastUpdated) {
@@ -88,7 +88,7 @@ export class SingleVisualizationSidebar extends Component {
         { visualizationType == 'hist' &&
           <BinningSelector
             config={ visualization.spec.config }
-            selectBinningConfig={ selectVisualizationConfig } />
+            selectBinningConfig={ selectVisualizationBinningConfig } />
         }
         { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
           <SidebarGroup heading="Filter by field">
@@ -104,6 +104,20 @@ export class SingleVisualizationSidebar extends Component {
                   selectConditionalValue={ selectConditional }/>
               </div>
             )}
+          </SidebarGroup>
+        }
+        { (visualizationType == 'hist' || visualizationType == 'bar') &&
+          <SidebarGroup heading="Vertical axis scale">
+              <DropDownMenu
+                value={ visualization.config.scaleType }
+                options={ [
+                  { value:'mirrorLog', label:'Logarithmic'},
+                  { value: 'null', label: 'Linear'}
+                  ] 
+                }
+                valueMember="value"
+                displayTextMember="label"
+                onChange={ (value) => selectVisualizationConfig('scaleType', value) }/>
           </SidebarGroup>
         }
       </Sidebar>
@@ -136,5 +150,6 @@ export default connect(mapStateToProps, {
   selectSingleVisualizationSortField,
   fetchFieldPropertiesIfNeeded,
   selectConditional,
+  selectVisualizationBinningConfig,
   selectVisualizationConfig
 })(SingleVisualizationSidebar);

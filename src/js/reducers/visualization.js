@@ -9,6 +9,7 @@ import {
   SELECT_SINGLE_VISUALIZATION_VISUALIZATION_TYPE,
   SELECT_SINGLE_VISUALIZATION_SORT_FIELD,
   SELECT_SINGLE_VISUALIZATION_SORT_ORDER,
+  SELECT_VISUALIZATION_BINNING_CONFIG,
   SELECT_VISUALIZATION_CONFIG,
   SET_SHARE_WINDOW,
   WIPE_PROJECT_STATE
@@ -108,8 +109,13 @@ export default function visualization(state = baseState, action) {
     case SELECT_SINGLE_VISUALIZATION_VISUALIZATION_TYPE:
       return { ...state, visualizationType: action.selectedType };
 
-    case SELECT_VISUALIZATION_CONFIG:
+    case SELECT_VISUALIZATION_BINNING_CONFIG:
       return { ...state, config: action.config, lastUpdated: Date.now() };
+
+    case SELECT_VISUALIZATION_CONFIG:
+      var modifiedConfig = state.config;
+      modifiedConfig[action.key] = action.value;
+      return { ...state, config: modifiedConfig, lastUpdated: Date.now() };
 
     case REQUEST_CREATE_EXPORTED_SPEC:
       return { ...state, isExporting: true };
