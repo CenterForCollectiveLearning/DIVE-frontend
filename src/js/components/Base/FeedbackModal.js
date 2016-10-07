@@ -22,21 +22,9 @@ class FeedbackModal extends Component {
   }
 
   submit = () => {
-    const { project, user, closeAction, submitFeedback, location } = this.props;
-    const { pathname, search } = location;
+    const { project, user, closeAction, submitFeedback } = this.props;
     const { feedbackType, description } = this.state;
-
-    const fullPath = pathname + search;
-
-    submitFeedback(
-      project.properties.id,
-      user.id,
-      user.email,
-      user.username,
-      feedbackType,
-      description,
-      fullPath
-    );
+    submitFeedback(project.properties.id, user.id, user.email, user.username, feedbackType, description);
   }
 
   selectFeedbackType = (feedbackType) => {
@@ -107,8 +95,7 @@ FeedbackModal.propTypes = {
   closeAction: PropTypes.func,
   user: PropTypes.object,
   project: PropTypes.object,
-  feedback: PropTypes.object,
-  location: PropTypes.object
+  feedback: PropTypes.object
 };
 
 function mapStateToProps(state) {
