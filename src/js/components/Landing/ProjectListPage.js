@@ -7,6 +7,7 @@ import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectSt
 
 import ProjectButton from '../Base/ProjectButton';
 import RaisedButton from '../Base/RaisedButton';
+import DropDownMenu from '../Base/DropDownMenu';
 import Loader from '../Base/Loader';
 import Footer from './Footer';
 
@@ -42,6 +43,10 @@ export class ProjectListPage extends Component {
     this.props.createProject(userId, projectTitle, projectDescription);
   }
 
+  onSelectProjectSortType = () => {
+
+  }
+
   render() {
     const { projects, userId, user } = this.props;
     const { userProjects, isFetchingUserProjects } = projects;
@@ -50,17 +55,33 @@ export class ProjectListPage extends Component {
       <DocumentTitle title='DIVE | Projects'>
         <div className={ styles.centeredFill }>
           <div className={ styles.ctaBox }>
-            <div className={ styles.ctaContainer }>
+            {/* <div className={ styles.ctaContainer }>
               <RaisedButton
                 label="Create Project"
                 primary={ true }
                 onClick={ this._onUploadClick.bind(this) }
                 className={ styles.uploadButton } />
-            </div>
+            </div> */}
           </div>
           { !isFetchingUserProjects && userId && userProjects.length > 0 &&
             <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
-              <div className={ styles.projectListSidebar }></div>
+              <div className={ styles.projectListTopbar }>
+                <div className={ styles.pageLabel }>Your Projects</div>
+                <div className={ styles.sortTypeDropdownContainer }>
+                  <DropDownMenu
+                    value='lastUpdated'
+                    options={ [
+                      { value: 'lastUpdated', label: 'Last Modified' },
+                      { value: 'created', label: 'Created' },
+                      { value: 'name', label: 'Project Name' },
+                      { value: 'starred', label: 'Starred' },
+                    ]}
+                    valueMember='value'
+                    displayTextMember='label'
+                    prefix="Sort By"
+                    onChange={ this.onSelectProjectSortType.bind(this) } />
+                </div>
+              </div>
               <div className={ styles.projectListContainer }>
                 { projects.isFetching &&
                   <div className={ styles.watermark }>Fetching projects...</div>

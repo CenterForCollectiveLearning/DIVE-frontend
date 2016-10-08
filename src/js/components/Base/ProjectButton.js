@@ -49,44 +49,40 @@ class ProjectButton extends Component {
     const { project, className, format } = this.props;
     const { id, title, description, numDatasets, includedDatasets, numSpecs, numDocuments, creationDate, updateDate } = project;
 
+    const starred = false;
+
     return (
       <div className={ styles.projectButton } onClick={ this.onClickProjectButton }>
-        <div className={ styles.projectTop }>
-          <div className={ styles.pullLeft }>
-            <div className={ styles.projectTitle }>{ title }</div>
+        <div className={ styles.projectLeft }>
+          {/* <div className={ styles.starContainer } onClick={ this.saveVisualization.bind(this) }> */}
+          <div className={ styles.starContainer }>
+            <i className={ starred ? 'fa fa-star ' + styles.starred : 'fa fa-star-o' }></i>
           </div>
-          { !project.preloaded &&
+          <div className={ styles.projectTitle }>{ title }</div>
+          <div className={ styles.projectDescription }>{ description }</div>
+          {/* { !project.preloaded &&
             <div className={ styles.pullRight }>
               <RaisedButton icon={ true } onClick={ this.onClickProjectSettings }><i className="fa fa-cog" /></RaisedButton>
               <RaisedButton icon={ true } onClick={ this.onClickDeleteProject }><i className="fa fa-trash" /></RaisedButton>
             </div>
-          }
+          } */}
         </div>
-        { (description && description !== 'Project Description') &&
-        <div className={ styles.projectMiddle }>
-          <div className={ styles.pullLeft }>
-              <div className={ styles.projectDescription }>{ description }</div>
-          </div>
-        </div>
-        }
-        <div className={ styles.projectMiddle }>
-          <div className={ styles.pullLeft }>
-            <div className={ styles.metadata }>
-              <div className={ styles.item }>
-                <span className={ styles.label }>Datasets</span>
-                <span className={ styles.value }>{ numDatasets }</span>
-              </div>
-              <div className={ styles.item }>
-                <span className={ styles.label }>Visualizations</span>
-                <span className={ styles.value }>{ numSpecs }</span>
-              </div>
-              <div className={ styles.item }>
-                <span className={ styles.label }>Documents</span>
-                <span className={ styles.value }>{ numDocuments }</span>
-              </div>
+        <div className={ styles.projectRight }>
+          <div className={ styles.metadata }>
+            <div className={ styles.item }>
+              <span className={ styles.label }>Datasets</span>
+              <span className={ styles.value }>{ numDatasets }</span>
+            </div>
+            <div className={ styles.item }>
+              <span className={ styles.label }>Visualizations</span>
+              <span className={ styles.value }>{ numSpecs }</span>
+            </div>
+            <div className={ styles.item }>
+              <span className={ styles.label }>Documents</span>
+              <span className={ styles.value }>{ numDocuments }</span>
             </div>
           </div>
-          <div className={ styles.pullRight }>
+          {/* <div className={ styles.pullRight }>
             <div className={ styles.item }>
               <span className={ styles.label }>Created</span>
               <span className={ styles.value }>{ moment(creationDate).format('LLL') }</span>
@@ -95,9 +91,13 @@ class ProjectButton extends Component {
               <span className={ styles.label }>Last Updated</span>
               <span className={ styles.value }>{ moment(updateDate).format('LLL') }</span>
             </div>
+          </div> */}
+          <div className={ styles.expandButton }>
+            ﹀
           </div>
         </div>
-        { (numDatasets > 0) &&
+
+        {/* { (numDatasets > 0) &&
         <div className={ styles.projectBottom }>
           <div className={ styles.item }>
             <span className={ styles.label }>Datasets</span>
@@ -108,7 +108,7 @@ class ProjectButton extends Component {
             </span>
           </div>
         </div>
-        }
+        } */}
         { this.state.projectSettingsModalOpen &&
           <ProjectSettingsModal
             projectName={ title }
