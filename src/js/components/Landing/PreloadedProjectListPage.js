@@ -19,10 +19,10 @@ export class PreloadedProjectListPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const nextProjectId = nextProps.project.properties.id;
+    const nextProjectId = nextProps.project.id;
     const nextUserId = nextProps.userId;
 
-    if (this.props.project.properties.id != nextProjectId) {
+    if (this.props.project.id != nextProjectId) {
       this.props.wipeProjectState();
       this.props.push(`/projects/${ nextProjectId }/datasets/upload`);
     }

@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { deleteProjectNoReturnHome, wipeProjectState } from '../../actions/ProjectActions.js';
+import { updateProject, deleteProjectNoReturnHome, wipeProjectState } from '../../actions/ProjectActions.js';
 
 import styles from './ProjectButton.sass';
 
@@ -38,6 +38,20 @@ class ProjectButton extends Component {
     this.setState({ projectSettingsModalOpen: true });
   }
 
+  onClickStarProject = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+
+    const { project, updateProject } = this.props;
+    const { title, description, starred } = project;
+
+    updateProject(project.id, {
+      title: title,
+      description: description,
+      starred: !starred
+    });
+  }
+
   onClickDeleteProject = (e) => {
     const { project, deleteProjectNoReturnHome } = this.props;
     e.stopPropagation()
@@ -46,58 +60,56 @@ class ProjectButton extends Component {
   }
 
   render() {
-    const { project, className, format } = this.props;
-    const { id, title, description, numDatasets, includedDatasets, numSpecs, numDocuments, creationDate, updateDate } = project;
+    const { project, className, format, sortField } = this.props;
+    const { id, title, description, numDatasets, includedDatasets, numSpecs, numAnalyses, numDocuments, creationDate, updateDate, starred } = project;
 
     return (
       <div className={ styles.projectButton } onClick={ this.onClickProjectButton }>
-        <div className={ styles.projectTop }>
-          <div className={ styles.pullLeft }>
-            <div className={ styles.projectTitle }>{ title }</div>
-          </div>
-          { !project.preloaded &&
-            <div className={ styles.pullRight }>
-              <RaisedButton icon={ true } onClick={ this.onClickProjectSettings }><i className="fa fa-cog" /></RaisedButton>
-              <RaisedButton icon={ true } onClick={ this.onClickDeleteProject }><i className="fa fa-trash" /></RaisedButton>
-            </div>
-          }
+        <div className={ styles.starContainer } onClick={ this.onClickStarProject }>
+          <i className={ starred ? 'fa fa-star ' + styles.starred : 'fa fa-star-o' }></i>
         </div>
-        { (description && description !== 'Project Description') &&
-        <div className={ styles.projectMiddle }>
-          <div className={ styles.pullLeft }>
+        <div className={ styles.projectLeft }>
+          <div className={ styles.projectTitle }>{ title }</div>
+          <div className={ styles.projectMetaData }>
+            { ( description && description !== 'Project Description' ) &&
               <div className={ styles.projectDescription }>{ description }</div>
+            }
+            { sortField == 'updateDate' &&
+              <div className={ styles.projectDescription }>Last Modified: { moment(updateDate).format('LLL') }</div>
+            }
+            { sortField == 'creationDate' &&
+              <div className={ styles.projectDescription }>Created: { moment(creationDate).format('LLL') }</div>
+            }
           </div>
         </div>
-        }
-        <div className={ styles.projectMiddle }>
-          <div className={ styles.pullLeft }>
-            <div className={ styles.metadata }>
-              <div className={ styles.item }>
-                <span className={ styles.label }>Datasets</span>
-                <span className={ styles.value }>{ numDatasets }</span>
-              </div>
-              <div className={ styles.item }>
-                <span className={ styles.label }>Visualizations</span>
-                <span className={ styles.value }>{ numSpecs }</span>
-              </div>
-              <div className={ styles.item }>
-                <span className={ styles.label }>Documents</span>
-                <span className={ styles.value }>{ numDocuments }</span>
-              </div>
+        <div className={ styles.projectRight }>
+          <div className={ styles.metadata }>
+            <div className={ styles.item }>
+              <span className={ styles.label }>Datasets</span>
+              <span className={ styles.value }>{ numDatasets }</span>
+            </div>
+            <div className={ styles.item }>
+              <span className={ styles.label }>Visualizations</span>
+              <span className={ styles.value }>{ numSpecs }</span>
+            </div>
+            <div className={ styles.item }>
+              <span className={ styles.label }>Analyses</span>
+              <span className={ styles.value }>{ numAnalyses }</span>
+            </div>
+            <div className={ styles.item }>
+              <span className={ styles.label }>Stories</span>
+              <span className={ styles.value }>{ numDocuments }</span>
             </div>
           </div>
-          <div className={ styles.pullRight }>
-            <div className={ styles.item }>
-              <span className={ styles.label }>Created</span>
-              <span className={ styles.value }>{ moment(creationDate).format('LLL') }</span>
-            </div>
-            <div className={ styles.item }>
-              <span className={ styles.label }>Last Updated</span>
-              <span className={ styles.value }>{ moment(updateDate).format('LLL') }</span>
+          <div className={ styles.expandButton }>
+            <div className={ styles.dropdown }>
+              <div className={ styles.dropdownOption } onClick={ this.onClickProjectSettings }>Edit Properties</div>
+              <div className={ styles.dropdownOption } onClick={ this.onClickDeleteProject }>Delete</div>
             </div>
           </div>
         </div>
-        { (numDatasets > 0) &&
+
+        {/* { (numDatasets > 0) &&
         <div className={ styles.projectBottom }>
           <div className={ styles.item }>
             <span className={ styles.label }>Datasets</span>
@@ -108,7 +120,7 @@ class ProjectButton extends Component {
             </span>
           </div>
         </div>
-        }
+        } */}
         { this.state.projectSettingsModalOpen &&
           <ProjectSettingsModal
             projectName={ title }
@@ -125,6 +137,7 @@ ProjectButton.propTypes = {
   className: PropTypes.string,
   format: PropTypes.string,
   project: PropTypes.object.isRequired,
+  sortField: PropTypes.string
 }
 
 ProjectButton.defaultProps = {
@@ -135,4 +148,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { deleteProjectNoReturnHome, wipeProjectState, push })(ProjectButton);
+export default connect(mapStateToProps, { updateProject, deleteProjectNoReturnHome, wipeProjectState, push })(ProjectButton);

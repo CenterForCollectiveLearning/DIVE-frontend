@@ -82,7 +82,7 @@ export function wipeProjectState() {
 
 function shouldCreateProject(state) {
   const { project } = state;
-  if (project.loaded && !(project.properties || project.isFetching)) {
+  if (project.loaded && !(project || project.isFetching)) {
     return true;
   }
   return false;
@@ -198,13 +198,13 @@ export function updateProject(projectId, params) {
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     })
-      .then(json => dispatch(updatedProjectDispatcher(json)));
+    .then(json => dispatch(updatedProjectDispatcher(json)));
   };
 }
 
 function shouldFetchProject(state) {
   const project = state.project;
-  if (project.properties.id || project.isFetching) {
+  if (project.id || project.isFetching) {
     return false;
   }
   return true;
@@ -219,7 +219,6 @@ export function fetchProjectIfNeeded(projectId) {
 }
 
 // Feedback
-
 function requestSendFeedbackDispatcher(projectId, feedbackType, description) {
   return {
     type: REQUEST_SEND_FEEDBACK,

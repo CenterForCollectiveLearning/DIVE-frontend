@@ -4,12 +4,9 @@
   +noSelect
   +regularCopy
   display: flex
-  flex-direction: column
+  flex-direction: row
   min-height: 100px
-
-  width: 70%
-  min-width: 600px
-  max-width: 600px
+  width: calc(100% - 100px)
 
   align-items: left
   justify-content: left
@@ -32,55 +29,121 @@
   &:hover
     border-color: $primary-accent
 
-  .item
+  .starContainer
     display: flex
-    .label
-      +smallCaps
-      margin-right: 5px
+    align-items: center
+    padding-left: 25px
+    padding-right: 10px
 
-    .value
-      font-size: 13px
-      white-space: nowrap
-      overflow: hidden
-      text-overflow: ellipsis
-      font-weight: 600
+    i
+      opacity: 0.5
 
-    .values
-      font-size: 12px
+      &.starred
+        color: orange
+        opacity: 0.6
 
-  .pullLeft, .pullRight
-    display: inline-block
+    &:hover i
+      opacity: 1
 
+    &.starred:hover i
+      opacity: 0.8
 
-
-    // > div:not(:first-of-type)
-    //   margin-left: 5px
-
-
-  .projectTop
+  .projectLeft
     display: flex
+    flex-direction: column
+    justify-content: center
     width: 100%
-    background-color: $ui-header-grey
-    padding: 12px 16px
-    border-bottom: 1px solid $ui-line-grey
+    padding: 0px 16px
+
     .projectTitle
       font-size: 14px
       font-weight: bold
 
     .pullRight
       display: flex
-      margin-left: auto     
+      margin-left: auto
       > div:not(:first-of-type)
         margin-left: 5px
 
   .projectBottom
     border-top: 1px solid $ui-line-grey
 
-  .projectMiddle, .projectBottom
+  .projectRight
     font-size: 12px
     display: flex
-    margin: 0 16px
-    padding: 11px 0
+
+    .metadata
+      display: flex
+      flex-direction: row
+      padding: 11px 0
+      align-items: center
+
+      .item
+        display: flex
+        flex-direction: column
+        padding: 0 8px
+        .label
+          +smallCaps
+          margin-right: 5px
+
+        .value
+          white-space: nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+          font-weight: 600
+          text-align: center
+          font-size: 25px
+
+    .expandButton
+      position: relative
+      display: flex
+      width: center
+      border-left: 1px solid $ui-line-grey
+      align-items: center
+      justify-content: center
+      width: 35px
+
+      &:after
+        content: "︿"
+        font-weight: bold
+        position: relative
+        top: -3px
+
+      &:hover
+        background-color: $ui-header-grey
+
+        &:after
+          content: "﹀"
+          top: 3px
+
+        .dropdown
+          opacity: 1
+          pointer-events: auto
+          user-select: text
+
+      .dropdown
+        position: absolute
+        opacity: 0
+        user-select: none
+        pointer-events: none
+        top: 95px
+        right: 0
+        background-color: white
+        z-index: 100
+        min-width: 150px
+
+        border: 1px solid $ui-line-grey
+        border-radius: 3px
+        position: absolute
+        padding: 3px 0px
+
+        .dropdownOption
+          padding: 8px 12px
+
+          &:hover
+            background-color: $primary-accent
+            color: white
+
 
     .pullRight
       display: flex

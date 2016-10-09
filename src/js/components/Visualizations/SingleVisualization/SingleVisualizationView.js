@@ -25,12 +25,12 @@ export class SingleVisualizationView extends Component {
   componentWillMount() {
     const { project, datasetSelector, datasets, specId, visualization, fetchSpecVisualizationIfNeeded } = this.props;
 
-    if (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
-      fetchDatasets(project.properties.id);
+    if (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
+      fetchDatasets(project.id);
     }
 
-    if (project.properties.id && !visualization.spec.id) {
-      fetchSpecVisualizationIfNeeded(project.properties.id, specId);
+    if (project.id && !visualization.spec.id) {
+      fetchSpecVisualizationIfNeeded(project.id, specId);
     }
   }
 
@@ -40,18 +40,18 @@ export class SingleVisualizationView extends Component {
     const exportingChanged = visualization.isExporting != nextProps.visualization.isExporting;
     const conditionalsChanged = nextProps.conditionals.lastUpdated != conditionals.lastUpdated;
     const configChanged = nextProps.visualization.config != visualization.config;
-    const projectChanged = (nextProps.project.properties.id !== project.properties.id);
+    const projectChanged = (nextProps.project.id !== project.id);
 
-    if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
-      fetchDatasets(project.properties.id);
+    if (projectChanged || (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
+      fetchDatasets(project.id);
     }
 
-    if (nextProps.project.properties.id && !visualization.isFetching && (!visualization.spec.id || conditionalsChanged || configChanged)) {
-      fetchSpecVisualizationIfNeeded(nextProps.project.properties.id, nextProps.specId, nextProps.conditionals.items, nextProps.visualization.config);
+    if (nextProps.project.id && !visualization.isFetching && (!visualization.spec.id || conditionalsChanged || configChanged)) {
+      fetchSpecVisualizationIfNeeded(nextProps.project.id, nextProps.specId, nextProps.conditionals.items, nextProps.visualization.config);
     }
 
     if (exportingChanged && !nextProps.visualization.isExporting && nextProps.visualization.shareWindow) {
-      nextProps.visualization.shareWindow.location.href = `/share/projects/${ nextProps.project.properties.id }/visualizations/${ nextProps.visualization.exportedSpecId }`;
+      nextProps.visualization.shareWindow.location.href = `/share/projects/${ nextProps.project.id }/visualizations/${ nextProps.visualization.exportedSpecId }`;
     }
   }
 
@@ -102,7 +102,7 @@ export class SingleVisualizationView extends Component {
 
   saveVisualization(saveAction = true) {
     const { project, visualization, createExportedSpec, conditionals } = this.props;
-    createExportedSpec(project.properties.id, visualization.spec.id, visualization.visualizationData, conditionals.items, visualization.config, saveAction);
+    createExportedSpec(project.id, visualization.spec.id, visualization.visualizationData, conditionals.items, visualization.config, saveAction);
   }
 
   onClickShare() {
@@ -112,7 +112,7 @@ export class SingleVisualizationView extends Component {
 
   onClickExplore() {
     const { project, datasetSelector, exploreSelector, push } = this.props;
-    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ exploreSelector.queryString }`);
+    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ exploreSelector.queryString }`);
   }
 
   render() {

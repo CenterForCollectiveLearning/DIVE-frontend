@@ -100,7 +100,7 @@ class ExplorePage extends Component {
 
 function mapStateToProps(state) {
   const { project, filters, specs } = state;
-  return { projectTitle: project.properties.title, filters, specs };
+  return { projectTitle: project.title, filters, specs };
 }
 
 export default connect(mapStateToProps, { setExploreQueryString })(ExplorePage);

@@ -9,26 +9,25 @@ import {
 
 const baseState = {
   isFetching: false,
-  loaded: false,
-  properties: {}
+  loaded: false
 };
 
 export default function project(state = baseState, action) {
   switch (action.type) {
     case REQUEST_PROJECT:
-      return { ...state, isFetching: true, properties: { id: action.projectId } };
+      return { ...state, isFetching: true, id: action.projectId };
 
     case RECEIVE_PROJECT:
-      return { ...state, isFetching: false, properties: action.projectProperties };
+      return { ...state, isFetching: false, ...action.projectProperties };
 
     case CREATE_PROJECT:
       return { ...state, isFetching: true };
 
     case CREATED_PROJECT:
-      return { ...state, isFetching: false, properties: action.projectProperties };
+      return { ...state, isFetching: false, ...action.projectProperties };
 
     case UPDATED_PROJECT:
-      return { ...state, properties: action.projectProperties };
+      return { ...state, ...action.projectProperties };
 
     case WIPE_PROJECT_STATE:
       return baseState;

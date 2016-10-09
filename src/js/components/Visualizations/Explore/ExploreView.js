@@ -23,13 +23,13 @@ export class ExploreView extends Component {
     const { datasetSelector, datasets, project, specs, exploreSelector, clearVisualization, fetchSpecs, fetchDatasets } = this.props;
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
 
-    if (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
-      fetchDatasets(project.properties.id);
+    if (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
+      fetchDatasets(project.id);
     }
 
-    if (project.properties.id && datasetSelector.datasetId && exploreSelector.fieldProperties.length && notLoadedAndNotFetching) {
+    if (project.id && datasetSelector.datasetId && exploreSelector.fieldProperties.length && notLoadedAndNotFetching) {
       for (var level of [ 0, 1, 2, 3 ]) {
-        fetchSpecs(project.properties.id, datasetSelector.datasetId, exploreSelector.fieldProperties, exploreSelector.recommendationTypes[level]);
+        fetchSpecs(project.id, datasetSelector.datasetId, exploreSelector.fieldProperties, exploreSelector.recommendationTypes[level]);
       }
     }
 
@@ -41,26 +41,26 @@ export class ExploreView extends Component {
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
     const exploreSelectorChanged = (exploreSelector.updatedAt !== previousProps.exploreSelector.updatedAt);
-    const projectChanged = (previousProps.project.properties.id !== project.properties.id);
+    const projectChanged = (previousProps.project.id !== project.id);
     const fieldPropertiesSelected = exploreSelector.fieldProperties.find((prop) => prop.selected) != undefined;
     const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = exploreSelector;
 
-    if (projectChanged || (project.properties.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
-      fetchDatasets(project.properties.id);
+    if (projectChanged || (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
+      fetchDatasets(project.id);
     }
 
     const numFields = exploreSelector.fieldProperties.filter((property) => property.selected).length;
 
-    if (project.properties.id && datasetSelector.datasetId && exploreSelector.fieldProperties.length) {
+    if (project.id && datasetSelector.datasetId && exploreSelector.fieldProperties.length) {
       for (var i in isFetchingSpecLevel) {
         if (!isFetchingSpecLevel[i] && !loadedSpecLevel[i] && exploreSelector.isValidSpecLevel[i]) {
-          fetchSpecs(project.properties.id, datasetSelector.datasetId, exploreSelector.fieldProperties, exploreSelector.recommendationTypes[i]);
+          fetchSpecs(project.id, datasetSelector.datasetId, exploreSelector.fieldProperties, exploreSelector.recommendationTypes[i]);
         }
       }
     }
 
-    if (project.properties.id && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {
-      fetchExportedVisualizationSpecs(project.properties.id);
+    if (project.id && exportedSpecs.items.length == 0 && !exportedSpecs.isFetching && !exportedSpecs.loaded) {
+      fetchExportedVisualizationSpecs(project.id);
     }
 
     clearVisualization();
@@ -68,13 +68,13 @@ export class ExploreView extends Component {
 
   onClickVisualization = (specId) => {
     const { project, datasetSelector, push, updateVisualizationStats } = this.props;
-    // updateVisualizationStats(project.properties.id, specId, 'click');
-    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore/${ specId }`);
+    // updateVisualizationStats(project.id, specId, 'click');
+    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore/${ specId }`);
   }
 
   saveVisualization = (specId, specData) => {
     const { project, createExportedSpec } = this.props;
-    createExportedSpec(project.properties.id, specId, specData, [], {}, true);
+    createExportedSpec(project.id, specId, specData, [], {}, true);
   }
 
 

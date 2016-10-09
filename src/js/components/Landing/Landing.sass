@@ -154,9 +154,16 @@
     +landingHeader
     font-size: 16px
 
-  .projectListSidebar
-    border-right: 1px solid $ui-line-grey
-    width: 100px
+  .projectListTopbar
+    display: flex
+    flex-direction: row
+    margin: 0 50px
+    .pageLabel
+      color: black
+      font-size: 24px
+    .sortTypeDropdownContainer
+      margin-left: auto
+      width: 200px
 
   .projectListContainer
     margin-top: 20px
@@ -179,6 +186,7 @@
 
   .linkContainer
     display: flex
+    margin-top: 3px
 
   div
     display: inline
@@ -188,9 +196,11 @@
       margin-left: 15px
 
   .userOptions
+    margin-top: -2px
     .usernameAndChevron
       display: flex
       cursor: pointer
+      padding-bottom: 10px
       span.username
         &:after
           content: "︿"
@@ -201,20 +211,21 @@
 
     .userOptionsMenu
       position: absolute
-      top: 40px
-      padding-top: 15px
+      top: 50px
+      min-width: 100px
+      border-radius: 3px
+      padding: 3px 0
       opacity: 0
       user-select: none
       pointer-events: none
       right: 35px
       display: flex
       flex-direction: column
+      border: 1px solid $ui-line-grey
+      background-color: $black
 
       > div
         padding: 8px 15px
-        margin-top: -1px
-        border: 1px solid $ui-line-grey
-        background-color: $black
 
         &:hover
           background-color: $primary-accent
@@ -235,41 +246,40 @@
     margin-right: 5px
 
 .aboutContainer
+  .textBox
+    +storyCopy
+    display: flex
+    flex-direction: column
+    width: 500px
 
-    .textBox
-      +storyCopy
+  .mugshotBox
+    .mugshots
       display: flex
-      flex-direction: column
-      width: 500px
+      flex-wrap: wrap
+      justify-content: center
 
-    .mugshotBox
-      .mugshots
+      .mugshotContainer
+        margin: 10px
+        width: 140px
         display: flex
-        flex-wrap: wrap
-        justify-content: center
+        flex-direction: column
 
-        .mugshotContainer
-          margin: 10px
-          width: 140px
+        .mugCaption
           display: flex
           flex-direction: column
+          text-align: center
 
-          .mugCaption
-            display: flex
-            flex-direction: column
-            text-align: center
+          .mugCaptionName
+            font-weight: 600
 
-            .mugCaptionName
-              font-weight: 600
+          .mugCaptionRole
+            margin-top: 2px
 
-            .mugCaptionRole
-              margin-top: 2px
-
-          img.mugshot
-            border-radius: 100px
-            width: 140px
-            height: 140px
-            overflow: hidden
+        img.mugshot
+          border-radius: 100px
+          width: 140px
+          height: 140px
+          overflow: hidden
 
 .footer
   display: flex

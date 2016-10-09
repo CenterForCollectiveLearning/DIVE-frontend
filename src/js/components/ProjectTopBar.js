@@ -28,8 +28,8 @@ export class ProjectTopBar extends Component {
     const { exploreSelector, project, push, selectDataset, routes } = this.props;
     const { pathname, query } = location;
     const remainingRoute = routes.slice(3).map((e) => e.path).join('/');
-    selectDataset(project.properties.id, datasetId);
-    push(`/projects/${ project.properties.id }/datasets/${ datasetId }/${ remainingRoute }`);
+    selectDataset(project.id, datasetId);
+    push(`/projects/${ project.id }/datasets/${ datasetId }/${ remainingRoute }`);
   }
 
   _getCurrentPage = () => {
@@ -82,21 +82,21 @@ export class ProjectTopBar extends Component {
 
     return (
       <div className={ styles.projectTopBar }>
-        { project.properties.title && !project.properties.userProjects &&
+        { project.title && !project.userProjects &&
           <div className={ styles.projectTopBarLeft}>
             <div className={ styles.section }>
-              { ( project.properties.preloaded || projects.userProjects.length == 1) &&
+              { ( project.preloaded || projects.userProjects.length == 1) &&
                 <div className={ styles.item }>
                   <div className={ styles.label }>Project</div>
-                  <div>{ project.properties.title }</div>
+                  <div>{ project.title }</div>
                 </div>
               }
-              { ( !project.properties.preloaded && projects.userProjects.length > 1) &&
+              { ( !project.preloaded && projects.userProjects.length > 1) &&
                 <DropDownMenu
                   className={ styles.projectSelector }
                   valueClassName={ styles.projectSelectorValue }
                   labelClassName={ styles.dropDownLabel }
-                  value={ parseInt(project.properties.id) }
+                  value={ parseInt(project.id) }
                   options={ projects.userProjects }
                   label="Project"
                   valueMember="id"
