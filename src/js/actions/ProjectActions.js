@@ -82,7 +82,7 @@ export function wipeProjectState() {
 
 function shouldCreateProject(state) {
   const { project } = state;
-  if (project.loaded && !(project.properties || project.isFetching)) {
+  if (project.loaded && !(project || project.isFetching)) {
     return true;
   }
   return false;
@@ -204,7 +204,7 @@ export function updateProject(projectId, params) {
 
 function shouldFetchProject(state) {
   const project = state.project;
-  if (project.properties.id || project.isFetching) {
+  if (project.id || project.isFetching) {
     return false;
   }
   return true;

@@ -103,8 +103,19 @@
       justify-content: center
       width: 35px
 
+      &:after
+        content: "︿"
+        font-weight: bold
+        position: relative
+        top: -3px
+
       &:hover
         background-color: $ui-header-grey
+
+        &:after
+          content: "﹀"
+          top: 3px
+
         .dropdown
           opacity: 1
           pointer-events: auto

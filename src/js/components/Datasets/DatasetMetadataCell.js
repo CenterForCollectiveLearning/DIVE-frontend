@@ -246,7 +246,7 @@ DatasetMetadataCell.defaultProps = {
 function mapStateToProps(state) {
   const { project } = state;
   return {
-    projectId: project.properties.id
+    projectId: project.id
   };
 }
 

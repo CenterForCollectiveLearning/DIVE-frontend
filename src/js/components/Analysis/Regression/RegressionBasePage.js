@@ -74,7 +74,7 @@ export class RegressionBasePage extends Component {
 
 function mapStateToProps(state) {
   const { fieldProperties, project } = state;
-  return { fieldProperties, projectTitle: project.properties.title };
+  return { fieldProperties, projectTitle: project.title };
 }
 
 export default connect(mapStateToProps, { replace, selectDependentVariable, selectRegressionType })(RegressionBasePage);

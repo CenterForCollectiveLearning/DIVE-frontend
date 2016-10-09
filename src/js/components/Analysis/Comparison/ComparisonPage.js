@@ -22,7 +22,7 @@ export class ComparisonPage extends Component {
 
 function mapStateToProps(state) {
   const { project } = state;
-  return { projectTitle: project.properties.title };
+  return { projectTitle: project.title };
 }
 
 export default connect(mapStateToProps, { })(ComparisonPage);

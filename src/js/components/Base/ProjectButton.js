@@ -61,7 +61,7 @@ class ProjectButton extends Component {
 
   render() {
     const { project, className, format, sortField } = this.props;
-    const { id, title, description, numDatasets, includedDatasets, numSpecs, numDocuments, creationDate, updateDate, starred } = project;
+    const { id, title, description, numDatasets, includedDatasets, numSpecs, numAnalyses, numDocuments, creationDate, updateDate, starred } = project;
 
     return (
       <div className={ styles.projectButton } onClick={ this.onClickProjectButton }>
@@ -94,7 +94,7 @@ class ProjectButton extends Component {
             </div>
             <div className={ styles.item }>
               <span className={ styles.label }>Analyses</span>
-              <span className={ styles.value }>{ numSpecs }</span>
+              <span className={ styles.value }>{ numAnalyses }</span>
             </div>
             <div className={ styles.item }>
               <span className={ styles.label }>Stories</span>
@@ -102,7 +102,6 @@ class ProjectButton extends Component {
             </div>
           </div>
           <div className={ styles.expandButton }>
-            <div className={ styles.chevron }>﹀</div>
             <div className={ styles.dropdown }>
               <div className={ styles.dropdownOption } onClick={ this.onClickProjectSettings }>Edit Properties</div>
               <div className={ styles.dropdownOption } onClick={ this.onClickDeleteProject }>Delete</div>

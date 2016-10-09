@@ -29,15 +29,15 @@ export class DatasetInspectPage extends Component {
     fetchDataset(params.projectId, params.datasetId);
     fetchFieldPropertiesIfNeeded(params.projectId, params.datasetId);
 
-    if (project.properties.id && !datasets.fetchedAll && !datasets.isFetching) {
+    if (project.id && !datasets.fetchedAll && !datasets.isFetching) {
       fetchDatasets(params.projectId, false);
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { project, params, datasetSelector, datasets, fetchDataset, fetchDatasets, fetchFieldPropertiesIfNeeded, replace } = nextProps;
-    if (project.properties.id !== this.props.project.properties.id || (!datasets.fetchedAll && !datasets.isFetching)) {
-      fetchDatasets(project.properties.id, false);
+    if (project.id !== this.props.project.id || (!datasets.fetchedAll && !datasets.isFetching)) {
+      fetchDatasets(project.id, false);
     }
 
     if (params.projectId !== this.props.params.projectId || params.datasetId !== this.props.params.datasetId) {
@@ -56,7 +56,7 @@ export class DatasetInspectPage extends Component {
 
   onSelectDataset = (selectedValue) => {
     if (selectedValue) {
-      this.props.replace(`/projects/${ this.props.project.properties.id }/datasets/${ selectedValue }/inspect`);
+      this.props.replace(`/projects/${ this.props.project.id }/datasets/${ selectedValue }/inspect`);
     }
   }
 
@@ -68,11 +68,11 @@ export class DatasetInspectPage extends Component {
   onClickDeleteDataset = () => {
     const { deleteDataset, datasetSelector, project } = this.props;
 
-    deleteDataset(project.properties.id, datasetSelector.datasetId);
+    deleteDataset(project.id, datasetSelector.datasetId);
   }
 
   onClickUploadDataset = () => {
-    this.props.replace(`/projects/${ this.props.project.properties.id }/datasets/upload`);
+    this.props.replace(`/projects/${ this.props.project.id }/datasets/upload`);
   }
 
   render() {
@@ -135,7 +135,7 @@ DatasetInspectPage.propTypes = {
 
 function mapStateToProps(state) {
   const { project, datasets, datasetSelector, fieldProperties } = state;
-  return { project, projectTitle: project.properties.title, datasets, datasetSelector, fieldProperties };
+  return { project, projectTitle: project.title, datasets, datasetSelector, fieldProperties };
 }
 
 export default connect(mapStateToProps, {

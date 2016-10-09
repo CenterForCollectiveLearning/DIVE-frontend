@@ -304,7 +304,7 @@ function receiveSaveDocumentDispatcher(projectId, documentId, json) {
 
 function saveDocument(dispatch, getState) {
   const { project, composeSelector } = getState();
-  const projectId = project.properties.id;
+  const projectId = project.id;
   const { documentId, blocks, title } = composeSelector;
 
   const content = { 'blocks': blocks };

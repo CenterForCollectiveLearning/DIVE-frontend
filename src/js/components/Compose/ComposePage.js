@@ -43,7 +43,7 @@ function mapStateToProps(state) {
   const { project, datasetSelector, fieldProperties, datasets, regressionSelector } = state;
 
   return {
-    projectId: project.properties.id,
+    projectId: project.id,
     datasetId: datasetSelector.datasetId,
     datasets,
     fieldProperties,

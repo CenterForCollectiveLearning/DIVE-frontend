@@ -34,9 +34,7 @@ export default function projects(state = {
       const { userProjects } = state;
       var userProjectsUpdated = userProjects.map(function(project) {
           if (project.id == action.projectProperties.id) {
-            return { ...project,
-              properties: { ...project.properties, ...action.projectProperties }
-            };
+            return { ...project, ...action.projectProperties };
           } else {
             return project;
           }
