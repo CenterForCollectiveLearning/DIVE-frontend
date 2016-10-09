@@ -198,6 +198,7 @@
     .usernameAndChevron
       display: flex
       cursor: pointer
+      padding-bottom: 10px
       span.username
         &:after
           content: "︿"
@@ -208,20 +209,21 @@
 
     .userOptionsMenu
       position: absolute
-      top: 40px
-      padding-top: 15px
+      top: 50px
+      min-width: 100px
+      border-radius: 3px
+      padding: 3px 0
       opacity: 0
       user-select: none
       pointer-events: none
       right: 35px
       display: flex
       flex-direction: column
+      border: 1px solid $ui-line-grey
+      background-color: $black
 
       > div
         padding: 8px 15px
-        margin-top: -1px
-        border: 1px solid $ui-line-grey
-        background-color: $black
 
         &:hover
           background-color: $primary-accent

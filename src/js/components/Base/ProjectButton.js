@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { deleteProjectNoReturnHome, wipeProjectState } from '../../actions/ProjectActions.js';
+import { updateProject, deleteProjectNoReturnHome, wipeProjectState } from '../../actions/ProjectActions.js';
 
 import styles from './ProjectButton.sass';
 
@@ -38,6 +38,20 @@ class ProjectButton extends Component {
     this.setState({ projectSettingsModalOpen: true });
   }
 
+  onClickStarProject = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+
+    const { project, updateProject } = this.props;
+    const { title, description, starred } = project;
+
+    updateProject(project.id, {
+      title: title,
+      description: description,
+      starred: !starred
+    });
+  }
+
   onClickDeleteProject = (e) => {
     const { project, deleteProjectNoReturnHome } = this.props;
     e.stopPropagation()
@@ -47,19 +61,17 @@ class ProjectButton extends Component {
 
   render() {
     const { project, className, format, sortField } = this.props;
-    const { id, title, description, numDatasets, includedDatasets, numSpecs, numDocuments, creationDate, updateDate } = project;
-
-    const starred = false;
+    const { id, title, description, numDatasets, includedDatasets, numSpecs, numDocuments, creationDate, updateDate, starred } = project;
 
     return (
       <div className={ styles.projectButton } onClick={ this.onClickProjectButton }>
-        <div className={ styles.starContainer }>
+        <div className={ styles.starContainer } onClick={ this.onClickStarProject }>
           <i className={ starred ? 'fa fa-star ' + styles.starred : 'fa fa-star-o' }></i>
         </div>
         <div className={ styles.projectLeft }>
           <div className={ styles.projectTitle }>{ title }</div>
           <div className={ styles.projectMetaData }>
-            { description !== 'Project Description' &&
+            { ( description && description !== 'Project Description' ) &&
               <div className={ styles.projectDescription }>{ description }</div>
             }
             { sortField == 'updateDate' &&
@@ -89,16 +101,6 @@ class ProjectButton extends Component {
               <span className={ styles.value }>{ numDocuments }</span>
             </div>
           </div>
-          {/* <div className={ styles.pullRight }>
-            <div className={ styles.item }>
-              <span className={ styles.label }>Created</span>
-              <span className={ styles.value }>{ moment(creationDate).format('LLL') }</span>
-            </div>
-            <div className={ styles.item }>
-              <span className={ styles.label }>Last Updated</span>
-              <span className={ styles.value }>{ moment(updateDate).format('LLL') }</span>
-            </div>
-          </div> */}
           <div className={ styles.expandButton }>
             <div className={ styles.chevron }>﹀</div>
             <div className={ styles.dropdown }>
@@ -147,4 +149,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { deleteProjectNoReturnHome, wipeProjectState, push })(ProjectButton);
+export default connect(mapStateToProps, { updateProject, deleteProjectNoReturnHome, wipeProjectState, push })(ProjectButton);

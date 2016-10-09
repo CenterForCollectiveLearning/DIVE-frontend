@@ -31,11 +31,6 @@ export class ProjectListPage extends Component {
     const nextProjectId = nextProps.project.properties.id;
     const nextUserId = nextProps.userId;
 
-    if (this.props.project.properties.id != nextProjectId) {
-      this.props.wipeProjectState();
-      this.props.push(`/projects/${ nextProjectId }/datasets/upload`);
-    }
-
     if (this.props.userId != nextUserId) {
       nextProps.fetchPreloadedProjects(nextUserId);
       if (nextUserId) {

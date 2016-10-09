@@ -198,7 +198,7 @@ export function updateProject(projectId, params) {
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     })
-      .then(json => dispatch(updatedProjectDispatcher(json)));
+    .then(json => dispatch(updatedProjectDispatcher(json)));
   };
 }
 
@@ -219,7 +219,6 @@ export function fetchProjectIfNeeded(projectId) {
 }
 
 // Feedback
-
 function requestSendFeedbackDispatcher(projectId, feedbackType, description) {
   return {
     type: REQUEST_SEND_FEEDBACK,

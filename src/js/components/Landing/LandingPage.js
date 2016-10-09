@@ -7,6 +7,7 @@ import { logoutUser } from '../../actions/AuthActions'
 
 import Link from '../Base/Link';
 import HomePage from './HomePage';
+import { wipeProjectState } from '../../actions/ProjectActions';
 
 import Logo from '../../../assets/DIVE_logo_white.svg?name=Logo';
 
@@ -21,11 +22,14 @@ export class LandingPage extends Component {
   }
 
   componentWillMount() {
-    const { user, push } = this.props;
+    const { user, push, wipeProjectState } = this.props;
     if (user.isAuthenticated) {
       // push('/projects')
     }
+    // Wipe project on landing page
+    wipeProjectState();
   }
+
   _onClickLogo(){
     this.props.push(`/`);
   }
@@ -74,8 +78,8 @@ export class LandingPage extends Component {
                       <div className={ styles.usernameAndChevron }>
                         <span className={ styles.username }>{ user.username }</span>
                         <div className={ styles.userOptionsMenu }>
-                          <Link route="/settings">Settings</Link>
-                          <Link onClick={ this.props.logoutUser }>Sign Out</Link>
+                          <div>Settings</div>
+                          <div onClick={ this.props.logoutUser }>Sign Out</div>
                         </div>
                       </div>
                     </div>
@@ -110,4 +114,4 @@ function mapStateToProps(state) {
   return { user };
 }
 
-export default connect(mapStateToProps, { push, logoutUser })(LandingPage);
+export default connect(mapStateToProps, { wipeProjectState, push, logoutUser })(LandingPage);
