@@ -59,7 +59,7 @@ export class ProjectListPage extends Component {
       .sort(function(a, b) {
         var aValue = a[sortField];
         var bValue = b[sortField];
-        const sortOrder = ([ 'updateDate', 'creationDate' ].indexOf(sortField) > -1) ? -1 : 1;
+        const sortOrder = ([ 'starred', 'updateDate', 'creationDate' ].indexOf(sortField) > -1) ? -1 : 1;
 
         return (aValue >= bValue) ? (aValue > bValue ? sortOrder : 0) : -sortOrder;
       });
