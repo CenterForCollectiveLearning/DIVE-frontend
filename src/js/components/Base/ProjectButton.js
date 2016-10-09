@@ -46,26 +46,29 @@ class ProjectButton extends Component {
   }
 
   render() {
-    const { project, className, format } = this.props;
+    const { project, className, format, sortField } = this.props;
     const { id, title, description, numDatasets, includedDatasets, numSpecs, numDocuments, creationDate, updateDate } = project;
 
     const starred = false;
 
     return (
       <div className={ styles.projectButton } onClick={ this.onClickProjectButton }>
+        <div className={ styles.starContainer }>
+          <i className={ starred ? 'fa fa-star ' + styles.starred : 'fa fa-star-o' }></i>
+        </div>
         <div className={ styles.projectLeft }>
-          {/* <div className={ styles.starContainer } onClick={ this.saveVisualization.bind(this) }> */}
-          <div className={ styles.starContainer }>
-            <i className={ starred ? 'fa fa-star ' + styles.starred : 'fa fa-star-o' }></i>
-          </div>
           <div className={ styles.projectTitle }>{ title }</div>
-          <div className={ styles.projectDescription }>{ description }</div>
-          {/* { !project.preloaded &&
-            <div className={ styles.pullRight }>
-              <RaisedButton icon={ true } onClick={ this.onClickProjectSettings }><i className="fa fa-cog" /></RaisedButton>
-              <RaisedButton icon={ true } onClick={ this.onClickDeleteProject }><i className="fa fa-trash" /></RaisedButton>
-            </div>
-          } */}
+          <div className={ styles.projectMetaData }>
+            { description !== 'Project Description' &&
+              <div className={ styles.projectDescription }>{ description }</div>
+            }
+            { sortField == 'updateDate' &&
+              <div className={ styles.projectDescription }>Last Modified: { moment(updateDate).format('LLL') }</div>
+            }
+            { sortField == 'creationDate' &&
+              <div className={ styles.projectDescription }>Created: { moment(creationDate).format('LLL') }</div>
+            }
+          </div>
         </div>
         <div className={ styles.projectRight }>
           <div className={ styles.metadata }>
@@ -78,7 +81,11 @@ class ProjectButton extends Component {
               <span className={ styles.value }>{ numSpecs }</span>
             </div>
             <div className={ styles.item }>
-              <span className={ styles.label }>Documents</span>
+              <span className={ styles.label }>Analyses</span>
+              <span className={ styles.value }>{ numSpecs }</span>
+            </div>
+            <div className={ styles.item }>
+              <span className={ styles.label }>Stories</span>
               <span className={ styles.value }>{ numDocuments }</span>
             </div>
           </div>
@@ -93,7 +100,11 @@ class ProjectButton extends Component {
             </div>
           </div> */}
           <div className={ styles.expandButton }>
-            ﹀
+            <div className={ styles.chevron }>﹀</div>
+            <div className={ styles.dropdown }>
+              <div className={ styles.dropdownOption } onClick={ this.onClickProjectSettings }>Edit Properties</div>
+              <div className={ styles.dropdownOption } onClick={ this.onClickDeleteProject }>Delete</div>
+            </div>
           </div>
         </div>
 
@@ -125,6 +136,7 @@ ProjectButton.propTypes = {
   className: PropTypes.string,
   format: PropTypes.string,
   project: PropTypes.object.isRequired,
+  sortField: PropTypes.string
 }
 
 ProjectButton.defaultProps = {

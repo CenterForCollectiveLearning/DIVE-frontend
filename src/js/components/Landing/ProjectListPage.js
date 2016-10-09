@@ -13,6 +13,14 @@ import Footer from './Footer';
 
 
 export class ProjectListPage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      sortField: 'updateDate'
+    };
+  }
+
   componentWillMount() {
     const { projects, userId } = this.props;
     this.props.fetchPreloadedProjects(userId);
@@ -43,13 +51,23 @@ export class ProjectListPage extends Component {
     this.props.createProject(userId, projectTitle, projectDescription);
   }
 
-  onSelectProjectSortType = () => {
-
+  onSelectProjectSortField = (sortField) => {
+    this.setState({ sortField: sortField });
   }
 
   render() {
     const { projects, userId, user } = this.props;
     const { userProjects, isFetchingUserProjects } = projects;
+    const { sortField } = this.state;
+
+    const sortedProjects = userProjects
+      .sort(function(a, b) {
+        var aValue = a[sortField];
+        var bValue = b[sortField];
+        const sortOrder = ([ 'updateDate', 'creationDate' ].indexOf(sortField) > -1) ? -1 : 1;
+
+        return (aValue >= bValue) ? (aValue > bValue ? sortOrder : 0) : -sortOrder;
+      });
 
     return (
       <DocumentTitle title='DIVE | Projects'>
@@ -69,25 +87,29 @@ export class ProjectListPage extends Component {
                 <div className={ styles.pageLabel }>Your Projects</div>
                 <div className={ styles.sortTypeDropdownContainer }>
                   <DropDownMenu
-                    value='lastUpdated'
+                    value={ sortField }
                     options={ [
-                      { value: 'lastUpdated', label: 'Last Modified' },
-                      { value: 'created', label: 'Created' },
-                      { value: 'name', label: 'Project Name' },
+                      { value: 'updateDate', label: 'Last Modified' },
+                      { value: 'creationDate', label: 'Created' },
+                      { value: 'title', label: 'Project Name' },
                       { value: 'starred', label: 'Starred' },
                     ]}
                     valueMember='value'
                     displayTextMember='label'
                     prefix="Sort By"
-                    onChange={ this.onSelectProjectSortType.bind(this) } />
+                    onChange={ this.onSelectProjectSortField } />
                 </div>
               </div>
               <div className={ styles.projectListContainer }>
                 { projects.isFetching &&
                   <div className={ styles.watermark }>Fetching projects...</div>
                 }
-                { userProjects.reverse().map((project) =>
-                  <ProjectButton project={ project } key={ `project-button-id-${ project.id }` }/>
+                { sortedProjects.map((project) =>
+                  <ProjectButton
+                    key={ `project-button-id-${ project.id }` }
+                    project={ project }
+                    sortField={ sortField }
+                  />
                 )}
               </div>
             </div>
