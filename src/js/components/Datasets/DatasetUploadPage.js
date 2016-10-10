@@ -68,8 +68,9 @@ export class DatasetUploadPage extends Component {
                     <div className={ styles.separater }></div>
                   </div>
                 }
-                <RaisedButton label="Select & upload a file" primary={ true } onClick={ this.onOpenClick } />
-                <span>or drop files here to upload</span>
+                <RaisedButton label="Upload dataset" primary={ true } onClick={ this.onOpenClick } />
+                  <span>or drag and drop files here</span>
+                  <span>Supported: CSV, TSV, JSON, EXCEL</span>
               </Dropzone>
             }
           </div>
