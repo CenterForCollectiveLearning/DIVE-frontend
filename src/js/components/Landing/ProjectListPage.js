@@ -80,19 +80,23 @@ export class ProjectListPage extends Component {
             <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
               <div className={ styles.projectListTopbar }>
                 <div className={ styles.pageLabel }>Your Projects</div>
-                <div className={ styles.sortTypeDropdownContainer }>
-                  <DropDownMenu
-                    value={ sortField }
-                    options={ [
-                      { value: 'updateDate', label: 'Last Modified' },
-                      { value: 'creationDate', label: 'Created' },
-                      { value: 'title', label: 'Project Name' },
-                      { value: 'starred', label: 'Starred' },
-                    ]}
-                    valueMember='value'
-                    displayTextMember='label'
-                    prefix="Sort By"
-                    onChange={ this.onSelectProjectSortField } />
+                <div className={ styles.pullRight }>
+                  <RaisedButton
+                    label="+ Create Project"
+                  <div className={ styles.sortTypeDropdownContainer }>
+                    <DropDownMenu
+                      value={ sortField }
+                      options={ [
+                        { value: 'updateDate', label: 'Last Modified' },
+                        { value: 'creationDate', label: 'Created' },
+                        { value: 'title', label: 'Project Name' },
+                        { value: 'starred', label: 'Starred' },
+                      ]}
+                      valueMember='value'
+                      displayTextMember='label'
+                      prefix="Sort By"
+                      onChange={ this.onSelectProjectSortField } />
+                  </div>
                 </div>
               </div>
               <div className={ styles.projectListContainer }>

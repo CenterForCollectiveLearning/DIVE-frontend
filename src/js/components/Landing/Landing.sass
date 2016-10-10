@@ -161,9 +161,26 @@
     .pageLabel
       color: black
       font-size: 24px
-    .sortTypeDropdownContainer
+    .pullRight
+      display: flex
+      flex-direction: row
       margin-left: auto
-      width: 200px
+
+      > div
+        margin-right: 10px
+
+        &:last-child
+          margin-right: 0px
+
+      .createProjectButton
+        border-color: $primary-accent
+        color: $primary-accent
+        &:hover
+          background-color: $primary-accent
+          color: white
+          
+      .sortTypeDropdownContainer
+        width: 200px
 
   .projectListContainer
     margin-top: 20px
