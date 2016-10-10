@@ -48,104 +48,116 @@
     &.starred:hover i
       opacity: 0.8
 
-  .projectLeft
-    display: flex
-    flex-direction: column
-    justify-content: center
-    width: 100%
-    padding: 0px 16px
-
-    .projectTitle
-      font-size: 14px
-      font-weight: bold
-
-    .pullRight
-      display: flex
-      margin-left: auto
-      > div:not(:first-of-type)
-        margin-left: 5px
-
-  .projectBottom
-    border-top: 1px solid $ui-line-grey
-
-  .projectRight
-    font-size: 12px
-    display: flex
-
-    .metadata
+  .projectButtonContent
+    flex-grow: 1
+    .projectButtonContentTop
       display: flex
       flex-direction: row
-      padding: 11px 0
-      align-items: center
-
-      .item
+      min-height: 100px
+      .projectLeft
         display: flex
         flex-direction: column
-        padding: 0 8px
-        .label
-          +smallCaps
-          margin-right: 5px
+        justify-content: center
+        width: 100%
+        padding: 0px 16px
 
-        .value
-          white-space: nowrap
-          overflow: hidden
-          text-overflow: ellipsis
-          font-weight: 600
-          text-align: center
-          font-size: 25px
+        .projectTitle
+          font-size: 14px
+          font-weight: bold
 
-    .expandButton
+        .pullRight
+          display: flex
+          margin-left: auto
+          > div:not(:first-of-type)
+            margin-left: 5px
+
+      .projectRight
+        font-size: 12px
+        display: flex
+
+        .metadata
+          display: flex
+          flex-direction: row
+          padding: 11px 0
+          align-items: center
+
+          .item
+            display: flex
+            flex-direction: column
+            padding: 0 8px
+            .label
+              +smallCaps
+              margin-right: 5px
+
+            .value
+              white-space: nowrap
+              overflow: hidden
+              text-overflow: ellipsis
+              font-weight: 600
+              text-align: center
+              font-size: 25px
+    .projectButtonContentBottom
+      padding: 0px 16px
+      padding-bottom: 16px
+
+      .label
+        +smallCaps
+      .values
+        > div
+          &:before
+            content: "-"
+            padding: 0 5px
+
+  .expandButton
+    position: relative
+    display: flex
+    width: center
+    border-left: 1px solid $ui-line-grey
+    align-items: center
+    justify-content: center
+    width: 35px
+
+    &:after
+      content: "︿"
+      font-weight: bold
       position: relative
-      display: flex
-      width: center
-      border-left: 1px solid $ui-line-grey
-      align-items: center
-      justify-content: center
-      width: 35px
+      top: -3px
+
+    &:hover
+      background-color: $ui-header-grey
 
       &:after
-        content: "︿"
-        font-weight: bold
-        position: relative
-        top: -3px
-
-      &:hover
-        background-color: $ui-header-grey
-
-        &:after
-          content: "﹀"
-          top: 3px
-
-        .dropdown
-          opacity: 1
-          pointer-events: auto
-          user-select: text
+        content: "﹀"
+        top: 3px
 
       .dropdown
-        position: absolute
-        opacity: 0
-        user-select: none
-        pointer-events: none
-        top: 95px
-        right: 0
-        background-color: white
-        z-index: 100
-        min-width: 150px
+        opacity: 1
+        pointer-events: auto
+        user-select: text
 
-        border: 1px solid $ui-line-grey
-        border-radius: 3px
-        position: absolute
-        padding: 3px 0px
+    .dropdown
+      position: absolute
+      opacity: 0
+      user-select: none
+      pointer-events: none
+      top: 95px
+      right: 0
+      background-color: white
+      z-index: 100
+      min-width: 150px
 
-        .dropdownOption
-          padding: 8px 12px
+      border: 1px solid $ui-line-grey
+      border-radius: 3px
+      position: absolute
+      padding: 3px 0px
 
-          &:hover
-            background-color: $primary-accent
-            color: white
+      .dropdownOption
+        padding: 8px 12px
 
+        &:hover
+          background-color: $primary-accent
+          color: white
 
-    .pullRight
-      display: flex
-      flex-direction: column
-      margin-left: auto
+  &.showDatasets
+    .projectButtonTop
+      min-height: 70px

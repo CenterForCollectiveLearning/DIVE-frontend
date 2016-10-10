@@ -17,6 +17,7 @@ import {
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
+import { push } from 'react-router-redux';
 
 function requestProjectDispatcher(projectId) {
   return {
@@ -110,7 +111,10 @@ export function createProject(user_id, title, description) {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(json => dispatch(createdProjectDispatcher(json)));
+    }).then(json => {
+      dispatch(createdProjectDispatcher(json))
+      dispatch(push(`/projects/${ json.id }/datasets/upload`))
+    });
   }
 }
 
