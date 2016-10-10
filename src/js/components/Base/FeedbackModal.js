@@ -29,7 +29,7 @@ class FeedbackModal extends Component {
     const fullPath = pathname + search;
 
     submitFeedback(
-      project.properties.id,
+      project.id,
       user.id,
       user.email,
       user.username,

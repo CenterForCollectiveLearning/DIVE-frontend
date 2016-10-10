@@ -13,13 +13,13 @@ export class DatasetsPage extends Component {
     const { push, replace, params, routes, project, datasetSelector, datasets, fetchDatasets, selectDataset } = this.props;
 
     if (routes.length < 4) {
-      if (project.properties.id && !datasetSelector.loaded && !datasets.isFetching) {
-        fetchDatasets(project.properties.id);
+      if (project.id && !datasetSelector.loaded && !datasets.isFetching) {
+        fetchDatasets(project.id);
       } else if (datasetSelector.loaded) {
         if (datasetSelector.datasetId) {
           replace(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
         } else {
-          push(`/projects/${ params.projectId }/datasets/upload`);
+          replace(`/projects/${ params.projectId }/datasets/upload`);
         }
       }
     } else {
@@ -36,13 +36,13 @@ export class DatasetsPage extends Component {
     }
 
     if (routes.length < 4) {
-      if ((project.properties.id && !datasetSelector.loaded && !datasets.isFetching) || (!datasets.isFetching && datasets.projectId != params.projectId)) {
+      if ((project.id && !datasetSelector.loaded && !datasets.isFetching) || (!datasets.isFetching && datasets.projectId != params.projectId)) {
         fetchDatasets(params.projectId);
       } else if (datasets.loaded && params.projectId == datasetSelector.projectId) {
         if (datasetSelector.datasetId && params.projectId == datasetSelector.projectId) {
           replace(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
         } else {
-          push(`/projects/${ params.projectId }/datasets/upload`);
+          replace(`/projects/${ params.projectId }/datasets/upload`);
         }
       }
     }
@@ -73,7 +73,7 @@ function mapStateToProps(state) {
     datasets,
     datasetSelector,
     datasetId,
-    projectTitle: project.properties.title
+    projectTitle: project.title
   }
 }
 

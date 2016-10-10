@@ -32,8 +32,17 @@ export default function projects(state = {
 
     case UPDATED_PROJECT:
       const { userProjects } = state;
-      var userProjectsUpdated = userProjects.filter((project) => project.id != action.projectProperties.id);
-      userProjectsUpdated.push(action.projectProperties);
+      var userProjectsUpdated = userProjects.map(function(project) {
+          if (project.id == action.projectProperties.id) {
+            return { ...project, ...action.projectProperties };
+          } else {
+            return project;
+          }
+      });
+      console.log(userProjectsUpdated, userProjects, action.projectProperties);
+      return { ...state, userProjects: userProjectsUpdated };
+
+      ((project) => project.id != action.projectProperties.id);
       return { ...state, userProjects: userProjectsUpdated };
 
     case DELETED_PROJECT:

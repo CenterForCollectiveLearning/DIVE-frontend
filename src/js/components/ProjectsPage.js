@@ -58,7 +58,7 @@ export class ProjectsPage extends Component {
 
   render() {
     const { project, user, feedback, location } = this.props;
-    const documentTitle = project.properties.title ? `DIVE | ${ project.properties.title }`: 'DIVE';
+    const documentTitle = project.title ? `DIVE | ${ project.title }`: 'DIVE';
 
     return (
       <DocumentTitle title={ documentTitle }>

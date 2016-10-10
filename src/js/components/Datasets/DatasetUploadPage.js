@@ -22,7 +22,7 @@ export class DatasetUploadPage extends Component {
   componentWillMount() {
     const { project, datasets, params, fetchDatasets, fetchFieldPropertiesIfNeeded } = this.props;
 
-    if (project.properties.id && !datasets.fetchedAll && !datasets.isFetching) {
+    if (project.id && !datasets.fetchedAll && !datasets.isFetching) {
       fetchDatasets(params.projectId, false);
     }
   }
@@ -33,13 +33,13 @@ export class DatasetUploadPage extends Component {
       push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
     }
 
-    if (project.properties.id && !datasets.fetchedAll && !datasets.isFetching) {
+    if (project.id && !datasets.fetchedAll && !datasets.isFetching) {
       fetchDatasets(params.projectId, false);
     }
   }
 
   onDrop(files) {
-    this.props.uploadDataset(this.props.project.properties.id, files[0]);
+    this.props.uploadDataset(this.props.project.id, files[0]);
   }
 
   onOpenClick() {
@@ -68,8 +68,9 @@ export class DatasetUploadPage extends Component {
                     <div className={ styles.separater }></div>
                   </div>
                 }
-                <RaisedButton label="Select & upload a file" primary={ true } onClick={ this.onOpenClick } />
-                <span>or drop files here to upload</span>
+                <RaisedButton label="Upload dataset" primary={ true } onClick={ this.onOpenClick } />
+                  <span>or drag and drop files here</span>
+                  <span>Supported: CSV, TSV, JSON, EXCEL</span>
               </Dropzone>
             }
           </div>
@@ -88,7 +89,7 @@ DatasetUploadPage.propTypes = {
 
 function mapStateToProps(state) {
   const { project, datasets, datasetSelector } = state;
-  return { project, projectTitle: project.properties.title, datasets, datasetSelector };
+  return { project, projectTitle: project.title, datasets, datasetSelector };
 }
 
 export default connect(mapStateToProps, {

@@ -148,7 +148,7 @@ function mapStateToProps(state) {
     conditionals,
     datasets,
     datasetSelector,
-    projectId: project.properties.id,
+    projectId: project.id,
     regressionType: regressionType,
     dependentVariableName: dependentVariableName,
     independentVariableNames: independentVariableNames,

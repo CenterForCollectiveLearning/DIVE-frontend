@@ -100,9 +100,9 @@ function mapStateToProps(state) {
   const { datasets, project, datasetSelector } = state;
   return {
     datasets: datasets,
-    projectId: (project.properties.id ? `${ project.properties.id }` : null),
+    projectId: (project.id ? `${ project.id }` : null),
     selectedDatasetId: `${ datasetSelector.datasetId }`,
-    preloadedProject: project.properties.preloaded
+    preloadedProject: project.preloaded
   };
 }
 

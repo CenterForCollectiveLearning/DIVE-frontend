@@ -17,6 +17,7 @@ import {
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
+import { push } from 'react-router-redux';
 
 function requestProjectDispatcher(projectId) {
   return {
@@ -82,7 +83,7 @@ export function wipeProjectState() {
 
 function shouldCreateProject(state) {
   const { project } = state;
-  if (project.loaded && !(project.properties || project.isFetching)) {
+  if (project.loaded && !(project || project.isFetching)) {
     return true;
   }
   return false;
@@ -110,7 +111,10 @@ export function createProject(user_id, title, description) {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(json => dispatch(createdProjectDispatcher(json)));
+    }).then(json => {
+      dispatch(createdProjectDispatcher(json))
+      dispatch(push(`/projects/${ json.id }/datasets/upload`))
+    });
   }
 }
 
@@ -198,13 +202,13 @@ export function updateProject(projectId, params) {
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     })
-      .then(json => dispatch(updatedProjectDispatcher(json)));
+    .then(json => dispatch(updatedProjectDispatcher(json)));
   };
 }
 
 function shouldFetchProject(state) {
   const project = state.project;
-  if (project.properties.id || project.isFetching) {
+  if (project.id || project.isFetching) {
     return false;
   }
   return true;
@@ -219,7 +223,6 @@ export function fetchProjectIfNeeded(projectId) {
 }
 
 // Feedback
-
 function requestSendFeedbackDispatcher(projectId, feedbackType, description) {
   return {
     type: REQUEST_SEND_FEEDBACK,

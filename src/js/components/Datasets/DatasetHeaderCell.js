@@ -41,7 +41,7 @@ DatasetHeaderCell.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  return { projectId: state.project.properties.id };
+  return { projectId: state.project.id };
 }
 
 export default connect(mapStateToProps, { setFieldType })(DatasetHeaderCell);
