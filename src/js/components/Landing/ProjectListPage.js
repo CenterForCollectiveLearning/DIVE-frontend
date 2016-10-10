@@ -6,6 +6,7 @@ import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
 import ProjectButton from '../Base/ProjectButton';
+import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
 import Loader from '../Base/Loader';
@@ -17,13 +18,13 @@ export class ProjectListPage extends Component {
     super(props);
 
     this.state = {
-      sortField: 'updateDate'
+      sortField: 'updateDate',
+      viewMode: 'normal'
     };
   }
 
   componentWillMount() {
     const { projects, userId } = this.props;
-    this.props.fetchPreloadedProjects(userId);
     this.props.fetchUserProjects(userId);
   }
 
@@ -32,14 +33,13 @@ export class ProjectListPage extends Component {
     const nextUserId = nextProps.userId;
 
     if (this.props.userId != nextUserId) {
-      nextProps.fetchPreloadedProjects(nextUserId);
       if (nextUserId) {
         nextProps.fetchUserProjects(nextUserId);
       }
     }
   }
 
-  _onUploadClick() {
+  _onUploadClick = () => {
     const userId = this.props.userId;
     const projectTitle = 'Project Title';
     const projectDescription = 'Project Description'
@@ -50,10 +50,14 @@ export class ProjectListPage extends Component {
     this.setState({ sortField: sortField });
   }
 
+  onSelectProjectViewMode = (viewMode) => {
+    this.setState({ viewMode: viewMode });
+  }
+
   render() {
     const { projects, userId, user } = this.props;
     const { userProjects, isFetchingUserProjects } = projects;
-    const { sortField } = this.state;
+    const { sortField, viewMode } = this.state;
 
     const sortedProjects = userProjects
       .sort(function(a, b) {
@@ -67,15 +71,6 @@ export class ProjectListPage extends Component {
     return (
       <DocumentTitle title='DIVE | Projects'>
         <div className={ styles.centeredFill }>
-          <div className={ styles.ctaBox }>
-            {/* <div className={ styles.ctaContainer }>
-              <RaisedButton
-                label="Create Project"
-                primary={ true }
-                onClick={ this._onUploadClick.bind(this) }
-                className={ styles.uploadButton } />
-            </div> */}
-          </div>
           { !isFetchingUserProjects && userId && userProjects.length > 0 &&
             <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
               <div className={ styles.projectListTopbar }>
@@ -83,6 +78,18 @@ export class ProjectListPage extends Component {
                 <div className={ styles.pullRight }>
                   <RaisedButton
                     label="+ Create Project"
+                    onClick={ this._onUploadClick }
+                    className={ styles.createProjectButton } />
+                  {/* <ToggleButtonGroup
+                    value={ viewMode }
+                    toggleItems={ [
+                      { value: 'default', label: 'Default' },
+                      { value: 'expanded', label: 'Expanded' },
+                    ] }
+                    displayTextMember="label"
+                    valueMember="value"
+                    separated={ false }
+                    onChange={ this.onSelectProjectViewMode } /> */}
                   <div className={ styles.sortTypeDropdownContainer }>
                     <DropDownMenu
                       value={ sortField }
@@ -108,6 +115,7 @@ export class ProjectListPage extends Component {
                     key={ `project-button-id-${ project.id }` }
                     project={ project }
                     sortField={ sortField }
+                    viewMode={ viewMode }
                   />
                 )}
               </div>
@@ -124,7 +132,7 @@ export class ProjectListPage extends Component {
           { isFetchingUserProjects && userId &&
             <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
               <div className={ styles.projectListSidebar }></div>
-              <Loader text='Loading your projects' />
+              <Loader text='Loading Your Projects' />
             </div>
           }
         </div>
