@@ -109,6 +109,8 @@ class DatasetDataRow extends Component {
                   className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
                   valueClassName={ styles.fieldTypeValue }
                   value={ fieldProperty.type }
+                  autosize={ true }
+                  searchable={ true }
                   options={ this.state.fieldTypes }
                   onChange={ this.onSelectFieldType.bind(this) } />
               </div>
