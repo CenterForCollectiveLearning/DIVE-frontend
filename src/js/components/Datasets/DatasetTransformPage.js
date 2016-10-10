@@ -10,7 +10,7 @@ import styles from './Datasets.sass';
 import HeaderBar from '../Base/HeaderBar';
 import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
-import DatasetDataGrid from './DatasetDataGrid';
+import DatasetDataList from './DatasetDataList';
 import DatasetRow from './DatasetRow';
 import ReduceColumnsModal from './ReduceColumnsModal';
 import PivotModal from './PivotModal';
@@ -120,7 +120,7 @@ export class DatasetTransformPage extends Component {
           />
 
           { dataset && dataset.details &&
-            <DatasetDataGrid dataset={ dataset } fieldProperties={ fieldProperties }/>
+            <DatasetDataList dataset={ dataset } fieldProperties={ fieldProperties }/>
           }
           { dataset && dataset.details && this.state.reduceColumnsModalOpen &&
             <ReduceColumnsModal

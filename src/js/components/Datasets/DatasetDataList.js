@@ -12,6 +12,7 @@ export default class DatasetDataList extends Component {
         {
           fieldProperties.items.map((fieldProperty) =>
             <DatasetDataRow
+              key={ `dataset-data-row-${ fieldProperty.id }` }
               fieldProperty={ fieldProperty }
               color = { fieldProperties.fieldNameToColor[fieldProperty.name] }
             />
