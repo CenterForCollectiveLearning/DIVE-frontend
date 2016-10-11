@@ -71,41 +71,41 @@ export class ProjectListPage extends Component {
     return (
       <DocumentTitle title='DIVE | Projects'>
         <div className={ styles.centeredFill }>
-          { !isFetchingUserProjects && userId && userProjects.length > 0 &&
-            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
-              <div className={ styles.projectListTopbar }>
-                <div className={ styles.pageLabel }>Your Projects</div>
-                <div className={ styles.pullRight }>
-                  <RaisedButton
-                    label="+ Create Project"
-                    onClick={ this._onUploadClick }
-                    className={ styles.createProjectButton } />
-                  {/* <ToggleButtonGroup
-                    value={ viewMode }
-                    toggleItems={ [
-                      { value: 'default', label: 'Default' },
-                      { value: 'expanded', label: 'Expanded' },
-                    ] }
-                    displayTextMember="label"
-                    valueMember="value"
-                    separated={ false }
-                    onChange={ this.onSelectProjectViewMode } /> */}
-                  <div className={ styles.sortTypeDropdownContainer }>
-                    <DropDownMenu
-                      value={ sortField }
-                      options={ [
-                        { value: 'updateDate', label: 'Last Modified' },
-                        { value: 'creationDate', label: 'Created' },
-                        { value: 'title', label: 'Project Name' },
-                        { value: 'starred', label: 'Starred' },
-                      ]}
-                      valueMember='value'
-                      displayTextMember='label'
-                      prefix="Sort By"
-                      onChange={ this.onSelectProjectSortField } />
-                  </div>
+          <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+            <div className={ styles.projectListTopbar }>
+              <div className={ styles.pageLabel }>Your Projects</div>
+              <div className={ styles.pullRight }>
+                <RaisedButton
+                  label="+ Create Project"
+                  onClick={ this._onUploadClick }
+                  className={ styles.createProjectButton } />
+                {/* <ToggleButtonGroup
+                  value={ viewMode }
+                  toggleItems={ [
+                    { value: 'default', label: 'Default' },
+                    { value: 'expanded', label: 'Expanded' },
+                  ] }
+                  displayTextMember="label"
+                  valueMember="value"
+                  separated={ false }
+                  onChange={ this.onSelectProjectViewMode } /> */}
+                <div className={ styles.sortTypeDropdownContainer }>
+                  <DropDownMenu
+                    value={ sortField }
+                    options={ [
+                      { value: 'updateDate', label: 'Last Modified' },
+                      { value: 'creationDate', label: 'Created' },
+                      { value: 'title', label: 'Project Name' },
+                      { value: 'starred', label: 'Starred' },
+                    ]}
+                    valueMember='value'
+                    displayTextMember='label'
+                    prefix="Sort By"
+                    onChange={ this.onSelectProjectSortField } />
                 </div>
               </div>
+            </div>
+            { !isFetchingUserProjects && userId && userProjects.length > 0 &&
               <div className={ styles.projectListContainer }>
                 { projects.isFetching &&
                   <div className={ styles.watermark }>Fetching projects...</div>
@@ -119,22 +119,22 @@ export class ProjectListPage extends Component {
                   />
                 )}
               </div>
-            </div>
-          }
-          { !isFetchingUserProjects && userProjects.length == 0 &&
-            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
-              <div className={ styles.projectListSidebar }></div>
-              <div className={ styles.watermark }>
-                You have no projects &#x2639;
+            }
+            { !isFetchingUserProjects && userProjects.length == 0 &&
+              <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+                <div className={ styles.projectListSidebar }></div>
+                <div className={ styles.watermark }>
+                  You have no projects &#x2639;
+                </div>
               </div>
-            </div>
-          }
-          { isFetchingUserProjects && userId &&
-            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
-              <div className={ styles.projectListSidebar }></div>
-              <Loader text='Loading Your Projects' />
-            </div>
-          }
+            }
+            { isFetchingUserProjects && userId &&
+              <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+                <div className={ styles.projectListSidebar }></div>
+                <Loader text='Loading Your Projects' />
+              </div>
+            }
+          </div>
         </div>
       </DocumentTitle>
     );
