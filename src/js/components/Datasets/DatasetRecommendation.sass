@@ -1,0 +1,30 @@
+@import '../../../css/mixins.sass'
+@import '../../../css/flexbox.sass'
+
+.recommendationPage
+  +fillContainer
+  flex-direction: row
+  max-width: 100%
+  max-height: 100%
+  overflow-y: auto
+
+  .recommendationMainPane
+    +fillContainer
+    max-width: 100%
+    max-height: 100%
+    overflow-y: auto
+
+.fieldGroup
+  &:first-child
+    .fieldGroupLabel
+      margin-top: 0
+
+  + .fieldGroup
+    margin-top: 7px
+
+  .fieldGroupLabel
+    +smallCaps
+    margin-top: 17px
+    margin-bottom: 5px
+
+    text-transform: uppercase

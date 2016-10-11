@@ -61,7 +61,7 @@ export class ExploreSidebar extends Component {
       selectedFieldPropertiesQueryString = selectedFieldPropertiesQueryString.reduce((a, b) => a + "&" + b);
     }
 
-    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
+    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/recommend?${ selectedFieldPropertiesQueryString }`);
   }
 
   clickRecommendationMode = (recommendationModeId) => {

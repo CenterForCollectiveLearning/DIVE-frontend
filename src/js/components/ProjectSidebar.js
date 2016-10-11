@@ -31,6 +31,7 @@ export class ProjectSidebar extends Component {
       'upload',
       'inspect',
       'transform',
+      'recommend',
       'explore',
       'starred',
       'aggregation',
@@ -114,8 +115,8 @@ export class ProjectSidebar extends Component {
           <TabGroup heading="1. DATASETS">
             <Tab label="Upload" value="upload" route={ `datasets/upload` } />
             <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
-            <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } disabled={ !datasets.items.length }/>
-            <Tab label="Clean" value="clean" route={ `datasets${ datasetId ? `/${ datasetId }/clean` : '/combine' }` } disabled={ true }/>
+            <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/transform' }` } disabled={ !datasets.items.length }/>
+            <Tab label="Recommend" value="recommend" route={ `datasets${ datasetId ? `/${ datasetId }/recommend` : '/recommend' }` } disabled={ !datasets.items.length }/>
           </TabGroup>
           <TabGroup heading="2. VISUALIZATIONS">
             <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>

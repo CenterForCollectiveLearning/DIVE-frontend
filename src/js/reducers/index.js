@@ -20,6 +20,7 @@ import feedback from './feedback';
 import exploreSelector from './exploreSelector';
 import project from './project';
 import projects from './projects';
+import recommendSelector from './recommendSelector';
 import regressionSelector from './regressionSelector';
 import specs from './specs';
 import aggregationSelector from './aggregationSelector';
@@ -49,6 +50,7 @@ const rootReducer = combineReducers({
   project,
   projects,
   regressionSelector,
+  recommendSelector,
   specs,
   aggregationSelector,
   segmentationSelector,

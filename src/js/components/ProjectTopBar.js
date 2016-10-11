@@ -38,6 +38,7 @@ export class ProjectTopBar extends Component {
       "upload",
       "inspect",
       "transform",
+      "recommend",
       "explore",
       "starred",
       "aggregation",
