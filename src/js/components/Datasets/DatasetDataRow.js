@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { ChromePicker } from 'react-color';
 
-import styles from './Datasets.sass';
+import styles from './DatasetDataRow.sass';
 import FieldTypes from '../../constants/FieldTypes';
 import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
@@ -84,179 +84,121 @@ class DatasetDataRow extends Component {
       },
     };
 
-    let fieldContent;
-    if ( generalType == 'c' ) {
-      fieldContent =
-        <div className={ styles.metadata }>
-          <div className={ styles.name }>{ name }</div>
-          <div className={ styles.type }>
-            <DropDownMenu
-              className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
-              valueClassName={ styles.fieldTypeValue }
-              value={ fieldProperty.type }
-              options={ this.state.fieldTypes }
-              onChange={ this.onSelectFieldType.bind(this) } />
-          </div>
-          { vizData &&
-            <ColumnChart
-              chartId={ `field-bar-${ id }` }
-              data={ vizData['visualize'] }
-              isMinimalView={ true }
-              colors={ colors }
-              additionalOptions={ additionalOptions }
-            />
-          }
-          { stats &&
-            <div className={ styles.statistics }>
-              { numNa !== null && <div className={ styles.statistic }><div className={ styles.field }>Null</div><div className={ styles.value }>{ `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }</div></div> }
-              <div className={ styles.statistic }><div className={ styles.field }>Unique Values</div><div className={ styles.value }>{ `${ getRoundedString(stats.unique) } (${ getRoundedString((stats.unique / stats.count) * 100) }%)` }</div></div>
-              <div className={ styles.statistic }><div className={ styles.field }>Most Frequent</div><div className={ styles.value }>{ stats.top }</div></div>
-              <div className={ styles.statistic }><div className={ styles.field }>Most Occurrences</div><div className={ styles.value }>{ getRoundedString(stats.freq) }</div></div>
-            </div>
-          }
-          { typeScores && showTypeScores &&
-            <div className={ styles.typeScores }>
-              { Object.keys(typeScores).map((key, i) =>
-                <div>
-                  {i + 1}. { key }: { getRoundedString(typeScores[key]) }
-                </div>
-              ) }
-            </div>
-          }
-          <div className={ styles.toggles }>
-            <div className={ styles.left }>
-              <input type="checkbox"
-                checked={ this.state.isId }
-                onChange={ this.onIDCheckboxChange.bind(this, projectId, datasetId, id) }
-              />
-              <span>ID</span>
-            </div>
-            <div className={ styles.right }>
-              <div
-                className={ styles.colorPickerButton }
-                style={ { backgroundColor: color } }
-                onClick={ this.onColorPickerClick } />
-            </div>
-          </div>
-        </div>
-    } else if ( generalType == 'q' ) {
-      fieldContent =
-        <div className={ styles.metadata }>
-          <div className={ styles.name }>{ name }</div>
-          <div className={ styles.type }>
-            <DropDownMenu
-              className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
-              valueClassName={ styles.fieldTypeValue }
-              value={ fieldProperty.type }
-              options={ this.state.fieldTypes }
-              onChange={ this.onSelectFieldType.bind(this) } />
-          </div>
-          { vizData &&
-            <Histogram
-              chartId={ `field-hist-${ id }` }
-              data={ vizData['visualize'] }
-              bins={ vizData['bins'] }
-              isMinimalView={ true }
-              colors={ colors }
-              additionalOptions={ additionalOptions }
-            />
-          }
-          { stats &&
-            <div className={ styles.statistics }>
-              { numNa !== null && <div className={ styles.statistic }><div className={ styles.field }>Null</div><div className={ styles.value }>{ `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }</div></div> }
-              <div className={ styles.statistic }><div className={ styles.field }>Mean</div><div className={ styles.value }>{ getRoundedString(stats.mean) }</div></div>
-              <div className={ styles.statistic }><div className={ styles.field }>Median</div><div className={ styles.value }>{ getRoundedString(stats['50%']) }</div></div>
-              <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div></div>
-              <div className={ styles.statistic }><div className={ styles.field }>Std</div><div className={ styles.value }>{ getRoundedString(stats.std) }</div></div>
-            </div>
-          }
-          { typeScores && showTypeScores &&
-            <div className={ styles.typeScores }>
-              { Object.keys(typeScores).map((key, i) =>
-                <div>
-                  {i + 1}. { key }: { getRoundedString(typeScores[key]) }
-                </div>
-              ) }
-            </div>
-          }
-          <div className={ styles.toggles }>
-            <div className={ styles.left }>
-              <input type="checkbox"
-                checked={ this.state.isId }
-                onChange={ this.onIDCheckboxChange.bind(this, projectId, datasetId, id) }
-              />
-              <span>ID</span>
-            </div>
-            <div className={ styles.right }>
-              <div
-                className={ styles.colorPickerButton }
-                style={ { backgroundColor: color } }
-                onClick={ this.onColorPickerClick } />
-            </div>
-          </div>
-        </div>
-    } else if ( generalType == 't' ) {
-      fieldContent =
-      <div className={ styles.metadata }>
-        <div className={ styles.name }>{ name }</div>
-        <div className={ styles.type }>
-          <DropDownMenu
-            className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
-            valueClassName={ styles.fieldTypeValue }
-            value={ fieldProperty.type }
-            options={ this.state.fieldTypes }
-            onChange={ this.onSelectFieldType.bind(this) } />
-        </div>
-        { vizData &&
-          <Histogram
-            chartId={ `field-hist-time-${ id }` }
-            data={ vizData['visualize'] }
-            bins={ vizData['bins'] }
-            isMinimalView={ true }
-            colors={ colors }
-            additionalOptions={ additionalOptions }
-          />
-        }
-        { stats &&
-          <div className={ styles.statistics }>
-            <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div></div>
-          </div>
-        }
-        { typeScores && showTypeScores &&
-          <div className={ styles.typeScores }>
-            { Object.keys(typeScores).map((key, i) =>
-              <div>
-                {i + 1}. { key }: { getRoundedString(typeScores[key]) }
-              </div>
-            ) }
-          </div>
-        }
-        <div className={ styles.toggles }>
-          <div className={ styles.left }>
-            <input type="checkbox"
-              checked={ this.state.isId }
-              onChange={ this.onIDCheckboxChange.bind(this, projectId, datasetId, id) }
-            />
-            <span>ID</span>
-          </div>
-          <div className={ styles.right }>
-            <div
-              className={ styles.colorPickerButton }
-              style={ { backgroundColor: color } }
-              onClick={ this.onColorPickerClick } />
-          </div>
-        </div>
-      </div>
+    const popover = {
+      position: 'absolute',
+      top: '30px',
+      right: '50px',
+      zIndex: '2',
+    }
+    const cover = {
+      position: 'fixed',
+      top: '0px',
+      right: '0px',
+      bottom: '0px',
+      left: '0px',
     }
 
-    return (
-      <div className={ styles.datasetDataRow }>
-        { fieldContent }
-        <div className={ styles.actions }>
-          <RaisedButton onClick={ () => this.onClickVisualizeField(name) }>Visualize</RaisedButton>
+    const constructFieldContent = (metadataChildren, statsChildren) => {
+      return (
+        <div className={ styles.datasetDataRow }>
+          <div className={ styles.metadata }>
+            <div className={ styles.nameAndType }>
+              <div className={ styles.name }>{ name }{this.state.isId}{ this.state.isId ? ' (ID)' : '' }</div>
+              <div className={ styles.type }>
+                <DropDownMenu
+                  className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
+                  valueClassName={ styles.fieldTypeValue }
+                  value={ fieldProperty.type }
+                  autosize={ true }
+                  searchable={ true }
+                  options={ this.state.fieldTypes }
+                  onChange={ this.onSelectFieldType.bind(this) } />
+              </div>
+            </div>
+            { metadataChildren }
+            { statsChildren }
+            { typeScores && showTypeScores &&
+              <div className={ styles.typeScores }>
+                { Object.keys(typeScores).map((key, i) =>
+                  <div>
+                    {i + 1}. { key }: { getRoundedString(typeScores[key]) }
+                  </div>
+                ) }
+              </div>
+            }
+          </div>
+          <div className={ styles.expandButton }>
+            <div className={ styles.dropdown }>
+              <div className={ styles.dropdownOption } onClick={ this.onIDCheckboxChange }>{ this.state.isId ? 'Remove as ID' : 'Mark as ID'}</div>
+              <div className={ styles.dropdownOption } onClick={ this.onColorPickerClick }>Change Color</div>
+              <div className={ styles.separator } />
+              <div className={ styles.dropdownOption } onClick={ () => this.onClickVisualizeField(name) }>Visualize</div>
+            </div>
+          </div>
+          { this.state.displayColorPicker ? <div style={ popover }>
+            <div style={ cover } onClick={ this.onColorPickerClose }/>
+            <ChromePicker
+              color={ color }
+              onChangeComplete={ this.onColorPickerChange }
+            />
+          </div> : null }
         </div>
-      </div>
-    );
+      )
+    }
+
+    let metadataContent;
+    let statsContent;
+    if ( generalType == 'c' ) {
+      metadataContent =
+        <ColumnChart
+          chartId={ `field-bar-${ id }` }
+          data={ vizData['visualize'] }
+          isMinimalView={ true }
+          colors={ colors }
+          additionalOptions={ additionalOptions }
+        />
+      statsContent =
+        <div className={ styles.statistics }>
+          { numNa !== null && <div className={ styles.statistic }><div className={ styles.field }>Null</div><div className={ styles.value }>{ `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }</div></div> }
+          <div className={ styles.statistic }><div className={ styles.field }>Unique Values</div><div className={ styles.value }>{ `${ getRoundedString(stats.unique) } (${ getRoundedString((stats.unique / stats.count) * 100) }%)` }</div></div>
+          <div className={ styles.statistic + ' ' + styles.wide }><div className={ styles.field }>Most Frequent</div><div className={ styles.value }>{ stats.top } ({ getRoundedString(stats.freq) })</div></div>
+        </div>
+    } else if ( generalType == 'q' ) {
+      metadataContent =
+        <Histogram
+          chartId={ `field-hist-${ id }` }
+          data={ vizData['visualize'] }
+          bins={ vizData['bins'] }
+          isMinimalView={ true }
+          colors={ colors }
+          additionalOptions={ additionalOptions }
+        />
+      statsContent =
+        <div className={ styles.statistics }>
+          { numNa !== null && <div className={ styles.statistic }><div className={ styles.field }>Null</div><div className={ styles.value }>{ `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }</div></div> }
+          <div className={ styles.statistic }><div className={ styles.field }>Mean</div><div className={ styles.value }>{ getRoundedString(stats.mean) }</div></div>
+          <div className={ styles.statistic }><div className={ styles.field }>Median</div><div className={ styles.value }>{ getRoundedString(stats['50%']) }</div></div>
+          <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div></div>
+          <div className={ styles.statistic }><div className={ styles.field }>Std</div><div className={ styles.value }>{ getRoundedString(stats.std) }</div></div>
+        </div>
+
+    } else if ( generalType == 't' ) {
+      metadataContent =
+        <Histogram
+          chartId={ `field-hist-time-${ id }` }
+          data={ vizData['visualize'] }
+          bins={ vizData['bins'] }
+          isMinimalView={ true }
+          colors={ colors }
+          additionalOptions={ additionalOptions }
+        />
+      statsContent =
+        <div className={ styles.statistics }>
+          <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div></div>
+        </div>
+    }
+
+    return constructFieldContent(metadataContent, statsContent);
   }
 }
 

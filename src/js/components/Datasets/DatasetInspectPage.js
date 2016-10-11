@@ -104,7 +104,7 @@ export class DatasetInspectPage extends Component {
                     onChange={ this.onClickLayoutType } />
                 </div>
                 <div className={ styles.headerControl }>
-                  <RaisedButton label="Upload new dataset" onClick={ this.onClickUploadDataset } />
+                  <RaisedButton buttonStyle='blueAction' label="+ Upload new dataset" onClick={ this.onClickUploadDataset } />
                 </div>
               </div>
             }

@@ -69,7 +69,7 @@ class DatasetMetadataCell extends Component {
         height: 70
       },
     };
-  
+
     let fieldContent;
     if ( generalType == 'c' ) {
       fieldContent =
@@ -207,8 +207,9 @@ class DatasetMetadataCell extends Component {
     }
 
     const popover = {
-      position: 'relative',
+      position: 'absolute',
       top: '30px',
+      right: '50px',
       zIndex: '2',
     }
     const cover = {
