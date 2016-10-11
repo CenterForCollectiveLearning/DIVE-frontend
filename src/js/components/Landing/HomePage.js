@@ -56,14 +56,15 @@ export class HomePage extends Component {
         <div className={ styles.centeredFill }>
           <div className={ styles.ctaBox }>
             <div className={ styles.primaryCopy }>
-              <span>Turn Data into Stories</span>
+              {/* <span>Turn Data into Stories</span> */}
+              <span>Easy and powerful data exploration</span>
             </div>
             <div className={ styles.secondaryCopy }>
-              Easy, fast, and powerful data visualization and analysis.
+              DIVE lets
             </div>
             <div className={ styles.ctaContainer }>
               <RaisedButton
-                label="Get Started"
+                label="Upload Data"
                 primary={ true }
                 onClick={ this._onUploadClick.bind(this) }
                 className={ styles.uploadButton + ' ' + styles.primary } />
