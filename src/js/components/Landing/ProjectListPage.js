@@ -77,6 +77,7 @@ export class ProjectListPage extends Component {
               <div className={ styles.pullRight }>
                 <RaisedButton
                   label="+ Create Project"
+                  buttonStyle="blueAction"
                   onClick={ this._onUploadClick }
                   className={ styles.createProjectButton } />
                 {/* <ToggleButtonGroup
