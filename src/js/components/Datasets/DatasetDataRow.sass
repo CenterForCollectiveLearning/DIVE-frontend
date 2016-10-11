@@ -31,6 +31,7 @@
       display: flex
       flex-direction: column
       justify-content: center
+      padding-top: 10px
 
     div.name, div.type
       display: flex
@@ -40,8 +41,8 @@
     div.name
       font-weight: bold
       min-width: 200px
-      font-size: 14px
-      line-height: 14px
+      font-size: 12px
+      line-height: 12px
       text-overflow: ellipsis
 
     div.type
@@ -59,8 +60,13 @@
         text-align: center
         white-space: wrap
         padding: 0 15px
-        min-width: 120px
-        width: 120px
+
+        min-width: 100px
+        width: 100px
+
+        &.wide
+          min-width: 160px
+          width: 160px
 
         .field
         .value
@@ -100,6 +106,12 @@
       position: absolute
       padding: 3px 0px
 
+      .separator
+        margin: 3px 12px
+        border-bottom: 1px solid $ui-line-grey
+        height: 0px
+        max-height: 0px
+
       .dropdownOption
         padding: 8px 12px
         cursor: pointer
@@ -127,44 +139,10 @@
         user-select: text
 
 .fieldTypeDropDown.dropDownMenu
-  min-width: 50px
-  max-width: 100%
-
+  margin-top: -5px
+  margin-left: -10px
   > div
     > div:first-of-type
-      height: 20px
-      line-height: 20px
-      padding: 0
       background-color: transparent
       border: none
       box-shadow: none
-      text-align: right
-      position: relative
-
-      > div:first-child
-        height: 20px
-        line-height: 20px
-        padding: 0
-        text-align: left
-
-      > span:last-child
-        position: absolute
-        right: -9px
-        top: -1px
-
-        > span:first-child
-          border-width: 4px 3px 0
-
-    > div:nth-of-type(2)
-      width: auto
-      right: 0
-
-      > div
-        > div
-          text-align: right
-          padding-right: 10px
-
-  .fieldTypeValue
-    font-weight: 400
-    font-size: 12px
-    color: #888

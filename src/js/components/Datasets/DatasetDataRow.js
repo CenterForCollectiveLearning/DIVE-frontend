@@ -131,6 +131,7 @@ class DatasetDataRow extends Component {
             <div className={ styles.dropdown }>
               <div className={ styles.dropdownOption } onClick={ this.onIDCheckboxChange }>{ this.state.isId ? 'Remove as ID' : 'Mark as ID'}</div>
               <div className={ styles.dropdownOption } onClick={ this.onColorPickerClick }>Change Color</div>
+              <div className={ styles.separator } />
               <div className={ styles.dropdownOption } onClick={ () => this.onClickVisualizeField(name) }>Visualize</div>
             </div>
           </div>
@@ -160,8 +161,7 @@ class DatasetDataRow extends Component {
         <div className={ styles.statistics }>
           { numNa !== null && <div className={ styles.statistic }><div className={ styles.field }>Null</div><div className={ styles.value }>{ `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }</div></div> }
           <div className={ styles.statistic }><div className={ styles.field }>Unique Values</div><div className={ styles.value }>{ `${ getRoundedString(stats.unique) } (${ getRoundedString((stats.unique / stats.count) * 100) }%)` }</div></div>
-          <div className={ styles.statistic }><div className={ styles.field }>Most Frequent</div><div className={ styles.value }>{ stats.top }</div></div>
-          <div className={ styles.statistic }><div className={ styles.field }>Most Occurrences</div><div className={ styles.value }>{ getRoundedString(stats.freq) }</div></div>
+          <div className={ styles.statistic + ' ' + styles.wide }><div className={ styles.field }>Most Frequent</div><div className={ styles.value }>{ stats.top } ({ getRoundedString(stats.freq) })</div></div>
         </div>
     } else if ( generalType == 'q' ) {
       metadataContent =
