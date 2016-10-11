@@ -69,7 +69,7 @@ export class HomePage extends Component {
                 className={ styles.uploadButton + ' ' + styles.primary } />
             </div>
             <div className={ styles.video }>
-              <iframe src="https://player.vimeo.com/video/179173590" color="#007BD7" width="640" height="360" frameBorder="0" allowFullScreen />
+              <iframe src="https://player.vimeo.com/video/179173590" color="#007BD7" width="600" height="340" frameBorder="0" allowFullScreen />
             </div>
           </div>
           <div className={ styles.sections + ' ' + styles.fillContainer }>
@@ -88,10 +88,20 @@ export class HomePage extends Component {
                 </div>
               </div>
             }
+            <div className={ styles.section + ' ' + styles.contentSection }>
+              <div className={ styles.sectionHeader }>Intelligent Data Ingestion</div>
+              <div className={ styles.sectionContent }>
+                <img className={ styles.gif } src="/assets/images/ingest.gif"/>
+                <div className={ styles.textBox }>
+                  <p>DIVE automatically recommends visualizations based on the fields you are interested in. No more building visualizations from scratch. You can sort visualizations based on effectiveness, expressiveness, and statistical properties like correlation, entropy, and gini.</p>
+                </div>
+              </div>
+            </div>
 
             <div className={ styles.section + ' ' + styles.contentSection }>
-              <div className={ styles.sectionHeader }>Automatic Visualization</div>
+              <div className={ styles.sectionHeader }>Semi-automated Visualization Recommendation</div>
               <div className={ styles.sectionContent }>
+                <img className={ styles.gif } src="/assets/images/visualization.gif"/>
                 <div className={ styles.textBox }>
                   <p>DIVE automatically recommends visualizations based on the fields you are interested in. No more building visualizations from scratch. You can sort visualizations based on effectiveness, expressiveness, and statistical properties like correlation, entropy, and gini.</p>
                 </div>
@@ -101,6 +111,7 @@ export class HomePage extends Component {
             <div className={ styles.section + ' ' + styles.contentSection }>
               <div className={ styles.sectionHeader }>Point-and-click Statistical Analysis</div>
               <div className={ styles.sectionContent }>
+                <img className={ styles.gif } src="/assets/images/analysis.gif"/>
                 <div className={ styles.textBox }>
                   <p>DIVE lowers the barrier to understanding data so you can focus on interpreting results, not technical minutiae. Run ANOVA to compare group means, build regressions to explore relationships between fields, and more, all without writing a single line of code. </p>
                 </div>
@@ -108,16 +119,17 @@ export class HomePage extends Component {
             </div>
 
             <div className={ styles.section + ' ' + styles.contentSection }>
-              <div className={ styles.sectionHeader }>Easy Visual Narratives</div>
+              <div className={ styles.sectionHeader }>WYSIWYG Visual Narratives</div>
               <div className={ styles.sectionContent }>
                 <div className={ styles.textBox }>
                   <p></p>
                 </div>
+                <img className={ styles.gif } src="/assets/images/compose.gif"/>
               </div>
             </div>
 
             <div className={ styles.section + ' ' + styles.contentSection + ' ' + styles.aboutContainer }>
-              <div className={ styles.sectionHeader }>About</div>
+              <div className={ styles.sectionHeader }>DIVE Development Team</div>
               <div className={ styles.sectionContent }>
                 <div className={ styles.textBox }>
                   <p>DIVE is built by <a target="_blank" href="https://twitter.com/KevinZengHu">Kevin Hu</a> and <a target="_blank" href="https://twitter.com/cesifoti">César Hidalgo</a> in the <a target="_blank" href="http://macro.media.mit.edu">Macro Connections Group</a> at the <a target="_blank" href="http://media.mit.edu">MIT Media Lab</a></p>
