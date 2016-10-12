@@ -3,6 +3,7 @@ import {
   DELETED_DATASET,
   REQUEST_UPLOAD_DATASET,
   PROGRESS_UPLOAD_DATASET,
+  ERROR_UPLOAD_DATASET,
   RECEIVE_UPLOAD_DATASET,
   RECEIVE_DATASET,
   RECEIVE_DATASETS,
@@ -31,6 +32,7 @@ const baseState = {
   isUploading: false,
   uploadError: null,
   progress: null,
+  error: null,
   projectId: null
 }
 
@@ -47,6 +49,9 @@ export default function datasetSelector(state = baseState, action) {
 
     case PROGRESS_UPLOAD_DATASET:
       return { ...state, progress: action.progress };
+
+    case ERROR_UPLOAD_DATASET:
+      return { ...state, progress: null, error: action.error };      
 
     case RECEIVE_UPLOAD_DATASET:
       if (action.error) {

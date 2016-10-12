@@ -7,6 +7,7 @@ import {
   DELETED_DATASET,
   REQUEST_UPLOAD_DATASET,
   PROGRESS_UPLOAD_DATASET,
+  ERROR_UPLOAD_DATASET,
   RECEIVE_UPLOAD_DATASET,
   PROGRESS_TRANSFORM,
   REQUEST_REDUCE_DATASET_COLUMNS,
@@ -79,9 +80,10 @@ function progressTaskUploadDatasetDispatcher(data) {
 }
 
 function errorTaskUploadDatasetDispatcher(event) {
+  console.log(event);
   return {
-    type: PROGRESS_UPLOAD_DATASET,
-    progress: 'Error uploading dataset, please check console.'
+    type: ERROR_UPLOAD_DATASET,
+    error: 'Error uploading dataset ☹'
   }
 }
 
@@ -97,7 +99,7 @@ function receiveUploadDatasetDispatcher(params, json) {
   return {
     type: RECEIVE_UPLOAD_DATASET,
     datasets: [],
-      projectId: params.projectId,
+    projectId: params.projectId,
     error: "Sorry, this dataset is too large for us to process right now."
   };
 }
@@ -116,7 +118,13 @@ export function uploadDataset(projectId, datasetFile) {
         function: (event) => {
           dispatch(progressUploadDatasetDispatcher(event));
         }
-      }
+      },
+      {
+        type: 'error',
+        function: (event) => {
+          dispatch(errorTaskUploadDatasetDispatcher(event));
+        }
+      },
     ];
 
     const completeEvent = (request) => (evt) => {

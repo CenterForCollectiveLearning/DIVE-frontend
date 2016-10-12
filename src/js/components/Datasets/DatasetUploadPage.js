@@ -55,9 +55,12 @@ export class DatasetUploadPage extends Component {
             className={ styles.datasetUploadBox }>
             { datasetSelector.isUploading &&
               <div className={ styles.uploadingZone + ' ' + styles.centeredFill }>
-                { datasetSelector.progress &&
-                  <Loader text={ datasetSelector.progress } />
-                }
+              { datasetSelector.progress &&
+                <Loader text={ datasetSelector.progress } />
+              }
+              { datasetSelector.error &&
+                <Loader text={ datasetSelector.error } error={ true }/>
+              }
               </div>
             }
             { !datasetSelector.isUploading &&
