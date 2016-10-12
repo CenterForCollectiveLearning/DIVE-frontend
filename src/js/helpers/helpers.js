@@ -90,12 +90,17 @@ function hexToRgb(hex) {
 
 // http://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
 export function useWhiteFontFromBackgroundHex(hex) {
-  var RGB = hexToRgb(hex);
-  var { r, g, b } = RGB;
+  try {
+    var RGB = hexToRgb(hex);
+    var { r, g, b } = RGB;
 
-  if (( r * 0.299 + g * 0.587 + b * 0.114 ) > 186) {
-    return false
-  } else {
+    if (( r * 0.299 + g * 0.587 + b * 0.114 ) > 186) {
+      return false
+    } else {
+      return true
+    }
+  } catch (e) {
+    console.error('Error in useWhiteFontFromBackgroundHex', e);
     return true
   }
 }
