@@ -1,32 +1,41 @@
 import React from 'react';
 import _ from 'underscore';
 
-// Only working for adding or removing single values to arrays
-// TODO
-// Add or remove arrays from arrays
-// Add or remove single value keys
-export function getNewQueryString(oldQueryObject, key, newValue, array=false) {
-  let newQueryObject;
-  if (array) {
-    const oldValues = parseFromQueryObject(oldQueryObject, key, array);
+
+export function getNewQueryString(oldQueryObject, key, newValue, arrayValued=false) {
+  var newQueryObject = oldQueryObject;
+  if (arrayValued) {  // Adding or removing arrays from arrays
+    const oldValues = parseFromQueryObject(oldQueryObject, key, arrayValued);
     let newValues;
     if (oldValues.find((oldValue) => oldValue == newValue)) {
-      newValues = oldValues.filter((oldValue) => oldValue != newValue)
+      newValues = oldValues.filter((oldValue) => oldValue != newValue);
     } else {
       newValues = [ ...oldValues, newValue ];
     }
-    newQueryObject = oldQueryObject;
     newQueryObject[key] = newValues;
+  } else {  // Adding or removing single valued keys
+    if (key in oldQueryObject) {
+      newQueryObject = _.omit(oldQueryObject, key);
+    } else {
+      newQueryObject[key] = newValue;
+    }
   }
   return queryObjectToQueryString(newQueryObject);
 }
 
-export function parseFromQueryObject(queryObject, key, array=false) {
-  if (array) {
-    if (queryObject.hasOwnProperty(key)) {
-      return queryObject[key].split(',').map((x) => parseInt(x));
+export function parseFromQueryObject(queryObject, key, arrayValued=false) {
+  if (arrayValued) {
+    if (key in queryObject) {
+      return queryObject[key].split(',').map((x) => parseInt(x) ? parseInt(x) : x);
     } else {
       return [];
+    }
+  } else {
+    if (key in queryObject) {
+      const x = queryObject[key];
+      return parseInt(x) ? parseInt(x) : x;
+    } else {
+      return null;
     }
   }
 }
@@ -37,7 +46,6 @@ function queryObjectToQueryString(queryObject) {
   Object.keys(queryObject).forEach(
     function (key, index, array) {
       const value = queryObject[key];
-      console.log(key, value);
       if (typeof value != 'undefined' && value !== null) {
         var fieldString = '';
         if (Array.isArray(value)) {
