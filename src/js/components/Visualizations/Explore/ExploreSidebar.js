@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
+import { getNewQueryString } from '../../../helpers/helpers';
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectFieldPropertyValue, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
 import { selectRecommendationMode, selectVisualizationType, selectSortingFunction } from '../../../actions/VisualizationActions';

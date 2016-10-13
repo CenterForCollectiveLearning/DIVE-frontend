@@ -23,9 +23,9 @@ import SingleVisualizationPage from './components/Visualizations/SingleVisualiza
 import AnalysisPage from './components/Analysis/AnalysisPage';
 import RegressionBasePage from './components/Analysis/Regression/RegressionBasePage';
 import SegmentationPage from './components/Analysis/Segmentation/SegmentationPage';
-import AggregationPage from './components/Analysis/Aggregation/AggregationPage';
+import AggregationBasePage from './components/Analysis/Aggregation/AggregationBasePage';
 import CorrelationPage from './components/Analysis/Correlation/CorrelationPage';
-import ComparisonPage from './components/Analysis/Comparison/ComparisonPage';
+import ComparisonBasePage from './components/Analysis/Comparison/ComparisonBasePage';
 import ExportedVisualizationPage from './components/Visualizations/ExportedVisualization/ExportedVisualizationPage';
 import ComposeBasePage from './components/Compose/ComposeBasePage';
 import ComposePage from './components/Compose/ComposePage';
@@ -76,9 +76,9 @@ export default (
         </Route>
         <Route path="analyze" component={ AnalysisPage }>
           <Route path="regression" component={ RegressionBasePage }/>
-          <Route path="aggregation" component={ AggregationPage }/>
+          <Route path="aggregation" component={ AggregationBasePage }/>
           <Route path="correlation" component={ CorrelationPage }/>
-          <Route path="comparison" component={ ComparisonPage }/>
+          <Route path="comparison" component={ ComparisonBasePage }/>
           <Route path="segmentation" component={ SegmentationPage }/>
         </Route>
       </Route>

@@ -16,8 +16,8 @@ import {
 } from '../constants/ActionTypes';
 
 const baseState = {
-  independentVariablesIds: [],
-  dependentVariablesIds: [],
+  // independentVariablesIds: [],
+  // dependentVariablesIds: [],
   numericalComparisonResult: {},
   anovaBoxplotData: {},
   pairwiseComparisonData: {},
@@ -55,24 +55,26 @@ export default function comparisonSelector(state = baseState, action) {
       return modifiedState;
 
     case SELECT_COMPARISON_INDEPENDENT_VARIABLE:
-      var independentVariablesIds = state.independentVariablesIds.slice();
-      const selectedIdIndependent = parseInt(action.independentVariableId);
-      if (state.independentVariablesIds.find((independentVariablesId) => independentVariablesId == selectedIdIndependent)) {
-        independentVariablesIds = independentVariablesIds.filter((independentVariablesId) => independentVariablesId != selectedIdIndependent);
-      } else {
-        independentVariablesIds.push(selectedIdIndependent);
-      }
-      return { ...state, independentVariablesIds: independentVariablesIds };
+      // var independentVariablesIds = state.independentVariablesIds.slice();
+      // const selectedIdIndependent = parseInt(action.independentVariableId);
+      // if (state.independentVariablesIds.find((independentVariablesId) => independentVariablesId == selectedIdIndependent)) {
+      //   independentVariablesIds = independentVariablesIds.filter((independentVariablesId) => independentVariablesId != selectedIdIndependent);
+      // } else {
+      //   independentVariablesIds.push(selectedIdIndependent);
+      // }
+      // return { ...state, independentVariablesIds: independentVariablesIds };
+      return state;
 
     case SELECT_COMPARISON_DEPENDENT_VARIABLE:
-      var dependentVariablesIds = state.dependentVariablesIds.slice();
-      const selectedIdDependent = parseInt(action.dependentVariableId);
-      if (state.dependentVariablesIds.find((dependentVariablesId) => dependentVariablesId == selectedIdDependent)) {
-        dependentVariablesIds = dependentVariablesIds.filter((dependentVariablesId) => dependentVariablesId != selectedIdDependent);
-      } else {
-        dependentVariablesIds.push(selectedIdDependent);
-      }
-      return { ...state, dependentVariablesIds: dependentVariablesIds };
+      // var dependentVariablesIds = state.dependentVariablesIds.slice();
+      // const selectedIdDependent = parseInt(action.dependentVariableId);
+      // if (state.dependentVariablesIds.find((dependentVariablesId) => dependentVariablesId == selectedIdDependent)) {
+      //   dependentVariablesIds = dependentVariablesIds.filter((dependentVariablesId) => dependentVariablesId != selectedIdDependent);
+      // } else {
+      //   dependentVariablesIds.push(selectedIdDependent);
+      // }
+      // return { ...state, dependentVariablesIds: dependentVariablesIds };
+      return state;
 
     case RECEIVE_NUMERICAL_COMPARISON:
       return { ...state, numericalComparisonResult: action.data };

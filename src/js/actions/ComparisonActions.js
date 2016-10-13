@@ -33,6 +33,8 @@ export function selectIndependentVariable(selectedVariableId) {
 }
 
 export function selectDependentVariable(selectedVariableId) {
+  console.log('selectDependentVariable', this);
+
   return {
     type: SELECT_COMPARISON_DEPENDENT_VARIABLE,
     dependentVariableId: selectedVariableId,

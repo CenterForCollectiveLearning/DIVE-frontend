@@ -1,6 +1,59 @@
 import React from 'react';
 import _ from 'underscore';
 
+// Only working for adding or removing single values to arrays
+// TODO
+// Add or remove arrays from arrays
+// Add or remove single value keys
+export function getNewQueryString(oldQueryObject, key, newValue, array=false) {
+  let newQueryObject;
+  if (array) {
+    const oldValues = parseFromQueryObject(oldQueryObject, key, array);
+    let newValues;
+    if (oldValues.find((oldValue) => oldValue == newValue)) {
+      newValues = oldValues.filter((oldValue) => oldValue != newValue)
+    } else {
+      newValues = [ ...oldValues, newValue ];
+    }
+    newQueryObject = oldQueryObject;
+    newQueryObject[key] = newValues;
+  }
+  return queryObjectToQueryString(newQueryObject);
+}
+
+export function parseFromQueryObject(queryObject, key, array=false) {
+  if (array) {
+    if (queryObject.hasOwnProperty(key)) {
+      return queryObject[key].split(',').map((x) => parseInt(x));
+    } else {
+      return [];
+    }
+  }
+}
+
+function queryObjectToQueryString(queryObject) {
+  var queryString = '';
+
+  Object.keys(queryObject).forEach(
+    function (key, index, array) {
+      const value = queryObject[key];
+      console.log(key, value);
+      if (typeof value != 'undefined' && value !== null) {
+        var fieldString = '';
+        if (Array.isArray(value)) {
+          if (value.length > 0) {
+            fieldString = `&${ key }=${ value.join(',') }`;
+          }
+        } else {
+          fieldString = `&${ key }=${ value }`;
+        }
+        queryString = queryString + fieldString;
+      }
+    }
+  );
+  queryString = queryString.replace('&', '?');
+  return queryString;
+}
 
 // https://blog.codinghorror.com/sorting-for-humans-natural-sort-order/
 // http://web.archive.org/web/20130826203933/http://my.opera.com/GreyWyvern/blog/show.dml/1671288
