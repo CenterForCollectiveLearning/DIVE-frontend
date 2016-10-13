@@ -31,9 +31,9 @@ export class ComparisonSidebar extends Component {
     }
   }
 
-  clickIndependentVariableId = (independentVariableId) => {
+  clickQueryStringTrackedItem = (key, independentVariableId) => {
     const { project, datasetSelector, push, queryObject } = this.props;
-    const newQueryString = getNewQueryString(queryObject, 'independentVariablesIds', independentVariableId, true);
+    const newQueryString = getNewQueryString(queryObject, key, independentVariableId, true);
     push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/analyze/comparison${ newQueryString }`);
   }
 
@@ -62,7 +62,7 @@ export class ComparisonSidebar extends Component {
                   colorMember="color"
                   externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickIndependentVariableId(parseInt(v)) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem('independentVariablesIds', parseInt(v)) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
@@ -82,7 +82,7 @@ export class ComparisonSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariable } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem('independentVariablesIds', parseInt(v)) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
@@ -102,7 +102,7 @@ export class ComparisonSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariable } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem('independentVariablesIds', parseInt(v)) } />
               </div>
             }
           </SidebarGroup>
@@ -125,7 +125,7 @@ export class ComparisonSidebar extends Component {
                 displayTextMember="name"
                 externalSelectedItems={ dependentVariablesIds }
                 separated={ true }
-                onChange={ selectDependentVariable } />
+                onChange={ (v) => this.clickQueryStringTrackedItem('dependentVariablesIds', parseInt(v)) } />
             </div>
           </SidebarGroup>
         }
@@ -140,7 +140,7 @@ export class ComparisonSidebar extends Component {
                   value={ conditional.value }
                   conditionalIndex={ i }
                   fieldProperties={ fieldProperties.items }
-                  selectConditionalValue={ selectConditional }/>
+                  selectConditionalValue={ (v) => this.clickQueryStringTrackedItem('dependentVariablesIds', parseInt(v)) }/>
               </div>
             )}
           </SidebarGroup>
