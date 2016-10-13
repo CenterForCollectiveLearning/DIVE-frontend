@@ -1,5 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+
+import { getNewQueryString } from '../../../helpers/helpers';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional } from '../../../actions/AggregationActions';
@@ -30,9 +33,14 @@ export class AggregationSidebar extends Component {
     }
   }
 
+  clickQueryStringTrackedItem = (key, value) => {
+    const { project, datasetSelector, push, queryObject } = this.props;
+    const newQueryString = getNewQueryString(queryObject, key, value, true);
+    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/analyze/aggregation${ newQueryString }`);
+  }
+
   render() {
-    const { fieldProperties, aggregationSelector, selectAggregationIndependentVariable, selectBinningConfigX, selectBinningConfigY, conditionals, selectConditional } = this.props;
-    const { aggregationVariablesIds, aggregationVariableId } = aggregationSelector;
+    const { fieldProperties, aggregationSelector, selectAggregationIndependentVariable, selectBinningConfigX, selectBinningConfigY, conditionals, selectConditional, aggregationVariablesIds, aggregationVariableId } = this.props;
 
     const nonAggregationVariables = fieldProperties.items.filter((item) => aggregationVariablesIds.indexOf(item.id) < 0)
     const aggregationOptions = [{'id': 'count', 'name' : 'count'}, ...nonAggregationVariables.filter((item) => item.generalType == 'q')]
@@ -60,7 +68,7 @@ export class AggregationSidebar extends Component {
                   colorMember="color"
                   externalSelectedItems={ aggregationVariablesIds }
                   separated={ true }
-                  onChange={ selectAggregationIndependentVariable } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem('aggregationVariablesIds', parseInt(v)) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
@@ -80,7 +88,7 @@ export class AggregationSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ aggregationVariablesIds }
                   separated={ true }
-                  onChange={ selectAggregationIndependentVariable } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem('aggregationVariablesIds', parseInt(v)) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
@@ -100,7 +108,7 @@ export class AggregationSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ aggregationVariablesIds }
                   separated={ true }
-                  onChange={ selectAggregationIndependentVariable } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem('aggregationVariablesIds', parseInt(v)) } />
               </div>
             }
           </SidebarGroup>
@@ -108,14 +116,14 @@ export class AggregationSidebar extends Component {
         { this.props.fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Aggregate on">
             <DropDownMenu
-              value={ this.props.aggregationSelector.aggregationVariableId }
+              value={ aggregationVariableId }
               options= {aggregationOptions}
               valueMember="id"
               displayTextMember="name"
               onChange={ this.props.selectAggregationVariable }/>
           </SidebarGroup>
         }
-        { this.props.aggregationSelector.aggregationVariableId != 'count' &&
+        { aggregationVariableId != 'count' &&
           <SidebarGroup heading="By">
             <DropDownMenu
               value={ this.props.aggregationSelector.aggregationFunction}
@@ -125,7 +133,7 @@ export class AggregationSidebar extends Component {
               onChange={ this.props.selectAggregationFunction }/>
           </SidebarGroup>
         }
-        { this.props.aggregationSelector.aggregationFunction == 'MEAN' && this.props.aggregationSelector.aggregationVariableId != 'count' &&
+        { this.props.aggregationSelector.aggregationFunction == 'MEAN' && aggregationVariableId != 'count' &&
           <SidebarGroup heading="Weighted by:">
             <DropDownMenu
               value={ this.props.aggregationSelector.weightVariableId}
@@ -173,7 +181,10 @@ AggregationSidebar.propTypes = {
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
   aggregationSelector: PropTypes.object.isRequired,
-  conditionals: PropTypes.object
+  conditionals: PropTypes.object,
+  queryObject: PropTypes.object.isRequired,
+  aggregationVariablesIds: PropTypes.array.isRequired,
+  aggregationVariablesId: PropTypes.number.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -187,4 +198,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional })(AggregationSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional, push })(AggregationSidebar);

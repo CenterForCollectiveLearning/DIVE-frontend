@@ -27,9 +27,9 @@ export class ExploreView extends Component {
       fetchDatasets(project.id);
     }
 
-    if (project.id && datasetSelector.datasetId && exploreSelector.fieldProperties.length && notLoadedAndNotFetching) {
+    if (project.id && datasetSelector.datasetId && fieldIds.length && notLoadedAndNotFetching) {
       for (var level of [ 0, 1, 2, 3 ]) {
-        fetchSpecs(project.id, datasetSelector.datasetId, exploreSelector.fieldProperties, exploreSelector.recommendationTypes[level]);
+        fetchSpecs(project.id, datasetSelector.datasetId, fieldIds, exploreSelector.recommendationTypes[level]);
       }
     }
 
@@ -37,24 +37,23 @@ export class ExploreView extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { datasetSelector, datasets, project, specs, exploreSelector, exportedSpecs, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = this.props;
+    const { datasetSelector, datasets, project, specs, exploreSelector, fieldIds, exportedSpecs, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = this.props;
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
     const exploreSelectorChanged = (exploreSelector.updatedAt !== previousProps.exploreSelector.updatedAt);
     const projectChanged = (previousProps.project.id !== project.id);
-    const fieldPropertiesSelected = exploreSelector.fieldProperties.find((prop) => prop.selected) != undefined;
     const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = exploreSelector;
 
     if (projectChanged || (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
       fetchDatasets(project.id);
     }
 
-    const numFields = exploreSelector.fieldProperties.filter((property) => property.selected).length;
+    const numFields = fieldIds.length
 
-    if (project.id && datasetSelector.datasetId && exploreSelector.fieldProperties.length) {
+    if (project.id && datasetSelector.datasetId && fieldIds.length) {
       for (var i in isFetchingSpecLevel) {
         if (!isFetchingSpecLevel[i] && !loadedSpecLevel[i] && exploreSelector.isValidSpecLevel[i]) {
-          fetchSpecs(project.id, datasetSelector.datasetId, exploreSelector.fieldProperties, exploreSelector.recommendationTypes[i]);
+          fetchSpecs(project.id, datasetSelector.datasetId, fieldIds, exploreSelector.recommendationTypes[i]);
         }
       }
     }

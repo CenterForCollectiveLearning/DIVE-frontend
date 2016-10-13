@@ -3,7 +3,7 @@ import _ from 'underscore';
 
 
 export function getNewQueryString(oldQueryObject, key, newValue, arrayValued=false) {
-  var newQueryObject = oldQueryObject;
+  var newQueryObject = { ...oldQueryObject };
   if (arrayValued) {  // Adding or removing arrays from arrays
     const oldValues = parseFromQueryObject(oldQueryObject, key, arrayValued);
     let newValues;

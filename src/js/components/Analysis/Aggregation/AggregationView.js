@@ -157,9 +157,10 @@ export class AggregationView extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const { project, datasets, aggregationSelector, datasetSelector, fieldProperties, conditionals } = state;
   const { aggregationResult, oneDimensionAggregationResult, binningConfigX, binningConfigY, aggregationVariableId } = aggregationSelector;
+  const { aggregationVariablesIds } = ownProps;
 
   const allAggregationVariableIds = fieldProperties.items.map((field) => field.id);
 
@@ -167,7 +168,7 @@ function mapStateToProps(state) {
   const aggregationVariableName = aggregationVariable ? aggregationVariable.name : null;
 
   const aggregationIndependentVariables = fieldProperties.items
-    .filter((property) => aggregationSelector.aggregationVariablesIds.indexOf(property.id) >= 0)
+    .filter((property) => aggregationVariablesIds.indexOf(property.id) >= 0)
 
   const aggregationIndependentVariableNames = aggregationIndependentVariables
     .map((field) => field.name);

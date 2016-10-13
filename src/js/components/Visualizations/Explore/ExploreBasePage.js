@@ -2,13 +2,14 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 
+import { parseFromQueryObject } from '../../../helpers/helpers'
 import { setExploreQueryString } from '../../../actions/VisualizationActions';
 
 import styles from '../Visualizations.sass';
 import ExploreSidebar from './ExploreSidebar';
 import ExploreView from './ExploreView';
 
-class ExplorePage extends Component {
+class ExploreBasePage extends Component {
   constructor(props) {
     super(props);
 
@@ -68,16 +69,7 @@ class ExplorePage extends Component {
   }
 
   render() {
-    const { projectTitle } = this.props;
-
-    var queryFields = [];
-    if (this.props.location.query['fields[]']) {
-      if (Array.isArray(this.props.location.query['fields[]'])) {
-        queryFields = this.props.location.query['fields[]'];
-      } else {
-        queryFields = [this.props.location.query['fields[]']];
-      }
-    }
+    const { projectTitle, queryObject, fieldIds } = this.props;
 
     const visualizationTypeObjects = this.state.visualizationTypes;
     const filteredVisualizationTypes = visualizationTypeObjects
@@ -89,8 +81,16 @@ class ExplorePage extends Component {
     return (
       <DocumentTitle title={ 'Explore' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.galleryContainer }` }>
-          <ExploreView filteredVisualizationTypes={ visualizationTypes } />
-          <ExploreSidebar filteredVisualizationTypes={ visualizationTypes } visualizationTypes={ visualizationTypeObjects } queryFields={ queryFields }/>
+          <ExploreView
+            filteredVisualizationTypes={ visualizationTypes }
+            fieldIds={ fieldIds }
+          />
+          <ExploreSidebar
+            filteredVisualizationTypes={ visualizationTypes }
+            visualizationTypes={ visualizationTypeObjects }
+            queryObject={ queryObject }
+            fieldIds={ fieldIds }
+          />
           { this.props.children }
         </div>
       </DocumentTitle>
@@ -98,9 +98,17 @@ class ExplorePage extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const { project, filters, specs } = state;
-  return { projectTitle: project.title, filters, specs };
+  const queryObject = ownProps.location.query;
+
+  return {
+    projectTitle: project.title,
+    queryObject: queryObject,
+    fieldIds: parseFromQueryObject(queryObject, 'fieldIds', true),
+    filters,
+    specs
+  };
 }
 
-export default connect(mapStateToProps, { setExploreQueryString })(ExplorePage);
+export default connect(mapStateToProps, { setExploreQueryString })(ExploreBasePage);

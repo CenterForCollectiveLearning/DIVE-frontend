@@ -4,8 +4,8 @@ import { push } from 'react-router-redux';
 
 import { getNewQueryString } from '../../../helpers/helpers';
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
-import { fetchFieldPropertiesIfNeeded, selectFieldProperty, selectFieldPropertyValue, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
-import { selectRecommendationMode, selectVisualizationType, selectSortingFunction } from '../../../actions/VisualizationActions';
+import { fetchFieldPropertiesIfNeeded, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
+import { selectRecommendationMode, selectVisualizationType, selectSortingFunction, setExploreQueryString } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
 import _ from 'underscore';
@@ -21,48 +21,30 @@ export class ExploreSidebar extends Component {
   }
 
   componentWillMount() {
-    const { project, datasetSelector, exploreSelector, fetchFieldPropertiesIfNeeded, queryFields, selectFieldProperty } = this.props;
+    const { project, datasetSelector, exploreSelector, fetchFieldPropertiesIfNeeded, fieldIds } = this.props;
     if (project.id && datasetSelector.datasetId && (exploreSelector.datasetId != datasetSelector.datasetId) && !exploreSelector.isFetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId, queryFields);
-    }
-
-    if (exploreSelector.fieldProperties.length && queryFields.length) {
-      queryFields.forEach((queryFieldName) =>
-        selectFieldProperty(exploreSelector.fieldProperties.find((property) => property.name == queryFieldName).id)
-      );
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId, fieldIds);
     }
   }
 
   componentDidUpdate(previousProps) {
-    const { project, datasetSelector, exploreSelector, fetchFieldPropertiesIfNeeded, queryFields, selectFieldProperty } = this.props;
+    const { project, datasetSelector, exploreSelector, fetchFieldPropertiesIfNeeded, fieldIds } = this.props;
 
     const projectChanged = (previousProps.project.id !== project.id);
     const datasetChanged = (previousProps.datasetSelector.datasetId !== datasetSelector.datasetId);
 
-    const queryFieldsChanged = _.union(_.difference(previousProps.queryFields, queryFields), _.difference(queryFields, previousProps.queryFields));
-
-    if (queryFieldsChanged.length) {
-      queryFieldsChanged.forEach((queryFieldName) =>
-        selectFieldProperty(exploreSelector.fieldProperties.find((property) => property.name == queryFieldName).id)
-      );
-    }
+    const fieldIdsChanged = _.union(_.difference(previousProps.fieldIds, fieldIds), _.difference(fieldIds, previousProps.fieldIds));
 
     if (project.id && (datasetChanged || (!exploreSelector.isFetching && (exploreSelector.datasetId != datasetSelector.datasetId)))) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId, queryFields);
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId, fieldIds);
     }
   }
 
-  clickFieldProperty = (fieldPropertyId) => {
-    const { exploreSelector, project, datasetSelector, push } = this.props;
-    var selectedFieldPropertiesQueryString = exploreSelector.fieldProperties
-      .filter((property) => (!property.selected && property.id == fieldPropertyId) || (property.selected && property.id != fieldPropertyId))
-      .map((property) => `fields%5B%5D=${ property.name }`);
-
-    if (selectedFieldPropertiesQueryString.length) {
-      selectedFieldPropertiesQueryString = selectedFieldPropertiesQueryString.reduce((a, b) => a + "&" + b);
-    }
-
-    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
+  clickQueryStringTrackedItem = (key, independentVariableId) => {
+    const { project, datasetSelector, queryObject, setExploreQueryString, push } = this.props;
+    const newQueryString = getNewQueryString(queryObject, key, independentVariableId, true);
+    setExploreQueryString(newQueryString);
+    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ newQueryString }`);
   }
 
   clickRecommendationMode = (recommendationModeId) => {
@@ -70,25 +52,24 @@ export class ExploreSidebar extends Component {
     selectRecommendationMode(recommendationModeId);
   }
 
-  clickFieldPropertyValue = (fieldPropertyId, fieldPropertyValueId) => {
-    const selectedProperty = this.props.exploreSelector.fieldProperties.find((property) => (property.id == fieldPropertyId));
-    if (!selectedProperty.selected) {
-      this.clickFieldProperty(fieldPropertyId);
-    }
-    this.props.selectFieldPropertyValue(fieldPropertyId, fieldPropertyValueId);
-  }
+  // clickFieldPropertyValue = (fieldPropertyId, fieldPropertyValueId) => {
+  //   const selectedProperty = this.props.exploreSelector.fieldProperties.find((property) => (property.id == fieldPropertyId));
+  //   if (!selectedProperty.selected) {
+  //     this.clickFieldProperty(fieldPropertyId);
+  //   }
+  //   this.props.selectFieldPropertyValue(fieldPropertyId, fieldPropertyValueId);
+  // }
 
   render() {
     const {
       visualizationTypes,
+      fieldIds,
       datasets,
       datasetSelector,
       exploreSelector,
       filters,
       filteredVisualizationTypes,
       selectVisualizationType,
-      selectFieldPropertyValue,
-      selectFieldProperty,
       selectAggregationFunction,
       selectSortingFunction
     } = this.props;
@@ -149,7 +130,8 @@ export class ExploreSidebar extends Component {
                   splitMenuItemsMember="values"
                   separated={ true }
                   selectMenuItem={ this.clickFieldPropertyValue }
-                  onChange={ this.clickFieldProperty } />
+                  externalSelectedItems={ fieldIds }
+                  onChange={ (v) => this.clickQueryStringTrackedItem('fieldIds', parseInt(v)) } />
               </div>
             }
             { exploreSelector.fieldProperties.filter((property) => property.generalType == 't').length > 0 &&
@@ -170,7 +152,8 @@ export class ExploreSidebar extends Component {
                   colorMember="color"
                   separated={ true }
                   selectMenuItem={ selectAggregationFunction }
-                  onChange={ this.clickFieldProperty } />
+                  externalSelectedItems={ fieldIds }
+                  onChange={ (v) => this.clickQueryStringTrackedItem('fieldIds', parseInt(v)) } />
               </div>
             }
             { exploreSelector.fieldProperties.filter((property) => property.generalType == 'q').length > 0 &&
@@ -192,7 +175,8 @@ export class ExploreSidebar extends Component {
                   splitMenuItemsMember="aggregations"
                   separated={ true }
                   selectMenuItem={ selectAggregationFunction }
-                  onChange={ this.clickFieldProperty } />
+                  externalSelectedItems={ fieldIds }
+                  onChange={ (v) => this.clickQueryStringTrackedItem('fieldIds', parseInt(v)) } />
               </div>
             }
           </SidebarGroup>
@@ -207,9 +191,10 @@ ExploreSidebar.propTypes = {
   datasetSelector: PropTypes.object.isRequired,
   exploreSelector: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
-  queryFields: PropTypes.array.isRequired,
   visualizationTypes: PropTypes.array.isRequired,
   filteredVisualizationTypes: PropTypes.array.isRequired,
+  queryObject: PropTypes.object.isRequired,
+  fieldIds: PropTypes.array.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -232,12 +217,12 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   fetchFieldPropertiesIfNeeded,
   selectVisualizationType,
-  selectFieldProperty,
-  selectFieldPropertyValue,
   selectAggregationFunction,
   selectRecommendationMode,
   selectSortingFunction,
   fetchDatasets,
   selectDataset,
+  getNewQueryString,
+  setExploreQueryString,
   push
 })(ExploreSidebar);

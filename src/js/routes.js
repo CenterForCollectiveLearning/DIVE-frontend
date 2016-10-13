@@ -18,7 +18,7 @@ import DatasetUploadPage from './components/Datasets/DatasetUploadPage';
 import DatasetInspectPage from './components/Datasets/DatasetInspectPage';
 import DatasetTransformPage from './components/Datasets/DatasetTransformPage';
 import VisualizationsPage from './components/Visualizations/VisualizationsPage';
-import ExplorePage from './components/Visualizations/Explore/ExplorePage';
+import ExploreBasePage from './components/Visualizations/Explore/ExploreBasePage';
 import SingleVisualizationPage from './components/Visualizations/SingleVisualization/SingleVisualizationPage';
 import AnalysisPage from './components/Analysis/AnalysisPage';
 import RegressionBasePage from './components/Analysis/Regression/RegressionBasePage';
@@ -71,7 +71,7 @@ export default (
 
       <Route path="datasets/:datasetId" component={ DatasetsPage }>
         <Route path="visualize" component={ VisualizationsPage }>
-          <Route path="explore" component={ ExplorePage }/>
+          <Route path="explore" component={ ExploreBasePage }/>
           <Route path="explore/:specId" component={ SingleVisualizationPage }/>
         </Route>
         <Route path="analyze" component={ AnalysisPage }>

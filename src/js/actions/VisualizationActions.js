@@ -152,23 +152,17 @@ function receiveSpecsDispatcher(params, json) {
   };
 }
 
-export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommendationType = null) {
-  const selectedFieldProperties = fieldProperties.filter((property) => property.selected);
+export function fetchSpecs(projectId, datasetId, fieldIds, recommendationType = null) {
   const selectedRecommendationType = recommendationType ? recommendationType.id : null;
   const selectedRecommendationLevel = recommendationType ? recommendationType.level : null;
 
-  const fieldAggPairs = selectedFieldProperties
+  const fieldAggPairs = fieldIds
     .map((property) =>
       new Object({
         'field_id': property.id,
-        'agg_fn': property.aggregations ?
-          property.aggregations.find((aggregation) => aggregation.selected).value
-          : undefined
+        'agg_fn': undefined  // TODO Restore functionality eventually
       })
     );
-
-  const selectedFieldPropertiesWithConditionals = selectedFieldProperties
-    .filter((property) => property.values && property.values.findIndex((valueObj) => valueObj.selected) != 0);
 
   const conditionals = !selectedFieldPropertiesWithConditionals.length ? {} : {
     'and': selectedFieldPropertiesWithConditionals.map((property) =>
@@ -381,26 +375,7 @@ export function setShareWindow(shareWindow) {
   }
 }
 
-export function setExploreQueryString(query) {
-  var queryString = '';
-
-  Object.keys(query).forEach(
-    function (fullKey, index, array) {
-      const key = fullKey.slice(0, -2);
-      var fieldString = '';
-      if (Array.isArray(query[fullKey])) {
-        query[fullKey].forEach((c, i, a) =>
-          fieldString = fieldString + `&${ key }[]=${ c }`
-        )
-      } else {
-        fieldString = `&${ key }[]=${ query[fullKey] }`;
-      }
-      queryString = queryString + fieldString;
-    }
-  );
-
-  queryString = queryString.replace('&', '?');
-
+export function setExploreQueryString(queryString) {
   return {
     type: SET_EXPLORE_QUERY_STRING,
     queryString: queryString

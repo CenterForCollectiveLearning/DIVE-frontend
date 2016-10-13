@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import { getNewQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectIndependentVariable, selectDependentVariable, selectConditional } from '../../../actions/ComparisonActions';
+import { setComparisonQueryString, selectConditional } from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
 
 import ConditionalSelector from '../../Base/ConditionalSelector';
@@ -31,16 +31,16 @@ export class ComparisonSidebar extends Component {
     }
   }
 
-  clickQueryStringTrackedItem = (key, independentVariableId) => {
-    const { project, datasetSelector, push, queryObject } = this.props;
-    const newQueryString = getNewQueryString(queryObject, key, independentVariableId, true);
-    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/analyze/comparison${ newQueryString }`);
+  clickQueryStringTrackedItem = (key, value) => {
+    const { pathname, queryObject, setComparisonQueryString, push } = this.props;
+    const newQueryString = getNewQueryString(queryObject, key, value, true);
+    setComparisonQueryString(newQueryString);
+    push(`${ pathname }${ newQueryString }`);
   }
 
   render() {
-    const { conditionals, fieldProperties, comparisonSelector, selectIndependentVariable, selectDependentVariable, selectConditional, independentVariablesIds, dependentVariablesIds } = this.props;
+    const { conditionals, fieldProperties, comparisonSelector, selectConditional, independentVariablesIds, dependentVariablesIds } = this.props;
 
-    console.log(dependentVariablesIds, independentVariablesIds);
     return (
       <Sidebar selectedTab="comparison">
         { fieldProperties.items.length != 0 &&
@@ -140,7 +140,7 @@ export class ComparisonSidebar extends Component {
                   value={ conditional.value }
                   conditionalIndex={ i }
                   fieldProperties={ fieldProperties.items }
-                  selectConditionalValue={ (v) => this.clickQueryStringTrackedItem('dependentVariablesIds', parseInt(v)) }/>
+                  selectConditionalValue={ selectConditional }/>
               </div>
             )}
           </SidebarGroup>
@@ -156,12 +156,13 @@ ComparisonSidebar.propTypes = {
   fieldProperties: PropTypes.object.isRequired,
   comparisonSelector: PropTypes.object.isRequired,
   comparisonSelector: PropTypes.object.isRequired,
+  pathname: PropTypes.string.isRequired,
   queryObject: PropTypes.object.isRequired,
   independentVariablesIds: PropTypes.array.isRequired,
   dependentVariablesIds: PropTypes.array.isRequired
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   const { project, datasetSelector, fieldProperties, comparisonSelector, conditionals } = state;
 
   return {
@@ -173,4 +174,10 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, selectDependentVariable, selectConditional, getNewQueryString, push })(ComparisonSidebar);
+export default connect(mapStateToProps, {
+  fetchFieldPropertiesIfNeeded,
+  selectConditional,
+  getNewQueryString,
+  setComparisonQueryString,
+  push
+})(ComparisonSidebar);

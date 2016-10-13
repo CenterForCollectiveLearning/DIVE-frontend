@@ -1,6 +1,4 @@
 import {
-  SELECT_COMPARISON_INDEPENDENT_VARIABLE,
-  SELECT_COMPARISON_DEPENDENT_VARIABLE,
   REQUEST_NUMERICAL_COMPARISON,
   RECEIVE_NUMERICAL_COMPARISON,
   UPDATE_COMPARISON_INPUT,
@@ -10,35 +8,24 @@ import {
   RECEIVE_ANOVA_BOXPLOT_DATA,
   REQUEST_PAIRWISE_COMPARISON_DATA,
   RECEIVE_PAIRWISE_COMPARISON_DATA,
-  SELECT_CONDITIONAL
+  SELECT_CONDITIONAL,
+  SET_COMPARISON_QUERY_STRING
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
 
+export function setComparisonQueryString(queryString) {
+  return {
+    type: SET_COMPARISON_QUERY_STRING,
+    queryString: queryString
+  }
+}
 
 export function selectConditional(conditional) {
   return {
     type: SELECT_CONDITIONAL,
     conditional: conditional
-  }
-}
-
-export function selectIndependentVariable(selectedVariableId) {
-  return {
-    type: SELECT_COMPARISON_INDEPENDENT_VARIABLE,
-    independentVariableId: selectedVariableId,
-    selectedAt: Date.now()
-  }
-}
-
-export function selectDependentVariable(selectedVariableId) {
-  console.log('selectDependentVariable', this);
-
-  return {
-    type: SELECT_COMPARISON_DEPENDENT_VARIABLE,
-    dependentVariableId: selectedVariableId,
-    selectedAt: Date.now()
   }
 }
 
