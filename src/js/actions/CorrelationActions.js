@@ -10,11 +10,19 @@ import {
   RECEIVE_CREATED_SAVED_CORRELATION,
   REQUEST_CREATE_EXPORTED_CORRELATION,
   RECEIVE_CREATED_EXPORTED_CORRELATION,
-  SELECT_CONDITIONAL
+  SELECT_CONDITIONAL,
+  SET_CORRELATION_QUERY_STRING  
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
+
+export function setCorrelationQueryString(queryString) {
+  return {
+    type: SET_CORRELATION_QUERY_STRING,
+    queryString: queryString
+  }
+}
 
 export function selectConditional(conditional) {
   return {

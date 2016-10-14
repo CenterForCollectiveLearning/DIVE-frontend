@@ -155,7 +155,6 @@ ComparisonSidebar.propTypes = {
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
   comparisonSelector: PropTypes.object.isRequired,
-  comparisonSelector: PropTypes.object.isRequired,
   pathname: PropTypes.string.isRequired,
   queryObject: PropTypes.object.isRequired,
   independentVariablesIds: PropTypes.array.isRequired,
