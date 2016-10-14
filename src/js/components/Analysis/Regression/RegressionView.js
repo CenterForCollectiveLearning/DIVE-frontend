@@ -40,7 +40,9 @@ export class RegressionView extends Component {
     const interactionTermsChanged = nextProps.interactionTermIds != interactionTermIds;
     const sidebarChanged = conditionalsChanged || dependentVariableChanged || independentVariablesChanged || regressionTypeChanged || interactionTermsChanged;
 
+    console.log(nextProps.projectId, nextProps.datasetId, dependentVariableExists, nextProps.regressionType, sidebarChanged);
     if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.regressionType && sidebarChanged) {
+      console.log('Running regression')
       runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames, nextProps.interactionTermIds, nextProps.conditionals.items);
     }
 
@@ -129,8 +131,10 @@ export class RegressionView extends Component {
 
 function mapStateToProps(state, ownProps) {
   const { project, datasets, conditionals, regressionSelector, datasetSelector, fieldProperties } = state;
-  const { progress, error, regressionResult, contributionToRSquared, regressionType } = regressionSelector;
-  const { independentVariablesIds, dependentVariableId } = ownProps;
+  const { progress, error, regressionResult, contributionToRSquared } = regressionSelector;
+  const { independentVariablesIds, dependentVariableId, regressionType } = ownProps;
+
+  console.log('regressionType', regressionType);
 
   const dependentVariable = fieldProperties.items.find((property) => property.id == dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;

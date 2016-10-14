@@ -54,13 +54,6 @@ export class RegressionSidebar extends Component {
     push(createURL(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
   }
 
-  onSelectRegressionType(regressionType) {
-    const { project, datasetSelector, regressionSelector, dependentVariableId, push } = this.props;
-
-    const queryParams = { 'dependent-variable': dependentVariableId, 'regression-type': regressionType };
-    push(createURL(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
-  }
-
   onAddInteractionTerm(dropDownNumber, independentVariableId) {
     const interactionVariables = this.state.interactionVariables;
     interactionVariables[dropDownNumber] = independentVariableId;
@@ -83,7 +76,17 @@ export class RegressionSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, regressionSelector, selectInteractionTerm, deleteInteractionTerm, conditionals, selectConditional, dependentVariableId, independentVariablesIds } = this.props;
+    const {
+      fieldProperties,
+      regressionSelector,
+      selectInteractionTerm,
+      deleteInteractionTerm,
+      conditionals,
+      selectConditional,
+      regressionType,
+      dependentVariableId,
+      independentVariablesIds
+    } = this.props;
     const { interactionVariables } = this.state;
 
     const interactionTermNames = regressionSelector.interactionTermIds.map((idTuple) => {
@@ -104,9 +107,9 @@ export class RegressionSidebar extends Component {
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Regression Type">
             <DropDownMenu
-              value={ regressionSelector.regressionType }
+              value={ regressionType }
               options={ shownRegressionTypes }
-              onChange={ this.onSelectRegressionType.bind(this) } />
+              onChange={ (v) => this.clickQueryStringTrackedItem('regressionType', v, false) } />
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
@@ -261,6 +264,7 @@ RegressionSidebar.propTypes = {
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
   regressionSelector: PropTypes.object.isRequired,
+  regressionType: PropTypes.string.isRequired,
   dependentVariableId: PropTypes.number.isRequired,
   independentVariablesIds: PropTypes.array.isRequired
 };

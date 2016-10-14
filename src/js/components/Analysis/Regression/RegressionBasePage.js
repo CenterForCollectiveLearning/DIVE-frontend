@@ -21,17 +21,19 @@ export class RegressionBasePage extends Component {
   }
 
   render() {
-    const { projectTitle, pathname, queryObject, dependentVariableId, independentVariablesIds } = this.props;
+    const { projectTitle, pathname, queryObject, regressionType, dependentVariableId, independentVariablesIds } = this.props;
     return (
       <DocumentTitle title={ 'Regression' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.regressionContainer }` }>
           <RegressionView
+            regressionType={ regressionType }
             dependentVariableId={ dependentVariableId }
             independentVariablesIds={ independentVariablesIds }
           />
           <RegressionSidebar
             pathname={ pathname }
             queryObject={ queryObject }
+            regressionType={ regressionType }
             dependentVariableId={ dependentVariableId }
             independentVariablesIds={ independentVariablesIds }
           />
@@ -51,6 +53,7 @@ function mapStateToProps(state, ownProps) {
     queryObject: queryObject,
     pathname: pathname,
     regressionQueryString: regressionSelector.queryString,
+    regressionType: parseFromQueryObject(queryObject, 'regressionType', false),
     dependentVariableId: parseFromQueryObject(queryObject, 'dependentVariableId', false),
     independentVariablesIds: parseFromQueryObject(queryObject, 'independentVariablesIds', true),
     projectTitle: project.title
