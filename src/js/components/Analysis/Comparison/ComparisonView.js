@@ -214,8 +214,8 @@ function mapStateToProps(state, ownProps) {
     anovaBoxplotData: anovaBoxplotData,
     pairwiseComparisonData: pairwiseComparisonData,
     conditionals: conditionals,
-    independentVariablesIds: PropTypes.array.isRequired,
-    dependentVariablesIds: PropTypes.array.isRequired
+    independentVariablesIds: independentVariablesIds,
+    dependentVariablesIds: dependentVariablesIds
   };
 }
 

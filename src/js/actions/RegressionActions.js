@@ -15,11 +15,19 @@ import {
   RECEIVE_CREATED_SAVED_REGRESSION,
   REQUEST_CREATE_EXPORTED_REGRESSION,
   RECEIVE_CREATED_EXPORTED_REGRESSION,
-  SELECT_CONDITIONAL
+  SELECT_CONDITIONAL,
+  SET_REGRESSION_QUERY_STRING
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
+
+export function setRegressionQueryString(queryString) {
+  return {
+    type: SET_REGRESSION_QUERY_STRING,
+    queryString: queryString
+  }
+}
 
 export function selectConditional(conditional) {
   return {

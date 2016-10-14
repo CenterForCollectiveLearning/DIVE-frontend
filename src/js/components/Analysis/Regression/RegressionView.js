@@ -19,13 +19,6 @@ import ContributionToRSquaredCard from './ContributionToRSquaredCard';
 
 export class RegressionView extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.saveRegression = this.saveRegression.bind(this);
-    this.onClickShare = this.onClickShare.bind(this);
-  }
-
   componentWillMount() {
     const { projectId, datasets, conditionals, datasetSelector, fetchDatasets } = this.props;
 
@@ -66,12 +59,12 @@ export class RegressionView extends Component {
     }
   }
 
-  saveRegression(saveAction = true) {
+  saveRegression = (saveAction = true) => {
     const { projectId, regressionResult, createExportedRegression } = this.props;
     createExportedRegression(projectId, regressionResult.data.id, regressionResult.data, regressionResult.conditionals, regressionResult.config, saveAction);
   }
 
-  onClickShare() {
+  onClickShare = () => {
     setShareWindow(window.open('about:blank'));
     this.saveRegression(false);
   }
@@ -134,14 +127,16 @@ export class RegressionView extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const { project, datasets, conditionals, regressionSelector, datasetSelector, fieldProperties } = state;
   const { progress, error, regressionResult, contributionToRSquared, regressionType } = regressionSelector;
-  const dependentVariable = fieldProperties.items.find((property) => property.id == regressionSelector.dependentVariableId);
+  const { independentVariablesIds, dependentVariableId } = ownProps;
+
+  const dependentVariable = fieldProperties.items.find((property) => property.id == dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;
 
   const independentVariableNames = fieldProperties.items
-    .filter((property) => regressionSelector.independentVariableIds.indexOf(property.id) >= 0)
+    .filter((property) => independentVariablesIds.indexOf(property.id) >= 0)
     .map((independentVariable) => independentVariable.name);
 
   return {
@@ -155,7 +150,7 @@ function mapStateToProps(state) {
     interactionTermIds: regressionSelector.interactionTermIds,
     datasetId: datasetSelector.datasetId,
     regressionResult: regressionResult,
-    contributionToRSquared: contributionToRSquared
+    contributionToRSquared: contributionToRSquared,
   };
 }
 

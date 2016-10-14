@@ -14,7 +14,7 @@ export function getNewQueryString(oldQueryObject, key, newValue, arrayValued=fal
     }
     newQueryObject[key] = newValues;
   } else {  // Adding or removing single valued keys
-    if (key in oldQueryObject) {
+    if (key in oldQueryObject && oldQueryObject[key] == newValue) {
       newQueryObject = _.omit(oldQueryObject, key);
     } else {
       newQueryObject[key] = newValue;
