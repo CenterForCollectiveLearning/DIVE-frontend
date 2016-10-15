@@ -23,7 +23,8 @@ import {
   SELECT_DATASET,
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_TYPE,
-  RECEIVE_FIELD_PROPERTIES
+  RECEIVE_FIELD_PROPERTIES,
+  SET_AGGREGATION_QUERY_STRING,
 } from '../constants/ActionTypes';
 
 const baseState = {
@@ -52,7 +53,8 @@ const baseState = {
     error: null,
     data: null
   },
-  loadAggregation: false
+  loadAggregation: false,
+  queryString: null
 }
 
 export default function aggregationSelector(state = baseState, action) {
@@ -164,6 +166,11 @@ export default function aggregationSelector(state = baseState, action) {
 
     case SELECT_AGGREGATION_CONFIG_Y:
       return { ...state, binningConfigY: action.config }
+
+    case SET_AGGREGATION_QUERY_STRING:
+      return {
+        ...state, queryString: action.queryString
+      }
 
     case WIPE_PROJECT_STATE:
       return baseState;

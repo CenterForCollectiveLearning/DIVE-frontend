@@ -63,9 +63,9 @@ export class ComparisonBasePage extends Component {
   }
 
   render() {
-    const { projectTitle, pathname, queryObject, independentVariablesIds, dependentVariablesIds } = this.props;
+    const { project, pathname, queryObject, independentVariablesIds, dependentVariablesIds } = this.props;
     return (
-      <DocumentTitle title={ 'Comparison' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
+      <DocumentTitle title={ 'Comparison' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.summaryContainer }` }>
           <ComparisonView
             independentVariablesIds={ independentVariablesIds }
