@@ -19,7 +19,7 @@ import {
 import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
 
-export function getInitialCorrelationState(projectId, datasetId, fieldProperties) {
+export function getInitialState(projectId, datasetId, fieldProperties) {
   var quantitativeItemIds = fieldProperties.filter((item) => (item.generalType == 'q' && !item.isId)).map((item) => item.id)
   var n_q = quantitativeItemIds.length;
   var selectedVariablesIds = [];
@@ -33,7 +33,7 @@ export function getInitialCorrelationState(projectId, datasetId, fieldProperties
   }
 }
 
-export function setCorrelationQueryString(queryString) {
+export function setQueryString(queryString) {
   return {
     type: SET_CORRELATION_QUERY_STRING,
     queryString: queryString

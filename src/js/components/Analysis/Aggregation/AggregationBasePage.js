@@ -6,23 +6,17 @@ import DocumentTitle from 'react-document-title';
 import styles from '../Analysis.sass';
 
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
-import { setAggregationQueryString, getInitialAggregationState } from '../../../actions/AggregationActions';
+import { setQueryString, getInitialState } from '../../../actions/AggregationActions';
 
 import AggregationSidebar from './AggregationSidebar';
 import AggregationView from './AggregationView';
 
 export class AggregationBasePage extends Component {
   componentWillMount() {
-    const {
-      pathname,
-      fieldProperties,
-      aggregationQueryString,
-      setAggregationQueryString,
-      replace
-    } = this.props;
+    const { fieldProperties, persistedQueryString, pathname, replace } = this.props;
 
-    if ( aggregationQueryString ) {
-      replace(`${ pathname }${ aggregationQueryString }`);
+    if ( persistedQueryString ) {
+      replace(`${ pathname }${ persistedQueryString }`);
     } else {
       if ( fieldProperties.items.length ) {
         this.setRecommendedInitialState(fieldProperties);
@@ -31,37 +25,21 @@ export class AggregationBasePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      aggregationQueryString: currentQueryString
-    } = this.props;
-    const {
-      fieldProperties,
-      aggregationQueryString: nextQueryString,
-    } = nextProps;
+    const { queryObject: currentQueryObject } = this.props;
+    const { fieldProperties, queryObject: nextQueryObject } = nextProps;
 
-    const shouldRecommendInitialState = !currentQueryString && !nextQueryString;
+    const shouldRecommendInitialState = Object.keys(currentQueryObject) == 0 && Object.keys(nextQueryObject).length == 0;
     if ( shouldRecommendInitialState && fieldProperties.items.length) {
       this.setRecommendedInitialState(fieldProperties);
     }
   }
 
   setRecommendedInitialState(fieldProperties) {
-    const {
-      project,
-      datasetSelector,
-      pathname,
-      replace,
-      setAggregationQueryString,
-      queryObject,
-      aggregationQueryString: currentQueryString
-    } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setQueryString, } = this.props;
 
-    const initialState = getInitialAggregationState(project.id, datasetSelector.datasetId, fieldProperties.items);
+    const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
-    console.log(queryObject);
-    console.log(initialState);
-    console.log(newQueryString);    
-    setAggregationQueryString(newQueryString);
+    setQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);
   }
 
@@ -96,7 +74,7 @@ function mapStateToProps(state, ownProps) {
     fieldProperties,
     queryObject: queryObject,
     pathname: pathname,
-    aggregationQueryString: aggregationSelector.queryString,
+    persistedQueryString: aggregationSelector.queryString,
     aggregationVariablesIds: parseFromQueryObject(queryObject, 'aggregationVariablesIds', true),
     aggregationVariablesId: parseFromQueryObject(queryObject, 'aggregationVariablesId', false),
   };
@@ -104,5 +82,5 @@ function mapStateToProps(state, ownProps) {
 
 export default connect(mapStateToProps, {
   replace,
-  setAggregationQueryString
+  setQueryString
 })(AggregationBasePage);

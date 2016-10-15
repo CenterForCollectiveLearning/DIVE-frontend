@@ -26,7 +26,7 @@ import {
 import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
 
-export function getInitialAggregationState(projectId, datasetId, fieldProperties) {
+export function getInitialState(projectId, datasetId, fieldProperties) {
   var categoricalItemIds = fieldProperties.filter((item) => ((item.generalType == 'c') && (!item.isId))).map((item) => item.id);
   var quantitativeItemIds = fieldProperties.filter((item) => ((item.generalType == 'q') && (!item.isId))).map((item) => item.id);
   var n_c = categoricalItemIds.length;
@@ -49,7 +49,7 @@ export function getInitialAggregationState(projectId, datasetId, fieldProperties
   }
 }
 
-export function setAggregationQueryString(queryString) {
+export function setQueryString(queryString) {
   return {
     type: SET_AGGREGATION_QUERY_STRING,
     queryString: queryString

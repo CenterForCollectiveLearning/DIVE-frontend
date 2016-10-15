@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import { updateQueryString } from '../../../helpers/helpers';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional } from '../../../actions/AggregationActions';
+import { setQueryString, selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional } from '../../../actions/AggregationActions';
 import styles from '../Analysis.sass';
 
 import ConditionalSelector from '../../Base/ConditionalSelector';
@@ -34,9 +34,13 @@ export class AggregationSidebar extends Component {
   }
 
   clickQueryStringTrackedItem = (key, value) => {
-    const { project, datasetSelector, push, queryObject } = this.props;
-    const newQueryString = updateQueryString(queryObject, key, value, true);
-    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/analyze/aggregation${ newQueryString }`);
+    const { pathname, queryObject, setQueryString, push } = this.props;
+    var newState = {};
+    newState[key] = [ value ];
+
+    const newQueryString = updateQueryString(queryObject, newState);
+    setQueryString(newQueryString);
+    push(`${ pathname }${ newQueryString }`);
   }
 
   render() {
@@ -198,4 +202,16 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional, push })(AggregationSidebar);
+export default connect(mapStateToProps, {
+  fetchFieldPropertiesIfNeeded,
+  selectBinningConfigX,
+  selectBinningConfigY,
+  selectAggregationIndependentVariable,
+  selectAggregationVariable,
+  selectAggregationFunction,
+  selectAggregationWeightVariable,
+  selectConditional,
+  updateQueryString,
+  setQueryString,
+  push
+})(AggregationSidebar);

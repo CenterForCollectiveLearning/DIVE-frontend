@@ -13,12 +13,7 @@ import ComparisonView from './ComparisonView';
 
 export class ComparisonBasePage extends Component {
   componentWillMount() {
-    const {
-      pathname,
-      fieldProperties,
-      persistedQueryString,
-      replace
-    } = this.props;
+    const { fieldProperties, persistedQueryString, pathname, replace } = this.props;
 
     if ( persistedQueryString ) {
       replace(`${ pathname }${ persistedQueryString }`);
@@ -40,14 +35,7 @@ export class ComparisonBasePage extends Component {
   }
 
   setRecommendedInitialState(fieldProperties) {
-    const {
-      project,
-      datasetSelector,
-      pathname,
-      queryObject,
-      replace,
-      setQueryString,
-    } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setQueryString } = this.props;
 
     const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
