@@ -152,17 +152,20 @@ function receiveSpecsDispatcher(params, json) {
   };
 }
 
-export function fetchSpecs(projectId, datasetId, fieldIds, recommendationType = null) {
+export function fetchSpecs(projectId, datasetId, selectedFieldProperties, recommendationType = null) {
   const selectedRecommendationType = recommendationType ? recommendationType.id : null;
   const selectedRecommendationLevel = recommendationType ? recommendationType.level : null;
 
-  const fieldAggPairs = fieldIds
+  const fieldAggPairs = selectedFieldProperties
     .map((property) =>
       new Object({
         'field_id': property.id,
         'agg_fn': undefined  // TODO Restore functionality eventually
       })
     );
+
+  const selectedFieldPropertiesWithConditionals = selectedFieldProperties
+    .filter((property) => property.values && property.values.findIndex((valueObj) => valueObj.selected) != 0);
 
   const conditionals = !selectedFieldPropertiesWithConditionals.length ? {} : {
     'and': selectedFieldPropertiesWithConditionals.map((property) =>

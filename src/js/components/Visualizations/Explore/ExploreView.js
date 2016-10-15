@@ -20,16 +20,18 @@ import VisualizationBlock from './VisualizationBlock';
 export class ExploreView extends Component {
 
   componentWillMount() {
-    const { datasetSelector, datasets, project, specs, exploreSelector, clearVisualization, fetchSpecs, fetchDatasets } = this.props;
+    const { datasetSelector, datasets, project, specs, exploreSelector, clearVisualization, fieldProperties, fieldIds, fetchSpecs, fetchDatasets } = this.props;
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
 
     if (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(project.id);
     }
 
+    const selectedFieldProperties = exploreSelector.fieldProperties.filter((property) => fieldIds.indexOf(property.id) >= -1);
+
     if (project.id && datasetSelector.datasetId && fieldIds.length && notLoadedAndNotFetching) {
       for (var level of [ 0, 1, 2, 3 ]) {
-        fetchSpecs(project.id, datasetSelector.datasetId, fieldIds, exploreSelector.recommendationTypes[level]);
+        fetchSpecs(project.id, datasetSelector.datasetId, selectedFieldProperties, exploreSelector.recommendationTypes[level]);
       }
     }
 
@@ -37,7 +39,7 @@ export class ExploreView extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { datasetSelector, datasets, project, specs, exploreSelector, fieldIds, exportedSpecs, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = this.props;
+    const { datasetSelector, datasets, project, specs, exploreSelector, fieldProperties, fieldIds, exportedSpecs, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = this.props;
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
     const exploreSelectorChanged = (exploreSelector.updatedAt !== previousProps.exploreSelector.updatedAt);
@@ -49,11 +51,12 @@ export class ExploreView extends Component {
     }
 
     const numFields = fieldIds.length
+    const selectedFieldProperties = exploreSelector.fieldProperties.filter((property) => fieldIds.indexOf(property.id) >= -1);
 
     if (project.id && datasetSelector.datasetId && fieldIds.length) {
       for (var i in isFetchingSpecLevel) {
         if (!isFetchingSpecLevel[i] && !loadedSpecLevel[i] && exploreSelector.isValidSpecLevel[i]) {
-          fetchSpecs(project.id, datasetSelector.datasetId, fieldIds, exploreSelector.recommendationTypes[i]);
+          fetchSpecs(project.id, datasetSelector.datasetId, selectedFieldProperties, exploreSelector.recommendationTypes[i]);
         }
       }
     }
@@ -251,7 +254,7 @@ ExploreView.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, filters, specs, exploreSelector, fieldProperties, datasets, datasetSelector, exportedSpecs } = state;
+  const { project, filters, specs, fieldProperties, exploreSelector, datasets, datasetSelector, exportedSpecs } = state;
   return {
     project,
     filters,

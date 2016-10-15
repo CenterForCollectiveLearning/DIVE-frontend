@@ -2,22 +2,39 @@ import React from 'react';
 import _ from 'underscore';
 
 
-export function getNewQueryString(oldQueryObject, key, newValue, arrayValued=false) {
+export function getNewQueryString(oldQueryObject, key, input, arrayValued=false) {
   var newQueryObject = { ...oldQueryObject };
   if (arrayValued) {  // Adding or removing arrays from arrays
     const oldValues = parseFromQueryObject(oldQueryObject, key, arrayValued);
-    let newValues;
-    if (oldValues.find((oldValue) => oldValue == newValue)) {
-      newValues = oldValues.filter((oldValue) => oldValue != newValue);
-    } else {
-      newValues = [ ...oldValues, newValue ];
+    var newValues = oldValues
+    if (!Array.isArray(input)) {
+      input = [ input ];
     }
+    console.log(oldValues, newValues, input);
+    // TODO Clean up this syntax
+    for (let e of input) {
+      if (newValues.indexOf(e) == -1) {
+        newValues.push(e);
+      } else {
+        newValues = oldValues.filter((oldValue) => oldValue !== e);
+      }
+    }
+
+    // for (let e of input) {
+    //   console.log(e, oldValues.indexOf(e));
+    //   if (oldValues.indexOf(e) > -1) {
+    //     newValues = oldValues.filter((oldValue) => oldValue != e);
+    //   } else {
+    //     newValues = [ ...oldValues, e];
+    //   }
+    // }
+    console.log('Final newValues', newValues);
     newQueryObject[key] = newValues;
   } else {  // Adding or removing single valued keys
-    if (key in oldQueryObject && oldQueryObject[key] == newValue) {
+    if (key in oldQueryObject && oldQueryObject[key] == input) {
       newQueryObject = _.omit(oldQueryObject, key);
     } else {
-      newQueryObject[key] = newValue;
+      newQueryObject[key] = input;
     }
   }
   return queryObjectToQueryString(newQueryObject);

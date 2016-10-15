@@ -93,7 +93,6 @@ CorrelationSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  correlationSelector: PropTypes.object.isRequired,
   conditionals: PropTypes.object,
   pathname: PropTypes.string.isRequired,
   queryObject: PropTypes.object.isRequired,
