@@ -17,7 +17,7 @@ import {
 import { fetch } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
 
-export function getInitialComparisonState(projectId, datasetId, fieldProperties) {
+export function getInitialState(projectId, datasetId, fieldProperties) {
   var categoricalItemIds = fieldProperties.filter((item) => ((item.generalType == 'c') && (!item.isId))).map((item) => item.id);
   var quantitativeItemIds = fieldProperties.filter((item) => ((item.generalType == 'q') && (!item.isId))).map((item) => item.id);
   var n_c = categoricalItemIds.length;
@@ -39,7 +39,7 @@ export function getInitialComparisonState(projectId, datasetId, fieldProperties)
   };
 }
 
-export function setComparisonQueryString(queryString) {
+export function setQueryString(queryString) {
   return {
     type: SET_COMPARISON_QUERY_STRING,
     queryString: queryString

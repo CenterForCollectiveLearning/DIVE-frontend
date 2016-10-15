@@ -62,7 +62,6 @@ export function updateQueryString(oldQueryObject, newState) {
 
 export function parseFromQueryObject(queryObject, key, arrayValued=false) {
   if (arrayValued) {
-    console.log(queryObject, key, queryObject[key]);
     if (key in queryObject) {
       return queryObject[key].split(',').map((x) => parseInt(x) ? parseInt(x) : x);
     } else {

@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import { updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { setComparisonQueryString, selectConditional } from '../../../actions/ComparisonActions';
+import { setQueryString, selectConditional } from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
 
 import ConditionalSelector from '../../Base/ConditionalSelector';
@@ -32,12 +32,12 @@ export class ComparisonSidebar extends Component {
   }
 
   clickQueryStringTrackedItem = (key, value) => {
-    const { pathname, queryObject, setComparisonQueryString, push } = this.props;
+    const { pathname, queryObject, setQueryString, push } = this.props;
     var newState = {};
     newState[key] = [ value ];
 
     const newQueryString = updateQueryString(queryObject, newState);
-    setComparisonQueryString(newQueryString);
+    setQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }
 
@@ -180,6 +180,6 @@ export default connect(mapStateToProps, {
   fetchFieldPropertiesIfNeeded,
   selectConditional,
   updateQueryString,
-  setComparisonQueryString,
+  setQueryString,
   push
 })(ComparisonSidebar);

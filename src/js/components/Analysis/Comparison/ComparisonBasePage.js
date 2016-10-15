@@ -6,7 +6,7 @@ import DocumentTitle from 'react-document-title';
 import styles from '../Analysis.sass';
 
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
-import { setComparisonQueryString, getInitialComparisonState } from '../../../actions/ComparisonActions';
+import { setQueryString, getInitialState } from '../../../actions/ComparisonActions';
 
 import ComparisonSidebar from './ComparisonSidebar';
 import ComparisonView from './ComparisonView';
@@ -16,13 +16,12 @@ export class ComparisonBasePage extends Component {
     const {
       pathname,
       fieldProperties,
-      comparisonQueryString,
-      setComparisonQueryString,
+      persistedQueryString,
       replace
     } = this.props;
 
-    if ( comparisonQueryString ) {
-      replace(`${ pathname }${ comparisonQueryString }`);
+    if ( persistedQueryString ) {
+      replace(`${ pathname }${ persistedQueryString }`);
     } else {
       if ( fieldProperties.items.length ) {
         this.setRecommendedInitialState(fieldProperties);
@@ -31,15 +30,10 @@ export class ComparisonBasePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      comparisonQueryString: currentQueryString
-    } = this.props;
-    const {
-      fieldProperties,
-      comparisonQueryString: nextQueryString,
-    } = nextProps;
+    const { queryObject: currentQueryObject } = this.props;
+    const { fieldProperties, queryObject: nextQueryObject } = nextProps;
 
-    const shouldRecommendInitialState = !currentQueryString && !nextQueryString;
+    const shouldRecommendInitialState = Object.keys(currentQueryObject) == 0 && Object.keys(nextQueryObject).length == 0;
     if ( shouldRecommendInitialState && fieldProperties.items.length) {
       this.setRecommendedInitialState(fieldProperties);
     }
@@ -50,15 +44,14 @@ export class ComparisonBasePage extends Component {
       project,
       datasetSelector,
       pathname,
-      replace,
-      setComparisonQueryString,
       queryObject,
-      comparisonQueryString: currentQueryString
+      replace,
+      setQueryString,
     } = this.props;
 
-    const initialState = getInitialComparisonState(project.id, datasetSelector.datasetId, fieldProperties.items);
+    const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
-    setComparisonQueryString(newQueryString);
+    setQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);
   }
 
@@ -94,7 +87,7 @@ function mapStateToProps(state, ownProps) {
     fieldProperties,
     queryObject: queryObject,
     pathname: pathname,
-    comparisonQueryString: comparisonSelector.queryString,
+    persistedQueryString: comparisonSelector.queryString,
     independentVariablesIds: parseFromQueryObject(queryObject, 'independentVariablesIds', true),
     dependentVariablesIds: parseFromQueryObject(queryObject, 'dependentVariablesIds', true)
   };
@@ -102,5 +95,5 @@ function mapStateToProps(state, ownProps) {
 
 export default connect(mapStateToProps, {
   replace,
-  setComparisonQueryString
+  setQueryString
 })(ComparisonBasePage);

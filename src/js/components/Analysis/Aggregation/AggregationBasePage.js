@@ -58,6 +58,9 @@ export class AggregationBasePage extends Component {
 
     const initialState = getInitialAggregationState(project.id, datasetSelector.datasetId, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
+    console.log(queryObject);
+    console.log(initialState);
+    console.log(newQueryString);    
     setAggregationQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);
   }
