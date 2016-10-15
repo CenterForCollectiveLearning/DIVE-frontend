@@ -22,16 +22,15 @@ import { getFilteredConditionals } from './ActionHelpers.js'
 export function getInitialCorrelationState(projectId, datasetId, fieldProperties) {
   var quantitativeItemIds = fieldProperties.filter((item) => (item.generalType == 'q' && !item.isId)).map((item) => item.id)
   var n_q = quantitativeItemIds.length;
-  var selectedVariableIds = [];
+  var selectedVariablesIds = [];
 
-  if (n_q >= 3) {
-    selectedVariableIds = _.sample(quantitativeItemIds, 3);
-  } else if (n_q == 2) {
-    selectedVariableIds = _.sample(quantitativeItemIds, 2);
-  } else if (n_q == 1) {
-    selectedVariableIds = _.sample(quantitativeItemIds, 1);
+  var max_samples = 3
+  var num_samples = Math.min(n_q, max_samples);
+  selectedVariablesIds = _.sample(quantitativeItemIds, 3);
+
+  return {
+    correlationVariablesIds: selectedVariablesIds
   }
-  return selectedVariableIds;
 }
 
 export function setCorrelationQueryString(queryString) {

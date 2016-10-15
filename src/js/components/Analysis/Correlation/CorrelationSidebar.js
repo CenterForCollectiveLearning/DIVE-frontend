@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { getNewQueryString } from '../../../helpers/helpers';
+import { updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { setCorrelationQueryString, selectConditional } from '../../../actions/CorrelationActions';
 import styles from '../Analysis.sass';
@@ -33,7 +33,10 @@ export class CorrelationSidebar extends Component {
 
   clickQueryStringTrackedItem = (key, value) => {
     const { pathname, queryObject, setCorrelationQueryString, push } = this.props;
-    const newQueryString = getNewQueryString(queryObject, key, value, true);
+    var newState = {};
+    newState[key] = [ value ];
+
+    const newQueryString = updateQueryString(queryObject, newState);
     setCorrelationQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }
@@ -113,7 +116,7 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   fetchFieldPropertiesIfNeeded,
   selectConditional,
-  getNewQueryString,
+  updateQueryString,
   setCorrelationQueryString,
   push
 })(CorrelationSidebar);

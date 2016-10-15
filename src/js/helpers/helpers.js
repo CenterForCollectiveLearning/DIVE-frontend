@@ -1,40 +1,62 @@
 import React from 'react';
 import _ from 'underscore';
 
+// Update query string given old query object and new object
+// Note: not wholesale replacement of query string
+// export function updateQueryString(oldQueryObject, key, input, arrayValued=false) {
+//   var newQueryObject = { ...oldQueryObject };
+//   if (arrayValued) {  // Adding or removing arrays from arrays
+//     const oldValues = parseFromQueryObject(oldQueryObject, key, arrayValued);
+//     var newValues = oldValues
+//     if (!Array.isArray(input)) {
+//       input = [ input ];
+//     }
+//
+//     for (let e of input) {
+//       if (newValues.indexOf(e) == -1) {
+//         newValues.push(e);
+//       } else {
+//         newValues = oldValues.filter((oldValue) => oldValue !== e);
+//       }
+//     }
+//     newQueryObject[key] = newValues;
+//
+//   } else {  // Adding or removing single valued keys
+//     if (key in oldQueryObject && oldQueryObject[key] == input) {
+//       newQueryObject = _.omit(oldQueryObject, key);
+//     } else {
+//       newQueryObject[key] = input;
+//     }
+//   }
+//   return queryObjectToQueryString(newQueryObject);
+// }
 
-export function getNewQueryString(oldQueryObject, key, input, arrayValued=false) {
-  var newQueryObject = { ...oldQueryObject };
-  if (arrayValued) {  // Adding or removing arrays from arrays
-    const oldValues = parseFromQueryObject(oldQueryObject, key, arrayValued);
-    var newValues = oldValues
-    if (!Array.isArray(input)) {
-      input = [ input ];
-    }
-    console.log(oldValues, newValues, input);
-    // TODO Clean up this syntax
-    for (let e of input) {
-      if (newValues.indexOf(e) == -1) {
-        newValues.push(e);
-      } else {
-        newValues = oldValues.filter((oldValue) => oldValue !== e);
+export function updateQueryString(oldQueryObject, newState) {
+  var newQueryObject = oldQueryObject;
+
+  console.log('newState:', newState);
+
+  for (let key in newState) {
+    var value = newState[key];
+    var arrayValued = Array.isArray(value);
+
+    if (arrayValued) {
+      var oldValues = parseFromQueryObject(oldQueryObject, key, arrayValued);
+      var newValues = oldValues;
+      for (let e of value) {
+        if (newValues.indexOf(e) == -1) {
+          newValues.push(e);
+        } else {
+          newValues = oldValues.filter((oldValue) => oldValue !== e);
+        }
       }
-    }
-
-    // for (let e of input) {
-    //   console.log(e, oldValues.indexOf(e));
-    //   if (oldValues.indexOf(e) > -1) {
-    //     newValues = oldValues.filter((oldValue) => oldValue != e);
-    //   } else {
-    //     newValues = [ ...oldValues, e];
-    //   }
-    // }
-    console.log('Final newValues', newValues);
-    newQueryObject[key] = newValues;
-  } else {  // Adding or removing single valued keys
-    if (key in oldQueryObject && oldQueryObject[key] == input) {
-      newQueryObject = _.omit(oldQueryObject, key);
+      newQueryObject[key] = newValues;
     } else {
-      newQueryObject[key] = input;
+      if (key in oldQueryObject && oldQueryObject[key] == input) {
+        newQueryObject = _.omit(oldQueryObject, key);
+      } else {
+        newQueryObject[key] = value;
+      }
     }
   }
   return queryObjectToQueryString(newQueryObject);
@@ -42,6 +64,7 @@ export function getNewQueryString(oldQueryObject, key, input, arrayValued=false)
 
 export function parseFromQueryObject(queryObject, key, arrayValued=false) {
   if (arrayValued) {
+    console.log(queryObject, key, queryObject[key]);
     if (key in queryObject) {
       return queryObject[key].split(',').map((x) => parseInt(x) ? parseInt(x) : x);
     } else {

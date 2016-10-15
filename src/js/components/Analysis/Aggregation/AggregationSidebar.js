@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { getNewQueryString } from '../../../helpers/helpers';
+import { updateQueryString } from '../../../helpers/helpers';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional } from '../../../actions/AggregationActions';
@@ -35,7 +35,7 @@ export class AggregationSidebar extends Component {
 
   clickQueryStringTrackedItem = (key, value) => {
     const { project, datasetSelector, push, queryObject } = this.props;
-    const newQueryString = getNewQueryString(queryObject, key, value, true);
+    const newQueryString = updateQueryString(queryObject, key, value, true);
     push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/analyze/aggregation${ newQueryString }`);
   }
 

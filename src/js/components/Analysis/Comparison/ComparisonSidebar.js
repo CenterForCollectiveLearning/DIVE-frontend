@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { getNewQueryString } from '../../../helpers/helpers';
+import { updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { setComparisonQueryString, selectConditional } from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
@@ -33,7 +33,7 @@ export class ComparisonSidebar extends Component {
 
   clickQueryStringTrackedItem = (key, value) => {
     const { pathname, queryObject, setComparisonQueryString, push } = this.props;
-    const newQueryString = getNewQueryString(queryObject, key, value, true);
+    const newQueryString = updateQueryString(queryObject, key, value, true);
     setComparisonQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }
@@ -176,7 +176,7 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   fetchFieldPropertiesIfNeeded,
   selectConditional,
-  getNewQueryString,
+  updateQueryString,
   setComparisonQueryString,
   push
 })(ComparisonSidebar);

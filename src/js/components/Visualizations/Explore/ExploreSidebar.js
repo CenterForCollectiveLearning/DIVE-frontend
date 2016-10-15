@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { getNewQueryString } from '../../../helpers/helpers';
+import { updateQueryString } from '../../../helpers/helpers';
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
 import { selectRecommendationMode, selectVisualizationType, selectSortingFunction, setExploreQueryString } from '../../../actions/VisualizationActions';
@@ -42,7 +42,7 @@ export class ExploreSidebar extends Component {
 
   clickQueryStringTrackedItem = (key, independentVariableId) => {
     const { project, datasetSelector, queryObject, setExploreQueryString, push } = this.props;
-    const newQueryString = getNewQueryString(queryObject, key, independentVariableId, true);
+    const newQueryString = updateQueryString(queryObject, key, independentVariableId, true);
     setExploreQueryString(newQueryString);
     push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ newQueryString }`);
   }
@@ -222,7 +222,7 @@ export default connect(mapStateToProps, {
   selectSortingFunction,
   fetchDatasets,
   selectDataset,
-  getNewQueryString,
+  updateQueryString,
   setExploreQueryString,
   push
 })(ExploreSidebar);

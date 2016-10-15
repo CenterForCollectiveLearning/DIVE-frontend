@@ -5,7 +5,7 @@ import { replace } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import styles from '../Analysis.sass';
 
-import { parseFromQueryObject, getNewQueryString } from '../../../helpers/helpers';
+import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
 import { setCorrelationQueryString, getInitialCorrelationState } from '../../../actions/CorrelationActions';
 
 import CorrelationSidebar from './CorrelationSidebar';
@@ -14,13 +14,9 @@ import CorrelationView from './CorrelationView';
 export class CorrelationBasePage extends Component {
   componentWillMount() {
     const {
-      project,
-      datasetSelector,
-      pathname,
       fieldProperties,
       correlationQueryString,
       setCorrelationQueryString,
-      queryObject,
       replace
     } = this.props;
 
@@ -28,15 +24,28 @@ export class CorrelationBasePage extends Component {
       replace(`${ pathname }${ correlationQueryString }`);
     } else {
       if ( fieldProperties.items.length ) {
-        const selectedVariableIds = getInitialCorrelationState(project.id, datasetSelector.datasetId, fieldProperties.items)
-        const newQueryString = getNewQueryString(queryObject, 'correlationVariablesIds', selectedVariableIds, true);
-        setCorrelationQueryString(newQueryString);
-        replace(`${ pathname }${ newQueryString }`);
+        this.setRecommendedInitialState(fieldProperties);
       }
     }
   }
 
   componentWillReceiveProps(nextProps) {
+    const {
+      correlationQueryString: currentQueryString
+    } = this.props;
+    const {
+      fieldProperties,
+      correlationQueryString: nextQueryString,
+    } = nextProps;
+
+    const shouldRecommendInitialState = !currentQueryString && !nextQueryString;
+    if ( shouldRecommendInitialState && fieldProperties.items.length) {
+      this.setRecommendedInitialState(fieldProperties);
+    }
+  }
+
+  setRecommendedInitialState(fieldProperties) {
+    console.log('setRecommendedInitialState');
     const {
       project,
       datasetSelector,
@@ -46,22 +55,11 @@ export class CorrelationBasePage extends Component {
       queryObject,
       correlationQueryString: currentQueryString
     } = this.props;
-    const {
-      fieldProperties,
-      correlationQueryString: nextQueryString,
-    } = nextProps;
 
-    const shouldRecommendInitialState = !currentQueryString && !nextQueryString;
-    console.log('Current:', currentQueryString);
-    console.log('Next:', nextQueryString);
-    if ( shouldRecommendInitialState && fieldProperties.items.length) {
-      const selectedVariableIds = getInitialCorrelationState(project.id, datasetSelector.datasetId, fieldProperties.items);
-      console.log(selectedVariableIds);
-      const newQueryString = getNewQueryString(queryObject, 'correlationVariablesIds', selectedVariableIds, true);
-      console.log(queryObject, pathname, newQueryString);
-      setCorrelationQueryString(newQueryString);
-      replace(`${ pathname }${ newQueryString }`);
-    }
+    const initialState = getInitialCorrelationState(project.id, datasetSelector.datasetId, fieldProperties.items);
+    const newQueryString = updateQueryString(queryObject, initialState);
+    setCorrelationQueryString(newQueryString);
+    replace(`${ pathname }${ newQueryString }`);
   }
 
   render() {

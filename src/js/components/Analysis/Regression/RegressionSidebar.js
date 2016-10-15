@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { getNewQueryString } from '../../../helpers/helpers';
+import { updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { setRegressionQueryString, selectRegressionType, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional } from '../../../actions/RegressionActions';
 import { createURL, createInteractionTermName, filterInteractionTermSelection } from '../../../helpers/helpers.js';
@@ -70,7 +70,7 @@ export class RegressionSidebar extends Component {
 
   clickQueryStringTrackedItem = (key, value, arrayValued=true) => {
     const { pathname, queryObject, setRegressionQueryString, push } = this.props;
-    const newQueryString = getNewQueryString(queryObject, key, value, arrayValued);
+    const newQueryString = updateQueryString(queryObject, key, value, arrayValued);
     setRegressionQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }
