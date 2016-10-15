@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import { updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { setRegressionQueryString, selectRegressionType, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional } from '../../../actions/RegressionActions';
+import { setQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional } from '../../../actions/RegressionActions';
 import { createURL, createInteractionTermName, filterInteractionTermSelection } from '../../../helpers/helpers.js';
 
 import styles from '../Analysis.sass';
@@ -68,10 +68,13 @@ export class RegressionSidebar extends Component {
     this.setState({ interactionVariables: [null, null] })
   }
 
-  clickQueryStringTrackedItem = (key, value, arrayValued=true) => {
-    const { pathname, queryObject, setRegressionQueryString, push } = this.props;
-    const newQueryString = updateQueryString(queryObject, key, value, arrayValued);
-    setRegressionQueryString(newQueryString);
+  clickQueryStringTrackedItem = (key, value) => {
+    const { pathname, queryObject, setQueryString, push } = this.props;
+    var newState = {};
+    newState[key] = [ value ];
+
+    const newQueryString = updateQueryString(queryObject, newState);
+    setQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }
 
@@ -280,4 +283,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectRegressionType, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional, setRegressionQueryString, push })(RegressionSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional, setQueryString, push })(RegressionSidebar);
