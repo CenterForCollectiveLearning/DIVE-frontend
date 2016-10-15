@@ -31,12 +31,9 @@ export class CorrelationSidebar extends Component {
     }
   }
 
-  clickQueryStringTrackedItem = (key, value) => {
+  clickQueryStringTrackedItem = (newObj) => {
     const { pathname, queryObject, setQueryString, push } = this.props;
-    var newState = {};
-    newState[key] = [ value ];
-
-    const newQueryString = updateQueryString(queryObject, newState);
+    const newQueryString = updateQueryString(queryObject, newObj);
     setQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }
@@ -65,7 +62,7 @@ export class CorrelationSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ correlationVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem('correlationVariablesIds', parseInt(v)) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ correlationVariablesIds: [ parseInt(v)] }) } />
               </div>
             }
           </SidebarGroup>

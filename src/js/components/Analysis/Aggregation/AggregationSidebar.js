@@ -33,12 +33,9 @@ export class AggregationSidebar extends Component {
     }
   }
 
-  clickQueryStringTrackedItem = (key, value) => {
+  clickQueryStringTrackedItem = (newObj) => {
     const { pathname, queryObject, setQueryString, push } = this.props;
-    var newState = {};
-    newState[key] = [ value ];
-
-    const newQueryString = updateQueryString(queryObject, newState);
+    const newQueryString = updateQueryString(queryObject, newObj);
     setQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }
@@ -72,7 +69,7 @@ export class AggregationSidebar extends Component {
                   colorMember="color"
                   externalSelectedItems={ aggregationVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem('aggregationVariablesIds', parseInt(v)) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationVariablesIds: [ parseInt(v) ]}) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
@@ -92,7 +89,7 @@ export class AggregationSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ aggregationVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem('aggregationVariablesIds', parseInt(v)) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationVariablesIds: [ parseInt(v) ]}) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
@@ -112,7 +109,7 @@ export class AggregationSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ aggregationVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem('aggregationVariablesIds', parseInt(v)) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationVariablesIds: [ parseInt(v) ]}) } />
               </div>
             }
           </SidebarGroup>

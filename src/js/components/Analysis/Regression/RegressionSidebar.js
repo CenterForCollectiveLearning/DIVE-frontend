@@ -68,12 +68,9 @@ export class RegressionSidebar extends Component {
     this.setState({ interactionVariables: [null, null] })
   }
 
-  clickQueryStringTrackedItem = (key, value) => {
+  clickQueryStringTrackedItem = (newObj) => {
     const { pathname, queryObject, setQueryString, push } = this.props;
-    var newState = {};
-    newState[key] = [ value ];
-
-    const newQueryString = updateQueryString(queryObject, newState);
+    const newQueryString = updateQueryString(queryObject, newObj);
     setQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }
@@ -112,7 +109,7 @@ export class RegressionSidebar extends Component {
             <DropDownMenu
               value={ regressionType }
               options={ shownRegressionTypes }
-              onChange={ (v) => this.clickQueryStringTrackedItem('regressionType', v, false) } />
+              onChange={ (v) => this.clickQueryStringTrackedItem({ regressionType: v }) }/>
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
@@ -122,7 +119,7 @@ export class RegressionSidebar extends Component {
               options={ fieldProperties.items.filter((property) => !property.isId) }
               valueMember="id"
               displayTextMember="name"
-              onChange={ (v) => this.clickQueryStringTrackedItem('dependentVariableId', parseInt(v), false) }/>
+              onChange={ (v) => this.clickQueryStringTrackedItem({ dependentVariableId: parseInt(v) })}/>
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
@@ -144,7 +141,7 @@ export class RegressionSidebar extends Component {
                   valueMember="id"
                   externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem('independentVariablesIds', parseInt(v)) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ] }) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
@@ -164,7 +161,7 @@ export class RegressionSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem('independentVariablesIds', parseInt(v)) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ] }) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
@@ -184,7 +181,7 @@ export class RegressionSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem('independentVariablesIds', parseInt(v)) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ] }) } />
               </div>
             }
             { fieldProperties.interactionTerms.length > 0 &&

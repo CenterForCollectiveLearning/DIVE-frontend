@@ -50,7 +50,7 @@ export function updateQueryString(oldQueryObject, newState) {
       }
       newQueryObject[key] = newValues;
     } else {
-      if (key in oldQueryObject && oldQueryObject[key] == input) {
+      if (key in oldQueryObject && oldQueryObject[key] == value) {
         newQueryObject = _.omit(oldQueryObject, key);
       } else {
         newQueryObject[key] = value;
