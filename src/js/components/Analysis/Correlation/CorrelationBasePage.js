@@ -14,6 +14,7 @@ import CorrelationView from './CorrelationView';
 export class CorrelationBasePage extends Component {
   componentWillMount() {
     const {
+      pathname,
       fieldProperties,
       correlationQueryString,
       setCorrelationQueryString,
@@ -45,7 +46,6 @@ export class CorrelationBasePage extends Component {
   }
 
   setRecommendedInitialState(fieldProperties) {
-    console.log('setRecommendedInitialState');
     const {
       project,
       datasetSelector,

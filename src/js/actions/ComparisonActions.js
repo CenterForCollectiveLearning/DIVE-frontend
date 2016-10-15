@@ -18,31 +18,24 @@ import { fetch } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
 
 export function getInitialComparisonState(projectId, datasetId, fieldProperties) {
-  var independentVariablesIds = [];
-  var dependentVariablesIds = [];
   var categoricalItemIds = fieldProperties.filter((item) => ((item.generalType == 'c') && (!item.isId))).map((item) => item.id);
   var quantitativeItemIds = fieldProperties.filter((item) => ((item.generalType == 'q') && (!item.isId))).map((item) => item.id);
   var n_c = categoricalItemIds.length;
   var n_q = quantitativeItemIds.length;
 
-  if ((n_c >= 2) && (n_q >= 1)) {
+  var independentVariablesIds = [];
+  var dependentVariablesIds = [];
+  if (n_c >= 1 && n_q >= 1) {
     independentVariablesIds = _.sample(categoricalItemIds, 1);
     dependentVariablesIds = _.sample(quantitativeItemIds, 1);
-  } else {
-    if (n_c == 0) {
-      if (n_q >= 2) {
-        independentVariablesIds = _.sample(quantitativeItemIds, 2);
-      }
-    } else if (n_c == 1) {
-      if (n_q >= 1) {
-        dependentVariablesIds = _.sample(quantitativeItemIds, 1);
-        independentVariablesIds = _.sample(categoricalItemIds, 1);
-      }
-    }
   }
+  if (n_c == 0 && n_q >= 2) {
+    independentVariablesIds = _.sample(quantitativeItemIds, 2);
+  }
+
   return {
-    'dependentVariablesIds': dependentVariablesIds,
-    'independentVariablesIds': dependentVariablesIds,
+    dependentVariablesIds: dependentVariablesIds,
+    independentVariablesIds: independentVariablesIds,
   };
 }
 

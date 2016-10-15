@@ -32,9 +32,7 @@ import _ from 'underscore';
 // }
 
 export function updateQueryString(oldQueryObject, newState) {
-  var newQueryObject = oldQueryObject;
-
-  console.log('newState:', newState);
+  var newQueryObject = { ...oldQueryObject };
 
   for (let key in newState) {
     var value = newState[key];

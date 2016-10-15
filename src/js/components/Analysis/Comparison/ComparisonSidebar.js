@@ -33,7 +33,10 @@ export class ComparisonSidebar extends Component {
 
   clickQueryStringTrackedItem = (key, value) => {
     const { pathname, queryObject, setComparisonQueryString, push } = this.props;
-    const newQueryString = updateQueryString(queryObject, key, value, true);
+    var newState = {};
+    newState[key] = [ value ];
+
+    const newQueryString = updateQueryString(queryObject, newState);
     setComparisonQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }

@@ -14,28 +14,38 @@ import ComparisonView from './ComparisonView';
 export class ComparisonBasePage extends Component {
   componentWillMount() {
     const {
-      project,
-      datasetSelector,
       pathname,
       fieldProperties,
       comparisonQueryString,
       setComparisonQueryString,
-      queryObject,
       replace
     } = this.props;
+
     if ( comparisonQueryString ) {
       replace(`${ pathname }${ comparisonQueryString }`);
     } else {
       if ( fieldProperties.items.length ) {
-        const selectedVariableIds = getInitialComparisonState(project.id, datasetSelector.datasetId, fieldProperties.items)
-        const newQueryString = updateQueryString(queryObject, 'independentVariablesIds', indepVariableIds, true);
-        setComparisonQueryString(newQueryString);
-        replace(`${ pathname }${ newQueryString }`);
+        this.setRecommendedInitialState(fieldProperties);
       }
     }
   }
 
   componentWillReceiveProps(nextProps) {
+    const {
+      comparisonQueryString: currentQueryString
+    } = this.props;
+    const {
+      fieldProperties,
+      comparisonQueryString: nextQueryString,
+    } = nextProps;
+
+    const shouldRecommendInitialState = !currentQueryString && !nextQueryString;
+    if ( shouldRecommendInitialState && fieldProperties.items.length) {
+      this.setRecommendedInitialState(fieldProperties);
+    }
+  }
+
+  setRecommendedInitialState(fieldProperties) {
     const {
       project,
       datasetSelector,
@@ -43,20 +53,13 @@ export class ComparisonBasePage extends Component {
       replace,
       setComparisonQueryString,
       queryObject,
-      correlationQueryString: currentQueryString
+      comparisonQueryString: currentQueryString
     } = this.props;
-    const {
-      fieldProperties,
-      correlationQueryString: nextQueryString,
-    } = nextProps;
 
-    const shouldRecommendInitialState = !currentQueryString && !nextQueryString;
-    if ( shouldRecommendInitialState && fieldProperties.items.length) {
-      const selectedVariableIds = getInitialComparisonState(project.id, datasetSelector.datasetId, fieldProperties.items);
-      const newQueryString = updateQueryString(queryObject, 'correlationVariablesIds', selectedVariableIds, true);
-      setComparisonQueryString(newQueryString);
-      replace(`${ pathname }${ newQueryString }`);
-    }
+    const initialState = getInitialComparisonState(project.id, datasetSelector.datasetId, fieldProperties.items);
+    const newQueryString = updateQueryString(queryObject, initialState);
+    setComparisonQueryString(newQueryString);
+    replace(`${ pathname }${ newQueryString }`);
   }
 
   render() {
