@@ -16,6 +16,7 @@ import {
   WIPE_PROJECT_STATE,
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_TYPE,
+  SET_REGRESSION_QUERY_STRING,
   CLEAR_ANALYSIS
 } from '../constants/ActionTypes';
 
@@ -47,7 +48,8 @@ const baseState = {
   },
   regressionModes: regressionModes,
   selectedMode: null,
-  contributionToRSquared: []
+  contributionToRSquared: [],
+  queryString: null
 }
 
 export default function regressionSelector(state = baseState, action) {
@@ -171,6 +173,11 @@ export default function regressionSelector(state = baseState, action) {
           exportedRegressionId: action.exportedRegressionId
         }
       };
+
+    case SET_REGRESSION_QUERY_STRING:
+      return {
+        ...state, queryString: action.queryString
+      }
 
     case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
       return { ...state, contributionToRSquared: (action.data.data || []) };
