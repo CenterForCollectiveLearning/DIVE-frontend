@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { replace } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 
 import { parseFromQueryObject } from '../../../helpers/helpers'
-import { setExploreQueryString } from '../../../actions/VisualizationActions';
+import { setQueryString } from '../../../actions/VisualizationActions';
 
 import styles from '../Visualizations.sass';
 import ExploreSidebar from './ExploreSidebar';
@@ -20,18 +21,19 @@ class ExploreBasePage extends Component {
   }
 
   componentWillMount() {
-    this.props.setExploreQueryString(this.props.location.query);
+    const { fieldProperties, persistedQueryString, pathname, replace } = this.props;
+
     this.setState({
       uniqueSpecVisualizationTypes: this.getUniqueSpecVisualizationTypes(this.props.specs)
     }, () => this.updateVisualizationTypes(this.props.filters.visualizationTypes));
+
+    if ( persistedQueryString ) {
+      replace(`${ pathname }${ persistedQueryString }`);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { location, specs, filters, setExploreQueryString } = nextProps;
-
-    if (location.query !== this.props.location.query) {
-      setExploreQueryString(location.query);
-    }
+    const { specs, filters, setQueryString } = nextProps;
 
     if (specs.updatedAt != this.props.specs.updatedAt || filters.updatedAt != this.props.filters.updatedAt) {
       this.setState({
@@ -69,7 +71,7 @@ class ExploreBasePage extends Component {
   }
 
   render() {
-    const { projectTitle, queryObject, fieldIds } = this.props;
+    const { project, pathname, queryObject, fieldIds } = this.props;
 
     const visualizationTypeObjects = this.state.visualizationTypes;
     const filteredVisualizationTypes = visualizationTypeObjects
@@ -79,7 +81,7 @@ class ExploreBasePage extends Component {
       .map((visualizationTypeObject) => visualizationTypeObject.type);
 
     return (
-      <DocumentTitle title={ 'Explore' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
+      <DocumentTitle title={ 'Explore' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.galleryContainer }` }>
           <ExploreView
             filteredVisualizationTypes={ visualizationTypes }
@@ -88,6 +90,7 @@ class ExploreBasePage extends Component {
           <ExploreSidebar
             filteredVisualizationTypes={ visualizationTypes }
             visualizationTypes={ visualizationTypeObjects }
+            pathname={ pathname }
             queryObject={ queryObject }
             fieldIds={ fieldIds }
           />
@@ -99,16 +102,21 @@ class ExploreBasePage extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  const { project, filters, specs } = state;
+  const { project, datasetSelector, exploreSelector, fieldProperties, filters, specs } = state;
+  const pathname = ownProps.location.pathname;
   const queryObject = ownProps.location.query;
 
   return {
-    projectTitle: project.title,
+    project,
+    datasetSelector,
+    fieldProperties,
     queryObject: queryObject,
+    pathname: pathname,
+    persistedQueryString: exploreSelector.queryString,
     fieldIds: parseFromQueryObject(queryObject, 'fieldIds', true),
     filters,
     specs
   };
 }
 
-export default connect(mapStateToProps, { setExploreQueryString })(ExploreBasePage);
+export default connect(mapStateToProps, { setQueryString, replace })(ExploreBasePage);

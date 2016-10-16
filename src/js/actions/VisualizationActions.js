@@ -378,7 +378,7 @@ export function setShareWindow(shareWindow) {
   }
 }
 
-export function setExploreQueryString(queryString) {
+export function setQueryString(queryString) {
   return {
     type: SET_EXPLORE_QUERY_STRING,
     queryString: queryString

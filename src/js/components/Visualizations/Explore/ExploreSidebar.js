@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import { updateQueryString } from '../../../helpers/helpers';
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
-import { selectRecommendationMode, selectVisualizationType, selectSortingFunction, setExploreQueryString } from '../../../actions/VisualizationActions';
+import { selectRecommendationMode, selectVisualizationType, selectSortingFunction, setQueryString } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
 import _ from 'underscore';
@@ -40,11 +40,11 @@ export class ExploreSidebar extends Component {
     }
   }
 
-  clickQueryStringTrackedItem = (key, independentVariableId) => {
-    const { project, datasetSelector, queryObject, setExploreQueryString, push } = this.props;
-    const newQueryString = updateQueryString(queryObject, key, independentVariableId, true);
-    setExploreQueryString(newQueryString);
-    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ newQueryString }`);
+  clickQueryStringTrackedItem = (newObj) => {
+    const { pathname, queryObject, setQueryString, push } = this.props;
+    const newQueryString = updateQueryString(queryObject, newObj);
+    setQueryString(newQueryString);
+    push(`${ pathname }${ newQueryString }`);
   }
 
   clickRecommendationMode = (recommendationModeId) => {
@@ -131,7 +131,7 @@ export class ExploreSidebar extends Component {
                   separated={ true }
                   selectMenuItem={ this.clickFieldPropertyValue }
                   externalSelectedItems={ fieldIds }
-                  onChange={ (v) => this.clickQueryStringTrackedItem('fieldIds', parseInt(v)) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ fieldIds: [ parseInt(v) ]}) } />
               </div>
             }
             { exploreSelector.fieldProperties.filter((property) => property.generalType == 't').length > 0 &&
@@ -153,7 +153,7 @@ export class ExploreSidebar extends Component {
                   separated={ true }
                   selectMenuItem={ selectAggregationFunction }
                   externalSelectedItems={ fieldIds }
-                  onChange={ (v) => this.clickQueryStringTrackedItem('fieldIds', parseInt(v)) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ fieldIds: [ parseInt(v) ]}) } />
               </div>
             }
             { exploreSelector.fieldProperties.filter((property) => property.generalType == 'q').length > 0 &&
@@ -176,7 +176,7 @@ export class ExploreSidebar extends Component {
                   separated={ true }
                   selectMenuItem={ selectAggregationFunction }
                   externalSelectedItems={ fieldIds }
-                  onChange={ (v) => this.clickQueryStringTrackedItem('fieldIds', parseInt(v)) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ fieldIds: [ parseInt(v) ]}) } />
               </div>
             }
           </SidebarGroup>
@@ -193,6 +193,7 @@ ExploreSidebar.propTypes = {
   filters: PropTypes.object.isRequired,
   visualizationTypes: PropTypes.array.isRequired,
   filteredVisualizationTypes: PropTypes.array.isRequired,
+  pathname: PropTypes.string.isRequired,
   queryObject: PropTypes.object.isRequired,
   fieldIds: PropTypes.array.isRequired,
 };
@@ -223,6 +224,6 @@ export default connect(mapStateToProps, {
   fetchDatasets,
   selectDataset,
   updateQueryString,
-  setExploreQueryString,
+  setQueryString,
   push
 })(ExploreSidebar);

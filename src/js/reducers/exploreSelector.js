@@ -296,32 +296,32 @@ export default function exploreSelector(state = baseState, action) {
         loadedSpecLevel: receiveLoadedSpecLevel
       };
 
-    case SELECT_FIELD_PROPERTY:
-      var fieldProperties = state.fieldProperties.map((property) =>
-        (property.id == action.selectedFieldPropertyId) ?
-          new Object({
-            ...property,
-            selected: !property.selected,
-            values: (!property.selected || property.generalType == 'q' || property.generalType == 't') ? property.values : property.values.map((value, i) => new Object({...value, selected: i == 0 })),
-            aggregations: (!property.selected || property.generalType == 'c') ? property.aggregations : property.aggregations.map((aggregation, i) => new Object({...aggregation, selected: i == 0 }))
-          })
-          : property
-      );
-
-      var selectedProperties = fieldProperties.filter((property) => property.selected);
-      var numSelectedFields = selectedProperties.length;
-      var isValidSpecLevel = getValidSpecLevelsFromNumFields(numSelectedFields, state.selectedRecommendationMode);
-
-      return {
-        ...state,
-        fieldProperties: fieldProperties,
-        progressByLevel: [ null, null, null, null ],
-        isFetchingSpecLevel: [ false, false, false, false ],
-        loadedSpecLevel: [ false, false, false, false ],
-        isValidSpecLevel: isValidSpecLevel,
-        specs: [],
-        updatedAt: Date.now()
-      };
+    // case SELECT_FIELD_PROPERTY:
+    //   var fieldProperties = state.fieldProperties.map((property) =>
+    //     (property.id == action.selectedFieldPropertyId) ?
+    //       new Object({
+    //         ...property,
+    //         selected: !property.selected,
+    //         values: (!property.selected || property.generalType == 'q' || property.generalType == 't') ? property.values : property.values.map((value, i) => new Object({...value, selected: i == 0 })),
+    //         aggregations: (!property.selected || property.generalType == 'c') ? property.aggregations : property.aggregations.map((aggregation, i) => new Object({...aggregation, selected: i == 0 }))
+    //       })
+    //       : property
+    //   );
+    //
+    //   var selectedProperties = fieldProperties.filter((property) => property.selected);
+    //   var numSelectedFields = selectedProperties.length;
+    //   var isValidSpecLevel = getValidSpecLevelsFromNumFields(numSelectedFields, state.selectedRecommendationMode);
+    //
+    //   return {
+    //     ...state,
+    //     fieldProperties: fieldProperties,
+    //     progressByLevel: [ null, null, null, null ],
+    //     isFetchingSpecLevel: [ false, false, false, false ],
+    //     loadedSpecLevel: [ false, false, false, false ],
+    //     isValidSpecLevel: isValidSpecLevel,
+    //     specs: [],
+    //     updatedAt: Date.now()
+    //   };
 
     case SELECT_SORTING_FUNCTION:
       const sortingFunctions = state.sortingFunctions.map((func) =>
