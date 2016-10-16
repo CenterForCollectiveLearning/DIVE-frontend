@@ -65,6 +65,44 @@ const recommendationModes = [
   }
 ]
 
+const sortingFunctions = [
+  {
+    'label': 'relevance',
+    'value': 'relevance',
+    'selected': true
+  },
+  {
+    'label': 'correlation',
+    'value': 'correlation',
+    'selected': false
+  },
+  {
+    'label': 'gini',
+    'value': 'gini',
+    'selected': false
+  },
+  {
+    'label': 'entropy',
+    'value': 'entropy',
+    'selected': false
+  },
+  {
+    'label': 'variance',
+    'value': 'variance',
+    'selected': false
+  },
+  {
+    'label': 'normality',
+    'value': 'normality',
+    'selected': false
+  },
+  {
+    'label': 'size',
+    'value': 'size',
+    'selected': false
+  }
+];
+
 const baseState = {
   datasetId: null,
   fieldProperties: [],
@@ -74,76 +112,16 @@ const baseState = {
   recommendationModes: recommendationModes,
   selectedRecommendationMode: 'regular',
   specs: [],
-  sortingFunctions: [],
+  sortingFunctions: sortingFunctions,
   queryString: "",
   progressByLevel: [ null, null, null, null ],
   isFetchingSpecLevel: [ false, false, false, false ],
   loadedSpecLevel: [ false, false, false, false ],
-  isValidSpecLevel: [ false, false, false, false ],
   allowExpandedSpecs: false,
   updatedAt: 0
 }
 
-function getValidSpecLevelsFromNumFields(numSelectedFields, selectedRecommendationMode) {
-  var isValidSpecLevel = [ false, false, false, false ];
-  if (numSelectedFields == 0) {
-    isValidSpecLevel[0] = true;  // Exact
-  }
-  if (numSelectedFields >= 1) {
-    isValidSpecLevel[2] = true;  // Individual
-    if (selectedRecommendationMode == 'expanded') {
-      isValidSpecLevel[3] = true  // Expanded
-    }
-  }
-  if (numSelectedFields >= 2) {
-    isValidSpecLevel[0] = true;  // Exact
-  }
-  if (numSelectedFields >= 3) {
-    isValidSpecLevel[1] = true;  // Subset
-  }
-  return isValidSpecLevel;
-}
-
 export default function exploreSelector(state = baseState, action) {
-
-  const SORTING_FUNCTIONS = [
-    {
-      'label': 'relevance',
-      'value': 'relevance',
-      'selected': true
-    },
-    {
-      'label': 'correlation',
-      'value': 'correlation',
-      'selected': false
-    },
-    {
-      'label': 'gini',
-      'value': 'gini',
-      'selected': false
-    },
-    {
-      'label': 'entropy',
-      'value': 'entropy',
-      'selected': false
-    },
-    {
-      'label': 'variance',
-      'value': 'variance',
-      'selected': false
-    },
-    {
-      'label': 'normality',
-      'value': 'normality',
-      'selected': false
-    },
-    {
-      'label': 'size',
-      'value': 'size',
-      'selected': false
-    }
-  ];
-
   const sortSpecsByFunction = function(sortingFunction, specA, specB) {
     const scoreObjectSpecA = specA.scores.find((score) => score.type == sortingFunction);
     const scoreObjectSpecB = specB.scores.find((score) => score.type == sortingFunction);
@@ -170,7 +148,6 @@ export default function exploreSelector(state = baseState, action) {
   switch (action.type) {
     case SELECT_RECOMMENDATION_MODE:
       var numSelectedFields = state.fieldProperties.filter((property) => property.selected).length;
-      var isValidSpecLevel = getValidSpecLevelsFromNumFields(numSelectedFields, action.selectedRecommendationModeId);
 
       var recommendationModes = state.recommendationModes.map((recommendationModeObject) =>
         (recommendationModeObject.id == action.selectedRecommendationModeId) ?
@@ -186,23 +163,20 @@ export default function exploreSelector(state = baseState, action) {
       return {
         ...state,
         selectedRecommendationMode: action.selectedRecommendationModeId,
-        isValidSpecLevel: isValidSpecLevel,
         recommendationModes: recommendationModes
       }
 
 
-    case RECEIVE_FIELD_PROPERTIES:
-      var numSelectedFields = action.fieldProperties.filter((property) => property.selected).length;
-      var isValidSpecLevel = getValidSpecLevelsFromNumFields(numSelectedFields, state.selectedRecommendationMode);
-      return {
-        ...state,
-        datasetId: action.datasetId,
-        fieldProperties: action.fieldProperties,
-        originalFieldProperties: action.fieldProperties,
-        isValidSpecLevel: isValidSpecLevel,
-        sortingFunctions: SORTING_FUNCTIONS,
-        updatedAt: action.receivedAt
-      };
+    // case RECEIVE_FIELD_PROPERTIES:
+    //   var numSelectedFields = action.fieldProperties.filter((property) => property.selected).length;
+    //   return {
+    //     ...state,
+    //     datasetId: action.datasetId,
+    //     fieldProperties: action.fieldProperties,
+    //     originalFieldProperties: action.fieldProperties,
+    //     sortingFunctions: SORTING_FUNCTIONS,
+    //     updatedAt: action.receivedAt
+    //   };
 
     case RECEIVE_SET_FIELD_TYPE:
     case RECEIVE_SET_FIELD_IS_ID:
@@ -229,7 +203,8 @@ export default function exploreSelector(state = baseState, action) {
       return {
         ...state,
         isFetchingSpecLevel: requestIsFetchingSpecLevel,
-        isFetching: true
+        isFetching: true,
+        loading: false
       };
 
     case PROGRESS_EXACT_SPECS:
@@ -353,9 +328,16 @@ export default function exploreSelector(state = baseState, action) {
     case WIPE_PROJECT_STATE:
       return baseState;
 
+    // TODO REINITIALIZE ON SPECIFIC FIELD SELECTION
     case SET_EXPLORE_QUERY_STRING:
       return {
-        ...state, queryString: action.queryString
+        ...state,
+        queryString: action.queryString,
+        progressByLevel: [ null, null, null, null ],
+        isFetchingSpecLevel: [ false, false, false, false ],
+        loadedSpecLevel: [ false, false, false, false ],
+        specs: [],
+        updatedAt: Date.now()
       }
 
     default:

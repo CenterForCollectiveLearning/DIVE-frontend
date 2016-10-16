@@ -16,27 +16,22 @@ import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 
 export class ExploreSidebar extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   componentWillMount() {
-    const { project, datasetSelector, exploreSelector, fetchFieldPropertiesIfNeeded, fieldIds } = this.props;
-    if (project.id && datasetSelector.datasetId && (exploreSelector.datasetId != datasetSelector.datasetId) && !exploreSelector.isFetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId, fieldIds);
+    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded, fieldIds } = this.props;
+
+    if (project.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
     }
   }
 
-  componentDidUpdate(previousProps) {
-    const { project, datasetSelector, exploreSelector, fetchFieldPropertiesIfNeeded, fieldIds } = this.props;
+  componentWillReceiveProps(nextProps) {
+    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded, fieldIds } = nextProps;
 
-    const projectChanged = (previousProps.project.id !== project.id);
-    const datasetChanged = (previousProps.datasetSelector.datasetId !== datasetSelector.datasetId);
+    const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
 
-    const fieldIdsChanged = _.union(_.difference(previousProps.fieldIds, fieldIds), _.difference(fieldIds, previousProps.fieldIds));
-
-    if (project.id && (datasetChanged || (!exploreSelector.isFetching && (exploreSelector.datasetId != datasetSelector.datasetId)))) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId, fieldIds);
+    if (project.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
     }
   }
 
@@ -64,6 +59,7 @@ export class ExploreSidebar extends Component {
     const {
       visualizationTypes,
       fieldIds,
+      fieldProperties,
       datasets,
       datasetSelector,
       exploreSelector,
@@ -109,13 +105,13 @@ export class ExploreSidebar extends Component {
               onChange={ selectVisualizationType } />
           </SidebarGroup>
         }
-        { exploreSelector.fieldProperties.length > 0 &&
+        { fieldProperties.items.length > 0 &&
           <SidebarGroup heading="Find Visualizations by Field">
-            { exploreSelector.fieldProperties.filter((property) => property.generalType == 'c').length > 0 &&
+            { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Categorical</div>
                 <ToggleButtonGroup
-                  toggleItems={ exploreSelector.fieldProperties.filter((property) => property.generalType == 'c').map((item) =>
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
                     new Object({
                       id: item.id,
                       name: item.name,
@@ -134,11 +130,11 @@ export class ExploreSidebar extends Component {
                   onChange={ (v) => this.clickQueryStringTrackedItem({ fieldIds: [ parseInt(v) ]}) } />
               </div>
             }
-            { exploreSelector.fieldProperties.filter((property) => property.generalType == 't').length > 0 &&
+            { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Temporal</div>
                 <ToggleButtonGroup
-                  toggleItems={ exploreSelector.fieldProperties.filter((property) => property.generalType == 't').map((item) =>
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
                     new Object({
                       id: item.id,
                       name: item.name,
@@ -156,11 +152,11 @@ export class ExploreSidebar extends Component {
                   onChange={ (v) => this.clickQueryStringTrackedItem({ fieldIds: [ parseInt(v) ]}) } />
               </div>
             }
-            { exploreSelector.fieldProperties.filter((property) => property.generalType == 'q').length > 0 &&
+            { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Quantitative</div>
                 <ToggleButtonGroup
-                  toggleItems={ exploreSelector.fieldProperties.filter((property) => property.generalType == 'q').map((item) =>
+                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
                     new Object({
                       id: item.id,
                       name: item.name,
@@ -204,6 +200,7 @@ function mapStateToProps(state) {
     datasets,
     datasetSelector,
     exploreSelector,
+    fieldProperties,
     filters
   } = state;
   return {
@@ -211,6 +208,7 @@ function mapStateToProps(state) {
     datasets,
     datasetSelector,
     exploreSelector,
+    fieldProperties,
     filters
   };
 }

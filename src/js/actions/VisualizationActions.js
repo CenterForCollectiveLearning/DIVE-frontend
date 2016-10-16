@@ -68,6 +68,27 @@ const specLevelToAction = [
   },
 ]
 
+export function getValidSpecLevelsFromNumFields(numSelectedFields, selectedRecommendationMode) {
+  var isValidSpecLevel = [ false, false, false, false ];
+  if (numSelectedFields == 0) {
+    isValidSpecLevel[0] = true;  // Exact
+  }
+  if (numSelectedFields >= 1) {
+    isValidSpecLevel[2] = true;  // Individual
+    if (selectedRecommendationMode.id == 'expanded') {
+      isValidSpecLevel[3] = true  // Expanded
+    }
+  }
+  if (numSelectedFields >= 2) {
+    isValidSpecLevel[0] = true;  // Exact
+  }
+  if (numSelectedFields >= 3) {
+    isValidSpecLevel[1] = true;  // Subset
+  }
+  console.log(numSelectedFields, isValidSpecLevel);
+  return isValidSpecLevel;
+}
+
 function requestUpdateVisualizationStatsDispatcher(selectedRecommendationLevel) {
   return {
     type: specLevelToAction[selectedRecommendationLevel].request,

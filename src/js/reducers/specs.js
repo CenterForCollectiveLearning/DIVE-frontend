@@ -13,6 +13,7 @@ import {
   RECEIVE_EXPANDED_SPECS,
   FAILED_RECEIVE_SPECS,
   SELECT_FIELD_PROPERTY,
+  SET_EXPLORE_QUERY_STRING,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -38,7 +39,7 @@ export default function specs(state=baseState, action) {
     case FAILED_RECEIVE_SPECS:
       return { ...state, isFetching: false, loaded: true, error: action.error };
 
-    case SELECT_FIELD_PROPERTY:
+    case SET_EXPLORE_QUERY_STRING:
       return baseState;
 
     case WIPE_PROJECT_STATE:
