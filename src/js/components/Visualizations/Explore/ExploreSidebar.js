@@ -42,29 +42,18 @@ export class ExploreSidebar extends Component {
     push(`${ pathname }${ newQueryString }`);
   }
 
-  clickRecommendationMode = (recommendationModeId) => {
-    const { selectRecommendationMode } = this.props;
-    selectRecommendationMode(recommendationModeId);
-  }
-
-  // clickFieldPropertyValue = (fieldPropertyId, fieldPropertyValueId) => {
-  //   const selectedProperty = this.props.exploreSelector.fieldProperties.find((property) => (property.id == fieldPropertyId));
-  //   if (!selectedProperty.selected) {
-  //     this.clickFieldProperty(fieldPropertyId);
-  //   }
-  //   this.props.selectFieldPropertyValue(fieldPropertyId, fieldPropertyValueId);
-  // }
-
   render() {
     const {
       visualizationTypes,
-      fieldIds,
       fieldProperties,
       datasets,
       datasetSelector,
       exploreSelector,
       filters,
+      recommendationMode,
+      sortBy,
       filteredVisualizationTypes,
+      fieldIds,
       selectVisualizationType,
       selectAggregationFunction,
       selectSortingFunction
@@ -76,6 +65,8 @@ export class ExploreSidebar extends Component {
       )
     );
 
+    console.log(sortBy, fieldIds, recommendationMode, filteredVisualizationTypes);
+
     return (
       <Sidebar>
         <SidebarGroup heading="Recommendation Mode">
@@ -84,14 +75,16 @@ export class ExploreSidebar extends Component {
             displayTextMember="name"
             valueMember="id"
             separated={ false }
-            onChange={ this.clickRecommendationMode } />
+            externalSelectedItems={ [ recommendationMode ] }
+            onChange={ (v) => this.clickQueryStringTrackedItem({ recommendationMode: v }) } />
         </SidebarGroup>
         <SidebarGroup heading="Sort By">
           <DropDownMenu
             options={ exploreSelector.sortingFunctions }
             valueMember="value"
             displayTextMember="label"
-            onChange={ selectSortingFunction } />
+            value={ sortBy }
+            onChange={ (v) => this.clickQueryStringTrackedItem({ sortBy: v }) } />
         </SidebarGroup>
         { visualizationTypes.length > 1 &&
           <SidebarGroup heading="Filter Visualization type">
@@ -102,7 +95,8 @@ export class ExploreSidebar extends Component {
               valueMember="type"
               imageNameMember="imageName"
               imageNameSuffix=".chart.svg"
-              onChange={ selectVisualizationType } />
+              externalSelectedItems={ filteredVisualizationTypes }
+              onChange={ (v) => this.clickQueryStringTrackedItem({ filteredVisualizationTypes: [ v ] }) } />
           </SidebarGroup>
         }
         { fieldProperties.items.length > 0 &&
@@ -188,10 +182,12 @@ ExploreSidebar.propTypes = {
   exploreSelector: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
   visualizationTypes: PropTypes.array.isRequired,
+  recommendationMode: PropTypes.string.isRequired,
+  sortBy: PropTypes.string.isRequired,
   filteredVisualizationTypes: PropTypes.array.isRequired,
+  fieldIds: PropTypes.array.isRequired,
   pathname: PropTypes.string.isRequired,
   queryObject: PropTypes.object.isRequired,
-  fieldIds: PropTypes.array.isRequired,
 };
 
 function mapStateToProps(state) {

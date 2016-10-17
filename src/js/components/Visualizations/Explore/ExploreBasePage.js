@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 
-import { parseFromQueryObject } from '../../../helpers/helpers'
-import { setQueryString } from '../../../actions/VisualizationActions';
+import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers'
+import { setQueryString, getInitialState } from '../../../actions/VisualizationActions';
 
 import styles from '../Visualizations.sass';
 import ExploreSidebar from './ExploreSidebar';
@@ -29,17 +29,36 @@ class ExploreBasePage extends Component {
 
     if ( persistedQueryString ) {
       replace(`${ pathname }${ persistedQueryString }`);
+    } else {
+      if ( fieldProperties.items.length ) {
+        this.setRecommendedInitialState(fieldProperties);
+      }
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { specs, filters, setQueryString } = nextProps;
+    const { queryObject: currentQueryObject } = this.props;
+    const { specs, filters, fieldProperties, queryObject: nextQueryObject } = nextProps;
 
     if (specs.updatedAt != this.props.specs.updatedAt || filters.updatedAt != this.props.filters.updatedAt) {
       this.setState({
         uniqueSpecVisualizationTypes: this.getUniqueSpecVisualizationTypes(specs)
       }, () => this.updateVisualizationTypes(filters.visualizationTypes));
     }
+
+    const shouldRecommendInitialState = Object.keys(currentQueryObject) == 0 && Object.keys(nextQueryObject).length == 0;
+    if ( shouldRecommendInitialState && fieldProperties.items.length) {
+      this.setRecommendedInitialState(fieldProperties);
+    }
+  }
+
+  setRecommendedInitialState(fieldProperties) {
+    const { project, datasetSelector, pathname, queryObject, replace, setQueryString } = this.props;
+
+    const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
+    const newQueryString = updateQueryString(queryObject, initialState);
+    setQueryString(newQueryString);
+    replace(`${ pathname }${ newQueryString }`);
   }
 
   updateVisualizationTypes = (visualizationTypes) => {
@@ -71,25 +90,22 @@ class ExploreBasePage extends Component {
   }
 
   render() {
-    const { project, pathname, queryObject, fieldIds } = this.props;
+    const { project, filteredVisualizationTypes, pathname, queryObject, fieldIds, sortBy, recommendationMode } = this.props;
 
-    const visualizationTypeObjects = this.state.visualizationTypes;
-    const filteredVisualizationTypes = visualizationTypeObjects
-      .filter((visualizationTypeObject) => visualizationTypeObject.selected);
-
-    const visualizationTypes = (filteredVisualizationTypes.length ? filteredVisualizationTypes : visualizationTypeObjects)
-      .map((visualizationTypeObject) => visualizationTypeObject.type);
+    const allValidVisualizationTypes = this.state.visualizationTypes;
 
     return (
       <DocumentTitle title={ 'Explore' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.galleryContainer }` }>
           <ExploreView
-            filteredVisualizationTypes={ visualizationTypes }
+            filteredVisualizationTypes={ filteredVisualizationTypes }
             fieldIds={ fieldIds }
           />
           <ExploreSidebar
-            filteredVisualizationTypes={ visualizationTypes }
-            visualizationTypes={ visualizationTypeObjects }
+            filteredVisualizationTypes={ filteredVisualizationTypes }
+            sortBy={ sortBy }
+            recommendationMode={ recommendationMode }
+            visualizationTypes={ allValidVisualizationTypes }
             pathname={ pathname }
             queryObject={ queryObject }
             fieldIds={ fieldIds }
@@ -110,6 +126,7 @@ function mapStateToProps(state, ownProps) {
     project,
     datasetSelector,
     fieldProperties,
+    exploreSelector,
     queryObject: queryObject,
     pathname: pathname,
     persistedQueryString: exploreSelector.queryString,
@@ -122,4 +139,7 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, { setQueryString, replace })(ExploreBasePage);
+export default connect(mapStateToProps, {
+  replace,
+  setQueryString
+})(ExploreBasePage);

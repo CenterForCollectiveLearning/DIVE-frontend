@@ -68,6 +68,13 @@ const specLevelToAction = [
   },
 ]
 
+export function getInitialState(projectId, datasetId, fieldProperties) {
+  return {
+    recommendationMode: 'regular',
+    sortBy: 'relevance'
+  };
+}
+
 export function getValidSpecLevelsFromNumFields(numSelectedFields, selectedRecommendationMode) {
   var isValidSpecLevel = [ false, false, false, false ];
   if (numSelectedFields == 0) {
@@ -85,7 +92,6 @@ export function getValidSpecLevelsFromNumFields(numSelectedFields, selectedRecom
   if (numSelectedFields >= 3) {
     isValidSpecLevel[1] = true;  // Subset
   }
-  console.log(numSelectedFields, isValidSpecLevel);
   return isValidSpecLevel;
 }
 

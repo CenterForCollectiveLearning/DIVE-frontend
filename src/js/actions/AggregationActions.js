@@ -45,6 +45,7 @@ export function getInitialState(projectId, datasetId, fieldProperties) {
 
 
   return {
+    aggregateOn: 'count',
     aggregationVariablesIds: selectedVariablesIds
   }
 }

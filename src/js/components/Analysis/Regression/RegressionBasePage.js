@@ -34,6 +34,34 @@ export class RegressionBasePage extends Component {
     if ( shouldRecommendInitialState && fieldProperties.items.length) {
       this.setRecommendedInitialState(fieldProperties);
     }
+
+    // Handling inconsistent state, default selection of certain fields
+    this.reconcileState();
+  }
+
+  reconcileState() {
+    const { project, datasetSelector, pathname, queryObject, replace, setQueryString, fieldProperties, regressionType, dependentVariableId } = this.props;
+
+    const generalTypeToPermissibleRegressionType = {
+      'q': [ 'linear' ],
+      'c': [ 'logistic' ],
+    }
+
+    // Auto regression type forcing
+    if ( dependentVariableId && fieldProperties.items.length ) {
+      var dependentVariableGeneralType = fieldProperties.items.find((property) => property.id == dependentVariableId).generalType;
+      var permissibleRegressionTypes = generalTypeToPermissibleRegressionType[dependentVariableGeneralType];
+
+      console.log(permissibleRegressionTypes, regressionType, dependentVariableGeneralType, permissibleRegressionTypes.indexOf(regressionType) == -1);
+      if (!regressionType || permissibleRegressionTypes.indexOf(regressionType) == -1) {
+        console.log('Must reconcile to', permissibleRegressionTypes[0]);
+        const newQueryString = updateQueryString(queryObject, {
+          regressionType: permissibleRegressionTypes[0]
+        });
+        setQueryString(newQueryString);
+        replace(`${ pathname }${ newQueryString }`);
+      }
+    }
   }
 
   setRecommendedInitialState(fieldProperties) {

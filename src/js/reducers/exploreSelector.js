@@ -1,6 +1,4 @@
 import {
-  REQUEST_FIELD_PROPERTIES,
-  RECEIVE_FIELD_PROPERTIES,
   REQUEST_EXACT_SPECS,
   REQUEST_INDIVIDUAL_SPECS,
   REQUEST_SUBSET_SPECS,
@@ -13,7 +11,6 @@ import {
   PROGRESS_INDIVIDUAL_SPECS,
   PROGRESS_SUBSET_SPECS,
   PROGRESS_EXPANDED_SPECS,
-  SELECT_FIELD_PROPERTY,
   SELECT_FIELD_PROPERTY_VALUE,
   SELECT_AGGREGATION_FUNCTION,
   SELECT_SORTING_FUNCTION,
@@ -55,51 +52,42 @@ const recommendationTypesToLevel = {
 const recommendationModes = [
   {
     id: 'regular',
-    name: 'Regular',
-    selected: true
+    name: 'Regular'
   },
   {
     id: 'expanded',
-    name: 'Expanded',
-    selected: false
+    name: 'Expanded'
   }
 ]
 
 const sortingFunctions = [
   {
     'label': 'relevance',
-    'value': 'relevance',
-    'selected': true
+    'value': 'relevance'
   },
   {
     'label': 'correlation',
-    'value': 'correlation',
-    'selected': false
+    'value': 'correlation'
   },
   {
     'label': 'gini',
-    'value': 'gini',
-    'selected': false
+    'value': 'gini'
   },
   {
     'label': 'entropy',
-    'value': 'entropy',
-    'selected': false
+    'value': 'entropy'
   },
   {
     'label': 'variance',
-    'value': 'variance',
-    'selected': false
+    'value': 'variance'
   },
   {
     'label': 'normality',
-    'value': 'normality',
-    'selected': false
+    'value': 'normality'
   },
   {
     'label': 'size',
-    'value': 'size',
-    'selected': false
+    'value': 'size'
   }
 ];
 
@@ -146,53 +134,6 @@ export default function exploreSelector(state = baseState, action) {
   };
 
   switch (action.type) {
-    case SELECT_RECOMMENDATION_MODE:
-      var numSelectedFields = state.fieldProperties.filter((property) => property.selected).length;
-
-      var recommendationModes = state.recommendationModes.map((recommendationModeObject) =>
-        (recommendationModeObject.id == action.selectedRecommendationModeId) ?
-          new Object({
-            ...recommendationModeObject,
-            selected: true
-          })
-          : new Object({
-            ...recommendationModeObject,
-            selected: false
-          })
-      );
-      return {
-        ...state,
-        selectedRecommendationMode: action.selectedRecommendationModeId,
-        recommendationModes: recommendationModes
-      }
-
-
-    // case RECEIVE_FIELD_PROPERTIES:
-    //   var numSelectedFields = action.fieldProperties.filter((property) => property.selected).length;
-    //   return {
-    //     ...state,
-    //     datasetId: action.datasetId,
-    //     fieldProperties: action.fieldProperties,
-    //     originalFieldProperties: action.fieldProperties,
-    //     sortingFunctions: SORTING_FUNCTIONS,
-    //     updatedAt: action.receivedAt
-    //   };
-
-    case RECEIVE_SET_FIELD_TYPE:
-    case RECEIVE_SET_FIELD_IS_ID:
-    case RECEIVE_SET_FIELD_COLOR:
-      var fieldProperties = state.fieldProperties.slice().map((fieldProperty) =>
-        fieldProperty.id == action.fieldProperty.id ? action.fieldProperty : fieldProperty
-      );
-
-      var fieldNameToColor = {};
-      for (var i in fieldProperties) {
-        var fieldProperty = fieldProperties[i];
-        fieldNameToColor[fieldProperty['name']] = fieldProperty['color'];
-      }
-
-      return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
-
     case REQUEST_EXACT_SPECS:
     case REQUEST_INDIVIDUAL_SPECS:
     case REQUEST_SUBSET_SPECS:
@@ -253,77 +194,24 @@ export default function exploreSelector(state = baseState, action) {
     case RECEIVE_INDIVIDUAL_SPECS:
     case RECEIVE_SUBSET_SPECS:
     case RECEIVE_EXPANDED_SPECS:
+
       var {
         isFetchingSpecLevel: receiveIsFetchingSpecLevel,
         loadedSpecLevel: receiveLoadedSpecLevel
       } = state;
       receiveIsFetchingSpecLevel[action.recommendationType.level] = false;
       receiveLoadedSpecLevel[action.recommendationType.level] = true;
-
-      const selectedSortingFunction = state.sortingFunctions.find((func) => func.selected).value;
-      const defaultSortSpecs = function (specA, specB) {
-        return sortSpecsByFunction(selectedSortingFunction, specA, specB);
-      };
+      //
+      // const selectedSortingFunction = state.sortingFunctions.find((func) => func.selected).value;
+      // const defaultSortSpecs = function (specA, specB) {
+      //   return sortSpecsByFunction(selectedSortingFunction, specA, specB);
+      // };
 
       return {
         ...state,
         isFetchingSpecLevel: receiveIsFetchingSpecLevel,
         loadedSpecLevel: receiveLoadedSpecLevel
       };
-
-    // case SELECT_FIELD_PROPERTY:
-    //   var fieldProperties = state.fieldProperties.map((property) =>
-    //     (property.id == action.selectedFieldPropertyId) ?
-    //       new Object({
-    //         ...property,
-    //         selected: !property.selected,
-    //         values: (!property.selected || property.generalType == 'q' || property.generalType == 't') ? property.values : property.values.map((value, i) => new Object({...value, selected: i == 0 })),
-    //         aggregations: (!property.selected || property.generalType == 'c') ? property.aggregations : property.aggregations.map((aggregation, i) => new Object({...aggregation, selected: i == 0 }))
-    //       })
-    //       : property
-    //   );
-    //
-    //   var selectedProperties = fieldProperties.filter((property) => property.selected);
-    //   var numSelectedFields = selectedProperties.length;
-    //   var isValidSpecLevel = getValidSpecLevelsFromNumFields(numSelectedFields, state.selectedRecommendationMode);
-    //
-    //   return {
-    //     ...state,
-    //     fieldProperties: fieldProperties,
-    //     progressByLevel: [ null, null, null, null ],
-    //     isFetchingSpecLevel: [ false, false, false, false ],
-    //     loadedSpecLevel: [ false, false, false, false ],
-    //     isValidSpecLevel: isValidSpecLevel,
-    //     specs: [],
-    //     updatedAt: Date.now()
-    //   };
-
-    case SELECT_SORTING_FUNCTION:
-      const sortingFunctions = state.sortingFunctions.map((func) =>
-        new Object({
-          ...func,
-          selected: func.value == action.selectedSortingFunction
-        })
-      );
-
-      const sortSpecs = function(specA, specB) {
-        return sortSpecsByFunction(action.selectedSortingFunction, specA, specB);
-      };
-
-      const sortedSpecs = state.specs.sort(sortSpecs);
-
-      return { ...state, sortingFunctions: sortingFunctions, specs: sortedSpecs };
-
-    case SELECT_RECOMMENDATION_TYPE:
-      const recommendationTypes = state.recommendationTypes.map((typeObject) =>
-        (typeObject.id == action.selectedRecommendationType) ?
-          new Object({
-            ...typeObject,
-            selected: (typeObject.id == action.selectedRecommendationType && !typeObject.selected)
-          })
-        : typeObject
-      );
-      return { ...state, recommendationTypes: recommendationTypes, updatedAt: Date.now() };
 
     case WIPE_PROJECT_STATE:
       return baseState;

@@ -32,10 +32,26 @@ export class AggregationBasePage extends Component {
     if ( shouldRecommendInitialState && fieldProperties.items.length) {
       this.setRecommendedInitialState(fieldProperties);
     }
+
+    // Handling inconsistent state, default selection of certain fields
+    this.reconcileState();
+  }
+
+  reconcileState() {
+    const { project, datasetSelector, pathname, queryObject, replace, setQueryString, aggregateOn, aggregationFunction } = this.props;
+
+    // Auto aggregation function selection
+    if ( aggregateOn && aggregateOn !== 'count' && !aggregationFunction ) {
+      const newQueryString = updateQueryString(queryObject, {
+        aggregationFunction: 'MEAN'
+      });
+      setQueryString(newQueryString);
+      replace(`${ pathname }${ newQueryString }`);
+    }
   }
 
   setRecommendedInitialState(fieldProperties) {
-    const { project, datasetSelector, pathname, queryObject, replace, setQueryString, } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setQueryString } = this.props;
 
     const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
@@ -44,17 +60,23 @@ export class AggregationBasePage extends Component {
   }
 
   render() {
-    const { project, pathname, queryObject, aggregationVariablesIds } = this.props;
+    const { project, pathname, queryObject, aggregationFunction, weightVariableId, aggregateOn, aggregationVariablesIds } = this.props;
 
     return (
       <DocumentTitle title={ 'Aggregation' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.summaryContainer }` }>
           <AggregationView
+            aggregationFunction={ aggregationFunction }
+            weightVariableId={ weightVariableId }
+            aggregateOn={ aggregateOn }
             aggregationVariablesIds={ aggregationVariablesIds }
           />
           <AggregationSidebar
             pathname={ pathname }
             queryObject={ queryObject }
+            aggregationFunction={ aggregationFunction }
+            weightVariableId={ weightVariableId }
+            aggregateOn={ aggregateOn }
             aggregationVariablesIds={ aggregationVariablesIds }
           />
         </div>
@@ -75,8 +97,10 @@ function mapStateToProps(state, ownProps) {
     queryObject: queryObject,
     pathname: pathname,
     persistedQueryString: aggregationSelector.queryString,
+    aggregationFunction: parseFromQueryObject(queryObject, 'aggregationFunction'),
+    weightVariableId: parseFromQueryObject(queryObject, 'weightVariableId'),
     aggregationVariablesIds: parseFromQueryObject(queryObject, 'aggregationVariablesIds', true),
-    aggregationVariablesId: parseFromQueryObject(queryObject, 'aggregationVariablesId', false),
+    aggregateOn: parseFromQueryObject(queryObject, 'aggregateOn'),
   };
 }
 
