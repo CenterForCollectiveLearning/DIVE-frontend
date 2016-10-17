@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 
 import { push, replace } from 'react-router-redux';
-import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
-import { setQueryString, getInitialState, fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
+import { parseFromQueryObject, updateQueryString } from '../../helpers/helpers';
+import { setInspectQueryString as setQueryString, getInitialState, fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 
 import styles from './Datasets.sass';
@@ -22,22 +22,27 @@ import PivotModal from './PivotModal';
 import MergeDatasetsModal from './MergeDatasetsModal';
 
 export class DatasetInspectPage extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentWillMount() {
-    const { project, datasets, params, fetchDataset, fetchDatasets, fetchFieldPropertiesIfNeeded } = this.props;
+    const { project, datasets, params, fetchDataset, fetchDatasets, fetchFieldPropertiesIfNeeded, persistedQueryString, pathname, replace } = this.props;
     fetchDataset(params.projectId, params.datasetId);
     fetchFieldPropertiesIfNeeded(params.projectId, params.datasetId);
 
     if (project.id && !datasets.fetchedAll && !datasets.isFetching) {
       fetchDatasets(params.projectId, false);
     }
+
+    if ( persistedQueryString ) {
+      console.log('Persisting query string', persistedQueryString);
+      replace(`${ pathname }${ persistedQueryString }`);
+    } else {
+      console.log('Setting initial recommended state');
+      this.setRecommendedInitialState();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, params, datasetSelector, datasets, fetchDataset, fetchDatasets, fetchFieldPropertiesIfNeeded, replace } = nextProps;
+    const { queryObject: currentQueryObject } = this.props;
+    const { queryObject: nextQueryObject, project, params, datasetSelector, datasets, fetchDataset, fetchDatasets, fetchFieldPropertiesIfNeeded, replace } = nextProps;
     if (project.id !== this.props.project.id || (!datasets.fetchedAll && !datasets.isFetching)) {
       fetchDatasets(project.id, false);
     }
@@ -56,16 +61,20 @@ export class DatasetInspectPage extends Component {
     }
   }
 
+  setRecommendedInitialState() {
+    const { project, datasetSelector, pathname, queryObject, replace, setQueryString } = this.props;
+
+    const initialState = getInitialState();
+    const newQueryString = updateQueryString(queryObject, initialState);
+    setQueryString(newQueryString);
+    replace(`${ pathname }${ newQueryString }`);
+  }
+
   onSelectDataset = (selectedValue) => {
     if (selectedValue) {
       this.props.replace(`/projects/${ this.props.project.id }/datasets/${ selectedValue }/inspect`);
     }
   }
-
-  // onClickLayoutType = (layoutType) => {
-  //   const { selectLayoutType } = this.props;
-  //   selectLayoutType(layoutType);
-  // }
 
   onClickDeleteDataset = () => {
     const { deleteDataset, datasetSelector, project } = this.props;
@@ -85,15 +94,13 @@ export class DatasetInspectPage extends Component {
   }
 
   render() {
-    const { datasets, datasetSelector, fieldProperties, params, project, projectTitle } = this.props;
-    const { layoutTypes } = datasetSelector;
-    const selectedLayoutType = layoutTypes.find((e) => e.selected).id;
+    const { datasets, datasetSelector, fieldProperties, params, project, selectedLayoutType } = this.props;
     const dataset = datasets.items.filter((dataset) =>
       dataset.datasetId == params.datasetId
     )[0];
 
     return (
-      <DocumentTitle title={ 'Inspect' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
+      <DocumentTitle title={ 'Inspect' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
           <HeaderBar
             actions={
@@ -110,7 +117,8 @@ export class DatasetInspectPage extends Component {
                     displayTextMember="label"
                     expand={ false }
                     separated={ false }
-                    onChange={ this.onClickLayoutType } />
+                    externalSelectedItems={ [ selectedLayoutType ] }
+                    onChange={ (v) => this.clickQueryStringTrackedItem({ selectedLayoutType: v }) } />
                 </div>
                 <div className={ styles.headerControl }>
                   <RaisedButton buttonStyle='blueAction' label="+ Upload new dataset" onClick={ this.onClickUploadDataset } />
@@ -134,37 +142,29 @@ export class DatasetInspectPage extends Component {
   }
 }
 
-DatasetInspectPage.propTypes = {
-  project: PropTypes.object.isRequired,
-  datasets: PropTypes.object.isRequired,
-  fieldProperties: PropTypes.object.isRequired,
-  children: PropTypes.node
-};
-
-
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const { project, datasets, datasetSelector, fieldProperties } = state;
   const pathname = ownProps.location.pathname;
   const queryObject = ownProps.location.query;
 
   return {
     project,
-    projectTitle: project.title,
     datasets,
     datasetSelector,
     fieldProperties,
     queryObject: queryObject,
     pathname: pathname,
+    persistedQueryString: datasetSelector.inspectQueryString,
     selectedLayoutType: parseFromQueryObject(queryObject, 'selectedLayoutType', false)
   };
 }
 
-export default connect(mapStateToProp,
-  {
+export default connect(mapStateToProps, {
   deleteDataset,
   fetchDataset,
   fetchDatasets,
   fetchFieldPropertiesIfNeeded,
+  setQueryString,
   push,
   replace
 })(DatasetInspectPage);

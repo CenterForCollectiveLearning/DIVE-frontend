@@ -11,12 +11,25 @@ import {
   RECEIVE_UPLOAD_DATASET,
   PROGRESS_TRANSFORM,
   REQUEST_REDUCE_DATASET_COLUMNS,
-  REQUEST_MERGE_DATASETS
+  REQUEST_MERGE_DATASETS,
+  SET_DATASET_INSPECT_QUERY_STRING
 } from '../constants/ActionTypes';
 
 import { fetch, httpRequest, pollForTask } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
+export function getInitialState() {
+  return {
+    selectedLayoutType: 'list',
+  };
+}
+
+export function setInspectQueryString(queryString) {
+  return {
+    type: SET_DATASET_INSPECT_QUERY_STRING,
+    queryString: queryString
+  }
+}
 
 export function selectDataset(projectId, datasetId) {
   return {
