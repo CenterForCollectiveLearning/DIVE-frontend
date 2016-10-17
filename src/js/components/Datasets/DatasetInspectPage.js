@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
+
 import { push, replace } from 'react-router-redux';
-import { fetchDataset, fetchDatasets, deleteDataset, selectLayoutType } from '../../actions/DatasetActions';
+import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
+import { setQueryString, getInitialState, fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 
 import styles from './Datasets.sass';
@@ -60,10 +62,10 @@ export class DatasetInspectPage extends Component {
     }
   }
 
-  onClickLayoutType = (layoutType) => {
-    const { selectLayoutType } = this.props;
-    selectLayoutType(layoutType);
-  }
+  // onClickLayoutType = (layoutType) => {
+  //   const { selectLayoutType } = this.props;
+  //   selectLayoutType(layoutType);
+  // }
 
   onClickDeleteDataset = () => {
     const { deleteDataset, datasetSelector, project } = this.props;
@@ -73,6 +75,13 @@ export class DatasetInspectPage extends Component {
 
   onClickUploadDataset = () => {
     this.props.replace(`/projects/${ this.props.project.id }/datasets/upload`);
+  }
+
+  clickQueryStringTrackedItem = (newObj) => {
+    const { pathname, queryObject, setQueryString, push } = this.props;
+    const newQueryString = updateQueryString(queryObject, newObj);
+    setQueryString(newQueryString);
+    push(`${ pathname }${ newQueryString }`);
   }
 
   render() {
@@ -135,15 +144,27 @@ DatasetInspectPage.propTypes = {
 
 function mapStateToProps(state) {
   const { project, datasets, datasetSelector, fieldProperties } = state;
-  return { project, projectTitle: project.title, datasets, datasetSelector, fieldProperties };
+  const pathname = ownProps.location.pathname;
+  const queryObject = ownProps.location.query;
+
+  return {
+    project,
+    projectTitle: project.title,
+    datasets,
+    datasetSelector,
+    fieldProperties,
+    queryObject: queryObject,
+    pathname: pathname,
+    selectedLayoutType: parseFromQueryObject(queryObject, 'selectedLayoutType', false)
+  };
 }
 
-export default connect(mapStateToProps, {
+export default connect(mapStateToProp,
+  {
   deleteDataset,
   fetchDataset,
   fetchDatasets,
   fetchFieldPropertiesIfNeeded,
-  selectLayoutType,
   push,
   replace
 })(DatasetInspectPage);

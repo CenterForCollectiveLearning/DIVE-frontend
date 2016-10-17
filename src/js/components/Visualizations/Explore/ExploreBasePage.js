@@ -113,6 +113,9 @@ function mapStateToProps(state, ownProps) {
     queryObject: queryObject,
     pathname: pathname,
     persistedQueryString: exploreSelector.queryString,
+    recommendationMode: parseFromQueryObject(queryObject, 'recommendationMode'),
+    sortBy: parseFromQueryObject(queryObject, 'sortBy'),
+    filteredVisualizationTypes: parseFromQueryObject(queryObject, 'filteredVisualizationTypes', true),
     fieldIds: parseFromQueryObject(queryObject, 'fieldIds', true),
     filters,
     specs

@@ -11,19 +11,12 @@ import {
   RECEIVE_UPLOAD_DATASET,
   PROGRESS_TRANSFORM,
   REQUEST_REDUCE_DATASET_COLUMNS,
-  REQUEST_MERGE_DATASETS,
-  SELECT_DATASET_LAYOUT_TYPE
+  REQUEST_MERGE_DATASETS
 } from '../constants/ActionTypes';
 
 import { fetch, httpRequest, pollForTask } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
-export function selectLayoutType(layoutType) {
-  return {
-    type: SELECT_DATASET_LAYOUT_TYPE,
-    layoutType: layoutType
-  };
-}
 
 export function selectDataset(projectId, datasetId) {
   return {
