@@ -8,6 +8,8 @@ import {
   RECEIVE_DATASET,
   RECEIVE_DATASETS,
   SELECT_DATASET_LAYOUT_TYPE,
+  SET_DATASET_INSPECT_QUERY_STRING,
+  SET_DATASET_TRANSFORM_QUERY_STRING,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -15,12 +17,10 @@ const layoutTypes = [
   {
     id: 'list',
     label: 'List',
-    selected: true
   },
   {
     id: 'table',
     label: 'Table',
-    selected: false
   }
 ]
 
@@ -33,7 +33,9 @@ const baseState = {
   uploadError: null,
   progress: null,
   error: null,
-  projectId: null
+  projectId: null,
+  inspectQueryString: null,
+  transformQueryString: null
 }
 
 export default function datasetSelector(state = baseState, action) {
@@ -51,7 +53,7 @@ export default function datasetSelector(state = baseState, action) {
       return { ...state, progress: action.progress };
 
     case ERROR_UPLOAD_DATASET:
-      return { ...state, progress: null, error: action.error };      
+      return { ...state, progress: null, error: action.error };
 
     case RECEIVE_UPLOAD_DATASET:
       if (action.error) {
@@ -68,22 +70,16 @@ export default function datasetSelector(state = baseState, action) {
       }
       return { ...state, loaded: true, projectId: action.projectId };
 
-    case SELECT_DATASET_LAYOUT_TYPE:
-      var layoutTypes = state.layoutTypes.map((layoutTypeObject) =>
-        (layoutTypeObject.id == action.layoutType) ?
-          new Object({
-            ...layoutTypeObject,
-            selected: true
-          })
-          : new Object({
-            ...layoutTypeObject,
-            selected: false
-          })
-      );
+    case SET_DATASET_INSPECT_QUERY_STRING:
       return {
-        ...state,
-        layoutTypes: layoutTypes,
+        ...state, inspectQueryString: action.queryString
       }
+
+    case SET_DATASET_TRANSFORM_QUERY_STRING:
+      return {
+        ...state, transformQueryString: action.queryString
+      }
+
 
     case WIPE_PROJECT_STATE:
       return baseState;

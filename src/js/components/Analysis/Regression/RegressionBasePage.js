@@ -1,10 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { replace } from 'react-router-redux';
+
 import DocumentTitle from 'react-document-title';
 import styles from '../Analysis.sass';
 
-import { createURL, recommendRegressionType } from '../../../helpers/helpers.js';
+import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
+import { setPersistedQueryString, getInitialState } from '../../../actions/RegressionActions';
 
 import RegressionSidebar from './RegressionSidebar';
 import RegressionView from './RegressionView';
@@ -13,58 +15,79 @@ import { selectDependentVariable, selectRegressionType } from '../../../actions/
 export class RegressionBasePage extends Component {
 
   componentWillMount() {
-    const { fieldProperties, params, replace, location, selectDependentVariable, selectRegressionType } = this.props;
-    const { 'dependent-variable': queriedDependentVariable, 'regression-type': queriedRegressionType } = location.query;
+    const { fieldProperties, persistedQueryString, pathname, replace } = this.props;
 
-    if(queriedDependentVariable && queriedRegressionType) {
-      selectDependentVariable(queriedDependentVariable);
-      selectRegressionType(queriedRegressionType);
-    }
-
-    if(fieldProperties.items.length > 0 && !queriedDependentVariable) {
-      const dependentVariable = (fieldProperties.items.find((property) => property.generalType == 'q') || fieldProperties.items.find((property) => property.generalType == 'c'));
-
-      const queryParams = { 'dependent-variable': dependentVariable.id, 'regression-type': recommendRegressionType(dependentVariable.generalType) };
-      replace(createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, queryParams));
+    if ( persistedQueryString ) {
+      replace(`${ pathname }${ persistedQueryString }`);
+    } else {
+      if ( fieldProperties.items.length ) {
+        this.setRecommendedInitialState(fieldProperties);
+      }
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, selectDependentVariable, fieldProperties, selectRegressionType, location, replace } = this.props;
-    const { query } = location;
-    const { fieldProperties: nextFieldProperties, params: nextParams, replace: nextReplace, location: nextLocation } = nextProps;
-    const { query: nextQuery } = nextLocation;
+    const { queryObject: currentQueryObject } = this.props;
+    const { fieldProperties, queryObject: nextQueryObject } = nextProps;
 
-    if (nextFieldProperties.items.length > 0 && nextFieldProperties.datasetId == nextParams.datasetId && !nextQuery['dependent-variable']) {
-      const dependentVariable = (nextFieldProperties.items.find((property) => property.generalType == 'q') || nextFieldProperties.items.find((property) => property.generalType == 'c'));
-
-      const queryParams = { 'dependent-variable': dependentVariable.id, 'regression-type': recommendRegressionType(dependentVariable.generalType) };
-      replace(createURL(`/projects/${ nextParams.projectId }/datasets/${ nextParams.datasetId }/analyze/regression`, queryParams));
+    const shouldRecommendInitialState = Object.keys(currentQueryObject) == 0 && Object.keys(nextQueryObject).length == 0;
+    if ( shouldRecommendInitialState && fieldProperties.items.length) {
+      this.setRecommendedInitialState(fieldProperties);
     }
 
-    if(nextQuery['dependent-variable'] && (query['dependent-variable'] != nextQuery['dependent-variable'])) {
-      selectDependentVariable(nextQuery['dependent-variable']);
+    // Handling inconsistent state, default selection of certain fields
+    this.reconcileState();
+  }
 
-      if(!nextQuery['regressionType']) {
-        const regressionType = recommendRegressionType(nextFieldProperties.items.find((property) => property.id == nextQuery['dependent-variable']).generalType);
+  reconcileState() {
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, fieldProperties, regressionType, dependentVariableId } = this.props;
 
-        const queryParams = { 'dependent-variable': nextQuery['dependent-variable'], 'regression-type': regressionType };
-        replace(createURL(`/projects/${ params.projectId }/datasets/${ params.datasetId }/analyze/regression`, queryParams));
+    const generalTypeToPermissibleRegressionType = {
+      'q': [ 'linear' ],
+      'c': [ 'logistic' ],
+    }
+
+    // Auto regression type forcing
+    if ( dependentVariableId && fieldProperties.items.length ) {
+      var dependentVariableGeneralType = fieldProperties.items.find((property) => property.id == dependentVariableId).generalType;
+      var permissibleRegressionTypes = generalTypeToPermissibleRegressionType[dependentVariableGeneralType];
+
+      if (!regressionType || permissibleRegressionTypes.indexOf(regressionType) == -1) {
+        const newQueryString = updateQueryString(queryObject, {
+          regressionType: permissibleRegressionTypes[0]
+        });
+        setPersistedQueryString(newQueryString);
+        replace(`${ pathname }${ newQueryString }`);
       }
-    }
-
-    if(query['regression-type'] != nextQuery['regression-type'] && nextQuery['regression-type']) {
-      selectRegressionType(nextQuery['regression-type']);
     }
   }
 
+  setRecommendedInitialState(fieldProperties) {
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
+
+    const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
+    const newQueryString = updateQueryString(queryObject, initialState);
+    setPersistedQueryString(newQueryString);
+    replace(`${ pathname }${ newQueryString }`);
+  }
+
   render() {
-    const { projectTitle } = this.props;
+    const { project, pathname, queryObject, regressionType, dependentVariableId, independentVariablesIds } = this.props;
     return (
-      <DocumentTitle title={ 'Regression' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
+      <DocumentTitle title={ 'Regression' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.regressionContainer }` }>
-          <RegressionView />
-          <RegressionSidebar />
+          <RegressionView
+            regressionType={ regressionType }
+            dependentVariableId={ dependentVariableId }
+            independentVariablesIds={ independentVariablesIds }
+          />
+          <RegressionSidebar
+            pathname={ pathname }
+            queryObject={ queryObject }
+            regressionType={ regressionType }
+            dependentVariableId={ dependentVariableId }
+            independentVariablesIds={ independentVariablesIds }
+          />
           { this.props.children }
         </div>
       </DocumentTitle>
@@ -72,9 +95,25 @@ export class RegressionBasePage extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  const { fieldProperties, project } = state;
-  return { fieldProperties, projectTitle: project.title };
+function mapStateToProps(state, ownProps) {
+  const { project, datasetSelector, regressionSelector, fieldProperties } = state;
+  const pathname = ownProps.location.pathname;
+  const queryObject = ownProps.location.query;
+
+  return {
+    project,
+    datasetSelector,
+    fieldProperties,
+    queryObject: queryObject,
+    pathname: pathname,
+    persistedQueryString: regressionSelector.queryString,
+    regressionType: parseFromQueryObject(queryObject, 'regressionType', false),
+    dependentVariableId: parseFromQueryObject(queryObject, 'dependentVariableId', false),
+    independentVariablesIds: parseFromQueryObject(queryObject, 'independentVariablesIds', true),
+  };
 }
 
-export default connect(mapStateToProps, { replace, selectDependentVariable, selectRegressionType })(RegressionBasePage);
+export default connect(mapStateToProps, {
+  replace,
+  setPersistedQueryString
+})(RegressionBasePage);

@@ -60,9 +60,9 @@ class DatasetDataRow extends Component {
     setFieldIsId( projectId, fieldId, this.state.isId );
   }
 
-  onClickVisualizeField = (name) => {
+  onClickVisualizeField = (id) => {
     const { projectId, datasetId, push } = this.props;
-    push(`/projects/${ projectId }/datasets/${ datasetId }/visualize/explore?fields[]=${ name }`);
+    push(`/projects/${ projectId }/datasets/${ datasetId }/visualize/explore?fieldsIds=${ id }`);
   }
 
   render() {
@@ -109,7 +109,6 @@ class DatasetDataRow extends Component {
                   className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
                   valueClassName={ styles.fieldTypeValue }
                   value={ fieldProperty.type }
-                  autosize={ true }
                   searchable={ true }
                   options={ this.state.fieldTypes }
                   onChange={ this.onSelectFieldType.bind(this) } />
@@ -132,7 +131,7 @@ class DatasetDataRow extends Component {
               <div className={ styles.dropdownOption } onClick={ this.onIDCheckboxChange }>{ this.state.isId ? 'Remove as ID' : 'Mark as ID'}</div>
               <div className={ styles.dropdownOption } onClick={ this.onColorPickerClick }>Change Color</div>
               <div className={ styles.separator } />
-              <div className={ styles.dropdownOption } onClick={ () => this.onClickVisualizeField(name) }>Visualize</div>
+              <div className={ styles.dropdownOption } onClick={ () => this.onClickVisualizeField(id) }>Visualize</div>
             </div>
           </div>
           { this.state.displayColorPicker ? <div style={ popover }>

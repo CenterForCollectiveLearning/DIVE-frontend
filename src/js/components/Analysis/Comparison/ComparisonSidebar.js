@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
+import { updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectIndependentVariable, selectDependentVariable, selectConditional } from '../../../actions/ComparisonActions';
+import { setPersistedQueryString, selectConditional } from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
 
 import ConditionalSelector from '../../Base/ConditionalSelector';
@@ -29,8 +31,16 @@ export class ComparisonSidebar extends Component {
     }
   }
 
+  clickQueryStringTrackedItem = (newObj) => {
+    const { pathname, queryObject, setPersistedQueryString, push } = this.props;
+    const newQueryString = updateQueryString(queryObject, newObj);
+    setPersistedQueryString(newQueryString);
+    push(`${ pathname }${ newQueryString }`);
+  }
+
   render() {
-    const { conditionals, fieldProperties, comparisonSelector, selectIndependentVariable, selectDependentVariable, selectConditional } = this.props;
+    const { conditionals, fieldProperties, comparisonSelector, selectConditional, independentVariablesIds, dependentVariablesIds } = this.props;
+
     return (
       <Sidebar selectedTab="comparison">
         { fieldProperties.items.length != 0 &&
@@ -43,16 +53,16 @@ export class ComparisonSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
+                      disabled: (dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
                       color: item.color
                     })
                   )}
                   displayTextMember="name"
                   valueMember="id"
                   colorMember="color"
-                  externalSelectedItems={ comparisonSelector.independentVariablesIds }
+                  externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariable } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ]}) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
@@ -63,16 +73,16 @@ export class ComparisonSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
+                      disabled: (dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
                       color: item.color
                     })
                   )}
                   valueMember="id"
                   colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ comparisonSelector.independentVariablesIds }
+                  externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariable } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ]}) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
@@ -83,16 +93,16 @@ export class ComparisonSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (comparisonSelector.dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
+                      disabled: (dependentVariablesIds.indexOf(item.id) >= 0) || item.isId,
                       color: item.color
                     })
                   )}
                   valueMember="id"
                   colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ comparisonSelector.independentVariablesIds }
+                  externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariable } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ]}) } />
               </div>
             }
           </SidebarGroup>
@@ -106,16 +116,16 @@ export class ComparisonSidebar extends Component {
                   new Object({
                     id: item.id,
                     name: item.name,
-                    disabled: (comparisonSelector.independentVariablesIds.indexOf(item.id) >= 0 || item.generalType == 'c' || item.isId),
+                    disabled: (independentVariablesIds.indexOf(item.id) >= 0 || item.generalType == 'c' || item.isId),
                     color: item.color
                   })
                 )}
                 valueMember="id"
                 colorMember="color"
                 displayTextMember="name"
-                externalSelectedItems={ comparisonSelector.dependentVariablesIds }
+                externalSelectedItems={ dependentVariablesIds }
                 separated={ true }
-                onChange={ selectDependentVariable } />
+                onChange={ (v) => this.clickQueryStringTrackedItem({ dependentVariablesIds: [ parseInt(v) ] })} />
             </div>
           </SidebarGroup>
         }
@@ -144,11 +154,16 @@ ComparisonSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  comparisonSelector: PropTypes.object.isRequired
+  comparisonSelector: PropTypes.object.isRequired,
+  pathname: PropTypes.string.isRequired,
+  queryObject: PropTypes.object.isRequired,
+  independentVariablesIds: PropTypes.array.isRequired,
+  dependentVariablesIds: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state) {
   const { project, datasetSelector, fieldProperties, comparisonSelector, conditionals } = state;
+
   return {
     project,
     conditionals,
@@ -158,4 +173,10 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectIndependentVariable, selectDependentVariable, selectConditional })(ComparisonSidebar);
+export default connect(mapStateToProps, {
+  fetchFieldPropertiesIfNeeded,
+  selectConditional,
+  updateQueryString,
+  setPersistedQueryString,
+  push
+})(ComparisonSidebar);
