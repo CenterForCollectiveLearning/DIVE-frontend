@@ -132,8 +132,6 @@ function mapStateToProps(state, ownProps) {
   const { progress, error, regressionResult, contributionToRSquared } = regressionSelector;
   const { independentVariablesIds, dependentVariableId, regressionType } = ownProps;
 
-  console.log('regressionType', regressionType);
-
   const dependentVariable = fieldProperties.items.find((property) => property.id == dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;
 

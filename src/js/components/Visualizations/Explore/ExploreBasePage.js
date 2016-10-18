@@ -91,7 +91,6 @@ class ExploreBasePage extends Component {
 
   render() {
     const { project, filteredVisualizationTypes, pathname, queryObject, fieldIds, sortBy, recommendationMode } = this.props;
-
     const allValidVisualizationTypes = this.state.visualizationTypes;
 
     return (

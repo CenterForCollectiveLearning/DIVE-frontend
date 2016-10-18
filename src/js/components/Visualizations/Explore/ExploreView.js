@@ -19,17 +19,23 @@ import VisualizationBlock from './VisualizationBlock';
 
 export class ExploreView extends Component {
   componentWillMount() {
-    const { datasetSelector, datasets, fieldProperties, project, specs, exploreSelector, clearVisualization, fetchSpecs, fetchDatasets } = this.props;
-    const { recommendationTypes } = exploreSelector;
+    const { datasetSelector, datasets, fieldProperties, project, specs, exploreSelector, clearVisualization, fieldIds, recommendationMode, fetchSpecs, fetchDatasets } = this.props;
+    const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = exploreSelector;
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
 
     if (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(project.id);
     }
 
-    if (project.id && datasetSelector.datasetId && fieldProperties.items.length && notLoadedAndNotFetching) {
-      for (var level of [ 0, 1, 2, 3 ]) {
-        fetchSpecs(project.id, datasetSelector.datasetId, fieldProperties.items, recommendationTypes[level]);
+    const numFields = fieldIds.length;
+    const selectedFieldProperties = fieldProperties.items.filter((property) => fieldIds.indexOf(property.id) > -1);
+    var isValidSpecLevel = getValidSpecLevelsFromNumFields(numFields, recommendationMode);
+
+    if (project.id && datasetSelector.datasetId && fieldProperties.loaded) {
+      for (var i in isFetchingSpecLevel) {
+        if (!isFetchingSpecLevel[i] && !loadedSpecLevel[i] && isValidSpecLevel[i]) {
+          fetchSpecs(project.id, datasetSelector.datasetId, selectedFieldProperties, recommendationTypes[i]);
+        }
       }
     }
 
@@ -38,12 +44,13 @@ export class ExploreView extends Component {
 
   componentDidUpdate(previousProps) {
     const { datasetSelector, datasets, fieldIds, project, specs, fieldProperties, exploreSelector, exportedSpecs, recommendationMode, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = this.props;
+    const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = exploreSelector;
 
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
     const projectChanged = (previousProps.project.id !== project.id);
     const fieldPropertiesSelected = exploreSelector.fieldProperties.find((prop) => prop.selected) != undefined;
-    const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = exploreSelector;
+
 
     if (projectChanged || (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
       fetchDatasets(project.id);
