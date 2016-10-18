@@ -98,6 +98,7 @@ class ExploreBasePage extends Component {
         <div className={ `${ styles.fillContainer } ${ styles.galleryContainer }` }>
           <ExploreView
             filteredVisualizationTypes={ filteredVisualizationTypes }
+            sortBy={ sortBy }
             recommendationMode={ recommendationMode }
             fieldIds={ fieldIds }
           />

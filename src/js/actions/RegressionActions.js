@@ -32,7 +32,6 @@ export function getInitialState(projectId, datasetId, fieldProperties) {
 
   var dependentVariableId = _.sample(quantitativeItemIds, 1) || _.sample(categoricalItemIds, 3);
   var independentVariablesIds = [ ...quantitativeItemIds.filter((id) => id != dependentVariableId) ];
-  console.log(dependentVariableId, independentVariablesIds, quantitativeItemIds.filter((id) => id != dependentVariableId));
   var regressionType = 'linear';
 
   return {

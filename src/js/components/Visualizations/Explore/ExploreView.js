@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { fetchDatasets } from '../../../actions/DatasetActions';
-import { getValidSpecLevelsFromNumFields, clearVisualization, updateVisualizationStats, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
+import { sortSpecsByFunction, getValidSpecLevelsFromNumFields, clearVisualization, updateVisualizationStats, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
 import { fetchExportedVisualizationSpecs } from '../../../actions/ComposeActions';
 import { useWhiteFontFromBackgroundHex } from '../../../helpers/helpers';
 
@@ -87,9 +87,14 @@ export class ExploreView extends Component {
   }
 
   render() {
-    const { filters, datasets, fieldNameToColor, fieldProperties, datasetSelector, filteredVisualizationTypes, exploreSelector, specs, exportedSpecs, recommendationMode, fieldIds, selectSortingFunction } = this.props;
+    const { filters, datasets, fieldNameToColor, fieldProperties, datasetSelector, filteredVisualizationTypes, exploreSelector, specs, exportedSpecs, recommendationMode, fieldIds, sortBy, selectSortingFunction } = this.props;
     const { isFetchingSpecLevel, loadedSpecLevel, progressByLevel } = exploreSelector;
     const isFetching = _.any(isFetchingSpecLevel);
+
+    console.log('sortBy', sortBy);
+    var sortSpecs = function(specA, specB) {
+      return sortSpecsByFunction(sortBy, specA, specB);
+    };
 
     const numFields = fieldIds.length;
     var isValidSpecLevel = getValidSpecLevelsFromNumFields(fieldIds.length, recommendationMode);
@@ -101,11 +106,13 @@ export class ExploreView extends Component {
       )
     );
 
+    const sortedSpecs = filteredSpecs.sort(sortSpecs);
+
     const areFieldsSelected = selectedFieldProperties.length > 0;
-    const baselineSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'baseline');
-    const subsetSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'subset');
-    const exactSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'exact');
-    const expandedSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'expanded');
+    const baselineSpecs = sortedSpecs.filter((spec) => spec.recommendationType == 'baseline');
+    const subsetSpecs = sortedSpecs.filter((spec) => spec.recommendationType == 'subset');
+    const exactSpecs = sortedSpecs.filter((spec) => spec.recommendationType == 'exact');
+    const expandedSpecs = sortedSpecs.filter((spec) => spec.recommendationType == 'expanded');
 
     let pageHeader;
     let helperText;
@@ -122,7 +129,7 @@ export class ExploreView extends Component {
         <div className={ styles.innerSpecsContainer }>
           <HeaderBar header={ pageHeader } helperText={ helperText } />
           <div className={ styles.specContainer }>
-            { !isFetching && filteredSpecs.length == 0 &&
+            { !isFetching && sortedSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>
             }
             { isValidSpecLevel[0] && !(loadedSpecLevel[0] && exactSpecs.length == 0) &&
@@ -260,6 +267,7 @@ ExploreView.propTypes = {
   exportedSpecs: PropTypes.object.isRequired,
   fieldIds: PropTypes.array.isRequired,
   recommendationMode: PropTypes.string,
+  sortBy: PropTypes.string.isRequired
 };
 
 function mapStateToProps(state) {

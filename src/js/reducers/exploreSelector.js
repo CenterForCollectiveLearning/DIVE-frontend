@@ -110,29 +110,6 @@ const baseState = {
 }
 
 export default function exploreSelector(state = baseState, action) {
-  const sortSpecsByFunction = function(sortingFunction, specA, specB) {
-    const scoreObjectSpecA = specA.scores.find((score) => score.type == sortingFunction);
-    const scoreObjectSpecB = specB.scores.find((score) => score.type == sortingFunction);
-
-    if (!scoreObjectSpecA && scoreObjectSpecB) {
-      return 1; // a < b
-    }
-
-    if (scoreObjectSpecA && !scoreObjectSpecB) {
-      return -1;
-    }
-
-    if (!scoreObjectSpecA && !scoreObjectSpecB) {
-      return 0;
-    }
-
-    if (scoreObjectSpecA.score == scoreObjectSpecB.score) {
-      return 0;
-    }
-
-    return (scoreObjectSpecA.score > scoreObjectSpecB.score) ? -1 : 1;
-  };
-
   switch (action.type) {
     case REQUEST_EXACT_SPECS:
     case REQUEST_INDIVIDUAL_SPECS:
@@ -201,11 +178,6 @@ export default function exploreSelector(state = baseState, action) {
       } = state;
       receiveIsFetchingSpecLevel[action.recommendationType.level] = false;
       receiveLoadedSpecLevel[action.recommendationType.level] = true;
-      //
-      // const selectedSortingFunction = state.sortingFunctions.find((func) => func.selected).value;
-      // const defaultSortSpecs = function (specA, specB) {
-      //   return sortSpecsByFunction(selectedSortingFunction, specA, specB);
-      // };
 
       return {
         ...state,
@@ -218,14 +190,23 @@ export default function exploreSelector(state = baseState, action) {
 
     // TODO REINITIALIZE ON SPECIFIC FIELD SELECTION
     case SET_EXPLORE_QUERY_STRING:
-      return {
-        ...state,
-        queryString: action.queryString,
-        progressByLevel: [ null, null, null, null ],
-        isFetchingSpecLevel: [ false, false, false, false ],
-        loadedSpecLevel: [ false, false, false, false ],
-        specs: [],
-        updatedAt: Date.now()
+
+      if (action.resetState) {
+        return {
+          ...state,
+          queryString: action.queryString,
+          progressByLevel: [ null, null, null, null ],
+          isFetchingSpecLevel: [ false, false, false, false ],
+          loadedSpecLevel: [ false, false, false, false ],
+          specs: [],
+          updatedAt: Date.now()
+        }
+      } else {
+        return {
+          ...state,
+          queryString: action.queryString,
+          updatedAt: Date.now()
+        }
       }
 
     default:

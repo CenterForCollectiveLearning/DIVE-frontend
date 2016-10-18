@@ -40,7 +40,11 @@ export default function specs(state=baseState, action) {
       return { ...state, isFetching: false, loaded: true, error: action.error };
 
     case SET_EXPLORE_QUERY_STRING:
-      return baseState;
+      if (action.resetState) {
+        return baseState;
+      } else {
+        return state;
+      }
 
     case WIPE_PROJECT_STATE:
       return baseState;

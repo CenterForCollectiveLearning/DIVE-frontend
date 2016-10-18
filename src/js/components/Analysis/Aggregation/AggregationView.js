@@ -96,7 +96,7 @@ export class AggregationView extends Component {
   render() {
     const { aggregationResult, oneDimensionAggregationResult, aggregationIndependentVariableNames, aggregationFunction, aggregateOn, aggregateOnName, datasets, datasetId } = this.props;
 
-    const noAggregationVariablesSelected = aggregationIndependentVariableNames.length ==0;
+    const noAggregationVariablesSelected = aggregationIndependentVariableNames.length == 0;
     const oneAggregationVariableSelected = aggregationIndependentVariableNames.length == 1;
     const twoAggregationVariablesSelected = aggregationIndependentVariableNames.length == 2;
     const oneDimensionDictHasElements = oneDimensionAggregationResult.data && oneDimensionAggregationResult.data.rows && oneDimensionAggregationResult.data.rows.length > 0;
@@ -106,7 +106,7 @@ export class AggregationView extends Component {
 
     var header = <span>
       Aggregating <ColoredFieldItems fields={ aggregationIndependentVariableNames } />
-      { (aggregateOn == 'count') ? <span> by count</span> : <span> by { aggregationFunction.toLowerCase() } of <ColoredFieldItems fields={ [aggregateOnName] } /></span>}
+      { (aggregateOn == 'count') ? <span> by count</span> : <span> by { (aggregationFunction ? aggregationFunction.toLowerCase() : '') } of <ColoredFieldItems fields={ [ aggregateOnName ] } /></span>}
     </span>;
 
     if (noAggregationVariablesSelected ) {

@@ -75,6 +75,29 @@ export function getInitialState(projectId, datasetId, fieldProperties) {
   };
 }
 
+export function sortSpecsByFunction(sortingFunction, specA, specB) {
+  const scoreObjectSpecA = specA.scores.find((score) => score.type == sortingFunction);
+  const scoreObjectSpecB = specB.scores.find((score) => score.type == sortingFunction);
+
+  if (!scoreObjectSpecA && scoreObjectSpecB) {
+    return 1; // a < b
+  }
+
+  if (scoreObjectSpecA && !scoreObjectSpecB) {
+    return -1;
+  }
+
+  if (!scoreObjectSpecA && !scoreObjectSpecB) {
+    return 0;
+  }
+
+  if (scoreObjectSpecA.score == scoreObjectSpecB.score) {
+    return 0;
+  }
+
+  return (scoreObjectSpecA.score > scoreObjectSpecB.score) ? -1 : 1;
+};
+
 export function getValidSpecLevelsFromNumFields(numSelectedFields, selectedRecommendationMode) {
   var isValidSpecLevel = [ false, false, false, false ];
   if (numSelectedFields == 0) {
@@ -405,9 +428,10 @@ export function setShareWindow(shareWindow) {
   }
 }
 
-export function setPersistedQueryString(queryString) {
+export function setPersistedQueryString(queryString, resetState=true) {
   return {
     type: SET_EXPLORE_QUERY_STRING,
-    queryString: queryString
+    queryString: queryString,
+    resetState: resetState
   }
 }

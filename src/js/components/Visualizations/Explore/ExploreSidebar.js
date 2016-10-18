@@ -35,10 +35,10 @@ export class ExploreSidebar extends Component {
     }
   }
 
-  clickQueryStringTrackedItem = (newObj) => {
+  clickQueryStringTrackedItem = (newObj, resetState=true) => {
     const { pathname, queryObject, setPersistedQueryString, push } = this.props;
     const newQueryString = updateQueryString(queryObject, newObj);
-    setPersistedQueryString(newQueryString);
+    setPersistedQueryString(newQueryString, resetState);
     push(`${ pathname }${ newQueryString }`);
   }
 
@@ -74,7 +74,7 @@ export class ExploreSidebar extends Component {
             valueMember="id"
             separated={ false }
             externalSelectedItems={ [ recommendationMode ] }
-            onChange={ (v) => this.clickQueryStringTrackedItem({ recommendationMode: v }) } />
+            onChange={ (v) => this.clickQueryStringTrackedItem({ recommendationMode: v }, false) } />
         </SidebarGroup>
         <SidebarGroup heading="Sort By">
           <DropDownMenu
@@ -82,7 +82,7 @@ export class ExploreSidebar extends Component {
             valueMember="value"
             displayTextMember="label"
             value={ sortBy }
-            onChange={ (v) => this.clickQueryStringTrackedItem({ sortBy: v }) } />
+            onChange={ (v) => this.clickQueryStringTrackedItem({ sortBy: v }, false) } />
         </SidebarGroup>
         { visualizationTypes.length > 1 &&
           <SidebarGroup heading="Filter Visualization type">
@@ -94,11 +94,11 @@ export class ExploreSidebar extends Component {
               imageNameMember="imageName"
               imageNameSuffix=".chart.svg"
               externalSelectedItems={ filteredVisualizationTypes }
-              onChange={ (v) => this.clickQueryStringTrackedItem({ filteredVisualizationTypes: [ v ] }) } />
+              onChange={ (v) => this.clickQueryStringTrackedItem({ filteredVisualizationTypes: [ v ] }, false) } />
           </SidebarGroup>
         }
         { fieldProperties.items.length > 0 &&
-          <SidebarGroup heading="Find Visualizations by Field">
+          <SidebarGroup heading="Create Visualizations by Field">
             { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupLabel }>Categorical</div>
