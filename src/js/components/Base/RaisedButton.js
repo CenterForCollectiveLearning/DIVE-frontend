@@ -14,6 +14,7 @@ export default class RaisedButton extends Component {
         className={
           styles.raisedButton
           + ' ' + this.props.className
+          + (this.props.buttonStyle ? ' ' + styles[this.props.buttonStyle] : '')
           + (this.props.primary ? ' ' + styles.primary : '')
           + (this.props.normalHeight ? ' ' + styles.normalHeight : '')
           + (this.props.fullWidth ? ' ' + styles.fullWidth : '')
@@ -37,6 +38,7 @@ export default class RaisedButton extends Component {
 
 RaisedButton.propTypes = {
   label: PropTypes.string,
+  buttonStyle: PropTypes.string,
   onClick: PropTypes.func,
   primary: PropTypes.bool,
   normalHeight: PropTypes.bool,
@@ -53,6 +55,7 @@ RaisedButton.propTypes = {
 
 RaisedButton.defaultProps = {
   label: "",
+  buttonStyle: '',
   altText: null,
   primary: false,
   normalHeight: false,

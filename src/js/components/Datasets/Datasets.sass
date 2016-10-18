@@ -4,99 +4,10 @@
 .datasetDataList
   display: flex
   flex-direction: column
-  margin: 40px
+  align-items: center
   border-radius: 3px
-
-  .datasetDataRow
-    border: 1px solid $ui-line-grey
-    margin-top: -1px
-    background-color: white
-    padding: 0 20px
-
-    &:first-child
-      border-top-right-radius: 3px
-      border-top-left-radius: 3px
-    &:last-child
-      border-bottom-right-radius: 3px
-      border-bottom-left-radius: 3px
-
-    &:hover
-      cursor: pointer
-      border-color: $primary-accent
-      z-index: 10
-
-      div.metadata
-        border-bottom: 1px solid $ui-line-grey
-      div.actions
-        max-height: 80px
-        transition: max-height 0s
-
-    div.type
-      display: flex
-      flex-direction: column
-      justify-content: center
-      margin-right: 30px
-
-    div.metadata
-      display: flex
-      flex-direction: row
-
-      div.name, div.type
-        line-height: 80px
-        text-overflow: ellipsis
-
-      div.name
-        font-weight: bold
-        min-width: 200px
-        height: 80px
-        font-size: 14px
-        line-height: 14px
-        display: flex
-        text-overflow: ellipsis
-        align-items: center
-
-      div.type
-        min-width: 80px
-
-      div.statistics
-        +smallCaps
-        display: flex
-        overflow-x: scroll
-
-        div.statistic
-          display: flex
-          flex-direction: column
-          justify-content: center
-          text-align: center
-          white-space: wrap
-          padding: 0 15px
-          min-width: 130px
-          width: 130px
-
-          .field
-          .value
-            color: $secondary-accent
-            font-size: 14px
-
-      div.toggles
-        +smallCaps
-        display: flex
-        text-align: center
-        .left
-          display: flex
-          flex-direction: column
-          justify-content: center
-
-    div.actions
-      +smallCaps
-      max-height: 0
-      overflow: hidden
-      transition: max-height 0.5s
-
-      > div
-        margin: 10px 0
-
-
+  padding-top: 20px
+  font-size: 12px
 
 .datasetPageContainer, .datasetContainer
   background-color: $center-grey
@@ -104,7 +15,7 @@
 
 .uploadingZone
   background-color: #FDFDFD
-  border: 2px dashed #DDD
+  border: 1px dashed #DDD
   justify-content: center
 
 .watermark
@@ -185,6 +96,48 @@
   > div
     width: auto!important
     overflow: visible!important
+
+  .fieldTypeDropDown.dropDownMenu
+    max-width: 100px
+    height: 20px
+
+    > div
+      > div:first-of-type
+        height: 20px
+        line-height: 20px
+        padding: 0
+        background-color: transparent
+        border: none
+        box-shadow: none
+        text-align: right
+        position: relative
+
+        > div:first-child
+          height: 20px
+          line-height: 20px
+          padding-right: 12px
+
+        > span:last-child
+          position: absolute
+          right: -9px
+          top: -1px
+
+          > span:first-child
+            border-width: 4px 3px 0
+
+      > div:nth-of-type(2)
+        width: auto
+        right: 0
+
+        > div
+          > div
+            text-align: right
+            padding-right: 10px
+
+    .fieldTypeValue
+      font-weight: 400
+      font-size: 12px
+      color: #888
 
 .dataRowsTable
   overflow-y: auto
@@ -285,47 +238,6 @@
 
     &:last-child
       border-right-width: 0px
-
-.fieldTypeDropDown.dropDownMenu
-  max-width: 72px
-
-  > div
-    > div:first-of-type
-      height: 20px
-      line-height: 20px
-      padding: 0
-      background-color: transparent
-      border: none
-      box-shadow: none
-      text-align: right
-      position: relative
-
-      > div:first-child
-        height: 20px
-        line-height: 20px
-        padding-right: 12px
-
-      > span:last-child
-        position: absolute
-        right: -9px
-        top: -1px
-
-        > span:first-child
-          border-width: 4px 3px 0
-
-    > div:nth-of-type(2)
-      width: auto
-      right: 0
-
-      > div
-        > div
-          text-align: right
-          padding-right: 10px
-
-  .fieldTypeValue
-    font-weight: 400
-    font-size: 12px
-    color: #888
 
 .headerControlRow
   display: flex

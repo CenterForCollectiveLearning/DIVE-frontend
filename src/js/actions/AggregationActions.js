@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 import {
   SELECT_AGGREGATION_AGGREGATION_VARIABLE,
   SELECT_AGGREGATION_INDEPENDENT_VARIABLE,
@@ -17,11 +19,43 @@ import {
   SELECT_AGGREGATION_CONFIG_Y,
   PROGRESS_AGGREGATION_STATISTICS,
   ERROR_AGGREGATION_STATISTICS,
-  SELECT_CONDITIONAL
+  SELECT_CONDITIONAL,
+  SET_AGGREGATION_QUERY_STRING
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
+
+export function getInitialState(projectId, datasetId, fieldProperties) {
+  var categoricalItemIds = fieldProperties.filter((item) => ((item.generalType == 'c') && (!item.isId))).map((item) => item.id);
+  var quantitativeItemIds = fieldProperties.filter((item) => ((item.generalType == 'q') && (!item.isId))).map((item) => item.id);
+  var n_c = categoricalItemIds.length;
+  var n_q = quantitativeItemIds.length;
+
+  var selectedVariablesIds = [];
+  if (n_c >= 2) {
+    selectedVariablesIds = _.sample(categoricalItemIds, 2);
+  } else if (n_c = 1) {
+    selectedVariablesIds = [ ..._.sample(categoricalItemIds, 1), ..._.sample(quantitativeItemIds, 1) ];
+  } else if (n_c == 0) {
+    if (n_q >= 2) {
+      selectedVariablesIds = _.sample(quantitativeItemIds, 2);
+    }
+  }
+
+
+  return {
+    aggregateOn: 'count',
+    aggregationVariablesIds: selectedVariablesIds
+  }
+}
+
+export function setPersistedQueryString(queryString) {
+  return {
+    type: SET_AGGREGATION_QUERY_STRING,
+    queryString: queryString
+  }
+}
 
 export function selectConditional(conditional) {
   return {

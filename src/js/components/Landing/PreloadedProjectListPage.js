@@ -17,7 +17,8 @@ export class PreloadedProjectListPage extends Component {
     super(props);
 
     this.state = {
-      sortField: 'title'
+      sortField: 'title',
+      viewMode: 'normal'      
     };
   }
 
@@ -43,30 +44,31 @@ export class PreloadedProjectListPage extends Component {
   render() {
     const { projects, userId, user } = this.props;
     const { preloadedProjects, isFetchingPreloadedProjects } = projects;
+    const { sortField, viewMode } = this.state;
 
     return (
       <DocumentTitle title='DIVE | Preloaded Projects'>
         <div className={ styles.centeredFill }>
-          { !isFetchingPreloadedProjects && preloadedProjects.length > 0 &&
-            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
-              <div className={ styles.projectListTopbar }>
-                <div className={ styles.pageLabel }>Preloaded Projects</div>
-                <div className={ styles.pullRight }>
-                  <div className={ styles.sortTypeDropdownContainer }>
-                    <DropDownMenu
-                      value={ sortField }
-                      options={ [
-                        { value: 'creationDate', label: 'Created' },
-                        { value: 'title', label: 'Project Name' },
-                        { value: 'starred', label: 'Starred' },
-                      ]}
-                      valueMember='value'
-                      displayTextMember='label'
-                      prefix="Sort By"
-                      onChange={ this.onSelectProjectSortField } />
-                  </div>
+          <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+            <div className={ styles.projectListTopbar }>
+              <div className={ styles.pageLabel }>Preloaded Projects</div>
+              <div className={ styles.pullRight }>
+                <div className={ styles.sortTypeDropdownContainer }>
+                  <DropDownMenu
+                    value={ sortField }
+                    options={ [
+                      { value: 'creationDate', label: 'Created' },
+                      { value: 'title', label: 'Project Name' },
+                      { value: 'starred', label: 'Starred' },
+                    ]}
+                    valueMember='value'
+                    displayTextMember='label'
+                    prefix="Sort By"
+                    onChange={ this.onSelectProjectSortField } />
                 </div>
               </div>
+            </div>
+            { !isFetchingPreloadedProjects && preloadedProjects.length > 0 &&
               <div className={ styles.projectListContainer }>
                 { projects.isFetching &&
                   <div className={ styles.watermark }>Fetching projects...</div>
@@ -79,22 +81,22 @@ export class PreloadedProjectListPage extends Component {
                   />
                 )}
               </div>
-            </div>
-          }
-          { !isFetchingPreloadedProjects && preloadedProjects.length == 0 &&
-            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
-              <div className={ styles.projectListSidebar }></div>
-              <div className={ styles.watermark }>
-                No preloaded projects exist &#x2639;
+            }
+            { !isFetchingPreloadedProjects && preloadedProjects.length == 0 &&
+              <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+                <div className={ styles.projectListSidebar }></div>
+                <div className={ styles.watermark }>
+                  No preloaded projects exist &#x2639;
+                </div>
               </div>
-            </div>
-          }
-          { isFetchingPreloadedProjects &&
-            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
-              <div className={ styles.projectListSidebar }></div>
-            <Loader text='Loading Preloaded Projects' />
-            </div>
-          }
+            }
+            { isFetchingPreloadedProjects &&
+              <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+                <div className={ styles.projectListSidebar }></div>
+              <Loader text='Loading Preloaded Projects' />
+              </div>
+            }
+          </div>
         </div>
       </DocumentTitle>
     );

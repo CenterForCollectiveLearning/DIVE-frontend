@@ -81,7 +81,7 @@ export default class RegressionSummary extends Component {
 }
 
 RegressionSummary.propTypes = {
-  dependentVariableName: PropTypes.string.isRequired,
+  dependentVariableName: PropTypes.string,
   independentVariableNames: PropTypes.array.isRequired,
   regressionResult: PropTypes.object.isRequired,
   contributionToRSquared: PropTypes.array.isRequired

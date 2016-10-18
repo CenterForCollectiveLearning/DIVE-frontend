@@ -174,28 +174,29 @@ export class ComparisonView extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const { project, datasets, comparisonSelector, datasetSelector, fieldProperties, conditionals } = state;
-  const { independentVariablesIds, numericalComparisonResult, anovaResult, anovaBoxplotData, pairwiseComparisonData } = comparisonSelector;
+  const { numericalComparisonResult, anovaResult, anovaBoxplotData, pairwiseComparisonData } = comparisonSelector;
+  const { independentVariablesIds, dependentVariablesIds } = ownProps;
 
   const independentVariableNames = fieldProperties.items
-    .filter((property) => comparisonSelector.independentVariablesIds.indexOf(property.id) >= 0)
+    .filter((property) => independentVariablesIds.indexOf(property.id) >= 0)
     .map((field) => field.name);
 
   const independentVariableNamesAndTypes = fieldProperties.items
-    .filter((property) => comparisonSelector.independentVariablesIds.indexOf(property.id) >= 0)
+    .filter((property) => independentVariablesIds.indexOf(property.id) >= 0)
     .map((field) => [field.generalType, field.name, 0]);
 
   const dependentVariableNames = fieldProperties.items
-    .filter((property) => comparisonSelector.dependentVariablesIds.indexOf(property.id) >= 0)
+    .filter((property) => dependentVariablesIds.indexOf(property.id) >= 0)
     .map((field) => field.name);
 
   const canRunNumericalComparisonIndependent = (fieldProperties.items
-    .filter((property) => comparisonSelector.independentVariablesIds.indexOf(property.id) >= 0 && property.generalType == 'q')
+    .filter((property) => independentVariablesIds.indexOf(property.id) >= 0 && property.generalType == 'q')
     .length == independentVariableNames.length) && dependentVariableNames.length == 0 && independentVariableNames.length >= 2;
 
   const canRunNumericalComparisonDependent = (fieldProperties.items
-    .filter((property) => comparisonSelector.dependentVariablesIds.indexOf(property.id) >= 0 && property.generalType == 'q')
+    .filter((property) => dependentVariablesIds.indexOf(property.id) >= 0 && property.generalType == 'q')
     .length == dependentVariableNames.length) && independentVariableNames.length == 0 && dependentVariableNames.length >= 2;
 
   return {
@@ -212,7 +213,9 @@ function mapStateToProps(state) {
     anovaResult: anovaResult,
     anovaBoxplotData: anovaBoxplotData,
     pairwiseComparisonData: pairwiseComparisonData,
-    conditionals: conditionals
+    conditionals: conditionals,
+    independentVariablesIds: independentVariablesIds,
+    dependentVariablesIds: dependentVariablesIds
   };
 }
 

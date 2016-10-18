@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
+import { updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectCorrelationVariable, selectConditional } from '../../../actions/CorrelationActions';
+import { setPersistedQueryString, selectConditional } from '../../../actions/CorrelationActions';
 import styles from '../Analysis.sass';
 
 import ConditionalSelector from '../../Base/ConditionalSelector';
@@ -29,8 +31,15 @@ export class CorrelationSidebar extends Component {
     }
   }
 
+  clickQueryStringTrackedItem = (newObj) => {
+    const { pathname, queryObject, setPersistedQueryString, push } = this.props;
+    const newQueryString = updateQueryString(queryObject, newObj);
+    setPersistedQueryString(newQueryString);
+    push(`${ pathname }${ newQueryString }`);
+  }
+
   render() {
-    const { fieldProperties, conditionals, selectCorrelationVariable, correlationSelector, selectConditional } = this.props;
+    const { fieldProperties, conditionals, correlationVariablesIds, electConditional } = this.props;
     const quantitativeVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q')
     return (
       <Sidebar selectedTab="correlation">
@@ -51,9 +60,9 @@ export class CorrelationSidebar extends Component {
                   valueMember="id"
                   colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ correlationSelector.correlationVariableIds }
+                  externalSelectedItems={ correlationVariablesIds }
                   separated={ true }
-                  onChange={ selectCorrelationVariable } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ correlationVariablesIds: [ parseInt(v)] }) } />
               </div>
             }
           </SidebarGroup>
@@ -84,19 +93,27 @@ CorrelationSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  correlationSelector: PropTypes.object.isRequired,
-  conditionals: PropTypes.object
+  conditionals: PropTypes.object,
+  pathname: PropTypes.string.isRequired,
+  queryObject: PropTypes.object.isRequired,
+  correlationVariablesIds: PropTypes.array.isRequired,
 };
 
 function mapStateToProps(state) {
-  const { project, datasetSelector, fieldProperties, correlationSelector, conditionals } = state;
+  const { project, datasetSelector, fieldProperties, conditionals } = state;
   return {
     project,
     datasetSelector,
     fieldProperties,
-    correlationSelector,
+    setPersistedQueryString,
     conditionals
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectCorrelationVariable, selectConditional })(CorrelationSidebar);
+export default connect(mapStateToProps, {
+  fetchFieldPropertiesIfNeeded,
+  selectConditional,
+  updateQueryString,
+  setPersistedQueryString,
+  push
+})(CorrelationSidebar);

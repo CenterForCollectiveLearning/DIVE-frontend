@@ -18,14 +18,14 @@ import DatasetUploadPage from './components/Datasets/DatasetUploadPage';
 import DatasetInspectPage from './components/Datasets/DatasetInspectPage';
 import DatasetTransformPage from './components/Datasets/DatasetTransformPage';
 import VisualizationsPage from './components/Visualizations/VisualizationsPage';
-import ExplorePage from './components/Visualizations/Explore/ExplorePage';
+import ExploreBasePage from './components/Visualizations/Explore/ExploreBasePage';
 import SingleVisualizationPage from './components/Visualizations/SingleVisualization/SingleVisualizationPage';
 import AnalysisPage from './components/Analysis/AnalysisPage';
 import RegressionBasePage from './components/Analysis/Regression/RegressionBasePage';
 import SegmentationPage from './components/Analysis/Segmentation/SegmentationPage';
-import AggregationPage from './components/Analysis/Aggregation/AggregationPage';
-import CorrelationPage from './components/Analysis/Correlation/CorrelationPage';
-import ComparisonPage from './components/Analysis/Comparison/ComparisonPage';
+import AggregationBasePage from './components/Analysis/Aggregation/AggregationBasePage';
+import CorrelationBasePage from './components/Analysis/Correlation/CorrelationBasePage';
+import ComparisonBasePage from './components/Analysis/Comparison/ComparisonBasePage';
 import ExportedVisualizationPage from './components/Visualizations/ExportedVisualization/ExportedVisualizationPage';
 import ComposeBasePage from './components/Compose/ComposeBasePage';
 import ComposePage from './components/Compose/ComposePage';
@@ -71,14 +71,14 @@ export default (
 
       <Route path="datasets/:datasetId" component={ DatasetsPage }>
         <Route path="visualize" component={ VisualizationsPage }>
-          <Route path="explore" component={ ExplorePage }/>
+          <Route path="explore" component={ ExploreBasePage }/>
           <Route path="explore/:specId" component={ SingleVisualizationPage }/>
         </Route>
         <Route path="analyze" component={ AnalysisPage }>
           <Route path="regression" component={ RegressionBasePage }/>
-          <Route path="aggregation" component={ AggregationPage }/>
-          <Route path="correlation" component={ CorrelationPage }/>
-          <Route path="comparison" component={ ComparisonPage }/>
+          <Route path="aggregation" component={ AggregationBasePage }/>
+          <Route path="correlation" component={ CorrelationBasePage }/>
+          <Route path="comparison" component={ ComparisonBasePage }/>
           <Route path="segmentation" component={ SegmentationPage }/>
         </Route>
       </Route>
