@@ -6,7 +6,7 @@ import DocumentTitle from 'react-document-title';
 import styles from '../Analysis.sass';
 
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
-import { setQueryString, getInitialState } from '../../../actions/ComparisonActions';
+import { setPersistedQueryString, getInitialState } from '../../../actions/ComparisonActions';
 
 import ComparisonSidebar from './ComparisonSidebar';
 import ComparisonView from './ComparisonView';
@@ -35,11 +35,11 @@ export class ComparisonBasePage extends Component {
   }
 
   setRecommendedInitialState(fieldProperties) {
-    const { project, datasetSelector, pathname, queryObject, replace, setQueryString } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
 
     const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
-    setQueryString(newQueryString);
+    setPersistedQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);
   }
 
@@ -83,5 +83,5 @@ function mapStateToProps(state, ownProps) {
 
 export default connect(mapStateToProps, {
   replace,
-  setQueryString
+  setPersistedQueryString
 })(ComparisonBasePage);

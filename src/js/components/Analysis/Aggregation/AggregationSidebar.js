@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import { updateQueryString } from '../../../helpers/helpers';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { setQueryString, selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional } from '../../../actions/AggregationActions';
+import { setPersistedQueryString, selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional } from '../../../actions/AggregationActions';
 import styles from '../Analysis.sass';
 
 import ConditionalSelector from '../../Base/ConditionalSelector';
@@ -34,9 +34,9 @@ export class AggregationSidebar extends Component {
   }
 
   clickQueryStringTrackedItem = (newObj) => {
-    const { pathname, queryObject, setQueryString, push } = this.props;
+    const { pathname, queryObject, setPersistedQueryString, push } = this.props;
     const newQueryString = updateQueryString(queryObject, newObj);
-    setQueryString(newQueryString);
+    setPersistedQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }
 
@@ -211,6 +211,6 @@ export default connect(mapStateToProps, {
   selectAggregationWeightVariable,
   selectConditional,
   updateQueryString,
-  setQueryString,
+  setPersistedQueryString,
   push
 })(AggregationSidebar);

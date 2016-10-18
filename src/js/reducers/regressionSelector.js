@@ -49,7 +49,7 @@ const baseState = {
   regressionModes: regressionModes,
   selectedMode: null,
   contributionToRSquared: [],
-  queryString: null
+  queryString: ''
 }
 
 export default function regressionSelector(state = baseState, action) {

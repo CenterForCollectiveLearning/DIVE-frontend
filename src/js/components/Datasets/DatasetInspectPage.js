@@ -4,7 +4,7 @@ import DocumentTitle from 'react-document-title';
 
 import { push, replace } from 'react-router-redux';
 import { parseFromQueryObject, updateQueryString } from '../../helpers/helpers';
-import { setInspectQueryString as setQueryString, getInitialState, fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
+import { setInspectQueryString as setPersistedQueryString, getInitialState, fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 
 import styles from './Datasets.sass';
@@ -62,11 +62,11 @@ export class DatasetInspectPage extends Component {
   }
 
   setRecommendedInitialState() {
-    const { project, datasetSelector, pathname, queryObject, replace, setQueryString } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
 
     const initialState = getInitialState();
     const newQueryString = updateQueryString(queryObject, initialState);
-    setQueryString(newQueryString);
+    setPersistedQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);
   }
 
@@ -87,9 +87,9 @@ export class DatasetInspectPage extends Component {
   }
 
   clickQueryStringTrackedItem = (newObj) => {
-    const { pathname, queryObject, setQueryString, push } = this.props;
+    const { pathname, queryObject, setPersistedQueryString, push } = this.props;
     const newQueryString = updateQueryString(queryObject, newObj);
-    setQueryString(newQueryString);
+    setPersistedQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }
 
@@ -164,7 +164,7 @@ export default connect(mapStateToProps, {
   fetchDataset,
   fetchDatasets,
   fetchFieldPropertiesIfNeeded,
-  setQueryString,
+  setPersistedQueryString,
   push,
   replace
 })(DatasetInspectPage);

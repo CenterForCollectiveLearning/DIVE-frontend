@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import { updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { setQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional } from '../../../actions/RegressionActions';
+import { setPersistedQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional } from '../../../actions/RegressionActions';
 import { createURL, createInteractionTermName, filterInteractionTermSelection } from '../../../helpers/helpers.js';
 
 import styles from '../Analysis.sass';
@@ -69,9 +69,9 @@ export class RegressionSidebar extends Component {
   }
 
   clickQueryStringTrackedItem = (newObj) => {
-    const { pathname, queryObject, setQueryString, push } = this.props;
+    const { pathname, queryObject, setPersistedQueryString, push } = this.props;
     const newQueryString = updateQueryString(queryObject, newObj);
-    setQueryString(newQueryString);
+    setPersistedQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }
 
@@ -264,9 +264,9 @@ RegressionSidebar.propTypes = {
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
   regressionSelector: PropTypes.object.isRequired,
-  regressionType: PropTypes.string.isRequired,
   dependentVariableId: PropTypes.number.isRequired,
-  independentVariablesIds: PropTypes.array.isRequired
+  independentVariablesIds: PropTypes.array.isRequired,
+  regressionType: PropTypes.string
 };
 
 function mapStateToProps(state) {
@@ -280,4 +280,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional, setQueryString, push })(RegressionSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional, setPersistedQueryString, push })(RegressionSidebar);

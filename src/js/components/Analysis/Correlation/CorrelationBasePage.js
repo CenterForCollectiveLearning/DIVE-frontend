@@ -6,7 +6,7 @@ import DocumentTitle from 'react-document-title';
 import styles from '../Analysis.sass';
 
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
-import { setQueryString, getInitialState } from '../../../actions/CorrelationActions';
+import { setPersistedQueryString, getInitialState } from '../../../actions/CorrelationActions';
 
 import CorrelationSidebar from './CorrelationSidebar';
 import CorrelationView from './CorrelationView';
@@ -35,11 +35,11 @@ export class CorrelationBasePage extends Component {
   }
 
   setRecommendedInitialState(fieldProperties) {
-    const { project, datasetSelector, pathname, queryObject, replace, setQueryString } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
 
     const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
-    setQueryString(newQueryString);
+    setPersistedQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);
   }
 
@@ -74,13 +74,12 @@ function mapStateToProps(state, ownProps) {
     fieldProperties,
     queryObject: queryObject,
     pathname: pathname,
-    persistedQueryString: pathname,
-    correlationQueryString: correlationSelector.queryString,
+    persistedQueryString: correlationSelector.queryString,
     correlationVariablesIds: parseFromQueryObject(queryObject, 'correlationVariablesIds', true),
   };
 }
 
 export default connect(mapStateToProps, {
   replace,
-  setQueryString
+  setPersistedQueryString
 })(CorrelationBasePage);

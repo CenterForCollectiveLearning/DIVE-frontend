@@ -6,7 +6,7 @@ import DocumentTitle from 'react-document-title';
 import styles from '../Analysis.sass';
 
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
-import { setQueryString, getInitialState } from '../../../actions/AggregationActions';
+import { setPersistedQueryString, getInitialState } from '../../../actions/AggregationActions';
 
 import AggregationSidebar from './AggregationSidebar';
 import AggregationView from './AggregationView';
@@ -38,24 +38,24 @@ export class AggregationBasePage extends Component {
   }
 
   reconcileState() {
-    const { project, datasetSelector, pathname, queryObject, replace, setQueryString, aggregateOn, aggregationFunction } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, aggregateOn, aggregationFunction } = this.props;
 
     // Auto aggregation function selection
     if ( aggregateOn && aggregateOn !== 'count' && !aggregationFunction ) {
       const newQueryString = updateQueryString(queryObject, {
         aggregationFunction: 'MEAN'
       });
-      setQueryString(newQueryString);
+      setPersistedQueryString(newQueryString);
       replace(`${ pathname }${ newQueryString }`);
     }
   }
 
   setRecommendedInitialState(fieldProperties) {
-    const { project, datasetSelector, pathname, queryObject, replace, setQueryString } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
 
     const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
-    setQueryString(newQueryString);
+    setPersistedQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);
   }
 
@@ -106,5 +106,5 @@ function mapStateToProps(state, ownProps) {
 
 export default connect(mapStateToProps, {
   replace,
-  setQueryString
+  setPersistedQueryString
 })(AggregationBasePage);

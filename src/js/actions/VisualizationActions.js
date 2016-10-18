@@ -82,7 +82,7 @@ export function getValidSpecLevelsFromNumFields(numSelectedFields, selectedRecom
   }
   if (numSelectedFields >= 1) {
     isValidSpecLevel[2] = true;  // Individual
-    if (selectedRecommendationMode.id == 'expanded') {
+    if (selectedRecommendationMode == 'expanded') {
       isValidSpecLevel[3] = true  // Expanded
     }
   }
@@ -405,7 +405,7 @@ export function setShareWindow(shareWindow) {
   }
 }
 
-export function setQueryString(queryString) {
+export function setPersistedQueryString(queryString) {
   return {
     type: SET_EXPLORE_QUERY_STRING,
     queryString: queryString

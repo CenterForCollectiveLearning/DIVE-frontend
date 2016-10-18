@@ -33,7 +33,7 @@ export function getInitialState(projectId, datasetId, fieldProperties) {
   }
 }
 
-export function setQueryString(queryString) {
+export function setPersistedQueryString(queryString) {
   return {
     type: SET_CORRELATION_QUERY_STRING,
     queryString: queryString

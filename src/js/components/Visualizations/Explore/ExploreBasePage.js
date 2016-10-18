@@ -4,7 +4,7 @@ import { replace } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers'
-import { setQueryString, getInitialState } from '../../../actions/VisualizationActions';
+import { setPersistedQueryString, getInitialState } from '../../../actions/VisualizationActions';
 
 import styles from '../Visualizations.sass';
 import ExploreSidebar from './ExploreSidebar';
@@ -53,11 +53,11 @@ class ExploreBasePage extends Component {
   }
 
   setRecommendedInitialState(fieldProperties) {
-    const { project, datasetSelector, pathname, queryObject, replace, setQueryString } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
 
     const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
-    setQueryString(newQueryString);
+    setPersistedQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);
   }
 
@@ -99,6 +99,7 @@ class ExploreBasePage extends Component {
         <div className={ `${ styles.fillContainer } ${ styles.galleryContainer }` }>
           <ExploreView
             filteredVisualizationTypes={ filteredVisualizationTypes }
+            recommendationMode={ recommendationMode }
             fieldIds={ fieldIds }
           />
           <ExploreSidebar
@@ -127,6 +128,8 @@ function mapStateToProps(state, ownProps) {
     datasetSelector,
     fieldProperties,
     exploreSelector,
+    specs,
+    filters,
     queryObject: queryObject,
     pathname: pathname,
     persistedQueryString: exploreSelector.queryString,
@@ -134,12 +137,10 @@ function mapStateToProps(state, ownProps) {
     sortBy: parseFromQueryObject(queryObject, 'sortBy'),
     filteredVisualizationTypes: parseFromQueryObject(queryObject, 'filteredVisualizationTypes', true),
     fieldIds: parseFromQueryObject(queryObject, 'fieldIds', true),
-    filters,
-    specs
   };
 }
 
 export default connect(mapStateToProps, {
   replace,
-  setQueryString
+  setPersistedQueryString
 })(ExploreBasePage);

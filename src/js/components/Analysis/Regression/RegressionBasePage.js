@@ -6,7 +6,7 @@ import DocumentTitle from 'react-document-title';
 import styles from '../Analysis.sass';
 
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
-import { setQueryString, getInitialState } from '../../../actions/RegressionActions';
+import { setPersistedQueryString, getInitialState } from '../../../actions/RegressionActions';
 
 import RegressionSidebar from './RegressionSidebar';
 import RegressionView from './RegressionView';
@@ -40,7 +40,7 @@ export class RegressionBasePage extends Component {
   }
 
   reconcileState() {
-    const { project, datasetSelector, pathname, queryObject, replace, setQueryString, fieldProperties, regressionType, dependentVariableId } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, fieldProperties, regressionType, dependentVariableId } = this.props;
 
     const generalTypeToPermissibleRegressionType = {
       'q': [ 'linear' ],
@@ -52,24 +52,22 @@ export class RegressionBasePage extends Component {
       var dependentVariableGeneralType = fieldProperties.items.find((property) => property.id == dependentVariableId).generalType;
       var permissibleRegressionTypes = generalTypeToPermissibleRegressionType[dependentVariableGeneralType];
 
-      console.log(permissibleRegressionTypes, regressionType, dependentVariableGeneralType, permissibleRegressionTypes.indexOf(regressionType) == -1);
       if (!regressionType || permissibleRegressionTypes.indexOf(regressionType) == -1) {
-        console.log('Must reconcile to', permissibleRegressionTypes[0]);
         const newQueryString = updateQueryString(queryObject, {
           regressionType: permissibleRegressionTypes[0]
         });
-        setQueryString(newQueryString);
+        setPersistedQueryString(newQueryString);
         replace(`${ pathname }${ newQueryString }`);
       }
     }
   }
 
   setRecommendedInitialState(fieldProperties) {
-    const { project, datasetSelector, pathname, queryObject, replace, setQueryString } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
 
     const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
-    setQueryString(newQueryString);
+    setPersistedQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);
   }
 
@@ -108,7 +106,7 @@ function mapStateToProps(state, ownProps) {
     fieldProperties,
     queryObject: queryObject,
     pathname: pathname,
-    persistedQueryString: pathname,
+    persistedQueryString: regressionSelector.queryString,
     regressionType: parseFromQueryObject(queryObject, 'regressionType', false),
     dependentVariableId: parseFromQueryObject(queryObject, 'dependentVariableId', false),
     independentVariablesIds: parseFromQueryObject(queryObject, 'independentVariablesIds', true),
@@ -117,5 +115,5 @@ function mapStateToProps(state, ownProps) {
 
 export default connect(mapStateToProps, {
   replace,
-  setQueryString
+  setPersistedQueryString
 })(RegressionBasePage);

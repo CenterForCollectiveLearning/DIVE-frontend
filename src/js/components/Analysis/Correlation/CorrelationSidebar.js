@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import { updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { setQueryString, selectConditional } from '../../../actions/CorrelationActions';
+import { setPersistedQueryString, selectConditional } from '../../../actions/CorrelationActions';
 import styles from '../Analysis.sass';
 
 import ConditionalSelector from '../../Base/ConditionalSelector';
@@ -32,9 +32,9 @@ export class CorrelationSidebar extends Component {
   }
 
   clickQueryStringTrackedItem = (newObj) => {
-    const { pathname, queryObject, setQueryString, push } = this.props;
+    const { pathname, queryObject, setPersistedQueryString, push } = this.props;
     const newQueryString = updateQueryString(queryObject, newObj);
-    setQueryString(newQueryString);
+    setPersistedQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }
 
@@ -105,7 +105,7 @@ function mapStateToProps(state) {
     project,
     datasetSelector,
     fieldProperties,
-    setQueryString,
+    setPersistedQueryString,
     conditionals
   };
 }
@@ -114,6 +114,6 @@ export default connect(mapStateToProps, {
   fetchFieldPropertiesIfNeeded,
   selectConditional,
   updateQueryString,
-  setQueryString,
+  setPersistedQueryString,
   push
 })(CorrelationSidebar);

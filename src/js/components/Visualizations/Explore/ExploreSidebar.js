@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import { updateQueryString } from '../../../helpers/helpers';
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded, selectAggregationFunction } from '../../../actions/FieldPropertiesActions';
-import { selectRecommendationMode, selectVisualizationType, selectSortingFunction, setQueryString } from '../../../actions/VisualizationActions';
+import { selectRecommendationMode, selectVisualizationType, selectSortingFunction, setPersistedQueryString } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
 import _ from 'underscore';
@@ -36,9 +36,9 @@ export class ExploreSidebar extends Component {
   }
 
   clickQueryStringTrackedItem = (newObj) => {
-    const { pathname, queryObject, setQueryString, push } = this.props;
+    const { pathname, queryObject, setPersistedQueryString, push } = this.props;
     const newQueryString = updateQueryString(queryObject, newObj);
-    setQueryString(newQueryString);
+    setPersistedQueryString(newQueryString);
     push(`${ pathname }${ newQueryString }`);
   }
 
@@ -64,8 +64,6 @@ export class ExploreSidebar extends Component {
         spec.vizTypes.indexOf(filter) >= 0
       )
     );
-
-    console.log(sortBy, fieldIds, recommendationMode, filteredVisualizationTypes);
 
     return (
       <Sidebar>
@@ -218,6 +216,6 @@ export default connect(mapStateToProps, {
   fetchDatasets,
   selectDataset,
   updateQueryString,
-  setQueryString,
+  setPersistedQueryString,
   push
 })(ExploreSidebar);
