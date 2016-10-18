@@ -40,7 +40,7 @@ export class RegressionBasePage extends Component {
   }
 
   reconcileState() {
-    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, fieldProperties, regressionType, dependentVariableId } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, fieldProperties, regressionType, independentVariablesIds, dependentVariableId } = this.props;
 
     const generalTypeToPermissibleRegressionType = {
       'q': [ 'linear' ],
@@ -59,6 +59,14 @@ export class RegressionBasePage extends Component {
         setPersistedQueryString(newQueryString);
         replace(`${ pathname }${ newQueryString }`);
       }
+    }
+
+    if ( dependentVariableId && independentVariablesIds.length && independentVariablesIds.indexOf(dependentVariableId) > -1 ) {
+      const newQueryString = updateQueryString(queryObject, {
+        independentVariablesIds: [ dependentVariableId ]
+      });
+      setPersistedQueryString(newQueryString);
+      replace(`${ pathname }${ newQueryString }`);
     }
   }
 

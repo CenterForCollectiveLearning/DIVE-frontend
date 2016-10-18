@@ -84,7 +84,12 @@ export class CorrelationView extends Component {
     const saved = (correlationResult.isSaving || (!correlationResult.isSaving && correlationResult.exportedRegressionId) || correlationResult.exported) ? true : false;
 
     var correlationContent;
-    if (twoCorrelationVariablesSelected ) {
+    if (correlationVariableNames.length < 2) {
+      correlationContent = <div className={ styles.watermark }>
+        Please Select Two or More Variables to Correlate
+      </div>
+    }
+    else if (twoCorrelationVariablesSelected ) {
       correlationContent =
         <div className={ styles.correlationViewContainer }>
           <Card header={

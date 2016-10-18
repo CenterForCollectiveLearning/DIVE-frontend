@@ -84,44 +84,58 @@ export class RegressionView extends Component {
       tableCardHeader = <span>Explaining <ColoredFieldItems fields={[ dependentVariableName ]} /> in terms of <ColoredFieldItems fields={ independentVariableNames } /></span>
     }
 
+    var regressionContent = <div></div>;
+
+    if (independentVariableNames.length == 0) {
+      regressionContent = <div className={ styles.watermark }>
+        Please Select One or More Independent Variables
+      </div>
+    }
+    else if (independentVariableNames.length >= 1) {
+      regressionContent =
+        <div className={ styles.regressionViewContainer }>
+          <HeaderBar
+            actions={
+              <div className={ styles.headerControlRow }>
+                <div className={ styles.headerControl }>
+                  <RaisedButton onClick={ this.onClickShare }>
+                    { regressionResult.isExporting && "Exporting..." }
+                    { !regressionResult.isExporting && "Share" }
+                  </RaisedButton>
+                </div>
+                <div className={ styles.headerControl }>
+                  <RaisedButton onClick={ this.saveRegression } active={ saved }>
+                    { !regressionResult.isSaving && regressionResult.exportedRegressionId && <i className="fa fa-star"></i> }
+                    { !regressionResult.exportedRegressionId && <i className="fa fa-star-o"></i> }
+                  </RaisedButton>
+                </div>
+            </div>
+            }
+          />
+          { regressionResult.loading &&
+            <Card header={ tableCardHeader }>
+              <Loader text={ regressionResult.progress != null ? regressionResult.progress : 'Running regressions…' } />
+            </Card>
+          }
+          { (!regressionResult.loading && regressionResult.data) &&
+            <RegressionTableCard
+              regressionType={ regressionType }
+              dependentVariableName={ dependentVariableName }
+              independentVariableNames={ independentVariableNames }
+              regressionResult={ regressionResult.data || {} }
+              contributionToRSquared={ contributionToRSquared }/>
+          }
+
+          { (contributionToRSquared.length > 0 && regressionResult.data) &&
+            <ContributionToRSquaredCard id={ `${ regressionResult.data.id }` } contributionToRSquared={ contributionToRSquared } />
+          }
+        </div>
+      ;
+    }
+
     return (
       <div className={ styles.analysisViewContainer }>
-        <HeaderBar
-          actions={
-            <div className={ styles.headerControlRow }>
-              <div className={ styles.headerControl }>
-                <RaisedButton onClick={ this.onClickShare }>
-                  { regressionResult.isExporting && "Exporting..." }
-                  { !regressionResult.isExporting && "Share" }
-                </RaisedButton>
-              </div>
-              <div className={ styles.headerControl }>
-                <RaisedButton onClick={ this.saveRegression } active={ saved }>
-                  { !regressionResult.isSaving && regressionResult.exportedRegressionId && <i className="fa fa-star"></i> }
-                  { !regressionResult.exportedRegressionId && <i className="fa fa-star-o"></i> }
-                </RaisedButton>
-              </div>
-          </div>
-        }
-
-      />
-        { regressionResult.loading &&
-          <Card header={ tableCardHeader }>
-            <Loader text={ regressionResult.progress != null ? regressionResult.progress : 'Running regressions…' } />
-          </Card>
-        }
-        { (!regressionResult.loading && regressionResult.data) &&
-          <RegressionTableCard
-            regressionType={ regressionType }
-            dependentVariableName={ dependentVariableName }
-            independentVariableNames={ independentVariableNames }
-            regressionResult={ regressionResult.data || {} }
-            contributionToRSquared={ contributionToRSquared }/>
-        }
-
-        { (contributionToRSquared.length > 0 && regressionResult.data) &&
-          <ContributionToRSquaredCard id={ `${ regressionResult.data.id }` } contributionToRSquared={ contributionToRSquared } />
-        }
+        { regressionContent }
       </div>
     );
   }
