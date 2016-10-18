@@ -32,19 +32,22 @@ export class DatasetInspectPage extends Component {
     }
 
     if ( persistedQueryString ) {
-      console.log('Persisting query string', persistedQueryString);
       replace(`${ pathname }${ persistedQueryString }`);
     } else {
-      console.log('Setting initial recommended state');
       this.setRecommendedInitialState();
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { queryObject: currentQueryObject } = this.props;
-    const { queryObject: nextQueryObject, project, params, datasetSelector, datasets, fetchDataset, fetchDatasets, fetchFieldPropertiesIfNeeded, replace } = nextProps;
+    const { queryObject: nextQueryObject, project, params, datasetSelector, datasets, fetchDataset, fetchDatasets, fetchFieldPropertiesIfNeeded, replace, push } = nextProps;
     if (project.id !== this.props.project.id || (!datasets.fetchedAll && !datasets.isFetching)) {
       fetchDatasets(project.id, false);
+    }
+
+    const shouldRecommendInitialState = Object.keys(currentQueryObject) == 0 && Object.keys(nextQueryObject).length == 0;
+    if ( shouldRecommendInitialState ) {
+      this.setRecommendedInitialState();
     }
 
     if (params.projectId !== this.props.params.projectId || params.datasetId !== this.props.params.datasetId) {
@@ -54,9 +57,9 @@ export class DatasetInspectPage extends Component {
 
     if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
       if (datasetSelector.datasetId) {
-        replace(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
       } else {
-        replace(`/projects/${ params.projectId }/datasets/upload`);
+        push(`/projects/${ params.projectId }/datasets/upload`);
       }
     }
   }
