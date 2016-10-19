@@ -1,6 +1,104 @@
 import React from 'react';
 import _ from 'underscore';
 
+// Update query string given old query object and new object
+// Note: not wholesale replacement of query string
+// export function updateQueryString(oldQueryObject, key, input, arrayValued=false) {
+//   var newQueryObject = { ...oldQueryObject };
+//   if (arrayValued) {  // Adding or removing arrays from arrays
+//     const oldValues = parseFromQueryObject(oldQueryObject, key, arrayValued);
+//     var newValues = oldValues
+//     if (!Array.isArray(input)) {
+//       input = [ input ];
+//     }
+//
+//     for (let e of input) {
+//       if (newValues.indexOf(e) == -1) {
+//         newValues.push(e);
+//       } else {
+//         newValues = oldValues.filter((oldValue) => oldValue !== e);
+//       }
+//     }
+//     newQueryObject[key] = newValues;
+//
+//   } else {  // Adding or removing single valued keys
+//     if (key in oldQueryObject && oldQueryObject[key] == input) {
+//       newQueryObject = _.omit(oldQueryObject, key);
+//     } else {
+//       newQueryObject[key] = input;
+//     }
+//   }
+//   return queryObjectToQueryString(newQueryObject);
+// }
+
+export function updateQueryString(oldQueryObject, newState) {
+  var newQueryObject = { ...oldQueryObject };
+
+  for (let key in newState) {
+    var value = newState[key];
+    var arrayValued = Array.isArray(value);
+
+    if (arrayValued) {
+      var oldValues = parseFromQueryObject(oldQueryObject, key, arrayValued);
+      var newValues = oldValues;
+      for (let e of value) {
+        if (newValues.indexOf(e) == -1) {
+          newValues.push(e);
+        } else {
+          newValues = oldValues.filter((oldValue) => oldValue !== e);
+        }
+      }
+      newQueryObject[key] = newValues;
+    } else {
+      if (key in oldQueryObject && oldQueryObject[key] == value) {
+        newQueryObject = _.omit(oldQueryObject, key);
+      } else {
+        newQueryObject[key] = value;
+      }
+    }
+  }
+  return queryObjectToQueryString(newQueryObject);
+}
+
+export function parseFromQueryObject(queryObject, key, arrayValued=false) {
+  if (arrayValued) {
+    if (key in queryObject) {
+      return queryObject[key].split(',').map((x) => parseInt(x) ? parseInt(x) : x);
+    } else {
+      return [];
+    }
+  } else {
+    if (key in queryObject) {
+      const x = queryObject[key];
+      return parseInt(x) ? parseInt(x) : x;
+    } else {
+      return null;
+    }
+  }
+}
+
+function queryObjectToQueryString(queryObject) {
+  var queryString = '';
+
+  Object.keys(queryObject).forEach(
+    function (key, index, array) {
+      const value = queryObject[key];
+      if (typeof value != 'undefined' && value !== null) {
+        var fieldString = '';
+        if (Array.isArray(value)) {
+          if (value.length > 0) {
+            fieldString = `&${ key }=${ value.join(',') }`;
+          }
+        } else {
+          fieldString = `&${ key }=${ value }`;
+        }
+        queryString = queryString + fieldString;
+      }
+    }
+  );
+  queryString = queryString.replace('&', '?');
+  return queryString;
+}
 
 // https://blog.codinghorror.com/sorting-for-humans-natural-sort-order/
 // http://web.archive.org/web/20130826203933/http://my.opera.com/GreyWyvern/blog/show.dml/1671288
@@ -90,12 +188,17 @@ function hexToRgb(hex) {
 
 // http://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
 export function useWhiteFontFromBackgroundHex(hex) {
-  var RGB = hexToRgb(hex);
-  var { r, g, b } = RGB;
+  try {
+    var RGB = hexToRgb(hex);
+    var { r, g, b } = RGB;
 
-  if (( r * 0.299 + g * 0.587 + b * 0.114 ) > 186) {
-    return false
-  } else {
+    if (( r * 0.299 + g * 0.587 + b * 0.114 ) > 186) {
+      return false
+    } else {
+      return true
+    }
+  } catch (e) {
+    console.error('Error in useWhiteFontFromBackgroundHex', e);
     return true
   }
 }

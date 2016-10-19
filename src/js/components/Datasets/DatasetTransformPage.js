@@ -5,7 +5,9 @@ import { push } from 'react-router-redux';
 import { fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 
-import styles from './Datasets.sass';
+import stylesDatasets from './Datasets.sass';
+import stylesTransform from './DatasetTransform.sass';
+const styles = { ...stylesDatasets, ...stylesTransform };
 
 import HeaderBar from '../Base/HeaderBar';
 import RaisedButton from '../Base/RaisedButton';
@@ -106,18 +108,20 @@ export class DatasetTransformPage extends Component {
                     <i className="fa fa-trash"></i>
                   </RaisedButton>
                 </div>
-                <div className={ styles.headerControl }>
-                  <RaisedButton label="Reduce columns" onClick={ this.openColumnReductionModal.bind(this) }/>
-                </div>
-                <div className={ styles.headerControl }>
-                  <RaisedButton label="Pivot" onClick={ this.openPivotModal.bind(this) }/>
-                </div>
-                <div className={ styles.headerControl }>
-                  <RaisedButton label="Combine datasets" onClick={ this.openMergeDatasetsModal.bind(this) }/>
-                </div>
               </div>
             }
           />
+          <div className={ styles.transformActions }>
+            <div className={ styles.transformAction }>
+              <RaisedButton label="Reduce columns" onClick={ this.openColumnReductionModal.bind(this) }/>
+            </div>
+            <div className={ styles.transformAction }>
+              <RaisedButton label="Pivot" onClick={ this.openPivotModal.bind(this) }/>
+            </div>
+            <div className={ styles.transformAction }>
+              <RaisedButton label="Combine datasets" onClick={ this.openMergeDatasetsModal.bind(this) }/>
+            </div>
+          </div>
 
           { dataset && dataset.details &&
             <DatasetDataList dataset={ dataset } fieldProperties={ fieldProperties }/>

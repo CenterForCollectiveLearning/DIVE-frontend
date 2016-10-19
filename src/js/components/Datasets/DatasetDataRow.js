@@ -60,9 +60,9 @@ class DatasetDataRow extends Component {
     setFieldIsId( projectId, fieldId, this.state.isId );
   }
 
-  onClickVisualizeField = (name) => {
+  onClickVisualizeField = (id) => {
     const { projectId, datasetId, push } = this.props;
-    push(`/projects/${ projectId }/datasets/${ datasetId }/visualize/explore?fields[]=${ name }`);
+    push(`/projects/${ projectId }/datasets/${ datasetId }/visualize/explore?fieldsIds=${ id }`);
   }
 
   render() {
@@ -109,7 +109,6 @@ class DatasetDataRow extends Component {
                   className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
                   valueClassName={ styles.fieldTypeValue }
                   value={ fieldProperty.type }
-                  autosize={ true }
                   searchable={ true }
                   options={ this.state.fieldTypes }
                   onChange={ this.onSelectFieldType.bind(this) } />
@@ -132,7 +131,7 @@ class DatasetDataRow extends Component {
               <div className={ styles.dropdownOption } onClick={ this.onIDCheckboxChange }>{ this.state.isId ? 'Remove as ID' : 'Mark as ID'}</div>
               <div className={ styles.dropdownOption } onClick={ this.onColorPickerClick }>Change Color</div>
               <div className={ styles.separator } />
-              <div className={ styles.dropdownOption } onClick={ () => this.onClickVisualizeField(name) }>Visualize</div>
+              <div className={ styles.dropdownOption } onClick={ () => this.onClickVisualizeField(id) }>Visualize</div>
             </div>
           </div>
           { this.state.displayColorPicker ? <div style={ popover }>
@@ -149,22 +148,22 @@ class DatasetDataRow extends Component {
     let metadataContent;
     let statsContent;
     if ( generalType == 'c' ) {
-      metadataContent =
+      metadataContent = vizData ?
         <ColumnChart
           chartId={ `field-bar-${ id }` }
           data={ vizData['visualize'] }
           isMinimalView={ true }
           colors={ colors }
           additionalOptions={ additionalOptions }
-        />
-      statsContent =
+        /> : <div/>;
+      statsContent = stats ?
         <div className={ styles.statistics }>
           { numNa !== null && <div className={ styles.statistic }><div className={ styles.field }>Null</div><div className={ styles.value }>{ `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }</div></div> }
           <div className={ styles.statistic }><div className={ styles.field }>Unique Values</div><div className={ styles.value }>{ `${ getRoundedString(stats.unique) } (${ getRoundedString((stats.unique / stats.count) * 100) }%)` }</div></div>
           <div className={ styles.statistic + ' ' + styles.wide }><div className={ styles.field }>Most Frequent</div><div className={ styles.value }>{ stats.top } ({ getRoundedString(stats.freq) })</div></div>
-        </div>
+        </div> : <div/>;
     } else if ( generalType == 'q' ) {
-      metadataContent =
+      metadataContent = vizData ?
         <Histogram
           chartId={ `field-hist-${ id }` }
           data={ vizData['visualize'] }
@@ -172,18 +171,18 @@ class DatasetDataRow extends Component {
           isMinimalView={ true }
           colors={ colors }
           additionalOptions={ additionalOptions }
-        />
-      statsContent =
+        /> : <div/>;
+      statsContent = stats ?
         <div className={ styles.statistics }>
           { numNa !== null && <div className={ styles.statistic }><div className={ styles.field }>Null</div><div className={ styles.value }>{ `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }</div></div> }
           <div className={ styles.statistic }><div className={ styles.field }>Mean</div><div className={ styles.value }>{ getRoundedString(stats.mean) }</div></div>
           <div className={ styles.statistic }><div className={ styles.field }>Median</div><div className={ styles.value }>{ getRoundedString(stats['50%']) }</div></div>
           <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div></div>
           <div className={ styles.statistic }><div className={ styles.field }>Std</div><div className={ styles.value }>{ getRoundedString(stats.std) }</div></div>
-        </div>
+        </div> : <div/>;
 
     } else if ( generalType == 't' ) {
-      metadataContent =
+      metadataContent = vizData ?
         <Histogram
           chartId={ `field-hist-time-${ id }` }
           data={ vizData['visualize'] }
@@ -191,11 +190,11 @@ class DatasetDataRow extends Component {
           isMinimalView={ true }
           colors={ colors }
           additionalOptions={ additionalOptions }
-        />
-      statsContent =
+        /> : <div/>;
+      statsContent = stats ?
         <div className={ styles.statistics }>
           <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div></div>
-        </div>
+        </div> : <div/>;
     }
 
     return constructFieldContent(metadataContent, statsContent);

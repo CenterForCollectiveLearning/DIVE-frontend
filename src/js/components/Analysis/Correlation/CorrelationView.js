@@ -84,7 +84,12 @@ export class CorrelationView extends Component {
     const saved = (correlationResult.isSaving || (!correlationResult.isSaving && correlationResult.exportedRegressionId) || correlationResult.exported) ? true : false;
 
     var correlationContent;
-    if (twoCorrelationVariablesSelected ) {
+    if (correlationVariableNames.length < 2) {
+      correlationContent = <div className={ styles.watermark }>
+        Please Select Two or More Variables to Correlate
+      </div>
+    }
+    else if (twoCorrelationVariablesSelected ) {
       correlationContent =
         <div className={ styles.correlationViewContainer }>
           <Card header={
@@ -132,12 +137,13 @@ export class CorrelationView extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const { project, datasets, correlationSelector, datasetSelector, fieldProperties, conditionals } = state;
+  const { correlationVariablesIds } = ownProps;
   const { correlationScatterplots } = correlationSelector;
 
   const correlationVariableNames = fieldProperties.items
-    .filter((property) => correlationSelector.correlationVariableIds.indexOf(property.id) >= 0)
+    .filter((property) => correlationVariablesIds.indexOf(property.id) >= 0)
     .map((field) => field.name);
 
   return {

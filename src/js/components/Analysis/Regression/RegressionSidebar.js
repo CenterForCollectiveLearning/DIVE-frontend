@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
+import { updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { selectIndependentVariable, selectRegressionType, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional } from '../../../actions/RegressionActions';
+import { setPersistedQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional } from '../../../actions/RegressionActions';
 import { createURL, createInteractionTermName, filterInteractionTermSelection } from '../../../helpers/helpers.js';
 
 import styles from '../Analysis.sass';
@@ -53,13 +54,6 @@ export class RegressionSidebar extends Component {
     push(createURL(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
   }
 
-  onSelectRegressionType(regressionType) {
-    const { project, datasetSelector, regressionSelector, push } = this.props;
-
-    const queryParams = { 'dependent-variable': regressionSelector.dependentVariableId, 'regression-type': regressionType };
-    push(createURL(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
-  }
-
   onAddInteractionTerm(dropDownNumber, independentVariableId) {
     const interactionVariables = this.state.interactionVariables;
     interactionVariables[dropDownNumber] = independentVariableId;
@@ -74,8 +68,25 @@ export class RegressionSidebar extends Component {
     this.setState({ interactionVariables: [null, null] })
   }
 
+  clickQueryStringTrackedItem = (newObj) => {
+    const { pathname, queryObject, setPersistedQueryString, push } = this.props;
+    const newQueryString = updateQueryString(queryObject, newObj);
+    setPersistedQueryString(newQueryString);
+    push(`${ pathname }${ newQueryString }`);
+  }
+
   render() {
-    const { fieldProperties, regressionSelector, selectIndependentVariable, selectInteractionTerm, deleteInteractionTerm, conditionals, selectConditional } = this.props;
+    const {
+      fieldProperties,
+      regressionSelector,
+      selectInteractionTerm,
+      deleteInteractionTerm,
+      conditionals,
+      selectConditional,
+      regressionType,
+      dependentVariableId,
+      independentVariablesIds
+    } = this.props;
     const { interactionVariables } = this.state;
 
     const interactionTermNames = regressionSelector.interactionTermIds.map((idTuple) => {
@@ -85,7 +96,7 @@ export class RegressionSidebar extends Component {
     var shownRegressionTypes = regressionTypes;
 
     if(fieldProperties.items.length > 0) {
-      const dependentVariableType = fieldProperties.items.find((property) => property.id == regressionSelector.dependentVariableId);
+      const dependentVariableType = fieldProperties.items.find((property) => property.id == dependentVariableId);
       if(dependentVariableType == 'decimal') {
         shownRegressionTypes = regressionTypes.filter((type) => type.value != 'logistic')
       }
@@ -96,19 +107,19 @@ export class RegressionSidebar extends Component {
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Regression Type">
             <DropDownMenu
-              value={ regressionSelector.regressionType }
+              value={ regressionType }
               options={ shownRegressionTypes }
-              onChange={ this.onSelectRegressionType.bind(this) } />
+              onChange={ (v) => this.clickQueryStringTrackedItem({ regressionType: v }) }/>
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Dependent Variable (Y)">
             <DropDownMenu
-              value={ parseInt(regressionSelector.dependentVariableId) }
+              value={ parseInt(dependentVariableId) }
               options={ fieldProperties.items.filter((property) => !property.isId) }
               valueMember="id"
               displayTextMember="name"
-              onChange={ this.onSelectDependentVariable.bind(this) }/>
+              onChange={ (v) => this.clickQueryStringTrackedItem({ dependentVariableId: parseInt(v) })}/>
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
@@ -121,16 +132,16 @@ export class RegressionSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
+                      disabled: (item.id == dependentVariableId) || dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
                       color: item.color
                     })
                   )}
                   displayTextMember="name"
                   colorMember="color"
                   valueMember="id"
-                  externalSelectedItems={ regressionSelector.independentVariableIds }
+                  externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariable } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ] }) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
@@ -141,16 +152,16 @@ export class RegressionSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
+                      disabled: (item.id == dependentVariableId) || dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
                       color: item.color
                     })
                   )}
                   valueMember="id"
                   colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ regressionSelector.independentVariableIds }
+                  externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariable } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ] }) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
@@ -161,16 +172,16 @@ export class RegressionSidebar extends Component {
                     new Object({
                       id: item.id,
                       name: item.name,
-                      disabled: (item.id == regressionSelector.dependentVariableId) || regressionSelector.dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
+                      disabled: (item.id == dependentVariableId) || dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
                       color: item.color
                     })
                   )}
                   valueMember="id"
                   colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ regressionSelector.independentVariableIds }
+                  externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ selectIndependentVariable } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ] }) } />
               </div>
             }
             { fieldProperties.interactionTerms.length > 0 &&
@@ -207,7 +218,7 @@ export class RegressionSidebar extends Component {
                 margin='2px'
                 value={ interactionVariables[0] }
                 options={ fieldProperties.items.filter((item) =>
-                  item.id != parseInt(regressionSelector.dependentVariableId) && item.id != interactionVariables[1]
+                  item.id != parseInt(dependentVariableId) && item.id != interactionVariables[1]
                     && filterInteractionTermSelection(item.id, interactionVariables[1], fieldProperties.interactionTerms))
                 }
                 valueMember="id"
@@ -217,7 +228,7 @@ export class RegressionSidebar extends Component {
                 width='50%'
                 value={ interactionVariables[1] }
                 options={ fieldProperties.items.filter((item) =>
-                  item.id != parseInt(regressionSelector.dependentVariableId) && item.id != interactionVariables[0]
+                  item.id != parseInt(dependentVariableId) && item.id != interactionVariables[0]
                     && filterInteractionTermSelection(item.id, interactionVariables[0], fieldProperties.interactionTerms))
                 }
                 valueMember="id"
@@ -252,7 +263,10 @@ RegressionSidebar.propTypes = {
   project: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
-  regressionSelector: PropTypes.object.isRequired
+  regressionSelector: PropTypes.object.isRequired,
+  dependentVariableId: PropTypes.number.isRequired,
+  independentVariablesIds: PropTypes.array.isRequired,
+  regressionType: PropTypes.string
 };
 
 function mapStateToProps(state) {
@@ -266,4 +280,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, selectRegressionType, selectIndependentVariable, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional, push })(RegressionSidebar);
+export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional, setPersistedQueryString, push })(RegressionSidebar);
