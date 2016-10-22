@@ -50,6 +50,26 @@ class ExploreBasePage extends Component {
     if ( shouldRecommendInitialState && fieldProperties.items.length) {
       this.setRecommendedInitialState(fieldProperties);
     }
+
+    // Handling inconsistent state, default selection of certain fields
+    this.reconcileState();
+  }
+
+  reconcileState() {
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, fieldProperties, fieldIds } = this.props;
+
+    // Limit number of selected fields to three
+    const numFields = fieldIds.length;
+    if ( numFields && numFields > 3 ) {
+      // TODO Write function to create a complete replace
+      // Deselecting all but last three
+
+      const newQueryString = updateQueryString(queryObject, {
+        fieldIds: fieldIds.slice(0, fieldIds.length - 2)
+      });
+      setPersistedQueryString(newQueryString);
+      replace(`${ pathname }${ newQueryString }`);
+    }
   }
 
   setRecommendedInitialState(fieldProperties) {
