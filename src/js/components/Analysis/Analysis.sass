@@ -4,8 +4,16 @@
 
 .fieldGroup
   &:first-child
-    .fieldGroupLabel
-      margin-top: 0
+    .fieldGroupHeader
+      display: flex
+      flex-direction: row
+      .fieldGroupLabel
+        margin-top: 0
+      .fieldGroupAction
+        +smallCaps
+        cursor: pointer
+        color: $primary-accent
+        margin-left: auto
 
   + .fieldGroup
     margin-top: 7px

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { updateQueryString } from '../../../helpers/helpers';
+import { removeFromQueryString, updateQueryString } from '../../../helpers/helpers';
 
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { setPersistedQueryString, selectBinningConfigX, selectBinningConfigY, selectAggregationIndependentVariable, selectAggregationVariable, selectAggregationFunction, selectAggregationWeightVariable, selectConditional } from '../../../actions/AggregationActions';
@@ -33,6 +33,14 @@ export class AggregationSidebar extends Component {
     }
   }
 
+  clickClearKeyFromQueryString = (key) => {
+    const { pathname, queryObject, setPersistedQueryString, push } = this.props;
+    const newQueryString = removeFromQueryString(queryObject, key);
+    setPersistedQueryString(newQueryString, true);
+    push(`${ pathname }${ newQueryString }`);
+  }
+
+
   clickQueryStringTrackedItem = (newObj) => {
     const { pathname, queryObject, setPersistedQueryString, push } = this.props;
     const newQueryString = updateQueryString(queryObject, newObj);
@@ -54,7 +62,15 @@ export class AggregationSidebar extends Component {
           <SidebarGroup heading="Aggregation Variables">
             { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
               <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Categorical</div>
+                <div className={ styles.fieldGroupHeader }>
+                  <div className={ styles.fieldGroupLabel }>Categorical</div>
+                  { aggregationVariablesIds.length > 0 &&
+                    <div className={ styles.fieldGroupAction }
+                      onClick={ (v) => this.clickClearKeyFromQueryString('aggregationVariablesIds') }>
+                      Deselect All
+                    </div>
+                  }
+                </div>
                 <ToggleButtonGroup
                   toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
                     new Object({

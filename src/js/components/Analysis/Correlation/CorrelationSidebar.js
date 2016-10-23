@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { updateQueryString } from '../../../helpers/helpers';
+import { removeFromQueryString, updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { setPersistedQueryString, selectConditional } from '../../../actions/CorrelationActions';
 import styles from '../Analysis.sass';
@@ -31,6 +31,13 @@ export class CorrelationSidebar extends Component {
     }
   }
 
+  clickClearKeyFromQueryString = (key) => {
+    const { pathname, queryObject, setPersistedQueryString, push } = this.props;
+    const newQueryString = removeFromQueryString(queryObject, key);
+    setPersistedQueryString(newQueryString, true);
+    push(`${ pathname }${ newQueryString }`);
+  }
+
   clickQueryStringTrackedItem = (newObj) => {
     const { pathname, queryObject, setPersistedQueryString, push } = this.props;
     const newQueryString = updateQueryString(queryObject, newObj);
@@ -47,7 +54,15 @@ export class CorrelationSidebar extends Component {
           <SidebarGroup heading="Correlation Variables">
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
               <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Quantitative</div>
+                <div className={ styles.fieldGroupHeader }>
+                  <div className={ styles.fieldGroupLabel }>Quantitative</div>
+                  { correlationVariablesIds.length > 0 &&
+                    <div className={ styles.fieldGroupAction }
+                      onClick={ (v) => this.clickClearKeyFromQueryString('correlationVariablesIds') }>
+                      Deselect All
+                    </div>
+                  }
+                </div>
                 <ToggleButtonGroup
                   toggleItems={ quantitativeVariables.map((item) =>
                     new Object({

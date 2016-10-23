@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { updateQueryString } from '../../../helpers/helpers';
+import { removeFromQueryString, updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import { setPersistedQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional } from '../../../actions/RegressionActions';
 import { createURL, createInteractionTermName, filterInteractionTermSelection } from '../../../helpers/helpers.js';
@@ -68,6 +68,13 @@ export class RegressionSidebar extends Component {
     this.setState({ interactionVariables: [null, null] })
   }
 
+  clickClearKeyFromQueryString = (key) => {
+    const { pathname, queryObject, setPersistedQueryString, push } = this.props;
+    const newQueryString = removeFromQueryString(queryObject, key);
+    setPersistedQueryString(newQueryString, true);
+    push(`${ pathname }${ newQueryString }`);
+  }
+
   clickQueryStringTrackedItem = (newObj) => {
     const { pathname, queryObject, setPersistedQueryString, push } = this.props;
     const newQueryString = updateQueryString(queryObject, newObj);
@@ -126,7 +133,15 @@ export class RegressionSidebar extends Component {
           <SidebarGroup heading="Explanatory Factors (X)">
             { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
               <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Categorical</div>
+                <div className={ styles.fieldGroupHeader }>
+                  <div className={ styles.fieldGroupLabel }>Categorical</div>
+                  { independentVariablesIds.length > 0 &&
+                    <div className={ styles.fieldGroupAction }
+                      onClick={ (v) => this.clickClearKeyFromQueryString('independentVariablesIds') }>
+                      Deselect All
+                    </div>
+                  }
+                </div>
                 <ToggleButtonGroup
                   toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
                     new Object({
