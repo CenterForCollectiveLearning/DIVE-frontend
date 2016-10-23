@@ -31,6 +31,11 @@ import _ from 'underscore';
 //   return queryObjectToQueryString(newQueryObject);
 // }
 
+export function removeFromQueryString(oldQueryObject, key) {
+  const newQueryObject = _.omit(oldQueryObject, key);
+  return queryObjectToQueryString(newQueryObject);
+}
+
 export function updateQueryString(oldQueryObject, newState) {
   var newQueryObject = { ...oldQueryObject };
 
