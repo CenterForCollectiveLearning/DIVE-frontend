@@ -5,6 +5,7 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
+import ProjectCreateModal from '../Base/ProjectCreateModal';
 import ProjectButton from '../Base/ProjectButton';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import RaisedButton from '../Base/RaisedButton';
@@ -18,6 +19,7 @@ export class ProjectListPage extends Component {
     super(props);
 
     this.state = {
+      projectCreateModalOpen: false,
       sortField: 'updateDate',
       viewMode: 'normal'
     };
@@ -39,11 +41,13 @@ export class ProjectListPage extends Component {
     }
   }
 
-  _onUploadClick = () => {
+  closeProjectSettingsModal = () => {
+    this.setState({ projectCreateModalOpen: false });
+  }
+
+  _onClickCreateProject = () => {
+    this.setState({ projectCreateModalOpen: true });
     const userId = this.props.userId;
-    const projectTitle = 'Project Title';
-    const projectDescription = 'Project Description'
-    this.props.createProject(userId, projectTitle, projectDescription);
   }
 
   onSelectProjectSortField = (sortField) => {
@@ -78,7 +82,7 @@ export class ProjectListPage extends Component {
                 <RaisedButton
                   label="+ Create Project"
                   buttonStyle="blueAction"
-                  onClick={ this._onUploadClick }
+                  onClick={ this._onClickCreateProject }
                   className={ styles.createProjectButton } />
                 {/* <ToggleButtonGroup
                   value={ viewMode }
@@ -134,6 +138,12 @@ export class ProjectListPage extends Component {
                 <div className={ styles.projectListSidebar }></div>
                 <Loader text='Loading Your Projects' />
               </div>
+            }
+            { this.state.projectCreateModalOpen &&
+              <ProjectCreateModal
+                userId={ userId }
+                closeAction={ this.closeProjectSettingsModal }
+              />
             }
           </div>
         </div>
