@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import 'react-select/dist/react-select.css';
 import styles from './DropDownMenu.sass';
 import Select from 'react-select';
 

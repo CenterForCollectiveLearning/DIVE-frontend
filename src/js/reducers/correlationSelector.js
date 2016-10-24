@@ -2,7 +2,6 @@ import _ from 'underscore';
 
 import {
   SELECT_DATASET,
-  SELECT_CORRELATION_VARIABLE,
   REQUEST_CORRELATION,
   RECEIVE_CORRELATION,
   PROGRESS_CORRELATION,
@@ -11,6 +10,7 @@ import {
   RECEIVE_CORRELATION_SCATTERPLOT,
   RECEIVE_CREATED_SAVED_CORRELATION,
   WIPE_PROJECT_STATE,
+  SET_CORRELATION_QUERY_STRING,
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_TYPE,
   CLEAR_ANALYSIS
@@ -26,7 +26,8 @@ const baseState = {
     error: null,
     data: null
   },
-  correlationScatterplots: []
+  correlationScatterplots: [],
+  queryString: null
 }
 
 export default function correlationSelector(state = baseState, action) {
@@ -46,16 +47,6 @@ export default function correlationSelector(state = baseState, action) {
       }
 
       return { ...state, correlationVariableIds: selectedVariableIds};
-
-    case SELECT_CORRELATION_VARIABLE:
-      var correlationVariableIds = state.correlationVariableIds.slice();
-      const selectedId = parseInt(action.correlationVariableId);
-      if (state.correlationVariableIds.find((correlationVariableId) => correlationVariableId == selectedId)) {
-        correlationVariableIds = correlationVariableIds.filter((correlationVariableId) => correlationVariableId != selectedId);
-      } else {
-        correlationVariableIds.push(selectedId);
-      }
-      return { ...state, correlationVariableIds: correlationVariableIds };
 
     case REQUEST_CORRELATION:
       return { ...state, correlationResult: { ...state.correlationResult, loading: true } };
@@ -88,6 +79,10 @@ export default function correlationSelector(state = baseState, action) {
         }
       };
 
+    case SET_CORRELATION_QUERY_STRING:
+      return {
+        ...state, queryString: action.queryString
+      }
 
     case WIPE_PROJECT_STATE, CLEAR_ANALYSIS, SELECT_DATASET:
       return baseState;

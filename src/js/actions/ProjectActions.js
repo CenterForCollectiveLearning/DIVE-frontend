@@ -97,10 +97,10 @@ export function createProjectIfNeeded(user_id, title, description) {
   }
 }
 
-export function createProject(user_id, title, description) {
+export function createProject(userId, title, description) {
   const params = {
-    'user_id': user_id || null,
-    'anonymous': user_id ? false : true,
+    'user_id': userId || null,
+    'anonymous': userId ? false : true,
     'title': title,
     'description': description
   }

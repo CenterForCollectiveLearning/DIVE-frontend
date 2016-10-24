@@ -24,7 +24,7 @@ export default function exportedSpecs(state=baseState, action) {
     case RECEIVE_CREATED_EXPORTED_SPEC, RECEIVE_CREATED_SAVED_SPEC:
       var updatedSpecs = state.items.slice();
 
-      if (!updatedSpecs.find((spec) => spec.id == action.specId)) {
+      if (action.specId && !updatedSpecs.find((spec) => spec.id == action.specId)) {
         updatedSpecs.push(action.exportedSpec);
       }
 

@@ -145,7 +145,7 @@ export class SingleVisualizationView extends Component {
             <RaisedButton label="PDF" onClick={ this.saveAs.bind(this, fileName, 'pdf') } fullWidth={ true }/>
           </div>
           <div className={ styles.headerControl }>
-            <RaisedButton onClick={ this.saveVisualization } active={ saved }>
+            <RaisedButton onClick={ this.saveVisualization } active={ saved } buttonStyle='blueActive'>
               { !visualization.isSaving && visualization.exportedSpecId && <i className="fa fa-star"></i> }
               { !visualization.exportedSpecId && <i className="fa fa-star-o"></i> }
             </RaisedButton>

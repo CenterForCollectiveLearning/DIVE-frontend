@@ -1,0 +1,148 @@
+@import '../../../css/mixins.sass'
+@import '../../../css/flexbox.sass'
+@import './Datasets.sass'
+
+.datasetDataRow
+  display: flex
+  flex-direction: row
+  position: relative
+  border: 1px solid $ui-line-grey
+  margin-top: -1px
+  background-color: white
+  width: calc(100% - 30px)
+  min-width: 600px
+  min-height: 80px
+  height: 80px
+
+  &:first-child
+    border-top-right-radius: 3px
+    border-top-left-radius: 3px
+  &:last-child
+    border-bottom-right-radius: 3px
+    border-bottom-left-radius: 3px
+
+  div.metadata
+    display: flex
+    flex-direction: row
+    flex-grow: 1
+    padding: 0 20px
+
+    .nameAndType
+      display: flex
+      flex-direction: column
+      justify-content: center
+      padding-top: 10px
+
+    div.name, div.type
+      display: flex
+      align-items: center
+      text-overflow: ellipsis
+
+    div.name
+      font-weight: bold
+      min-width: 200px
+      font-size: 12px
+      line-height: 12px
+      text-overflow: ellipsis
+
+    div.type
+      min-width: 80px
+      margin-right: 20px
+
+    div.statistics
+      +smallCaps
+      display: flex
+
+      div.statistic
+        display: flex
+        flex-direction: column
+        justify-content: center
+        text-align: center
+        white-space: wrap
+        padding: 0 15px
+
+        min-width: 100px
+        width: 100px
+
+        &.wide
+          min-width: 160px
+          width: 160px
+
+        .field
+        .value
+          color: $primary-accent
+          font-size: 14px
+
+    div.toggles
+      +smallCaps
+      display: flex
+      text-align: center
+      .left
+        display: flex
+        flex-direction: column
+        justify-content: center
+
+  .expandButton
+    position: relative
+    display: flex
+    border-left: 1px solid $ui-line-grey
+    align-items: center
+    justify-content: center
+    width: 35px
+
+    .dropdown
+      position: absolute
+      opacity: 0
+      user-select: none
+      pointer-events: none
+      top: 75px
+      right: 0
+      background-color: white
+      z-index: 100
+      min-width: 150px
+
+      border: 1px solid $ui-line-grey
+      border-radius: 3px
+      position: absolute
+      padding: 3px 0px
+
+      .separator
+        margin: 3px 12px
+        border-bottom: 1px solid $ui-line-grey
+        height: 0px
+        max-height: 0px
+
+      .dropdownOption
+        padding: 8px 12px
+        cursor: pointer
+
+        &:hover
+          background-color: $primary-accent
+          color: white
+
+    &:after
+      content: "︿"
+      font-weight: bold
+      position: relative
+      top: -3px
+
+    &:hover
+      background-color: $ui-header-grey
+
+      &:after
+        content: "﹀"
+        top: 3px
+
+      .dropdown
+        opacity: 1
+        pointer-events: auto
+        user-select: text
+
+  .fieldTypeDropDown.dropDownMenu
+    margin-top: -5px
+    margin-left: -10px
+    > div
+      > div:first-of-type
+        background-color: transparent
+        border: none
+        box-shadow: none

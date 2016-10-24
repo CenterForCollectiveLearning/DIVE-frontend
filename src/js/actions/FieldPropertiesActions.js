@@ -124,13 +124,13 @@ export function fetchFieldPropertiesIfNeeded(projectId, datasetId, selectedField
   };
 }
 
-export function selectFieldProperty(selectedFieldPropertyId) {
-  return {
-    type: SELECT_FIELD_PROPERTY,
-    selectedFieldPropertyId: selectedFieldPropertyId,
-    receivedAt: Date.now()
-  }
-}
+// export function selectFieldProperty(selectedFieldPropertyId) {
+//   return {
+//     type: SELECT_FIELD_PROPERTY,
+//     selectedFieldPropertyId: selectedFieldPropertyId,
+//     receivedAt: Date.now()
+//   }
+// }
 
 export function selectFieldPropertyValue(selectedFieldPropertyId, selectedFieldPropertyValueId) {
   return {

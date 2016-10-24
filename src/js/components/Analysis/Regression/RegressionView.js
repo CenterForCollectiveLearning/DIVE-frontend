@@ -19,13 +19,6 @@ import ContributionToRSquaredCard from './ContributionToRSquaredCard';
 
 export class RegressionView extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.saveRegression = this.saveRegression.bind(this);
-    this.onClickShare = this.onClickShare.bind(this);
-  }
-
   componentWillMount() {
     const { projectId, datasets, conditionals, datasetSelector, fetchDatasets } = this.props;
 
@@ -66,12 +59,12 @@ export class RegressionView extends Component {
     }
   }
 
-  saveRegression(saveAction = true) {
+  saveRegression = (saveAction = true) => {
     const { projectId, regressionResult, createExportedRegression } = this.props;
     createExportedRegression(projectId, regressionResult.data.id, regressionResult.data, regressionResult.conditionals, regressionResult.config, saveAction);
   }
 
-  onClickShare() {
+  onClickShare = () => {
     setShareWindow(window.open('about:blank'));
     this.saveRegression(false);
   }
@@ -91,57 +84,73 @@ export class RegressionView extends Component {
       tableCardHeader = <span>Explaining <ColoredFieldItems fields={[ dependentVariableName ]} /> in terms of <ColoredFieldItems fields={ independentVariableNames } /></span>
     }
 
+    var regressionContent = <div></div>;
+
+    if (independentVariableNames.length == 0) {
+      regressionContent = <div className={ styles.watermark }>
+        Please Select One or More Independent Variables
+      </div>
+    }
+    else if (independentVariableNames.length >= 1) {
+      regressionContent =
+        <div className={ styles.regressionViewContainer }>
+          <HeaderBar
+            actions={
+              <div className={ styles.headerControlRow }>
+                <div className={ styles.headerControl }>
+                  <RaisedButton onClick={ this.onClickShare }>
+                    { regressionResult.isExporting && "Exporting..." }
+                    { !regressionResult.isExporting && "Share" }
+                  </RaisedButton>
+                </div>
+                <div className={ styles.headerControl }>
+                  <RaisedButton onClick={ this.saveRegression } active={ saved }>
+                    { !regressionResult.isSaving && regressionResult.exportedRegressionId && <i className="fa fa-star"></i> }
+                    { !regressionResult.exportedRegressionId && <i className="fa fa-star-o"></i> }
+                  </RaisedButton>
+                </div>
+            </div>
+            }
+          />
+          { regressionResult.loading &&
+            <Card header={ tableCardHeader }>
+              <Loader text={ regressionResult.progress != null ? regressionResult.progress : 'Running regressions…' } />
+            </Card>
+          }
+          { (!regressionResult.loading && regressionResult.data) &&
+            <RegressionTableCard
+              regressionType={ regressionType }
+              dependentVariableName={ dependentVariableName }
+              independentVariableNames={ independentVariableNames }
+              regressionResult={ regressionResult.data || {} }
+              contributionToRSquared={ contributionToRSquared }/>
+          }
+
+          { (contributionToRSquared.length > 0 && regressionResult.data) &&
+            <ContributionToRSquaredCard id={ `${ regressionResult.data.id }` } contributionToRSquared={ contributionToRSquared } />
+          }
+        </div>
+      ;
+    }
+
     return (
       <div className={ styles.analysisViewContainer }>
-        <HeaderBar
-          actions={
-            <div className={ styles.headerControlRow }>
-              <div className={ styles.headerControl }>
-                <RaisedButton onClick={ this.onClickShare }>
-                  { regressionResult.isExporting && "Exporting..." }
-                  { !regressionResult.isExporting && "Share" }
-                </RaisedButton>
-              </div>
-              <div className={ styles.headerControl }>
-                <RaisedButton onClick={ this.saveRegression } active={ saved }>
-                  { !regressionResult.isSaving && regressionResult.exportedRegressionId && <i className="fa fa-star"></i> }
-                  { !regressionResult.exportedRegressionId && <i className="fa fa-star-o"></i> }
-                </RaisedButton>
-              </div>
-          </div>
-        }
-
-      />
-        { regressionResult.loading &&
-          <Card header={ tableCardHeader }>
-            <Loader text={ regressionResult.progress != null ? regressionResult.progress : 'Running regressions…' } />
-          </Card>
-        }
-        { (!regressionResult.loading && regressionResult.data) &&
-          <RegressionTableCard
-            regressionType={ regressionType }
-            dependentVariableName={ dependentVariableName }
-            independentVariableNames={ independentVariableNames }
-            regressionResult={ regressionResult.data || {} }
-            contributionToRSquared={ contributionToRSquared }/>
-        }
-
-        { (contributionToRSquared.length > 0 && regressionResult.data) &&
-          <ContributionToRSquaredCard id={ `${ regressionResult.data.id }` } contributionToRSquared={ contributionToRSquared } />
-        }
+        { regressionContent }
       </div>
     );
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const { project, datasets, conditionals, regressionSelector, datasetSelector, fieldProperties } = state;
-  const { progress, error, regressionResult, contributionToRSquared, regressionType } = regressionSelector;
-  const dependentVariable = fieldProperties.items.find((property) => property.id == regressionSelector.dependentVariableId);
+  const { progress, error, regressionResult, contributionToRSquared } = regressionSelector;
+  const { independentVariablesIds, dependentVariableId, regressionType } = ownProps;
+
+  const dependentVariable = fieldProperties.items.find((property) => property.id == dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;
 
   const independentVariableNames = fieldProperties.items
-    .filter((property) => regressionSelector.independentVariableIds.indexOf(property.id) >= 0)
+    .filter((property) => independentVariablesIds.indexOf(property.id) >= 0)
     .map((independentVariable) => independentVariable.name);
 
   return {
@@ -155,7 +164,7 @@ function mapStateToProps(state) {
     interactionTermIds: regressionSelector.interactionTermIds,
     datasetId: datasetSelector.datasetId,
     regressionResult: regressionResult,
-    contributionToRSquared: contributionToRSquared
+    contributionToRSquared: contributionToRSquared,
   };
 }
 
