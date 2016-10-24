@@ -5,6 +5,7 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
+import ProjectCreateModal from '../Base/ProjectCreateModal';
 import RaisedButton from '../Base/RaisedButton';
 import ProjectButton from '../Base/ProjectButton';
 import Footer from './Footer';
@@ -14,6 +15,14 @@ import MacroConnectionsLogo from '../../../assets/MacroConnections_Logo_K_RGB.sv
 
 
 export class HomePage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      projectCreateModalOpen: false
+    };
+  }
+
   componentWillMount() {
     const { projects, userId } = this.props;
     this.props.fetchPreloadedProjects(userId);
@@ -37,12 +46,14 @@ export class HomePage extends Component {
     }
   }
 
+  closeProjectSettingsModal = () => {
+    this.setState({ projectCreateModalOpen: false });
+  }
+
   _onUploadClick() {
     const { user, userId, push, createProject } = this.props;
     if (user.isAuthenticated) {
-      const projectTitle = 'Project Title';
-      const projectDescription = 'Project Description'
-      createProject(userId, projectTitle, projectDescription);
+      this.setState({ projectCreateModalOpen: true });
     } else {
       push('/register')
     }
@@ -90,7 +101,7 @@ export class HomePage extends Component {
               </div>
             }
             <div className={ styles.section + ' ' + styles.contentSection }>
-              <div className={ styles.sectionHeader }>Intelligent Data Ingestion</div>
+              <div className={ styles.sectionHeader }>1. Intelligent Data Ingestion</div>
               <div className={ styles.sectionContent }>
                 <img className={ styles.gif } src="/assets/images/ingest.gif"/>
                 <div className={ styles.textBox }>
@@ -100,7 +111,7 @@ export class HomePage extends Component {
             </div>
 
             <div className={ styles.section + ' ' + styles.contentSection }>
-              <div className={ styles.sectionHeader }>Semi-automated Visualization Recommendation</div>
+              <div className={ styles.sectionHeader }>2. Semi-automated Visualization Recommendation</div>
               <div className={ styles.sectionContent }>
                 <img className={ styles.gif } src="/assets/images/visualization.gif"/>
                 <div className={ styles.textBox }>
@@ -110,7 +121,7 @@ export class HomePage extends Component {
             </div>
 
             <div className={ styles.section + ' ' + styles.contentSection }>
-              <div className={ styles.sectionHeader }>Point-and-click Statistical Analysis</div>
+              <div className={ styles.sectionHeader }>3. Point-and-click Statistical Analysis</div>
               <div className={ styles.sectionContent }>
                 <img className={ styles.gif } src="/assets/images/analysis.gif"/>
                 <div className={ styles.textBox }>
@@ -120,7 +131,7 @@ export class HomePage extends Component {
             </div>
 
             <div className={ styles.section + ' ' + styles.contentSection }>
-              <div className={ styles.sectionHeader }>WYSIWYG Visual Narratives</div>
+              <div className={ styles.sectionHeader }>4. WYSIWYG Visual Narratives</div>
               <div className={ styles.sectionContent }>
                 <img className={ styles.gif } src="/assets/images/compose.gif"/>
                 <div className={ styles.textBox }>
@@ -169,6 +180,12 @@ export class HomePage extends Component {
               </div>
             </div>
           </div>
+          { this.state.projectCreateModalOpen &&
+            <ProjectCreateModal
+              userId={ userId }
+              closeAction={ this.closeProjectSettingsModal }
+            />
+          }
           <Footer />
         </div>
       </DocumentTitle>

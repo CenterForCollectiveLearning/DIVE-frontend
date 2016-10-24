@@ -19,7 +19,7 @@ export class ProjectListPage extends Component {
     super(props);
 
     this.state = {
-      projectCreateModalOpen: true,
+      projectCreateModalOpen: false,
       sortField: 'updateDate',
       viewMode: 'normal'
     };
@@ -48,10 +48,6 @@ export class ProjectListPage extends Component {
   _onClickCreateProject = () => {
     this.setState({ projectCreateModalOpen: true });
     const userId = this.props.userId;
-  }
-
-  _onSubmitCreateProject = () => {
-    this.props.createProject(userId, projectTitle, projectDescription);
   }
 
   onSelectProjectSortField = (sortField) => {
@@ -145,7 +141,9 @@ export class ProjectListPage extends Component {
             }
             { this.state.projectCreateModalOpen &&
               <ProjectCreateModal
-                closeAction={ this.closeProjectSettingsModal }/>
+                userId={ userId }
+                closeAction={ this.closeProjectSettingsModal }
+              />
             }
           </div>
         </div>

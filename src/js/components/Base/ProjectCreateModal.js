@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { updateProject, deleteProject } from '../../actions/ProjectActions.js';
+import { createProject } from '../../actions/ProjectActions.js';
 import styles from '../App/App.sass';
 
 import BlockingModal from './BlockingModal';
@@ -14,21 +14,21 @@ class ProjectCreateModal extends Component {
     super(props);
 
     this.state = {
-      projectName: this.props.projectName,
+      projectTitle: this.props.projectTitle,
       projectDescription: this.props.projectDescription
     };
   }
 
   submit() {
-    const {updateProject, closeAction } = this.props;
-    const { projectName, projectDescription } = this.state;
+    const { createProject, closeAction, userId } = this.props;
+    const { projectTitle, projectDescription } = this.state;
 
-    // updateProject(, { title: projectName, description: projectDescription });
+    createProject(userId, projectTitle, projectDescription);
     closeAction();
   }
 
   enteredProjectNameInput(event) {
-    this.setState({ projectName: event.target.value });
+    this.setState({ projectTitle: event.target.value });
   }
 
   enteredProjectDescriptionInput(event) {
@@ -37,7 +37,7 @@ class ProjectCreateModal extends Component {
 
   render() {
     const { closeAction } = this.props;
-    const { projectName, projectDescription } = this.state;
+    const { projectTitle, projectDescription } = this.state;
 
     var footer =
       <div className={ styles.footerContent }>
@@ -51,19 +51,19 @@ class ProjectCreateModal extends Component {
       <BlockingModal
         scrollable={ false }
         closeAction={ this.props.closeAction }
-        heading="Project Create"
+        heading="Create a Project"
         footer={ footer }>
         <div className={ styles.fillContainer }>
           <div className={ styles.controlSection }>
-            <div className={ styles.label }>Project Name</div>
+            <div className={ styles.label }>Title</div>
             <Input
               type="text"
-              placeholder={ projectName }
+              placeholder={ projectTitle }
               autofocus={ true }
               onChange={ this.enteredProjectNameInput.bind(this) }/>
           </div>
           <div className={ styles.controlSection }>
-            <div className={ styles.label }>Project Description</div>
+            <div className={ styles.label }>Description</div>
             <TextArea
               type="textarea"
               placeholder={ projectDescription }
@@ -76,13 +76,14 @@ class ProjectCreateModal extends Component {
 }
 
 ProjectCreateModal.propTypes = {
-  projectName: PropTypes.string,
+  userId: PropTypes.number.isRequired,
+  projectTitle: PropTypes.string,
   projectDescription: PropTypes.string,
   closeAction: PropTypes.func
 };
 
 ProjectCreateModal.defaultProps = {
-  projectName: 'Project Title',
+  projectTitle: 'Project Title',
   projectDescription: 'Project Description'
 }
 
@@ -90,4 +91,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { updateProject, deleteProject })(ProjectCreateModal);
+export default connect(mapStateToProps, { createProject })(ProjectCreateModal);
