@@ -111,7 +111,7 @@ export class ExploreSidebar extends Component {
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupHeader }>
                   <div className={ styles.fieldGroupLabel }>Categorical</div>
-                  { fieldIds.length &&
+                  { (fieldIds.length > 0) &&
                     <div className={ styles.fieldGroupAction }
                       onClick={ (v) => this.clickClearKeyFromQueryString('fieldIds') }>
                       Deselect All
