@@ -1,6 +1,42 @@
 @import '../../../css/mixins.sass'
 @import '../../../css/flexbox.sass'
 
+.signupForm
+  form
+    display: flex
+    .emailInput
+      height: 40px
+      padding-left: 14px
+      padding-right: 10px
+      width: 250px
+
+      background-color: white
+      border: 1px solid #CDCDCD
+      border-radius: 2px
+
+      outline: none
+      font-family: 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
+
+      font-size: 14px
+      line-height: 40px
+    .submitButton
+      border-radius: 2px
+      cursor: pointer
+      border-width: 0
+      color: white
+      padding: 0 15px
+      background-color: $primary-accent
+      margin-left: 10px
+      font-family: 'Roboto Condensed', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
+      height: 40px
+      line-height: 40px
+      font-weight: 600
+      font-size: 20px
+      &:hover
+        background-color: $secondary-accent
+        color: $white
+
+
 .landingPage
   color: white
   overflow-y: auto
@@ -197,6 +233,10 @@
   .linkContainer
     display: flex
     margin-top: 3px
+
+    .link
+      +linkStyle(12px)
+      color: $white
 
   div
     display: inline

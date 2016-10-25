@@ -57,7 +57,7 @@ export class LandingPage extends Component {
   render() {
     const { user } = this.props;
     return (
-      <DocumentTitle title='DIVE | Landing'>
+      <DocumentTitle title='DIVE | Coming Soon'>
         <div className={ styles.fillContainer + ' ' + styles.landingPage }>
           <div className={ styles.background }>
           </div>
@@ -70,28 +70,10 @@ export class LandingPage extends Component {
                 <Logo className={ styles.logo } />
               </div>
               <div className={ styles.topRightControls }>
-                { user && user.username &&
-                  <div className={ styles.linkContainer }>
-                    <Link route="/preloaded">Preloaded Projects</Link>
-                    <Link route="/projects">Your Projects</Link>
-                    <div className={ styles.userOptions + ( this.state.userOptionsOpen ? ' ' + styles.open : '' )} >
-                      <div className={ styles.usernameAndChevron }>
-                        <span className={ styles.username }>{ user.username }</span>
-                        <div className={ styles.userOptionsMenu }>
-                          <div>Settings</div>
-                          <div onClick={ this.props.logoutUser }>Sign Out</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                }
-                { (!user || !user.username) &&
-                  <div className={ styles.linkContainer }>
-                    <Link route="/login">Log In</Link>
-                  </div>
-                }
+                <div className={ styles.linkContainer }>
+                  <a className={ styles.link } href="https://staging.usedive.com">For Beta Testers</a>
+                </div>
               </div>
-
             </div>
             <div className={ styles.centeredFill }>
               { this.props.children ||

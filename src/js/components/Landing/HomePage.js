@@ -68,38 +68,24 @@ export class HomePage extends Component {
           <div className={ styles.ctaBox }>
             <div className={ styles.primaryCopy }>
               {/* <span>Turn Data into Stories</span> */}
-              <span>Easy and powerful data exploration</span>
+              <span>Coming Soon: Easy and powerful data exploration</span>
             </div>
             <div className={ styles.secondaryCopy }>
               DIVE lets you turn data into stories within minutes, without writing a single line of code
             </div>
             <div className={ styles.ctaContainer }>
-              <RaisedButton
-                label="Upload Data"
-                primary={ true }
-                onClick={ this._onUploadClick.bind(this) }
-                className={ styles.uploadButton + ' ' + styles.primary } />
+              <div id="mc_embed_signup" className={ styles.signupForm }>
+                <form action="//usedive.us14.list-manage.com/subscribe/post?u=4635a27366f6b552e374ae581&amp;id=6f1c319666" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" noValidate>
+                	<input className={ styles.emailInput } type="email" name="EMAIL" id="mce-EMAIL" placeholder="E-mail address" required />
+                  <input className={ styles.submitButton } type="submit" value="Stay Posted" name="stayposted" id="mc-embedded-subscribe" />
+                </form>
+              </div>
             </div>
             <div className={ styles.video }>
               <iframe src="https://player.vimeo.com/video/179173590" color="#007BD7" width="600" height="340" frameBorder="0" allowFullScreen />
             </div>
           </div>
           <div className={ styles.sections + ' ' + styles.fillContainer }>
-            { (!projects.fetching && preloadedProjects.length > 0) &&
-              <div className={ styles.section + ' ' + styles.projectsContainer + ' ' + styles.contentSection }>
-                <div className={ styles.innerSection + ' ' + styles.projectTypeContainer }>
-                  <div className={ styles.sectionHeader }>Featured Projects</div>
-                  <div className={ styles.projectListContainer }>
-                    { projects.isFetching &&
-                      <div className={ styles.watermark }>Fetching projects...</div>
-                    }
-                    { preloadedProjects.slice(0, 5).map((project) =>
-                      <ProjectButton project={ project } key={ `project-button-id-${ project.id }` }/>
-                    )}
-                  </div>
-                </div>
-              </div>
-            }
             <div className={ styles.section + ' ' + styles.contentSection }>
               <div className={ styles.sectionHeader }>1. Intelligent Data Ingestion</div>
               <div className={ styles.sectionContent }>
