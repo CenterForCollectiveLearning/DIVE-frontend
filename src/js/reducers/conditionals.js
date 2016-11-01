@@ -13,7 +13,7 @@ const baseConditional = {
 
 const baseState = {
   lastUpdated: null,
-  items: [ baseConditional],
+  items: [ baseConditional ],
 }
 
 export default function conditionals(state = baseState, action) {
@@ -28,6 +28,7 @@ export default function conditionals(state = baseState, action) {
       } else {
         conditionals.splice(conditionals.length - 1, 0, action.conditional)
       }
+      conditionals.push(baseConditional)
       return { ...state, items: conditionals, lastUpdated: Date.now() };
 
     case DELETE_CONDITIONAL:

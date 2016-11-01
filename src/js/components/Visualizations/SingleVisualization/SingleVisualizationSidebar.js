@@ -12,7 +12,6 @@ import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 import RaisedButton from '../../Base/RaisedButton';
-
 import ConditionalSelector from '../../Base/ConditionalSelector';
 import BinningSelector from './BinningSelector';
 
@@ -52,6 +51,7 @@ export class SingleVisualizationSidebar extends Component {
       new Object({ ...visualizationType, selected: visualizationType.type == visualizationType })
     );
 
+    console.log('Conditionals:', conditionals);
     return (
       <Sidebar>
         { visualizationType && visualizationTypes.length > 1 &&
@@ -90,20 +90,9 @@ export class SingleVisualizationSidebar extends Component {
             config={ visualization.spec.config }
             selectBinningConfig={ selectVisualizationConfig } />
         }
-        { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
+        { conditionals.items.length != 0 && fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Filter by field">
-            { conditionals.items.map((conditional, i) =>
-              <div key={ `conditional-selector-${ i }` }>
-                <ConditionalSelector
-                  fieldId={ conditional.fieldId }
-                  combinator={ conditional.combinator }
-                  operator={ conditional.operator }
-                  value={ conditional.value }
-                  conditionalIndex={ i }
-                  fieldProperties={ fieldProperties.items }
-                  selectConditionalValue={ selectConditional }/>
-              </div>
-            )}
+            <ConditionalSelector conditionals={ conditionals } fieldProperties={ fieldProperties }/>
           </SidebarGroup>
         }
       </Sidebar>
