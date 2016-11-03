@@ -28,7 +28,9 @@ export default function conditionals(state = baseState, action) {
       } else {
         conditionals.splice(conditionals.length - 1, 0, action.conditional)
       }
-      conditionals.push(baseConditional)
+      const lastIndex = conditionals.length - 1;
+      // conditionals[lastIndex].conditionalIndex = lastIndex;
+      // conditionals.push(baseConditional)
       return { ...state, items: conditionals, lastUpdated: Date.now() };
 
     case DELETE_CONDITIONAL:

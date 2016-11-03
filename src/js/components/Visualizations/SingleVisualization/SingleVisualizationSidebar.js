@@ -51,7 +51,6 @@ export class SingleVisualizationSidebar extends Component {
       new Object({ ...visualizationType, selected: visualizationType.type == visualizationType })
     );
 
-    console.log('Conditionals:', conditionals);
     return (
       <Sidebar>
         { visualizationType && visualizationTypes.length > 1 &&

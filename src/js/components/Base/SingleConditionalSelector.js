@@ -73,6 +73,13 @@ export class SingleConditionalSelector extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { conditionalIndex, fieldId, operator, value, combinator } = nextProps;
+    this.setState({
+      conditionalIndex: conditionalIndex
+    });
+  }
+
   updateConditional = (newProps, isDefaultValue = false) => {
     const conditional = { ...this.state, ...newProps };
 
@@ -101,7 +108,7 @@ export class SingleConditionalSelector extends Component {
   }
 
   onSelectCombinator = (combinator) => {
-    this.updateConditional({ combinator: combinator });
+    this.updateConditional({ combinator: combinator }, true);
   }
 
   onSelectFieldValue = (fieldValue) => {
@@ -131,7 +138,7 @@ export class SingleConditionalSelector extends Component {
 
     return (
       <div className={ styles.fieldGroup }>
-        { conditionalIndex > 0 &&
+        { ( conditionalIndex != null && conditionalIndex > 0) &&
           <ToggleButtonGroup
             className={ styles.conditionalCombinator }
             buttonClassName={ styles.conditionalCombinatorButton }
