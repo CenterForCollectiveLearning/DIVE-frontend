@@ -4,7 +4,8 @@ import { push } from 'react-router-redux';
 
 import { removeFromQueryString, updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { setPersistedQueryString, selectConditional } from '../../../actions/CorrelationActions';
+import { setPersistedQueryString } from '../../../actions/CorrelationActions';
+import { selectConditional } from '../../../actions/ConditionalsActions';
 import styles from '../Analysis.sass';
 
 import ConditionalSelector from '../../Base/ConditionalSelector';
@@ -46,7 +47,7 @@ export class CorrelationSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, conditionals, correlationVariablesIds, electConditional } = this.props;
+    const { fieldProperties, conditionals, correlationVariablesIds, selectConditional } = this.props;
     const quantitativeVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q')
     return (
       <Sidebar selectedTab="correlation">
@@ -85,13 +86,14 @@ export class CorrelationSidebar extends Component {
         { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
           <SidebarGroup heading="Filter by field">
             { conditionals.items.map((conditional, i) =>
-              <div key={ `conditional-selector-${ i }` }>
+              <div key={ conditional.conditionalId }>
                 <ConditionalSelector
+                  conditionalIndex={ i }
+                  conditionalId={ conditional.conditionalId }
                   fieldId={ conditional.fieldId }
                   combinator={ conditional.combinator }
                   operator={ conditional.operator }
                   value={ conditional.value }
-                  conditionalIndex={ i }
                   fieldProperties={ fieldProperties.items }
                   selectConditionalValue={ selectConditional }/>
               </div>

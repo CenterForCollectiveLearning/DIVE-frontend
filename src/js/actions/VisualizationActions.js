@@ -310,10 +310,10 @@ function receiveSpecVisualizationDispatcher(json) {
     spec: json.spec,
     exported: json.exported,
     exportedSpecId: json.exportedSpecId,
-    tableData: json.visualization.table ? formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data) : [],
-    bins: json.visualization.bins,
-    visualizationData: json.visualization.visualize,
-    sampleSize: json.visualization.count,
+    tableData: json.visualization ? (json.visualization.table ? formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data) : []) : [],
+    bins: json.visualization ? json.visualization.bins : [],
+    visualizationData: json.visualization ? json.visualization.visualize : [],
+    sampleSize: json.visualization ? json.visualization.count : null,
     receivedAt: Date.now()
   };
 }

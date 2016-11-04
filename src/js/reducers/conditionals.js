@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 import {
   SELECT_CONDITIONAL,
   DELETE_CONDITIONAL,
@@ -6,6 +8,7 @@ import {
 
 const baseConditional = {
   conditionalIndex: null,
+  conditionalId: _.uniqueId('conditional_'),
   fieldId: null,
   operator: null,
   value: null
@@ -13,26 +16,27 @@ const baseConditional = {
 
 const baseState = {
   lastUpdated: null,
-  items: [ baseConditional],
+  items: [ baseConditional ],
 }
 
 export default function conditionals(state = baseState, action) {
   switch (action.type) {
     case SELECT_CONDITIONAL:
       var conditionals = state.items.slice();
-      const conditionalExists = conditionals.find((conditional) => conditional.conditionalIndex == action.conditional.conditionalIndex);
-      if (conditionalExists) {
-        conditionals = conditionals.map((conditional) =>
-          (conditional.conditionalIndex == action.conditional.conditionalIndex) ? action.conditional : conditional
-        );
-      } else {
-        conditionals.splice(conditionals.length - 1, 0, action.conditional)
+      conditionals = conditionals.map((conditional) =>
+        (conditional.conditionalId == action.conditional.conditionalId) ? action.conditional : conditional
+      );
+
+      if (action.createNewConditional) {
+        const newConditional = { ...baseConditional, conditionalId: _.uniqueId('conditional_') };
+        conditionals.push(newConditional);
       }
+
       return { ...state, items: conditionals, lastUpdated: Date.now() };
 
     case DELETE_CONDITIONAL:
       var conditionals = state.items.slice();
-      conditionals = conditionals.filter((conditional) => conditional.conditionalIndex != action.conditionalIndex);
+      conditionals = conditionals.filter((conditional) => conditional.conditionalId != action.conditionalId);
       return { ...state, items: conditionals, lastUpdated: Date.now() };
 
     case WIPE_PROJECT_STATE:

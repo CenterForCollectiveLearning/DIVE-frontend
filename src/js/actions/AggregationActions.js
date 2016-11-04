@@ -57,13 +57,6 @@ export function setPersistedQueryString(queryString) {
   }
 }
 
-export function selectConditional(conditional) {
-  return {
-    type: SELECT_CONDITIONAL,
-    conditional: conditional
-  }
-}
-
 export function selectAggregationIndependentVariable(selectedIndependentVariableId) {
   return {
     type: SELECT_AGGREGATION_INDEPENDENT_VARIABLE,

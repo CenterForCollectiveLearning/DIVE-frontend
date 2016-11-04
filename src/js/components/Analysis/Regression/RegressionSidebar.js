@@ -4,7 +4,8 @@ import { push } from 'react-router-redux';
 
 import { removeFromQueryString, updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { setPersistedQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional } from '../../../actions/RegressionActions';
+import { setPersistedQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm } from '../../../actions/RegressionActions';
+import { selectConditional } from '../../../actions/ConditionalsActions';
 import { createURL, createInteractionTermName, filterInteractionTermSelection } from '../../../helpers/helpers.js';
 
 import styles from '../Analysis.sass';
@@ -256,13 +257,14 @@ export class RegressionSidebar extends Component {
         { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
           <SidebarGroup heading="Filter by field">
             { conditionals.items.map((conditional, i) =>
-              <div key={ `conditional-selector-${ i }` }>
+              <div key={ conditional.conditionalId }>
                 <ConditionalSelector
+                  conditionalIndex={ i }
+                  conditionalId={ conditional.conditionalId }
                   fieldId={ conditional.fieldId }
                   combinator={ conditional.combinator }
                   operator={ conditional.operator }
                   value={ conditional.value }
-                  conditionalIndex={ i }
                   fieldProperties={ fieldProperties.items }
                   selectConditionalValue={ selectConditional }/>
               </div>

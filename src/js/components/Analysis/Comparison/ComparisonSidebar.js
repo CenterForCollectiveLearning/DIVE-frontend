@@ -4,7 +4,8 @@ import { push } from 'react-router-redux';
 
 import { removeFromQueryString, updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { setPersistedQueryString, selectConditional } from '../../../actions/ComparisonActions';
+import { selectConditional } from '../../../actions/ConditionalsActions';
+import { setPersistedQueryString } from '../../../actions/ComparisonActions';
 import styles from '../Analysis.sass';
 
 import ConditionalSelector from '../../Base/ConditionalSelector';
@@ -155,13 +156,14 @@ export class ComparisonSidebar extends Component {
         { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
           <SidebarGroup heading="Filter by field">
             { conditionals.items.map((conditional, i) =>
-              <div key={ `conditional-selector-${ i }` }>
+              <div key={ conditional.conditionalId }>
                 <ConditionalSelector
+                  conditionalIndex={ i }
+                  conditionalId={ conditional.conditionalId }
                   fieldId={ conditional.fieldId }
                   combinator={ conditional.combinator }
                   operator={ conditional.operator }
                   value={ conditional.value }
-                  conditionalIndex={ i }
                   fieldProperties={ fieldProperties.items }
                   selectConditionalValue={ selectConditional }/>
               </div>
