@@ -38,7 +38,7 @@ export const fullOptions = {
     }
   },
   hAxis: {
-      titleTextStyle: {
+    titleTextStyle: {
       color: "#333",
       italic: false,
       bold: true

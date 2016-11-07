@@ -233,15 +233,39 @@
   flex-wrap: wrap
   align-content: flex-start
   flex-grow: 1
+  padding-top: 15px
 
   .correlationScatterplot
-    width: 33.33%
+    width: 33.333333%
     display: flex
     flex-direction: column
     position: relative
     padding: 15px
     height: 200px
+    min-height: 200px
 
     .header
       text-align: center
       font-size: 14px
+
+  .scatterplotWithYLabel
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: center
+    height: 200px
+    min-height: 200px
+
+    .yLabel
+      position: absolute
+      left: -20px
+      transform: rotate(-90deg)
+      font-weight: 500
+      font-size: 12px
+      line-height: 12px
+
+  .xLabel
+    margin-top: 0px
+    text-align: center
+    font-weight: 500
+    font-size: 12px
