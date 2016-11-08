@@ -32,6 +32,32 @@ export class ComparisonBasePage extends Component {
     if ( shouldRecommendInitialState && fieldProperties.items.length) {
       this.setRecommendedInitialState(fieldProperties);
     }
+
+    // Handling inconsistent state, default selection of certain fields
+    this.reconcileState(nextProps);
+  }
+
+  reconcileState(nextProps) {
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, independentVariablesIds, dependentVariablesIds } = nextProps;
+
+    var newQueryStringModifier = {};
+
+    const numIndependentFields = independentVariablesIds.length;
+    if ( numIndependentFields > 2 ) {
+      newQueryStringModifier.independentVariablesIds = independentVariablesIds.slice(0, numIndependentFields - 2);
+    }
+
+    const numDependentFields = dependentVariablesIds.length;
+    if ( numDependentFields > 1 ) {
+      newQueryStringModifier.dependentVariablesIds = dependentVariablesIds.slice(0, numDependentFields - 1);
+    }
+
+    if (Object.keys(newQueryStringModifier).length > 0) {
+      const newQueryString = updateQueryString(queryObject, newQueryStringModifier);
+
+      setPersistedQueryString(newQueryString);
+      replace(`${ pathname }${ newQueryString }`);
+    }
   }
 
   setRecommendedInitialState(fieldProperties) {

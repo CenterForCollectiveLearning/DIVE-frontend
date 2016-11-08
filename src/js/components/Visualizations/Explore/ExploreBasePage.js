@@ -52,11 +52,11 @@ class ExploreBasePage extends Component {
     }
 
     // Handling inconsistent state, default selection of certain fields
-    this.reconcileState();
+    this.reconcileState(nextProps);
   }
 
-  reconcileState() {
-    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, fieldProperties, fieldIds } = this.props;
+  reconcileState(nextProps) {
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, fieldProperties, fieldIds } = nextProps;
 
     // Limit number of selected fields to three
     const numFields = fieldIds.length;
@@ -65,7 +65,7 @@ class ExploreBasePage extends Component {
       // Deselecting all but last three
 
       const newQueryString = updateQueryString(queryObject, {
-        fieldIds: fieldIds.slice(0, fieldIds.length - 2)
+        fieldIds: fieldIds.slice(0, numFields - 3)
       });
       setPersistedQueryString(newQueryString);
       replace(`${ pathname }${ newQueryString }`);
