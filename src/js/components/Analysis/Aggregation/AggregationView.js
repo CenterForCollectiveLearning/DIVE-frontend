@@ -155,6 +155,12 @@ export class AggregationView extends Component {
       ;
     }
 
+    else {
+      aggregationContent = <div className={ styles.watermark }>
+        Too many variables selected
+      </div>
+    }
+
     return (
       <div className={ styles.analysisViewContainer }>
         { aggregationContent }

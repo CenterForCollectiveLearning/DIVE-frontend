@@ -60,7 +60,7 @@ class ExploreBasePage extends Component {
 
     // Limit number of selected fields to three
     const numFields = fieldIds.length;
-    if ( numFields && numFields > 3 ) {
+    if ( numFields > 3 ) {
       // TODO Write function to create a complete replace
       // Deselecting all but last three
 

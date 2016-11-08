@@ -38,7 +38,20 @@ export class AggregationBasePage extends Component {
   }
 
   reconcileState() {
-    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, aggregateOn, aggregationFunction } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, aggregateOn, aggregationFunction, aggregationVariablesIds } = this.props;
+
+    // // Limit number of selected fields to three
+    // const numFields = aggregationVariablesIds.length;
+    // console.log('numFields:', aggregationVariablesIds, numFields);
+    // if ( numFields > 2) {
+    //   // Deselect all but last two
+    //   const newQueryString = updateQueryString(queryObject, {
+    //     aggregationVariablesIds: aggregationVariablesIds.slice(0, aggregationVariablesIds.length - 2)
+    //   });
+    //   console.log('Setting query string to:', newQueryString)
+    //   setPersistedQueryString(newQueryString);
+    //   replace(`${ pathname }${ newQueryString }`);
+    // }
 
     // Auto aggregation function selection
     if ( aggregateOn && aggregateOn !== 'count' && !aggregationFunction ) {
@@ -53,6 +66,7 @@ export class AggregationBasePage extends Component {
   setRecommendedInitialState(fieldProperties) {
     const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
 
+    console.log('Setting initial recommended state');
     const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
     setPersistedQueryString(newQueryString);
