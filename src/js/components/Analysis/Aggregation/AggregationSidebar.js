@@ -203,7 +203,7 @@ AggregationSidebar.propTypes = {
   conditionals: PropTypes.object,
   queryObject: PropTypes.object.isRequired,
   aggregationVariablesIds: PropTypes.array.isRequired,
-  aggregateOn: PropTypes.any.isRequired,
+  aggregateOn: PropTypes.any,
   aggregationFunction: PropTypes.string,
   weightVariableId: PropTypes.string,
 };

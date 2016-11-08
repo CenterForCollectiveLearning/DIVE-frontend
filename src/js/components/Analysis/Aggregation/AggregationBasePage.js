@@ -34,17 +34,28 @@ export class AggregationBasePage extends Component {
     }
 
     // Handling inconsistent state, default selection of certain fields
-    this.reconcileState();
+    this.reconcileState(nextProps);
   }
 
-  reconcileState() {
-    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, aggregateOn, aggregationFunction } = this.props;
+  reconcileState(nextProps) {
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, aggregateOn, aggregationFunction, aggregationVariablesIds } = nextProps;
+
+    var newQueryStringModifier = {};
+
+    const numFields = aggregationVariablesIds.length;
+    if ( numFields > 2 ) {
+      // Deselect all but last two
+      newQueryStringModifier.aggregationVariablesIds = aggregationVariablesIds.slice(0, numFields - 2);
+    }
 
     // Auto aggregation function selection
     if ( aggregateOn && aggregateOn !== 'count' && !aggregationFunction ) {
-      const newQueryString = updateQueryString(queryObject, {
-        aggregationFunction: 'MEAN'
-      });
+      newQueryStringModifier.aggregationFunction = 'MEAN';
+    }
+
+    if (Object.keys(newQueryStringModifier).length > 0) {
+      const newQueryString = updateQueryString(queryObject, newQueryStringModifier);
+
       setPersistedQueryString(newQueryString);
       replace(`${ pathname }${ newQueryString }`);
     }

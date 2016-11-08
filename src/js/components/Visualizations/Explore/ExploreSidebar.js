@@ -43,7 +43,6 @@ export class ExploreSidebar extends Component {
   }
 
   clickQueryStringTrackedItem = (newObj, resetState=true) => {
-    console.log(newObj);
     const { pathname, queryObject, setPersistedQueryString, push } = this.props;
     const newQueryString = updateQueryString(queryObject, newObj);
     setPersistedQueryString(newQueryString, resetState);
