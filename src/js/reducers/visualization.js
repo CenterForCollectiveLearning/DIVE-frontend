@@ -15,6 +15,28 @@ import {
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
+const LEGEND_POSITION_OPTIONS = [
+  {
+    value:'top',
+    label:'Yes'
+  },
+  {
+    value:'none',
+    label:'No'
+  }
+];
+
+const SCALE_OPTIONS = [
+  { 
+    value:'mirrorLog',
+    label:'Logarithmic'
+  },
+  { 
+    value: 'linear',
+    label: 'Linear'
+  }
+];
+
 const baseState = {
   tableData: [],
   visualizationData: [],
@@ -31,7 +53,15 @@ const baseState = {
   isSaving: false,
   isFetching: false,
   lastUpdated: null,
-  config: {}
+  configOptions: {
+    'legendPosition': LEGEND_POSITION_OPTIONS,
+    'scaleType': SCALE_OPTIONS
+  },
+  config: {
+    'hScaleType': 'linear',
+    'legendPosition': 'none',
+    'vScaleType': 'linear'
+  }
 }
 
 export default function visualization(state = baseState, action) {

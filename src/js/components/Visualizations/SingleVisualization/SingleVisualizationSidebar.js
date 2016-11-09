@@ -106,18 +106,34 @@ export class SingleVisualizationSidebar extends Component {
             )}
           </SidebarGroup>
         }
-        { (visualizationType == 'hist' || visualizationType == 'bar') &&
+        { (visualizationType == 'hist' || visualizationType == 'bar' || visualizationType == 'scatter') &&
           <SidebarGroup heading="Vertical axis scale">
               <DropDownMenu
-                value={ visualization.config.scaleType }
-                options={ [
-                  { value:'mirrorLog', label:'Logarithmic'},
-                  { value: 'null', label: 'Linear'}
-                  ] 
-                }
+                value={ visualization.config.vScaleType }
+                options={ visualization.configOptions.scaleType }
                 valueMember="value"
                 displayTextMember="label"
-                onChange={ (value) => selectVisualizationConfig('scaleType', value) }/>
+                onChange={ (value) => selectVisualizationConfig('vScaleType', value) }/>
+          </SidebarGroup>
+        }
+        { (visualizationType == 'scatter') &&
+          <SidebarGroup heading="Horizontal axis scale">
+              <DropDownMenu
+                value={ visualization.config.hScaleType }
+                options={ visualization.configOptions.scaleType }
+                valueMember="value"
+                displayTextMember="label"
+                onChange={ (value) => selectVisualizationConfig('hScaleType', value) }/>
+          </SidebarGroup>
+        }
+        { (visualizationType != 'tree' && visualizationType != 'box') &&
+          <SidebarGroup heading="Legend">
+              <DropDownMenu
+                value={ visualization.config.legendPosition }
+                options={ visualization.configOptions.legendPosition }
+                valueMember="value"
+                displayTextMember="label"
+                onChange={ (value) => selectVisualizationConfig('legendPosition', value) } />
           </SidebarGroup>
         }
       </Sidebar>

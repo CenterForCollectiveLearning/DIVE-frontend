@@ -12,8 +12,6 @@ export default class Histogram extends Component {
     var finalData = data;
 
     var options = isMinimalView ? minimalOptions : fullOptions;
-
-    console.log("scaleType", config.scaleType);
     
     if (isMinimalView) {
 
@@ -52,7 +50,7 @@ export default class Histogram extends Component {
             bold: true,
             italic: false
           },
-          scaleType: config.scaleType,
+          scaleType: config.vScaleType,
         },
         tooltip: {
           isHtml: true

@@ -329,8 +329,6 @@ export function selectVisualizationBinningConfig(config) {
 }
 
 export function selectVisualizationConfig(key, value) {
-  console.log("selectVisualizationConfig");
-  console.log(key, value);
   return {
     type: SELECT_VISUALIZATION_CONFIG,
     key: key,

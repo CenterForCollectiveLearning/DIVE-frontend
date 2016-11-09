@@ -53,10 +53,10 @@ export default class ColumnChart extends Component {
             bold: true,
             italic: false
           },
-          scaleType: config.scaleType,
+          scaleType: config.vScaleType,
         },
         legend: {
-          position: 'none'
+          position: config.legendPosition
         }
       };
     }

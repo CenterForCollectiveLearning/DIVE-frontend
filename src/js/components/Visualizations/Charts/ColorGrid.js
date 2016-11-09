@@ -12,7 +12,7 @@ var Chart = require('react-google-charts').Chart;
 export default class ColorGrid extends Component {
 
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, additionalOptions, colors, labels } = this.props;
+    const { data, fieldNames, generatingProcedure, isMinimalView, additionalOptions, colors, labels, config } = this.props;
     const preview = isMinimalView;
 
     var tableHeader = data[0];  // Skip first value
@@ -108,12 +108,14 @@ ColorGrid.propTypes = {
   isMinimalView: PropTypes.bool,
   additionalOptions: PropTypes.object,
   labels: PropTypes.object,
-  colors: PropTypes.array
+  colors: PropTypes.array,
+  config: PropTypes.object
 };
 
 ColorGrid.defaultProps = {
   isMinimalView: false,
   additionalOptions: {},
   labels: {},
-  colors: [ '#007BD7' ]
+  colors: [ '#007BD7' ],
+  config: {}
 };
