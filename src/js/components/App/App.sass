@@ -39,6 +39,31 @@
       background-color: $primary-accent-hover
       color: $white
 
+.feedbackButton
+  position: absolute
+  bottom: 0
+  right: 0
+  z-index: 20
+  width: 150px
+  +smallCaps
+  background-color: $orange
+  display: flex
+  flex-direction: row
+  flex-grow: 1
+  align-items: center
+  height: 30px
+  cursor: pointer
+  padding: 8px 15px
+  color: $white
+
+  &:hover
+    background-color: $light-orange
+
+  .smile
+    margin-left: auto
+    margin-top: -2px
+    font-size: 18px
+
 .secondaryNavToggle
   +smallCaps
   display: flex

@@ -69,7 +69,7 @@ export class CorrelationView extends Component {
 
   saveCorrelation(saveAction = true) {
     const { project, correlationResult, createExportedCorrelation } = this.props;
-    createExportedCorrelation(project.properties.id, correlationResult.data.id, correlationResult.data, correlationResult.conditionals, correlationResult.config, saveAction);
+    createExportedCorrelation(project.id, correlationResult.data.id, correlationResult.data, correlationResult.conditionals, correlationResult.config, saveAction);
   }
 
   onClickShare() {
@@ -145,7 +145,7 @@ function mapStateToProps(state) {
     datasets: datasets,
     datasetSelector: datasetSelector,
     project: project,
-    projectId: project.properties.id,
+    projectId: project.id,
     datasetId: datasetSelector.datasetId,
     correlationResult: correlationSelector.correlationResult,
     correlationVariableNames: correlationVariableNames,

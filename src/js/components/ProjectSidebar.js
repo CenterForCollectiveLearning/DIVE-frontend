@@ -67,10 +67,8 @@ export class ProjectSidebar extends Component {
     this.setState({ secondaryNavOpen: !this.state.secondaryNavOpen });
   }
 
-
   _handleTabsChange = (tab) => {
-    console.log(tab)
-    this.props.push(`/projects/${ this.props.project.properties.id }/${ tab.props.route }`);
+    this.props.push(`/projects/${ this.props.project.id }/${ tab.props.route }`);
   }
 
   _onClickLogo = () =>{
@@ -94,6 +92,8 @@ export class ProjectSidebar extends Component {
     this.setState({ projectSettingsModalOpen: false });
   }
 
+
+
   render() {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 
@@ -108,7 +108,7 @@ export class ProjectSidebar extends Component {
             </div>
             <Logo className={ styles.logo } />
           </div>
-          <div className={ styles.projectTitle }>{ project.properties.title }</div>
+          <div className={ styles.projectTitle }>{ project.title }</div>
         </div>
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange }>
           <TabGroup heading="1. DATASETS">
@@ -143,9 +143,9 @@ export class ProjectSidebar extends Component {
               </div>
               { this.state.projectSettingsModalOpen &&
                 <ProjectSettingsModal
-                  projectName={ project.properties.title }
-                  projectDescription={ project.properties.description }
-                  projectId={ project.properties.id }
+                  projectName={ project.title }
+                  projectDescription={ project.description }
+                  projectId={ project.id }
                   closeAction={ this.closeProjectSettingsModal }/>
               }
             </div>

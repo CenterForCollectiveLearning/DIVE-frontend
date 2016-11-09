@@ -136,7 +136,7 @@ function mapStateToProps(state) {
   const { project, fieldProperties, composeSelector, exportedSpecs, exportedRegressions, exportedCorrelations, documents } = state;
 
   return {
-    projectId: (project.properties.id ? `${ project.properties.id }` : null),
+    projectId: (project.id ? `${ project.id }` : null),
     composeSelector,
     exportedSpecs,
     exportedRegressions,

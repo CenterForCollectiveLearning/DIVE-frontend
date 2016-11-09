@@ -197,7 +197,7 @@ function mapStateToProps(state) {
     conditionals,
     datasets,
     datasetSelector,
-    projectId: project.properties.id,
+    projectId: project.id,
     datasetId: datasetSelector.datasetId,
     segmentationResult,
     segmentationVariableName,

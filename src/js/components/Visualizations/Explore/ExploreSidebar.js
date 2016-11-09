@@ -21,8 +21,8 @@ export class ExploreSidebar extends Component {
 
   componentWillMount() {
     const { project, datasetSelector, exploreSelector, fetchFieldPropertiesIfNeeded, queryFields, selectFieldProperty } = this.props;
-    if (project.properties.id && datasetSelector.datasetId && (exploreSelector.datasetId != datasetSelector.datasetId) && !exploreSelector.isFetching) {
-      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId, queryFields);
+    if (project.id && datasetSelector.datasetId && (exploreSelector.datasetId != datasetSelector.datasetId) && !exploreSelector.isFetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId, queryFields);
     }
 
     if (exploreSelector.fieldProperties.length && queryFields.length) {
@@ -35,7 +35,7 @@ export class ExploreSidebar extends Component {
   componentDidUpdate(previousProps) {
     const { project, datasetSelector, exploreSelector, fetchFieldPropertiesIfNeeded, queryFields, selectFieldProperty } = this.props;
 
-    const projectChanged = (previousProps.project.properties.id !== project.properties.id);
+    const projectChanged = (previousProps.project.id !== project.id);
     const datasetChanged = (previousProps.datasetSelector.datasetId !== datasetSelector.datasetId);
 
     const queryFieldsChanged = _.union(_.difference(previousProps.queryFields, queryFields), _.difference(queryFields, previousProps.queryFields));
@@ -46,8 +46,8 @@ export class ExploreSidebar extends Component {
       );
     }
 
-    if (project.properties.id && (datasetChanged || (!exploreSelector.isFetching && (exploreSelector.datasetId != datasetSelector.datasetId)))) {
-      fetchFieldPropertiesIfNeeded(project.properties.id, datasetSelector.datasetId, queryFields);
+    if (project.id && (datasetChanged || (!exploreSelector.isFetching && (exploreSelector.datasetId != datasetSelector.datasetId)))) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId, queryFields);
     }
   }
 
@@ -61,7 +61,7 @@ export class ExploreSidebar extends Component {
       selectedFieldPropertiesQueryString = selectedFieldPropertiesQueryString.reduce((a, b) => a + "&" + b);
     }
 
-    push(`/projects/${ project.properties.id }/datasets/${ datasetSelector.datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
+    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore?${ selectedFieldPropertiesQueryString }`);
   }
 
   clickRecommendationMode = (recommendationModeId) => {

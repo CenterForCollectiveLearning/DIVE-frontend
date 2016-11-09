@@ -7,17 +7,29 @@ import { logoutUser } from '../../actions/AuthActions'
 
 import Link from '../Base/Link';
 import HomePage from './HomePage';
+import { wipeProjectState } from '../../actions/ProjectActions';
 
 import Logo from '../../../assets/DIVE_logo_white.svg?name=Logo';
 
 
 export class LandingPage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      userOptionsOpen: true,
+    };
+  }
+
   componentWillMount() {
-    const { user, push } = this.props;
+    const { user, push, wipeProjectState } = this.props;
     if (user.isAuthenticated) {
       // push('/projects')
     }
+    // Wipe project on landing page
+    wipeProjectState();
   }
+
   _onClickLogo(){
     this.props.push(`/`);
   }
@@ -32,6 +44,14 @@ export class LandingPage extends Component {
       return this.props.routes[2].path;
     }
     return "";
+  }
+
+  openUserOptionsMenu = () => {
+    this.setState({ userOptionsOpen: true });
+  }
+
+  closeUserOptionsMenu = () => {
+    this.setState({ userOptionsOpen: false });
   }
 
   render() {
@@ -54,7 +74,15 @@ export class LandingPage extends Component {
                   <div className={ styles.linkContainer }>
                     <Link route="/preloaded">Preloaded Projects</Link>
                     <Link route="/projects">Your Projects</Link>
-                    <div>{ user.username }<span className={ styles.separater }>|</span><Link onClick={ this.props.logoutUser }>Sign Out</Link></div>
+                    <div className={ styles.userOptions + ( this.state.userOptionsOpen ? ' ' + styles.open : '' )} >
+                      <div className={ styles.usernameAndChevron }>
+                        <span className={ styles.username }>{ user.username }</span>
+                        <div className={ styles.userOptionsMenu }>
+                          <div>Settings</div>
+                          <div onClick={ this.props.logoutUser }>Sign Out</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 }
                 { (!user || !user.username) &&
@@ -86,4 +114,4 @@ function mapStateToProps(state) {
   return { user };
 }
 
-export default connect(mapStateToProps, { push, logoutUser })(LandingPage);
+export default connect(mapStateToProps, { wipeProjectState, push, logoutUser })(LandingPage);

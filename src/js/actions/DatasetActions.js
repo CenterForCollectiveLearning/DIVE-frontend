@@ -64,9 +64,10 @@ function requestUploadDatasetDispatcher() {
 }
 
 function progressUploadDatasetDispatcher(event) {
+  const percent = event.loaded ? ( ' ' + Math.round(event.loaded / event.total * 100) + '%') : ''
   return {
     type: PROGRESS_UPLOAD_DATASET,
-    progress: `Uploading dataset… ${ Math.round(event.loaded / event.total * 100) }%`
+    progress: `Uploading dataset…${ percent }`
   }
 }
 

@@ -7,71 +7,83 @@ import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectSt
 
 import ProjectButton from '../Base/ProjectButton';
 import RaisedButton from '../Base/RaisedButton';
+import DropDownMenu from '../Base/DropDownMenu';
 import Loader from '../Base/Loader';
 import Footer from './Footer';
 
 
 export class PreloadedProjectListPage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      sortField: 'title'
+    };
+  }
+
   componentWillMount() {
     const { projects, userId } = this.props;
     this.props.fetchPreloadedProjects(userId);
-    this.props.fetchUserProjects(userId);
   }
 
   componentWillReceiveProps(nextProps) {
-    const nextProjectId = nextProps.project.properties.id;
+    const nextProjectId = nextProps.project.id;
     const nextUserId = nextProps.userId;
 
-    if (this.props.project.properties.id != nextProjectId) {
+    if (this.props.project.id != nextProjectId) {
       this.props.wipeProjectState();
       this.props.push(`/projects/${ nextProjectId }/datasets/upload`);
     }
 
     if (this.props.userId != nextUserId) {
       nextProps.fetchPreloadedProjects(nextUserId);
-      if (nextUserId) {
-        nextProps.fetchUserProjects(nextUserId);
-      }
     }
-  }
-
-  _onUploadClick() {
-    const userId = this.props.userId;
-    const projectTitle = 'Project Title';
-    const projectDescription = 'Project Description'
-    this.props.createProject(userId, projectTitle, projectDescription);
   }
 
   render() {
     const { projects, userId, user } = this.props;
-    const { userProjects, preloadedProjects, isFetchingPreloadedProjects } = projects;
+    const { preloadedProjects, isFetchingPreloadedProjects } = projects;
 
     return (
-      <DocumentTitle title='DIVE | Projects'>
+      <DocumentTitle title='DIVE | Preloaded Projects'>
         <div className={ styles.centeredFill }>
-          <div className={ styles.ctaBox }>
-            <div className={ styles.ctaContainer }>
-              <RaisedButton
-                label="Create Project"
-                primary={ true }
-                onClick={ this._onUploadClick.bind(this) }
-                className={ styles.uploadButton } />
-            </div>
-          </div>
           { !isFetchingPreloadedProjects && preloadedProjects.length > 0 &&
             <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+              <div className={ styles.projectListTopbar }>
+                <div className={ styles.pageLabel }>Preloaded Projects</div>
+                <div className={ styles.pullRight }>
+                  <div className={ styles.sortTypeDropdownContainer }>
+                    <DropDownMenu
+                      value={ sortField }
+                      options={ [
+                        { value: 'creationDate', label: 'Created' },
+                        { value: 'title', label: 'Project Name' },
+                        { value: 'starred', label: 'Starred' },
+                      ]}
+                      valueMember='value'
+                      displayTextMember='label'
+                      prefix="Sort By"
+                      onChange={ this.onSelectProjectSortField } />
+                  </div>
+                </div>
+              </div>
               <div className={ styles.projectListContainer }>
                 { projects.isFetching &&
                   <div className={ styles.watermark }>Fetching projects...</div>
                 }
-                { preloadedProjects.reverse().map((project) =>
-                  <ProjectButton project={ project } key={ `project-button-id-${ project.id }` }/>
+                { sortedProjects.map((project) =>
+                  <ProjectButton
+                    key={ `project-button-id-${ project.id }` }
+                    project={ project }
+                    sortField={ sortField }
+                  />
                 )}
               </div>
             </div>
           }
           { !isFetchingPreloadedProjects && preloadedProjects.length == 0 &&
             <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+              <div className={ styles.projectListSidebar }></div>
               <div className={ styles.watermark }>
                 No preloaded projects exist &#x2639;
               </div>
@@ -79,7 +91,8 @@ export class PreloadedProjectListPage extends Component {
           }
           { isFetchingPreloadedProjects &&
             <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
-              <Loader text='Loading Preloaded projects' />
+              <div className={ styles.projectListSidebar }></div>
+            <Loader text='Loading Preloaded Projects' />
             </div>
           }
         </div>

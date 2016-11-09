@@ -10,7 +10,6 @@ export class DatasetHeaderCell extends Component {
   constructor (props) {
     super(props);
 
-    console.log('field types constants', FieldTypes);
     this.state = {
       fieldTypes: FieldTypes
     };
@@ -42,7 +41,7 @@ DatasetHeaderCell.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  return { projectId: state.project.properties.id };
+  return { projectId: state.project.id };
 }
 
 export default connect(mapStateToProps, { setFieldType })(DatasetHeaderCell);

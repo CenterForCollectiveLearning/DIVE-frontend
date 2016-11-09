@@ -272,7 +272,7 @@ DatasetDataRow.defaultProps = {
 function mapStateToProps(state) {
   const { project, datasetSelector } = state;
   return {
-    projectId: project.properties.id,
+    projectId: project.id,
     datasetId: datasetSelector.datasetId
   };
 }
