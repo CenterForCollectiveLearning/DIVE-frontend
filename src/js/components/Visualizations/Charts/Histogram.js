@@ -12,7 +12,7 @@ export default class Histogram extends Component {
     var finalData = data;
 
     var options = isMinimalView ? minimalOptions : fullOptions;
-    
+
     if (isMinimalView) {
 
     } else {
