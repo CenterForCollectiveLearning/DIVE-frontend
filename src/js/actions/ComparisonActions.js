@@ -1,6 +1,6 @@
+import _ from 'underscore';
+
 import {
-  SELECT_COMPARISON_INDEPENDENT_VARIABLE,
-  SELECT_COMPARISON_DEPENDENT_VARIABLE,
   REQUEST_NUMERICAL_COMPARISON,
   RECEIVE_NUMERICAL_COMPARISON,
   UPDATE_COMPARISON_INPUT,
@@ -10,33 +10,46 @@ import {
   RECEIVE_ANOVA_BOXPLOT_DATA,
   REQUEST_PAIRWISE_COMPARISON_DATA,
   RECEIVE_PAIRWISE_COMPARISON_DATA,
-  SELECT_CONDITIONAL
+  SELECT_CONDITIONAL,
+  SET_COMPARISON_QUERY_STRING
 } from '../constants/ActionTypes';
 
 import { fetch } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
 
+export function getInitialState(projectId, datasetId, fieldProperties) {
+  var categoricalItemIds = fieldProperties.filter((item) => ((item.generalType == 'c') && (!item.isId))).map((item) => item.id);
+  var quantitativeItemIds = fieldProperties.filter((item) => ((item.generalType == 'q') && (!item.isId))).map((item) => item.id);
+  var n_c = categoricalItemIds.length;
+  var n_q = quantitativeItemIds.length;
+
+  var independentVariablesIds = [];
+  var dependentVariablesIds = [];
+  if (n_c >= 1 && n_q >= 1) {
+    independentVariablesIds = _.sample(categoricalItemIds, 1);
+    dependentVariablesIds = _.sample(quantitativeItemIds, 1);
+  }
+  if (n_c == 0 && n_q >= 2) {
+    independentVariablesIds = _.sample(quantitativeItemIds, 2);
+  }
+
+  return {
+    dependentVariablesIds: dependentVariablesIds,
+    independentVariablesIds: independentVariablesIds,
+  };
+}
+
+export function setPersistedQueryString(queryString) {
+  return {
+    type: SET_COMPARISON_QUERY_STRING,
+    queryString: queryString
+  }
+}
 
 export function selectConditional(conditional) {
   return {
     type: SELECT_CONDITIONAL,
     conditional: conditional
-  }
-}
-
-export function selectIndependentVariable(selectedVariableId) {
-  return {
-    type: SELECT_COMPARISON_INDEPENDENT_VARIABLE,
-    independentVariableId: selectedVariableId,
-    selectedAt: Date.now()
-  }
-}
-
-export function selectDependentVariable(selectedVariableId) {
-  return {
-    type: SELECT_COMPARISON_DEPENDENT_VARIABLE,
-    dependentVariableId: selectedVariableId,
-    selectedAt: Date.now()
   }
 }
 

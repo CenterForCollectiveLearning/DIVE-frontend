@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
@@ -93,13 +92,14 @@ export class SingleVisualizationSidebar extends Component {
         { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
           <SidebarGroup heading="Filter by field">
             { conditionals.items.map((conditional, i) =>
-              <div key={ `conditional-selector-${ i }` }>
+              <div key={ conditional.conditionalId }>
                 <ConditionalSelector
+                  conditionalIndex={ i }
+                  conditionalId={ conditional.conditionalId }
                   fieldId={ conditional.fieldId }
                   combinator={ conditional.combinator }
                   operator={ conditional.operator }
                   value={ conditional.value }
-                  conditionalIndex={ i }
                   fieldProperties={ fieldProperties.items }
                   selectConditionalValue={ selectConditional }/>
               </div>

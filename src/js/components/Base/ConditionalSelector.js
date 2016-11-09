@@ -1,21 +1,17 @@
+import _ from 'underscore';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import styles from './ConditionalSelector.sass';
 
-import { deleteConditional } from '../../actions/ConditionalActions'
+import { deleteConditional } from '../../actions/ConditionalsActions'
 import Input from './Input';
 import DropDownMenu from './DropDownMenu';
 import ToggleButtonGroup from './ToggleButtonGroup';
 
-
-
-export default class ConditionalSelector extends Component {
+export class ConditionalSelector extends Component {
   constructor(props) {
     super(props);
-
-    this.updateConditional = this.updateConditional.bind(this);
-    this.onClickDelete = this.onClickDelete.bind(this);
 
     this.combinators = [
       {
@@ -62,7 +58,7 @@ export default class ConditionalSelector extends Component {
     ];
 
     this.state = {
-      conditionalIndex: this.props.conditionalIndex,
+      conditionalId: this.props.conditionalId,
       fieldId: this.props.fieldId || this.props.fieldnull,
       operator: this.props.operator || '==',
       value: this.props.value || null,
@@ -70,7 +66,7 @@ export default class ConditionalSelector extends Component {
     };
 
     this.baseConditional = {
-      conditionalIndex: null,
+      conditionalId: null,
       fieldId: null,
       operator: '==',
       value: null,
@@ -78,52 +74,58 @@ export default class ConditionalSelector extends Component {
     }
   }
 
-  updateConditional(newProps, isDefaultValue = false) {
+  updateConditional = (newProps, createNewConditional = false) => {
     const conditional = { ...this.state, ...newProps };
 
     this.setState(conditional);
 
-    if (!isDefaultValue || (isDefaultValue && this.state.value)) {
-      this.props.selectConditionalValue(conditional);
-    }
+    console.log(createNewConditional)
+    this.props.selectConditionalValue(conditional, createNewConditional);
+
+    // Whether to create add new conditional
+
+    // if (!isDefaultValue || (isDefaultValue && this.state.value)) {
+    //   this.props.selectConditionalValue(conditional);
+    // }
   }
 
-  onSelectField(fieldId) {
+  onSelectField = (fieldId) => {
     const selectedField = this.props.fieldProperties.find((item) => item.id == fieldId);
-    const value = selectedField.generalType == 'c' ? "ALL_VALUES" : "";
+    const value = "ALL_VALUES";
     const operator = "==";
-    this.updateConditional({ fieldId: fieldId, value: value, operator: operator }, true);
+    this.updateConditional({ fieldId: fieldId, value: value, operator: operator });
   }
 
-  onClickDelete() {
-    const { conditionalIndex, deleteConditional } = this.props;
-    deleteConditional(conditionalIndex);
+  onClickDelete = () => {
+    const { deleteConditional } = this.props;
+    const { conditionalId } = this.state;
+    deleteConditional(conditionalId);
     this.state = this.baseConditional;
   }
 
-  onSelectOperator(operator) {
+  onSelectOperator = (operator) => {
     this.updateConditional({ operator: operator });
   }
 
-  onSelectCombinator(combinator) {
+  onSelectCombinator = (combinator) => {
     this.updateConditional({ combinator: combinator });
   }
 
-  onSelectFieldValue(fieldValue) {
-    if (fieldValue != ""){
-      this.updateConditional({ value: fieldValue });
-    }
+  onSelectFieldValue = (fieldValue) => {
+    const createNewConditional = (this.state.value == 'ALL_VALUES' && fieldValue != null);;
+    this.updateConditional({ value: fieldValue }, createNewConditional);
   }
 
-  onTypeFieldValue(e) {
-    if (e.target.value != ""){
-      this.updateConditional({ value: Number.parseInt(e.target.value) });
-    }
+  onTypeFieldValue = (e) => {
+    const val = e.target.value;
+    const createNewConditional = (this.state.value == 'ALL_VALUES' && val != null);
+    this.updateConditional({ value: Number.parseInt(val) }, createNewConditional);
   }
+
 
   render() {
-    const { fieldProperties, selectConditionalValue } = this.props;
-    const { fieldId, operator, value, combinator, conditionalIndex } = this.state;
+    const { fieldProperties, selectConditionalValue, conditionalIndex } = this.props;
+    const { fieldId, operator, value, combinator, conditionalId } = this.state;
     const selectedField = fieldProperties.find((item) => item.id == fieldId);
     const fieldValues = selectedField ? selectedField.values : [];
 
@@ -143,7 +145,7 @@ export default class ConditionalSelector extends Component {
             toggleItems={ combinators }
             valueMember="value"
             displayTextMember="label"
-            onChange={ this.onSelectCombinator.bind(this) } />
+            onChange={ this.onSelectCombinator } />
         }
 
         <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
@@ -154,7 +156,7 @@ export default class ConditionalSelector extends Component {
             options={ fieldProperties }
             valueMember="id"
             displayTextMember="name"
-            onChange={ this.onSelectField.bind(this) }/>
+            onChange={ this.onSelectField }/>
 
           <div style={{ display: 'flex' }}>
             <DropDownMenu
@@ -164,7 +166,7 @@ export default class ConditionalSelector extends Component {
               width="20%"
               valueMember="value"
               displayTextMember="label"
-              onChange={ this.onSelectOperator.bind(this) }/>
+              onChange={ this.onSelectOperator }/>
 
             { (!selectedField || selectedField.generalType == 'c') &&
               <DropDownMenu
@@ -174,14 +176,14 @@ export default class ConditionalSelector extends Component {
                 width="80%"
                 valueMember="value"
                 displayTextMember="label"
-                onChange={ this.onSelectFieldValue.bind(this) }/>
+                onChange={ this.onSelectFieldValue }/>
             }
             { selectedField && (selectedField.generalType == 'q' || selectedField.generalType == 't') &&
               <Input
                 className={ styles.conditionalInput + (fieldId == null ? ' ' + styles.disabledInput : '') }
                 placeholder={ `${ value }` }
                 type="text"
-                onChange={ this.onTypeFieldValue.bind(this) }/>
+                onChange={ this.onTypeFieldValue }/>
             }
           </div>
         </div>

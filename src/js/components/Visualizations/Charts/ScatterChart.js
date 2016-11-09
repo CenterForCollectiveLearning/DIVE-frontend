@@ -26,18 +26,17 @@ export default class ScatterChart extends Component {
       }
     }
 
+    options.hAxis.title = labels && labels.x ? labels.x : data[0][0];
+    options.vAxis.title = labels && labels.y ? labels.y : data[0][1];
+    options.colors = colors;
+
     options = {
       ...options,
       ...additionalOptions,
     }
 
-    options.hAxis.title = labels && labels.x ? labels.x : data[0][0];
-    options.vAxis.title = labels && labels.y ? labels.y : data[0][1];
-    options.colors = colors;
-
     return (
       <Chart
-        key={ chartId }
         graph_id={ chartId }
         chartType="ScatterChart"
         options={ options }
