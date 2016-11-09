@@ -1,3 +1,38 @@
 {
-  "stage": 0
+  "passPerPreset": true,
+  "presets": [
+    { "plugins": [ "transform-runtime" ] },
+    { "passPerPreset": false,
+      "presets": [
+        "es2015",
+        "stage-0",
+        "react"
+      ]
+    }
+  ],
+  "plugins": [
+    "transform-runtime",
+    "add-module-exports",
+    "transform-decorators-legacy",
+    "transform-react-display-name",
+    "react-hot-loader/babel"
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        "typecheck",
+        ["react-transform", {
+            "transforms": [{
+              "transform": "react-transform-hmr",
+                "imports": ["react"],
+                "locals": ["module"]
+              },{
+              "transform": "react-transform-catch-errors",
+                "imports": ["react", "redbox-react"]
+              }
+            ]
+        }]
+      ]
+    }
+  }
 }

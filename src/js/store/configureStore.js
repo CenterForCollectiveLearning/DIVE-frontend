@@ -18,7 +18,7 @@ import createHistory from 'history/lib/createBrowserHistory';
 
 const loggerMiddleware = createLogger({
   level: 'info',
-  collapsed: false
+  collapsed: true
 });
 
 export default function configureStore(initialState) {

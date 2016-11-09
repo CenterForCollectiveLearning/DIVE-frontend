@@ -52,9 +52,3 @@ SidebarGroup.defaultProps = {
   className: "",
   heading: ""
 }
-
-function mapStateToProps(state) {
-  return {};
-}
-
-export default connect(mapStateToProps, {} )(SidebarGroup);

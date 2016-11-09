@@ -2,12 +2,16 @@ var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+
+var host = '0.0.0.0';
+var port = 3009;
+
 var devFlagPlugin = new webpack.DefinePlugin({
   __DEV__: JSON.stringify(JSON.parse(process.env.DEBUG || 'false'))
 });
 
 function getEntrySources(sources) {
-  sources.push('webpack-dev-server/client?http://0.0.0.0:3009')
+  sources.push(`webpack-dev-server/client?http://${ host }:${ port }`)
   sources.push('webpack/hot/only-dev-server')
   return sources;
 }
@@ -31,7 +35,7 @@ module.exports = {
       './src/css/app.css'
   ]),
   output: {
-    path: __dirname + '/dist',
+    path: path.join(__dirname, '/dist'),
     publicPath: '/',
     filename: 'bundle.js',
     hot: true
@@ -56,7 +60,10 @@ module.exports = {
     noParse: /node_modules\/quill\/dist/,
     loaders: [
       { test: require.resolve("react"), loader: "imports?shim=es6-shim/es6-shim&sham=es6-shim/es6-sham" },
-      { test: /\.js$/, loaders: ['react-hot', 'babel'], exclude: /node_modules/ },
+      { test: /\.js$/, loader: 'babel',
+        cacheDirectory: true,
+        include: [ path.join(__dirname, 'src/js') ],
+        exclude: /node_modules/ },
       { test: /\.css$/, loader: ExtractTextPlugin.extract('css-loader?module!cssnext-loader') },
       { test: /\.sass$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?indentedSyntax&outputStyle=expanded&sourceMap' },
       { test: /\.less$/,  loader: "style!css!less" },
