@@ -24,6 +24,7 @@ export default class ComposeVisualizationPreviewBlock extends Component {
           fieldNameToColor={ fieldNameToColor }
           visualizationTypes={ spec.vizTypes }
           spec={ spec }
+          config={ spec.config }
           data={ spec.data }
           isMinimalView={ true }
           showHeader={ true } />

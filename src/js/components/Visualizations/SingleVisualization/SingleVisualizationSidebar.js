@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { selectSingleVisualizationVisualizationType, selectSingleVisualizationSortOrder, selectSingleVisualizationSortField, selectVisualizationConfig } from '../../../actions/VisualizationActions';
+import { selectSingleVisualizationVisualizationType, selectSingleVisualizationSortOrder, selectSingleVisualizationSortField, selectVisualizationBinningConfig, selectVisualizationConfig } from '../../../actions/VisualizationActions';
 import { selectConditional } from '../../../actions/ConditionalsActions';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import styles from '../Visualizations.sass';
@@ -38,7 +38,7 @@ export class SingleVisualizationSidebar extends Component {
   }
 
   render() {
-    const { conditionals, fieldProperties, selectSingleVisualizationVisualizationType, selectSingleVisualizationSortField, selectSingleVisualizationSortOrder, selectConditional, selectVisualizationConfig, filters, visualization } = this.props;
+    const { conditionals, fieldProperties, selectSingleVisualizationVisualizationType, selectSingleVisualizationSortField, selectSingleVisualizationSortOrder, selectConditional, selectVisualizationBinningConfig, selectVisualizationConfig, filters, visualization } = this.props;
     const { visualizationType } = visualization;
 
     if (!visualization.lastUpdated) {
@@ -87,7 +87,37 @@ export class SingleVisualizationSidebar extends Component {
         { visualizationType == 'hist' &&
           <BinningSelector
             config={ visualization.spec.config }
-            selectBinningConfig={ selectVisualizationConfig } />
+            selectBinningConfig={ selectVisualizationBinningConfig } />
+        }
+        { (visualizationType == 'hist' || visualizationType == 'bar' || visualizationType == 'scatter') &&
+          <SidebarGroup heading="Vertical axis scale">
+              <DropDownMenu
+                value={ visualization.config.vScaleType }
+                options={ visualization.configOptions.scaleType }
+                valueMember="value"
+                displayTextMember="label"
+                onChange={ (value) => selectVisualizationConfig('vScaleType', value) }/>
+          </SidebarGroup>
+        }
+        { (visualizationType == 'scatter') &&
+          <SidebarGroup heading="Horizontal axis scale">
+              <DropDownMenu
+                value={ visualization.config.hScaleType }
+                options={ visualization.configOptions.scaleType }
+                valueMember="value"
+                displayTextMember="label"
+                onChange={ (value) => selectVisualizationConfig('hScaleType', value) }/>
+          </SidebarGroup>
+        }
+        { (visualizationType == 'bar') &&
+          <SidebarGroup heading="Legend">
+              <DropDownMenu
+                value={ visualization.config.legendPosition }
+                options={ visualization.configOptions.legendPosition }
+                valueMember="value"
+                displayTextMember="label"
+                onChange={ (value) => selectVisualizationConfig('legendPosition', value) } />
+          </SidebarGroup>
         }
         { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
           <SidebarGroup heading="Filter by field">
@@ -136,5 +166,6 @@ export default connect(mapStateToProps, {
   selectSingleVisualizationSortField,
   fetchFieldPropertiesIfNeeded,
   selectConditional,
+  selectVisualizationBinningConfig,
   selectVisualizationConfig
 })(SingleVisualizationSidebar);

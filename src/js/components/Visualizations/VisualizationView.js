@@ -53,6 +53,7 @@ export default class VisualizationView extends Component {
                   containerClassName={ styles.visualizationContainer }
                   visualizationTypes={ visualizationTypes }
                   fieldNameToColor={ fieldNameToColor }
+                  config={ visualization.config }
                   spec={ visualization.spec }
                   bins={ visualization.bins }
                   data={ visualization.visualizationData }

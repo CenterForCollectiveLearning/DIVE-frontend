@@ -119,7 +119,6 @@ export class HomePage extends Component {
                 </div>
               </div>
             </div>
-
             <div className={ styles.section + ' ' + styles.contentSection }>
               <div className={ styles.sectionHeader }>3. Point-and-click Statistical Analysis</div>
               <div className={ styles.sectionContent }>
@@ -129,7 +128,6 @@ export class HomePage extends Component {
                 </div>
               </div>
             </div>
-
             <div className={ styles.section + ' ' + styles.contentSection }>
               <div className={ styles.sectionHeader }>4. WYSIWYG Visual Narratives</div>
               <div className={ styles.sectionContent }>
@@ -139,7 +137,6 @@ export class HomePage extends Component {
                 </div>
               </div>
             </div>
-
             <div className={ styles.section + ' ' + styles.contentSection + ' ' + styles.aboutContainer }>
               <div className={ styles.sectionHeader }>DIVE Development Team</div>
               <div className={ styles.sectionContent }>
@@ -192,11 +189,8 @@ export class HomePage extends Component {
     );
   }
 }
-
-
 function mapStateToProps(state) {
   const { project, projects, user } = state;
   return { project, projects, user, userId: user.id };
 }
-
 export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, push })(HomePage);
