@@ -44,6 +44,7 @@ export default class ComposeBlockVisualization extends Component {
       fieldNameToColor={ fieldNameToColor }
       spec={ spec }
       data={ spec.data }
+      config={ spec.config }
       isMinimalView={ false }
       showHeader={ false }/>
 

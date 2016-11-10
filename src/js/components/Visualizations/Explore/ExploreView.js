@@ -81,7 +81,7 @@ export class ExploreView extends Component {
     push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore/${ specId }`);
   }
 
-  saveVisualization = (specId, specData) => {
+  saveVisualization = (specId, specData, config) => {
     const { project, createExportedSpec } = this.props;
     createExportedSpec(project.id, specId, specData, [], {}, true);
   }
