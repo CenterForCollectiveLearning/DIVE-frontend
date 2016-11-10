@@ -89,23 +89,6 @@ export class SingleVisualizationSidebar extends Component {
             config={ visualization.spec.config }
             selectBinningConfig={ selectVisualizationBinningConfig } />
         }
-        { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
-          <SidebarGroup heading="Filter by field">
-            { conditionals.items.map((conditional, i) =>
-              <div key={ conditional.conditionalId }>
-                <ConditionalSelector
-                  conditionalIndex={ i }
-                  conditionalId={ conditional.conditionalId }
-                  fieldId={ conditional.fieldId }
-                  combinator={ conditional.combinator }
-                  operator={ conditional.operator }
-                  value={ conditional.value }
-                  fieldProperties={ fieldProperties.items }
-                  selectConditionalValue={ selectConditional }/>
-              </div>
-            )}
-          </SidebarGroup>
-        }
         { (visualizationType == 'hist' || visualizationType == 'bar' || visualizationType == 'scatter') &&
           <SidebarGroup heading="Vertical axis scale">
               <DropDownMenu
@@ -126,7 +109,7 @@ export class SingleVisualizationSidebar extends Component {
                 onChange={ (value) => selectVisualizationConfig('hScaleType', value) }/>
           </SidebarGroup>
         }
-        { (visualizationType != 'tree' && visualizationType != 'box') &&
+        { (visualizationType == 'bar') &&
           <SidebarGroup heading="Legend">
               <DropDownMenu
                 value={ visualization.config.legendPosition }
@@ -134,6 +117,23 @@ export class SingleVisualizationSidebar extends Component {
                 valueMember="value"
                 displayTextMember="label"
                 onChange={ (value) => selectVisualizationConfig('legendPosition', value) } />
+          </SidebarGroup>
+        }
+        { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
+          <SidebarGroup heading="Filter by field">
+            { conditionals.items.map((conditional, i) =>
+              <div key={ conditional.conditionalId }>
+                <ConditionalSelector
+                  conditionalIndex={ i }
+                  conditionalId={ conditional.conditionalId }
+                  fieldId={ conditional.fieldId }
+                  combinator={ conditional.combinator }
+                  operator={ conditional.operator }
+                  value={ conditional.value }
+                  fieldProperties={ fieldProperties.items }
+                  selectConditionalValue={ selectConditional }/>
+              </div>
+            )}
           </SidebarGroup>
         }
       </Sidebar>
