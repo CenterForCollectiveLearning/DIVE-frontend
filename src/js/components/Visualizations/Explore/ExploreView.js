@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { fetchDatasets } from '../../../actions/DatasetActions';
-import { clearVisualization, updateVisualizationStats, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
+import { sortSpecsByFunction, getValidSpecLevelsFromNumFields, clearVisualization, updateVisualizationStats, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
 import { fetchExportedVisualizationSpecs } from '../../../actions/ComposeActions';
 import { useWhiteFontFromBackgroundHex } from '../../../helpers/helpers';
 
@@ -18,18 +18,24 @@ import Visualization from '../Visualization';
 import VisualizationBlock from './VisualizationBlock';
 
 export class ExploreView extends Component {
-
   componentWillMount() {
-    const { datasetSelector, datasets, project, specs, exploreSelector, clearVisualization, fetchSpecs, fetchDatasets } = this.props;
+    const { datasetSelector, datasets, fieldProperties, project, specs, exploreSelector, clearVisualization, fieldIds, recommendationMode, fetchSpecs, fetchDatasets } = this.props;
+    const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = exploreSelector;
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
 
     if (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(project.id);
     }
 
-    if (project.id && datasetSelector.datasetId && exploreSelector.fieldProperties.length && notLoadedAndNotFetching) {
-      for (var level of [ 0, 1, 2, 3 ]) {
-        fetchSpecs(project.id, datasetSelector.datasetId, exploreSelector.fieldProperties, exploreSelector.recommendationTypes[level]);
+    const numFields = fieldIds.length;
+    const selectedFieldProperties = fieldProperties.items.filter((property) => fieldIds.indexOf(property.id) > -1);
+    var isValidSpecLevel = getValidSpecLevelsFromNumFields(numFields, recommendationMode);
+
+    if (project.id && datasetSelector.datasetId && fieldProperties.loaded) {
+      for (var i in isFetchingSpecLevel) {
+        if (!isFetchingSpecLevel[i] && !loadedSpecLevel[i] && isValidSpecLevel[i]) {
+          fetchSpecs(project.id, datasetSelector.datasetId, selectedFieldProperties, recommendationTypes[i]);
+        }
       }
     }
 
@@ -37,24 +43,27 @@ export class ExploreView extends Component {
   }
 
   componentDidUpdate(previousProps) {
-    const { datasetSelector, datasets, project, specs, exploreSelector, exportedSpecs, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = this.props;
+    const { datasetSelector, datasets, fieldIds, project, specs, fieldProperties, exploreSelector, exportedSpecs, recommendationMode, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = this.props;
+    const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = exploreSelector;
+
     const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
-    const exploreSelectorChanged = (exploreSelector.updatedAt !== previousProps.exploreSelector.updatedAt);
     const projectChanged = (previousProps.project.id !== project.id);
     const fieldPropertiesSelected = exploreSelector.fieldProperties.find((prop) => prop.selected) != undefined;
-    const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = exploreSelector;
+
 
     if (projectChanged || (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
       fetchDatasets(project.id);
     }
 
-    const numFields = exploreSelector.fieldProperties.filter((property) => property.selected).length;
+    const numFields = fieldIds.length;
+    const selectedFieldProperties = fieldProperties.items.filter((property) => fieldIds.indexOf(property.id) > -1);
+    var isValidSpecLevel = getValidSpecLevelsFromNumFields(numFields, recommendationMode);
 
-    if (project.id && datasetSelector.datasetId && exploreSelector.fieldProperties.length) {
+    if (project.id && datasetSelector.datasetId && fieldProperties.loaded) {
       for (var i in isFetchingSpecLevel) {
-        if (!isFetchingSpecLevel[i] && !loadedSpecLevel[i] && exploreSelector.isValidSpecLevel[i]) {
-          fetchSpecs(project.id, datasetSelector.datasetId, exploreSelector.fieldProperties, exploreSelector.recommendationTypes[i]);
+        if (!isFetchingSpecLevel[i] && !loadedSpecLevel[i] && isValidSpecLevel[i]) {
+          fetchSpecs(project.id, datasetSelector.datasetId, selectedFieldProperties, recommendationTypes[i]);
         }
       }
     }
@@ -72,19 +81,24 @@ export class ExploreView extends Component {
     push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore/${ specId }`);
   }
 
-  saveVisualization = (specId, specData) => {
+  saveVisualization = (specId, specData, config) => {
     const { project, createExportedSpec } = this.props;
     createExportedSpec(project.id, specId, specData, [], {}, true);
   }
 
-
   render() {
-    const { filters, datasets, fieldNameToColor, datasetSelector, filteredVisualizationTypes, exploreSelector, specs, exportedSpecs, selectSortingFunction } = this.props;
-    const { fieldProperties, isFetchingSpecLevel, isValidSpecLevel, loadedSpecLevel, progressByLevel, selectedRecommendationMode } = exploreSelector;
+    const { filters, datasets, fieldNameToColor, fieldProperties, datasetSelector, filteredVisualizationTypes, exploreSelector, specs, exportedSpecs, recommendationMode, fieldIds, sortBy, selectSortingFunction } = this.props;
+    const { isFetchingSpecLevel, loadedSpecLevel, progressByLevel } = exploreSelector;
     const isFetching = _.any(isFetchingSpecLevel);
 
-    var selectedFieldProperties = fieldProperties
-      .filter((property) => property.selected).map((property) => property.name);
+    console.log('sortBy', sortBy);
+    var sortSpecs = function(specA, specB) {
+      return sortSpecsByFunction(sortBy, specA, specB);
+    };
+
+    const numFields = fieldIds.length;
+    var isValidSpecLevel = getValidSpecLevelsFromNumFields(fieldIds.length, recommendationMode);
+    const selectedFieldProperties = fieldProperties.items.filter((property) => fieldIds.indexOf(property.id) > -1);
 
     const filteredSpecs = specs.items.filter((spec) =>
       (filteredVisualizationTypes.length == 0) || filteredVisualizationTypes.some((filter) =>
@@ -92,16 +106,18 @@ export class ExploreView extends Component {
       )
     );
 
+    const sortedSpecs = filteredSpecs.sort(sortSpecs);
+
     const areFieldsSelected = selectedFieldProperties.length > 0;
-    const baselineSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'baseline');
-    const subsetSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'subset');
-    const exactSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'exact');
-    const expandedSpecs = filteredSpecs.filter((spec) => spec.recommendationType == 'expanded');
+    const baselineSpecs = sortedSpecs.filter((spec) => spec.recommendationType == 'baseline');
+    const subsetSpecs = sortedSpecs.filter((spec) => spec.recommendationType == 'subset');
+    const exactSpecs = sortedSpecs.filter((spec) => spec.recommendationType == 'exact');
+    const expandedSpecs = sortedSpecs.filter((spec) => spec.recommendationType == 'expanded');
 
     let pageHeader;
     let helperText;
     if (areFieldsSelected) {
-      pageHeader = <span>Visualizations of <ColoredFieldItems fields={ selectedFieldProperties } /></span>
+      pageHeader = <span>Visualizations of <ColoredFieldItems fields={ selectedFieldProperties.map((field) => field.name) } /></span>
       helperText = 'exploreSelectedFields'
     } else {
       pageHeader = <span>Default Descriptive Visualizations</span>
@@ -113,7 +129,7 @@ export class ExploreView extends Component {
         <div className={ styles.innerSpecsContainer }>
           <HeaderBar header={ pageHeader } helperText={ helperText } />
           <div className={ styles.specContainer }>
-            { !isFetching && filteredSpecs.length == 0 &&
+            { !isFetching && sortedSpecs.length == 0 &&
               <div className={ styles.watermark }>No visualizations</div>
             }
             { isValidSpecLevel[0] && !(loadedSpecLevel[0] && exactSpecs.length == 0) &&
@@ -248,16 +264,20 @@ ExploreView.propTypes = {
   datasets: PropTypes.object.isRequired,
   datasetSelector: PropTypes.object.isRequired,
   filteredVisualizationTypes: PropTypes.array.isRequired,
-  exportedSpecs: PropTypes.object.isRequired
+  exportedSpecs: PropTypes.object.isRequired,
+  fieldIds: PropTypes.array.isRequired,
+  recommendationMode: PropTypes.string,
+  sortBy: PropTypes.string.isRequired
 };
 
 function mapStateToProps(state) {
-  const { project, filters, specs, exploreSelector, fieldProperties, datasets, datasetSelector, exportedSpecs } = state;
+  const { project, filters, specs, fieldProperties, exploreSelector, datasets, datasetSelector, exportedSpecs } = state;
   return {
     project,
     filters,
     specs,
     exploreSelector,
+    fieldProperties,
     fieldNameToColor: fieldProperties.fieldNameToColor,
     datasets,
     datasetSelector,

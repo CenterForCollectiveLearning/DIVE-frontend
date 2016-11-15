@@ -15,7 +15,6 @@
   border: 1px solid $ui-line-grey
   border-radius: 2px
   margin-bottom: 10px
-  padding:
   background-color: $white
   color: $black
   font-size: 12px
@@ -39,7 +38,7 @@
       opacity: 0.5
 
       &.starred
-        color: orange
+        color: $primary-accent
         opacity: 0.6
 
     &:hover i
@@ -80,6 +79,7 @@
           flex-direction: row
           padding: 11px 0
           align-items: center
+          flex-grow: 1
 
           .item
             display: flex
@@ -117,24 +117,6 @@
     justify-content: center
     width: 35px
 
-    &:after
-      content: "︿"
-      font-weight: bold
-      position: relative
-      top: -3px
-
-    &:hover
-      background-color: $ui-header-grey
-
-      &:after
-        content: "﹀"
-        top: 3px
-
-      .dropdown
-        opacity: 1
-        pointer-events: auto
-        user-select: text
-
     .dropdown
       position: absolute
       opacity: 0
@@ -153,10 +135,31 @@
 
       .dropdownOption
         padding: 8px 12px
+        cursor: pointer
 
         &:hover
           background-color: $primary-accent
           color: white
+
+    &:after
+      content: "︿"
+      font-weight: bold
+      position: relative
+      top: -3px
+
+    &:hover
+      background-color: $ui-header-grey
+
+      &:after
+        content: "﹀"
+        top: 3px
+
+      .dropdown
+        opacity: 1
+        pointer-events: auto
+        user-select: text
+
+
 
   &.showDatasets
     .projectButtonTop

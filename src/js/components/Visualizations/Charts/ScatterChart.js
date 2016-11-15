@@ -8,30 +8,35 @@ var Chart = require('react-google-charts').Chart;
 export default class ScatterChart extends Component {
 
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, colors, labels, additionalOptions } = this.props;
+    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, colors, labels, additionalOptions, config } = this.props;
 
     var options = isMinimalView ? minimalOptions : fullOptions;
 
     options = {
       ...options,
+      hAxis: {
+        scaleType: config.hScaleType
+      },
       legend: {
         ...options.legend,
         position: 'none'
+      },
+      vAxis: {
+        scaleType: config.vScaleType
       }
-    }
-
-    options = {
-      ...options,
-      ...additionalOptions,
     }
 
     options.hAxis.title = labels && labels.x ? labels.x : data[0][0];
     options.vAxis.title = labels && labels.y ? labels.y : data[0][1];
     options.colors = colors;
 
+    options = {
+      ...options,
+      ...additionalOptions,
+    }
+
     return (
       <Chart
-        key={ chartId }
         graph_id={ chartId }
         chartType="ScatterChart"
         options={ options }
@@ -50,12 +55,14 @@ ScatterChart.propTypes = {
   isMinimalView: PropTypes.bool,
   additionalOptions: PropTypes.object,
   labels: PropTypes.object,
-  colors: PropTypes.array
+  colors: PropTypes.array,
+  config: PropTypes.object
 };
 
 ScatterChart.defaultProps = {
   isMinimalView: false,
   additionalOptions: {},
   labels: {},
-  colors: [ '#007BD7' ]
+  colors: [ '#007BD7' ],
+  config: {}
 };

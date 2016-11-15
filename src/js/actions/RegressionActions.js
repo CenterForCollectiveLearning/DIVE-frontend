@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 import {
   SELECT_REGRESSION_TYPE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
@@ -15,11 +17,36 @@ import {
   RECEIVE_CREATED_SAVED_REGRESSION,
   REQUEST_CREATE_EXPORTED_REGRESSION,
   RECEIVE_CREATED_EXPORTED_REGRESSION,
-  SELECT_CONDITIONAL
+  SELECT_CONDITIONAL,
+  SET_REGRESSION_QUERY_STRING
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
+
+export function getInitialState(projectId, datasetId, fieldProperties) {
+  var categoricalItemIds = fieldProperties.filter((item) => ((item.generalType == 'c') && (!item.isId))).map((item) => item.id);
+  var quantitativeItemIds = fieldProperties.filter((item) => ((item.generalType == 'q') && (!item.isId))).map((item) => item.id);
+  var n_c = categoricalItemIds.length;
+  var n_q = quantitativeItemIds.length;
+
+  var dependentVariableId = _.sample(quantitativeItemIds, 1) || _.sample(categoricalItemIds, 3);
+  var independentVariablesIds = [ ...quantitativeItemIds.filter((id) => id != dependentVariableId) ];
+  var regressionType = 'linear';
+
+  return {
+    regressionType: regressionType,
+    dependentVariableId: dependentVariableId,
+    independentVariablesIds: independentVariablesIds
+  }
+}
+
+export function setPersistedQueryString(queryString) {
+  return {
+    type: SET_REGRESSION_QUERY_STRING,
+    queryString: queryString
+  }
+}
 
 export function selectConditional(conditional) {
   return {

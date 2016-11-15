@@ -68,7 +68,9 @@ export class ProjectSidebar extends Component {
   }
 
   _handleTabsChange = (tab) => {
-    this.props.push(`/projects/${ this.props.project.id }/${ tab.props.route }`);
+    if (tab.props.value !== this._getSelectedTab()) {
+      this.props.push(`/projects/${ this.props.project.id }/${ tab.props.route }`);
+    }
   }
 
   _onClickLogo = () =>{
@@ -110,12 +112,11 @@ export class ProjectSidebar extends Component {
           </div>
           <div className={ styles.projectTitle }>{ project.title }</div>
         </div>
-        <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange }>
+        <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange } >
           <TabGroup heading="1. DATASETS">
             <Tab label="Upload" value="upload" route={ `datasets/upload` } />
             <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
             <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } disabled={ !datasets.items.length }/>
-            <Tab label="Clean" value="clean" route={ `datasets${ datasetId ? `/${ datasetId }/clean` : '/combine' }` } disabled={ true }/>
           </TabGroup>
           <TabGroup heading="2. VISUALIZATIONS">
             <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
@@ -125,7 +126,6 @@ export class ProjectSidebar extends Component {
             <Tab label="Comparison" value="comparison" route={ `datasets/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>
             <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
             <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
-            <Tab label="Segmentation" value="segmentation" route={ `datasets/${ datasetId }/analyze/segmentation` } disabled={ !datasetId }/>
           </TabGroup>
           <TabGroup heading="4. STORIES">
             <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>

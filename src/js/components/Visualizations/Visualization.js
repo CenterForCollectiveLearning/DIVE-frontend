@@ -20,11 +20,11 @@ export default class Visualization extends Component {
     super(props);
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     window.addEventListener('resize', this.handleResize);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     window.removeEventListener('resize', this.handleResize);
   }
 
@@ -41,7 +41,7 @@ export default class Visualization extends Component {
   }
 
   render() {
-    const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields } = this.props;
+    const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields, config } = this.props;
     const { args, meta } = spec;
     const chartId = `${ this.props.chartId || spec.id  }${ ( sortIndex ? '-' + sortIndex : '') }`;
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
@@ -185,7 +185,8 @@ export default class Visualization extends Component {
                 data={ finalDataArray }
                 colors={ colors }
                 labels={ labels }
-                isMinimalView={ isMinimalView }/>
+                isMinimalView={ isMinimalView }
+                config = { config }/>
             }
             { (defaultVisualizationType == 'hist') &&
               <Histogram
@@ -194,7 +195,8 @@ export default class Visualization extends Component {
                 bins={ bins }
                 colors={ colors }
                 labels={ labels }
-                isMinimalView={ isMinimalView }/>
+                isMinimalView={ isMinimalView }
+                config = { config }/>
             }
             { (defaultVisualizationType == 'bar') &&
               <ColumnChart
@@ -202,7 +204,8 @@ export default class Visualization extends Component {
                 data={ finalDataArray }
                 colors={ colors }
                 labels={ labels }
-                isMinimalView={ isMinimalView }/>
+                isMinimalView={ isMinimalView }
+                config = { config }/>
             }
             { (defaultVisualizationType == 'stackedbar' ) &&
               <StackedColumnChart
@@ -210,7 +213,8 @@ export default class Visualization extends Component {
                 data={ finalDataArray }
                 colors={ colors }
                 labels={ labels }
-                isMinimalView={ isMinimalView }/>
+                isMinimalView={ isMinimalView }
+                config = { config }/>
             }
             { (defaultVisualizationType == 'grid' ) &&
               <ColorGrid
@@ -218,7 +222,8 @@ export default class Visualization extends Component {
                 data={ finalDataArray }
                 colors={ colors }
                 labels={ labels }
-                isMinimalView={ isMinimalView }/>
+                isMinimalView={ isMinimalView }
+                config = { config }/>
             }
             { (defaultVisualizationType == 'scatter' ) &&
               <ScatterChart
@@ -226,7 +231,8 @@ export default class Visualization extends Component {
                 data={ finalDataArray }
                 colors={ colors }
                 labels={ labels }
-                isMinimalView={ isMinimalView }/>
+                isMinimalView={ isMinimalView }
+                config = { config }/>
             }
             { (defaultVisualizationType == 'line' ) &&
               <LineChart
@@ -234,7 +240,8 @@ export default class Visualization extends Component {
                 data={ finalDataArray }
                 colors={ colors }
                 labels={ labels }
-                isMinimalView={ isMinimalView }/>
+                isMinimalView={ isMinimalView }
+                config = { config }/>
             }
             { defaultVisualizationType == 'pie' &&
               <PieChart
@@ -242,7 +249,8 @@ export default class Visualization extends Component {
                 data={ finalDataArray }
                 colors={ colors }
                 labels={ labels }
-                isMinimalView={ isMinimalView }/>
+                isMinimalView={ isMinimalView }
+                config = { config }/>
             }
             { defaultVisualizationType == 'tree' &&
               <TreeMap
@@ -251,7 +259,8 @@ export default class Visualization extends Component {
                 data={ finalDataArray }
                 colors={ colors }
                 labels={ labels }
-                isMinimalView={ isMinimalView }/>
+                isMinimalView={ isMinimalView }
+                config = { config }/>
             }
           </div>
       </div>
@@ -273,7 +282,8 @@ Visualization.propTypes = {
   visualizationTypes: PropTypes.array,
   bins: PropTypes.array,
   sortOrders: PropTypes.array,
-  sortFields: PropTypes.array
+  sortFields: PropTypes.array,
+  config: PropTypes.object
 };
 
 Visualization.defaultProps = {
@@ -287,5 +297,6 @@ Visualization.defaultProps = {
   visualizationTypes: [],
   sortOrders: [],
   sortFields: [],
-  fieldNameToColor: {}
+  fieldNameToColor: {},
+  config: {}
 };

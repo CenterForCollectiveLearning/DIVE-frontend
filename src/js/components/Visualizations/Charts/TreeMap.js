@@ -8,7 +8,7 @@ var Chart = require('react-google-charts').Chart;
 export default class TreeMap extends Component {
 
   render() {
-    const { data, generatingProcedure, isMinimalView, chartId, parent, colors, labels } = this.props;
+    const { data, generatingProcedure, isMinimalView, chartId, parent, colors, labels, config } = this.props;
 
     // Adding in dummy parent value
     const headerRow = data[0];
@@ -75,12 +75,14 @@ TreeMap.propTypes = {
   isMinimalView: PropTypes.bool,
   options: PropTypes.object,
   labels: PropTypes.object,
-  colors: PropTypes.array
+  colors: PropTypes.array,
+  config: PropTypes.object
 };
 
 TreeMap.defaultProps = {
   isMinimalView: false,
   options: {},
   labels: {},
-  colors: [ '#007BD7' ]
+  colors: [ '#007BD7' ],
+  config: {}
 };

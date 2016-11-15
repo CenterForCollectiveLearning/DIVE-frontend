@@ -7,7 +7,7 @@ var Chart = require('react-google-charts').Chart;
 
 export default class BoxPlot extends Component {
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, colors, labels, additionalOptions } = this.props;
+    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, colors, labels, additionalOptions, config } = this.props;
 
     // Data
     var firstRow = [
@@ -101,12 +101,14 @@ BoxPlot.propTypes = {
   isMinimalView: PropTypes.bool,
   additionalOptions: PropTypes.object,
   labels: PropTypes.object,
-  colors: PropTypes.array
+  colors: PropTypes.array,
+  config: PropTypes.object
 };
 
 BoxPlot.defaultProps = {
   isMinimalView: false,
   additionalOptions: {},
   labels: {},
-  colors: [ '#007BD7' ]
+  colors: [ '#007BD7' ],
+  config: {}
 };

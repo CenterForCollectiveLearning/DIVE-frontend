@@ -32,9 +32,10 @@ import {
   SELECT_SINGLE_VISUALIZATION_SORT_ORDER,
   SELECT_SINGLE_VISUALIZATION_SORT_FIELD,
   SELECT_CONDITIONAL,
-  SELECT_VISUALIZATION_CONFIG,
+  SELECT_VISUALIZATION_BINNING_CONFIG,
   SET_EXPLORE_QUERY_STRING,
-  SELECT_RECOMMENDATION_MODE
+  SELECT_RECOMMENDATION_MODE,
+  SELECT_VISUALIZATION_CONFIG
 } from '../constants/ActionTypes';
 
 import _ from 'underscore';
@@ -67,6 +68,56 @@ const specLevelToAction = [
     fail: FAILED_RECEIVE_EXPANDED_SPECS
   },
 ]
+
+export function getInitialState(projectId, datasetId, fieldProperties) {
+  return {
+    recommendationMode: 'regular',
+    sortBy: 'relevance'
+  };
+}
+
+export function sortSpecsByFunction(sortingFunction, specA, specB) {
+  const scoreObjectSpecA = specA.scores.find((score) => score.type == sortingFunction);
+  const scoreObjectSpecB = specB.scores.find((score) => score.type == sortingFunction);
+
+  if (!scoreObjectSpecA && scoreObjectSpecB) {
+    return 1; // a < b
+  }
+
+  if (scoreObjectSpecA && !scoreObjectSpecB) {
+    return -1;
+  }
+
+  if (!scoreObjectSpecA && !scoreObjectSpecB) {
+    return 0;
+  }
+
+  if (scoreObjectSpecA.score == scoreObjectSpecB.score) {
+    return 0;
+  }
+
+  return (scoreObjectSpecA.score > scoreObjectSpecB.score) ? -1 : 1;
+};
+
+export function getValidSpecLevelsFromNumFields(numSelectedFields, selectedRecommendationMode) {
+  var isValidSpecLevel = [ false, false, false, false ];
+  if (numSelectedFields == 0) {
+    isValidSpecLevel[0] = true;  // Exact
+  }
+  if (numSelectedFields >= 1) {
+    isValidSpecLevel[2] = true;  // Individual
+    if (selectedRecommendationMode == 'expanded') {
+      isValidSpecLevel[3] = true  // Expanded
+    }
+  }
+  if (numSelectedFields >= 2) {
+    isValidSpecLevel[0] = true;  // Exact
+  }
+  if (numSelectedFields >= 3) {
+    isValidSpecLevel[1] = true;  // Subset
+  }
+  return isValidSpecLevel;
+}
 
 function requestUpdateVisualizationStatsDispatcher(selectedRecommendationLevel) {
   return {
@@ -152,8 +203,7 @@ function receiveSpecsDispatcher(params, json) {
   };
 }
 
-export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommendationType = null) {
-  const selectedFieldProperties = fieldProperties.filter((property) => property.selected);
+export function fetchSpecs(projectId, datasetId, selectedFieldProperties, recommendationType = null) {
   const selectedRecommendationType = recommendationType ? recommendationType.id : null;
   const selectedRecommendationLevel = recommendationType ? recommendationType.level : null;
 
@@ -161,9 +211,7 @@ export function fetchSpecs(projectId, datasetId, fieldProperties = [], recommend
     .map((property) =>
       new Object({
         'field_id': property.id,
-        'agg_fn': property.aggregations ?
-          property.aggregations.find((aggregation) => aggregation.selected).value
-          : undefined
+        'agg_fn': undefined  // TODO Restore functionality eventually
       })
     );
 
@@ -263,10 +311,10 @@ function receiveSpecVisualizationDispatcher(json) {
     spec: json.spec,
     exported: json.exported,
     exportedSpecId: json.exportedSpecId,
-    tableData: json.visualization.table ? formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data) : [],
-    bins: json.visualization.bins,
-    visualizationData: json.visualization.visualize,
-    sampleSize: json.visualization.count,
+    tableData: json.visualization ? (json.visualization.table ? formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data) : []) : [],
+    bins: json.visualization ? json.visualization.bins : [],
+    visualizationData: json.visualization ? json.visualization.visualize : [],
+    sampleSize: json.visualization ? json.visualization.count : null,
     receivedAt: Date.now()
   };
 }
@@ -320,10 +368,18 @@ export function selectConditional(conditional) {
   }
 }
 
-export function selectVisualizationConfig(config) {
+export function selectVisualizationBinningConfig(config) {
+  return {
+    type: SELECT_VISUALIZATION_BINNING_CONFIG,
+    config: config
+  }
+}
+
+export function selectVisualizationConfig(key, value) {
   return {
     type: SELECT_VISUALIZATION_CONFIG,
-    config: config
+    key: key,
+    value: value
   }
 }
 
@@ -381,28 +437,10 @@ export function setShareWindow(shareWindow) {
   }
 }
 
-export function setExploreQueryString(query) {
-  var queryString = '';
-
-  Object.keys(query).forEach(
-    function (fullKey, index, array) {
-      const key = fullKey.slice(0, -2);
-      var fieldString = '';
-      if (Array.isArray(query[fullKey])) {
-        query[fullKey].forEach((c, i, a) =>
-          fieldString = fieldString + `&${ key }[]=${ c }`
-        )
-      } else {
-        fieldString = `&${ key }[]=${ query[fullKey] }`;
-      }
-      queryString = queryString + fieldString;
-    }
-  );
-
-  queryString = queryString.replace('&', '?');
-
+export function setPersistedQueryString(queryString, resetState=true) {
   return {
     type: SET_EXPLORE_QUERY_STRING,
-    queryString: queryString
+    queryString: queryString,
+    resetState: resetState
   }
 }

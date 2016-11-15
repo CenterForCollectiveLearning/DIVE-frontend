@@ -70,6 +70,22 @@
       color: $white
       box-shadow: inset 1px 1px 2px 0 rgba(0, 0, 0, 0.28)
 
+  &.blueAction
+    border-color: $primary-accent
+    color: $primary-accent
+    &:hover
+      background-color: $primary-accent
+      color: white
+
+  // Regular
+  &.blueActive
+    &.active
+      background-color: transparent
+      border-color: $primary-accent
+      color: $primary-accent
+    &:hover
+      color: $primary-accent
+
   &.normalHeight
     height: 35px
     line-height: 35px

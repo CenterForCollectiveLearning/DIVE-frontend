@@ -7,7 +7,7 @@ var Chart = require('react-google-charts').Chart;
 
 export default class Histogram extends Component {
   render() {
-    const { data, bins, fieldNames, generatingProcedure, isMinimalView, chartId, additionalOptions, colors, labels } = this.props;
+    const { data, bins, fieldNames, generatingProcedure, isMinimalView, chartId, additionalOptions, colors, labels, config } = this.props;
 
     var finalData = data;
 
@@ -49,7 +49,8 @@ export default class Histogram extends Component {
             color: '#333',
             bold: true,
             italic: false
-          }
+          },
+          scaleType: config.vScaleType,
         },
         tooltip: {
           isHtml: true
@@ -91,12 +92,14 @@ Histogram.propTypes = {
   isMinimalView: PropTypes.bool,
   additionalOptions: PropTypes.object,
   labels: PropTypes.object,
-  colors: PropTypes.array
+  colors: PropTypes.array,
+  config: PropTypes.object
 };
 
 Histogram.defaultProps = {
   isMinimalView: false,
   additionalOptions: {},
   labels: {},
-  colors: [ '#007BD7' ]
+  colors: [ '#007BD7' ],
+  config: {}
 };

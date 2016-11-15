@@ -8,7 +8,7 @@ var Chart = require('react-google-charts').Chart;
 export default class PieChart extends Component {
 
   render() {
-    const { data, generatingProcedure, isMinimalView, chartId, colors, labels, additionalOptions  } = this.props;
+    const { data, generatingProcedure, isMinimalView, chartId, colors, labels, additionalOptions, config  } = this.props;
 
     const finalData = data.map((row) =>
       [`${ row[0] }`, row[1]]
@@ -36,12 +36,14 @@ PieChart.propTypes = {
   isMinimalView: PropTypes.bool,
   additionalOptions: PropTypes.object,
   labels: PropTypes.object,
-  colors: PropTypes.array
+  colors: PropTypes.array,
+  config: PropTypes.object
 };
 
 PieChart.defaultProps = {
   isMinimalView: false,
   additionalOptions: {},
   labels: {},
-  colors: [ '#007BD7' ]
+  colors: [ '#007BD7' ],
+  config: {}
 };

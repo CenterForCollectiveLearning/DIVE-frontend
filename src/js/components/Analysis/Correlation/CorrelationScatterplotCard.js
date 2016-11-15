@@ -18,6 +18,12 @@ export default class CorrelationScatterplotCard extends Component {
         top: '5%',
         width: '70%',
         height: '80%'
+      },
+      hAxis: {
+        title: ''
+      },
+      vAxis: {
+        title: ''
       }
     };
 
@@ -25,15 +31,20 @@ export default class CorrelationScatterplotCard extends Component {
       <Card header="Correlation scatterplots">
         <div className={ styles.correlationScatterplots }>
           { data.map((scatterplotData, i) =>
-            <div className={ styles.correlationScatterplot } key={ `scatterplot-${ scatterplotData.x }-${ scatterplotData.y }` }>
-              <div className={ styles.header }>
-                { scatterplotData.x + ' vs. ' + scatterplotData.y }
+            <div className={ styles.correlationScatterplot } key={ `scatterplot-${ i }` }>
+              <div className={ styles.scatterplotWithYLabel }>
+                <div className={ styles.yLabel }>
+                  { scatterplotData.y }
+                </div>
+                <ScatterChart
+                  chartId={ `scatterplot-${ i }` }
+                  data={ scatterplotData.data }
+                  additionalOptions={ additionalOptions }
+                />
               </div>
-              <ScatterChart
-                chartId={ `scatterplot-${ i }` }
-                data={ scatterplotData.data }
-                additionalOptions={ additionalOptions }
-              />
+              <div className={ styles.xLabel }>
+                { scatterplotData.x }
+              </div>
             </div>
           )}
         </div>

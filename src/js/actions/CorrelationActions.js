@@ -1,3 +1,5 @@
+import _ from 'underscore'
+
 import {
   SELECT_CORRELATION_VARIABLE,
   REQUEST_CORRELATION,
@@ -10,11 +12,33 @@ import {
   RECEIVE_CREATED_SAVED_CORRELATION,
   REQUEST_CREATE_EXPORTED_CORRELATION,
   RECEIVE_CREATED_EXPORTED_CORRELATION,
-  SELECT_CONDITIONAL
+  SELECT_CONDITIONAL,
+  SET_CORRELATION_QUERY_STRING
 } from '../constants/ActionTypes';
 
 import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
+
+export function getInitialState(projectId, datasetId, fieldProperties) {
+  var quantitativeItemIds = fieldProperties.filter((item) => (item.generalType == 'q' && !item.isId)).map((item) => item.id)
+  var n_q = quantitativeItemIds.length;
+  var selectedVariablesIds = [];
+
+  var max_samples = 3
+  var num_samples = Math.min(n_q, max_samples);
+  selectedVariablesIds = _.sample(quantitativeItemIds, 3);
+
+  return {
+    correlationVariablesIds: selectedVariablesIds
+  }
+}
+
+export function setPersistedQueryString(queryString) {
+  return {
+    type: SET_CORRELATION_QUERY_STRING,
+    queryString: queryString
+  }
+}
 
 export function selectConditional(conditional) {
   return {
