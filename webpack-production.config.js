@@ -59,8 +59,8 @@ module.exports = {
         exclude: /node_modules/ },
       { test: /\.css$/, exclude: /\.useable\.css$/, loader: ExtractTextPlugin.extract('css-loader?module!cssnext-loader') },
       { test: /\.useable\.css$/, loader: "style/useable!css" },
-      { test: /\.sass$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?indentedSyntax&outputStyle=expanded&sourceMap' },
-      { test: /\.less$/,  loader: "style!css!less" },
+      { test: /\.sass$/, loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?indentedSyntax&outputStyle=expanded&sourceMap') },
+      { test: /\.less$/,  loader: ExtractTextPlugin.extract('style', 'css!less') },
       { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url?limit=10000&minetype=application/font-woff" },
       { test: /\.(ttf|eot)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file" },
       { test: /\.svg(\?.*)?$/, loader: 'babel!svg-react' +
