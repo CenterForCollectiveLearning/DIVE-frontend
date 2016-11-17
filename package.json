@@ -99,7 +99,7 @@
     "redbox-react": "^1.3.0",
     "sass-loader": "^4.0.2",
     "string-replace-loader": "^1.0.3",
-    "style-loader": "^0.12.3",
+    "style-loader": "^0.13.1",
     "svg-react-loader": "^0.3.7",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.0",
