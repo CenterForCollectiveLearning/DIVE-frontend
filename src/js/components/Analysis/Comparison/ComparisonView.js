@@ -148,7 +148,7 @@ export class ComparisonView extends Component {
               anovaData={ anovaResult }
             />
           </Card>
-          { pairwiseComparisonData.rows && pairwiseComparisonData.rows.length > 0 &&
+          { pairwiseComparisonData && pairwiseComparisonData.rows && pairwiseComparisonData.rows.length > 0 &&
             <PairwiseComparisonCard
               pairwiseComparisonData={ pairwiseComparisonData }
             />
