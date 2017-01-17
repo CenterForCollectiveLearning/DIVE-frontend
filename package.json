@@ -7,6 +7,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@blueprintjs/core": "^1.6.0",
     "autoprefixer-loader": "^3.1.0",
     "canvg-browser": "^1.0.0",
     "component-file-picker": "^0.2.1",
@@ -30,6 +31,7 @@
     "moment": "^2.14.1",
     "node-sass": "^3.10.0",
     "react": "^15.4.2",
+    "react-addons-css-transition-group": "^15.4.2",
     "react-color": "^2.2.6",
     "react-contenteditable": "^1.1.0",
     "react-cookie": "^0.4.5",

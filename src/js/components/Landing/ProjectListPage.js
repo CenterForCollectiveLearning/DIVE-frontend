@@ -5,6 +5,7 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
+import { Menu, MenuDivider, MenuItem, Popover, Position } from "@blueprintjs/core";
 import ProjectCreateModal from '../Base/ProjectCreateModal';
 import ProjectButton from '../Base/ProjectButton';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
@@ -79,6 +80,7 @@ export class ProjectListPage extends Component {
             <div className={ styles.projectListTopbar }>
               <div className={ styles.pageLabel }>Your Projects</div>
               <div className={ styles.pullRight }>
+                <button type="button" className="pt-button pt-icon-add">Default button</button>
                 <RaisedButton
                   label="+ Create Project"
                   buttonStyle="blueAction"
@@ -95,6 +97,9 @@ export class ProjectListPage extends Component {
                   separated={ false }
                   onChange={ this.onSelectProjectViewMode } /> */}
                 <div className={ styles.sortTypeDropdownContainer }>
+                {/* <Popover content={<Menu>...</Menu>} position={Position.RIGHT_TOP}>
+                  <Button iconName="share" text="Open in..." />
+                </Popover> */}
                   <DropDownMenu
                     value={ sortField }
                     options={ [
