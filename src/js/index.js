@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 import { Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux'
 
+import { FocusStyleManager } from '@blueprintjs/core';
+
 import configureStore from './store/configureStore';
 
 import routes from './routes'
@@ -20,7 +22,11 @@ if (window.__env.NODE_ENV == "PRODUCTION") {
 }
 window.ReactGA = ReactGA;
 
+// Tap event support
 injectTapEventPlugin();
+
+// Focus management
+FocusStyleManager.onlyShowFocusOnTabs();
 
 const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);

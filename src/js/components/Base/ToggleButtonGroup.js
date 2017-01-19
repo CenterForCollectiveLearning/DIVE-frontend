@@ -10,23 +10,38 @@ export default class ToggleButtonGroup extends Component {
     const stringifiedExternalSelectedItems = externalSelectedItems ? externalSelectedItems.map((item) => `${item}`) : null;
 
     return (
-      <div className={ styles.toggleButtonGroup + (column ? ' ' + styles.column : '') + (className ? ' ' + className : '') }>
+      <div className={
+        'pt-button-group' +
+        ( separated ? ' pt-vertical pt-align-left' : '' ) +
+        ( className ? ' ' + className : '' ) +
+        ( expand ? (' pt-fill') : '' )
+      }>
         { toggleItems.map((item) =>
-          <ToggleButton
+          <button
             key={ `toggle-${item[valueMember]}` }
-            className={ buttonClassName + ( expand ? (' ' + styles.expand) : '')}
-            altText={ altTextMember ? item[altTextMember] : item[displayTextMember] }
+            className={
+              'pt-button' +
+
+              ( item.disabled ? ' pt-disabled' : '') +
+              ( item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) ? ' pt-active' : '')
+            }
             color={ colorMember ? item[colorMember] : null }
-            content={ item[displayTextMember] }
-            imageName={ imageNameMember ? `/assets/${item[imageNameMember]}${imageNameSuffix}` : null }
-            onChange={ onChange }
-            isDisabled={ item.disabled }
-            isSelected={ item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) || false }
             separated={ separated }
+            onClick={ () => onChange(item[valueMember].toString()) }
             splitMenu={ splitMenuItemsMember ? item[splitMenuItemsMember] : [] }
             selectMenuItem={ selectMenuItem }
-            value={ item[valueMember].toString() }
-            onDelete={ onDelete } />
+            onDelete={ onDelete }
+          >
+            { imageNameMember ?
+              <img
+                src={ imageNameMember ? `/assets/${item[imageNameMember]}${imageNameSuffix}` : null  }
+                alt={ altTextMember ? item[altTextMember] : item[displayTextMember] } />
+              : this.props.content
+            }
+            { !imageNameMember &&
+              item[displayTextMember]
+            }
+          </button>
         )}
       </div>
     );
@@ -48,12 +63,10 @@ ToggleButtonGroup.propTypes = {
   selectMenuItem: PropTypes.func,
   separated: PropTypes.bool,
   expand: PropTypes.bool,
-  column: PropTypes.bool,
   externalSelectedItems: PropTypes.array,
   onDelete: PropTypes.func
 };
 
 ToggleButtonGroup.defaultProps = {
-  column: false,
   expand: true
 }

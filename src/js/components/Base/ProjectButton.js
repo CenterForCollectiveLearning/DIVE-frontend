@@ -69,7 +69,7 @@ class ProjectButton extends Component {
     const showDatasets = (viewMode == 'expanded' && numDatasets > 0);
     if (this.state.deleted) { return ( <div/> )};
     return (
-      <div className={ styles.projectButton + ( showDatasets ? ' ' + styles.showDatasets : '') } onClick={ this.onClickProjectButton }>
+      <div className={ 'pt-card ' + styles.projectButton + ( showDatasets ? ' ' + styles.showDatasets : '') } onClick={ this.onClickProjectButton }>
         <div className={ styles.starContainer } onClick={ this.onClickStarProject }>
           <i className={ starred ? 'fa fa-star ' + styles.starred : 'fa fa-star-o' }></i>
         </div>

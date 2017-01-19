@@ -8,7 +8,6 @@ import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectSt
 import { Menu, MenuDivider, MenuItem, Popover, Position } from "@blueprintjs/core";
 import ProjectCreateModal from '../Base/ProjectCreateModal';
 import ProjectButton from '../Base/ProjectButton';
-import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
 import Loader from '../Base/Loader';
@@ -73,6 +72,20 @@ export class ProjectListPage extends Component {
         return (aValue >= bValue) ? (aValue > bValue ? sortOrder : 0) : -sortOrder;
       });
 
+    const compassMenu = (
+        <Menu>
+            <MenuItem iconName="graph" text="Graph" />
+            <MenuItem iconName="map" text="Map" />
+            <MenuItem iconName="th" text="Table" shouldDismissPopover={false} />
+            <MenuItem iconName="zoom-to-fit" text="Nucleus" disabled={true} />
+            <MenuDivider />
+            <MenuItem iconName="cog" text="Settings...">
+                <MenuItem iconName="add" text="Add new application" disabled={true} />
+                <MenuItem iconName="remove" text="Remove application" />
+            </MenuItem>
+        </Menu>
+    );
+
     return (
       <DocumentTitle title='DIVE | Projects'>
         <div className={ styles.centeredFill }>
@@ -80,26 +93,13 @@ export class ProjectListPage extends Component {
             <div className={ styles.projectListTopbar }>
               <div className={ styles.pageLabel }>Your Projects</div>
               <div className={ styles.pullRight }>
-                <button type="button" className="pt-button pt-icon-add">Default button</button>
-                <RaisedButton
-                  label="+ Create Project"
-                  buttonStyle="blueAction"
-                  onClick={ this._onClickCreateProject }
-                  className={ styles.createProjectButton } />
-                {/* <ToggleButtonGroup
-                  value={ viewMode }
-                  toggleItems={ [
-                    { value: 'default', label: 'Default' },
-                    { value: 'expanded', label: 'Expanded' },
-                  ] }
-                  displayTextMember="label"
-                  valueMember="value"
-                  separated={ false }
-                  onChange={ this.onSelectProjectViewMode } /> */}
+                <button
+                  type="button"
+                  className="pt-button pt-intent-primary pt-icon-add"
+                  onClick={ this._onClickCreateProject }>
+                  Create Project
+                </button>
                 <div className={ styles.sortTypeDropdownContainer }>
-                {/* <Popover content={<Menu>...</Menu>} position={Position.RIGHT_TOP}>
-                  <Button iconName="share" text="Open in..." />
-                </Popover> */}
                   <DropDownMenu
                     value={ sortField }
                     options={ [

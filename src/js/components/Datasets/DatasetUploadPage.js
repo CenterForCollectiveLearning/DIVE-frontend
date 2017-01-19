@@ -71,9 +71,14 @@ export class DatasetUploadPage extends Component {
                     <div className={ styles.separater }></div>
                   </div>
                 }
-                <RaisedButton label="Upload dataset" primary={ true } onClick={ this.onOpenClick } />
-                  <span>or drag and drop files here</span>
-                  <span>Supported: CSV, TSV, JSON, EXCEL</span>
+                <button
+                  type="button"
+                  className="pt-button pt-intent-primary"
+                  onClick={ this.onOpenClick }>
+                  Upload Dataset
+                </button>
+                <span>or drag and drop files here</span>
+                <span>Supported: CSV, TSV, JSON, EXCEL</span>
               </Dropzone>
             }
           </div>

@@ -1,32 +1,32 @@
-@import '../../../css/flexbox.sass'
-@import '../../../css/mixins.sass'
-
-@keyframes square-spin
-  25%
-    transform: perspective(100px) rotateX(180deg) rotateY(0)
-  50%
-      transform: perspective(100px) rotateX(180deg) rotateY(180deg)
-  75%
-      transform: perspective(100px) rotateX(0) rotateY(180deg)
-  100%
-      transform: perspective(100px) rotateX(0) rotateY(0)
-
-.loader
-  display: flex
-  flex-direction: column
-  align-items: center
-  justify-content: center
-  min-height: 200px
-
-  .square
-    animation-fill-mode: both
-    width: 30px
-    height: 30px
-    background: $primary-accent
-    // border: 1px solid red
-    animation: square-spin 3s 0s cubic-bezier(.09,.57,.49,.9) infinite
-
-  .text
-    +smallCaps
-    padding-top: 10px
-    color: $primary-accent
+// @import '../../../css/flexbox.sass'
+// @import '../../../css/mixins.sass'
+//
+// @keyframes square-spin
+//   25%
+//     transform: perspective(100px) rotateX(180deg) rotateY(0)
+//   50%
+//       transform: perspective(100px) rotateX(180deg) rotateY(180deg)
+//   75%
+//       transform: perspective(100px) rotateX(0) rotateY(180deg)
+//   100%
+//       transform: perspective(100px) rotateX(0) rotateY(0)
+//
+// .loader
+//   display: flex
+//   flex-direction: column
+//   align-items: center
+//   justify-content: center
+//   min-height: 200px
+//
+//   .square
+//     animation-fill-mode: both
+//     width: 30px
+//     height: 30px
+//     background: $primary-accent
+//     // border: 1px solid red
+//     animation: square-spin 3s 0s cubic-bezier(.09,.57,.49,.9) infinite
+//
+//   .text
+//     +smallCaps
+//     padding-top: 10px
+//     color: $primary-accent

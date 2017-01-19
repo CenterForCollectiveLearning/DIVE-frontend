@@ -133,7 +133,13 @@ export class ProjectSidebar extends Component {
           </TabGroup>
         </Tabs>
         <div className={ styles.bottom }>
-          { this.state.secondaryNavOpen &&
+          <div className='pt-button pt-minimal pt-icon-cog' onClick={ this.onClickProjectSettings }>
+            Edit Project
+          </div>
+          <div className='pt-button pt-minimal pt-icon-log-out' onClick={ this.onClickProjectSettings }>
+            Log out of <span className={ styles.username }>{ user.username }</span>
+          </div>
+          {/* { this.state.secondaryNavOpen &&
             <div className={ styles.secondaryNav }>
               <div className={ styles.secondaryNavItem } onClick={ this.onClickProjectSettings }>
                 Edit Project Properties
@@ -149,8 +155,9 @@ export class ProjectSidebar extends Component {
                   closeAction={ this.closeProjectSettingsModal }/>
               }
             </div>
-          }
-          <div
+          } */}
+
+          {/* <div
             className={
               styles.secondaryNavToggle +
               ( this.state.secondaryNavOpen ? (' ' + styles.secondaryNavOpen) : '')
@@ -159,7 +166,7 @@ export class ProjectSidebar extends Component {
           >
               <span>{ user.username }</span>
               { this.state.secondaryNavOpen ? <span className={ styles.chevron }>&#65088;</span> : <span className={ styles.chevron }>&#65087;</span> }
-          </div>
+          </div> */}
         </div>
       </div>
     );

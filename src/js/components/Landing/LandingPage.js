@@ -62,41 +62,29 @@ export class LandingPage extends Component {
           <div className={ styles.background }>
           </div>
           <div className={ styles.landingPageContent + ( this.props.children ? ' ' + styles.landingPageProjects : ' ' + styles.landingPageHome) }>
-            <div className={ styles.header }>
-              <div className={ styles.logoContainer } onClick={ this._onClickLogo.bind(this) }>
-                <div className={ styles.logoText }>
+            <nav className="pt-navbar pt-dark pt-fixed-top">
+              <div className="pt-navbar-group pt-align-left">
+                <div className="pt-navbar-heading">
                   DIVE
+                  {/* <div className={ styles.logoText }>DIVE</div>
+                  <Logo className={ styles.logo } /> */}
                 </div>
-                <Logo className={ styles.logo } />
               </div>
-              <div className={ styles.topRightControls }>
+              <div className="pt-navbar-group pt-align-right">
                 { user && user.username &&
-                  <div className={ styles.linkContainer }>
-                    <Link route="/preloaded">Preloaded Projects</Link>
-                    <Link route="/projects">Your Projects</Link>
-                    <div className={ styles.userOptions + ( this.state.userOptionsOpen ? ' ' + styles.open : '' )} >
-                      <div className={ styles.usernameAndChevron }>
-                        <span className={ styles.username }>{ user.username }</span>
-                        <div className={ styles.userOptionsMenu }>
-                          <div>Settings</div>
-                          <div onClick={ this.props.logoutUser }>Sign Out</div>
-                        </div>
-                      </div>
-                    </div>
+                  <div>
+                    <Link className="pt-button pt-minimal pt-icon-projects" route="/projects">Projects</Link>
+                    <span className="pt-navbar-divider"></span>
+                    <div className="pt-button pt-minimal pt-icon-log-out" onClick={ this.props.logoutUser }>Log Out</div>
                   </div>
                 }
                 { (!user || !user.username) &&
-                  <div className={ styles.linkContainer }>
-                    <Link route="/login">Log In</Link>
-                  </div>
+                  <Link className="pt-button pt-minimal pt-icon-log-in" route="/login">Log In</Link>
                 }
               </div>
-
-            </div>
+            </nav>
             <div className={ styles.centeredFill }>
-              { this.props.children ||
-                <HomePage />
-              }
+              { this.props.children || <HomePage /> }
             </div>
           </div>
         </div>
