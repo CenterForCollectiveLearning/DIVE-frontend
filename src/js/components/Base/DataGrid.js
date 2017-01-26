@@ -32,41 +32,42 @@ export default class DataGrid extends Component {
       return <Cell>{`${(rowIndex * 10).toFixed(2)}`}</Cell>
     };
 
-    // console.log(data);
-
     const numRows = data.length;
     const columnHeaders = Object.keys(data[0]);
     const columns = columnHeaders.map((columnHeader) =>
       data.map((row) => row[columnHeader] )
     );
 
-    // console.log(columns);
+    console.log(data);
+    console.log(columnHeaders);
+    console.log(columns);
 
-    return (
-      <div className={ containerClassName }>
-        <div>
-          { this.state.loading &&
-            <div className={ styles.watermark }>Loading...</div>
-          }
-          { !this.state.loading &&
-            <Table
-              numRows={ numRows }
-              defaultColumnWidth={ 100 }
-            >
-              {
-                columns.map((column, index) =>
-                  <Column
-                    name={ columnHeaders[index] }
-                    renderCell={ renderCell }
-                  />
-                )
-              }
-              />
-            </Table>
-          }
-        </div>
-      </div>
-    );
+    return (<div/>);
+    // return (
+    //   <div className={ containerClassName }>
+    //     <div>
+    //       { this.state.loading &&
+    //         <div className={ styles.watermark }>Loading...</div>
+    //       }
+    //       { !this.state.loading &&
+    //         <Table
+    //           numRows={ numRows }
+    //           defaultColumnWidth={ 100 }
+    //         >
+    //           {
+    //             columns.map((column, index) =>
+    //               <Column
+    //                 name={ columnHeaders[index] }
+    //                 renderCell={ renderCell }
+    //               />
+    //             )
+    //           }
+    //           />
+    //         </Table>
+    //       }
+    //     </div>
+    //   </div>
+    // );
   }
 }
 

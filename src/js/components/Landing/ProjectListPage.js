@@ -19,7 +19,7 @@ export class ProjectListPage extends Component {
     super(props);
 
     this.state = {
-      projectCreateModalOpen: true,
+      projectCreateModalOpen: false,
       sortField: 'updateDate',
       viewMode: 'normal'
     };
