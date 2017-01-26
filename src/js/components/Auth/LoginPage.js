@@ -5,6 +5,7 @@ import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { loginUser } from '../../actions/AuthActions';
 
+import { Button, Intent } from '@blueprintjs/core';
 import styles from './Auth.sass';
 
 import Input from '../Base/Input'
@@ -143,27 +144,33 @@ class AuthPage extends Component {
               { (loginError == 'E-mail not found' || loginError == 'Username not found') &&
                 <div className={ styles.authInputError }>Not found</div>
               }
-              <Input
-                type="text"
-                className={ styles.usernameOrEmail }
-                placeholder="Username or E-mail"
-                autocomplete="on"
-                onChange={ this.handleUsernameOrEmailChange }
-                autofocus={ true }
-                onSubmit={ this.submit }
-              />
+              <div className="pt-input-group pt-large">
+                <input
+                  type="text"
+                  className="pt-input pt-large pt-icon-user pt-fill"
+                  placeholder="Username or E-mail"
+                  autocomplete="on"
+                  onChange={ this.handleUsernameOrEmailChange }
+                  autofocus={ true }
+                  onSubmit={ this.submit }
+                />
+                <button className="pt-button pt-minimal pt-icon-user" />
+              </div>
             </div>
             <div className={ styles.authInputGroup }>
               { (loginError == 'Incorrect credentials') &&
                 <div className={ styles.authInputError }>Incorrect</div>
               }
-              <Input
-                className={ styles.password }
-                type="password"
-                placeholder="Password"
-                onChange={ this.handlePasswordChange }
-                onSubmit={ this.submit }
-              />
+              <div className="pt-input-group pt-large">
+                <input
+                  className='pt-input pt-large pt-icon-lock pt-fill'
+                  type="password"
+                  placeholder="Password"
+                  onChange={ this.handlePasswordChange }
+                  onSubmit={ this.submit }
+                />
+                <button className="pt-button pt-minimal pt-icon-lock" />
+              </div>
             </div>
             <div className={ styles.authInputGroup }>
               <div className={ styles.checkbox }>
@@ -179,15 +186,13 @@ class AuthPage extends Component {
                 </div>
               </div>
             </div>
-            <RaisedButton
-              primary
-              className={ styles.submitButton }
+            <Button
+              className="pt-large pt-fill"
+              text="Login"
+              intent={ Intent.PRIMARY }
               disabled={ loginDisabled }
               onClick={ this.submit }
-              minWidth={ 100 }
-            >
-              Login
-            </RaisedButton>
+            />
           </form>
         </AuthModal>
       </DocumentTitle>

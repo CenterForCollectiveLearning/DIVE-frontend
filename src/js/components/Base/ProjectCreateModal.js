@@ -58,6 +58,7 @@ class ProjectCreateModal extends Component {
             <div className={ styles.controlSection }>
               <div className={ styles.label }>Description</div>
               <TextArea
+                className='pt-input pt-fill'
                 type="textarea"
                 placeholder={ projectDescription }
                 onChange={ this.enteredProjectDescriptionInput.bind(this) }/>
