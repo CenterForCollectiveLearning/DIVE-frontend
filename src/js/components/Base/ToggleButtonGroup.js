@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-
-import ToggleButton from './ToggleButton';
+import styles from './ToggleButtonGroup.sass';
 
 export default class ToggleButtonGroup extends Component {
   render() {
@@ -19,12 +18,14 @@ export default class ToggleButtonGroup extends Component {
           <button
             key={ `toggle-${item[valueMember]}` }
             className={
-              'pt-button' +
+              'pt-button ' +
+              styles.toggleButton +
               ( item.disabled ? ' pt-disabled' : '') +
+              ( colorMember ? (' ' + styles.coloredBorder) : '' ) +
               ( item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) ? ' pt-active' : '')
             }
-            color={ colorMember ? item[colorMember] : null }
             separated={ separated }
+            style={ colorMember ? { 'borderLeftColor': item[colorMember] } : {} }
             onClick={ () => onChange(item[valueMember].toString()) }
             splitMenu={ splitMenuItemsMember ? item[splitMenuItemsMember] : [] }
             selectMenuItem={ selectMenuItem }

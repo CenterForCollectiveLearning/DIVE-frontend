@@ -147,7 +147,7 @@ export default class Visualization extends Component {
     }
 
     return (
-      <div className={ 'pt-card pt-elevation-3 pt-interactive ' + containerClassName } onClick={ this.handleClick }>
+      <div className={ 'pt-card pt-interactive ' + containerClassName } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
           <div className={ headerClassName }>
             { spec.meta.construction.map(function(construct, i) {
