@@ -2,13 +2,19 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from '../Analysis.sass';
 
-import BareDataGrid from '../../Base/BareDataGrid';
+import { Table, Column, Cell } from '@blueprintjs/table';
 import { getRoundedString } from '../../../helpers/helpers';
 
 export default class AggregationTable extends Component {
 
+
+
   render() {
     const { aggregationResult, aggregationIndependentVariableNames } = this.props;
+
+    const renderCell = (rowIndex) => {
+      return <Cell>{`${(rowIndex * 10).toFixed(2)}`}</Cell>
+    };
 
     const data = [
       {
@@ -32,13 +38,17 @@ export default class AggregationTable extends Component {
         items: [ 'Column Totals', ...aggregationResult.columnTotals.map((column) => <div className={ styles.footerCell }>{ column }</div>) ]
       })
     }
+    console.log(aggregationResult);
+    console.log(data);
 
     return (
       <div className={ styles.aggregationTable }>
         <div className={ styles.columnFieldLabel }>{ aggregationIndependentVariableNames[0] }</div>
         <div className={ styles.gridWithRowFieldLabel }>
           <div className={ styles.rowFieldLabel }>{ aggregationIndependentVariableNames[1] }</div>
-          <BareDataGrid data={ data }/>
+          <Table numRows={10}>
+            <Column name="Dollars" renderCell={ renderCell }/>
+          </Table>
         </div>
       </div>
     );

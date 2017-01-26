@@ -118,16 +118,34 @@ export class CorrelationView extends Component {
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
-                <RaisedButton onClick={ this.onClickShare }>
+                <button
+                  type='button'
+                  className={
+                    'pt-button pt-icon-share'
+                  }
+                  onClick={ this.onClickShare }>
                   { correlationResult.isExporting && "Exporting..." }
                   { !correlationResult.isExporting && "Share" }
-                </RaisedButton>
+                </button>
               </div>
               <div className={ styles.headerControl }>
-                <RaisedButton onClick={ this.saveCorrelation } active={ saved }>
-                  { !correlationResult.isSaving && correlationResult.exportedCorrelationId && <i className="fa fa-star"></i> }
-                  { !correlationResult.exportedCorrelationId && <i className="fa fa-star-o"></i> }
-                </RaisedButton>
+                <button
+                  type='button'
+                  className={ 'pt-button' }
+                  onClick={ this.saveCorrelation }>
+                  { !correlationResult.isSaving && !correlationResult.exportedCorrelationId &&
+                    <div>
+                      <span className='pt-icon-standard pt-icon-star-empty' />
+                      Save
+                    </div>
+                  }
+                  { correlationResult.exportedCorrelationId &&
+                    <div>
+                      <span className='pt-icon-standard pt-icon-star' />
+                      Saved
+                    </div>
+                  }
+                </button>
               </div>
             </div>
           }/>

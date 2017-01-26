@@ -155,7 +155,7 @@ export class ExploreView extends Component {
                         exportedSpecs={ exportedSpecs }
                         onClick={ this.onClickVisualization }
                         saveVisualization={ this.saveVisualization }
-                        showStats={ true }
+                        showStats={ false }
                       />
                       )
                     }

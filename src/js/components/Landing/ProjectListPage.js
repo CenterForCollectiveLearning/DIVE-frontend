@@ -19,7 +19,7 @@ export class ProjectListPage extends Component {
     super(props);
 
     this.state = {
-      projectCreateModalOpen: false,
+      projectCreateModalOpen: true,
       sortField: 'updateDate',
       viewMode: 'normal'
     };
@@ -42,6 +42,7 @@ export class ProjectListPage extends Component {
   }
 
   closeProjectSettingsModal = () => {
+    console.log('CLOSING PROJECT SETTINGS MODAL');
     this.setState({ projectCreateModalOpen: false });
   }
 
@@ -144,12 +145,11 @@ export class ProjectListPage extends Component {
                 <Loader text='Loading Your Projects' />
               </div>
             }
-            { this.state.projectCreateModalOpen &&
-              <ProjectCreateModal
-                userId={ userId }
-                closeAction={ this.closeProjectSettingsModal }
-              />
-            }
+            <ProjectCreateModal
+              userId={ userId }
+              closeAction={ this.closeProjectSettingsModal }
+              isOpen={ this.state.projectCreateModalOpen }
+            />
           </div>
         </div>
       </DocumentTitle>

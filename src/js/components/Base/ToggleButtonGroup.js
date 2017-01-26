@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
 import ToggleButton from './ToggleButton';
-import styles from './ToggleButtonGroup.sass';
 
 export default class ToggleButtonGroup extends Component {
   render() {
@@ -21,7 +20,6 @@ export default class ToggleButtonGroup extends Component {
             key={ `toggle-${item[valueMember]}` }
             className={
               'pt-button' +
-
               ( item.disabled ? ' pt-disabled' : '') +
               ( item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) ? ' pt-active' : '')
             }

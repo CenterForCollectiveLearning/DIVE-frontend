@@ -50,7 +50,7 @@ export class HomePage extends Component {
     this.setState({ projectCreateModalOpen: false });
   }
 
-  _onUploadClick() {
+  _onUploadClick = () => {
     const { user, userId, push, createProject } = this.props;
     if (user.isAuthenticated) {
       this.setState({ projectCreateModalOpen: true });
@@ -74,11 +74,12 @@ export class HomePage extends Component {
               DIVE lets you turn data into stories within minutes, without writing a single line of code
             </div>
             <div className={ styles.ctaContainer }>
-              <RaisedButton
-                label="Upload Data"
-                primary={ true }
-                onClick={ this._onUploadClick.bind(this) }
-                className={ styles.uploadButton + ' ' + styles.primary } />
+              <button
+                type="button"
+                className="pt-button pt-intent-primary pt-large"
+                onClick={ this._onUploadClick }>
+                Upload Data
+              </button>
             </div>
             <div className={ styles.video }>
               <iframe src="https://player.vimeo.com/video/179173590" color="#007BD7" width="600" height="340" frameBorder="0" allowFullScreen />
