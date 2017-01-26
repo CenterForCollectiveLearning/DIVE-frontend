@@ -72,6 +72,8 @@ export class ExploreSidebar extends Component {
       )
     );
 
+    const activeVisualizationTypes = visualizationTypes.filter((type) => !type.disabled);
+
     return (
       <Sidebar>
         <SidebarGroup heading="Recommendation Mode">
@@ -94,7 +96,7 @@ export class ExploreSidebar extends Component {
         { visualizationTypes.length > 1 &&
           <SidebarGroup heading="Filter Visualization type">
             <ToggleButtonGroup
-              toggleItems={ visualizationTypes }
+              toggleItems={ activeVisualizationTypes }
               displayTextMember="label"
               expand={ false }
               valueMember="type"

@@ -120,7 +120,7 @@ export class ExploreView extends Component {
       pageHeader = <span>Visualizations of <ColoredFieldItems fields={ selectedFieldProperties.map((field) => field.name) } /></span>
       helperText = 'exploreSelectedFields'
     } else {
-      pageHeader = <span>Default Descriptive Visualizations</span>
+      pageHeader = <span>Descriptive Visualizations</span>
       helperText = 'exploreDefault'
     }
 
@@ -149,6 +149,7 @@ export class ExploreView extends Component {
                       <VisualizationBlock
                         key={ `${ spec.id }-${ i }` }
                         spec={ spec }
+                        isCard={ true }
                         className='exact'
                         fieldNameToColor={ fieldNameToColor }
                         filteredVisualizationTypes={ filteredVisualizationTypes }
@@ -178,6 +179,7 @@ export class ExploreView extends Component {
                       <VisualizationBlock
                         key={ spec.id }
                         spec={ spec }
+                        isCard={ true }
                         className='subset'
                         fieldNameToColor={ fieldNameToColor }
                         filteredVisualizationTypes={ filteredVisualizationTypes }
@@ -207,6 +209,7 @@ export class ExploreView extends Component {
                       <VisualizationBlock
                         key={ spec.id }
                         spec={ spec }
+                        isCard={ true }
                         className='baseline'
                         fieldNameToColor={ fieldNameToColor }
                         filteredVisualizationTypes={ filteredVisualizationTypes }
@@ -236,6 +239,7 @@ export class ExploreView extends Component {
                       <VisualizationBlock
                         key={ spec.id }
                         spec={ spec }
+                        isCard={ true }                        
                         className='expanded'
                         fieldNameToColor={ fieldNameToColor }
                         filteredVisualizationTypes={ filteredVisualizationTypes }

@@ -8,7 +8,7 @@ export const HELPER_TEXT = {
   correlation: '',
   correlationScatterplots: '',
   exploreSelectedFields: '',
-  exploreDefault: '.',
+  exploreDefault: 'By default, DIVE recommends descriptive visualizations of each column in your dataset. Select a field on your bottom right to receive field-specific recommendations.',
   exactMatches: ',',
   individualMatches: '.',
   closeMatches: '.',

@@ -12,7 +12,7 @@ export default class ToggleButtonGroup extends Component {
         'pt-button-group' +
         ( separated ? ' pt-vertical pt-align-left' : '' ) +
         ( className ? ' ' + className : '' ) +
-        ( expand ? (' pt-fill') : '' )
+        ( ( expand || imageNameMember ) ? (' pt-fill') : '' )
       }>
         { toggleItems.map((item) =>
           <button
@@ -20,8 +20,9 @@ export default class ToggleButtonGroup extends Component {
             className={
               'pt-button ' +
               styles.toggleButton +
+              ( imageNameMember ? ' ' + styles.iconButton : '' ) +
               ( item.disabled ? ' pt-disabled' : '') +
-              ( colorMember ? (' ' + styles.coloredBorder) : '' ) +
+              ( item.colorMember ? (' ' + styles.coloredBorder) : '' ) +
               ( item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) ? ' pt-active' : '')
             }
             separated={ separated }
