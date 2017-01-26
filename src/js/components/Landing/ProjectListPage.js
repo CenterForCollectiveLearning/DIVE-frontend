@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
-import { Menu, MenuDivider, MenuItem, Popover, Position } from "@blueprintjs/core";
+import { Menu, MenuDivider, MenuItem, Popover, Position, NonIdealState } from "@blueprintjs/core";
 import ProjectCreateModal from '../Base/ProjectCreateModal';
 import ProjectButton from '../Base/ProjectButton';
 import RaisedButton from '../Base/RaisedButton';
@@ -134,9 +134,11 @@ export class ProjectListPage extends Component {
             { !isFetchingUserProjects && userProjects.length == 0 &&
               <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
                 <div className={ styles.projectListSidebar }></div>
-                <div className={ styles.watermark }>
-                  You have no projects &#x2639;
-                </div>
+                <NonIdealState
+                  title='No projects'
+                  description='To create a project, click the above "Create Project" button'
+                  visual='folder-open'
+                />
               </div>
             }
             { isFetchingUserProjects && userId &&
