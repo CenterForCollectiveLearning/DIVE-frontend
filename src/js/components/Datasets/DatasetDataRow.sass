@@ -89,6 +89,7 @@
     align-items: center
     justify-content: center
     width: 35px
+    height: 100%
 
     .dropdown
       position: absolute
@@ -120,23 +121,8 @@
           background-color: $primary-accent
           color: white
 
-    &:after
-      content: "︿"
-      font-weight: bold
-      position: relative
-      top: -3px
-
     &:hover
       background-color: $ui-header-grey
-
-      &:after
-        content: "﹀"
-        top: 3px
-
-      .dropdown
-        opacity: 1
-        pointer-events: auto
-        user-select: text
 
   .fieldTypeDropDown.dropDownMenu
     margin-top: -5px

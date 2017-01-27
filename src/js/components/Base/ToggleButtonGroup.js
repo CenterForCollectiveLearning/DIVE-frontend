@@ -22,7 +22,7 @@ export default class ToggleButtonGroup extends Component {
               styles.toggleButton +
               ( imageNameMember ? ' ' + styles.iconButton : '' ) +
               ( item.disabled ? ' pt-disabled' : '') +
-              ( item.colorMember ? (' ' + styles.coloredBorder) : '' ) +
+              ( colorMember ? (' ' + styles.coloredBorder) : '' ) +
               ( item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) ? ' pt-active' : '')
             }
             separated={ separated }

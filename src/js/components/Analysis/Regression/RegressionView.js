@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
+import { Button, NonIdealState } from '@blueprintjs/core';
+
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { runRegression, getContributionToRSquared, createExportedRegression } from '../../../actions/RegressionActions';
 import { clearAnalysis } from '../../../actions/AnalysisActions';
@@ -87,8 +89,12 @@ export class RegressionView extends Component {
     var regressionContent = <div></div>;
 
     if (independentVariableNames.length == 0) {
-      regressionContent = <div className={ styles.watermark }>
-        Please Select One or More Independent Variables
+      regressionContent = <div className={ styles.centeredFill }>
+        <NonIdealState
+          title='Too Few Independent Variables Selected'
+          description='To run a regression, please select one or more independent variables'
+          visual='variable'
+        />
       </div>
     }
     else if (independentVariableNames.length >= 1) {
@@ -98,16 +104,25 @@ export class RegressionView extends Component {
             actions={
               <div className={ styles.headerControlRow }>
                 <div className={ styles.headerControl }>
-                  <RaisedButton onClick={ this.onClickShare }>
-                    { regressionResult.isExporting && "Exporting..." }
+                  <Button
+                    iconName='share'
+                    onClick={ this.onClickShare }
+                    loading={ regressionResult.isExporting }
+                  >
                     { !regressionResult.isExporting && "Share" }
-                  </RaisedButton>
+                  </Button>
                 </div>
                 <div className={ styles.headerControl }>
-                  <RaisedButton onClick={ this.saveRegression } active={ saved }>
-                    { !regressionResult.isSaving && regressionResult.exportedRegressionId && <i className="fa fa-star"></i> }
-                    { !regressionResult.exportedRegressionId && <i className="fa fa-star-o"></i> }
-                  </RaisedButton>
+                  <Button
+                    onClick={ this.saveRegression }
+                    loading={ regressionResult.isSaving }>
+                    { !regressionResult.isSaving && !regressionResult.exportedRegressionId &&
+                      <div><span className='pt-icon-standard pt-icon-star-empty' />Save</div>
+                    }
+                    { regressionResult.exportedRegressionId &&
+                      <div><span className='pt-icon-standard pt-icon-star' />Saved</div>
+                    }
+                  </Button>
                 </div>
             </div>
             }

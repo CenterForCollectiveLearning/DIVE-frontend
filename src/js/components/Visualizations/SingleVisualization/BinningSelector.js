@@ -12,7 +12,7 @@ export default class BinningSelector extends Component {
     super(props);
 
     this.state = {
-      'binning_type': 'procedural',
+      'binning_type': 'auto',
       'binning_procedure': 'freedman',
       'num_bins': 7,
       ...this.props.config
@@ -41,7 +41,7 @@ export default class BinningSelector extends Component {
 
   render() {
     const binningTypes = [
-      { label: 'Procedural', value: 'procedural' },
+      { label: 'Auto', value: 'auto' },
       { label: 'Manual', value: 'manual' }
     ].map((binningType) =>
       new Object({ ...binningType, selected: binningType.value == this.state['binning_type'] })
@@ -79,7 +79,7 @@ export default class BinningSelector extends Component {
               displayTextMember="label"
               onChange={ this.onSelectBinningType.bind(this) } />
           </div>
-          { this.state['binning_type'] == 'procedural' &&
+          { this.state['binning_type'] == 'auto' &&
             <div className={ styles.fieldGroup + ' ' + styles.binningConfigBlock }>
               <div className={ styles.fieldGroupLabel }>Procedure</div>
               <DropDownMenu
@@ -93,7 +93,7 @@ export default class BinningSelector extends Component {
           }
           { this.state['binning_type'] == 'manual' &&
             <div className={ styles.fieldGroup + ' ' + styles.binningConfigBlock }>
-              <div className={ styles.fieldGroupLabel }>Number of Bins</div>
+              <div className={ styles.fieldGroupLabel }>Bin Count</div>
               <DropDownMenu
                 className={ styles.sidebarDropdown }
                 value={ this.state['num_bins'] }

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Button, NonIdealState } from '@blueprintjs/core';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { runAggregation, runAggregationOneDimensional } from '../../../actions/AggregationActions';
@@ -110,8 +111,12 @@ export class AggregationView extends Component {
     </span>;
 
     if (noAggregationVariablesSelected ) {
-      aggregationContent = <div className={ styles.watermark }>
-        Please Select One or More Variables
+      aggregationContent = <div className={ styles.centeredFill }>
+        <NonIdealState
+          title='Too Few Variables Selected'
+          description='Please select one or more variables'
+          visual='variable'
+        />
       </div>
     }
 

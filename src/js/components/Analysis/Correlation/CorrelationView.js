@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
+import { Button, NonIdealState } from '@blueprintjs/core';
+
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { getCorrelations, getCorrelationScatterplot, createExportedCorrelation } from '../../../actions/CorrelationActions';
 import { setShareWindow } from '../../../actions/VisualizationActions';
@@ -85,8 +87,12 @@ export class CorrelationView extends Component {
 
     var correlationContent;
     if (correlationVariableNames.length < 2) {
-      correlationContent = <div className={ styles.watermark }>
-        Please Select Two or More Variables to Correlate
+      correlationContent = <div className={ styles.centeredFill }>
+        <NonIdealState
+          title='Too Few Variables Selected'
+          description='To run a correlation, please select two or more variables'
+          visual='variable'
+        />
       </div>
     }
     else if (twoCorrelationVariablesSelected ) {
@@ -118,34 +124,25 @@ export class CorrelationView extends Component {
           actions={
             <div className={ styles.headerControlRow }>
               <div className={ styles.headerControl }>
-                <button
-                  type='button'
-                  className={
-                    'pt-button pt-icon-share'
-                  }
-                  onClick={ this.onClickShare }>
-                  { correlationResult.isExporting && "Exporting..." }
+                <Button
+                  iconName='share'
+                  onClick={ this.onClickShare }
+                  loading={ correlationResult.isExporting }
+                >
                   { !correlationResult.isExporting && "Share" }
-                </button>
+                </Button>
               </div>
               <div className={ styles.headerControl }>
-                <button
-                  type='button'
-                  className={ 'pt-button' }
-                  onClick={ this.saveCorrelation }>
+                <Button
+                  onClick={ this.saveCorrelation }
+                  loading={ correlationResult.isSaving }>
                   { !correlationResult.isSaving && !correlationResult.exportedCorrelationId &&
-                    <div>
-                      <span className='pt-icon-standard pt-icon-star-empty' />
-                      Save
-                    </div>
+                    <div><span className='pt-icon-standard pt-icon-star-empty' />Save</div>
                   }
                   { correlationResult.exportedCorrelationId &&
-                    <div>
-                      <span className='pt-icon-standard pt-icon-star' />
-                      Saved
-                    </div>
+                    <div><span className='pt-icon-standard pt-icon-star' />Saved</div>
                   }
-                </button>
+                </Button>
               </div>
             </div>
           }/>

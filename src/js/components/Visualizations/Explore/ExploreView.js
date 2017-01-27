@@ -10,6 +10,8 @@ import { useWhiteFontFromBackgroundHex } from '../../../helpers/helpers';
 
 import styles from '../Visualizations.sass';
 
+import { Button, NonIdealState } from '@blueprintjs/core';
+
 import Loader from '../../Base/Loader';
 import HeaderBar from '../../Base/HeaderBar';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -130,7 +132,13 @@ export class ExploreView extends Component {
           <HeaderBar header={ pageHeader } helperText={ helperText } />
           <div className={ styles.specContainer }>
             { !isFetching && sortedSpecs.length == 0 &&
-              <div className={ styles.watermark }>No visualizations</div>
+              <div className={ styles.centeredFill }>
+                <NonIdealState
+                  title='No Visualizations Returned'
+                  description='Please change your selection or refresh DIVE.'
+                  visual='timeline-line-chart'
+                />
+              </div>
             }
             { isValidSpecLevel[0] && !(loadedSpecLevel[0] && exactSpecs.length == 0) &&
               <div className={ styles.specSection }>
@@ -186,7 +194,7 @@ export class ExploreView extends Component {
                         exportedSpecs={ exportedSpecs }
                         onClick={ this.onClickVisualization }
                         saveVisualization={ this.saveVisualization }
-                        showStats={ true }
+                        showStats={ false }
                       />
                       )
                     }
@@ -216,7 +224,7 @@ export class ExploreView extends Component {
                         exportedSpecs={ exportedSpecs }
                         onClick={ this.onClickVisualization }
                         saveVisualization={ this.saveVisualization }
-                        showStats={ true }
+                        showStats={ false }
                       />
                       )
                     }
@@ -239,14 +247,14 @@ export class ExploreView extends Component {
                       <VisualizationBlock
                         key={ spec.id }
                         spec={ spec }
-                        isCard={ true }                        
+                        isCard={ true }
                         className='expanded'
                         fieldNameToColor={ fieldNameToColor }
                         filteredVisualizationTypes={ filteredVisualizationTypes }
                         exportedSpecs={ exportedSpecs }
                         onClick={ this.onClickVisualization }
                         saveVisualization={ this.saveVisualization }
-                        showStats={ true }
+                        showStats={ false }
                       />
                       )
                     }

@@ -125,7 +125,7 @@ export class DatasetInspectPage extends Component {
                 <button
                   type="button"
                   className="pt-button pt-icon-trash"
-                  onClick={ this.onClickDeleteProject } />                  
+                  onClick={ this.onClickDeleteProject } />
               </div>
             }
           />

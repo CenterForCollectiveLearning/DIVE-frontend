@@ -13,7 +13,7 @@ export default class Loader extends Component {
     const parsedText = (Array.isArray(text)) ? text[0] : text;
     return (
       <div className={ styles.loader }>
-        { !error && <div className="pt-spinner pt-medium pt-intent-primary">
+        { !error && <div className="pt-spinner pt-medium">
           <div className="pt-spinner-svg-container">
             <svg viewBox="0 0 100 100">
               <path className="pt-spinner-track" d="M 50,50 m 0,-44.5 a 44.5,44.5 0 1 1 0,89 a 44.5,44.5 0 1 1 0,-89"></path>
@@ -30,7 +30,7 @@ export default class Loader extends Component {
           </button>
         }
         { text &&
-          <div className={ styles.text }>{ text }</div>
+          <h6 style={{ 'margin-top': '20px' }}>{ text }</h6>
         }
       </div>
     );

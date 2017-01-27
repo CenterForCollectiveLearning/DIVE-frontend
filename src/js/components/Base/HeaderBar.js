@@ -55,7 +55,6 @@ export default class HeaderBar extends Component {
           { helperText &&
             <Popover content={ popoverContent }
               interactionKind={ PopoverInteractionKind.HOVER_TARGET_ONLY }
-              popoverClassName="pt-popover-content-sizing"
               position={ Position.LEFT }
               useSmartPositioning={ true }
               transitionDuration={ 100 }

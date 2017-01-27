@@ -6,6 +6,8 @@ import { push } from 'react-router-redux';
 
 import { updateProject, deleteProjectNoReturnHome, wipeProjectState } from '../../actions/ProjectActions.js';
 
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem } from '@blueprintjs/core';
+
 import styles from './ProjectButton.sass';
 
 import RaisedButton from './RaisedButton';
@@ -68,6 +70,22 @@ class ProjectButton extends Component {
 
     const showDatasets = (viewMode == 'expanded' && numDatasets > 0);
     if (this.state.deleted) { return ( <div/> )};
+
+    let popoverContent = (
+      <Menu>
+        <MenuItem
+          iconName="edit"
+          onClick={ this.onClickProjectSettings }
+          text="Edit Properties"
+        />
+        <MenuItem
+          iconName="trash"
+          onClick={ this.onClickDeleteProject }
+          text="Delete"
+        />
+      </Menu>
+    );
+
     return (
       <div className={ 'pt-card pt-interactive ' + styles.projectButton + ( showDatasets ? ' ' + styles.showDatasets : '') } onClick={ this.onClickProjectButton }>
         <div className={ styles.starContainer } onClick={ this.onClickStarProject }>
@@ -123,12 +141,16 @@ class ProjectButton extends Component {
             </div>
           }
         </div>
-        <div className={ styles.expandButton }>
-          <div className={ styles.dropdown }>
-            <div className={ styles.dropdownOption } onClick={ this.onClickProjectSettings }>Edit Properties</div>
-            <div className={ styles.dropdownOption } onClick={ this.onClickDeleteProject }>Delete</div>
-          </div>
-        </div>
+        <Popover content={ popoverContent }
+          interactionKind={ PopoverInteractionKind.HOVER }
+          position={ Position.LEFT }
+          useSmartPositioning={ true }
+          transitionDuration={ 100 }
+          hoverOpenDelay={ 100 }
+          hoverCloseDelay={ 100 }
+        >
+          <div className={ styles.expandButton + ' pt-icon-standard pt-icon-menu-open' } />
+        </Popover>
 
         { this.state.projectSettingsModalOpen &&
           <ProjectSettingsModal

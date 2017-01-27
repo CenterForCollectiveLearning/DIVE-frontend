@@ -1,12 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
+import Griddle from 'griddle-react';
 import styles from './DataGrid.sass';
-import {
-  Table,
-  Column,
-  ColumnHeaderCell,
-  Cell,
-} from '@blueprintjs/table';
 
 export default class DataGrid extends Component {
   constructor(props) {
@@ -28,46 +23,34 @@ export default class DataGrid extends Component {
   render() {
     const { data, tableClassName, containerClassName, useFixedWidth, customRowComponent } = this.props;
 
-    const renderCell = (rowIndex) => {
-      return <Cell>{`${(rowIndex * 10).toFixed(2)}`}</Cell>
+    const columnWidth = 200;
+    const nColumns = data.length ? Object.keys(data[0]).length : 0;
+    const innerContainerStyle = {
+      width: `${ nColumns * columnWidth }px`,
+      minWidth: '100%',
+      overflow: 'hidden'
     };
 
-    const numRows = data.length;
-    const columnHeaders = Object.keys(data[0]);
-    const columns = columnHeaders.map((columnHeader) =>
-      data.map((row) => row[columnHeader] )
+    return (
+      <div className={ containerClassName }>
+        <div style={ useFixedWidth ? innerContainerStyle : {} }>
+          { this.state.loading &&
+            <div className={ styles.watermark }>Loading...</div>
+          }
+          { !this.state.loading &&
+            <Griddle
+              results={ data }
+              resultsPerPage={ 300 }
+              useFixedHeader={ true }
+              useFixedLayout={ false }
+              tableClassName={ tableClassName }
+              useGriddleStyles={ false }
+              useCustomRowComponent={ customRowComponent ? true : false }
+              customRowComponent={ customRowComponent }/>
+          }
+        </div>
+      </div>
     );
-
-    console.log(data);
-    console.log(columnHeaders);
-    console.log(columns);
-
-    return (<div/>);
-    // return (
-    //   <div className={ containerClassName }>
-    //     <div>
-    //       { this.state.loading &&
-    //         <div className={ styles.watermark }>Loading...</div>
-    //       }
-    //       { !this.state.loading &&
-    //         <Table
-    //           numRows={ numRows }
-    //           defaultColumnWidth={ 100 }
-    //         >
-    //           {
-    //             columns.map((column, index) =>
-    //               <Column
-    //                 name={ columnHeaders[index] }
-    //                 renderCell={ renderCell }
-    //               />
-    //             )
-    //           }
-    //           />
-    //         </Table>
-    //       }
-    //     </div>
-    //   </div>
-    // );
   }
 }
 
