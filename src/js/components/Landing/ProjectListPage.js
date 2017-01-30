@@ -42,7 +42,6 @@ export class ProjectListPage extends Component {
   }
 
   closeProjectSettingsModal = () => {
-    console.log('CLOSING PROJECT SETTINGS MODAL');
     this.setState({ projectCreateModalOpen: false });
   }
 
