@@ -18,6 +18,7 @@ export class LandingPage extends Component {
 
     this.state = {
       userOptionsOpen: true,
+      opaqueNavbar: false
     };
   }
 
@@ -30,11 +31,11 @@ export class LandingPage extends Component {
     wipeProjectState();
   }
 
-  _onClickLogo(){
+  _onClickLogo = () => {
     this.props.push(`/`);
   }
 
-  _getSelectedTab(){
+  _getSelectedTab = () => {
     const tabList = ["/projects", "/about"];
     const _validTab = function (tabValue) {
       return tabList.indexOf(tabValue) > -1;
@@ -54,22 +55,29 @@ export class LandingPage extends Component {
     this.setState({ userOptionsOpen: false });
   }
 
+  _handleScroll = (e) => {
+    const scrollThreshold = 200;
+    this.setState({ opaqueNavbar: (e.target.scrollTop > scrollThreshold) });
+  }
+
   render() {
-    const { user } = this.props;
+    const { user, location } = this.props;
+    const onLandingPage = (location.pathname == '/');
+
     return (
       <DocumentTitle title='DIVE | Landing'>
-        <div className={ styles.fillContainer + ' ' + styles.landingPage }>
-          <div className={ styles.background }>
-          </div>
-          <div className={ styles.landingPageContent + ( this.props.children ? ' ' + styles.landingPageProjects : ' ' + styles.landingPageHome) }>
-            <nav className="pt-navbar pt-dark pt-fixed-top">
-              <div className="pt-navbar-group pt-align-left">
-                <div className="pt-navbar-heading">
-                  DIVE
-                  {/* <div className={ styles.logoText }>DIVE</div>
-                  <Logo className={ styles.logo } /> */}
-                </div>
+        <div className={ styles.fillContainer + ' ' + styles.landingPage } onScroll={ this._handleScroll }>
+          <div className={ styles.background } />
+          <div
+            className={ styles.landingPageContent + ( this.props.children ? ' ' + styles.landingPageProjects : ' ' + styles.landingPageHome) }
+          >
+          <nav className={ 'pt-navbar pt-dark pt-fixed-top ' + styles.header + ( onLandingPage ? ( this.state.opaqueNavbar ? ' ' + styles.opaque : '') : ' ' + styles.opaque) }>
+            <div className="pt-navbar-group pt-align-left">
+              <div className={ 'pt-navbar-heading ' + styles.logoContainer } onClick={ this._onClickLogo }>
+                <Logo className={ styles.logo } />
+                <div className={ styles.logoText }>DIVE</div>
               </div>
+            </div>
               <div className="pt-navbar-group pt-align-right">
                 { user && user.username &&
                   <div>

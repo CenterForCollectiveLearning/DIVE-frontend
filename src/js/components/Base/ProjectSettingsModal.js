@@ -83,7 +83,7 @@ class ProjectSettingsModal extends Component {
 }
 
 ProjectSettingsModal.propTypes = {
-  projectId: PropTypes.number.isRequired,
+  projectId: PropTypes.any.isRequired,
   projectName: PropTypes.string.isRequired,
   projectDescription: PropTypes.string.isRequired,
   closeAction: PropTypes.func,

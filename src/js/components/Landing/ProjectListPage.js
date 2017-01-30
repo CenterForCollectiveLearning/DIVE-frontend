@@ -5,6 +5,8 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
+import { Button, Intent } from '@blueprintjs/core';
+
 import { Menu, MenuDivider, MenuItem, Popover, Position, NonIdealState } from "@blueprintjs/core";
 import ProjectCreateModal from '../Base/ProjectCreateModal';
 import ProjectButton from '../Base/ProjectButton';
@@ -93,12 +95,13 @@ export class ProjectListPage extends Component {
             <div className={ styles.projectListTopbar }>
               <div className={ styles.pageLabel }>Your Projects</div>
               <div className={ styles.pullRight }>
-                <button
-                  type="button"
-                  className="pt-button pt-intent-primary pt-icon-add"
+                <Button
+                  className={ styles.createProjectButton }
+                  intent={ Intent.PRIMARY }
+                  iconName="add"
                   onClick={ this._onClickCreateProject }>
                   Create Project
-                </button>
+                </Button>
                 <div className={ styles.sortTypeDropdownContainer }>
                   <DropDownMenu
                     value={ sortField }
