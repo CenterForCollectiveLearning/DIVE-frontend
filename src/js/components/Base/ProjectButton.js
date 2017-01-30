@@ -151,14 +151,12 @@ class ProjectButton extends Component {
         >
           <div className={ styles.expandButton + ' pt-icon-standard pt-icon-menu-open' } />
         </Popover>
-
-        { this.state.projectSettingsModalOpen &&
-          <ProjectSettingsModal
-            projectName={ title }
-            projectDescription={ description }
-            projectId={ id }
-            closeAction={ this.closeProjectSettingsModal }/>
-        }
+        <ProjectSettingsModal
+          projectName={ title }
+          projectDescription={ description }
+          projectId={ id }
+          isOpen={ this.state.projectSettingsModalOpen }
+          closeAction={ this.closeProjectSettingsModal }/>
       </div>
     )
   }
