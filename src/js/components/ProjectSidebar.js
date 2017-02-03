@@ -158,7 +158,10 @@ export class ProjectSidebar extends Component {
             hoverOpenDelay={ 100 }
             hoverCloseDelay={ 100 }
           >
-            <div className={ styles.expandButton + ' pt-icon-standard pt-icon-menu-open' } />
+            <div>
+              <span className={ styles.username }>{ user.username }</span>
+              <span className={ styles.expandButton + ' pt-icon-standard pt-icon-menu-open' } />
+            </div>
           </Popover>
           <ProjectSettingsModal
             projectName={ project.title }
