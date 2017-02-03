@@ -109,7 +109,7 @@ export class HomePage extends Component {
               <div className={ styles.sectionContent }>
                 <img className={ styles.gif } src="/assets/images/ingest.gif"/>
                 <div className={ styles.textBox }>
-                  <p>DIVE intelligently samples your data to <b>infer the types of your fields and the structure of your datasets</b> to best inform your visualizations and statistical analyses. DIVE works with human-interpretable data types, not machine types, to best match your domain knowledge.</p>
+                  <p className="pt-running-text">DIVE intelligently samples your data to <b>infer the types of your fields and the structure of your datasets</b> to best inform your visualizations and statistical analyses. DIVE works with human-interpretable data types, not machine types, to best match your domain knowledge.</p>
                 </div>
               </div>
             </div>
@@ -119,7 +119,7 @@ export class HomePage extends Component {
               <div className={ styles.sectionContent }>
                 <img className={ styles.gif } src="/assets/images/visualization.gif"/>
                 <div className={ styles.textBox }>
-                  <p>Instead of learning syntax or specifying visual mappings, simply <b>select the fields you're interested in and DIVE will recommend relevant visualizations.</b> No more building visualizations from scratch. You can <b>sort visualizations</b> based on effectiveness, expressiveness, and statistical properties like correlation, entropy, and gini.</p>
+                  <p className="pt-running-text">Instead of learning syntax or specifying visual mappings, simply <b>select the fields you're interested in and DIVE will recommend relevant visualizations.</b> No more building visualizations from scratch. You can <b>sort visualizations</b> based on effectiveness, expressiveness, and statistical properties like correlation, entropy, and gini.</p>
                 </div>
               </div>
             </div>
@@ -128,7 +128,7 @@ export class HomePage extends Component {
               <div className={ styles.sectionContent }>
                 <img className={ styles.gif } src="/assets/images/analysis.gif"/>
                 <div className={ styles.textBox }>
-                  <p>DIVE <b>lowers the barrier to running statistical analyses so you can focus on interpreting results, not technical minutiae</b>. Run ANOVA to compare group means, build regressions to explore relationships between fields, and more, all without writing a single line of code. </p>
+                  <p className="pt-running-text">DIVE <b>lowers the barrier to running statistical analyses so you can focus on interpreting results, not technical minutiae</b>. Run ANOVA to compare group means, build regressions to explore relationships between fields, and more, all without writing a single line of code. </p>
                 </div>
               </div>
             </div>
@@ -137,7 +137,7 @@ export class HomePage extends Component {
               <div className={ styles.sectionContent }>
                 <img className={ styles.gif } src="/assets/images/compose.gif"/>
                 <div className={ styles.textBox }>
-                  <p>With the visualizations and analyses you've saved, <b>construct visual stories with a what-you-see-is-what-you-get editor</b>. Share stories with <b>interactive content linked to dynamic data.</b> If this doesn't suit you, yes, we are working on powerpoint export ☺. </p>
+                  <p className="pt-running-text">With the visualizations and analyses you've saved, <b>construct visual stories with a what-you-see-is-what-you-get editor</b>. Share stories with <b>interactive content linked to dynamic data.</b> If this doesn't suit you, yes, we are working on powerpoint export ☺. </p>
                 </div>
               </div>
             </div>
@@ -145,7 +145,7 @@ export class HomePage extends Component {
               <div className={ styles.sectionHeader }>DIVE Development Team</div>
               <div className={ styles.sectionContent }>
                 <div className={ styles.textBox }>
-                  <p>DIVE is built by <a target="_blank" href="https://twitter.com/KevinZengHu">Kevin Hu</a> and <a target="_blank" href="https://twitter.com/cesifoti">César Hidalgo</a> in the <a target="_blank" href="http://macro.media.mit.edu">Macro Connections Group</a> at the <a target="_blank" href="http://media.mit.edu">MIT Media Lab</a>. To give feedback, compliments, or complaints, please e-mail us at <a href="mailto:dive@media.mit.edu" target="_top">dive@media.mit.edu</a>.</p>
+                  <p className="pt-running-text">DIVE is built by <a target="_blank" href="https://twitter.com/KevinZengHu">Kevin Hu</a> and <a target="_blank" href="https://twitter.com/cesifoti">César Hidalgo</a> in the <a target="_blank" href="http://macro.media.mit.edu">Macro Connections Group</a> at the <a target="_blank" href="http://media.mit.edu">MIT Media Lab</a>. To give feedback, compliments, or complaints, please e-mail us at <a href="mailto:dive@media.mit.edu" target="_top">dive@media.mit.edu</a>.</p>
                 </div>
                 <div className={ styles.mugshotBox }>
                   <div className={ styles.mugshots }>

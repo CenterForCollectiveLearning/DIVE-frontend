@@ -93,7 +93,6 @@ export class ExploreView extends Component {
     const { isFetchingSpecLevel, loadedSpecLevel, progressByLevel } = exploreSelector;
     const isFetching = _.any(isFetchingSpecLevel);
 
-    console.log('sortBy', sortBy);
     var sortSpecs = function(specA, specB) {
       return sortSpecsByFunction(sortBy, specA, specB);
     };
