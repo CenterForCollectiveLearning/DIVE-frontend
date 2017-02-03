@@ -10,7 +10,6 @@ import styles from './Datasets.sass';
 import Dropzone from 'react-dropzone';
 import Loader from '../Base/Loader';
 import HeaderBar from '../Base/HeaderBar';
-import RaisedButton from '../Base/RaisedButton';
 
 export class DatasetUploadPage extends Component {
   constructor(props) {
@@ -71,9 +70,14 @@ export class DatasetUploadPage extends Component {
                     <div className={ styles.separater }></div>
                   </div>
                 }
-                <RaisedButton label="Upload dataset" primary={ true } onClick={ this.onOpenClick } />
-                  <span>or drag and drop files here</span>
-                  <span>Supported: CSV, TSV, JSON, EXCEL</span>
+                <button
+                  type="button"
+                  className="pt-button pt-intent-primary pt-large"
+                  onClick={ this.onOpenClick }>
+                  Upload Dataset
+                </button>
+                <span>or drag and drop files here</span>
+                <span>Supported: CSV, TSV, JSON, EXCEL</span>
               </Dropzone>
             }
           </div>

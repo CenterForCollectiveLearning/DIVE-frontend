@@ -5,9 +5,11 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
+import { Button, Intent } from '@blueprintjs/core';
+
+import { Menu, MenuDivider, MenuItem, Popover, Position, NonIdealState } from "@blueprintjs/core";
 import ProjectCreateModal from '../Base/ProjectCreateModal';
 import ProjectButton from '../Base/ProjectButton';
-import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
 import Loader from '../Base/Loader';
@@ -72,6 +74,20 @@ export class ProjectListPage extends Component {
         return (aValue >= bValue) ? (aValue > bValue ? sortOrder : 0) : -sortOrder;
       });
 
+    const compassMenu = (
+        <Menu>
+            <MenuItem iconName="graph" text="Graph" />
+            <MenuItem iconName="map" text="Map" />
+            <MenuItem iconName="th" text="Table" shouldDismissPopover={false} />
+            <MenuItem iconName="zoom-to-fit" text="Nucleus" disabled={true} />
+            <MenuDivider />
+            <MenuItem iconName="cog" text="Settings...">
+                <MenuItem iconName="add" text="Add new application" disabled={true} />
+                <MenuItem iconName="remove" text="Remove application" />
+            </MenuItem>
+        </Menu>
+    );
+
     return (
       <DocumentTitle title='DIVE | Projects'>
         <div className={ styles.centeredFill }>
@@ -79,21 +95,13 @@ export class ProjectListPage extends Component {
             <div className={ styles.projectListTopbar }>
               <div className={ styles.pageLabel }>Your Projects</div>
               <div className={ styles.pullRight }>
-                <RaisedButton
-                  label="+ Create Project"
-                  buttonStyle="blueAction"
-                  onClick={ this._onClickCreateProject }
-                  className={ styles.createProjectButton } />
-                {/* <ToggleButtonGroup
-                  value={ viewMode }
-                  toggleItems={ [
-                    { value: 'default', label: 'Default' },
-                    { value: 'expanded', label: 'Expanded' },
-                  ] }
-                  displayTextMember="label"
-                  valueMember="value"
-                  separated={ false }
-                  onChange={ this.onSelectProjectViewMode } /> */}
+                <Button
+                  className={ styles.createProjectButton }
+                  intent={ Intent.PRIMARY }
+                  iconName="add"
+                  onClick={ this._onClickCreateProject }>
+                  Create Project
+                </Button>
                 <div className={ styles.sortTypeDropdownContainer }>
                   <DropDownMenu
                     value={ sortField }
@@ -128,9 +136,11 @@ export class ProjectListPage extends Component {
             { !isFetchingUserProjects && userProjects.length == 0 &&
               <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
                 <div className={ styles.projectListSidebar }></div>
-                <div className={ styles.watermark }>
-                  You have no projects &#x2639;
-                </div>
+                <NonIdealState
+                  title='No projects'
+                  description='To create a project, click the above "Create Project" button'
+                  visual='folder-open'
+                />
               </div>
             }
             { isFetchingUserProjects && userId &&
@@ -139,12 +149,11 @@ export class ProjectListPage extends Component {
                 <Loader text='Loading Your Projects' />
               </div>
             }
-            { this.state.projectCreateModalOpen &&
-              <ProjectCreateModal
-                userId={ userId }
-                closeAction={ this.closeProjectSettingsModal }
-              />
-            }
+            <ProjectCreateModal
+              userId={ userId }
+              closeAction={ this.closeProjectSettingsModal }
+              isOpen={ this.state.projectCreateModalOpen }
+            />
           </div>
         </div>
       </DocumentTitle>

@@ -5,6 +5,8 @@ import canvg from 'canvg-browser';
 import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
 
+import { Button } from '@blueprintjs/core';
+
 import { fetchDatasets } from '../../../actions/DatasetActions';
 import { fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
@@ -133,22 +135,28 @@ export class SingleVisualizationView extends Component {
         </div>
         <div className={ styles.headerControlRow }>
           <div className={ styles.headerControl }>
-            <RaisedButton label="Back to Explore" onClick={ this.onClickExplore } fullWidth={ true }/>
+            <Button iconName='undo' text="Back to Explore" onClick={ this.onClickExplore } fullWidth={ true }/>
           </div>
           <div className={ styles.headerControl }>
-            <RaisedButton onClick={ this.onClickShare }>
-              { visualization.isExporting && "Exporting..." }
-              { !visualization.isExporting && "URL" }
-            </RaisedButton>
-            <RaisedButton label="SVG" onClick={ this.saveAs.bind(this, fileName, 'svg') } fullWidth={ true }/>
-            <RaisedButton label="PNG" onClick={ this.saveAs.bind(this, fileName, 'png') } fullWidth={ true }/>
-            <RaisedButton label="PDF" onClick={ this.saveAs.bind(this, fileName, 'pdf') } fullWidth={ true }/>
+            <div className="pt-button-group">
+              <Button onClick={ this.onClickShare }>
+                { visualization.isExporting && "Exporting..." }
+                { !visualization.isExporting && "URL" }
+              </Button>
+              <Button text="SVG" onClick={ this.saveAs.bind(this, fileName, 'svg') } fullWidth={ true }/>
+              <Button text="PNG" onClick={ this.saveAs.bind(this, fileName, 'png') } fullWidth={ true }/>
+              <Button text="PDF" onClick={ this.saveAs.bind(this, fileName, 'pdf') } fullWidth={ true }/>
+            </div>
           </div>
           <div className={ styles.headerControl }>
-            <RaisedButton onClick={ this.saveVisualization } active={ saved } buttonStyle='blueActive'>
-              { !visualization.isSaving && visualization.exportedSpecId && <i className="fa fa-star"></i> }
-              { !visualization.exportedSpecId && <i className="fa fa-star-o"></i> }
-            </RaisedButton>
+            <Button onClick={ this.saveVisualization } active={ saved } buttonStyle='blueActive' loading={ visualization.isSaving }>
+              { !visualization.isSaving && !visualization.exportedSpecId &&
+                <div><span className='pt-icon-standard pt-icon-star-empty' />Save</div>
+              }
+              { visualization.exportedSpecId &&
+                <div><span className='pt-icon-standard pt-icon-star' />Saved</div>
+              }
+            </Button>
           </div>
         </div>
       </VisualizationView>

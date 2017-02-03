@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Button, NonIdealState } from '@blueprintjs/core';
 
 import styles from '../Analysis.sass';
 
@@ -160,9 +161,12 @@ export class ComparisonView extends Component {
           }
         </div>
       } else {
-      comparisonContent =
-      <div className={ styles.watermark }>
-        Please Select Two or More Variables
+      comparisonContent = < div className={ styles.centeredFill }>
+        <NonIdealState
+          title='Too Few Variables Selected'
+          description='To run a comparison, please select two or more variables'
+          visual='variable'
+        />
       </div>
     }
 

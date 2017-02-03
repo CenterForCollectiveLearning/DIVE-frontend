@@ -18,6 +18,7 @@ export class LandingPage extends Component {
 
     this.state = {
       userOptionsOpen: true,
+      opaqueNavbar: false
     };
   }
 
@@ -30,11 +31,11 @@ export class LandingPage extends Component {
     wipeProjectState();
   }
 
-  _onClickLogo(){
+  _onClickLogo = () => {
     this.props.push(`/`);
   }
 
-  _getSelectedTab(){
+  _getSelectedTab = () => {
     const tabList = ["/projects", "/about"];
     const _validTab = function (tabValue) {
       return tabList.indexOf(tabValue) > -1;
@@ -54,49 +55,44 @@ export class LandingPage extends Component {
     this.setState({ userOptionsOpen: false });
   }
 
+  _handleScroll = (e) => {
+    const scrollThreshold = 200;
+    this.setState({ opaqueNavbar: (e.target.scrollTop > scrollThreshold) });
+  }
+
   render() {
-    const { user } = this.props;
+    const { user, location } = this.props;
+    const onLandingPage = (location.pathname == '/');
+
     return (
       <DocumentTitle title='DIVE | Landing'>
-        <div className={ styles.fillContainer + ' ' + styles.landingPage }>
-          <div className={ styles.background }>
-          </div>
-          <div className={ styles.landingPageContent + ( this.props.children ? ' ' + styles.landingPageProjects : ' ' + styles.landingPageHome) }>
-            <div className={ styles.header }>
-              <div className={ styles.logoContainer } onClick={ this._onClickLogo.bind(this) }>
-                <div className={ styles.logoText }>
-                  DIVE
-                </div>
+        <div className={ styles.fillContainer + ' ' + styles.landingPage } onScroll={ this._handleScroll }>
+          <div className={ styles.background } />
+          <div
+            className={ styles.landingPageContent + ( this.props.children ? ' ' + styles.landingPageProjects : ' ' + styles.landingPageHome) }
+          >
+          <nav className={ 'pt-navbar pt-dark pt-fixed-top ' + styles.header + ( onLandingPage ? ( this.state.opaqueNavbar ? ' ' + styles.opaque : '') : ' ' + styles.opaque) }>
+            <div className="pt-navbar-group pt-align-left">
+              <div className={ 'pt-navbar-heading ' + styles.logoContainer } onClick={ this._onClickLogo }>
                 <Logo className={ styles.logo } />
+                <div className={ styles.logoText }>DIVE</div>
               </div>
-              <div className={ styles.topRightControls }>
+            </div>
+              <div className="pt-navbar-group pt-align-right">
                 { user && user.username &&
-                  <div className={ styles.linkContainer }>
-                    <Link route="/preloaded">Preloaded Projects</Link>
-                    <Link route="/projects">Your Projects</Link>
-                    <div className={ styles.userOptions + ( this.state.userOptionsOpen ? ' ' + styles.open : '' )} >
-                      <div className={ styles.usernameAndChevron }>
-                        <span className={ styles.username }>{ user.username }</span>
-                        <div className={ styles.userOptionsMenu }>
-                          <div>Settings</div>
-                          <div onClick={ this.props.logoutUser }>Sign Out</div>
-                        </div>
-                      </div>
-                    </div>
+                  <div>
+                    <Link className="pt-button pt-minimal pt-icon-projects" route="/projects">Projects</Link>
+                    <span className="pt-navbar-divider"></span>
+                    <div className="pt-button pt-minimal pt-icon-log-out" onClick={ this.props.logoutUser }>Log Out</div>
                   </div>
                 }
                 { (!user || !user.username) &&
-                  <div className={ styles.linkContainer }>
-                    <Link route="/login">Log In</Link>
-                  </div>
+                  <Link className="pt-button pt-minimal pt-icon-log-in" route="/login">Log In</Link>
                 }
               </div>
-
-            </div>
+            </nav>
             <div className={ styles.centeredFill }>
-              { this.props.children ||
-                <HomePage />
-              }
+              { this.props.children || <HomePage /> }
             </div>
           </div>
         </div>

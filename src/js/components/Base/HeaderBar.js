@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import { HELPER_TEXT } from './HelperText'
 import styles from './HeaderBar.sass';
 
@@ -26,6 +27,12 @@ export default class HeaderBar extends Component {
     const { className, textClassName, header, subheader, actions, helperText } = this.props;
     const { showHelperText } = this.state;
 
+    let popoverContent = (
+      <div>
+        <p>{ HELPER_TEXT[helperText] }</p>
+      </div>
+    );
+
     return (
       <div className={
         styles.headerBar
@@ -46,14 +53,19 @@ export default class HeaderBar extends Component {
         </div>
         <div className={ styles.headerRightActions }>
           { helperText &&
-            <i
-              onMouseOut={ this._hideHoverText.bind(this) }
-              onMouseOver={ this._showHoverText.bind(this) }
-              className={'fa fa-question-circle' + ' ' + styles.helperButton }
-            />
-          }
-          { helperText && showHelperText &&
-            <div className={ styles.helperText }>{ HELPER_TEXT[helperText] }</div>
+            <Popover content={ popoverContent }
+              interactionKind={ PopoverInteractionKind.HOVER_TARGET_ONLY }
+              popoverClassName="pt-popover-content-sizing"
+              position={ Position.LEFT }
+              useSmartPositioning={ true }
+              transitionDuration={ 100 }
+              hoverOpenDelay={ 100 }
+              hoverCloseDelay={ 100 }
+            >
+              <i
+                className={'fa fa-question-circle' + ' ' + styles.helperButton }
+              />
+           </Popover>
           }
         </div>
         <div className={ styles.pageRightActions } >

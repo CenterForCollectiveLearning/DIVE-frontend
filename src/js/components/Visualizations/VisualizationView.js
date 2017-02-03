@@ -64,9 +64,6 @@ export default class VisualizationView extends Component {
           }
           { visualization.tableData.length != 0 &&
             <div>
-              <HeaderBar
-                header={ <div>Data Table</div> }
-                actions={ this.props.children } />
               <div className={ styles.tableContainer }>
                 <DataGrid
                   id={ `${ visualization.spec.id }` }

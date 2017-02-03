@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { createProject } from '../../actions/ProjectActions.js';
 import styles from '../App/App.sass';
 
-import BlockingModal from './BlockingModal';
+import { Button, Classes, Dialog } from '@blueprintjs/core';
+
 import RaisedButton from './RaisedButton';
 import Input from './Input';
 import TextArea from './TextArea';
@@ -19,7 +20,7 @@ class ProjectCreateModal extends Component {
     };
   }
 
-  submit() {
+  submit = () => {
     const { createProject, closeAction, userId } = this.props;
     const { projectTitle, projectDescription } = this.state;
 
@@ -36,41 +37,39 @@ class ProjectCreateModal extends Component {
   }
 
   render() {
-    const { closeAction } = this.props;
+    const { closeAction, isOpen } = this.props;
     const { projectTitle, projectDescription } = this.state;
 
-    var footer =
-      <div className={ styles.footerContent }>
-        <div className={ styles.rightActions }>
-          <RaisedButton primary normalHeight minWidth={ 100 } onClick={ this.submit.bind(this) }>Create</RaisedButton>
-          <RaisedButton onClick={ closeAction }>Cancel</RaisedButton>
-        </div>
-      </div>;
-
     return (
-      <BlockingModal
-        scrollable={ false }
-        closeAction={ this.props.closeAction }
-        heading="Create a Project"
-        footer={ footer }>
-        <div className={ styles.fillContainer }>
-          <div className={ styles.controlSection }>
-            <div className={ styles.label }>Title</div>
-            <Input
-              type="text"
-              placeholder={ projectTitle }
-              autofocus={ true }
-              onChange={ this.enteredProjectNameInput.bind(this) }/>
-          </div>
-          <div className={ styles.controlSection }>
-            <div className={ styles.label }>Description</div>
-            <TextArea
-              type="textarea"
-              placeholder={ projectDescription }
-              onChange={ this.enteredProjectDescriptionInput.bind(this) }/>
-          </div>
+      <Dialog
+        onClose={ closeAction }
+        title='Create New Project'
+        isOpen={ isOpen }
+      >
+        <div className={ Classes.DIALOG_BODY }>
+           <div className={ styles.controlSection }>
+              <div className={ styles.label }>Title</div>
+              <Input
+                type="text"
+                placeholder={ projectTitle }
+                autofocus={ true }
+                onChange={ this.enteredProjectNameInput.bind(this) }/>
+            </div>
+            <div className={ styles.controlSection }>
+              <div className={ styles.label }>Description</div>
+              <TextArea
+                className='pt-input pt-fill'
+                type="textarea"
+                placeholder={ projectDescription }
+                onChange={ this.enteredProjectDescriptionInput.bind(this) }/>
+            </div>
         </div>
-      </BlockingModal>
+        <div className={ Classes.DIALOG_FOOTER }>
+            <div className={ Classes.DIALOG_FOOTER_ACTIONS }>
+                <Button className="pt-intent-primary" onClick={ this.submit }>Create</Button>
+            </div>
+        </div>
+      </Dialog>
     );
   }
 }
@@ -79,12 +78,14 @@ ProjectCreateModal.propTypes = {
   userId: PropTypes.number.isRequired,
   projectTitle: PropTypes.string,
   projectDescription: PropTypes.string,
-  closeAction: PropTypes.func
+  closeAction: PropTypes.func,
+  isOpen: PropTypes.bool
 };
 
 ProjectCreateModal.defaultProps = {
   projectTitle: 'Project Title',
-  projectDescription: 'Project Description'
+  projectDescription: 'Project Description',
+  isOpen: false
 }
 
 function mapStateToProps(state) {

@@ -5,6 +5,8 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
+import { Button, Intent } from '@blueprintjs/core';
+
 import ProjectCreateModal from '../Base/ProjectCreateModal';
 import RaisedButton from '../Base/RaisedButton';
 import ProjectButton from '../Base/ProjectButton';
@@ -50,8 +52,9 @@ export class HomePage extends Component {
     this.setState({ projectCreateModalOpen: false });
   }
 
-  _onUploadClick() {
+  _onUploadClick = () => {
     const { user, userId, push, createProject } = this.props;
+    console.log('Uploading');
     if (user.isAuthenticated) {
       this.setState({ projectCreateModalOpen: true });
     } else {
@@ -74,11 +77,12 @@ export class HomePage extends Component {
               DIVE lets you turn data into stories within minutes, without writing a single line of code
             </div>
             <div className={ styles.ctaContainer }>
-              <RaisedButton
-                label="Upload Data"
-                primary={ true }
-                onClick={ this._onUploadClick.bind(this) }
-                className={ styles.uploadButton + ' ' + styles.primary } />
+              <Button
+                text="Upload Data"
+                intent={ Intent.PRIMARY }
+                className="pt-large"
+                onClick={ this._onUploadClick }
+              />
             </div>
             <div className={ styles.video }>
               <iframe src="https://player.vimeo.com/video/179173590" color="#007BD7" width="600" height="340" frameBorder="0" allowFullScreen />
@@ -177,12 +181,11 @@ export class HomePage extends Component {
               </div>
             </div>
           </div>
-          { this.state.projectCreateModalOpen &&
-            <ProjectCreateModal
-              userId={ userId }
-              closeAction={ this.closeProjectSettingsModal }
-            />
-          }
+          <ProjectCreateModal
+            userId={ userId }
+            closeAction={ this.closeProjectSettingsModal }
+            isOpen={ this.state.projectCreateModalOpen }
+          />
           <Footer />
         </div>
       </DocumentTitle>

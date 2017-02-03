@@ -7,6 +7,7 @@
   flex-direction: row
   min-height: 100px
   width: calc(100% - 100px)
+  padding: 0 !important
 
   align-items: left
   justify-content: left
@@ -24,9 +25,6 @@
 
   &:first-of-type
     border-top: 1px solid $ui-line-grey
-
-  &:hover
-    border-color: $primary-accent
 
   .starContainer
     display: flex
@@ -116,50 +114,12 @@
     align-items: center
     justify-content: center
     width: 35px
+    height: 100%
 
-    .dropdown
-      position: absolute
-      opacity: 0
-      user-select: none
-      pointer-events: none
-      top: 95px
-      right: 0
-      background-color: white
-      z-index: 100
-      min-width: 150px
-
-      border: 1px solid $ui-line-grey
-      border-radius: 3px
-      position: absolute
-      padding: 3px 0px
-
-      .dropdownOption
-        padding: 8px 12px
-        cursor: pointer
-
-        &:hover
-          background-color: $primary-accent
-          color: white
-
-    &:after
-      content: "︿"
-      font-weight: bold
-      position: relative
-      top: -3px
-
-    &:hover
+    &.pt-popover-open
       background-color: $ui-header-grey
-
-      &:after
-        content: "﹀"
-        top: 3px
-
-      .dropdown
-        opacity: 1
-        pointer-events: auto
-        user-select: text
-
-
+      &:before
+        content: '\E655'
 
   &.showDatasets
     .projectButtonTop

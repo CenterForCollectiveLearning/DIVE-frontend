@@ -41,7 +41,7 @@ export default class Visualization extends Component {
   }
 
   render() {
-    const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields, config } = this.props;
+    const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields, config, isCard } = this.props;
     const { args, meta } = spec;
     const chartId = `${ this.props.chartId || spec.id  }${ ( sortIndex ? '-' + sortIndex : '') }`;
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
@@ -147,7 +147,7 @@ export default class Visualization extends Component {
     }
 
     return (
-      <div className={ containerClassName } onClick={ this.handleClick }>
+      <div className={ ( isCard ? 'pt-card pt-interactive ' : '' )+ containerClassName } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
           <div className={ headerClassName }>
             { spec.meta.construction.map(function(construct, i) {
@@ -283,7 +283,8 @@ Visualization.propTypes = {
   bins: PropTypes.array,
   sortOrders: PropTypes.array,
   sortFields: PropTypes.array,
-  config: PropTypes.object
+  config: PropTypes.object,
+  isCard: PropTypes.bool
 };
 
 Visualization.defaultProps = {
@@ -298,5 +299,6 @@ Visualization.defaultProps = {
   sortOrders: [],
   sortFields: [],
   fieldNameToColor: {},
-  config: {}
+  config: {},
+  isCard: false
 };

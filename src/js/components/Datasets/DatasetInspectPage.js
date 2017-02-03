@@ -107,25 +107,25 @@ export class DatasetInspectPage extends Component {
         <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
           <HeaderBar
             actions={
-              <div className={ styles.headerControlRow }>
-                <div className={ styles.headerControl }>
-                  <RaisedButton icon onClick={ this.onClickDeleteDataset }>
-                    <i className="fa fa-trash"></i>
-                  </RaisedButton>
-                </div>
-                <div className={ styles.headerControl }>
-                  <ToggleButtonGroup
-                    toggleItems={ datasetSelector.layoutTypes }
-                    valueMember="id"
-                    displayTextMember="label"
-                    expand={ false }
-                    separated={ false }
-                    externalSelectedItems={ [ selectedLayoutType ] }
-                    onChange={ (v) => this.clickQueryStringTrackedItem({ selectedLayoutType: v }) } />
-                </div>
-                <div className={ styles.headerControl }>
-                  <RaisedButton buttonStyle='blueAction' label="+ Upload new dataset" onClick={ this.onClickUploadDataset } />
-                </div>
+              <div>
+                <button
+                  type="button"
+                  className="pt-button pt-intent-primary pt-icon-add"
+                  onClick={ this.onClickUploadDataset }>
+                  Upload New Dataset
+                </button>
+                <ToggleButtonGroup
+                  toggleItems={ datasetSelector.layoutTypes }
+                  valueMember="id"
+                  displayTextMember="label"
+                  expand={ false }
+                  separated={ false }
+                  externalSelectedItems={ [ selectedLayoutType ] }
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ selectedLayoutType: v }) } />
+                <button
+                  type="button"
+                  className="pt-button pt-icon-trash"
+                  onClick={ this.onClickDeleteProject } />
               </div>
             }
           />

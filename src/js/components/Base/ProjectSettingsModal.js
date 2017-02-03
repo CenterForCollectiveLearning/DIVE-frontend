@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { updateProject, deleteProject } from '../../actions/ProjectActions.js';
 import styles from '../App/App.sass';
 
-import BlockingModal from './BlockingModal';
+import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
+
 import RaisedButton from './RaisedButton';
 import Input from './Input';
 import TextArea from './TextArea';
@@ -19,7 +20,7 @@ class ProjectSettingsModal extends Component {
     };
   }
 
-  submit() {
+  submit = () => {
     const { projectId, updateProject, closeAction } = this.props;
     const { projectName, projectDescription } = this.state;
 
@@ -27,70 +28,73 @@ class ProjectSettingsModal extends Component {
     closeAction();
   }
 
-  enteredProjectNameInput(event) {
+  enteredProjectNameInput = (event) => {
     this.setState({ projectName: event.target.value });
   }
 
-  enteredProjectDescriptionInput(event) {
+  enteredProjectDescriptionInput = (event) => {
     this.setState({ projectDescription: event.target.value });
   }
 
-  onClickDeleteProject() {
+  onClickDeleteProject = () => {
     const { projectId, deleteProject } = this.props;
     deleteProject(projectId);
   }
 
   render() {
-    const { closeAction } = this.props;
+    const { closeAction, isOpen } = this.props;
     const { projectName, projectDescription } = this.state;
 
-    var footer =
-      <div className={ styles.footerContent }>
-        <RaisedButton icon altText="Delete project" onClick={ this.onClickDeleteProject.bind(this) }>
-          <i className="fa fa-trash"></i>
-        </RaisedButton>
-
-        <div className={ styles.rightActions }>
-          <RaisedButton primary normalHeight minWidth={ 100 } onClick={ this.submit.bind(this) }>Save</RaisedButton>
-          <RaisedButton onClick={ closeAction }>Cancel</RaisedButton>
-        </div>
-      </div>;
-
     return (
-      <BlockingModal
-        scrollable={ false }
-        closeAction={ this.props.closeAction }
-        heading="Project Settings"
-        footer={ footer }>
-        <div className={ styles.fillContainer }>
-          <div className={ styles.controlSection }>
-            <div className={ styles.label }>Project Name</div>
-            <Input
-              type="text"
-              placeholder={ projectName }
-              value={ projectName }
-              onChange={ this.enteredProjectNameInput.bind(this) }/>
-          </div>
-          <div className={ styles.controlSection }>
-            <div className={ styles.label }>Project Description</div>
-            <TextArea
-              type="textarea"
-              placeholder={ projectDescription }
-              value={ projectDescription }
-              onChange={ this.enteredProjectDescriptionInput.bind(this) }/>
-          </div>
+      <Dialog
+        onClose={ closeAction }
+        title='Edit Project Settings'
+        isOpen={ isOpen }
+      >
+        <div className={ Classes.DIALOG_BODY }>
+           <div className={ styles.controlSection }>
+              <div className={ styles.label }>Title</div>
+              <Input
+                type="text"
+                placeholder={ projectName }
+                autofocus={ true }
+                value={ projectName }
+                onChange={ this.enteredProjectNameInput }/>
+            </div>
+            <div className={ styles.controlSection }>
+              <div className={ styles.label }>Description</div>
+              <TextArea
+                className='pt-input pt-fill'
+                type="textarea"
+                placeholder={ projectDescription }
+                value={ projectDescription }
+                onChange={ this.enteredProjectDescriptionInput }/>
+            </div>
         </div>
-      </BlockingModal>
+        <div className={ Classes.DIALOG_FOOTER }>
+            <div className={ Classes.DIALOG_FOOTER_ACTIONS }>
+                <Button intent={ Intent.DANGER } iconName="trash" onClick={ this.onClickDeleteProject }>Delete</Button>
+                <Button intent={ Intent.PRIMARY } onClick={ this.submit }>Save Changes</Button>
+            </div>
+        </div>
+      </Dialog>
     );
   }
 }
 
 ProjectSettingsModal.propTypes = {
-  projectId: PropTypes.number.isRequired,
+  projectId: PropTypes.any.isRequired,
   projectName: PropTypes.string.isRequired,
   projectDescription: PropTypes.string.isRequired,
-  closeAction: PropTypes.func
+  closeAction: PropTypes.func,
+  isOpen: PropTypes.bool
 };
+
+ProjectSettingsModal.defaultProps = {
+  projectTitle: 'Project Title',
+  projectDescription: 'Project Description',
+  isOpen: false
+}
 
 function mapStateToProps(state) {
   return {};

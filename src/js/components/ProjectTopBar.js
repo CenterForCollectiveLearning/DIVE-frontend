@@ -128,7 +128,6 @@ export class ProjectTopBar extends Component {
                 }
               </div>
             }
-
             <div className={ styles.section }>
               <span className={ styles.separator }>&#9002;</span>
               <div className={ styles.item }>

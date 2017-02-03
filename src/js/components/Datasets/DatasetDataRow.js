@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { ChromePicker } from 'react-color';
 
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+
 import styles from './DatasetDataRow.sass';
 import FieldTypes from '../../constants/FieldTypes';
 import RaisedButton from '../Base/RaisedButton';
@@ -98,6 +100,27 @@ class DatasetDataRow extends Component {
       left: '0px',
     }
 
+    let popoverContent = (
+      <Menu>
+        <MenuItem
+          iconName={ this.state.isId ? 'delete' : 'numerical'}
+          onClick={ this.onIDCheckboxChange }
+          text={ this.state.isId ? 'Remove as ID' : 'Mark as ID' }
+        />
+        <MenuItem
+          iconName="edit"
+          onClick={ this.onColorPickerClick }
+          text="Change Color"
+        />
+        <MenuDivider />
+        <MenuItem
+          iconName="timeline-area-chart"
+          onClick={ () => this.onClickVisualizeField(id) }
+          text="Visualize"
+        />
+      </Menu>
+    );
+
     const constructFieldContent = (metadataChildren, statsChildren) => {
       return (
         <div className={ styles.datasetDataRow }>
@@ -126,14 +149,16 @@ class DatasetDataRow extends Component {
               </div>
             }
           </div>
-          <div className={ styles.expandButton }>
-            <div className={ styles.dropdown }>
-              <div className={ styles.dropdownOption } onClick={ this.onIDCheckboxChange }>{ this.state.isId ? 'Remove as ID' : 'Mark as ID'}</div>
-              <div className={ styles.dropdownOption } onClick={ this.onColorPickerClick }>Change Color</div>
-              <div className={ styles.separator } />
-              <div className={ styles.dropdownOption } onClick={ () => this.onClickVisualizeField(id) }>Visualize</div>
-            </div>
-          </div>
+          <Popover content={ popoverContent }
+            interactionKind={ PopoverInteractionKind.HOVER }
+            position={ Position.LEFT }
+            useSmartPositioning={ true }
+            transitionDuration={ 100 }
+            hoverOpenDelay={ 100 }
+            hoverCloseDelay={ 100 }
+          >
+            <div className={ styles.expandButton + ' pt-icon-standard pt-icon-menu-open' } />
+          </Popover>
           { this.state.displayColorPicker ? <div style={ popover }>
             <div style={ cover } onClick={ this.onColorPickerClose }/>
             <ChromePicker

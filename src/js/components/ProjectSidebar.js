@@ -4,6 +4,9 @@ import { push } from 'react-router-redux';
 
 import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions.js';
 import { logoutUser } from '../actions/AuthActions';
+
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem } from '@blueprintjs/core';
+
 import styles from './App/App.sass';
 
 import DropDownMenu from './Base/DropDownMenu';
@@ -101,6 +104,20 @@ export class ProjectSidebar extends Component {
 
     const datasetId = paramDatasetId || datasetSelector.datasetId || (datasets.items.length > 0 && datasets.items[0].datasetId);
 
+    let popoverContent = (
+      <Menu>
+        <MenuItem
+          iconName="edit"
+          onClick={ this.onClickProjectSettings }
+          text="Edit Project Properties"
+        />
+        <MenuItem
+          iconName="log-out"
+          onClick={ this._logout }
+          text={ `Log out of ${ user.username }` }
+        />
+      </Menu>
+    );
     return (
       <div className={ styles.projectSidebar }>
         <div className={ styles.top }>
@@ -133,33 +150,25 @@ export class ProjectSidebar extends Component {
           </TabGroup>
         </Tabs>
         <div className={ styles.bottom }>
-          { this.state.secondaryNavOpen &&
-            <div className={ styles.secondaryNav }>
-              <div className={ styles.secondaryNavItem } onClick={ this.onClickProjectSettings }>
-                Edit Project Properties
-              </div>
-              <div className={ styles.secondaryNavItem } onClick={ this._logout }>
-                Log out of <span className={ styles.username }>{ user.username }</span>
-              </div>
-              { this.state.projectSettingsModalOpen &&
-                <ProjectSettingsModal
-                  projectName={ project.title }
-                  projectDescription={ project.description }
-                  projectId={ project.id }
-                  closeAction={ this.closeProjectSettingsModal }/>
-              }
-            </div>
-          }
-          <div
-            className={
-              styles.secondaryNavToggle +
-              ( this.state.secondaryNavOpen ? (' ' + styles.secondaryNavOpen) : '')
-            }
-            onClick={ this._toggleSecondaryNav }
+          <Popover content={ popoverContent }
+            interactionKind={ PopoverInteractionKind.HOVER }
+            position={ Position.TOP_LEFT }
+            useSmartPositioning={ true }
+            transitionDuration={ 100 }
+            hoverOpenDelay={ 100 }
+            hoverCloseDelay={ 100 }
           >
-              <span>{ user.username }</span>
-              { this.state.secondaryNavOpen ? <span className={ styles.chevron }>&#65088;</span> : <span className={ styles.chevron }>&#65087;</span> }
-          </div>
+            <div>
+              <span className={ styles.username }>{ user.username }</span>
+              <span className={ styles.expandButton + ' pt-icon-standard pt-icon-menu-open' } />
+            </div>
+          </Popover>
+          <ProjectSettingsModal
+            projectName={ project.title }
+            projectDescription={ project.description }
+            projectId={ project.id }
+            isOpen={ this.state.projectSettingsModalOpen }
+            closeAction={ this.closeProjectSettingsModal }/>
         </div>
       </div>
     );
