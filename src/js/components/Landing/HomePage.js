@@ -81,6 +81,7 @@ export class HomePage extends Component {
                 text="Upload Data"
                 intent={ Intent.PRIMARY }
                 className="pt-large"
+                iconName="cloud-upload"
                 onClick={ this._onUploadClick }
               />
             </div>

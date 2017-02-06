@@ -110,7 +110,7 @@ export class DatasetInspectPage extends Component {
               <div>
                 <button
                   type="button"
-                  className="pt-button pt-intent-primary pt-icon-add"
+                  className="pt-button pt-intent-primary pt-icon-cloud-upload"
                   onClick={ this.onClickUploadDataset }>
                   Upload New Dataset
                 </button>

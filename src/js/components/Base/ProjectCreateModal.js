@@ -66,7 +66,7 @@ class ProjectCreateModal extends Component {
         </div>
         <div className={ Classes.DIALOG_FOOTER }>
             <div className={ Classes.DIALOG_FOOTER_ACTIONS }>
-                <Button className="pt-intent-primary" onClick={ this.submit }>Create</Button>
+                <Button className="pt-intent-primary" iconName="add" onClick={ this.submit }>Create</Button>
             </div>
         </div>
       </Dialog>
