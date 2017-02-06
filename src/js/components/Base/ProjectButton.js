@@ -149,7 +149,7 @@ class ProjectButton extends Component {
           hoverOpenDelay={ 100 }
           hoverCloseDelay={ 100 }
         >
-          <div className={ styles.expandButton + ' pt-icon-standard pt-icon-menu-open' } />
+          <span className={ styles.expandButton + ' pt-icon-standard pt-icon-menu-open' } />
         </Popover>
         <ProjectSettingsModal
           projectName={ title }

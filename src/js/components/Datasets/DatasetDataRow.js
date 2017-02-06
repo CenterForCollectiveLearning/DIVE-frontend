@@ -157,7 +157,7 @@ class DatasetDataRow extends Component {
             hoverOpenDelay={ 100 }
             hoverCloseDelay={ 100 }
           >
-            <div className={ styles.expandButton + ' pt-icon-standard pt-icon-menu-open' } />
+            <span className={ styles.expandButton + ' pt-icon-standard pt-icon-menu-open' } />
           </Popover>
           { this.state.displayColorPicker ? <div style={ popover }>
             <div style={ cover } onClick={ this.onColorPickerClose }/>

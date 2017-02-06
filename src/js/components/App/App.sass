@@ -2,6 +2,23 @@
 @import '../../../css/mixins.sass'
 @import '../Base/BlockingModal.sass'
 
+html, body, main
+  height: 100%
+  min-height: 100%
+
+main
+  display: flex
+  flex-direction: column
+  flex-grow:
+
+body
+  margin: 0
+  -webkit-font-smoothing: antialiased
+  font-family: 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif, 'Icons16'
+*
+  box-sizing: border-box
+
+
 .appContainer, .projectContainer
   +maxHeight100NoOverflow
 
