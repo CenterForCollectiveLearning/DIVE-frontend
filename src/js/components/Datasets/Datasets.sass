@@ -21,15 +21,24 @@
 .watermark
   +watermark
 
-.errorDescription
+.dragAndDrop
+  padding-top: 8px
+
+.uploadDescription, .errorDescription
   display: flex
   flex-direction: column
-  margin-bottom: 20px
   align-items: center
+  margin-bottom: 20px
+  line-height: 20px
+  align-items: center
+
+.errorDescription
+  color: $red1
 
 .separater
   border-bottom: 1px solid #eee
-  margin-top: 10px
+  margin-top: 20px
+  margin-bottom: 20px
   width: 70%
 
 .datasetSelectorContainer
@@ -49,12 +58,6 @@
     background-color: rgba(255, 255, 255, 0.8)
     border: 2px dashed #BBB
     justify-content: center
-
-    span
-      color: #2a2d33
-      font-size: 12px
-      font-weight: 400
-      line-height: 35px
 
 .cellContent
   display: flex

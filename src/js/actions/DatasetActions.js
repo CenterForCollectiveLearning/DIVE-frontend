@@ -81,15 +81,15 @@ function progressUploadDatasetDispatcher(event) {
 function progressTaskUploadDatasetDispatcher(data) {
   return {
     type: PROGRESS_UPLOAD_DATASET,
-    progress:  data.currentTask
+    progress: data.currentTask
   }
 }
 
 function errorTaskUploadDatasetDispatcher(event) {
-  console.log(event);
+  console.error(event, event.message);
   return {
     type: ERROR_UPLOAD_DATASET,
-    error: 'Error uploading dataset ☹'
+    error: event.message ? event.message : 'Error uploading dataset ☹'
   }
 }
 
@@ -115,7 +115,17 @@ export function uploadDataset(projectId, datasetFile) {
   formData.append('data', JSON.stringify({ project_id: projectId }));
   formData.append('file', datasetFile);
 
+  const fileSize = datasetFile.size;
+  const fileSizeLimit = 10 * (1000 * 1000);
+
   return (dispatch) => {
+    if (fileSize > fileSizeLimit) {
+      return dispatch(errorTaskUploadDatasetDispatcher({
+        type: 'error',
+        message: `File size is too large (${ fileSizeLimit / (1000 * 1000) }MB limit)`
+      }));
+    }
+
     dispatch(requestUploadDatasetDispatcher());
 
     const uploadEvents = [

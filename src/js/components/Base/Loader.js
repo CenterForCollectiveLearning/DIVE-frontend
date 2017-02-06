@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
+import { Button, Intent, NonIdealState } from "@blueprintjs/core";
+
 import styles from './Loader.sass';
 
 export default class Loader extends Component {
@@ -22,15 +24,17 @@ export default class Loader extends Component {
           </div>
         </div> }
         { error &&
-          <button
-            type="button"
-            className={ `${ styles.refreshButton } pt-button pt-intent-primary pt-large pt-icon-refresh` }
-            onClick={ this.onRefresh }>
-            Refresh DIVE
-          </button>
-        }
-        { text &&
-          <h6 style={{ 'margin-top': '20px' }}>{ text }</h6>
+          <NonIdealState
+            title={ text }
+            description={ <Button
+              className={ `${ styles.refreshButton } pt-large` }
+              intent={ Intent.PRIMARY }
+              iconName="refresh"
+              onClick={ this.onRefresh }>
+              Refresh DIVE
+            </Button> }
+            visual="error"
+          />
         }
       </div>
     );
