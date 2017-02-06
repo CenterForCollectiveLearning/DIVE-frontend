@@ -38,6 +38,9 @@ export class DatasetUploadPage extends Component {
   }
 
   onDrop(files) {
+    const fileSize = files[0].size;
+    const fileSizeLimit = 1000; // 100 * (1000 * 1000);
+
     this.props.uploadDataset(this.props.project.id, files[0]);
   }
 
@@ -47,6 +50,7 @@ export class DatasetUploadPage extends Component {
 
   render() {
     const { projectTitle, datasetSelector } = this.props;
+    console.log('DatasetSelector error:', datasetSelector.error);
     return (
       <DocumentTitle title={ 'Upload' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
         <div className={ styles.fillContainer }>
@@ -64,20 +68,25 @@ export class DatasetUploadPage extends Component {
             }
             { !datasetSelector.isUploading &&
               <Dropzone ref="dropzone" className={ styles.dropzone + ' ' + styles.centeredFill } onDrop={ this.onDrop } disableClick={ true }>
-                { datasetSelector.uploadError &&
-                  <div className={ styles.errorDescription + ' ' + styles.watermark }>
-                    { datasetSelector.uploadError }
-                    <div className={ styles.separater }></div>
-                  </div>
-                }
                 <button
                   type="button"
                   className="pt-button pt-intent-primary pt-large"
                   onClick={ this.onOpenClick }>
                   Upload Dataset
                 </button>
-                <span>or drag and drop files here</span>
-                <span>Supported: CSV, TSV, JSON, EXCEL</span>
+                <div className={ styles.dragAndDrop }>or drag and drop files here</div>
+                <div className={ styles.separater }></div>
+                { !datasetSelector.error &&
+                  <div className={ styles.uploadDescription }>
+                    <div>Supported file types: CSV, TSV, JSON, EXCEL</div>
+                  </div>
+                }
+                { datasetSelector.error &&
+                  <div className={ styles.errorDescription }>
+                    <div>{ datasetSelector.error }</div>
+                    <div>Please try another file</div>
+                  </div>
+                }
               </Dropzone>
             }
           </div>

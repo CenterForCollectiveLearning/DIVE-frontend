@@ -29,9 +29,6 @@ const baseState = {
   datasetId: null,
   title: null,
   loaded: false,
-  isUploading: false,
-  uploadError: null,
-  progress: null,
   error: null,
   projectId: null,
   inspectQueryString: null,
@@ -57,9 +54,9 @@ export default function datasetSelector(state = baseState, action) {
 
     case RECEIVE_UPLOAD_DATASET:
       if (action.error) {
-        return { ...state, loaded: true, isUploading: false, uploadError: action.error };
+        return { ...state, loaded: true, isUploading: false, error: action.error };
       }
-      return { ...state, datasetId: action.datasets[0].datasetId, title: action.datasets[0].title, loaded: true, isUploading: false, uploadError: null, projectId: action.projectId };
+      return { ...state, datasetId: action.datasets[0].datasetId, title: action.datasets[0].title, loaded: true, isUploading: false, error: null, projectId: action.projectId };
 
     case RECEIVE_DATASET:
       return { ...state, datasetId: action.datasetId, title: action.title, loaded: true, progress: null, projectId: action.projectId };
