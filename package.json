@@ -31,6 +31,7 @@
     "lodash": "^3.10.1",
     "moment": "^2.14.1",
     "node-sass": "^3.10.0",
+    "normalize.css": "^5.0.0",
     "react": "^15.4.2",
     "react-addons-css-transition-group": "^15.4.2",
     "react-color": "^2.2.6",
