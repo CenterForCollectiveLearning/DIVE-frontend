@@ -192,18 +192,15 @@ class AuthPage extends Component {
               { (email && email.length > 3 && !emailValid) &&
                 <div className={ styles.authInputError }>Invalid</div>
               }
-              { (email && email.length > 3 && !emailValid) &&
-                <div className={ styles.authInputError }>Invalid</div>
-              }
               { emailError &&
                 <div className={ styles.authInputError }>Taken</div>
               }
               <div className="pt-input-group pt-large">
                 <input
-                  className={ "pt-input pt-large pt-icon-lock pt-fill " + styles.email }
+                  className={ "pt-input pt-large pt-icon-lock pt-fill " + ((emailError || (email && email.length > 3 && !emailValid)) ? 'pt-intent-warning' : '') }
                   placeholder="E-mail Address"
-                  autocomplete="on"
-                  autofocus={ true }
+                  autoComplete="on"
+                  autoFocus={ true }
                   onChange={ this.handleEmailChange }
                   onSubmit={ this.submit }
                 />
@@ -220,9 +217,9 @@ class AuthPage extends Component {
               <div className="pt-input-group pt-large">
                 <input
                   type="text"
-                  className={ "pt-input pt-large pt-icon-user pt-fill " + styles.username }
+                  className={ "pt-input pt-large pt-icon-user pt-fill " + (( usernameError || usernameTooLong || usernameTooShort) ? 'pt-intent-warning' : '')}
                   placeholder="Username"
-                  autocomplete="on"
+                  autoComplete="on"
                   onChange={ this.handleUsernameChange }
                   onSubmit={ this.submit }
                 />
@@ -236,7 +233,7 @@ class AuthPage extends Component {
               { (password && passwordScore >= 3) && <div className={ styles.authInputError + ' ' + styles.strong }>Strong</div> }
               <div className="pt-input-group pt-large">
                 <input
-                  className='pt-input pt-large pt-icon-lock pt-fill'
+                  className={ 'pt-input pt-large pt-icon-lock pt-fill ' + ( (password && passwordScore <= 1) ? 'pt-intent-warning' : '') }
                   type="password"
                   placeholder="Password"
                   onChange={ this.handlePasswordChange }
