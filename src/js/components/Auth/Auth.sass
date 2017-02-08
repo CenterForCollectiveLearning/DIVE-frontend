@@ -1,6 +1,5 @@
 @import '../../../css/mixins.sass'
 
-
 .loginModal, .registerModal
   display: flex
   flex-shrink: 0
@@ -23,7 +22,7 @@
   width: 100%
 
   .generalAuthError
-    font-size: 12px
+    font-size: 14px
     color: $red
     margin-top: 15px
 
@@ -52,7 +51,7 @@
     margin-top: 10px
 
     &:first-of-type
-      margin-top: 0px
+      margin-top: 10px
 
     &:last-of-type
       margin-bottom: 15px
@@ -73,47 +72,13 @@
         color:
         display: flex
 
-    // input[type="text"], input[type="password"]
-    //   height: 40px
-    //   background-image: url(../../../assets/images/auth_icons.png)
-    //   background-repeat: no-repeat
-    //   background-size: 40px 171px
-    //   box-sizing: border-box
-    //   padding-right: 40px
-    //
-    //   &.username
-    //     background-position: 100% -7%
-    //
-    //   &.usernameOrEmail, &.email
-    //     background-position: 100% 30%
-    //
-    //   &.password
-    //     background-position: 100% 67%
-    //
-    //   &::-webkit-input-placeholder
-    //      text-align: left
-    //
-    //   &:-moz-placeholder
-    //      text-align: left
-    //
-    //   &::-moz-placeholder
-    //      text-align: left
-    //
-    //   &:-ms-input-placeholder
-    //      text-align: left
-
-    .checkbox
-      height: 10px
-
-      input[type="checkbox"]
-        margin-top: 0px
-        margin-right: 5px
-        margin-left: 0px
-        float: left
+    .rememberMe
+      float: left
 
     .forgotPassword
       +noSelect
-      +linkStyle(12px)
+      +linkStyle(14px)
+      float: right
       margin-top: -2px
       margin-left: auto
       // font-weight: normal
@@ -137,14 +102,13 @@
 
 
 .registerText, .loginText
-  +regularText
   .registerLink, .loginLink
-    +linkStyle(12px)
+    +linkStyle(14px)
 
 .footerLabel
   display: flex
   align-items: center
-  font-size: 13px
+  font-size: 14px
 
   label.error
     color: darkred

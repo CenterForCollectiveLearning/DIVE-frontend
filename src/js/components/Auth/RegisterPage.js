@@ -7,6 +7,8 @@ import { registerUser } from '../../actions/AuthActions';
 
 import styles from './Auth.sass';
 
+import { Button, Intent, Checkbox } from '@blueprintjs/core';
+
 import Input from '../Base/Input'
 import AuthModal from '../Base/AuthModal';
 import RaisedButton from '../Base/RaisedButton';
@@ -39,7 +41,7 @@ class AuthPage extends Component {
     };
   }
 
-  closeRegistrationPage() {
+  closeRegistrationPage = () => {
     const { push } = this.props;
     push('/')
   }
@@ -171,6 +173,8 @@ class AuthPage extends Component {
       <DocumentTitle title='DIVE | Register'>
         <AuthModal
           scrollable
+          titleText="Register for DIVE"
+          isOpen={ true}
           closeAction={ this.closeRegistrationPage }
           className={ styles.registerModal }
           blackBackground={ true }
@@ -178,10 +182,8 @@ class AuthPage extends Component {
             <span>Account Registration</span>
           }
           footer={
-            <div className={ styles.footerContent }>
-              <div className={ styles.loginText }>
-                Already registered? <span className={ styles.loginLink } onClick={ this._clickLogin }>Click here to login</span>.
-              </div>
+            <div className={ styles.loginText }>
+              Already registered? <span className={ styles.loginLink } onClick={ this._clickLogin }>Click here to login</span>.
             </div>
           }>
 
@@ -196,15 +198,17 @@ class AuthPage extends Component {
               { emailError &&
                 <div className={ styles.authInputError }>Taken</div>
               }
-              <Input
-                type="text"
-                className={ styles.email }
-                placeholder="E-mail Address"
-                autocomplete="on"
-                autofocus={ true }
-                onChange={ this.handleEmailChange }
-                onSubmit={ this.submit }
-              />
+              <div className="pt-input-group pt-large">
+                <input
+                  className={ "pt-input pt-large pt-icon-lock pt-fill " + styles.email }
+                  placeholder="E-mail Address"
+                  autocomplete="on"
+                  autofocus={ true }
+                  onChange={ this.handleEmailChange }
+                  onSubmit={ this.submit }
+                />
+                <span className="pt-icon pt-minimal pt-icon-envelope" />
+              </div>
             </div>
 
             <div className={ styles.authInputGroup }>
@@ -213,37 +217,41 @@ class AuthPage extends Component {
               { usernameError &&
                 <div className={ styles.authInputError }>Taken</div>
               }
-              <Input
-                type="text"
-                className={ styles.username }
-                placeholder="Username"
-                autocomplete="on"
-                onChange={ this.handleUsernameChange }
-                onSubmit={ this.submit }
-              />
+              <div className="pt-input-group pt-large">
+                <input
+                  type="text"
+                  className={ "pt-input pt-large pt-icon-user pt-fill " + styles.username }
+                  placeholder="Username"
+                  autocomplete="on"
+                  onChange={ this.handleUsernameChange }
+                  onSubmit={ this.submit }
+                />
+                <span className="pt-icon pt-minimal pt-icon-user" />
+              </div>
             </div>
 
             <div className={ styles.authInputGroup }>
               { (password && passwordScore <= 1) && <div className={ styles.authInputError + ' ' + styles.weak }>Weak</div> }
               { (password && passwordScore == 2) && <div className={ styles.authInputError + ' ' + styles.good }>Good</div> }
               { (password && passwordScore >= 3) && <div className={ styles.authInputError + ' ' + styles.strong }>Strong</div> }
-              <Input
-                type="password"
-                className={ styles.password }
-                placeholder="Password"
-                onChange={ this.handlePasswordChange }
-                onSubmit={ this.submit }
-              />
+              <div className="pt-input-group pt-large">
+                <input
+                  className='pt-input pt-large pt-icon-lock pt-fill'
+                  type="password"
+                  placeholder="Password"
+                  onChange={ this.handlePasswordChange }
+                  onSubmit={ this.submit }
+                />
+                <span className="pt-icon pt-minimal pt-icon-lock" />
+              </div>
             </div>
-
-            <RaisedButton
-              primary
-              className={ styles.submitButton }
-              minWidth={ 100 }
+            <Button
+              className="pt-large pt-fill"
+              text="Create Account"
+              intent={ Intent.PRIMARY }
               disabled={ !validForm }
-              onClick={ this.submit }>
-              Create your account
-            </RaisedButton>
+              onClick={ this.submit }
+            />
           </form>
         </AuthModal>
       </DocumentTitle>

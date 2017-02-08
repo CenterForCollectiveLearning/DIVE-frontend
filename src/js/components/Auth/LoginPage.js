@@ -5,7 +5,7 @@ import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { loginUser } from '../../actions/AuthActions';
 
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Intent, Checkbox } from '@blueprintjs/core';
 import styles from './Auth.sass';
 
 import Input from '../Base/Input'
@@ -131,6 +131,8 @@ class AuthPage extends Component {
       <DocumentTitle title='DIVE | Login'>
         <AuthModal
           scrollable
+          titleText="Log in to DIVE"
+          isOpen={ true }
           closeAction={ this.closeLoginPage }
           className={ styles.loginModal }
           blackBackground={ true }
@@ -173,18 +175,13 @@ class AuthPage extends Component {
               </div>
             </div>
             <div className={ styles.authInputGroup }>
-              <div className={ styles.checkbox }>
-                <div className={ styles.authInputLabelAndError}>
-                  <input
-                    type="checkbox"
-                    onChange={ this.handleRememberMeChange }
-                    checked={ this.state.rememberMe }
-                    onSubmit={ this.submit }
-                  />
-                  <span className={ styles.authInputLabel }>Remember Me</span>
-                  <span className={ styles.forgotPassword } onClick={ this.clickForgot }>Forgot Password?</span>
-                </div>
-              </div>
+              <Checkbox
+                className={ styles.rememberMe}
+                checked={this.state.rememberMe}
+                onChange={this.handleRememberMeChange}
+                label="Remember Me"
+              />
+              <span className={ styles.forgotPassword } onClick={ this.clickForgot }>Forgot Password?</span>
             </div>
             <Button
               className="pt-large pt-fill"
