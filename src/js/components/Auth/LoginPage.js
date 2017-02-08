@@ -141,7 +141,7 @@ class AuthPage extends Component {
               Don&#39;t have an account? <span className={ styles.registerLink } onClick={ this.clickRegister }>Click here to create one</span>.
             </div>
           }>
-          <form className={ styles.authForm } >
+          <form className={ styles.authForm } onSubmit={ this.submit }>
             <div className={ styles.authInputGroup }>
               { (loginError == 'E-mail not found' || loginError == 'Username not found') &&
                 <div className={ styles.authInputError }>Not found</div>
@@ -151,9 +151,9 @@ class AuthPage extends Component {
                   type="text"
                   className="pt-input pt-large pt-icon-user pt-fill"
                   placeholder="Username or E-mail"
-                  autocomplete="on"
+                  autoComplete="on"
                   onChange={ this.handleUsernameOrEmailChange }
-                  autofocus={ true }
+                  autoFocus={ true }
                   onSubmit={ this.submit }
                 />
                 <span className="pt-icon pt-minimal pt-icon-user" />
@@ -176,15 +176,16 @@ class AuthPage extends Component {
             </div>
             <div className={ styles.authInputGroup }>
               <Checkbox
-                className={ styles.rememberMe}
-                checked={this.state.rememberMe}
-                onChange={this.handleRememberMeChange}
+                className={ styles.rememberMe }
+                checked={ this.state.rememberMe }
+                onChange={ this.handleRememberMeChange }
                 label="Remember Me"
               />
               <span className={ styles.forgotPassword } onClick={ this.clickForgot }>Forgot Password?</span>
             </div>
             <Button
               className="pt-large pt-fill"
+              type="submit"
               text="Login"
               intent={ Intent.PRIMARY }
               disabled={ loginDisabled }

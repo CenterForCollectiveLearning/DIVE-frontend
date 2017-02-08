@@ -244,6 +244,7 @@ class AuthPage extends Component {
             </div>
             <Button
               className="pt-large pt-fill"
+              type="submit"
               text="Create Account"
               intent={ Intent.PRIMARY }
               disabled={ !validForm }

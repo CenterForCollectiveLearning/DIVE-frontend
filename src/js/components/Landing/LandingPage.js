@@ -67,7 +67,6 @@ export class LandingPage extends Component {
     return (
       <DocumentTitle title='DIVE | Landing'>
         <div className={ styles.fillContainer + ' ' + styles.landingPage } onScroll={ this._handleScroll }>
-          <div className={ styles.background } />
           <div
             className={ styles.landingPageContent + ( this.props.children ? ' ' + styles.landingPageProjects : ' ' + styles.landingPageHome) }
           >
