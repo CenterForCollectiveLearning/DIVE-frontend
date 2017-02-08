@@ -154,7 +154,7 @@ class AuthPage extends Component {
                   autofocus={ true }
                   onSubmit={ this.submit }
                 />
-                <button className="pt-button pt-minimal pt-icon-user" />
+                <span className="pt-icon pt-minimal pt-icon-user" />
               </div>
             </div>
             <div className={ styles.authInputGroup }>
@@ -169,7 +169,7 @@ class AuthPage extends Component {
                   onChange={ this.handlePasswordChange }
                   onSubmit={ this.submit }
                 />
-                <button className="pt-button pt-minimal pt-icon-lock" />
+                <span className="pt-icon pt-minimal pt-icon-lock" />
               </div>
             </div>
             <div className={ styles.authInputGroup }>
