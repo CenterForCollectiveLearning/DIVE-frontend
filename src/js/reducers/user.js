@@ -49,6 +49,7 @@ export default function user(state = baseState, action) {
         id: action.id
       };
     case ERROR_LOGIN_USER:
+      console.log('Error login', action, action.error)
       return { ...state, error: { ...state.error, login: action.error }};
     case RECEIVE_REGISTER_USER:
       return { ...state,
