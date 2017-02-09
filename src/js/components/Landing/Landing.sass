@@ -7,6 +7,7 @@
   .header
     background-color: transparent !important
     box-shadow: none !important
+    z-index: 20
 
     &.opaque
       background-color: black !important
@@ -26,16 +27,7 @@
         margin-bottom: 5px
 
   .landingPageContent
-    z-index: 10
-    justify-content: center
-    align-items: center
-    position: relative
-
-    flex-grow: 1
-
     &.landingPageProjects
-      display: flex
-      flex-direction: column
 
 .background
   position: absolute
@@ -121,11 +113,8 @@
     iframe
       border: none
 
-
-
 .projectsContainer
   width: 100%
-  padding-top: 80px
   background-color: white
   border-bottom: 1px solid $ui-line-grey
 
@@ -149,7 +138,8 @@
   .projectListTopbar
     display: flex
     flex-direction: row
-    margin: 0 50px
+    margin: 100px 50px 20px 50px
+
     .pageLabel
       color: black
       font-size: 24px
@@ -171,11 +161,13 @@
         width: 200px
 
   .projectListContainer
-    margin-top: 20px
+    // margin-top: 20px
     width: 100%
     display: flex
     flex-direction: column
     align-items: center
+    max-height: calc(100% - 300px)
+    overflow-y: auto
 
 .watermark
   +watermark
@@ -186,7 +178,7 @@
   flex-grow: 1
   flex-direction: row-reverse
   align-items: center
-  font-size: 12px
+  font-size: 14px
   font-weight: 400
 
   .linkContainer

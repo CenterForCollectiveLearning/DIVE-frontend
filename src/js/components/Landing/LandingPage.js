@@ -90,7 +90,7 @@ export class LandingPage extends Component {
                 }
               </div>
             </nav>
-            <div className={ styles.centeredFill }>
+            <div className={ styles.fillContainer }>
               { this.props.children || <HomePage /> }
             </div>
           </div>

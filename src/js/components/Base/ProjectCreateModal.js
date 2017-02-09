@@ -75,7 +75,7 @@ class ProjectCreateModal extends Component {
 }
 
 ProjectCreateModal.propTypes = {
-  userId: PropTypes.number.isRequired,
+  userId: PropTypes.any.isRequired,
   projectTitle: PropTypes.string,
   projectDescription: PropTypes.string,
   closeAction: PropTypes.func,

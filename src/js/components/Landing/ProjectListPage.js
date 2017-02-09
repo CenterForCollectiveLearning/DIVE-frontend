@@ -90,71 +90,69 @@ export class ProjectListPage extends Component {
 
     return (
       <DocumentTitle title='DIVE | Projects'>
-        <div className={ styles.centeredFill }>
-          <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
-            <div className={ styles.projectListTopbar }>
-              <div className={ styles.pageLabel }>Your Projects</div>
-              <div className={ styles.pullRight }>
-                <Button
-                  className={ styles.createProjectButton }
-                  intent={ Intent.PRIMARY }
-                  iconName="add"
-                  onClick={ this._onClickCreateProject }>
-                  Create Project
-                </Button>
-                <div className={ styles.sortTypeDropdownContainer }>
-                  <DropDownMenu
-                    value={ sortField }
-                    options={ [
-                      { value: 'updateDate', label: 'Last Modified' },
-                      { value: 'creationDate', label: 'Created' },
-                      { value: 'title', label: 'Project Name' },
-                      { value: 'starred', label: 'Starred' },
-                    ]}
-                    valueMember='value'
-                    displayTextMember='label'
-                    prefix="Sort By"
-                    onChange={ this.onSelectProjectSortField } />
-                </div>
+        <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+          <div className={ styles.projectListTopbar }>
+            <div className={ styles.pageLabel }>Your Projects</div>
+            <div className={ styles.pullRight }>
+              <Button
+                className={ styles.createProjectButton }
+                intent={ Intent.PRIMARY }
+                iconName="add"
+                onClick={ this._onClickCreateProject }>
+                Create Project
+              </Button>
+              <div className={ styles.sortTypeDropdownContainer }>
+                <DropDownMenu
+                  value={ sortField }
+                  options={ [
+                    { value: 'updateDate', label: 'Last Modified' },
+                    { value: 'creationDate', label: 'Created' },
+                    { value: 'title', label: 'Project Name' },
+                    { value: 'starred', label: 'Starred' },
+                  ]}
+                  valueMember='value'
+                  displayTextMember='label'
+                  prefix="Sort By"
+                  onChange={ this.onSelectProjectSortField } />
               </div>
             </div>
-            { !isFetchingUserProjects && userId && userProjects.length > 0 &&
-              <div className={ styles.projectListContainer }>
-                { projects.isFetching &&
-                  <div className={ styles.watermark }>Fetching projects...</div>
-                }
-                { sortedProjects.map((project) =>
-                  <ProjectButton
-                    key={ `project-button-id-${ project.id }` }
-                    project={ project }
-                    sortField={ sortField }
-                    viewMode={ viewMode }
-                  />
-                )}
-              </div>
-            }
-            { !isFetchingUserProjects && userProjects.length == 0 &&
-              <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
-                <div className={ styles.projectListSidebar }></div>
-                <NonIdealState
-                  title='No projects'
-                  description='To create a project, click the above "Create Project" button'
-                  visual='folder-open'
-                />
-              </div>
-            }
-            { isFetchingUserProjects && userId &&
-              <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
-                <div className={ styles.projectListSidebar }></div>
-                <Loader text='Loading Your Projects' />
-              </div>
-            }
-            <ProjectCreateModal
-              userId={ userId }
-              closeAction={ this.closeProjectSettingsModal }
-              isOpen={ this.state.projectCreateModalOpen }
-            />
           </div>
+          { !isFetchingUserProjects && userId && userProjects.length > 0 &&
+            <div className={ styles.projectListContainer }>
+              { projects.isFetching &&
+                <div className={ styles.watermark }>Fetching projects...</div>
+              }
+              { sortedProjects.map((project) =>
+                <ProjectButton
+                  key={ `project-button-id-${ project.id }` }
+                  project={ project }
+                  sortField={ sortField }
+                  viewMode={ viewMode }
+                />
+              )}
+            </div>
+          }
+          { !isFetchingUserProjects && userProjects.length == 0 &&
+            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+              <div className={ styles.projectListSidebar }></div>
+              <NonIdealState
+                title='No projects'
+                description='To create a project, click the above "Create Project" button'
+                visual='folder-open'
+              />
+            </div>
+          }
+          { isFetchingUserProjects && userId &&
+            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+              <div className={ styles.projectListSidebar }></div>
+              <Loader text='Loading Your Projects' />
+            </div>
+          }
+          <ProjectCreateModal
+            userId={ userId }
+            closeAction={ this.closeProjectSettingsModal }
+            isOpen={ this.state.projectCreateModalOpen }
+          />
         </div>
       </DocumentTitle>
     );
