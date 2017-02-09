@@ -115,6 +115,7 @@ class AuthPage extends Component {
   submit = () => {
     const { loginUser } = this.props;
     const { email, username, password, rememberMe } = this.state;
+
     loginUser(email, username, password, rememberMe);
   }
 
@@ -141,7 +142,7 @@ class AuthPage extends Component {
               Don&#39;t have an account? <span className={ styles.registerLink } onClick={ this.clickRegister }>Click here to create one</span>.
             </div>
           }>
-          <form className={ styles.authForm } onSubmit={ this.submit }>
+          <form className={ styles.authForm }>
             <div className={ styles.authInputGroup }>
               { (loginError == 'E-mail not found' || loginError == 'Username not found') &&
                 <div className={ styles.authInputError }>Not found</div>

@@ -187,7 +187,7 @@ class AuthPage extends Component {
             </div>
           }>
 
-          <form className={ styles.authForm } onSubmit={ this.submit }>
+          <form className={ styles.authForm } >
             <div className={ styles.authInputGroup }>
               { (email && email.length > 3 && !emailValid) &&
                 <div className={ styles.authInputError }>Invalid</div>

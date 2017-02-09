@@ -107,7 +107,7 @@ export class ExploreSidebar extends Component {
           </SidebarGroup>
         }
         { fieldProperties.items.length > 0 &&
-          <SidebarGroup heading="Create Visualizations by Field">
+          <SidebarGroup heading="Select Fields to Visualize">
             { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupHeader }>

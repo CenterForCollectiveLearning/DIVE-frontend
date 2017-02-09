@@ -90,7 +90,7 @@ export class ProjectListPage extends Component {
 
     return (
       <DocumentTitle title='DIVE | Projects'>
-        <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+        <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer + ' ' + styles.fillContainer }>
           <div className={ styles.projectListTopbar }>
             <div className={ styles.pageLabel }>Your Projects</div>
             <div className={ styles.pullRight }>

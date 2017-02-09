@@ -110,11 +110,12 @@ export class DatasetInspectPage extends Component {
               <div>
                 <button
                   type="button"
-                  className="pt-button pt-intent-primary pt-icon-cloud-upload"
+                  className={ "pt-button pt-intent-primary pt-icon-cloud-upload" }
                   onClick={ this.onClickUploadDataset }>
                   Upload New Dataset
                 </button>
                 <ToggleButtonGroup
+                  className={ styles.formatToggle }
                   toggleItems={ datasetSelector.layoutTypes }
                   valueMember="id"
                   displayTextMember="label"

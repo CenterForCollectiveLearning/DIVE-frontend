@@ -68,7 +68,7 @@ export class LandingPage extends Component {
       <DocumentTitle title='DIVE | Landing'>
         <div className={ styles.fillContainer + ' ' + styles.landingPage } onScroll={ this._handleScroll }>
           <div
-            className={ styles.landingPageContent + ( this.props.children ? ' ' + styles.landingPageProjects : ' ' + styles.landingPageHome) }
+            className={ styles.fillContainer + ' ' + styles.landingPageContent + ( this.props.children ? ' ' + styles.landingPageProjects : ' ' + styles.landingPageHome) }
           >
           <nav className={ 'pt-navbar pt-dark pt-fixed-top ' + styles.header + ( onLandingPage ? ( this.state.opaqueNavbar ? ' ' + styles.opaque : '') : ' ' + styles.opaque) }>
             <div className="pt-navbar-group pt-align-left">
