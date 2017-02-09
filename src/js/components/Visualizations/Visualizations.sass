@@ -23,7 +23,6 @@
     font-size: 13px
     color: #555
     font-weight: 600
-    text-transform: uppercase
 
   .columnFieldLabel
     display: flex
@@ -146,11 +145,9 @@
     margin-top: 7px
 
   .fieldGroupLabel
-    +smallCaps
+    +greyHeading
     margin-top: 17px
     margin-bottom: 5px
-
-    text-transform: uppercase
 
 .sortGroup
   display: flex
@@ -283,10 +280,8 @@
           font-size: 16px
 
         .blockSectionHeaderTitle
-          text-transform: uppercase
-          color: $small-caps-grey
-          font-weight: 600
-          font-size: 11px
+          +greyHeading
+          text-transform: capitalize
 
         strong
           font-weight: 500

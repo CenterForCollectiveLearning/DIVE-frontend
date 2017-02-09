@@ -130,21 +130,21 @@ export class ProjectSidebar extends Component {
           <div className={ styles.projectTitle }>{ project.title }</div>
         </div>
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange } >
-          <TabGroup heading="1. DATASETS">
+          <TabGroup heading="1. Datasets">
             <Tab label="Upload" value="upload" route={ `datasets/upload` } />
             <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
             <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } disabled={ !datasets.items.length }/>
           </TabGroup>
-          <TabGroup heading="2. VISUALIZATIONS">
+          <TabGroup heading="2. Visualizations">
             <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
           </TabGroup>
-          <TabGroup heading="3. ANALYSIS">
+          <TabGroup heading="3. Analyses">
             <Tab label="Aggregation" value="aggregation" route={ `datasets/${ datasetId }/analyze/aggregation` } disabled={ !datasetId }/>
             <Tab label="Comparison" value="comparison" route={ `datasets/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>
             <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
             <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
           </TabGroup>
-          <TabGroup heading="4. STORIES">
+          <TabGroup heading="4. Stories">
             <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>
             <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
           </TabGroup>

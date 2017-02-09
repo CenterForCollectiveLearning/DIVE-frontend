@@ -112,10 +112,11 @@ class AuthPage extends Component {
     }
   };
 
-  submit = () => {
+  submit = (e) => {
     const { loginUser } = this.props;
     const { email, username, password, rememberMe } = this.state;
 
+    e.preventDefault();
     loginUser(email, username, password, rememberMe);
   }
 
@@ -142,7 +143,7 @@ class AuthPage extends Component {
               Don&#39;t have an account? <span className={ styles.registerLink } onClick={ this.clickRegister }>Click here to create one</span>.
             </div>
           }>
-          <form className={ styles.authForm }>
+          <form className={ styles.authForm } onsubmit={ this.submit }>
             <div className={ styles.authInputGroup }>
               { (loginError == 'E-mail not found' || loginError == 'Username not found') &&
                 <div className={ styles.authInputError }>Not found</div>
@@ -150,12 +151,11 @@ class AuthPage extends Component {
               <div className="pt-input-group pt-large">
                 <input
                   type="text"
-                  className="pt-input pt-large pt-icon-user pt-fill"
+                  className={ "pt-input pt-large pt-icon-user pt-fill " + ((loginError == 'E-mail not found' || loginError == 'Username not found') ? 'pt-intent-warning' : '') }
                   placeholder="Username or E-mail"
                   autoComplete="on"
                   onChange={ this.handleUsernameOrEmailChange }
                   autoFocus={ true }
-                  onSubmit={ this.submit }
                 />
                 <span className="pt-icon pt-minimal pt-icon-user" />
               </div>
@@ -166,11 +166,10 @@ class AuthPage extends Component {
               }
               <div className="pt-input-group pt-large">
                 <input
-                  className='pt-input pt-large pt-icon-lock pt-fill'
+                  className={ 'pt-input pt-large pt-icon-lock pt-fill ' + ((loginError == 'Incorrect credentials') ? 'pt-intent-warning' : '' ) }
                   type="password"
                   placeholder="Password"
                   onChange={ this.handlePasswordChange }
-                  onSubmit={ this.submit }
                 />
                 <span className="pt-icon pt-minimal pt-icon-lock" />
               </div>
@@ -179,15 +178,15 @@ class AuthPage extends Component {
               <Checkbox
                 className={ styles.rememberMe }
                 checked={ this.state.rememberMe }
-                onChange={ this.handleRememberMeChange }
+
                 label="Remember Me"
               />
               <span className={ styles.forgotPassword } onClick={ this.clickForgot }>Forgot Password?</span>
             </div>
             <Button
               className="pt-large pt-fill"
-              type="submit"
               text="Login"
+              type="submit"
               intent={ Intent.PRIMARY }
               disabled={ loginDisabled }
               onClick={ this.submit }

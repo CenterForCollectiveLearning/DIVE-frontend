@@ -133,7 +133,7 @@ class AuthPage extends Component {
     return validForm;
   }
 
-  submit = () => {
+  submit = (e) => {
     const { registerUser } = this.props;
     const {
       email,
@@ -142,6 +142,7 @@ class AuthPage extends Component {
     } = this.state;
 
     const validForm = this.validateForm();
+    e.preventDefault();
 
     if (validForm) {
       registerUser(email, username, password);
@@ -187,7 +188,7 @@ class AuthPage extends Component {
             </div>
           }>
 
-          <form className={ styles.authForm } >
+          <form className={ styles.authForm } onsubmit={ this.submit }>
             <div className={ styles.authInputGroup }>
               { (email && email.length > 3 && !emailValid) &&
                 <div className={ styles.authInputError }>Invalid</div>
@@ -221,7 +222,6 @@ class AuthPage extends Component {
                   placeholder="Username"
                   autoComplete="on"
                   onChange={ this.handleUsernameChange }
-                  onSubmit={ this.submit }
                 />
                 <span className="pt-icon pt-minimal pt-icon-user" />
               </div>
@@ -237,7 +237,6 @@ class AuthPage extends Component {
                   type="password"
                   placeholder="Password"
                   onChange={ this.handlePasswordChange }
-                  onSubmit={ this.submit }
                 />
                 <span className="pt-icon pt-minimal pt-icon-lock" />
               </div>
