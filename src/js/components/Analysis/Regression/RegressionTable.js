@@ -127,7 +127,7 @@ export default class RegressionTable extends Component {
       ]
     }
 
-    const additionalData = [
+    const additionalData  = [
       {
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,

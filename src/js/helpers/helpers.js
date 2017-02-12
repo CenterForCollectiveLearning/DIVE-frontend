@@ -129,6 +129,12 @@ export function getRoundedString(num, decimalPlaces=3, useFixed=true) {
 // Desired behavior: > 1M (10^6) or < 0.000001 (10^-6) are displayed in scientiic notation
 export function getRoundedNum(num, decimalPlaces=3, useFixed=true) {
   if (num != null) {
+    if (num === 0) {
+      return {
+        scientific: false,
+        number: num
+      }
+    }
     const exponent = getExponent(num);
     if (Math.abs(exponent) > decimalPlaces) {
       return {
