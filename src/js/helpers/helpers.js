@@ -1,36 +1,6 @@
 import React from 'react';
 import _ from 'underscore';
 
-// Update query string given old query object and new object
-// Note: not wholesale replacement of query string
-// export function updateQueryString(oldQueryObject, key, input, arrayValued=false) {
-//   var newQueryObject = { ...oldQueryObject };
-//   if (arrayValued) {  // Adding or removing arrays from arrays
-//     const oldValues = parseFromQueryObject(oldQueryObject, key, arrayValued);
-//     var newValues = oldValues
-//     if (!Array.isArray(input)) {
-//       input = [ input ];
-//     }
-//
-//     for (let e of input) {
-//       if (newValues.indexOf(e) == -1) {
-//         newValues.push(e);
-//       } else {
-//         newValues = oldValues.filter((oldValue) => oldValue !== e);
-//       }
-//     }
-//     newQueryObject[key] = newValues;
-//
-//   } else {  // Adding or removing single valued keys
-//     if (key in oldQueryObject && oldQueryObject[key] == input) {
-//       newQueryObject = _.omit(oldQueryObject, key);
-//     } else {
-//       newQueryObject[key] = input;
-//     }
-//   }
-//   return queryObjectToQueryString(newQueryObject);
-// }
-
 export function removeFromQueryString(oldQueryObject, key) {
   const newQueryObject = _.omit(oldQueryObject, key);
   return queryObjectToQueryString(newQueryObject);
@@ -138,24 +108,51 @@ export function naturalSort(a, b) {
   return aa.length - bb.length;
 }
 
-export function getRoundedString(num, decimalPlaces=3, useFixed=false) {
+export function getRoundedString(num, decimalPlaces=3, useFixed=true) {
   if (typeof num === 'string' || num instanceof String) {
     return num;
   }
-  const roundedNum = getRoundedNum(num, decimalPlaces, useFixed);
-  if (isNaN(roundedNum)) {
-    return '';
+  const roundedNumData = getRoundedNum(num, decimalPlaces, useFixed);
+  if (roundedNumData.scientific) {
+    if (isNaN(roundedNumData.mantissa) || isNaN(roundedNumData.exponent)) {
+      return '';
+    }
+    return `${ roundedNumData.mantissa }×10${ roundedNumData.exponent.toString().sup() }`;
+  } else {
+    if (isNaN(roundedNumData.number)) {
+      return '';
+    }
+    return roundedNumData.number.toString();
   }
-  return roundedNum.toString();
 }
 
-export function getRoundedNum(num, decimalPlaces=3, useFixed=false) {
+// Desired behavior: > 1M (10^6) or < 0.000001 (10^-6) are displayed in scientiic notation
+export function getRoundedNum(num, decimalPlaces=3, useFixed=true) {
   if (num != null) {
-    return Math.abs(parseFloat(num)) < 1 || useFixed ?
-      +parseFloat(num).toFixed(decimalPlaces) :
-      +parseFloat(num).toPrecision(decimalPlaces);
+    const exponent = getExponent(num);
+    if (Math.abs(exponent) > decimalPlaces) {
+      return {
+        scientific: true,
+        mantissa: (+parseFloat(num) / Math.pow(10, exponent)).toPrecision(decimalPlaces),
+        exponent: exponent
+      }
+    } else {
+      const parsedNum = Math.abs(parseFloat(num)) < 1 || useFixed ?
+        +parseFloat(num).toFixed(decimalPlaces) :
+        +parseFloat(num).toPrecision(decimalPlaces);
+      return {
+        scientific: false,
+        number: parsedNum
+      };
+    }
   }
   return NaN;
+}
+
+function getExponent(x) {
+  x = Math.abs(x);
+  var exp = Math.floor(Math.log(x) / Math.log(10));
+  return exp;
 }
 
 export function numberWithCommas(x) {
