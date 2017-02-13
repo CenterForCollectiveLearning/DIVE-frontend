@@ -22,12 +22,14 @@ export default class Number extends Component {
   }
 
   getDecimalPlaces = (number) => {
-    // toFixed produces a fixed representation accurate to 20 decimal places
-    // without an exponent.
-    // The ^-?\d*\. strips off any sign, integer portion, and decimal point
-    // leaving only the decimal fraction.
-    // The 0+$ strips off any trailing zeroes.
-    return ((+number).toFixed(20)).replace(/^-?\d*\.?|0+$/g, '').length;
+    var s = "" + (+number);
+    var match = /(?:\.(\d+))?(?:[eE]([+\-]?\d+))?$/.exec(s);
+    if (!match) { return 0; }
+
+    return Math.max(
+        0,  // lower limit.
+        (match[1] == '0' ? 0 : (match[1] || '').length)  // fraction length
+        - (match[2] || 0));  // exponent
   }
 
   render() {
@@ -39,7 +41,8 @@ export default class Number extends Component {
       className,
       prefix,
       suffix,
-      fullPrecisionOnMouseOver
+      fullPrecisionOnMouseOver,
+      style
     } = this.props;
 
   const exponent = this.getExponent(value);
@@ -69,10 +72,10 @@ export default class Number extends Component {
         reduceInformation = true;
         break;
       case (!scientific):
-        const numDecimals = this.getDecimalPlaces(value);
+        var numDecimals = this.getDecimalPlaces(value);
 
         let parsedNumber;
-        if (numDecimals < precision) {  // Maximize precision
+        if (numDecimals <= precision) {  // Maximize precision
           parsedNumber = value;
         } else {
           parsedNumber = (Math.abs(value) < 1) ?
@@ -84,9 +87,12 @@ export default class Number extends Component {
         break;
     }
 
-    let popoverContent = (
-      <div className={ styles.fullPrecision }>{ value.toString() }</div>
-    );
+    let popoverContent;
+    if (reduceInformation) {
+      popoverContent = (
+        <div className={ styles.fullPrecision }>{ value.toString() }</div>
+      );
+    }
 
     let finalContent = (
       <div>{ prefix }{ content }{ suffix }</div>
@@ -95,6 +101,7 @@ export default class Number extends Component {
     return (
       <div
         className={ styles.number + (this.props.className ? ' ' + this.props.className : '') }
+        style={ style }
       >
         { fullPrecisionOnMouseOver && reduceInformation &&
           <Popover content={ popoverContent }
@@ -109,7 +116,6 @@ export default class Number extends Component {
           </Popover>
         }
         { !(fullPrecisionOnMouseOver && reduceInformation) && finalContent }
-
       </div>
     );
   }
@@ -123,12 +129,14 @@ Number.propTypes = {
   className: PropTypes.string,
   prefix: PropTypes.string,
   suffix: PropTypes.string,
-  fullPrecisionOnMouseOver: PropTypes.bool
+  fullPrecisionOnMouseOver: PropTypes.bool,
+  style: PropTypes.object
 }
 
 Number.defaultProps = {
   exponentCutoff: 6,
   precision: 3,
   multiplicationSign: '×',
-  fullPrecisionOnMouseOver: true
+  fullPrecisionOnMouseOver: true,
+  style: {}
 }

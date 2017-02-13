@@ -184,9 +184,24 @@ class DatasetDataRow extends Component {
         /> : <div/>;
       statsContent = stats ?
         <div className={ styles.statistics }>
-          { numNa !== null && <div className={ styles.statistic }><div className={ styles.field }>Null</div><div className={ styles.value }>{ `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }</div></div> }
-          <div className={ styles.statistic }><div className={ styles.field }>Unique Values</div><div className={ styles.value }>{ `${ getRoundedString(stats.unique) } (${ getRoundedString((stats.unique / stats.count) * 100) }%)` }</div></div>
-          <div className={ styles.statistic + ' ' + styles.wide }><div className={ styles.field }>Most Frequent</div><div className={ styles.value }>{ stats.top } ({ getRoundedString(stats.freq) })</div></div>
+          { numNa !== null && <div className={ styles.statistic }>
+            <div className={ styles.field }>Null</div>
+            <div className={ styles.value }>
+              <Number value={ numNa } />
+              { numNa > 0 && <Number value={ (numNa / stats.count) * 100 } prefix='(' suffix='%)' /> }
+            </div>
+          </div> }
+          <div className={ styles.statistic }>
+            <div className={ styles.field }>Unique Values</div>
+            <div className={ styles.value + ' ' + styles.inlineElements }>
+              <Number value={ stats.unique } />
+              <Number style={{ marginLeft: '3px' }} value={ (stats.unique / stats.count) * 100 } prefix='(' suffix='%)' />
+            </div>
+          </div>
+          <div className={ styles.statistic + ' ' + styles.wide }>
+            <div className={ styles.field }>Most Frequent</div>
+            <div className={ styles.value }>{ stats.top }<Number value={ stats.freq } prefix='(' suffix=')' /></div>
+          </div>
         </div> : <div/>;
     } else if ( generalType == 'q' ) {
       metadataContent = vizData ?
@@ -202,7 +217,10 @@ class DatasetDataRow extends Component {
         <div className={ styles.statistics }>
           { numNa !== null && <div className={ styles.statistic }>
             <div className={ styles.field }>Null</div>
-            <Number className={ styles.value } value={ getRoundedString(numNa) } /> - <Number className={ styles.value } value={ (numNa / stats.count) * 100 } prefix='(' suffix=')'/>
+            <div className={ styles.value }>
+              <Number value={ getRoundedString(numNa) } />
+              { numNa > 0 && <Number value={ (numNa / stats.count) * 100 } prefix='(' suffix='%)' /> }
+            </div>
           </div> }
           <div className={ styles.statistic }>
             <div className={ styles.field }>Mean</div>
@@ -214,7 +232,11 @@ class DatasetDataRow extends Component {
           </div>
           <div className={ styles.statistic }>
             <div className={ styles.field }>Range</div>
-            <Number className={ styles.value } value={ stats.min } /> - <Number className={ styles.value } value={ stats.max } />
+            <div className={ styles.value + ' ' + styles.inlineElements }>
+              <Number className={ styles.inline } style={{ marginRight: '2px'}} value={ stats.min } />
+              -
+              <Number className={ styles.inline } style={{ marginLeft: '2px'}} value={ stats.max } />
+            </div>
           </div>
           <div className={ styles.statistic }>
             <div className={ styles.field }>Std</div>
@@ -234,7 +256,14 @@ class DatasetDataRow extends Component {
         /> : <div/>;
       statsContent = stats ?
         <div className={ styles.statistics }>
-          <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value } dangerouslySetInnerHTML={{ __html: `${ getRoundedString(stats.min) } - ${ getRoundedString(stats.max) }`}} /></div>
+          <div className={ styles.statistic }>
+            <div className={ styles.field }>Range</div>
+            <div className={ styles.value + ' ' + styles.inlineElements }>
+              <Number className={ styles.inline } style={{ marginRight: '2px'}}  value={ stats.min } />
+              -
+              <Number className={ styles.inline } style={{ marginLeft: '2px'}} value={ stats.max } />
+            </div>
+          </div>
         </div> : <div/>;
     }
 
@@ -245,10 +274,6 @@ class DatasetDataRow extends Component {
 DatasetDataRow.propTypes = {
   fieldProperty: PropTypes.object,
   color: PropTypes.string
-}
-
-DatasetDataRow.defaultProps = {
-  fieldProperty: {}
 }
 
 function mapStateToProps(state) {
