@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './Number.sass';
 
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem } from '@blueprintjs/core';
 
 /**
   * Component for formatting numbers.
@@ -37,14 +38,16 @@ export default class Number extends Component {
       multiplicationSign,
       className,
       prefix,
-      suffix
+      suffix,
+      fullPrecisionOnMouseOver
     } = this.props;
 
-    const exponent = this.getExponent(value);
+  const exponent = this.getExponent(value);
     const mantissa = (+parseFloat(value) / Math.pow(10, exponent)).toFixed(precision);
     const scientific = (Math.abs(exponent) >= exponentCutoff);
 
     let content;
+    let reduceInformation = false;
     switch (true) {
       case (typeof value === 'string' || value instanceof String):
         content = <span>{ value }</span>;
@@ -63,6 +66,7 @@ export default class Number extends Component {
         break;
       case (scientific):
         content = <span>{ `${ mantissa }${ multiplicationSign }10` }<sup>{ exponent }</sup></span>;
+        reduceInformation = true;
         break;
       case (!scientific):
         const numDecimals = this.getDecimalPlaces(value);
@@ -74,19 +78,38 @@ export default class Number extends Component {
           parsedNumber = (Math.abs(value) < 1) ?
             +parseFloat(value).toPrecision(precision) :
             +parseFloat(value).toFixed(precision);
+          reduceInformation = true;
         }
         content = <span>{ parsedNumber }</span>;
         break;
     }
 
+    let popoverContent = (
+      <div className={ styles.fullPrecision }>{ value.toString() }</div>
+    );
+
+    let finalContent = (
+      <div>{ prefix }{ content }{ suffix }</div>
+    );
+
     return (
       <div
-        className={
-          styles.number
-          + (this.props.className ? ' ' + this.props.className : '')
-        }
+        className={ styles.number + (this.props.className ? ' ' + this.props.className : '') }
       >
-        { prefix }{ content }{ suffix }
+        { fullPrecisionOnMouseOver && reduceInformation &&
+          <Popover content={ popoverContent }
+            interactionKind={ PopoverInteractionKind.HOVER }
+            position={ Position.TOP }
+            useSmartPositioning={ true }
+            transitionDuration={ 100 }
+            hoverOpenDelay={ 100 }
+            hoverCloseDelay={ 100 }
+          >
+            { finalContent }
+          </Popover>
+        }
+        { !(fullPrecisionOnMouseOver && reduceInformation) && finalContent }
+
       </div>
     );
   }
@@ -107,5 +130,5 @@ Number.defaultProps = {
   exponentCutoff: 6,
   precision: 3,
   multiplicationSign: '×',
-  fullPrecisionOnMouseOver: false
+  fullPrecisionOnMouseOver: true
 }
