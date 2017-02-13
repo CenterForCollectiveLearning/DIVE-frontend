@@ -23,34 +23,31 @@ export default class Number extends Component {
     const mantissa = (+parseFloat(value) / Math.pow(10, exponent)).toFixed(precision);
     const scientific = (Math.abs(exponent) > exponentCutoff);
 
-    let formattedContent;
-
+    let content;
     switch (true) {
+      case (typeof value === 'string' || value instanceof String):
+        content = <span>{ value }</span>;
+        break;
       case value == 0:
-        formattedContent = <span>0</span>;
+        content = <span>0</span>;
         break;
       case value == null:
-        formattedContent = <span />;
+        content = <span />;
         break;
       case isNaN(value):
-        formattedContent = <span>NaN</span>;
+        content = <span>NaN</span>;
         break;
       case !isFinite(value):
-        formattedContent = <span>Infinity</span>;
-        break;
-      case (typeof value === 'string' || value instanceof String):
-        formattedContent = <span>{ value }</span>;
+        content = <span>Infinity</span>;
         break;
       case (scientific):
-        formattedContent = <span>{ `${ mantissa }${ multiplicationSign }10` }<sup>{ exponent }</sup></span>;
+        content = <span>{ `${ mantissa }${ multiplicationSign }10` }<sup>{ exponent }</sup></span>;
         break;
       case (!scientific):
         const parsedNumber = +parseFloat(value).toFixed(precision);
-        formattedContent = <span>{ parsedNumber }</span>;
+        content = <span>{ parsedNumber }</span>;
         break;
     }
-
-    console.log(value, (value == 0), (value == null));
 
     return (
       <div
@@ -59,7 +56,7 @@ export default class Number extends Component {
           + (this.props.className ? ' ' + this.props.className : '')
         }
       >
-        { prefix }{ formattedContent }{ suffix }
+        { prefix }{ content }{ suffix }
       </div>
     );
   }
@@ -76,7 +73,7 @@ Number.propTypes = {
 }
 
 Number.defaultProps = {
-  exponentCutoff: 3,
+  exponentCutoff: 6,
   precision: 3,
   multiplicationSign: '×'
 }

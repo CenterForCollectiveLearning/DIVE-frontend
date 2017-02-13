@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
 import styles from '../Analysis.sass';
-import { getRoundedString } from '../../../helpers/helpers';
 
 export default class AnovaText extends Component {
   render() {

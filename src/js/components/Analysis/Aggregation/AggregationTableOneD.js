@@ -3,8 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Analysis.sass';
 
 import BareDataGrid from '../../Base/BareDataGrid';
-
-import { getRoundedString } from '../../../helpers/helpers';
+import Number from '../../Base/Number';
 
 export default class AggregationTableOneD extends Component {
 
@@ -24,7 +23,7 @@ export default class AggregationTableOneD extends Component {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumnOneD,
-          items: [ row_object.field,  <div className={ styles.tableCell }>{ getRoundedString(row_object.value, 2, true) }</div> ]
+          items: [ row_object.field, <Number className={ styles.tableCell } value={ row_object.value } /> ]
         })
       })
     ];
@@ -33,7 +32,7 @@ export default class AggregationTableOneD extends Component {
       data.push({
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
-        items: [ 'Column Total',  <div className={ styles.tableCell }>{ getRoundedString(aggregationResult.columnTotal, 2, true) }</div> ]
+        items: [ 'Column Total', <Number className={ styles.tableCell } value={ aggregationResult.columnTotal } /> ]
       })
     }
 

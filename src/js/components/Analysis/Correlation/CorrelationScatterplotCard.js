@@ -6,7 +6,7 @@ import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
 
 import ScatterChart from '../../Visualizations/Charts/ScatterChart';
-import { getRoundedNum } from '../../../helpers/helpers';
+
 
 export default class CorrelationScatterplotCard extends Component {
   render() {

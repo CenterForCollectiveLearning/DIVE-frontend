@@ -5,7 +5,6 @@ import styles from '../Analysis.sass';
 
 import Number from '../../Base/Number';
 import BareDataGrid from '../../Base/BareDataGrid';
-import { getRoundedString } from '../../../helpers/helpers';
 
 export default class RegressionTable extends Component {
 

@@ -6,7 +6,6 @@ import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
 
 import BoxPlot from '../../Visualizations/Charts/BoxPlot';
-import { getRoundedNum } from '../../../helpers/helpers';
 
 export default class AnovaBoxplotCard extends Component {
   constructor(props) {

@@ -108,49 +108,22 @@ export function naturalSort(a, b) {
   return aa.length - bb.length;
 }
 
-export function getRoundedString(num, decimalPlaces=3, useFixed=true) {
+export function getRoundedString(num, decimalPlaces=3, useFixed=false) {
   if (typeof num === 'string' || num instanceof String) {
     return num;
   }
-  const roundedNumData = getRoundedNum(num, decimalPlaces, useFixed);
-  if (roundedNumData.scientific) {
-    if (isNaN(roundedNumData.mantissa) || isNaN(roundedNumData.exponent)) {
-      return '';
-    }
-    return `${ roundedNumData.mantissa }×10${ roundedNumData.exponent.toString().sup() }`;
-  } else {
-    if (isNaN(roundedNumData.number)) {
-      return '';
-    }
-    return roundedNumData.number.toString();
+  const roundedNum = getRoundedNum(num, decimalPlaces, useFixed);
+  if (isNaN(roundedNum)) {
+    return '';
   }
+  return roundedNum.toString();
 }
 
-// Desired behavior: > 1M (10^6) or < 0.000001 (10^-6) are displayed in scientiic notation
-export function getRoundedNum(num, decimalPlaces=3, useFixed=true) {
+export function getRoundedNum(num, decimalPlaces=3, useFixed=false) {
   if (num != null) {
-    if (num === 0) {
-      return {
-        scientific: false,
-        number: num
-      }
-    }
-    const exponent = getExponent(num);
-    if (Math.abs(exponent) > decimalPlaces) {
-      return {
-        scientific: true,
-        mantissa: (+parseFloat(num) / Math.pow(10, exponent)).toPrecision(decimalPlaces),
-        exponent: exponent
-      }
-    } else {
-      const parsedNum = Math.abs(parseFloat(num)) < 1 || useFixed ?
-        +parseFloat(num).toFixed(decimalPlaces) :
-        +parseFloat(num).toPrecision(decimalPlaces);
-      return {
-        scientific: false,
-        number: parsedNum
-      };
-    }
+    return Math.abs(parseFloat(num)) < 1 || useFixed ?
+      +parseFloat(num).toFixed(decimalPlaces) :
+      +parseFloat(num).toPrecision(decimalPlaces);
   }
   return NaN;
 }
