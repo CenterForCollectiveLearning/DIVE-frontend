@@ -7,6 +7,7 @@ import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider 
 
 import styles from './DatasetDataRow.sass';
 import FieldTypes from '../../constants/FieldTypes';
+import Number from '../Base/Number';
 import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
 import ColumnChart from '../Visualizations/Charts/ColumnChart';
@@ -201,23 +202,23 @@ class DatasetDataRow extends Component {
         <div className={ styles.statistics }>
           { numNa !== null && <div className={ styles.statistic }>
             <div className={ styles.field }>Null</div>
-            <div className={ styles.value } dangerouslySetInnerHTML={{ __html: `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }}/>
+            <Number className={ styles.value } value={ getRoundedString(numNa) } /> - <Number className={ styles.value } value={ (numNa / stats.count) * 100 } prefix='(' suffix=')'/>
           </div> }
           <div className={ styles.statistic }>
             <div className={ styles.field }>Mean</div>
-            <div className={ styles.value } dangerouslySetInnerHTML={{ __html: getRoundedString(stats.mean) }} />
+            <Number className={ styles.value } value={ stats.mean } />
           </div>
           <div className={ styles.statistic }>
             <div className={ styles.field }>Median</div>
-            <div className={ styles.value } dangerouslySetInnerHTML={{ __html: getRoundedString(stats['50%']) }} />
+            <Number className={ styles.value } value={ stats['50%'] } />
           </div>
           <div className={ styles.statistic }>
             <div className={ styles.field }>Range</div>
-            <div className={ styles.value } dangerouslySetInnerHTML={{ __html: `${ getRoundedString(stats.min) } - ${ getRoundedString(stats.max)}` }} />
+            <Number className={ styles.value } value={ stats.min } /> - <Number className={ styles.value } value={ stats.max } />
           </div>
           <div className={ styles.statistic }>
             <div className={ styles.field }>Std</div>
-            <div className={ styles.value } dangerouslySetInnerHTML={{ __html: getRoundedString(stats.std) }} />
+            <Number className={ styles.value } value={ stats.std } />
           </div>
         </div> : <div/>;
 

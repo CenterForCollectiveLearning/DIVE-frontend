@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Analysis.sass';
 
 import BareDataGrid from '../../Base/BareDataGrid';
-import { getRoundedString } from '../../../helpers/helpers';
+import Number from '../../Base/Number';
 
 export default class AnovaTable extends Component {
 
@@ -20,7 +20,7 @@ export default class AnovaTable extends Component {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
-          items: [ object.field, ...object.stats.map((num) => <div className={ styles.dataCell }>{ getRoundedString(num, 2, true) }</div>) ]
+          items: [ object.field, ...object.stats.map((num) => <Number className={ styles.dataCell } value={ num } />) ]
         })
       })
     ];

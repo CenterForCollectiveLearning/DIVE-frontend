@@ -6,7 +6,8 @@ import styles from '../Analysis.sass';
 import * as d3Scale from 'd3-scale';
 
 import BareDataGrid from '../../Base/BareDataGrid';
-import { getRoundedString, useWhiteFontFromBackgroundRGBString } from '../../../helpers/helpers';
+import Number from '../../Base/Number';
+import { useWhiteFontFromBackgroundRGBString } from '../../../helpers/helpers';
 
 export default class CorrelationTable extends Component {
 
@@ -20,14 +21,10 @@ export default class CorrelationTable extends Component {
       return (
         <div style={ customStyles } className={ styles.dataCell }>
           { !preview &&
-            <div className={ styles.coefficient }>
-              { getRoundedString(property[0], 2, true) }
-            </div>
+            <Number className={ styles.coefficient } value={ property[0] } />
           }
           { !preview &&
-            <div className={ styles.standardError }>
-              ({ getRoundedString(property[1], 2, true) })
-            </div>
+            <Number className={ styles.standardError } value={ property[0] } prefix='(' suffix=')' />
           }
       </div>
       );

@@ -40,7 +40,6 @@ export default class RegressionTable extends Component {
       } else {
         // categorical fixed effects
         return { ...field, formattedName: field.name, enabled: true };
-
       }
     });
 
@@ -50,7 +49,7 @@ export default class RegressionTable extends Component {
         <div className={ styles.dataCell }>
           { enabled &&
             <Number className={ styles.coefficient } value={ property.coefficient } suffix={ context.getPValueString(property.pValue ) }/>
-
+          }
           { enabled &&
             <Number className={ styles.standardError } value={ property.standardError } prefix='(' suffix=')' />
           }

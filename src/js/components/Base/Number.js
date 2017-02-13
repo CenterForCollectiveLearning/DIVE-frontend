@@ -25,29 +25,32 @@ export default class Number extends Component {
 
     let formattedContent;
 
-    if (isNaN(value)) {
-      formattedContent = <span>NaN</span>;
-    };
-    if (!isFinite(value)) {
-      formattedContent = <span>Infinity</span>;
-    };
+    switch (true) {
+      case value == 0:
+        formattedContent = <span>0</span>;
+        break;
+      case value == null:
+        formattedContent = <span />;
+        break;
+      case isNaN(value):
+        formattedContent = <span>NaN</span>;
+        break;
+      case !isFinite(value):
+        formattedContent = <span>Infinity</span>;
+        break;
+      case (typeof value === 'string' || value instanceof String):
+        formattedContent = <span>{ value }</span>;
+        break;
+      case (scientific):
+        formattedContent = <span>{ `${ mantissa }${ multiplicationSign }10` }<sup>{ exponent }</sup></span>;
+        break;
+      case (!scientific):
+        const parsedNumber = +parseFloat(value).toFixed(precision);
+        formattedContent = <span>{ parsedNumber }</span>;
+        break;
+    }
 
-    if (typeof value === 'string' || value instanceof String) {
-      formattedContent = <span>{ value }</span>;
-    };
-
-    if (scientific) {
-      formattedContent = <span>{ `${ mantissa }${ multiplicationSign }10` }<sup>{ exponent }</sup></span>;
-    } else {
-      // 30492.30942 -> 30492.3094
-      // 304923 => 304923
-      // 0.00032411 => 0.000324
-
-      const parsedNumber = +parseFloat(value).toFixed(precision);
-      formattedContent = <span>{ parsedNumber }</span>;
-    };
-
-    console.log(value, formattedContent);
+    console.log(value, (value == 0), (value == null));
 
     return (
       <div
