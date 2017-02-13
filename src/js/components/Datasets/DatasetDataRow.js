@@ -7,6 +7,7 @@ import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider 
 
 import styles from './DatasetDataRow.sass';
 import FieldTypes from '../../constants/FieldTypes';
+import Number from '../Base/Number';
 import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
 import ColumnChart from '../Visualizations/Charts/ColumnChart';
@@ -199,11 +200,26 @@ class DatasetDataRow extends Component {
         /> : <div/>;
       statsContent = stats ?
         <div className={ styles.statistics }>
-          { numNa !== null && <div className={ styles.statistic }><div className={ styles.field }>Null</div><div className={ styles.value }>{ `${ getRoundedString(numNa) } (${ getRoundedString((numNa / stats.count) * 100) }%)` }</div></div> }
-          <div className={ styles.statistic }><div className={ styles.field }>Mean</div><div className={ styles.value }>{ getRoundedString(stats.mean) }</div></div>
-          <div className={ styles.statistic }><div className={ styles.field }>Median</div><div className={ styles.value }>{ getRoundedString(stats['50%']) }</div></div>
-          <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div></div>
-          <div className={ styles.statistic }><div className={ styles.field }>Std</div><div className={ styles.value }>{ getRoundedString(stats.std) }</div></div>
+          { numNa !== null && <div className={ styles.statistic }>
+            <div className={ styles.field }>Null</div>
+            <Number className={ styles.value } value={ getRoundedString(numNa) } /> - <Number className={ styles.value } value={ (numNa / stats.count) * 100 } prefix='(' suffix=')'/>
+          </div> }
+          <div className={ styles.statistic }>
+            <div className={ styles.field }>Mean</div>
+            <Number className={ styles.value } value={ stats.mean } />
+          </div>
+          <div className={ styles.statistic }>
+            <div className={ styles.field }>Median</div>
+            <Number className={ styles.value } value={ stats['50%'] } />
+          </div>
+          <div className={ styles.statistic }>
+            <div className={ styles.field }>Range</div>
+            <Number className={ styles.value } value={ stats.min } /> - <Number className={ styles.value } value={ stats.max } />
+          </div>
+          <div className={ styles.statistic }>
+            <div className={ styles.field }>Std</div>
+            <Number className={ styles.value } value={ stats.std } />
+          </div>
         </div> : <div/>;
 
     } else if ( generalType == 't' ) {
@@ -218,7 +234,7 @@ class DatasetDataRow extends Component {
         /> : <div/>;
       statsContent = stats ?
         <div className={ styles.statistics }>
-          <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div></div>
+          <div className={ styles.statistic }><div className={ styles.field }>Range</div><div className={ styles.value } dangerouslySetInnerHTML={{ __html: `${ getRoundedString(stats.min) } - ${ getRoundedString(stats.max) }`}} /></div>
         </div> : <div/>;
     }
 

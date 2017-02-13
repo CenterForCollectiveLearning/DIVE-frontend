@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Analysis.sass';
 
 import BareDataGrid from '../../Base/BareDataGrid';
-import { getRoundedString } from '../../../helpers/helpers';
+import Number from '../../Base/Number';
 
 export default class AggregationTable extends Component {
 
@@ -20,7 +20,7 @@ export default class AggregationTable extends Component {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
-          items: [ row.field, ...row.values.map((column) => <div className={ styles.dataCell }>{ getRoundedString(column, 2, true) }</div>) ]
+          items: [ row.field, ...row.values.map((column) => <Number className={ styles.dataCell } value={ column } />) ]
         })
       })
     ];

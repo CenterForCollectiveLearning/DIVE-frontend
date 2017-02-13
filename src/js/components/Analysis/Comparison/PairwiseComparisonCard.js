@@ -6,7 +6,7 @@ import Card from '../../Base/Card';
 import HeaderBar from '../../Base/HeaderBar';
 
 import BareDataGrid from '../../Base/BareDataGrid';
-import { getRoundedString } from '../../../helpers/helpers';
+import Number from '../../Base/Number';
 
 
 export default class PairwiseComparisonCard extends Component {
@@ -27,7 +27,7 @@ export default class PairwiseComparisonCard extends Component {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
-          items: [ ...object.map((value) => <div className={ styles.dataCell }>{ getRoundedString(value) }</div>) ]
+          items: [ ...object.map((value) => <Number className={ styles.dataCell } value={ value } />) ]
         })
       })
     ];

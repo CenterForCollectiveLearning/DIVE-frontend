@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Analysis.sass';
 
 import BareDataGrid from '../../Base/BareDataGrid';
-import { getRoundedString } from '../../../helpers/helpers';
+import Number from '../../Base/Number';
 
 export default class StatsTable extends Component {
 
@@ -20,7 +20,7 @@ export default class StatsTable extends Component {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
-          items: [ object.test, ...object.values.map((num) => <div className={ styles.dataCell }>{ getRoundedString(num, 2, true) }</div>) ]
+          items: [ object.test, ...object.values.map((num) => <Number className={ styles.dataCell } value={ num } />) ]
         })
       })
     ];

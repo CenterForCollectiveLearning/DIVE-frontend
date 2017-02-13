@@ -3,24 +3,15 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from '../Analysis.sass';
 
+import Number from '../../Base/Number';
 import BareDataGrid from '../../Base/BareDataGrid';
-import { getRoundedString } from '../../../helpers/helpers';
 
 export default class RegressionTable extends Component {
-  constructor(props) {
-    super(props);
-
-    this.getCoefficientString = this.getCoefficientString.bind(this);
-  }
 
   componentWillReceiveProps(nextProps) {
   }
 
-  getCoefficientString(coefficient, pValue, enabled) {
-    if (!enabled) {
-      return '✓';
-    }
-
+  getPValueString = (pValue) => {
     var pValueString = ''
     if (pValue < 0.01){
       pValueString = '***';
@@ -29,7 +20,7 @@ export default class RegressionTable extends Component {
     } else if (pValue < 0.1) {
       pValueString = ''
     }
-    return getRoundedString(coefficient) + pValueString;
+    return pValueString;
   }
 
   render() {
@@ -48,7 +39,6 @@ export default class RegressionTable extends Component {
       } else {
         // categorical fixed effects
         return { ...field, formattedName: field.name, enabled: true };
-
       }
     });
 
@@ -56,13 +46,14 @@ export default class RegressionTable extends Component {
     const renderDataColumn = function(property, enabled) {
       return (
         <div className={ styles.dataCell }>
-          <div className={ styles.coefficient }>
-            { context.getCoefficientString(property.coefficient, property.pValue, enabled) }
-          </div>
           { enabled &&
-            <div className={ styles.standardError }>
-              ({ getRoundedString(property.standardError) })
-            </div>
+            <Number className={ styles.coefficient } value={ property.coefficient } suffix={ context.getPValueString(property.pValue ) }/>
+          }
+          { enabled &&
+            <Number className={ styles.standardError } value={ property.standardError } prefix='(' suffix=')' />
+          }
+          { !enabled &&
+            <span>✓</span>
           }
         </div>
       );
@@ -134,14 +125,14 @@ export default class RegressionTable extends Component {
       ]
     }
 
-    const additionalData = [
+    const additionalData  = [
       {
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
         items: [
           <div className={ styles.rSquaredAdjust }>{ regressionType == 'logistic' ? <div className="cmu">Pseudo</div> : null }<div className={ styles.r }>R</div><sup className="cmu">2</sup></div>,
           ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.rSquaredAdj) }</div>
+            <Number className={ styles.footerCell } value={ column.columnProperties.rSquaredAdj } />
           )
         ]
       },
@@ -152,7 +143,7 @@ export default class RegressionTable extends Component {
           items: [
             <div className="cmu">{ val.name }</div>,
             ...regressionResult.regressionsByColumn.map((column) =>
-              <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties[val.prop]) }</div>
+              <Number className={ styles.footerCell } value={ column.columnProperties[val.prop] } />
             )
           ]
         }
