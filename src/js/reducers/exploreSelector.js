@@ -1,4 +1,5 @@
 import {
+  SELECT_DATASET,
   REQUEST_EXACT_SPECS,
   REQUEST_INDIVIDUAL_SPECS,
   REQUEST_SUBSET_SPECS,
@@ -185,6 +186,7 @@ export default function exploreSelector(state = baseState, action) {
         loadedSpecLevel: receiveLoadedSpecLevel
       };
 
+    case SELECT_DATASET:
     case WIPE_PROJECT_STATE:
       return baseState;
 

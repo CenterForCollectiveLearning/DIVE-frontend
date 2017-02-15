@@ -21,6 +21,7 @@ import {
   ERROR_AGGREGATION_STATISTICS,
   WIPE_PROJECT_STATE,
   SELECT_DATASET,
+  CLEAR_ANALYSIS,
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_TYPE,
   RECEIVE_FIELD_PROPERTIES,
@@ -172,12 +173,10 @@ export default function aggregationSelector(state = baseState, action) {
         ...state, queryString: action.queryString
       }
 
-    case WIPE_PROJECT_STATE:
-      return baseState;
-
+    case CLEAR_ANALYSIS:
     case SELECT_DATASET:
-    case WIPE_PROJECT_STATE, SELECT_DATASET:
-      return baseState;
+    case WIPE_PROJECT_STATE:
+          return baseState;
 
     default:
       return state;

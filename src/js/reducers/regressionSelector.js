@@ -1,6 +1,7 @@
 import _ from 'underscore';
 
 import {
+  SELECT_DATASET,
   SELECT_REGRESSION_TYPE,
   SELECT_REGRESSION_MODE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
@@ -182,7 +183,9 @@ export default function regressionSelector(state = baseState, action) {
     case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
       return { ...state, contributionToRSquared: (action.data.data || []) };
 
-    case WIPE_PROJECT_STATE, CLEAR_ANALYSIS:
+    case SELECT_DATASET:
+    case WIPE_PROJECT_STATE:
+    case CLEAR_ANALYSIS:
       return baseState;
 
     default:
