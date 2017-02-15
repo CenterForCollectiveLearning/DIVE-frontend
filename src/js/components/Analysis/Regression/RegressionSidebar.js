@@ -1,10 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { push, replace } from 'react-router-redux';
 
-import { removeFromQueryString, updateQueryString } from '../../../helpers/helpers';
+import { Button, Intent } from '@blueprintjs/core';
+
+import { removeFromQueryString, parseFromQueryObject, queryObjectToQueryString, updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { setPersistedQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm } from '../../../actions/RegressionActions';
+import { setPersistedQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, getRecommendation } from '../../../actions/RegressionActions';
 import { selectConditional } from '../../../actions/ConditionalsActions';
 import { createURL, createInteractionTermName, filterInteractionTermSelection } from '../../../helpers/helpers.js';
 
@@ -16,6 +18,25 @@ import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 import RaisedButton from '../../Base/RaisedButton';
+
+const recommendationTypes = [ {
+  value: 'forwardR2',
+  label: 'Forward Selection R-Squared'
+}, {
+  value: 'lasso',
+  label: 'LASSO'
+}]
+
+const completionTypes = [ {
+  value: 'all',
+  label: 'Only Complete Model',
+}, {
+  value: 'oneAtATime',
+  label: 'One at a Time'
+}, {
+  value: 'leaveOneOut',
+  label: 'Leave One Out'
+}]
 
 const regressionTypes = [
   { value: 'linear', label: 'Linear' },
@@ -83,6 +104,20 @@ export class RegressionSidebar extends Component {
     push(`${ pathname }${ newQueryString }`);
   }
 
+  setRecommendedState = (fieldProperties) =>{
+    const { project, datasetSelector, dependentVariableId, pathname, queryObject, replace, setPersistedQueryString, getRecommendation } = this.props;
+
+    function setRecommendationCallback(json) {
+      json = { ...json, recommended: true };
+      const newQueryString = queryObjectToQueryString(json);
+      console.log(json, queryObject, newQueryString);
+      setPersistedQueryString(newQueryString);
+      replace(`${ pathname }${ newQueryString }`);
+    }
+
+    getRecommendation(project.id, datasetSelector.datasetId, fieldProperties.items, setRecommendationCallback, dependentVariableId);
+  }
+
   render() {
     const {
       fieldProperties,
@@ -91,10 +126,14 @@ export class RegressionSidebar extends Component {
       deleteInteractionTerm,
       conditionals,
       selectConditional,
+      recommended,
+      recommendationType,
+      completionType,
       regressionType,
       dependentVariableId,
-      independentVariablesIds
+      independentVariablesIds,
     } = this.props;
+
     const { interactionVariables } = this.state;
 
     const interactionTermNames = regressionSelector.interactionTermIds.map((idTuple) => {
@@ -112,6 +151,32 @@ export class RegressionSidebar extends Component {
 
     return (
       <Sidebar selectedTab="regression">
+        { fieldProperties.items.length != 0 &&
+          <SidebarGroup heading="Recommendation Type">
+            <Button
+              className={ 'pt-fill ' + styles.recommendModelButton + ( recommended ? ' .pt-active' : '' )}
+              iconName='predictive-analysis'
+              text={ recommended ? 'Recommended Model' : 'Recommend Model' }
+              intent={ recommended ? Intent.NONE : Intent.PRIMARY }
+              disabled={ recommended }
+              onClick={ this.setRecommendedState }
+            />
+            <DropDownMenu
+              value={ recommendationType }
+              valueMember='value'
+              displayTextMember='label'
+              options={ recommendationTypes }
+              onChange={ (v) => this.clickQueryStringTrackedItem({ recommendationType: v }) }/>
+          </SidebarGroup>
+        }
+        { fieldProperties.items.length != 0 &&
+          <SidebarGroup heading="Table Layout Mode">
+            <DropDownMenu
+              value={ completionType }
+              options={ completionTypes }
+              onChange={ (v) => this.clickQueryStringTrackedItem({ completionType: v }) }/>
+          </SidebarGroup>
+        }
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Regression Type">
             <DropDownMenu
@@ -157,7 +222,7 @@ export class RegressionSidebar extends Component {
                   valueMember="id"
                   externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ] }) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
@@ -177,7 +242,7 @@ export class RegressionSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ] }) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
@@ -197,7 +262,7 @@ export class RegressionSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ] }) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
               </div>
             }
             { fieldProperties.interactionTerms.length > 0 &&
@@ -283,7 +348,10 @@ RegressionSidebar.propTypes = {
   regressionSelector: PropTypes.object.isRequired,
   dependentVariableId: PropTypes.number.isRequired,
   independentVariablesIds: PropTypes.array.isRequired,
-  regressionType: PropTypes.string
+  recommended: PropTypes.bool,
+  regressionType: PropTypes.string,
+  recommendationType: PropTypes.string,
+  completionType: PropTypes.string
 };
 
 function mapStateToProps(state) {
@@ -297,4 +365,14 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional, setPersistedQueryString, push })(RegressionSidebar);
+export default connect(mapStateToProps, {
+  fetchFieldPropertiesIfNeeded,
+  createInteractionTerm,
+  selectInteractionTerm,
+  deleteInteractionTerm,
+  selectConditional,
+  setPersistedQueryString,
+  getRecommendation,
+  replace,
+  push
+})(RegressionSidebar);

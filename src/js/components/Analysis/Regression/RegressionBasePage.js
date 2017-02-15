@@ -6,7 +6,7 @@ import DocumentTitle from 'react-document-title';
 import styles from '../Analysis.sass';
 
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
-import { setPersistedQueryString, getInitialState } from '../../../actions/RegressionActions';
+import { setPersistedQueryString, getRecommendation } from '../../../actions/RegressionActions';
 
 import RegressionSidebar from './RegressionSidebar';
 import RegressionView from './RegressionView';
@@ -71,21 +71,20 @@ export class RegressionBasePage extends Component {
   }
 
   setRecommendedInitialState = (fieldProperties) =>{
-    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, getInitialState } = this.props;
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, getRecommendation } = this.props;
 
     function setInitialStateCallback(json) {
-      console.log('In Callback', json, pathname);
+      json = { ...json, recommended: true };
       const newQueryString = updateQueryString(queryObject, json);
-      console.log('new query string', newQueryString, queryObject);
       setPersistedQueryString(newQueryString);
       replace(`${ pathname }${ newQueryString }`);
     }
 
-    getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items, setInitialStateCallback);
+    getRecommendation(project.id, datasetSelector.datasetId, fieldProperties.items, setInitialStateCallback);
   }
 
   render() {
-    const { project, pathname, queryObject, regressionType, dependentVariableId, independentVariablesIds } = this.props;
+    const { project, pathname, queryObject, regressionType, recommendationType, completionType, recommended, dependentVariableId, independentVariablesIds } = this.props;
     return (
       <DocumentTitle title={ 'Regression' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.regressionContainer }` }>
@@ -97,7 +96,10 @@ export class RegressionBasePage extends Component {
           <RegressionSidebar
             pathname={ pathname }
             queryObject={ queryObject }
+            completionType={ completionType }
             regressionType={ regressionType }
+            recommended={ recommended }
+            recommendationType={ recommendationType }
             dependentVariableId={ dependentVariableId }
             independentVariablesIds={ independentVariablesIds }
           />
@@ -120,6 +122,9 @@ function mapStateToProps(state, ownProps) {
     queryObject: queryObject,
     pathname: pathname,
     persistedQueryString: regressionSelector.queryString,
+    recommended: (parseFromQueryObject(queryObject, 'recommended', false) == 'true'),
+    completionType: parseFromQueryObject(queryObject, 'completionType', false),
+    recommendationType: parseFromQueryObject(queryObject, 'recommendationType', false),
     regressionType: parseFromQueryObject(queryObject, 'regressionType', false),
     dependentVariableId: parseFromQueryObject(queryObject, 'dependentVariableId', false),
     independentVariablesIds: parseFromQueryObject(queryObject, 'independentVariablesIds', true),
@@ -129,5 +134,5 @@ function mapStateToProps(state, ownProps) {
 export default connect(mapStateToProps, {
   replace,
   setPersistedQueryString,
-  getInitialState
+  getRecommendation
 })(RegressionBasePage);

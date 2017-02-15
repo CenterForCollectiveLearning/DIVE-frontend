@@ -46,7 +46,7 @@ const baseState = {
   },
   SingleVisualizationSpec: {
   },
-  regressionModes: regressionModes,
+
   selectedMode: null,
   contributionToRSquared: [],
   queryString: ''

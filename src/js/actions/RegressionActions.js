@@ -44,14 +44,13 @@ function receiveInitialRegressionStateDispatcher(json) {
   };
 }
 
-export function getInitialState(projectId, datasetId, fieldProperties, callback) {
+export function getRecommendation(projectId, datasetId, fieldProperties, callback, dependentVariableId=null) {
   const params = {
     projectId: projectId,
     datasetId: datasetId,
-    fieldProperties: fieldProperties
+    fieldProperties: fieldProperties,
+    dependentVariableId: dependentVariableId
   }
-
-  console.log('In getInitialState');
 
   return (dispatch) => {
     dispatch(requestInitialRegressionStateDispatcher());

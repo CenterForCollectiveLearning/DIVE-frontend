@@ -52,7 +52,7 @@ export function parseFromQueryObject(queryObject, key, arrayValued=false) {
   }
 }
 
-function queryObjectToQueryString(queryObject) {
+export function queryObjectToQueryString(queryObject) {
   var queryString = '';
 
   Object.keys(queryObject).forEach(
