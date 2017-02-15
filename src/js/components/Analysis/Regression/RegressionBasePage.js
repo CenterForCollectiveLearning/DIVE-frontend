@@ -70,13 +70,18 @@ export class RegressionBasePage extends Component {
     }
   }
 
-  setRecommendedInitialState(fieldProperties) {
-    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
+  setRecommendedInitialState = (fieldProperties) =>{
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, getInitialState } = this.props;
 
-    const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
-    const newQueryString = updateQueryString(queryObject, initialState);
-    setPersistedQueryString(newQueryString);
-    replace(`${ pathname }${ newQueryString }`);
+    function setInitialStateCallback(json) {
+      console.log('In Callback', json, pathname);
+      const newQueryString = updateQueryString(queryObject, json);
+      console.log('new query string', newQueryString, queryObject);
+      setPersistedQueryString(newQueryString);
+      replace(`${ pathname }${ newQueryString }`);
+    }
+
+    getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items, setInitialStateCallback);
   }
 
   render() {
@@ -123,5 +128,6 @@ function mapStateToProps(state, ownProps) {
 
 export default connect(mapStateToProps, {
   replace,
-  setPersistedQueryString
+  setPersistedQueryString,
+  getInitialState
 })(RegressionBasePage);
