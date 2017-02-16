@@ -69,7 +69,7 @@ export default class RegressionTable extends Component {
             return new Object({
               rowClass: styles.dataRow,
               columnClass: styles.dataColumn,
-              items: [ ( preview ? '' : fieldValue ), ...regressionResult.regressionsByColumn.map(function (column) {
+              items: [ ( preview ? '✓' : fieldValue ), ...regressionResult.regressionsByColumn.map(function (column) {
                 const property = column.regression.propertiesByField.find((property) => ((property.baseField == field.name) && (property.valueField == fieldValue)));
                 if (!property) return '';
 
