@@ -62,8 +62,8 @@ export default class HeaderBar extends Component {
               hoverOpenDelay={ 100 }
               hoverCloseDelay={ 100 }
             >
-              <i
-                className={'fa fa-question-circle' + ' ' + styles.helperButton }
+              <span
+                className={'pt-icon pt-icon-help ' + styles.helperButton }
               />
            </Popover>
           }

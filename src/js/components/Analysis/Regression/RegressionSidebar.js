@@ -27,7 +27,7 @@ const recommendationTypes = [ {
   label: 'LASSO'
 }]
 
-const completionTypes = [ {
+const tableLayouts = [ {
   value: 'all',
   label: 'Only Complete Model',
 }, {
@@ -128,7 +128,7 @@ export class RegressionSidebar extends Component {
       selectConditional,
       recommended,
       recommendationType,
-      completionType,
+      tableLayout,
       regressionType,
       dependentVariableId,
       independentVariablesIds,
@@ -152,7 +152,7 @@ export class RegressionSidebar extends Component {
     return (
       <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Recommendation Type">
+          <SidebarGroup heading="Recommendation Type" helperText='regression'>
             <Button
               className={ 'pt-fill ' + styles.recommendModelButton + ( recommended ? ' .pt-active' : '' )}
               iconName='predictive-analysis'
@@ -172,9 +172,9 @@ export class RegressionSidebar extends Component {
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Table Layout Mode">
             <DropDownMenu
-              value={ completionType }
-              options={ completionTypes }
-              onChange={ (v) => this.clickQueryStringTrackedItem({ completionType: v }) }/>
+              value={ tableLayout }
+              options={ tableLayouts }
+              onChange={ (v) => this.clickQueryStringTrackedItem({ tableLayout: v }) }/>
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
@@ -351,7 +351,7 @@ RegressionSidebar.propTypes = {
   recommended: PropTypes.bool,
   regressionType: PropTypes.string,
   recommendationType: PropTypes.string,
-  completionType: PropTypes.string
+  tableLayout: PropTypes.string
 };
 
 function mapStateToProps(state) {

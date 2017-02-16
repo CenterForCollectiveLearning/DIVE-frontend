@@ -84,7 +84,7 @@ export class RegressionBasePage extends Component {
   }
 
   render() {
-    const { project, pathname, queryObject, regressionType, recommendationType, completionType, recommended, dependentVariableId, independentVariablesIds } = this.props;
+    const { project, pathname, queryObject, regressionType, recommendationType, tableLayout, recommended, dependentVariableId, independentVariablesIds } = this.props;
     return (
       <DocumentTitle title={ 'Regression' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.regressionContainer }` }>
@@ -92,11 +92,12 @@ export class RegressionBasePage extends Component {
             regressionType={ regressionType }
             dependentVariableId={ dependentVariableId }
             independentVariablesIds={ independentVariablesIds }
+            tableLayout={ tableLayout }
           />
           <RegressionSidebar
             pathname={ pathname }
             queryObject={ queryObject }
-            completionType={ completionType }
+            tableLayout={ tableLayout }
             regressionType={ regressionType }
             recommended={ recommended }
             recommendationType={ recommendationType }
@@ -123,7 +124,7 @@ function mapStateToProps(state, ownProps) {
     pathname: pathname,
     persistedQueryString: regressionSelector.queryString,
     recommended: (parseFromQueryObject(queryObject, 'recommended', false) == 'true'),
-    completionType: parseFromQueryObject(queryObject, 'completionType', false),
+    tableLayout: parseFromQueryObject(queryObject, 'tableLayout', false),
     recommendationType: parseFromQueryObject(queryObject, 'recommendationType', false),
     regressionType: parseFromQueryObject(queryObject, 'regressionType', false),
     dependentVariableId: parseFromQueryObject(queryObject, 'dependentVariableId', false),
