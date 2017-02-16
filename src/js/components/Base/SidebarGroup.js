@@ -32,7 +32,7 @@ export default class SidebarGroup extends Component {
   }
 
   render() {
-    const { className, helperText } = this.props;
+    const { className, helperText, helperTextPosition } = this.props;
     const { collapsed, showHelperText } = this.state;
 
     let popoverContent = (
@@ -50,10 +50,11 @@ export default class SidebarGroup extends Component {
             <span className={ styles.headingName }>{ this.props.heading }</span>
             { helperText &&
               <Popover content={ popoverContent }
-                interactionKind={ PopoverInteractionKind.HOVER_TARGET_ONLY }
+                interactionKind={ PopoverInteractionKind.HOVER }
                 popoverClassName="pt-popover-content-sizing"
-                position={ Position.LEFT }
-                useSmartPositioning={ true }
+                position={ helperTextPosition }
+                useSmartPositioning={ false }
+                useSmartArrowPositioning={ true }
                 transitionDuration={ 100 }
                 hoverOpenDelay={ 100 }
                 hoverCloseDelay={ 100 }
@@ -82,10 +83,12 @@ SidebarGroup.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
   heading: PropTypes.string,
-  helperText: PropTypes.string
+  helperText: PropTypes.string,
+  helperTextPosition: PropTypes.number
 };
 
 SidebarGroup.defaultProps = {
   className: "",
-  heading: ""
+  heading: "",
+  helperTextPosition: Position.LEFT
 }

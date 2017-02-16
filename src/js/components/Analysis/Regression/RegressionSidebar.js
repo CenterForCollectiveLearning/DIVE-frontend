@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push, replace } from 'react-router-redux';
 
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Intent, Position } from '@blueprintjs/core';
 
 import { removeFromQueryString, parseFromQueryObject, queryObjectToQueryString, updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
@@ -152,7 +152,7 @@ export class RegressionSidebar extends Component {
     return (
       <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Recommendation Type" helperText='regression'>
+          <SidebarGroup heading="Recommendation Type" helperText='regressionModel' helperTextPosition={ Position.LEFT_TOP }>
             <Button
               className={ 'pt-fill ' + styles.recommendModelButton + ( recommended ? ' .pt-active' : '' )}
               iconName='predictive-analysis'
@@ -170,7 +170,7 @@ export class RegressionSidebar extends Component {
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Table Layout Mode">
+          <SidebarGroup heading="Table Layout Mode" helperText='tableLayout'>
             <DropDownMenu
               value={ tableLayout }
               options={ tableLayouts }
@@ -178,7 +178,7 @@ export class RegressionSidebar extends Component {
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Regression Type">
+          <SidebarGroup heading="Regression Type" helperText='regressionType'>
             <DropDownMenu
               value={ regressionType }
               options={ shownRegressionTypes }
