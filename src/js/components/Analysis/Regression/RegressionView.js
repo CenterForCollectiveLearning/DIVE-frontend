@@ -32,7 +32,7 @@ export class RegressionView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, conditionals, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, regressionResult, runRegression, getContributionToRSquared, fetchDatasets, tableLayout } = this.props;
+    const { projectId, datasetId, conditionals, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, regressionResult, runRegression, getContributionToRSquared, fetchDatasets, tableLayout, recommendationType } = this.props;
 
     const conditionalsChanged = nextProps.conditionals.lastUpdated != conditionals.lastUpdated;
     const regressionTypeChanged = nextProps.regressionType != regressionType;
@@ -41,8 +41,9 @@ export class RegressionView extends Component {
     const dependentVariableExists = (nextProps.dependentVariableName != null);
     const interactionTermsChanged = nextProps.interactionTermIds != interactionTermIds;
     const tableLayoutChanged = nextProps.tableLayout != tableLayout;
+    const recommendationTypeChanged = nextProps.recommendationType != recommendationType;
     const sidebarChanged = conditionalsChanged || dependentVariableChanged || independentVariablesChanged || regressionTypeChanged || interactionTermsChanged || tableLayoutChanged;
-
+    
     if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.regressionType && sidebarChanged) {
       runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames, nextProps.interactionTermIds, nextProps.conditionals.items, nextProps.tableLayout);
     }
@@ -160,7 +161,7 @@ export class RegressionView extends Component {
 function mapStateToProps(state, ownProps) {
   const { project, datasets, conditionals, regressionSelector, datasetSelector, fieldProperties } = state;
   const { progress, error, regressionResult, contributionToRSquared } = regressionSelector;
-  const { independentVariablesIds, dependentVariableId, regressionType, tableLayout } = ownProps;
+  const { independentVariablesIds, dependentVariableId, regressionType, tableLayout, recommendationType } = ownProps;
 
   const dependentVariable = fieldProperties.items.find((property) => property.id == dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;
@@ -181,7 +182,8 @@ function mapStateToProps(state, ownProps) {
     datasetId: datasetSelector.datasetId,
     regressionResult: regressionResult,
     contributionToRSquared: contributionToRSquared,
-    tableLayout: tableLayout
+    tableLayout: tableLayout,
+    recommendationType: recommendationType
   };
 }
 

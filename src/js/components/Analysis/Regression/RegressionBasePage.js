@@ -31,8 +31,8 @@ export class RegressionBasePage extends Component {
     const { fieldProperties, queryObject: nextQueryObject } = nextProps;
 
     const shouldRecommendInitialState = Object.keys(currentQueryObject) == 0 && Object.keys(nextQueryObject).length == 0;
-    if ( shouldRecommendInitialState && fieldProperties.items.length) {
-      this.setRecommendedInitialState(fieldProperties);
+    if ( shouldRecommendInitialState ) {
+      this.setRecommendedInitialState();
     }
 
     // Handling inconsistent state, default selection of certain fields
@@ -70,7 +70,7 @@ export class RegressionBasePage extends Component {
     }
   }
 
-  setRecommendedInitialState = (fieldProperties) =>{
+  setRecommendedInitialState = () => {
     const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, getRecommendation } = this.props;
 
     function setInitialStateCallback(json) {
@@ -80,7 +80,7 @@ export class RegressionBasePage extends Component {
       replace(`${ pathname }${ newQueryString }`);
     }
 
-    getRecommendation(project.id, datasetSelector.datasetId, fieldProperties.items, setInitialStateCallback);
+    getRecommendation(project.id, datasetSelector.datasetId, setInitialStateCallback);
   }
 
   render() {
@@ -88,22 +88,8 @@ export class RegressionBasePage extends Component {
     return (
       <DocumentTitle title={ 'Regression' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.regressionContainer }` }>
-          <RegressionView
-            regressionType={ regressionType }
-            dependentVariableId={ dependentVariableId }
-            independentVariablesIds={ independentVariablesIds }
-            tableLayout={ tableLayout }
-          />
-          <RegressionSidebar
-            pathname={ pathname }
-            queryObject={ queryObject }
-            tableLayout={ tableLayout }
-            regressionType={ regressionType }
-            recommended={ recommended }
-            recommendationType={ recommendationType }
-            dependentVariableId={ dependentVariableId }
-            independentVariablesIds={ independentVariablesIds }
-          />
+          <RegressionView { ...this.props } />
+          <RegressionSidebar { ...this.props } />
           { this.props.children }
         </div>
       </DocumentTitle>

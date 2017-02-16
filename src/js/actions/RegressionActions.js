@@ -44,12 +44,12 @@ function receiveInitialRegressionStateDispatcher(json) {
   };
 }
 
-export function getRecommendation(projectId, datasetId, fieldProperties, callback, dependentVariableId=null) {
+export function getRecommendation(projectId, datasetId, callback, dependentVariableId=null, recommendationType='forwardR2') {
   const params = {
     projectId: projectId,
     datasetId: datasetId,
-    fieldProperties: fieldProperties,
-    dependentVariableId: dependentVariableId
+    dependentVariableId: dependentVariableId,
+    recommendationType: recommendationType
   }
 
   return (dispatch) => {
@@ -60,9 +60,6 @@ export function getRecommendation(projectId, datasetId, fieldProperties, callbac
       headers: { 'Content-Type': 'application/json' }
     }).then(json => callback(json))
   };
-  //   }).then(json => dispatch(receiveInitialRegressionStateDispatcher(json)))
-  //     .catch(err => console.error("Error getting initial regression state:", err));
-  // };
 }
 
 

@@ -48,7 +48,7 @@ export class RegressionSidebar extends Component {
     super(props);
 
     this.state = {
-      interactionVariables: [null, null]
+      interactionVariables: [ null, null ]
     }
   }
 
@@ -61,11 +61,16 @@ export class RegressionSidebar extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = nextProps;
+    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded, recommendationType } = nextProps;
     const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
+    const recommendationTypeChanged = recommendationType != this.props.recommendationType;
 
     if (project.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
       fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
+    }
+
+    if (project.id && datasetSelector.datasetId && recommendationTypeChanged) {
+      this.setRecommendedState(recommendationType);
     }
   }
 
@@ -104,18 +109,17 @@ export class RegressionSidebar extends Component {
     push(`${ pathname }${ newQueryString }`);
   }
 
-  setRecommendedState = (fieldProperties) =>{
+  setRecommendedState = (passedRecommendationType) => {
     const { project, datasetSelector, dependentVariableId, pathname, queryObject, replace, setPersistedQueryString, getRecommendation } = this.props;
+    const recommendationType = passedRecommendationType ? passedRecommendationType : this.props.recommendationType;
 
     function setRecommendationCallback(json) {
-      json = { ...json, recommended: true };
       const newQueryString = queryObjectToQueryString(json);
-      console.log(json, queryObject, newQueryString);
       setPersistedQueryString(newQueryString);
       replace(`${ pathname }${ newQueryString }`);
     }
 
-    getRecommendation(project.id, datasetSelector.datasetId, fieldProperties.items, setRecommendationCallback, dependentVariableId);
+    getRecommendation(project.id, datasetSelector.datasetId, setRecommendationCallback, dependentVariableId, recommendationType);
   }
 
   render() {
@@ -149,7 +153,7 @@ export class RegressionSidebar extends Component {
       }
     }
 
-    return (
+
       <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Recommendation Type" helperText='regressionModel' helperTextPosition={ Position.LEFT_TOP }>
