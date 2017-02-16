@@ -21,7 +21,7 @@ import RaisedButton from '../../Base/RaisedButton';
 
 const recommendationTypes = [ {
   value: 'forwardR2',
-  label: 'Forward Selection R-Squared'
+  label: <span>Forward Selection R<sup>2</sup></span>
 }, {
   value: 'lasso',
   label: 'LASSO'
@@ -153,7 +153,7 @@ export class RegressionSidebar extends Component {
       }
     }
 
-
+    return (
       <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Recommendation Type" helperText='regressionModel' helperTextPosition={ Position.LEFT_TOP }>
@@ -163,7 +163,7 @@ export class RegressionSidebar extends Component {
               text={ recommended ? 'Recommended Model' : 'Recommend Model' }
               intent={ recommended ? Intent.NONE : Intent.PRIMARY }
               disabled={ recommended }
-              onClick={ this.setRecommendedState }
+              onClick={ () => this.setRecommendedState() }
             />
             <DropDownMenu
               value={ recommendationType }

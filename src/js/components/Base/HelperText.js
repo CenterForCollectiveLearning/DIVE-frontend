@@ -17,7 +17,7 @@ export const HELPER_TEXT = {
   expandedMatches: 'Visualizations involving one or more selected fields, in addition to non-selected fields.',
   regressionModel: <div>
     <p>Regression model describes the procedure used to determine.</p>
-    <p><b>Forward R<sup>2</sup></b>, also known as stepwise selection, is a greedy forward-selection algorithm incrementally adding the variables that explain the most variance in the model (R2) above a certain threshold.</p>
+    <p><b>Forward R<sup>2</sup></b>, also known as stepwise selection, is a greedy forward-selection algorithm incrementally adding the variables that explain the most variance in the model (R<sup>2</sup>) above a certain threshold.</p>
     <p><b>LASSO</b> is a variable selection approach constraining the sum of the absolute value of the regression coefficients beneath a certain threshold.</p>
   </div>,
   tableLayout: <div>
