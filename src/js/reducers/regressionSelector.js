@@ -12,6 +12,8 @@ import {
   RECEIVE_RUN_REGRESSION,
   PROGRESS_RUN_REGRESSION,
   ERROR_RUN_REGRESSION,
+  REQUEST_INITIAL_REGRESSION_STATE,
+  RECEIVE_INITIAL_REGRESSION_STATE,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
   RECEIVE_CREATED_SAVED_REGRESSION,
   WIPE_PROJECT_STATE,
@@ -37,6 +39,10 @@ const baseState = {
   dependentVariableId: null,
   independentVariableIds: [],
   interactionTermIds: [],
+  recommendationResult: {
+    loading: false,
+    progress: null
+  },
   regressionResult: {
     exported: false,
     exportedRegressionId: null,
@@ -45,9 +51,6 @@ const baseState = {
     error: null,
     data: null
   },
-  SingleVisualizationSpec: {
-  },
-
   selectedMode: null,
   contributionToRSquared: [],
   queryString: ''
@@ -140,6 +143,12 @@ export default function regressionSelector(state = baseState, action) {
           action.fieldProperty : fieldProperty
       );
       return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
+
+    case REQUEST_INITIAL_REGRESSION_STATE:
+      return { ...state, recommendationResult: { loading: true, progress: 'Recommending initial state' } };
+
+    case RECEIVE_INITIAL_REGRESSION_STATE:
+      return { ...state, recommendationResult: { loading: false, progress: null } };
 
     case REQUEST_RUN_REGRESSION:
       return { ...state, regressionResult: { ...state.regressionResult, loading: true } };

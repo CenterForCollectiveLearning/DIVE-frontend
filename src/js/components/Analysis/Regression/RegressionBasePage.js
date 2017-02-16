@@ -27,11 +27,11 @@ export class RegressionBasePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { queryObject: currentQueryObject } = this.props;
+    const { queryObject: currentQueryObject, regressionSelector } = this.props;
     const { fieldProperties, queryObject: nextQueryObject } = nextProps;
 
     const shouldRecommendInitialState = Object.keys(currentQueryObject) == 0 && Object.keys(nextQueryObject).length == 0;
-    if ( shouldRecommendInitialState ) {
+    if ( shouldRecommendInitialState && !regressionSelector.recommendationResult.loading) {
       this.setRecommendedInitialState();
     }
 
@@ -106,8 +106,9 @@ function mapStateToProps(state, ownProps) {
     project,
     datasetSelector,
     fieldProperties,
-    queryObject: queryObject,
-    pathname: pathname,
+    regressionSelector,
+    queryObject,
+    pathname,
     persistedQueryString: regressionSelector.queryString,
     recommended: (parseFromQueryObject(queryObject, 'recommended', false) == 'true'),
     tableLayout: parseFromQueryObject(queryObject, 'tableLayout', false),

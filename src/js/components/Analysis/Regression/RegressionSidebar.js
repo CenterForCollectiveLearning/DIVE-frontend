@@ -170,6 +170,7 @@ export class RegressionSidebar extends Component {
               intent={ recommended ? Intent.NONE : Intent.PRIMARY }
               disabled={ recommended }
               onClick={ () => this.setRecommendedState() }
+              loading={ regressionSelector.recommendationResult.loading }
             />
             <DropDownMenu
               value={ recommendationType }
@@ -202,7 +203,7 @@ export class RegressionSidebar extends Component {
               options={ fieldProperties.items.filter((property) => !property.isId) }
               valueMember="id"
               displayTextMember="name"
-              onChange={ (v) => this.clickQueryStringTrackedItem({ dependentVariableId: parseInt(v) })}/>
+              onChange={ (v) => this.clickQueryStringTrackedItem({ dependentVariableId: parseInt(v), recommended: false })}/>
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&

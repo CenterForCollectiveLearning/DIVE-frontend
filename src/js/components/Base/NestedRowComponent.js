@@ -64,7 +64,6 @@ export default class NestedRowComponent extends Component {
 
     // Creating first row based on values
     const firstChildRow = row.children[0];
-    console.log(firstChildRow.items);
     const parentRow = {
       rowClass: firstChildRow.rowClass,
       columnClass: firstChildRow.columnClass,
