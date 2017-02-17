@@ -23,12 +23,12 @@ const recommendationTypes = [ {
   value: 'forwardR2',
   label: <span>Forward Selection on R<sup>2</sup></span>
 }, {
-  value: 'forwardF',
-  label: 'Forward Selection on F'
-}, {
-  value: 'rfe',
-  label: 'Recursive Feature Elimination'
-}, {
+//   value: 'forwardF',
+//   label: 'Forward Selection on F'
+// }, {
+//   value: 'rfe',
+//   label: 'Recursive Feature Elimination'
+// }, {
   value: 'lasso',
   label: 'LASSO'
 }]
