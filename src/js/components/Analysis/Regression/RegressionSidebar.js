@@ -67,7 +67,7 @@ export class RegressionSidebar extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded, recommendationType } = nextProps;
+    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded, recommendationType, recommendationResult, regressionSelector } = nextProps;
     const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
     const recommendationTypeChanged = recommendationType != this.props.recommendationType;
 
@@ -75,9 +75,10 @@ export class RegressionSidebar extends Component {
       fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
     }
 
-    if (project.id && datasetSelector.datasetId && recommendationTypeChanged) {
-      this.setRecommendedState(recommendationType);
-    }
+    // if (project.id && datasetSelector.datasetId && !regressionSelector.recommendationResult.loading && recommendationTypeChanged) {
+    //   console.log('Setting recommended state from sidebar');
+    //   this.setRecommendedState();
+    // }
   }
 
   onSelectDependentVariable(dependentVariable) {
@@ -115,9 +116,8 @@ export class RegressionSidebar extends Component {
     push(`${ pathname }${ newQueryString }`);
   }
 
-  setRecommendedState = (passedRecommendationType) => {
-    const { project, datasetSelector, dependentVariableId, pathname, queryObject, replace, setPersistedQueryString, getRecommendation } = this.props;
-    const recommendationType = passedRecommendationType ? passedRecommendationType : this.props.recommendationType;
+  setRecommendedState = () => {
+    const { project, datasetSelector, dependentVariableId, pathname, queryObject, replace, setPersistedQueryString, getRecommendation, recommendationType } = this.props;
 
     function setRecommendationCallback(json) {
       const newQueryString = queryObjectToQueryString(json);
@@ -357,8 +357,8 @@ RegressionSidebar.propTypes = {
   datasetSelector: PropTypes.object.isRequired,
   fieldProperties: PropTypes.object.isRequired,
   regressionSelector: PropTypes.object.isRequired,
-  dependentVariableId: PropTypes.number.isRequired,
-  independentVariablesIds: PropTypes.array.isRequired,
+  dependentVariableId: PropTypes.number,
+  independentVariablesIds: PropTypes.array,
   recommended: PropTypes.bool,
   regressionType: PropTypes.string,
   recommendationType: PropTypes.string,

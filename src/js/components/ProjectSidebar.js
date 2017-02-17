@@ -163,12 +163,14 @@ export class ProjectSidebar extends Component {
               <span className={ styles.expandButton + ' pt-icon-standard pt-icon-menu-open' } />
             </div>
           </Popover>
-          <ProjectSettingsModal
-            projectName={ project.title }
-            projectDescription={ project.description }
-            projectId={ project.id }
-            isOpen={ this.state.projectSettingsModalOpen }
-            closeAction={ this.closeProjectSettingsModal }/>
+          { project.title &&
+            <ProjectSettingsModal
+              projectName={ project.title }
+              projectDescription={ project.description }
+              projectId={ project.id }
+              isOpen={ this.state.projectSettingsModalOpen }
+              closeAction={ this.closeProjectSettingsModal } />
+            }
         </div>
       </div>
     );

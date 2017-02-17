@@ -27,12 +27,13 @@ export class RegressionBasePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { queryObject: currentQueryObject, regressionSelector } = this.props;
-    const { fieldProperties, queryObject: nextQueryObject } = nextProps;
+    const { queryObject: currentQueryObject } = this.props;
+    const { queryObject: nextQueryObject, project, datasetSelector, recommendationLoading } = nextProps;
 
     const shouldRecommendInitialState = Object.keys(currentQueryObject) == 0 && Object.keys(nextQueryObject).length == 0;
-    if ( shouldRecommendInitialState && !regressionSelector.recommendationResult.loading) {
-      this.setRecommendedInitialState();
+    if ( project.id, datasetSelector.datasetId, shouldRecommendInitialState && !recommendationLoading) {
+      console.log('Setting recommended state from receiveProps');
+      this.setRecommendedInitialState(nextProps);
     }
 
     // Handling inconsistent state, default selection of certain fields
@@ -70,11 +71,10 @@ export class RegressionBasePage extends Component {
     }
   }
 
-  setRecommendedInitialState = () => {
-    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, getRecommendation } = this.props;
+  setRecommendedInitialState = (props) => {
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, getRecommendation } = props;
 
     function setInitialStateCallback(json) {
-      json = { ...json, recommended: true };
       const newQueryString = updateQueryString(queryObject, json);
       setPersistedQueryString(newQueryString);
       replace(`${ pathname }${ newQueryString }`);
@@ -109,6 +109,7 @@ function mapStateToProps(state, ownProps) {
     regressionSelector,
     queryObject,
     pathname,
+    recommendationLoading: regressionSelector.recommendationResult.loading,
     persistedQueryString: regressionSelector.queryString,
     recommended: (parseFromQueryObject(queryObject, 'recommended', false) == 'true'),
     tableLayout: parseFromQueryObject(queryObject, 'tableLayout', false),
