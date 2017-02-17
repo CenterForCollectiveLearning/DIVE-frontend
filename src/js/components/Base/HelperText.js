@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const HELPER_TEXT = {
   regression: 'Simple linear regression is the least squares estimator of a linear regression model with a single explanatory variable. In other words, simple linear regression fits a straight line through the set of n points in such a way that makes the sum of squared residuals of the model (that is, vertical distances between the points of the data set and the fitted line) as small as possible.',
   rsquared: 'Contribution to R-squared by variable.',
@@ -13,4 +15,20 @@ export const HELPER_TEXT = {
   individualMatches: 'Visualizations involving exactly one selected field.',
   closeMatches: 'Visualizations involving two or more selected fields.',
   expandedMatches: 'Visualizations involving one or more selected fields, in addition to non-selected fields.',
+  regressionModel: <div>
+    <p>Regression model describes the procedure used to determine.</p>
+    <p><b>Forward R<sup>2</sup></b>, also known as stepwise selection, is a greedy forward-selection algorithm incrementally adding the variables that explain the most variance in the model (R<sup>2</sup>) above a certain threshold.</p>
+    <p><b>LASSO</b> is a variable selection approach constraining the sum of the absolute value of the regression coefficients beneath a certain threshold.</p>
+  </div>,
+  tableLayout: <div>
+    <p>Table layout describes the other regression models included with the complete model that includes all variables.</p>
+    <p><b>One at a time</b> includes models with each independent variable individually.</p>
+    <p><b>Leave one out</b> includes models with the complete model excluding one independent variable at a time.</p>
+    <p><b>Complete</b> only includes the one model with all variables.</p>
+  </div>,
+  regressionType: <div>
+    <p>Regression type describes the model used to describe the relationship between the dependent variable (y) and the independent variables (x).</p>
+    <p>A <b>linear model</b> estimates y as a linear combination of the independent variables.</p>
+    <p>A <b>logistic regression</b> estimates probabilities of a categorical dependent variable using a logistic function.</p>
+  </div>
 }

@@ -1,6 +1,7 @@
 import _ from 'underscore';
 
 import {
+  SELECT_DATASET,
   SELECT_REGRESSION_TYPE,
   SELECT_REGRESSION_MODE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
@@ -11,6 +12,8 @@ import {
   RECEIVE_RUN_REGRESSION,
   PROGRESS_RUN_REGRESSION,
   ERROR_RUN_REGRESSION,
+  REQUEST_INITIAL_REGRESSION_STATE,
+  RECEIVE_INITIAL_REGRESSION_STATE,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
   RECEIVE_CREATED_SAVED_REGRESSION,
   WIPE_PROJECT_STATE,
@@ -36,6 +39,11 @@ const baseState = {
   dependentVariableId: null,
   independentVariableIds: [],
   interactionTermIds: [],
+  recommendationResult: {
+    loading: false,
+    progress: null,
+    data: null
+  },
   regressionResult: {
     exported: false,
     exportedRegressionId: null,
@@ -44,9 +52,6 @@ const baseState = {
     error: null,
     data: null
   },
-  SingleVisualizationSpec: {
-  },
-  regressionModes: regressionModes,
   selectedMode: null,
   contributionToRSquared: [],
   queryString: ''
@@ -140,6 +145,12 @@ export default function regressionSelector(state = baseState, action) {
       );
       return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
 
+    case REQUEST_INITIAL_REGRESSION_STATE:
+      return { ...state, recommendationResult: { loading: true, progress: 'Recommending initial state', data: null } };
+
+    case RECEIVE_INITIAL_REGRESSION_STATE:
+      return { ...state, recommendationResult: { loading: false, progress: null, data: state.data } };
+
     case REQUEST_RUN_REGRESSION:
       return { ...state, regressionResult: { ...state.regressionResult, loading: true } };
 
@@ -182,7 +193,9 @@ export default function regressionSelector(state = baseState, action) {
     case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
       return { ...state, contributionToRSquared: (action.data.data || []) };
 
-    case WIPE_PROJECT_STATE, CLEAR_ANALYSIS:
+    case SELECT_DATASET:
+    case WIPE_PROJECT_STATE:
+    case CLEAR_ANALYSIS:
       return baseState;
 
     default:

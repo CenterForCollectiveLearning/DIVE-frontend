@@ -54,6 +54,26 @@
         height: 0
         width: 0
 
+      .helperText
+        +regularText
+        position: absolute
+        top: 20px
+        right: 20px
+        z-index: 1000
+        background-color: $center-grey
+        border: 1px solid $ui-line-grey
+        width: 300px
+        padding: 12px 20px
+        display: table
+
+      .helperButton
+        margin-left: 6px
+        cursor: pointer
+        z-index: 10000
+        color: $ui-line-grey
+        &:hover
+          color: $primary-accent
+
     .sidebarGroupContent
       padding-top: 10px
 

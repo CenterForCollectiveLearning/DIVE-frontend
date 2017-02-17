@@ -77,7 +77,6 @@ export default function datasetSelector(state = baseState, action) {
         ...state, transformQueryString: action.queryString
       }
 
-
     case WIPE_PROJECT_STATE:
       return baseState;
 

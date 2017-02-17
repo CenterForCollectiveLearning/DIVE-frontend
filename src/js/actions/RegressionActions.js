@@ -1,4 +1,8 @@
 import _ from 'underscore';
+import { push } from 'react-router-redux';
+import { replace } from 'react-router-redux';
+
+import { parseFromQueryObject, updateQueryString } from '../helpers/helpers';
 
 import {
   SELECT_REGRESSION_TYPE,
@@ -11,6 +15,8 @@ import {
   ERROR_RUN_REGRESSION,
   RECEIVE_CREATED_INTERACTION_TERM,
   DELETED_INTERACTION_TERM,
+  REQUEST_INITIAL_REGRESSION_STATE,
+  RECEIVE_INITIAL_REGRESSION_STATE,
   REQUEST_CONTRIBUTION_TO_R_SQUARED,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
   REQUEST_CREATE_SAVED_REGRESSION,
@@ -24,7 +30,44 @@ import {
 import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
 
-export function getInitialState(projectId, datasetId, fieldProperties) {
+function requestInitialRegressionStateDispatcher() {
+  return {
+    type: REQUEST_INITIAL_REGRESSION_STATE
+  };
+}
+
+function receiveInitialRegressionStateDispatcher(json) {
+  return {
+    type: RECEIVE_INITIAL_REGRESSION_STATE,
+    data: json,
+    receivedAt: Date.now()
+  };
+}
+
+export function getRecommendation(projectId, datasetId, callback, dependentVariableId=null, recommendationType='forwardR2') {
+  const params = {
+    projectId: projectId,
+    datasetId: datasetId,
+    dependentVariableId: dependentVariableId,
+    recommendationType: recommendationType
+  }
+
+  return (dispatch) => {
+    dispatch(requestInitialRegressionStateDispatcher());
+    return fetch('/statistics/v1/initial_regression_state', {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(json => {
+      dispatch(receiveInitialRegressionStateDispatcher());
+      callback(json);
+    })
+  };
+}
+
+
+
+export function getInitialStateOld(projectId, datasetId, fieldProperties) {
   var categoricalItemIds = fieldProperties.filter((item) => ((item.generalType == 'c') && (!item.isId))).map((item) => item.id);
   var quantitativeItemIds = fieldProperties.filter((item) => ((item.generalType == 'q') && (!item.isId))).map((item) => item.id);
   var n_c = categoricalItemIds.length;
@@ -169,7 +212,7 @@ function receiveContributionToRSquaredDispatcher(json) {
   };
 }
 
-export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, conditionals=[]) {
+export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, conditionals=[], tableLayout='leaveOneOut') {
   const params = {
     projectId: projectId,
     spec: {
@@ -177,7 +220,8 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
       regressionType: regressionType,
       dependentVariable: dependentVariableName,
       independentVariables: independentVariableNames,
-      interactionTerms: interactionTermIds
+      interactionTerms: interactionTermIds,
+      tableLayout: tableLayout
     }
   }
 

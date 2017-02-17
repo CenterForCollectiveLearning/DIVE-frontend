@@ -69,8 +69,7 @@ export default class NestedRowComponent extends Component {
       columnClass: firstChildRow.columnClass,
       items: [
         row.parentName,
-        '',
-        ...firstChildRow.items.slice(2).map((column) => ((column !== '') ? '✓' : ''))
+        ...firstChildRow.items.slice(1).map((column) => ((column !== '') ? '✓' : ''))
       ]
     };
 

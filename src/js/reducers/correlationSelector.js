@@ -84,7 +84,9 @@ export default function correlationSelector(state = baseState, action) {
         ...state, queryString: action.queryString
       }
 
-    case WIPE_PROJECT_STATE, CLEAR_ANALYSIS, SELECT_DATASET:
+    case WIPE_PROJECT_STATE:
+    case CLEAR_ANALYSIS:
+    case SELECT_DATASET:
       return baseState;
 
     case RECEIVE_CORRELATION_SCATTERPLOT:

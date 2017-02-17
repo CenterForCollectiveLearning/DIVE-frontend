@@ -1,10 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { push, replace } from 'react-router-redux';
 
-import { removeFromQueryString, updateQueryString } from '../../../helpers/helpers';
+import { Button, Intent, Position } from '@blueprintjs/core';
+
+import { removeFromQueryString, parseFromQueryObject, queryObjectToQueryString, updateQueryString } from '../../../helpers/helpers';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
-import { setPersistedQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm } from '../../../actions/RegressionActions';
+import { setPersistedQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, getRecommendation } from '../../../actions/RegressionActions';
 import { selectConditional } from '../../../actions/ConditionalsActions';
 import { createURL, createInteractionTermName, filterInteractionTermSelection } from '../../../helpers/helpers.js';
 
@@ -17,6 +19,31 @@ import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 import RaisedButton from '../../Base/RaisedButton';
 
+const recommendationTypes = [ {
+  value: 'forwardR2',
+  label: <span>Forward Selection on R<sup>2</sup></span>
+}, {
+//   value: 'forwardF',
+//   label: 'Forward Selection on F'
+// }, {
+//   value: 'rfe',
+//   label: 'Recursive Feature Elimination'
+// }, {
+  value: 'lasso',
+  label: 'LASSO'
+}]
+
+const tableLayouts = [ {
+  value: 'all',
+  label: 'Only Complete Model',
+}, {
+  value: 'oneAtATime',
+  label: 'One at a Time'
+}, {
+  value: 'leaveOneOut',
+  label: 'Leave One Out'
+}]
+
 const regressionTypes = [
   { value: 'linear', label: 'Linear' },
   { value: 'logistic', label: 'Logistic' }
@@ -27,32 +54,37 @@ export class RegressionSidebar extends Component {
     super(props);
 
     this.state = {
-      interactionVariables: [null, null]
+      interactionVariables: [ null, null ]
     }
   }
 
   componentWillMount(props) {
-    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
+    const { project, datasetId, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
 
-    if (project.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
+    if (project.id && datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetId)
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = nextProps;
-    const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
+    const { project, datasetId, fieldProperties, fetchFieldPropertiesIfNeeded, recommendationType, recommendationResult, regressionSelector } = nextProps;
+    const datasetIdChanged = datasetId != this.props.datasetId;
+    const recommendationTypeChanged = recommendationType != this.props.recommendationType;
 
-    if (project.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
+    if (project.id && datasetId && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetId)
+    }
+
+    if (project.id && datasetId && !regressionSelector.recommendationResult.loading && recommendationTypeChanged) {
+      this.setRecommendedState(nextProps);
     }
   }
 
   onSelectDependentVariable(dependentVariable) {
-    const { project, datasetSelector, fieldProperties, push } = this.props;
+    const { project, datasetId, fieldProperties, push } = this.props;
 
     const queryParams = { 'dependent-variable': dependentVariable };
-    push(createURL(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
+    push(createURL(`/projects/${ project.id }/datasets/${ datasetId }/analyze/regression`, queryParams));
   }
 
   onAddInteractionTerm(dropDownNumber, independentVariableId) {
@@ -83,6 +115,19 @@ export class RegressionSidebar extends Component {
     push(`${ pathname }${ newQueryString }`);
   }
 
+  setRecommendedState = (passedProps) => {
+    const props = (passedProps && Object.keys(passedProps).length != 0) ? passedProps : this.props;
+    const { project, datasetId, dependentVariableId, pathname, queryObject, replace, setPersistedQueryString, getRecommendation, recommendationType } = props;
+
+    function setRecommendationCallback(json) {
+      const newQueryString = queryObjectToQueryString(json);
+      setPersistedQueryString(newQueryString);
+      replace(`${ pathname }${ newQueryString }`);
+    }
+
+    getRecommendation(project.id, datasetId, setRecommendationCallback, dependentVariableId, recommendationType);
+  }
+
   render() {
     const {
       fieldProperties,
@@ -91,10 +136,14 @@ export class RegressionSidebar extends Component {
       deleteInteractionTerm,
       conditionals,
       selectConditional,
+      recommended,
+      recommendationType,
+      tableLayout,
       regressionType,
       dependentVariableId,
-      independentVariablesIds
+      independentVariablesIds,
     } = this.props;
+
     const { interactionVariables } = this.state;
 
     const interactionTermNames = regressionSelector.interactionTermIds.map((idTuple) => {
@@ -113,7 +162,34 @@ export class RegressionSidebar extends Component {
     return (
       <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Regression Type">
+          <SidebarGroup heading="Recommendation Type" helperText='regressionModel' helperTextPosition={ Position.LEFT_TOP }>
+            <Button
+              className={ 'pt-fill ' + styles.recommendModelButton + ( recommended ? ' .pt-active' : '' )}
+              iconName='predictive-analysis'
+              text={ recommended ? 'Recommended Model' : 'Recommend Model' }
+              intent={ recommended ? Intent.NONE : Intent.PRIMARY }
+              disabled={ recommended }
+              onClick={ () => this.setRecommendedState() }
+              loading={ regressionSelector.recommendationResult.loading }
+            />
+            <DropDownMenu
+              value={ recommendationType }
+              valueMember='value'
+              displayTextMember='label'
+              options={ recommendationTypes }
+              onChange={ (v) => this.clickQueryStringTrackedItem({ recommendationType: v }) }/>
+          </SidebarGroup>
+        }
+        { fieldProperties.items.length != 0 &&
+          <SidebarGroup heading="Table Layout Mode" helperText='tableLayout'>
+            <DropDownMenu
+              value={ tableLayout }
+              options={ tableLayouts }
+              onChange={ (v) => this.clickQueryStringTrackedItem({ tableLayout: v }) }/>
+          </SidebarGroup>
+        }
+        { fieldProperties.items.length != 0 &&
+          <SidebarGroup heading="Regression Type" helperText='regressionType'>
             <DropDownMenu
               value={ regressionType }
               options={ shownRegressionTypes }
@@ -127,7 +203,7 @@ export class RegressionSidebar extends Component {
               options={ fieldProperties.items.filter((property) => !property.isId) }
               valueMember="id"
               displayTextMember="name"
-              onChange={ (v) => this.clickQueryStringTrackedItem({ dependentVariableId: parseInt(v) })}/>
+              onChange={ (v) => this.clickQueryStringTrackedItem({ dependentVariableId: parseInt(v), recommended: false })}/>
           </SidebarGroup>
         }
         { fieldProperties.items.length != 0 &&
@@ -157,7 +233,7 @@ export class RegressionSidebar extends Component {
                   valueMember="id"
                   externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ] }) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
@@ -177,7 +253,7 @@ export class RegressionSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ] }) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
               </div>
             }
             { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
@@ -197,7 +273,7 @@ export class RegressionSidebar extends Component {
                   displayTextMember="name"
                   externalSelectedItems={ independentVariablesIds }
                   separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ] }) } />
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
               </div>
             }
             { fieldProperties.interactionTerms.length > 0 &&
@@ -278,12 +354,15 @@ export class RegressionSidebar extends Component {
 
 RegressionSidebar.propTypes = {
   project: PropTypes.object.isRequired,
-  datasetSelector: PropTypes.object.isRequired,
+  datasetId: PropTypes.string.isRequired,
   fieldProperties: PropTypes.object.isRequired,
   regressionSelector: PropTypes.object.isRequired,
-  dependentVariableId: PropTypes.number.isRequired,
-  independentVariablesIds: PropTypes.array.isRequired,
-  regressionType: PropTypes.string
+  dependentVariableId: PropTypes.number,
+  independentVariablesIds: PropTypes.array,
+  recommended: PropTypes.bool,
+  regressionType: PropTypes.string,
+  recommendationType: PropTypes.string,
+  tableLayout: PropTypes.string
 };
 
 function mapStateToProps(state) {
@@ -291,10 +370,20 @@ function mapStateToProps(state) {
   return {
     project,
     conditionals,
-    datasetSelector,
+    datasetId: datasetSelector.datasetId,
     fieldProperties,
     regressionSelector
   };
 }
 
-export default connect(mapStateToProps, { fetchFieldPropertiesIfNeeded, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, selectConditional, setPersistedQueryString, push })(RegressionSidebar);
+export default connect(mapStateToProps, {
+  fetchFieldPropertiesIfNeeded,
+  createInteractionTerm,
+  selectInteractionTerm,
+  deleteInteractionTerm,
+  selectConditional,
+  setPersistedQueryString,
+  getRecommendation,
+  replace,
+  push
+})(RegressionSidebar);

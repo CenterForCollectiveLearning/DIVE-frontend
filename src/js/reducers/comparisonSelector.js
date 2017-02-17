@@ -2,6 +2,7 @@ import _ from 'underscore';
 
 import {
   WIPE_PROJECT_STATE,
+  CLEAR_ANALYSIS,
   RECEIVE_NUMERICAL_COMPARISON,
   UPDATE_COMPARISON_INPUT,
   RECEIVE_ANOVA,
@@ -46,10 +47,9 @@ export default function comparisonSelector(state = baseState, action) {
         ...state, queryString: action.queryString
       }
 
-    case WIPE_PROJECT_STATE:
-      return baseState;
-
     case SELECT_DATASET:
+    case CLEAR_ANALYSIS:
+    case WIPE_PROJECT_STATE:
       return baseState;
 
     default:
