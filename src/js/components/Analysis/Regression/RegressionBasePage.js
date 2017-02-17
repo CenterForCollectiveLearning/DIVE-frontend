@@ -15,13 +15,13 @@ import { selectDependentVariable, selectRegressionType } from '../../../actions/
 export class RegressionBasePage extends Component {
 
   componentWillMount() {
-    const { fieldProperties, persistedQueryString, pathname, replace } = this.props;
+    const { project, datasetId, fieldProperties, persistedQueryString, pathname, replace } = this.props;
 
     if ( persistedQueryString ) {
       replace(`${ pathname }${ persistedQueryString }`);
     } else {
-      if ( fieldProperties.items.length ) {
-        this.setRecommendedInitialState(fieldProperties);
+      if ( project.id && datasetId ) {
+        this.setRecommendedInitialState(this.props);
       }
     }
   }
