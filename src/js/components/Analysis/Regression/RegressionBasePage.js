@@ -28,20 +28,19 @@ export class RegressionBasePage extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { queryObject: currentQueryObject, recommendationResult } = this.props;
-    const { queryObject: nextQueryObject, project, datasetId } = nextProps;
+    const { queryObject: nextQueryObject, project, datasetId, persistedQueryString } = nextProps;
 
-    const shouldRecommendInitialState = Object.keys(currentQueryObject) == 0 && Object.keys(nextQueryObject).length == 0 && !recommendationResult.loading && !recommendationResult.data;
+    const shouldRecommendInitialState = Object.keys(currentQueryObject).length == 0 && Object.keys(nextQueryObject).length == 0 && !recommendationResult.loading && !nextProps.recommendationResult.loading && !persistedQueryString;
     if ( project.id && datasetId && shouldRecommendInitialState) {
-      console.log('Setting recommended state from receiveProps', this.props.recommendationResult, recommendationResult);
       this.setRecommendedInitialState(nextProps);
     }
 
     // Handling inconsistent state, default selection of certain fields
-    this.reconcileState();
+    this.reconcileState(nextProps);
   }
 
-  reconcileState() {
-    const { project, datasetId, pathname, queryObject, replace, setPersistedQueryString, fieldProperties, regressionType, independentVariablesIds, dependentVariableId } = this.props;
+  reconcileState(props) {
+    const { project, datasetId, pathname, queryObject, replace, setPersistedQueryString, fieldProperties, regressionType, independentVariablesIds, dependentVariableId } = props;
 
     const generalTypeToPermissibleRegressionType = {
       'q': [ 'linear' ],

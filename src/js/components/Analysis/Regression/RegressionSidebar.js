@@ -59,33 +59,32 @@ export class RegressionSidebar extends Component {
   }
 
   componentWillMount(props) {
-    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
+    const { project, datasetId, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
 
-    if (project.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
+    if (project.id && datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetId)
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded, recommendationType, recommendationResult, regressionSelector } = nextProps;
-    const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
+    const { project, datasetId, fieldProperties, fetchFieldPropertiesIfNeeded, recommendationType, recommendationResult, regressionSelector } = nextProps;
+    const datasetIdChanged = datasetId != this.props.datasetId;
     const recommendationTypeChanged = recommendationType != this.props.recommendationType;
 
-    if (project.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
+    if (project.id && datasetId && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetId)
     }
 
-    // if (project.id && datasetSelector.datasetId && !regressionSelector.recommendationResult.loading && recommendationTypeChanged) {
-    //   console.log('Setting recommended state from sidebar');
-    //   this.setRecommendedState();
-    // }
+    if (project.id && datasetId && !regressionSelector.recommendationResult.loading && recommendationTypeChanged) {
+      this.setRecommendedState(nextProps);
+    }
   }
 
   onSelectDependentVariable(dependentVariable) {
-    const { project, datasetSelector, fieldProperties, push } = this.props;
+    const { project, datasetId, fieldProperties, push } = this.props;
 
     const queryParams = { 'dependent-variable': dependentVariable };
-    push(createURL(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/analyze/regression`, queryParams));
+    push(createURL(`/projects/${ project.id }/datasets/${ datasetId }/analyze/regression`, queryParams));
   }
 
   onAddInteractionTerm(dropDownNumber, independentVariableId) {
@@ -116,8 +115,9 @@ export class RegressionSidebar extends Component {
     push(`${ pathname }${ newQueryString }`);
   }
 
-  setRecommendedState = () => {
-    const { project, datasetSelector, dependentVariableId, pathname, queryObject, replace, setPersistedQueryString, getRecommendation, recommendationType } = this.props;
+  setRecommendedState = (passedProps) => {
+    const props = (passedProps && Object.keys(passedProps).length != 0) ? passedProps : this.props;
+    const { project, datasetId, dependentVariableId, pathname, queryObject, replace, setPersistedQueryString, getRecommendation, recommendationType } = props;
 
     function setRecommendationCallback(json) {
       const newQueryString = queryObjectToQueryString(json);
@@ -125,7 +125,7 @@ export class RegressionSidebar extends Component {
       replace(`${ pathname }${ newQueryString }`);
     }
 
-    getRecommendation(project.id, datasetSelector.datasetId, setRecommendationCallback, dependentVariableId, recommendationType);
+    getRecommendation(project.id, datasetId, setRecommendationCallback, dependentVariableId, recommendationType);
   }
 
   render() {
@@ -354,7 +354,7 @@ export class RegressionSidebar extends Component {
 
 RegressionSidebar.propTypes = {
   project: PropTypes.object.isRequired,
-  datasetSelector: PropTypes.object.isRequired,
+  datasetId: PropTypes.string.isRequired,
   fieldProperties: PropTypes.object.isRequired,
   regressionSelector: PropTypes.object.isRequired,
   dependentVariableId: PropTypes.number,
@@ -370,7 +370,7 @@ function mapStateToProps(state) {
   return {
     project,
     conditionals,
-    datasetSelector,
+    datasetId: datasetSelector.datasetId,
     fieldProperties,
     regressionSelector
   };
