@@ -36,9 +36,10 @@ function requestInitialRegressionStateDispatcher() {
   };
 }
 
-function receiveInitialRegressionStateDispatcher() {
+function receiveInitialRegressionStateDispatcher(json) {
   return {
     type: RECEIVE_INITIAL_REGRESSION_STATE,
+    data: json,
     receivedAt: Date.now()
   };
 }
@@ -59,7 +60,7 @@ export function getRecommendation(projectId, datasetId, callback, dependentVaria
       headers: { 'Content-Type': 'application/json' }
     }).then(json => {
       dispatch(receiveInitialRegressionStateDispatcher());
-      callback(json);      
+      callback(json);
     })
   };
 }

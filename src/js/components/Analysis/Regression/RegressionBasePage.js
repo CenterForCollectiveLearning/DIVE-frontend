@@ -27,12 +27,12 @@ export class RegressionBasePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { queryObject: currentQueryObject } = this.props;
-    const { queryObject: nextQueryObject, project, datasetSelector, recommendationLoading } = nextProps;
+    const { queryObject: currentQueryObject, recommendationResult } = this.props;
+    const { queryObject: nextQueryObject, project, datasetId } = nextProps;
 
-    const shouldRecommendInitialState = Object.keys(currentQueryObject) == 0 && Object.keys(nextQueryObject).length == 0;
-    if ( project.id, datasetSelector.datasetId, shouldRecommendInitialState && !recommendationLoading) {
-      console.log('Setting recommended state from receiveProps');
+    const shouldRecommendInitialState = Object.keys(currentQueryObject) == 0 && Object.keys(nextQueryObject).length == 0 && !recommendationResult.loading && !recommendationResult.data;
+    if ( project.id && datasetId && shouldRecommendInitialState) {
+      console.log('Setting recommended state from receiveProps', this.props.recommendationResult, recommendationResult);
       this.setRecommendedInitialState(nextProps);
     }
 
@@ -41,7 +41,7 @@ export class RegressionBasePage extends Component {
   }
 
   reconcileState() {
-    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, fieldProperties, regressionType, independentVariablesIds, dependentVariableId } = this.props;
+    const { project, datasetId, pathname, queryObject, replace, setPersistedQueryString, fieldProperties, regressionType, independentVariablesIds, dependentVariableId } = this.props;
 
     const generalTypeToPermissibleRegressionType = {
       'q': [ 'linear' ],
@@ -72,7 +72,7 @@ export class RegressionBasePage extends Component {
   }
 
   setRecommendedInitialState = (props) => {
-    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, getRecommendation } = props;
+    const { project, datasetId, pathname, queryObject, replace, setPersistedQueryString, getRecommendation } = props;
 
     function setInitialStateCallback(json) {
       const newQueryString = updateQueryString(queryObject, json);
@@ -80,7 +80,7 @@ export class RegressionBasePage extends Component {
       replace(`${ pathname }${ newQueryString }`);
     }
 
-    getRecommendation(project.id, datasetSelector.datasetId, setInitialStateCallback);
+    getRecommendation(project.id, datasetId, setInitialStateCallback);
   }
 
   render() {
@@ -104,12 +104,12 @@ function mapStateToProps(state, ownProps) {
 
   return {
     project,
-    datasetSelector,
     fieldProperties,
     regressionSelector,
     queryObject,
     pathname,
-    recommendationLoading: regressionSelector.recommendationResult.loading,
+    datasetId: datasetSelector.datasetId,
+    recommendationResult: regressionSelector.recommendationResult,
     persistedQueryString: regressionSelector.queryString,
     recommended: (parseFromQueryObject(queryObject, 'recommended', false) == 'true'),
     tableLayout: parseFromQueryObject(queryObject, 'tableLayout', false),

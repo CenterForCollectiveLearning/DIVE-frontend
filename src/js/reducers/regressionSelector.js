@@ -41,7 +41,8 @@ const baseState = {
   interactionTermIds: [],
   recommendationResult: {
     loading: false,
-    progress: null
+    progress: null,
+    data: null
   },
   regressionResult: {
     exported: false,
@@ -145,10 +146,10 @@ export default function regressionSelector(state = baseState, action) {
       return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
 
     case REQUEST_INITIAL_REGRESSION_STATE:
-      return { ...state, recommendationResult: { loading: true, progress: 'Recommending initial state' } };
+      return { ...state, recommendationResult: { loading: true, progress: 'Recommending initial state', data: null } };
 
     case RECEIVE_INITIAL_REGRESSION_STATE:
-      return { ...state, recommendationResult: { loading: false, progress: null } };
+      return { ...state, recommendationResult: { loading: false, progress: null, data: state.data } };
 
     case REQUEST_RUN_REGRESSION:
       return { ...state, regressionResult: { ...state.regressionResult, loading: true } };

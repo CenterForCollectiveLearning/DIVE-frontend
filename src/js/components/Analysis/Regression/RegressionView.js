@@ -48,7 +48,7 @@ export class RegressionView extends Component {
       runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames, nextProps.interactionTermIds, nextProps.conditionals.items, nextProps.tableLayout);
     }
 
-    if (nextProps.projectId && nextProps.regressionResult.data && nextProps.regressionResult.data.id && (sidebarChanged || regressionResult.data == null || (nextProps.regressionResult.data.id != regressionResult.data.id)) && (tableLayout == 'leaveOneOut')) {
+    if (nextProps.projectId && nextProps.regressionResult.data && nextProps.regressionResult.data.id && independentVariableNames.length > 1 && (sidebarChanged || regressionResult.data == null || (nextProps.regressionResult.data.id != regressionResult.data.id)) && (tableLayout == 'leaveOneOut')) {
       getContributionToRSquared(nextProps.projectId, nextProps.regressionResult.data.id, nextProps.conditionals.items);
     }
   }
