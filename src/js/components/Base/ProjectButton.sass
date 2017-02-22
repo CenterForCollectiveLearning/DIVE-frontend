@@ -1,5 +1,6 @@
 @import '../../../css/mixins.sass'
 
+
 .projectButton
   +noSelect
   +regularCopy
@@ -50,7 +51,6 @@
     .projectButtonContentTop
       display: flex
       flex-direction: row
-      min-height: 100px
       .projectLeft
         display: flex
         flex-direction: column
@@ -124,3 +124,21 @@
   &.showDatasets
     .projectButtonTop
       min-height: 70px
+
+
+.projectButton.minimal
+  $minimalHeight: 40px
+  min-height: $minimalHeight
+  line-height: $minimalHeight
+  margin-bottom: -1px
+  width: 100%
+  align-items: center
+
+  .projectButtonContent
+    .projectButtonContentTop
+      .projectTitle
+        line-height: $minimalHeight
+        font-weight: normal
+  .rightButtons
+    height: 30px
+    margin-right: 10px

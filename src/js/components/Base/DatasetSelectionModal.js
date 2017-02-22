@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { createProject } from '../../actions/ProjectActions.js';
-import styles from '../App/App.sass';
+import styles from './SelectionModal.sass';
 
 import { Button, Classes, Dialog } from '@blueprintjs/core';
 
@@ -20,6 +20,7 @@ class DatasetSelectionModal extends Component {
 
     return (
       <Dialog
+        className={ styles.datasetSelectionModal }
         onClose={ closeAction }
         title={ `Change Dataset (${ datasets.length })` }
         iconName='document'
@@ -29,10 +30,11 @@ class DatasetSelectionModal extends Component {
           <div className="pt-button-group pt-vertical pt-fill">
             { datasets.map((dataset) =>
               <Button
-                text={ dataset.title }
                 disabled={ (dataset.datasetId == currentDatasetId) }
                 onClick={ () => onClickButton(dataset.datasetId) }
-              />
+              >
+                <div>{ dataset.title } ({ dataset.datasetId })</div>
+              </Button>
             ) }
           </div>
         </div>
