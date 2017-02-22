@@ -125,15 +125,19 @@ function deleteProjectDispatcher(projectId) {
   };
 }
 
-function deletedProjectDispatcher(projectId) {
+function deletedProjectDispatcher(json) {
   return {
     type: DELETED_PROJECT,
-    projectId: projectId.id
+    projectId: json.id
   };
 }
 
 function goHome() {
   window.location.href = '/';
+}
+
+function goToProjects() {
+  window.location.href = '/projects';
 }
 
 export function deleteProjectNoReturnHome(projectId) {
@@ -151,7 +155,7 @@ export function deleteProject(projectId) {
     return fetch(`/projects/v1/projects/${ projectId }`, {
       method: 'delete'
     }).then(json => dispatch(deletedProjectDispatcher(json)))
-      .then(goHome);
+      .then(goToProjects);
   }
 }
 
@@ -216,7 +220,6 @@ function shouldFetchProject(state) {
 
 export function fetchProjectIfNeeded(projectId) {
   return (dispatch, getState) => {
-    console.log(getState(), shouldFetchProject(getState()))
     if (shouldFetchProject(getState())) {
       return dispatch(fetchProject(projectId));
     }

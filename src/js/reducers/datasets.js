@@ -3,6 +3,7 @@ import {
   RECEIVE_DATASETS,
   RECEIVE_UPLOAD_DATASET,
   RECEIVE_DATASET,
+  DELETED_DATASET,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -53,7 +54,7 @@ export default function datasets(state = baseState, action) {
 
     case RECEIVE_DATASETS:
       var mergedDatasetLists = mergeDatasetLists(state.items, action.datasets);
-      return { ...state, isFetching: false, items: mergedDatasetLists, loaded: true, fetchedAll: true, projectId: action.projectId };        
+      return { ...state, isFetching: false, items: mergedDatasetLists, loaded: true, fetchedAll: true, projectId: action.projectId };
 
     case RECEIVE_UPLOAD_DATASET:
       if (action.error) {
@@ -69,6 +70,11 @@ export default function datasets(state = baseState, action) {
           details: action.details
       }];
       return { ...state, items: mergeDatasetLists(state.items, newDataset), projectId: action.projectId };
+
+    case DELETED_DATASET:
+      var updatedDatasets = state.items.filter((d) => d.datasetId != action.datasetId);
+      console.log('Deleted dataset', action.datasetId);
+      return { ...state, items: updatedDatasets };
 
     case WIPE_PROJECT_STATE:
       return baseState;

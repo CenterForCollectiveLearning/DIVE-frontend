@@ -50,7 +50,7 @@ export class DatasetUploadPage extends Component {
 
   render() {
     const { projectTitle, datasetSelector } = this.props;
-    console.log('DatasetSelector error:', datasetSelector.error);
+
     return (
       <DocumentTitle title={ 'Upload' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
         <div className={ styles.fillContainer }>

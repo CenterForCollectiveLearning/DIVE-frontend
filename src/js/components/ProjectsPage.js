@@ -35,9 +35,8 @@ export class ProjectsPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, user, projects, fetchUserProjects } = nextProps;
-
-    console.log('Will Receive Props projectsPage', params);
+    const { params, user, projects, fetchProjectIfNeeded, fetchUserProjects } = nextProps;
+    
     if (params.projectId) {
       fetchProjectIfNeeded(params.projectId);
     }
