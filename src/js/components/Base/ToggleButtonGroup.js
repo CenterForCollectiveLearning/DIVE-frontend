@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './ToggleButtonGroup.sass';
 
+import { Button } from '@blueprintjs/core';
+
 export default class ToggleButtonGroup extends Component {
   render() {
     const { className, buttonClassName, colorMember, toggleItems, altTextMember, valueMember, displayTextMember, imageNameMember, imageNameSuffix, externalSelectedItems, separated, column, splitMenuItemsMember, selectMenuItem, onChange, onDelete, expand } = this.props;
@@ -15,7 +17,7 @@ export default class ToggleButtonGroup extends Component {
         ( ( expand || imageNameMember ) ? (' pt-fill') : '' )
       }>
         { toggleItems.map((item) =>
-          <button
+          <Button
             key={ `toggle-${item[valueMember]}` }
             className={
               'pt-button ' +
@@ -25,12 +27,12 @@ export default class ToggleButtonGroup extends Component {
               ( colorMember ? (' ' + styles.coloredBorder) : '' ) +
               ( item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) ? ' pt-active' : '')
             }
-            separated={ separated }
+            // separated={ separated }
             style={ colorMember ? { 'borderLeftColor': item[colorMember] } : {} }
             onClick={ () => onChange(item[valueMember].toString()) }
-            splitMenu={ splitMenuItemsMember ? item[splitMenuItemsMember] : [] }
-            selectMenuItem={ selectMenuItem }
-            onDelete={ onDelete }
+            // splitMenu={ splitMenuItemsMember ? item[splitMenuItemsMember] : [] }
+            // selectMenuItem={ selectMenuItem }
+            // onDelete={ onDelete }
           >
             { imageNameMember ?
               <img
@@ -41,7 +43,7 @@ export default class ToggleButtonGroup extends Component {
             { !imageNameMember &&
               item[displayTextMember]
             }
-          </button>
+          </Button>
         )}
       </div>
     );

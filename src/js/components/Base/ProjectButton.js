@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { updateProject, deleteProjectNoReturnHome, wipeProjectState } from '../../actions/ProjectActions.js';
+import { updateProject, deleteProject, deleteProjectNoReturnHome, wipeProjectState } from '../../actions/ProjectActions.js';
 
 import { Button, Popover, PopoverInteractionKind, Position, Menu, MenuItem } from '@blueprintjs/core';
 
@@ -48,13 +48,18 @@ class ProjectButton extends Component {
   }
 
   onClickDeleteProject = (e) => {
-    const { project, deleteProjectNoReturnHome } = this.props;
+    const { project, selected, deleteProject, deleteProjectNoReturnHome } = this.props;
     e.stopPropagation()
     e.preventDefault()
-    this.setState({ deleted: true });
-    deleteProjectNoReturnHome(project.id);
-  }
 
+    this.setState({ deleted: true })
+
+    if (selected) {
+      deleteProject(project.id);
+    } else {
+      deleteProjectNoReturnHome(project.id);
+    }
+  }
 
   onClickProjectButton = (e) => {
     const { project, wipeProjectState, push } = this.props;
@@ -69,8 +74,12 @@ class ProjectButton extends Component {
     const { project, className, minimal, showId, format, sortField, viewMode, selected, onClickButton } = this.props;
     const { id, title, description, numDatasets, includedDatasets, numSpecs, numAnalyses, numDocuments, creationDate, updateDate, starred } = project;
 
+    const noop = () => {};
+
     const showDatasets = (viewMode == 'expanded' && numDatasets > 0);
-    if (this.state.deleted) { return ( <div/> )};
+    if (this.state.deleted) {
+      return ( <div /> )
+    };
 
     let popoverContent = (
       <Menu>
@@ -89,12 +98,12 @@ class ProjectButton extends Component {
 
     return (
       <div className={
-        'pt-card pt-interactive '
+        'pt-card '
         + styles.projectButton
         + ( showDatasets ? ' ' + styles.showDatasets : '')
         + (minimal ? ' ' + styles.minimal : '')
-        + (selected ? ' ' + styles.selected : '')}
-        onClick={ onClickButton ? onClickButton : this.onClickProjectButton }
+        + (selected ? ' ' + styles.selected : ' pt-interactive')}
+        onClick={ selected ? noop : (onClickButton ? onClickButton : this.onClickProjectButton) }
       >
         { !minimal &&
           <div className={ styles.starContainer } onClick={ this.onClickStarProject }>
@@ -206,4 +215,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { updateProject, deleteProjectNoReturnHome, wipeProjectState, push })(ProjectButton);
+export default connect(mapStateToProps, { updateProject, deleteProject, deleteProjectNoReturnHome, wipeProjectState, push })(ProjectButton);

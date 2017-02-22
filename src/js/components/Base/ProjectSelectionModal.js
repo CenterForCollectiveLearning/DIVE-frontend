@@ -35,6 +35,7 @@ class ProjectSelectionModal extends Component {
           <div className={ styles.listContainer }>
             { projects.map((project) =>
               <ProjectButton
+                key={ `project-button-${ project.id }` }
                 project={ project }
                 minimal={ true }
                 showId={ projectTitles.filter((projectTitle) => projectTitle == project.title).length > 1 }

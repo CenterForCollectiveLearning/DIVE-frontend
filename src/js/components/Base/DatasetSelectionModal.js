@@ -25,7 +25,7 @@ class DatasetSelectionModal extends Component {
     const datasetTitles = datasets.map((d) => d.title);
     return (
       <Dialog
-        className={ styles.datasetSelectionModal }
+        className={ styles.selectionModal }
         onClose={ closeAction }
         title={ `Change Dataset (${ datasets.length })` }
         iconName='document'
@@ -35,6 +35,7 @@ class DatasetSelectionModal extends Component {
           <div className={ styles.listContainer }>
             { datasets.map((dataset) =>
               <DatasetButton
+                key={ `dataset-button-${ dataset.datasetId }`}
                 project={ project }
                 dataset={ dataset }
                 minimal={ true }

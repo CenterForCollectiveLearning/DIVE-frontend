@@ -6,7 +6,7 @@ import { push } from 'react-router-redux';
 
 import { deleteDataset } from '../../actions/DatasetActions.js';
 
-import { Button, Popover, PopoverInteractionKind, Position, Menu, MenuItem } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 
 import styles from './ProjectButton.sass';
 
@@ -24,10 +24,12 @@ class DatasetButton extends Component {
   }
 
   onClickDeleteDataset = (e) => {
-    const { project, dataset, deleteProjectNoReturnHome } = this.props;
+    const { project, dataset, deleteDataset } = this.props;
     e.stopPropagation()
     e.preventDefault()
+    console.log('Deleting dataset', dataset.datasetId);
 
+    this.setState({ deleted: true });
     deleteDataset(project.id, dataset.datasetId);
   }
 
@@ -35,47 +37,26 @@ class DatasetButton extends Component {
     const { project, dataset, className, minimal, showId, format, sortField, viewMode, selected, onClickButton } = this.props;
     const { datasetId, title } = dataset;
 
+    const noop = () => {};
+
     const showDatasets = (viewMode == 'expanded' && numDatasets > 0);
     if (this.state.deleted) { return ( <div/> )};
 
-    let popoverContent = (
-      <Menu>
-        <MenuItem
-          iconName="edit"
-          onClick={ this.onClickProjectSettings }
-          text="Edit Properties"
-        />
-        <MenuItem
-          iconName="trash"
-          onClick={ this.onClickDeleteProject }
-          text="Delete"
-        />
-      </Menu>
-    );
-    
     return (
       <div
         className={
-          'pt-card pt-interactive '
+          'pt-card '
           + styles.projectButton
           + ( showDatasets ? ' ' + styles.showDatasets : '')
           + (minimal ? ' ' + styles.minimal : '')
-          + (selected ? ' ' + styles.selected : '')
+          + (selected ? ' ' + styles.selected : ' pt-interactive')
         }
-        onClick={ () => onClickButton(datasetId) }
+        onClick={ selected ? noop : onClickButton }
       >
         <div className={ styles.projectButtonContent }>
           <div className={ styles.projectButtonContentTop }>
             <div className={ styles.projectLeft }>
               <div className={ styles.projectTitle }>{ title } { showId && <span>({ datasetId })</span>}</div>
-              <div className={ styles.projectMetaData }>
-                { sortField == 'updateDate' &&
-                  <div className={ styles.projectDescription }>Last Modified: { moment(updateDate).format('LLL') }</div>
-                }
-                { sortField == 'creationDate' &&
-                  <div className={ styles.projectDescription }>Created: { moment(creationDate).format('LLL') }</div>
-                }
-              </div>
             </div>
           </div>
         </div>
