@@ -24,7 +24,7 @@ export default class TaskManager {
   addTask(taskId, taskType) {
     var tasks = this.currentTasks;
 
-    const otherTaskIds = tasks
+    const otherTaskIdsOfSameType = tasks
       .filter((task) => ((task.id != taskId) && (task.type == taskType)))
       .map((task) => task.id);
 
@@ -33,7 +33,7 @@ export default class TaskManager {
     }
 
     this.setTasks(tasks);
-    return otherTaskIds;
+    return otherTaskIdsOfSameType;
   }
 
   removeTask(taskId) {

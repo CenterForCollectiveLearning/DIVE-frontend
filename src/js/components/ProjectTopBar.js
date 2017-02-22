@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 
-import { selectDataset, fetchDatasets } from '../actions/DatasetActions';
 import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions';
+import { fetchDatasets } from '../actions/DatasetActions';
 
 import styles from './App/App.sass';
 
+import ProjectSelectionModal from './Base/ProjectSelectionModal';
+import DatasetSelectionModal from './Base/DatasetSelectionModal';
 import DropDownMenu from './Base/DropDownMenu';
 import RaisedButton from './Base/RaisedButton';
 import Tabs from './Base/Tabs';
@@ -20,18 +21,25 @@ export class ProjectTopBar extends Component {
     super(props);
 
     this.state = {
-      projectSettingsModalOpen: false
+      projectSelectionModalOpen: false,
+      datasetSelectionModalOpen: false
     };
   }
 
-  onSelectProject(projectId) {
-    window.location.href = `/projects/${ projectId }/datasets`;
+  closeProjectSelectionModal = () => {
+    this.setState({ projectSelectionModalOpen: false });
   }
 
-  onSelectDataset = (datasetId) => {
-    const { project, push, selectDataset, routes } = this.props;
-    selectDataset(project.id, datasetId);
-    push(`/projects/${ project.id }/datasets/${ datasetId }/inspect`);
+  closeDatasetSelectionModal = () => {
+    this.setState({ datasetSelectionModalOpen: false });
+  }
+
+  openProjectSelectionModal = () => {
+    this.setState({ projectSelectionModalOpen: true });
+  }
+
+  openDatasetSelectionModal = () => {
+    this.setState({ datasetSelectionModalOpen: true });
   }
 
   _getCurrentPage = () => {
@@ -68,9 +76,6 @@ export class ProjectTopBar extends Component {
     }
   }
 
-
-
-
   render() {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 
@@ -79,53 +84,34 @@ export class ProjectTopBar extends Component {
     const filteredDatasets = datasets.items.filter((d) =>
       (d.id !== datasetSelector.datasetId)
     )
-
+    
     return (
       <div className={ styles.projectTopBar }>
         { project.title && !project.userProjects &&
           <div className={ styles.projectTopBarLeft}>
             <div className={ styles.section }>
-              { ( project.preloaded || projects.userProjects.length == 1) &&
-                <div className={ styles.item }>
-                  <div className={ styles.label }>Project</div>
-                  <div>{ project.title }</div>
-                </div>
-              }
-              { ( !project.preloaded && projects.userProjects.length > 1) &&
-                <DropDownMenu
-                  className={ styles.projectSelector }
-                  valueClassName={ styles.projectSelectorValue }
-                  labelClassName={ styles.dropDownLabel }
-                  value={ parseInt(project.id) }
-                  options={ projects.userProjects }
-                  label="Project"
-                  valueMember="id"
-                  displayTextMember="title"
-                  onChange={ this.onSelectProject } />
-              }
+              <div className={ styles.item }>
+                <div className={ styles.label }>Project</div>
+                <span
+                  className={ styles.value + ((!project.preloaded && projects.userProjects.length > 1) ? ' ' + styles.multiple : '') }
+                  onClick={ this.openProjectSelectionModal }
+                >
+                  { project.title }
+                </span>
+              </div>
             </div>
             { datasetSelector.datasetId &&
               <div className={ styles.section }>
                 <span className={ styles.separator }>&#9002;</span>
-                { datasets.items.length == 1 &&
-                  <div className={ styles.item }>
-                    <div className={ styles.label }>Dataset</div>
-                    <span className={ styles.value }>{ datasetSelector.title }</span>
-                  </div>
-                }
-                { datasets.items.length > 1 &&
-                  <DropDownMenu
-                    autosize={ true }
-                    className={ styles.datasetSelector }
-                    valueClassName={ styles.datasetSelectorValue }
-                    labelClassName={ styles.dropDownLabel }
-                    value={ parseInt(datasetSelector.datasetId) }
-                    options={ datasets.items }
-                    label="Dataset"
-                    valueMember="datasetId"
-                    displayTextMember="title"
-                    onChange={ this.onSelectDataset.bind(this) } />
-                }
+                <div className={ styles.item }>
+                  <div className={ styles.label }>Dataset</div>
+                  <span
+                    className={ styles.value + (datasets.items.length > 1 ?  ' ' + styles.multiple : '')}
+                    onClick={ this.openDatasetSelectionModal }
+                  >
+                    { datasetSelector.title }
+                  </span>
+                </div>
               </div>
             }
             <div className={ styles.section }>
@@ -137,6 +123,21 @@ export class ProjectTopBar extends Component {
                 </span>
               </div>
             </div>
+            <ProjectSelectionModal
+              isOpen={ this.state.projectSelectionModalOpen }
+              closeAction={ this.closeProjectSelectionModal }
+              projects={ projects.userProjects }
+              onSelect={ this.onSelectProject }
+              currentProjectId={ parseInt(project.id) }
+            />
+            <DatasetSelectionModal
+              project={ project }
+              isOpen={ this.state.datasetSelectionModalOpen }
+              closeAction={ this.closeDatasetSelectionModal }
+              datasets={ datasets.items }
+              onSelect={ this.onSelectDataset }
+              currentDatasetId={ parseInt(datasetSelector.datasetId) }
+            />
           </div>
         }
       </div>
@@ -156,7 +157,5 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  push,
-  fetchDatasets,
-  selectDataset,
+  fetchDatasets
 })(ProjectTopBar);

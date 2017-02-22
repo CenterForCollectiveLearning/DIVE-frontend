@@ -129,7 +129,7 @@ export class ExploreView extends Component {
       <div className={ styles.specsContainer }>
         <div className={ styles.innerSpecsContainer }>
           <HeaderBar header={ pageHeader } helperText={ helperText } />
-          <div className={ styles.specContainer }>
+          <div className={ styles.specContainer + ' ' + styles.fillContainer}>
             { !isFetching && sortedSpecs.length == 0 &&
               <div className={ styles.centeredFill }>
                 <NonIdealState
