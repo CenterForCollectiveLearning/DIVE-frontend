@@ -27,15 +27,6 @@ class ProjectButton extends Component {
     this.setState({ projectSettingsModalOpen: false });
   }
 
-  onClickProjectButton = (e) => {
-    const { project, wipeProjectState, push } = this.props;
-    const { projectSettingsModalOpen } = this.state;
-    if (!projectSettingsModalOpen) {
-      wipeProjectState();
-      push(`/projects/${ project.id }/datasets`);
-    }
-  }
-
   onClickProjectSettings = (e) => {
     e.stopPropagation()
     e.preventDefault()
@@ -64,8 +55,18 @@ class ProjectButton extends Component {
     deleteProjectNoReturnHome(project.id);
   }
 
+
+  onClickProjectButton = (e) => {
+    const { project, wipeProjectState, push } = this.props;
+    const { projectSettingsModalOpen } = this.state;
+    if (!projectSettingsModalOpen) {
+      wipeProjectState();
+      push(`/projects/${ project.id }/datasets`);
+    }
+  }
+
   render() {
-    const { project, className, minimal, showId, format, sortField, viewMode } = this.props;
+    const { project, className, minimal, showId, format, sortField, viewMode, selected, onClickButton } = this.props;
     const { id, title, description, numDatasets, includedDatasets, numSpecs, numAnalyses, numDocuments, creationDate, updateDate, starred } = project;
 
     const showDatasets = (viewMode == 'expanded' && numDatasets > 0);
@@ -87,7 +88,14 @@ class ProjectButton extends Component {
     );
 
     return (
-      <div className={ 'pt-card pt-interactive ' + styles.projectButton + ( showDatasets ? ' ' + styles.showDatasets : '') + (minimal ? ' ' + styles.minimal : '')} onClick={ this.onClickProjectButton }>
+      <div className={
+        'pt-card pt-interactive '
+        + styles.projectButton
+        + ( showDatasets ? ' ' + styles.showDatasets : '')
+        + (minimal ? ' ' + styles.minimal : '')
+        + (selected ? ' ' + styles.selected : '')}
+        onClick={ onClickButton ? onClickButton : this.onClickProjectButton }
+      >
         { !minimal &&
           <div className={ styles.starContainer } onClick={ this.onClickStarProject }>
             <i className={ starred ? 'fa fa-star ' + styles.starred : 'fa fa-star-o' }></i>
@@ -181,14 +189,17 @@ ProjectButton.propTypes = {
   sortField: PropTypes.string,
   viewMode: PropTypes.string,
   minimal: PropTypes.bool,
-  showId: PropTypes.bool
+  showId: PropTypes.bool,
+  selected: PropTypes.bool,
+  onClickButton: PropTypes.func
 }
 
 ProjectButton.defaultProps = {
   format: 'list',
   viewMode: 'standard',
   minimal: false,
-  showId: false
+  showId: false,
+  selected: false
 }
 
 function mapStateToProps(state) {

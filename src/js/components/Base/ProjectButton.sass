@@ -51,6 +51,7 @@
     .projectButtonContentTop
       display: flex
       flex-direction: row
+      height: 100%
       .projectLeft
         display: flex
         flex-direction: column
@@ -130,9 +131,14 @@
   $minimalHeight: 40px
   min-height: $minimalHeight
   line-height: $minimalHeight
-  margin-bottom: -1px
+  margin-bottom: -2px
   width: 100%
   align-items: center
+
+  &.selected
+    box-shadow: inset 0 0 0 0px rgba(16, 22, 26, 0.2), inset 0 1px 1px rgba(16, 22, 26, 0.2)
+    background-color: #d8e1e8
+    background-image: none
 
   .projectButtonContent
     .projectButtonContentTop

@@ -216,6 +216,7 @@ function shouldFetchProject(state) {
 
 export function fetchProjectIfNeeded(projectId) {
   return (dispatch, getState) => {
+    console.log(getState(), shouldFetchProject(getState()))
     if (shouldFetchProject(getState())) {
       return dispatch(fetchProject(projectId));
     }

@@ -1,23 +1,28 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
-import { createProject } from '../../actions/ProjectActions.js';
+import { selectDataset } from '../../actions/DatasetActions';
 import styles from './SelectionModal.sass';
 
 import { Button, Classes, Dialog } from '@blueprintjs/core';
 
+import DatasetButton from './DatasetButton';
 import RaisedButton from './RaisedButton';
 import Input from './Input';
 import TextArea from './TextArea';
 
 class DatasetSelectionModal extends Component {
-  constructor(props) {
-    super(props);
+  onSelectDataset = (datasetId) => {
+    const { project, push, selectDataset, routes } = this.props;
+    selectDataset(project.id, datasetId);
+    push(`/projects/${ project.id }/datasets/${ datasetId }/inspect`);
   }
 
   render() {
-    const { datasets, currentDatasetId, closeAction, isOpen, onClickButton } = this.props;
+    const { project, datasets, currentDatasetId, closeAction, isOpen } = this.props;
 
+    const datasetTitles = datasets.map((d) => d.title);
     return (
       <Dialog
         className={ styles.datasetSelectionModal }
@@ -27,21 +32,18 @@ class DatasetSelectionModal extends Component {
         isOpen={ isOpen }
       >
         <div className={ Classes.DIALOG_BODY }>
-          <div className="pt-button-group pt-vertical pt-fill">
+          <div className={ styles.listContainer }>
             { datasets.map((dataset) =>
-              <Button
-                disabled={ (dataset.datasetId == currentDatasetId) }
-                onClick={ () => onClickButton(dataset.datasetId) }
-              >
-                <div>{ dataset.title } ({ dataset.datasetId })</div>
-              </Button>
+              <DatasetButton
+                project={ project }
+                dataset={ dataset }
+                minimal={ true }
+                showId={ datasetTitles.filter((datasetTitle) => datasetTitle == dataset.title).length > 1 }
+                selected={ dataset.datasetId == currentDatasetId }
+                onClickButton={ () => this.onSelectDataset(dataset.datasetId) }
+              />
             ) }
           </div>
-        </div>
-        <div className={ Classes.DIALOG_FOOTER }>
-            <div className={ Classes.DIALOG_FOOTER_ACTIONS }>
-                <Button className="pt-intent-primary" iconName="add" onClick={ this.submit }>Create</Button>
-            </div>
         </div>
       </Dialog>
     );
@@ -49,11 +51,11 @@ class DatasetSelectionModal extends Component {
 }
 
 DatasetSelectionModal.propTypes = {
+  project: PropTypes.object,
   datasets: PropTypes.array,
   closeAction: PropTypes.func,
   isOpen: PropTypes.bool,
-  currentDatasetId: PropTypes.number,
-  onClickButton: PropTypes.func
+  currentDatasetId: PropTypes.number
 };
 
 DatasetSelectionModal.defaultProps = {
@@ -65,4 +67,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { createProject })(DatasetSelectionModal);
+export default connect(mapStateToProps, { push, selectDataset })(DatasetSelectionModal);

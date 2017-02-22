@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
-import { createProject } from '../../actions/ProjectActions.js';
+import { wipeProjectState } from '../../actions/ProjectActions.js';
 import styles from './SelectionModal.sass';
 
 import { Button, Classes, Dialog } from '@blueprintjs/core';
@@ -12,8 +13,14 @@ import Input from './Input';
 import TextArea from './TextArea';
 
 class ProjectSelectionModal extends Component {
+  onSelectProject(projectId) {
+    const { push, wipeProjectState } = this.props;
+    wipeProjectState();
+    push(`/projects/${ projectId }/datasets`);
+  }
+
   render() {
-    const { projects, currentProjectId, closeAction, isOpen, onClickButton } = this.props;
+    const { projects, currentProjectId, closeAction, isOpen } = this.props;
 
     const projectTitles = projects.map((p) => p.title);
     return (
@@ -31,14 +38,11 @@ class ProjectSelectionModal extends Component {
                 project={ project }
                 minimal={ true }
                 showId={ projectTitles.filter((projectTitle) => projectTitle == project.title).length > 1 }
+                selected={ project.id == currentProjectId }
+                onClickButton={ () => this.onSelectProject(project.id) }
               />
             ) }
           </div>
-        </div>
-        <div className={ Classes.DIALOG_FOOTER }>
-            <div className={ Classes.DIALOG_FOOTER_ACTIONS }>
-                <Button className="pt-intent-primary" iconName="add" onClick={ this.submit }>Go to Project</Button>
-            </div>
         </div>
       </Dialog>
     );
@@ -49,8 +53,7 @@ ProjectSelectionModal.propTypes = {
   datasets: PropTypes.array,
   closeAction: PropTypes.func,
   isOpen: PropTypes.bool,
-  currentProjectId: PropTypes.number,
-  onClickButton: PropTypes.func
+  currentProjectId: PropTypes.number
 };
 
 ProjectSelectionModal.defaultProps = {
@@ -62,4 +65,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { createProject })(ProjectSelectionModal);
+export default connect(mapStateToProps, { push, wipeProjectState })(ProjectSelectionModal);

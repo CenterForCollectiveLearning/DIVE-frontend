@@ -35,7 +35,12 @@ export class ProjectsPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { user, projects, fetchUserProjects } = nextProps;
+    const { params, user, projects, fetchUserProjects } = nextProps;
+
+    console.log('Will Receive Props projectsPage', params);
+    if (params.projectId) {
+      fetchProjectIfNeeded(params.projectId);
+    }
 
     if (user.id) {
       window.amplitude.setUserId(user.id);

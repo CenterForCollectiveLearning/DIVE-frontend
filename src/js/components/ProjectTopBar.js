@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 
-import { selectDataset, fetchDatasets } from '../actions/DatasetActions';
 import { fetchProjectIfNeeded, createAUID } from '../actions/ProjectActions';
+import { fetchDatasets } from '../actions/DatasetActions';
 
 import styles from './App/App.sass';
 
@@ -25,16 +24,6 @@ export class ProjectTopBar extends Component {
       projectSelectionModalOpen: false,
       datasetSelectionModalOpen: false
     };
-  }
-
-  onSelectProject(projectId) {
-    window.location.href = `/projects/${ projectId }/datasets`;
-  }
-
-  onSelectDataset = (datasetId) => {
-    const { project, push, selectDataset, routes } = this.props;
-    selectDataset(project.id, datasetId);
-    push(`/projects/${ project.id }/datasets/${ datasetId }/inspect`);
   }
 
   closeProjectSelectionModal = () => {
@@ -95,7 +84,7 @@ export class ProjectTopBar extends Component {
     const filteredDatasets = datasets.items.filter((d) =>
       (d.id !== datasetSelector.datasetId)
     )
-
+    
     return (
       <div className={ styles.projectTopBar }>
         { project.title && !project.userProjects &&
@@ -140,15 +129,14 @@ export class ProjectTopBar extends Component {
               projects={ projects.userProjects }
               onSelect={ this.onSelectProject }
               currentProjectId={ parseInt(project.id) }
-              onClickButton={ this.onSelectProject }
             />
             <DatasetSelectionModal
+              project={ project }
               isOpen={ this.state.datasetSelectionModalOpen }
               closeAction={ this.closeDatasetSelectionModal }
               datasets={ datasets.items }
               onSelect={ this.onSelectDataset }
               currentDatasetId={ parseInt(datasetSelector.datasetId) }
-              onClickButton={ this.onSelectDataset }
             />
           </div>
         }
@@ -169,7 +157,5 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  push,
-  fetchDatasets,
-  selectDataset,
+  fetchDatasets
 })(ProjectTopBar);
