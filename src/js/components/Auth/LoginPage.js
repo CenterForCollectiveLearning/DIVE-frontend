@@ -138,6 +138,7 @@ class AuthPage extends Component {
           closeAction={ this.closeLoginPage }
           className={ styles.loginModal }
           blackBackground={ true }
+          authType="login"
           footer={
             <div className={ styles.registerText }>
               Don&#39;t have an account? <span className={ styles.registerLink } onClick={ this.clickRegister }>Click here to create one</span>.

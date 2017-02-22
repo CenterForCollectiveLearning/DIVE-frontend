@@ -23,7 +23,7 @@ export class AuthModal extends Component {
   }
 
   render() {
-    const { closeAction, isOpen, titleText } = this.props;
+    const { closeAction, isOpen, titleText, authType } = this.props;
     const styles = this.props.styles ? this.props.styles : baseStyles;
 
     return (
@@ -34,7 +34,7 @@ export class AuthModal extends Component {
         backdropClassName={ styles.blockingModalMask + ' ' + styles.blackBackground }
       >
         <div className={ Classes.DIALOG_HEADER }>
-          <span className="pt-icon-large pt-icon-log-in" />
+          <span className={ "pt-icon-large " + ( authType == 'login' ? "pt-icon-log-in" : "pt-icon-user") }/>
           <h5>{ this.props.titleText }</h5>
           <Button
             className={ "pt-minimal " + styles.backButton }
@@ -63,7 +63,8 @@ AuthModal.propTypes = {
   children: PropTypes.node,
   scrollable: PropTypes.bool,
   blackBackground: PropTypes.bool,
-  isOpen: PropTypes.bool
+  isOpen: PropTypes.bool,
+  authType: PropTypes.string
 }
 
 AuthModal.defaultProps = {
@@ -75,7 +76,8 @@ AuthModal.defaultProps = {
   scrollable: false,
   className: '',
   blackBackground: false,
-  isOpen: false
+  isOpen: false,
+  authType: 'login'
 }
 
 

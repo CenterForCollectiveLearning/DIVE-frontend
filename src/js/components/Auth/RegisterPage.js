@@ -175,10 +175,11 @@ class AuthPage extends Component {
         <AuthModal
           scrollable
           titleText="Register for DIVE"
-          isOpen={ true}
+          isOpen={ true }
           closeAction={ this.closeRegistrationPage }
           className={ styles.registerModal }
           blackBackground={ true }
+          authType='register'
           heading={
             <span>Account Registration</span>
           }

@@ -79,14 +79,17 @@ export class LandingPage extends Component {
             </div>
               <div className="pt-navbar-group pt-align-right">
                 { user && user.username &&
-                  <div>
+                  <div className={ styles.rightButtons }>
                     <Link className="pt-button pt-minimal pt-icon-projects" route="/projects">Projects</Link>
                     <span className="pt-navbar-divider"></span>
                     <div className="pt-button pt-minimal pt-icon-log-out" onClick={ this.props.logoutUser }>Log Out</div>
                   </div>
                 }
                 { (!user || !user.username) &&
-                  <Link className="pt-button pt-minimal pt-icon-log-in" route="/login">Log In</Link>
+                  <div className={ styles.rightButtons }>                    
+                    <Link className="pt-button pt-minimal pt-icon-log-in" route="/login">Log In</Link>
+                    <Link className="pt-button pt-minimal pt-icon-user" route="/register">Register</Link>
+                  </div>
                 }
               </div>
             </nav>
