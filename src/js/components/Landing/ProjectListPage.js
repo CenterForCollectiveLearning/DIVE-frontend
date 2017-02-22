@@ -5,9 +5,7 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
-import { Button, Intent } from '@blueprintjs/core';
-
-import { Menu, MenuDivider, MenuItem, Popover, Position, NonIdealState } from "@blueprintjs/core";
+import { Button, Intent, Menu, MenuDivider, MenuItem, Popover, Position, NonIdealState } from "@blueprintjs/core";
 import ProjectCreateModal from '../Base/ProjectCreateModal';
 import ProjectButton from '../Base/ProjectButton';
 import RaisedButton from '../Base/RaisedButton';
