@@ -8,6 +8,9 @@ import {
   REQUEST_REGISTER_USER,
   RECEIVE_REGISTER_USER,
   ERROR_REGISTER_USER,
+  REQUEST_CONFIRM_TOKEN,
+  RECEIVE_CONFIRM_TOKEN,
+  ERROR_CONFIRM_TOKEN
 } from '../constants/ActionTypes';
 
 import { detectClient } from '../helpers/clientdetection';
@@ -61,6 +64,46 @@ function errorRegisterUserDispatcher(error) {
     type: ERROR_REGISTER_USER,
     emailError: error.message.email,
     usernameError: error.message.username
+  }
+}
+
+function requestConfirmTokenDispatcher() {
+  return {
+    type: REQUEST_CONFIRM_TOKEN
+  }
+}
+
+function receiveConfirmTokenDispatcher(json) {
+  return {
+    type: RECEIVE_CONFIRM_TOKEN,
+
+  }
+}
+
+function errorConfirmTokenDispatcher() {
+  return {
+    type: RECEIVE_CONFIRM_TOKEN
+  }
+}
+
+export function confirmToken(token) {
+  return (dispatch) => {
+    dispatch(requestConfirmTokenDispatcher());
+    return rawFetch(`/auth/v1/confirm/${ token }`)
+    .then((response) => {
+      if (response.status >= 400) {
+        response.json().then( json =>
+          dispatch(errorConfirmTokenDispatcher(json))
+        );
+      } else {
+        response.json().then( (json) => {
+          console.log(json)
+          window.amplitude.setUserId(json.user.email);
+          return dispatch(receiveConfirmTokenDispatcher(json));
+        });
+      }
+    })
+    .catch( error => { console.log('Token confirmation failed', error); });
   }
 }
 

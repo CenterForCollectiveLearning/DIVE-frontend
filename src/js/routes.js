@@ -3,23 +3,38 @@ import { Route, IndexRoute } from 'react-router';
 import { push } from 'react-router-redux';
 import { UserAuthWrapper } from 'redux-auth-wrapper';
 
-import AboutPage from './components/Landing/AboutPage';
+// Auth
 import LoginPage from './components/Auth/LoginPage';
 import RegisterPage from './components/Auth/RegisterPage';
+import AuthPage from './components/Auth/AuthPage';
+import UnconfirmedPage from './components/Auth/UnconfirmedPage';
+import ActivatePage from './components/Auth/ActivatePage';
+import ForgotPage from './components/Auth/ForgotPage';
+
+// Landing
+import AboutPage from './components/Landing/AboutPage';
 import LandingPage from './components/Landing/LandingPage';
 import ProjectListPage from './components/Landing/ProjectListPage';
 import PreloadedProjectListPage from './components/Landing/PreloadedProjectListPage';
 import StoryPage from './components/Landing/StoryPage';
 import FeaturesPage from './components/Landing/FeaturesPage';
+
+// Project
 import App from './components/App/App';
 import ProjectsPage from './components/ProjectsPage';
+
+// Dataset
 import DatasetsPage from './components/Datasets/DatasetsPage';
 import DatasetUploadPage from './components/Datasets/DatasetUploadPage';
 import DatasetInspectPage from './components/Datasets/DatasetInspectPage';
 import DatasetTransformPage from './components/Datasets/DatasetTransformPage';
+
+// Visualization
 import VisualizationsPage from './components/Visualizations/VisualizationsPage';
 import ExploreBasePage from './components/Visualizations/Explore/ExploreBasePage';
 import SingleVisualizationPage from './components/Visualizations/SingleVisualization/SingleVisualizationPage';
+
+// Analysis
 import AnalysisPage from './components/Analysis/AnalysisPage';
 import RegressionBasePage from './components/Analysis/Regression/RegressionBasePage';
 import SegmentationPage from './components/Analysis/Segmentation/SegmentationPage';
@@ -27,6 +42,8 @@ import AggregationBasePage from './components/Analysis/Aggregation/AggregationBa
 import CorrelationBasePage from './components/Analysis/Correlation/CorrelationBasePage';
 import ComparisonBasePage from './components/Analysis/Comparison/ComparisonBasePage';
 import ExportedVisualizationPage from './components/Visualizations/ExportedVisualization/ExportedVisualizationPage';
+
+// Compose
 import ComposeBasePage from './components/Compose/ComposeBasePage';
 import ComposePage from './components/Compose/ComposePage';
 import NarrativeBasePage from './components/Compose/NarrativeBasePage';
@@ -48,8 +65,14 @@ const requireAuthentication = UserAuthWrapper({
 
 export default (
   <Route path="/" component={ App }>
-    <Route path="/login" component={ LoginPage }/>
-    <Route path="/register" component={ RegisterPage }/>
+    <Route path="/auth" component={ AuthPage }>
+      <Route path="login" component={ LoginPage }/>
+      <Route path="register" component={ RegisterPage }/>
+      <Route path="forgot" component={ ForgotPage }/>
+      <Route path="activate/:token" component={ ActivatePage } />
+      <Route path="unconfirmed" component={ UnconfirmedPage }/>
+      <Route path="forgot" component={ ForgotPage }/>
+    </Route>
 
     <IndexRoute component={ LandingPage }/>
     <Route path="/landing" component={ LandingPage }>

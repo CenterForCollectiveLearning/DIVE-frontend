@@ -17,7 +17,7 @@ function validateEmail(email) {
     return re.test(email);
 }
 
-class AuthPage extends Component {
+class LoginPage extends Component {
   constructor(props) {
     super(props);
 
@@ -71,11 +71,6 @@ class AuthPage extends Component {
     }
   }
 
-  goHome = () => {
-    const { push } = this.props;
-    push('/')
-  }
-
   handlePasswordChange = (e) => {
     this.sanitizeBackendErrors();
     this.setState({ password: e.target.value });
@@ -83,16 +78,12 @@ class AuthPage extends Component {
 
   clickRegister = () => {
     const { push } = this.props;
-    push('/register')
-  }
-
-  clickRegister = () => {
-    const { push } = this.props;
-    push('/register')
+    push('/auth/register');
   }
 
   clickForgot = () => {
-    alert('Functionality in progress');
+    const { push } = this.props;
+    push('/auth/forgot');
   }
 
   handleRememberMeChange = (e) => {
@@ -144,7 +135,7 @@ class AuthPage extends Component {
               Don&#39;t have an account? <span className={ styles.registerLink } onClick={ this.clickRegister }>Click here to create one</span>.
             </div>
           }>
-          <form className={ styles.authForm } onsubmit={ this.submit }>
+          <form className={ styles.authForm } onSubmit={ this.submit }>
             <div className={ styles.authInputGroup }>
               { (loginError == 'E-mail not found' || loginError == 'Username not found') &&
                 <div className={ styles.authInputError }>Not found</div>
@@ -199,7 +190,7 @@ class AuthPage extends Component {
   }
 }
 
-AuthPage.propTypes = {
+LoginPage.propTypes = {
   authRequired: React.PropTypes.bool
 };
 
@@ -214,4 +205,4 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   loginUser,
   push
-})(AuthPage);
+})(LoginPage);

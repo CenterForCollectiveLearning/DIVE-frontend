@@ -87,8 +87,8 @@ export class LandingPage extends Component {
                 }
                 { (!user || !user.username) &&
                   <div className={ styles.rightButtons }>
-                    <Link className="pt-button pt-minimal pt-icon-log-in" route="/login">Log In</Link>
-                    <Link className="pt-button pt-minimal pt-icon-user" route="/register">Register</Link>
+                    <Link className="pt-button pt-minimal pt-icon-log-in" route="/auth/login">Log In</Link>
+                    <Link className="pt-button pt-minimal pt-icon-user" route="/auth/register">Register</Link>
                   </div>
                 }
               </div>

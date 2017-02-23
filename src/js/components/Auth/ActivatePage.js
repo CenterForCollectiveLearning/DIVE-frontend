@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
-import { registerUser } from '../../actions/AuthActions';
+import { confirmToken, registerUser } from '../../actions/AuthActions';
 
 import styles from './Auth.sass';
 
@@ -19,7 +19,7 @@ function validateEmail(email)
     return re.test(email);
 }
 
-class RegisterPage extends Component {
+class ActivatePage extends Component {
   constructor(props) {
     super(props);
 
@@ -47,7 +47,10 @@ class RegisterPage extends Component {
   }
 
   componentWillMount() {
+    const { params, confirmToken } = this.props;
+    const { token } = params;
     this.ensureNotLoggedIn(this.props)
+    confirmToken(token);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -106,7 +109,7 @@ class RegisterPage extends Component {
 
   _clickLogin = () => {
     const { push } = this.props;
-    push('/auth/login')
+    push('/login')
   }
 
   ensureNotLoggedIn(props) {
@@ -174,7 +177,7 @@ class RegisterPage extends Component {
       <DocumentTitle title='DIVE | Register'>
         <AuthModal
           scrollable
-          titleText="Register for DIVE"
+          titleText="Activate DIVE Account"
           isOpen={ true }
           closeAction={ this.closeRegistrationPage }
           className={ styles.registerModal }
@@ -191,44 +194,6 @@ class RegisterPage extends Component {
 
           <form className={ styles.authForm } onSubmit={ this.submit }>
             <div className={ styles.authInputGroup }>
-              { (email && email.length > 3 && !emailValid) &&
-                <div className={ styles.authInputError }>Invalid</div>
-              }
-              { emailError &&
-                <div className={ styles.authInputError }>Taken</div>
-              }
-              <div className="pt-input-group pt-large">
-                <input
-                  className={ "pt-input pt-large pt-icon-lock pt-fill " + ((emailError || (email && email.length > 3 && !emailValid)) ? 'pt-intent-warning' : '') }
-                  placeholder="E-mail Address"
-                  autoComplete="on"
-                  autoFocus={ true }
-                  onChange={ this.handleEmailChange }
-                  onSubmit={ this.submit }
-                />
-                <span className="pt-icon pt-minimal pt-icon-envelope" />
-              </div>
-            </div>
-
-            <div className={ styles.authInputGroup }>
-              { (username && usernameTooShort) && <div className={ styles.authInputError }>Too Short</div> }
-              { (username && usernameTooLong) && <div className={ styles.authInputError }>Too Long</div> }
-              { usernameError &&
-                <div className={ styles.authInputError }>Taken</div>
-              }
-              <div className="pt-input-group pt-large">
-                <input
-                  type="text"
-                  className={ "pt-input pt-large pt-icon-user pt-fill " + (( usernameError || usernameTooLong || usernameTooShort) ? 'pt-intent-warning' : '')}
-                  placeholder="Username"
-                  autoComplete="on"
-                  onChange={ this.handleUsernameChange }
-                />
-                <span className="pt-icon pt-minimal pt-icon-user" />
-              </div>
-            </div>
-
-            {/* <div className={ styles.authInputGroup }>
               { (password && passwordScore <= 1) && <div className={ styles.authInputError + ' ' + styles.weak }>Weak</div> }
               { (password && passwordScore == 2) && <div className={ styles.authInputError + ' ' + styles.good }>Good</div> }
               { (password && passwordScore >= 3) && <div className={ styles.authInputError + ' ' + styles.strong }>Strong</div> }
@@ -241,11 +206,11 @@ class RegisterPage extends Component {
                 />
                 <span className="pt-icon pt-minimal pt-icon-lock" />
               </div>
-            </div> */}
+            </div>
             <Button
               className="pt-large pt-fill"
               type="submit"
-              text="Create Account"
+              text="Activate Account"
               intent={ Intent.PRIMARY }
               disabled={ !validForm }
               onClick={ this.submit }
@@ -257,7 +222,7 @@ class RegisterPage extends Component {
   }
 }
 
-RegisterPage.propTypes = {
+ActivatePage.propTypes = {
   authRequired: React.PropTypes.bool
 };
 
@@ -270,4 +235,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { registerUser, push })(RegisterPage);
+export default connect(mapStateToProps, { confirmToken, registerUser, push })(ActivatePage);

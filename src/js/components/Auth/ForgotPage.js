@@ -19,7 +19,7 @@ function validateEmail(email)
     return re.test(email);
 }
 
-class RegisterPage extends Component {
+class ForgotPage extends Component {
   constructor(props) {
     super(props);
 
@@ -106,7 +106,7 @@ class RegisterPage extends Component {
 
   _clickLogin = () => {
     const { push } = this.props;
-    push('/auth/login')
+    push('/login')
   }
 
   ensureNotLoggedIn(props) {
@@ -257,7 +257,7 @@ class RegisterPage extends Component {
   }
 }
 
-RegisterPage.propTypes = {
+ForgotPage.propTypes = {
   authRequired: React.PropTypes.bool
 };
 
@@ -270,4 +270,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { registerUser, push })(RegisterPage);
+export default connect(mapStateToProps, { registerUser, push })(ForgotPage);
