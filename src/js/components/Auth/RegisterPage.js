@@ -129,7 +129,7 @@ class RegisterPage extends Component {
       password
     } = this.state;
 
-    const validForm = (email && username && emailValid) && !(emailError || usernameError || usernameTooShort || usernameTooLong);
+    const validForm = (email && username && emailValid && password) && !(emailError || usernameError || usernameTooShort || usernameTooLong);
     return validForm;
   }
 
@@ -228,7 +228,7 @@ class RegisterPage extends Component {
               </div>
             </div>
 
-            {/* <div className={ styles.authInputGroup }>
+            <div className={ styles.authInputGroup }>
               { (password && passwordScore <= 1) && <div className={ styles.authInputError + ' ' + styles.weak }>Weak</div> }
               { (password && passwordScore == 2) && <div className={ styles.authInputError + ' ' + styles.good }>Good</div> }
               { (password && passwordScore >= 3) && <div className={ styles.authInputError + ' ' + styles.strong }>Strong</div> }
@@ -241,7 +241,7 @@ class RegisterPage extends Component {
                 />
                 <span className="pt-icon pt-minimal pt-icon-lock" />
               </div>
-            </div> */}
+            </div>
             <Button
               className="pt-large pt-fill"
               type="submit"

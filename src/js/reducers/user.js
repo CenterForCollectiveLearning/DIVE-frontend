@@ -8,6 +8,9 @@ import {
   REQUEST_LOGOUT_USER,
   RECEIVE_LOGOUT_USER,
   ERROR_LOGOUT_USER,
+  REQUEST_CONFIRM_TOKEN,
+  RECEIVE_CONFIRM_TOKEN,
+  ERROR_CONFIRM_TOKEN
 } from '../constants/ActionTypes';
 
 import cookie from 'react-cookie';
@@ -33,13 +36,35 @@ const baseState = {
     logout: '',
     register: ''
   },
-  properties: {}
+  token: {
+    error: null,
+    isConfirming: false,
+    confirmed: false,
+    message: '',
+    alreadyActivated: false
+  },
+  properties: {},
 };
 
 export default function user(state = baseState, action) {
   switch (action.type) {
     case REQUEST_LOGIN_USER:
       return { ...state, error: baseError };
+
+    case REQUEST_CONFIRM_TOKEN:
+      return { ...state, token: { ...state.token, isConfirming: true }};
+
+    case RECEIVE_CONFIRM_TOKEN:
+      return { ...state,
+        // success: { login: action.message, register: ''},
+        // isAuthenticated: true,
+        username: action.username,
+        email: action.email,
+        id: action.id,
+        alreadyActivated: action.alreadyActivated,
+        token: { ...state.token, isConfirming: false, confirmed: true, message: action.message
+      }};
+
     case RECEIVE_LOGIN_USER:
       return { ...state,
         success: { login: action.message, register: '' },
@@ -48,9 +73,15 @@ export default function user(state = baseState, action) {
         email: action.email,
         id: action.id
       };
+
+    case ERROR_CONFIRM_TOKEN:
+      console.error('Error confirming token', action.error);
+      return { ...state, token: { ...state.token, error: true, message: action.error }}
+
     case ERROR_LOGIN_USER:
-      console.log('Error login', action, action.error)
+      console.error('Error logging in', action, action.error)
       return { ...state, error: { ...state.error, login: action.error }};
+
     case RECEIVE_REGISTER_USER:
       return { ...state,
         success: { register: action.message, login: ''},

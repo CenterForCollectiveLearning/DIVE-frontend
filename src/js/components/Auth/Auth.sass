@@ -21,6 +21,9 @@
 .authForm
   width: 100%
 
+  &.activationForm
+    padding-top: 10px
+
   .generalAuthError
     font-size: 14px
     color: $red
@@ -103,9 +106,8 @@
     justify-content: center
 
 
-.registerText, .loginText
-  .registerLink, .loginLink
-    +linkStyle(14px)
+.registerLink, .loginLink
+  +linkStyle(14px)
 
 .footerLabel
   display: flex

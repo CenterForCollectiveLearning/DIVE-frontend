@@ -7,17 +7,12 @@ import { registerUser } from '../../actions/AuthActions';
 
 import styles from './Auth.sass';
 
-import { Button, Intent, Checkbox } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 
 import Input from '../Base/Input'
 import AuthModal from '../Base/AuthModal';
 import RaisedButton from '../Base/RaisedButton';
 
-function validateEmail(email)
-{
-    var re = /\S+@\S+\.\S+/;
-    return re.test(email);
-}
 
 class UnconfirmedPage extends Component {
   constructor(props) {
@@ -25,44 +20,10 @@ class UnconfirmedPage extends Component {
 
     this.state = {
       email: '',
-      username: '',
-      password: '',
       emailAlreadyTaken: null,
-      usernameAlreadyTaken: null,
-      usernameTooShort: null,
-      usernameTooLong: null,
       emailValid: null,
-      emailTaken: null,
-      usernameTaken: null,
-      passwordMatching: null,
-      passwordScore: null,
-      passwordFeedbackWarning: '',
-      passwordFeedbackSuggestions: ''
-    };
-  }
-
-  closeRegistrationPage = () => {
-    const { push } = this.props;
-    push('/')
-  }
-
-  componentWillMount() {
-    this.ensureNotLoggedIn(this.props)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      emailError: nextProps.emailError,
-      usernameError: nextProps.usernameError,
-    });
-    this.ensureNotLoggedIn(nextProps)
-  }
-
-  sanitizeBackendErrors = () => {
-    this.setState({
-      emailError: null,
-      usernameError: null,
-    })
+      emailTaken: null
+    }
   }
 
   handleEmailChange = (e) => {
@@ -75,182 +36,77 @@ class UnconfirmedPage extends Component {
     });
   }
 
-  handleUsernameChange = (e) => {
-    const username = e.target.value;
-    this.sanitizeBackendErrors();
-    this.setState({ username: username });
-    if (username.length < 3) {
-      this.setState({ usernameTooShort: true });
-    } else if (username.length > 65 ){
-      this.setState({ usernameTooLong: true });
-    } else {
-      this.setState({
-        usernameTooShort: false,
-        usernameTooLong: false
-      });
-    }
-  }
-
-  handlePasswordChange = (e) => {
-    const password = e.target.value;
-    this.sanitizeBackendErrors();
-
-    const passwordTest = zxcvbn(password);
-    this.setState({
-      password: e.target.value,
-      passwordScore: passwordTest.score,
-      passwordFeedbackWarning: passwordTest.feedback.warning,
-      passwordFeedbackSuggestions: passwordTest.feedback.suggestions,
-    });
-  }
-
-  _clickLogin = () => {
+  closeRegistrationPage = () => {
     const { push } = this.props;
-    push('/login')
+    push('/')
   }
-
-  ensureNotLoggedIn(props) {
-    const { isAuthenticated, push } = props;
-
-    if (isAuthenticated){
-      push(props.location.query.next || '/projects');
-    }
-  };
 
   validateForm = () => {
     const {
       emailError,
-      usernameError,
       email,
-      emailValid,
-      username,
-      usernameTooLong,
-      usernameTooShort,
-      password
+      emailValid
     } = this.state;
 
-    const validForm = (email && username && emailValid) && !(emailError || usernameError || usernameTooShort || usernameTooLong);
+    const validForm = email && !emailError;
     return validForm;
   }
-
-  submit = (e) => {
-    const { registerUser } = this.props;
-    const {
-      email,
-      username,
-      password
-    } = this.state;
-
-    const validForm = this.validateForm();
-    e.preventDefault();
-
-    if (validForm) {
-      registerUser(email, username, password);
-    }
-  }
-
   render() {
     const { authRequired } = this.props;
     const {
       emailError,
-      usernameError,
       email,
-      emailValid,
-      username,
-      usernameTooLong,
-      usernameTooShort,
-      password,
-      passwordScore,
-      passwordFeedbackWarning,
-      passwordFeedbackSuggestions
+      emailValid
     } = this.state;
-    const validForm = this.validateForm();
 
     if (authRequired) {
       openModal();
     }
 
     return (
-      <DocumentTitle title='DIVE | Register'>
+      <DocumentTitle title='DIVE | Unconfirmed'>
         <AuthModal
           scrollable
-          titleText="Register for DIVE"
+          titleText='DIVE Account Not Activated'
           isOpen={ true }
           closeAction={ this.closeRegistrationPage }
           className={ styles.registerModal }
           blackBackground={ true }
           authType='register'
-          heading={
-            <span>Account Registration</span>
+          footer = {
+            <form className={ styles.authForm + ' ' + styles.activationForm } onSubmit={ this.submit }>
+              <div className={ styles.authInputGroup }>
+                { (email && email.length > 3 && !emailValid) &&
+                  <div className={ styles.authInputError }>Invalid</div>
+                }
+                { emailError &&
+                  <div className={ styles.authInputError }>Taken</div>
+                }
+                <div className="pt-input-group pt-large">
+                  <input
+                    className={ "pt-input pt-large pt-icon-lock pt-fill " + ((emailError || (email && email.length > 3 && !emailValid)) ? 'pt-intent-warning' : '') }
+                    placeholder="E-mail Address"
+                    autoComplete="on"
+                    autoFocus={ true }
+                    onChange={ this.handleEmailChange }
+                    onSubmit={ this.submit }
+                  />
+                  <span className="pt-icon pt-minimal pt-icon-envelope" />
+                </div>
+              </div>
+              <Button
+                className="pt-large pt-fill"
+                type="submit"
+                text="Resend Activation E-mail"
+                intent={ Intent.PRIMARY }
+              />
+            </form>
           }
-          footer={
-            <div className={ styles.loginText }>
-              Already registered? <span className={ styles.loginLink } onClick={ this._clickLogin }>Click here to login</span>.
-            </div>
-          }>
-
-          <form className={ styles.authForm } onSubmit={ this.submit }>
-            <div className={ styles.authInputGroup }>
-              { (email && email.length > 3 && !emailValid) &&
-                <div className={ styles.authInputError }>Invalid</div>
-              }
-              { emailError &&
-                <div className={ styles.authInputError }>Taken</div>
-              }
-              <div className="pt-input-group pt-large">
-                <input
-                  className={ "pt-input pt-large pt-icon-lock pt-fill " + ((emailError || (email && email.length > 3 && !emailValid)) ? 'pt-intent-warning' : '') }
-                  placeholder="E-mail Address"
-                  autoComplete="on"
-                  autoFocus={ true }
-                  onChange={ this.handleEmailChange }
-                  onSubmit={ this.submit }
-                />
-                <span className="pt-icon pt-minimal pt-icon-envelope" />
-              </div>
-            </div>
-
-            <div className={ styles.authInputGroup }>
-              { (username && usernameTooShort) && <div className={ styles.authInputError }>Too Short</div> }
-              { (username && usernameTooLong) && <div className={ styles.authInputError }>Too Long</div> }
-              { usernameError &&
-                <div className={ styles.authInputError }>Taken</div>
-              }
-              <div className="pt-input-group pt-large">
-                <input
-                  type="text"
-                  className={ "pt-input pt-large pt-icon-user pt-fill " + (( usernameError || usernameTooLong || usernameTooShort) ? 'pt-intent-warning' : '')}
-                  placeholder="Username"
-                  autoComplete="on"
-                  onChange={ this.handleUsernameChange }
-                />
-                <span className="pt-icon pt-minimal pt-icon-user" />
-              </div>
-            </div>
-
-            {/* <div className={ styles.authInputGroup }>
-              { (password && passwordScore <= 1) && <div className={ styles.authInputError + ' ' + styles.weak }>Weak</div> }
-              { (password && passwordScore == 2) && <div className={ styles.authInputError + ' ' + styles.good }>Good</div> }
-              { (password && passwordScore >= 3) && <div className={ styles.authInputError + ' ' + styles.strong }>Strong</div> }
-              <div className="pt-input-group pt-large">
-                <input
-                  className={ 'pt-input pt-large pt-icon-lock pt-fill ' + ( (password && passwordScore <= 1) ? 'pt-intent-warning' : '') }
-                  type="password"
-                  placeholder="Password"
-                  onChange={ this.handlePasswordChange }
-                />
-                <span className="pt-icon pt-minimal pt-icon-lock" />
-              </div>
-            </div> */}
-            <Button
-              className="pt-large pt-fill"
-              type="submit"
-              text="Create Account"
-              intent={ Intent.PRIMARY }
-              disabled={ !validForm }
-              onClick={ this.submit }
-            />
-          </form>
+        >
+          <div>
+            <p>Account not activated. Please click the activation link sent to your e-mail.</p>
+            <p>To resend your activation e-mail, please enter your e-mail address and click the button below.</p>
+          </div>
         </AuthModal>
       </DocumentTitle>
     );

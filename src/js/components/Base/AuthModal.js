@@ -45,10 +45,12 @@ export class AuthModal extends Component {
         <div className={ Classes.DIALOG_BODY }>
           { this.props.children }
         </div>
-        <div className={ Classes.DIALOG_FOOTER }>
-          <div className={ styles.separator } />
-          { this.props.footer }
-        </div>
+        { this.props.footer &&
+          <div className={ Classes.DIALOG_FOOTER }>
+            <div className={ styles.separator } />
+            { this.props.footer }
+          </div>
+        }
       </Dialog>
     );
   }

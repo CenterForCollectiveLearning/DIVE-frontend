@@ -9,6 +9,7 @@ import styles from './Auth.sass';
 
 import { Button, Intent, Checkbox } from '@blueprintjs/core';
 
+import Loader from '../Base/Loader';
 import Input from '../Base/Input'
 import AuthModal from '../Base/AuthModal';
 import RaisedButton from '../Base/RaisedButton';
@@ -109,7 +110,12 @@ class ActivatePage extends Component {
 
   _clickLogin = () => {
     const { push } = this.props;
-    push('/login')
+    push('/auth/login')
+  }
+
+  _clickRegister = () => {
+    const { push } = this.props;
+    push('/auth/register')
   }
 
   ensureNotLoggedIn(props) {
@@ -153,20 +159,7 @@ class ActivatePage extends Component {
   }
 
   render() {
-    const { authRequired } = this.props;
-    const {
-      emailError,
-      usernameError,
-      email,
-      emailValid,
-      username,
-      usernameTooLong,
-      usernameTooShort,
-      password,
-      passwordScore,
-      passwordFeedbackWarning,
-      passwordFeedbackSuggestions
-    } = this.state;
+    const { token, authRequired } = this.props;
     const validForm = this.validateForm();
 
     if (authRequired) {
@@ -174,7 +167,7 @@ class ActivatePage extends Component {
     }
 
     return (
-      <DocumentTitle title='DIVE | Register'>
+      <DocumentTitle title='DIVE | Activate'>
         <AuthModal
           scrollable
           titleText="Activate DIVE Account"
@@ -186,36 +179,25 @@ class ActivatePage extends Component {
           heading={
             <span>Account Registration</span>
           }
-          footer={
-            <div className={ styles.loginText }>
-              Already registered? <span className={ styles.loginLink } onClick={ this._clickLogin }>Click here to login</span>.
-            </div>
-          }>
-
-          <form className={ styles.authForm } onSubmit={ this.submit }>
-            <div className={ styles.authInputGroup }>
-              { (password && passwordScore <= 1) && <div className={ styles.authInputError + ' ' + styles.weak }>Weak</div> }
-              { (password && passwordScore == 2) && <div className={ styles.authInputError + ' ' + styles.good }>Good</div> }
-              { (password && passwordScore >= 3) && <div className={ styles.authInputError + ' ' + styles.strong }>Strong</div> }
-              <div className="pt-input-group pt-large">
-                <input
-                  className={ 'pt-input pt-large pt-icon-lock pt-fill ' + ( (password && passwordScore <= 1) ? 'pt-intent-warning' : '') }
-                  type="password"
-                  placeholder="Password"
-                  onChange={ this.handlePasswordChange }
-                />
-                <span className="pt-icon pt-minimal pt-icon-lock" />
-              </div>
-            </div>
-            <Button
-              className="pt-large pt-fill"
-              type="submit"
-              text="Activate Account"
-              intent={ Intent.PRIMARY }
-              disabled={ !validForm }
-              onClick={ this.submit }
-            />
-          </form>
+        >
+        { !token.confirmed && token.confirming &&
+          <Loader text='Confirming token'/>
+        }
+        { token.confirmed && !token.confirming && token.alreadyActivated &&
+          <div>
+            <p>{ token.message } <span className={ styles.loginLink } onClick={ this._clickLogin }>Click here to login</span></p>
+          </div>
+        }
+        { token.confirmed && !token.confirming && !token.alreadyActivated &&
+          <div>
+            <p>{ token.message } <span className={ styles.loginLink } onClick={ this._clickLogin }>Click here to login</span></p>
+          </div>
+        }
+        { token.error &&
+          <div>
+            <p>{ token.message } <span className={ styles.registerLink } onClick={ this._clickRegister }>Click here to register.</span></p>
+          </div>
+        }
         </AuthModal>
       </DocumentTitle>
     );
@@ -229,9 +211,7 @@ ActivatePage.propTypes = {
 function mapStateToProps(state) {
   const { user } = state;
   return {
-    usernameError: user.error.register.username,
-    emailError: user.error.register.email,
-    isAuthenticated: user.isAuthenticated
+    token: user.token
   };
 }
 

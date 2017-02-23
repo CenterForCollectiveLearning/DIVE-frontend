@@ -76,13 +76,18 @@ function requestConfirmTokenDispatcher() {
 function receiveConfirmTokenDispatcher(json) {
   return {
     type: RECEIVE_CONFIRM_TOKEN,
-
+    alreadyActivated: json.alreadyActivated,
+    id: json.user.id,
+    username: json.user.username,
+    email: json.user.email,
+    message: json.message
   }
 }
 
-function errorConfirmTokenDispatcher() {
+function errorConfirmTokenDispatcher(error) {
   return {
-    type: RECEIVE_CONFIRM_TOKEN
+    type: ERROR_CONFIRM_TOKEN,
+    error: error.message
   }
 }
 
