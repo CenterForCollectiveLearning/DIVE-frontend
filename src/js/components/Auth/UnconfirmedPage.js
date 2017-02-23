@@ -3,7 +3,8 @@ import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
-import { registerUser } from '../../actions/AuthActions';
+import { resendConfirmationEmail } from '../../actions/AuthActions';
+import { validateEmail } from '../../helpers/auth';
 
 import styles from './Auth.sass';
 
@@ -24,6 +25,19 @@ class UnconfirmedPage extends Component {
       emailValid: null,
       emailTaken: null
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      emailError: nextProps.emailError,
+    });
+  }
+
+  sanitizeBackendErrors = () => {
+    this.setState({
+      emailError: null,
+      usernameError: null,
+    })
   }
 
   handleEmailChange = (e) => {
@@ -48,9 +62,24 @@ class UnconfirmedPage extends Component {
       emailValid
     } = this.state;
 
-    const validForm = email && !emailError;
+    const validForm = email && emailValid && !emailError;
     return validForm;
   }
+
+  submit = (e) => {
+    const { resendConfirmationEmail } = this.props;
+    const {
+      email
+    } = this.state;
+
+    const validForm = this.validateForm();
+    e.preventDefault();
+
+    if (validForm) {
+      resendConfirmationEmail(email);
+    }
+  }
+
   render() {
     const { authRequired } = this.props;
     const {
@@ -58,6 +87,7 @@ class UnconfirmedPage extends Component {
       email,
       emailValid
     } = this.state;
+    const validForm = this.validateForm();
 
     if (authRequired) {
       openModal();
@@ -80,7 +110,7 @@ class UnconfirmedPage extends Component {
                   <div className={ styles.authInputError }>Invalid</div>
                 }
                 { emailError &&
-                  <div className={ styles.authInputError }>Taken</div>
+                  <div className={ styles.authInputError }>Invalid</div>
                 }
                 <div className="pt-input-group pt-large">
                   <input
@@ -99,6 +129,8 @@ class UnconfirmedPage extends Component {
                 type="submit"
                 text="Resend Activation E-mail"
                 intent={ Intent.PRIMARY }
+                disabled={ !validForm }
+                onClick={ this.submit }
               />
             </form>
           }
@@ -120,10 +152,10 @@ UnconfirmedPage.propTypes = {
 function mapStateToProps(state) {
   const { user } = state;
   return {
-    usernameError: user.error.register.username,
-    emailError: user.error.register.email,
+    resend: user.resend,
+    emailError: user.resend.error,
     isAuthenticated: user.isAuthenticated
   };
 }
 
-export default connect(mapStateToProps, { registerUser, push })(UnconfirmedPage);
+export default connect(mapStateToProps, { resendConfirmationEmail, push })(UnconfirmedPage);

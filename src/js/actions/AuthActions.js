@@ -10,13 +10,18 @@ import {
   ERROR_REGISTER_USER,
   REQUEST_CONFIRM_TOKEN,
   RECEIVE_CONFIRM_TOKEN,
-  ERROR_CONFIRM_TOKEN
+  ERROR_CONFIRM_TOKEN,
+  REQUEST_RESEND_EMAIL,
+  RECEIVE_RESEND_EMAIL,
+  ERROR_RESEND_EMAIL
 } from '../constants/ActionTypes';
 
-import { detectClient } from '../helpers/clientdetection';
+import { push } from 'react-router-redux';
+
+import { detectClient } from '../helpers/auth';
 import cookie from 'react-cookie';
 import { default } from 'cryptojs';
-import { rawFetch } from './api.js';
+import { rawFetch } from './api';
 
 
 function requestLoginUserDispatcher() {
@@ -208,6 +213,10 @@ function errorLogoutUserDispatcher(error) {
   }
 }
 
+function goHome() {
+  push('/');
+}
+
 export function logoutUser() {
   const params = {};
 
@@ -235,6 +244,61 @@ export function logoutUser() {
         });
       }
     })
+    .then(goHome())
     .catch( error => { console.log('Logout failed', error); });
+  };
+}
+
+function requestResendEmailDispatcher() {
+  return {
+    type: REQUEST_RESEND_EMAIL
+  }
+}
+
+function receiveResendEmailDispatcher(json) {
+  return {
+    type: RECEIVE_RESEND_EMAIL
+  }
+}
+
+function errorResendEmailDispatcher(error) {
+  return {
+    type: ERROR_RESEND_EMAIL,
+    error: error.message
+  }
+}
+
+export function resendConfirmationEmail(email) {
+  const clientInfo = detectClient();
+
+  const params = {
+    'email': email,
+    'browser': clientInfo.browser,
+    'os': clientInfo.os
+  };
+
+  return (dispatch) => {
+    dispatch(requestResendEmailDispatcher());
+    return rawFetch('/auth/v1/resend', {
+      credentials: 'include',
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(function(response) {
+      if (response.status >= 400) {
+        response.json().then( json =>
+          dispatch(errorResendEmailDispatcher(json))
+        );
+      } else {
+        response.json().then( json =>
+          dispatch(receiveResendEmailDispatcher(json))
+        );
+      }
+    })
+    .catch( error => { console.log('Resending E-mail Failed', error); });
   };
 }

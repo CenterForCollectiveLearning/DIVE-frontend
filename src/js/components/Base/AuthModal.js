@@ -23,11 +23,12 @@ export class AuthModal extends Component {
   }
 
   render() {
-    const { closeAction, isOpen, titleText, authType } = this.props;
+    const { closeAction, isOpen, titleText, authType, footer, className } = this.props;
     const styles = this.props.styles ? this.props.styles : baseStyles;
 
     return (
       <Dialog
+        className={ className }
         isOpen={ isOpen }
         canOutsideClickClose={ false }
         hasBackdrop={ true }
@@ -45,10 +46,10 @@ export class AuthModal extends Component {
         <div className={ Classes.DIALOG_BODY }>
           { this.props.children }
         </div>
-        { this.props.footer &&
+        { footer &&
           <div className={ Classes.DIALOG_FOOTER }>
             <div className={ styles.separator } />
-            { this.props.footer }
+            { footer }
           </div>
         }
       </Dialog>

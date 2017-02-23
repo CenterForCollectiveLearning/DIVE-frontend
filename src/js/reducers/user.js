@@ -10,7 +10,10 @@ import {
   ERROR_LOGOUT_USER,
   REQUEST_CONFIRM_TOKEN,
   RECEIVE_CONFIRM_TOKEN,
-  ERROR_CONFIRM_TOKEN
+  ERROR_CONFIRM_TOKEN,
+  REQUEST_RESEND_EMAIL,
+  RECEIVE_RESEND_EMAIL,
+  ERROR_RESEND_EMAIL
 } from '../constants/ActionTypes';
 
 import cookie from 'react-cookie';
@@ -42,6 +45,11 @@ const baseState = {
     confirmed: false,
     message: '',
     alreadyActivated: false
+  },
+  resend: {
+    error: null,
+    isSending: false,
+    sent: false
   },
   properties: {},
 };
@@ -76,7 +84,7 @@ export default function user(state = baseState, action) {
 
     case ERROR_CONFIRM_TOKEN:
       console.error('Error confirming token', action.error);
-      return { ...state, token: { ...state.token, error: true, message: action.error }}
+      return { ...state, token: { ...state.token, isConfirming: false, error: true, message: action.error }}
 
     case ERROR_LOGIN_USER:
       console.error('Error logging in', action, action.error)
@@ -109,6 +117,16 @@ export default function user(state = baseState, action) {
         id: '',
         isAuthenticated: false
       };
+
+    case REQUEST_RESEND_EMAIL:
+      return { ...state, resend: { ...state.resend, isSending: true }};
+
+    case RECEIVE_RESEND_EMAIL:
+      return { ...state, resend: { ...state.resend, isSending: false, sent: true }};
+
+    case ERROR_RESEND_EMAIL:
+      return { ...state, resend: { ...state.resend, error: action.error, isSending: false, sent: false }};
+
     default:
       return state;
   }

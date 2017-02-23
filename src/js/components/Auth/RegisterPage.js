@@ -12,12 +12,8 @@ import { Button, Intent, Checkbox } from '@blueprintjs/core';
 import Input from '../Base/Input'
 import AuthModal from '../Base/AuthModal';
 import RaisedButton from '../Base/RaisedButton';
+import { validateEmail } from '../../helpers/auth';
 
-function validateEmail(email)
-{
-    var re = /\S+@\S+\.\S+/;
-    return re.test(email);
-}
 
 class RegisterPage extends Component {
   constructor(props) {

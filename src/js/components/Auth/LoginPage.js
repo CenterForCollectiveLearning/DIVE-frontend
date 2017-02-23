@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { loginUser } from '../../actions/AuthActions';
+import { validateEmail } from '../../helpers/auth';
 
 import { Button, Intent, Checkbox } from '@blueprintjs/core';
 import styles from './Auth.sass';
@@ -12,10 +13,6 @@ import Input from '../Base/Input'
 import AuthModal from '../Base/AuthModal';
 import RaisedButton from '../Base/RaisedButton';
 
-function validateEmail(email) {
-    var re = /\S+@\S+\.\S+/;
-    return re.test(email);
-}
 
 class LoginPage extends Component {
   constructor(props) {

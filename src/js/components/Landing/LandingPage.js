@@ -24,6 +24,7 @@ export class LandingPage extends Component {
 
   componentWillMount() {
     const { user, push, wipeProjectState } = this.props;
+
     if (user.isAuthenticated) {
       // push('/projects')
     }

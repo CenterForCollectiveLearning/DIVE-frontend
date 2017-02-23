@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { confirmToken, registerUser } from '../../actions/AuthActions';
+import { validateEmail } from '../../helpers/auth';
 
 import styles from './Auth.sass';
 
@@ -14,11 +15,6 @@ import Input from '../Base/Input'
 import AuthModal from '../Base/AuthModal';
 import RaisedButton from '../Base/RaisedButton';
 
-function validateEmail(email)
-{
-    var re = /\S+@\S+\.\S+/;
-    return re.test(email);
-}
 
 class ActivatePage extends Component {
   constructor(props) {
@@ -108,6 +104,11 @@ class ActivatePage extends Component {
     });
   }
 
+  _clickProjects = () => {
+    const { push } = this.props;
+    push('/projects')
+  }
+
   _clickLogin = () => {
     const { push } = this.props;
     push('/auth/login')
@@ -173,7 +174,7 @@ class ActivatePage extends Component {
           titleText="Activate DIVE Account"
           isOpen={ true }
           closeAction={ this.closeRegistrationPage }
-          className={ styles.registerModal }
+          className={ styles.registerModal + ' ' + styles.noFooter}
           blackBackground={ true }
           authType='register'
           heading={
@@ -185,12 +186,12 @@ class ActivatePage extends Component {
         }
         { token.confirmed && !token.confirming && token.alreadyActivated &&
           <div>
-            <p>{ token.message } <span className={ styles.loginLink } onClick={ this._clickLogin }>Click here to login</span></p>
+            <p>{ token.message } <span className={ styles.loginLink } onClick={ this._clickLogin }>Click here to login.</span></p>
           </div>
         }
         { token.confirmed && !token.confirming && !token.alreadyActivated &&
           <div>
-            <p>{ token.message } <span className={ styles.loginLink } onClick={ this._clickLogin }>Click here to login</span></p>
+            <p>{ token.message } <span className={ styles.loginLink } onClick={ this._clickProjects}>Click here to create a project.</span></p>
           </div>
         }
         { token.error &&

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
+import { push } from 'react-router-redux';
 import { fetchProjectIfNeeded, fetchUserProjects } from '../actions/ProjectActions.js';
 import { closeFeedbackModal } from '../actions/FeedbackActions.js';
 
@@ -20,7 +21,12 @@ export class ProjectsPage extends Component {
   }
 
   componentDidMount() {
-    const { params, user, projects, fetchProjectIfNeeded, fetchUserProjects } = this.props;
+    const { params, user, projects, fetchProjectIfNeeded, fetchUserProjects, push } = this.props;
+
+    if (user.isAuthenticated && !user.token.confirmed) {
+      push('/auth/unconfirmed');
+    }
+
     if (params.projectId) {
       fetchProjectIfNeeded(params.projectId);
     }
@@ -36,7 +42,7 @@ export class ProjectsPage extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { params, user, projects, fetchProjectIfNeeded, fetchUserProjects } = nextProps;
-    
+
     if (params.projectId) {
       fetchProjectIfNeeded(params.projectId);
     }
@@ -113,5 +119,6 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   fetchProjectIfNeeded,
   fetchUserProjects,
-  closeFeedbackModal
+  closeFeedbackModal,
+  push
 })(ProjectsPage);
