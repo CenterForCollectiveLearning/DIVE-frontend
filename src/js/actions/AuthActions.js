@@ -10,6 +10,7 @@ import {
   ERROR_REGISTER_USER,
 } from '../constants/ActionTypes';
 
+import { detectClient } from '../helpers/clientdetection';
 import cookie from 'react-cookie';
 import { default } from 'cryptojs';
 import { rawFetch } from './api.js';
@@ -102,10 +103,14 @@ export function loginUser(email, username, password, rememberMe) {
 
 export function registerUser(email, username, password) {
   const encryptedPassword = Crypto.MD5(password);
+  const clientInfo = detectClient();
+
   const params = {
     'email': email,
     'username': username,
-    'password': encryptedPassword
+    'password': encryptedPassword,
+    'browser': clientInfo.browser,
+    'os': clientInfo.os
   };
 
   return (dispatch) => {
