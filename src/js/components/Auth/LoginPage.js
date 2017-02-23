@@ -195,7 +195,7 @@ function mapStateToProps(state) {
   const { user } = state;
   return {
     isAuthenticated: user.isAuthenticated,
-    loginError: user.error.login
+    loginError: user.login.error
   };
 }
 

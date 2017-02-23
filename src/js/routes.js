@@ -53,6 +53,7 @@ import NarrativePage from './components/Compose/NarrativePage';
 const requireAuthentication = UserAuthWrapper({
   authSelector: state => state.user,
   predicate: user => user.isAuthenticated,
+  failureRedirectPath: '/auth/login',
   redirectAction: function({ pathname, query }){
     if (query.redirect) {
       return push(`${ pathname }?next=${ query.redirect }`);

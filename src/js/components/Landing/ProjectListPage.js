@@ -29,7 +29,7 @@ export class ProjectListPage extends Component {
     const { projects, userId, user, push } = this.props;
     this.props.fetchUserProjects(userId);
 
-    if (user.isAuthenticated && !user.token.confirmed) {
+    if (user.isAuthenticated && !user.confirmed) {
       push('/auth/unconfirmed');
     }
   }

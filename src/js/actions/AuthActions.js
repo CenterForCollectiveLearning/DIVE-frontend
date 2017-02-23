@@ -33,6 +33,7 @@ function requestLoginUserDispatcher() {
 function receiveLoginUserDispatcher(json) {
   return {
     type: RECEIVE_LOGIN_USER,
+    confirmed: json.user.confirmed,
     id: json.user.id,
     username: json.user.username,
     email: json.user.email,

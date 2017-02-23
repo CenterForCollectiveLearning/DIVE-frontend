@@ -106,7 +106,7 @@ class ForgotPage extends Component {
 
   _clickLogin = () => {
     const { push } = this.props;
-    push('/login')
+    push('/auth/login')
   }
 
   ensureNotLoggedIn(props) {

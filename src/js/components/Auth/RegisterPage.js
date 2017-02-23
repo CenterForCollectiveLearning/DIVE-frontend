@@ -260,8 +260,8 @@ RegisterPage.propTypes = {
 function mapStateToProps(state) {
   const { user } = state;
   return {
-    usernameError: user.error.register.username,
-    emailError: user.error.register.email,
+    usernameError: user.register.usernameError,
+    emailError: user.register.emailError,
     isAuthenticated: user.isAuthenticated
   };
 }

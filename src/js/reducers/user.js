@@ -18,26 +18,26 @@ import {
 
 import cookie from 'react-cookie';
 
-const baseError = {
-  login: '',
-  logout: '',
-  register: {
-    email: null,
-    username: null
-  }
-};
-
 const baseState = {
   rememberToken: cookie.load('remember_token') || null,
   isAuthenticated: cookie.load('remember_token') ? true : false,
   username: cookie.load('username') || '',
   email: cookie.load('email') || '',
   id: cookie.load('user_id') || '',
-  error: baseError,
-  success: {
-    login: '',
-    logout: '',
-    register: ''
+  confirmed: (cookie.load('confirmed') == 'True') || false,
+  login: {
+    error: null,
+    success: false,
+  },
+  register: {
+    error: null,
+    emailError: null,
+    usernameError: null,
+    success: false,
+  },
+  logout: {
+    error: null,
+    success: false,
   },
   token: {
     error: null,
@@ -50,32 +50,38 @@ const baseState = {
     error: null,
     isSending: false,
     sent: false
-  },
-  properties: {},
+  }
 };
 
 export default function user(state = baseState, action) {
   switch (action.type) {
     case REQUEST_LOGIN_USER:
-      return { ...state, error: baseError };
+      return { ...state, login: baseState.login };
+
+    case REQUEST_REGISTER_USER:
+      return { ...state, register: baseState.register };
 
     case REQUEST_CONFIRM_TOKEN:
       return { ...state, token: { ...state.token, isConfirming: true }};
 
     case RECEIVE_CONFIRM_TOKEN:
       return { ...state,
-        // success: { login: action.message, register: ''},
-        // isAuthenticated: true,
+        confirmed: true,
         username: action.username,
         email: action.email,
         id: action.id,
-        alreadyActivated: action.alreadyActivated,
-        token: { ...state.token, isConfirming: false, confirmed: true, message: action.message
+        token: {
+          ...state.token,
+          alreadyActivated: action.alreadyActivated,
+          isConfirming: false,
+          confirmed: true,
+          message: action.message
       }};
 
     case RECEIVE_LOGIN_USER:
       return { ...state,
         success: { login: action.message, register: '' },
+        confirmed: action.confirmed,
         isAuthenticated: true,
         username: action.username,
         email: action.email,
@@ -84,30 +90,40 @@ export default function user(state = baseState, action) {
 
     case ERROR_CONFIRM_TOKEN:
       console.error('Error confirming token', action.error);
-      return { ...state, token: { ...state.token, isConfirming: false, error: true, message: action.error }}
+      return { ...state,
+        token: { ...state.token,
+          isConfirming: false,
+          error: action.error
+        }
+      };
 
     case ERROR_LOGIN_USER:
-      console.error('Error logging in', action, action.error)
-      return { ...state, error: { ...state.error, login: action.error }};
+      return { ...state,
+        login: {
+          error: action.error,
+          success: false
+        }
+      };
 
     case RECEIVE_REGISTER_USER:
       return { ...state,
-        success: { register: action.message, login: ''},
+        register: { ...baseState.success, success: action.message },
         isAuthenticated: true,
+        confirmed: false,
         username: action.username,
         email: action.email,
         id: action.id
       };
+
     case ERROR_REGISTER_USER:
       return { ...state,
-        error: {
-          ...state.error,
-          register: {
-            ...state.error.register,
-            email: action.emailError,
-            username: action.usernameError,
-          }
-      }};
+        register: {
+          success: false,
+          emailError: action.emailError,
+          usernameError: action.usernameError
+        }
+      };
+
     case RECEIVE_LOGOUT_USER:
       return {
         ...baseState,

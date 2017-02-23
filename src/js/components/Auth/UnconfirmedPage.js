@@ -81,7 +81,7 @@ class UnconfirmedPage extends Component {
   }
 
   render() {
-    const { authRequired } = this.props;
+    const { authRequired, resend } = this.props;
     const {
       emailError,
       email,
@@ -127,10 +127,11 @@ class UnconfirmedPage extends Component {
               <Button
                 className="pt-large pt-fill"
                 type="submit"
-                text="Resend Activation E-mail"
+                text={ resend.sent ? 'E-mail Sent!' : 'Resend Activation E-mail' }
                 intent={ Intent.PRIMARY }
-                disabled={ !validForm }
+                disabled={ !validForm || resend.sent }
                 onClick={ this.submit }
+                loading={ resend.isSending }
               />
             </form>
           }
