@@ -175,7 +175,7 @@ class RegisterPage extends Component {
           closeAction={ this.closeRegistrationPage }
           className={ styles.registerModal }
           blackBackground={ true }
-          authType='register'
+          iconName='user'
           heading={
             <span>Account Registration</span>
           }

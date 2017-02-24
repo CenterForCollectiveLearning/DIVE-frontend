@@ -13,7 +13,13 @@ import {
   ERROR_CONFIRM_TOKEN,
   REQUEST_RESEND_EMAIL,
   RECEIVE_RESEND_EMAIL,
-  ERROR_RESEND_EMAIL
+  ERROR_RESEND_EMAIL,
+  REQUEST_RESET_PASSWORD_EMAIL,
+  RECEIVE_RESET_PASSWORD_EMAIL,
+  ERROR_RESET_PASSWORD_EMAIL,
+  REQUEST_RESET_PASSWORD_SUBMIT,
+  RECEIVE_RESET_PASSWORD_SUBMIT,
+  ERROR_RESET_PASSWORD_SUBMIT,
 } from '../constants/ActionTypes';
 
 import cookie from 'react-cookie';
@@ -50,6 +56,17 @@ const baseState = {
     error: null,
     isSending: false,
     sent: false
+  },
+  resetPasswordEmail: {
+    error: null,
+    isSending: false,
+    sent: false
+  },
+  resetPasswordSubmit: {
+    error: null,
+    message: '',
+    isResetting: false,
+    reset: false
   }
 };
 
@@ -142,6 +159,24 @@ export default function user(state = baseState, action) {
 
     case ERROR_RESEND_EMAIL:
       return { ...state, resend: { ...state.resend, error: action.error, isSending: false, sent: false }};
+
+    case REQUEST_RESET_PASSWORD_EMAIL:
+      return { ...state, resetPasswordEmail: { ...state.resetPasswordEmail, isSending: true }};
+
+    case RECEIVE_RESET_PASSWORD_EMAIL:
+      return { ...state, resetPasswordEmail: { ...state.resetPasswordEmail, isSending: false, sent: true }};
+
+    case ERROR_RESET_PASSWORD_EMAIL:
+      return { ...state, resetPasswordEmail: { ...state.resetPasswordEmail, error: action.error, isSending: false, sent: false }};
+
+    case REQUEST_RESET_PASSWORD_SUBMIT:
+      return { ...state, resetPasswordSubmit: { ...state.resetPasswordSubmit, isResetting: true }};
+
+    case RECEIVE_RESET_PASSWORD_SUBMIT:
+      return { ...state, resetPasswordSubmit: { ...state.resetPasswordSubmit, message: action.message, isResetting: false, reset: true }};
+
+    case ERROR_RESET_PASSWORD_SUBMIT:
+      return { ...state, resetPasswordSubmit: { ...state.resetPasswordSubmit, message: action.message, error: action.error, isResetting: false, sent: false }};
 
     default:
       return state;

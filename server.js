@@ -39,6 +39,12 @@ if (useExpress) {
             to: function() {
                 return 'index.html';
             }
+        },
+        {
+            from: /^\/auth\/reset\/.*$/,
+            to: function() {
+                return 'index.html';
+            }
         }
     ]
     },

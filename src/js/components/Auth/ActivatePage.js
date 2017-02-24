@@ -177,9 +177,6 @@ class ActivatePage extends Component {
           className={ styles.registerModal + ' ' + styles.noFooter}
           blackBackground={ true }
           authType='register'
-          heading={
-            <span>Account Registration</span>
-          }
         >
         { !token.confirmed && token.confirming &&
           <Loader text='Confirming token'/>
@@ -196,7 +193,7 @@ class ActivatePage extends Component {
         }
         { token.error &&
           <div>
-            <p>{ token.message } <span className={ styles.registerLink } onClick={ this._clickRegister }>Click here to register.</span></p>
+            <p>{ token.error } <span className={ styles.registerLink } onClick={ this._clickRegister }>Click here to register.</span></p>
           </div>
         }
         </AuthModal>

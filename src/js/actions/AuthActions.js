@@ -13,7 +13,13 @@ import {
   ERROR_CONFIRM_TOKEN,
   REQUEST_RESEND_EMAIL,
   RECEIVE_RESEND_EMAIL,
-  ERROR_RESEND_EMAIL
+  ERROR_RESEND_EMAIL,
+  REQUEST_RESET_PASSWORD_EMAIL,
+  RECEIVE_RESET_PASSWORD_EMAIL,
+  ERROR_RESET_PASSWORD_EMAIL,
+  REQUEST_RESET_PASSWORD_SUBMIT,
+  RECEIVE_RESET_PASSWORD_SUBMIT,
+  ERROR_RESET_PASSWORD_SUBMIT,
 } from '../constants/ActionTypes';
 
 import { push } from 'react-router-redux';
@@ -301,5 +307,112 @@ export function resendConfirmationEmail(email) {
       }
     })
     .catch( error => { console.log('Resending E-mail Failed', error); });
+  };
+}
+
+function requestResetPasswordEmailDispatcher() {
+  return {
+    type: REQUEST_RESET_PASSWORD_EMAIL
+  }
+}
+
+function receiveResetPasswordEmailDispatcher(json) {
+  return {
+    type: RECEIVE_RESET_PASSWORD_EMAIL
+  }
+}
+
+function errorResetPasswordEmailDispatcher(error) {
+  return {
+    type: ERROR_RESET_PASSWORD_EMAIL,
+    error: error.message
+  }
+}
+
+export function sendResetPasswordEmail(email) {
+  const clientInfo = detectClient();
+
+  const params = {
+    'email': email,
+    'browser': clientInfo.browser,
+    'os': clientInfo.os
+  };
+
+  return (dispatch) => {
+    dispatch(requestResetPasswordEmailDispatcher());
+    return rawFetch('/auth/v1/reset_password', {
+      credentials: 'include',
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(function(response) {
+      if (response.status >= 400) {
+        response.json().then( json =>
+          dispatch(errorResetPasswordEmailDispatcher(json))
+        );
+      } else {
+        response.json().then( json =>
+          dispatch(receiveResetPasswordEmailDispatcher(json))
+        );
+      }
+    })
+    .catch( error => { console.log('Sending reset passwrod e-mail failed', error); });
+  };
+}
+
+function requestResetPasswordSubmitDispatcher() {
+  return {
+    type: REQUEST_RESET_PASSWORD_SUBMIT
+  }
+}
+
+function receiveResetPasswordSubmitDispatcher(json) {
+  return {
+    type: RECEIVE_RESET_PASSWORD_SUBMIT,
+    message: json.message
+  }
+}
+
+function errorResetPasswordSubmitDispatcher(error) {
+  return {
+    type: ERROR_RESET_PASSWORD_SUBMIT,
+    error: error.message
+  }
+}
+
+export function sendResetPasswordSubmit(token, password) {
+  const encryptedPassword = Crypto.MD5(password);
+  const params = {
+    token: token,
+    password: encryptedPassword
+  };
+
+  return (dispatch) => {
+    dispatch(requestResetPasswordSubmitDispatcher());
+    return rawFetch(`/auth/v1/reset_password/${ token }`, {
+      credentials: 'include',
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(function(response) {
+      if (response.status >= 400) {
+        response.json().then( json =>
+          dispatch(errorResetPasswordSubmitDispatcher(json))
+        );
+      } else {
+        response.json().then( json =>
+          dispatch(receiveResetPasswordSubmitDispatcher(json))
+        );
+      }
+    })
+    .catch( error => { console.log('Sending reset passwrod e-mail failed', error); });
   };
 }

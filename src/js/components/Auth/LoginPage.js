@@ -80,7 +80,7 @@ class LoginPage extends Component {
 
   clickForgot = () => {
     const { push } = this.props;
-    push('/auth/forgot');
+    push('/auth/reset');
   }
 
   handleRememberMeChange = (e) => {
@@ -126,7 +126,7 @@ class LoginPage extends Component {
           closeAction={ this.closeLoginPage }
           className={ styles.loginModal }
           blackBackground={ true }
-          authType="login"
+          iconName='log-in'
           footer={
             <div className={ styles.registerText }>
               Don&#39;t have an account? <span className={ styles.registerLink } onClick={ this.clickRegister }>Click here to create one</span>.
@@ -167,7 +167,7 @@ class LoginPage extends Component {
               <Checkbox
                 className={ styles.rememberMe }
                 checked={ this.state.rememberMe }
-
+                onChange={ this.handleRememberMeChange }
                 label="Remember Me"
               />
               <span className={ styles.forgotPassword } onClick={ this.clickForgot }>Forgot Password?</span>

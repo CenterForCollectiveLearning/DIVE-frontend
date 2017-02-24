@@ -9,7 +9,8 @@ import RegisterPage from './components/Auth/RegisterPage';
 import AuthPage from './components/Auth/AuthPage';
 import UnconfirmedPage from './components/Auth/UnconfirmedPage';
 import ActivatePage from './components/Auth/ActivatePage';
-import ForgotPage from './components/Auth/ForgotPage';
+import ResetPasswordEmailPage from './components/Auth/ResetPasswordEmailPage';
+import ResetPasswordSubmitPage from './components/Auth/ResetPasswordSubmitPage';
 
 // Landing
 import AboutPage from './components/Landing/AboutPage';
@@ -69,10 +70,10 @@ export default (
     <Route path="/auth" component={ AuthPage }>
       <Route path="login" component={ LoginPage }/>
       <Route path="register" component={ RegisterPage }/>
-      <Route path="forgot" component={ ForgotPage }/>
       <Route path="activate/:token" component={ ActivatePage } />
       <Route path="unconfirmed" component={ UnconfirmedPage }/>
-      <Route path="forgot" component={ ForgotPage }/>
+      <Route path="reset" component={ ResetPasswordEmailPage }/>
+      <Route path="reset/:token" component={ ResetPasswordSubmitPage }/>
     </Route>
 
     <IndexRoute component={ LandingPage }/>
