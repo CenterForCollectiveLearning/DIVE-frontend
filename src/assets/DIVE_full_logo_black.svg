@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="260.01947"
+   height="99.1035"
+   viewBox="0 0 260.01948 99.103495"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="DIVE_full_logo_black.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.58"
+     inkscape:cx="-178.12483"
+     inkscape:cy="221.67001"
+     inkscape:document-units="px"
+     inkscape:current-layer="g3388"
+     showgrid="false"
+     inkscape:window-width="1360"
+     inkscape:window-height="744"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     width="300mm"
+     units="px"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3403"
+       originx="-0.077709278"
+       originy="-0.4680858" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-0.07770928,-952.79066)">
+    <g
+       id="g3388"
+       transform="translate(2.2098629,0.2253994)">
+      <polygon
+         id="polygon3390"
+         points="49.198,12.553 49.785,50.261 12.072,50.135 "
+         stroke-miterlimit="10"
+         style="fill:none;stroke:#000000;stroke-width:10;stroke-miterlimit:10;stroke-opacity:1"
+         transform="translate(-2.2758621,952)" />
+      <polygon
+         id="polygon3392"
+         points="50.541,87.681 49.954,49.972 87.667,50.099 "
+         stroke-miterlimit="10"
+         style="fill:none;stroke:#000000;stroke-width:10;stroke-miterlimit:10;stroke-opacity:1"
+         transform="translate(-2.2758621,952)" />
+      <flowRoot
+         xml:space="preserve"
+         id="flowRoot4205"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:125%;font-family:roboto;-inkscape-font-specification:roboto;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         transform="translate(-4.485725,936.96272)"><flowRegion
+           id="flowRegion4207"><rect
+             id="rect4209"
+             width="349.50494"
+             height="104.9505"
+             x="112.87128"
+             y="20.679037"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:roboto;-inkscape-font-specification:roboto" /></flowRegion><flowPara
+           id="flowPara4211"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:70px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';stroke:#000000;stroke-opacity:0" /></flowRoot>      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="109.10922"
+         y="1027.0481"
+         id="text5351"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan5353"
+           x="109.10922"
+           y="1027.0481"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:70px;font-family:roboto;-inkscape-font-specification:'roboto Bold'">DIVE</tspan></text>
+    </g>
+  </g>
+</svg>
