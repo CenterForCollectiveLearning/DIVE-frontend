@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { loginUser } from '../../actions/AuthActions';
+import { validateEmail } from '../../helpers/auth';
 
 import { Button, Intent, Checkbox } from '@blueprintjs/core';
 import styles from './Auth.sass';
@@ -12,12 +13,8 @@ import Input from '../Base/Input'
 import AuthModal from '../Base/AuthModal';
 import RaisedButton from '../Base/RaisedButton';
 
-function validateEmail(email) {
-    var re = /\S+@\S+\.\S+/;
-    return re.test(email);
-}
 
-class AuthPage extends Component {
+class LoginPage extends Component {
   constructor(props) {
     super(props);
 
@@ -71,11 +68,6 @@ class AuthPage extends Component {
     }
   }
 
-  goHome = () => {
-    const { push } = this.props;
-    push('/')
-  }
-
   handlePasswordChange = (e) => {
     this.sanitizeBackendErrors();
     this.setState({ password: e.target.value });
@@ -83,16 +75,12 @@ class AuthPage extends Component {
 
   clickRegister = () => {
     const { push } = this.props;
-    push('/register')
-  }
-
-  clickRegister = () => {
-    const { push } = this.props;
-    push('/register')
+    push('/auth/register');
   }
 
   clickForgot = () => {
-    alert('Functionality in progress');
+    const { push } = this.props;
+    push('/auth/reset');
   }
 
   handleRememberMeChange = (e) => {
@@ -138,13 +126,13 @@ class AuthPage extends Component {
           closeAction={ this.closeLoginPage }
           className={ styles.loginModal }
           blackBackground={ true }
-          authType="login"
+          iconName='log-in'
           footer={
             <div className={ styles.registerText }>
               Don&#39;t have an account? <span className={ styles.registerLink } onClick={ this.clickRegister }>Click here to create one</span>.
             </div>
           }>
-          <form className={ styles.authForm } onsubmit={ this.submit }>
+          <form className={ styles.authForm } onSubmit={ this.submit }>
             <div className={ styles.authInputGroup }>
               { (loginError == 'E-mail not found' || loginError == 'Username not found') &&
                 <div className={ styles.authInputError }>Not found</div>
@@ -179,7 +167,7 @@ class AuthPage extends Component {
               <Checkbox
                 className={ styles.rememberMe }
                 checked={ this.state.rememberMe }
-
+                onChange={ this.handleRememberMeChange }
                 label="Remember Me"
               />
               <span className={ styles.forgotPassword } onClick={ this.clickForgot }>Forgot Password?</span>
@@ -199,7 +187,7 @@ class AuthPage extends Component {
   }
 }
 
-AuthPage.propTypes = {
+LoginPage.propTypes = {
   authRequired: React.PropTypes.bool
 };
 
@@ -207,11 +195,11 @@ function mapStateToProps(state) {
   const { user } = state;
   return {
     isAuthenticated: user.isAuthenticated,
-    loginError: user.error.login
+    loginError: user.login.error
   };
 }
 
 export default connect(mapStateToProps, {
   loginUser,
   push
-})(AuthPage);
+})(LoginPage);

@@ -32,7 +32,21 @@ if (useExpress) {
     quiet: false,
     noInfo: false,
     historyApiFallback: {
-      index: 'index.html'
+      index: 'index.html',
+      rewrites: [
+        {
+            from: /^\/auth\/activate\/.*$/,
+            to: function() {
+                return 'index.html';
+            }
+        },
+        {
+            from: /^\/auth\/reset\/.*$/,
+            to: function() {
+                return 'index.html';
+            }
+        }
+    ]
     },
     open: true,
     stats: { colors: true }

@@ -1,5 +1,8 @@
 @import '../../../css/mixins.sass'
 
+.noFooter
+  padding-bottom: 0 !important
+
 .loginModal, .registerModal
   display: flex
   flex-shrink: 0
@@ -20,6 +23,9 @@
 
 .authForm
   width: 100%
+
+  &.activationForm
+    padding-top: 10px
 
   .generalAuthError
     font-size: 14px
@@ -103,9 +109,8 @@
     justify-content: center
 
 
-.registerText, .loginText
-  .registerLink, .loginLink
-    +linkStyle(14px)
+.registerLink, .loginLink
+  +linkStyle(14px)
 
 .footerLabel
   display: flex

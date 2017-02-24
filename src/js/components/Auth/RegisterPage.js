@@ -12,14 +12,10 @@ import { Button, Intent, Checkbox } from '@blueprintjs/core';
 import Input from '../Base/Input'
 import AuthModal from '../Base/AuthModal';
 import RaisedButton from '../Base/RaisedButton';
+import { validateEmail } from '../../helpers/auth';
 
-function validateEmail(email)
-{
-    var re = /\S+@\S+\.\S+/;
-    return re.test(email);
-}
 
-class AuthPage extends Component {
+class RegisterPage extends Component {
   constructor(props) {
     super(props);
 
@@ -106,7 +102,7 @@ class AuthPage extends Component {
 
   _clickLogin = () => {
     const { push } = this.props;
-    push('/login')
+    push('/auth/login')
   }
 
   ensureNotLoggedIn(props) {
@@ -129,7 +125,7 @@ class AuthPage extends Component {
       password
     } = this.state;
 
-    const validForm = (email && username && password && emailValid) && !(emailError || usernameError || usernameTooShort || usernameTooLong);
+    const validForm = (email && username && emailValid && password) && !(emailError || usernameError || usernameTooShort || usernameTooLong);
     return validForm;
   }
 
@@ -150,7 +146,7 @@ class AuthPage extends Component {
   }
 
   render() {
-    const { authRequired } = this.props;
+    const { authRequired, register } = this.props;
     const {
       emailError,
       usernameError,
@@ -179,7 +175,7 @@ class AuthPage extends Component {
           closeAction={ this.closeRegistrationPage }
           className={ styles.registerModal }
           blackBackground={ true }
-          authType='register'
+          iconName='user'
           heading={
             <span>Account Registration</span>
           }
@@ -189,7 +185,7 @@ class AuthPage extends Component {
             </div>
           }>
 
-          <form className={ styles.authForm } onsubmit={ this.submit }>
+          <form className={ styles.authForm } onSubmit={ this.submit }>
             <div className={ styles.authInputGroup }>
               { (email && email.length > 3 && !emailValid) &&
                 <div className={ styles.authInputError }>Invalid</div>
@@ -249,6 +245,7 @@ class AuthPage extends Component {
               intent={ Intent.PRIMARY }
               disabled={ !validForm }
               onClick={ this.submit }
+              loading={ register.isRegistering }
             />
           </form>
         </AuthModal>
@@ -257,17 +254,18 @@ class AuthPage extends Component {
   }
 }
 
-AuthPage.propTypes = {
+RegisterPage.propTypes = {
   authRequired: React.PropTypes.bool
 };
 
 function mapStateToProps(state) {
   const { user } = state;
   return {
-    usernameError: user.error.register.username,
-    emailError: user.error.register.email,
+    register: user.register,
+    usernameError: user.register.usernameError,
+    emailError: user.register.emailError,
     isAuthenticated: user.isAuthenticated
   };
 }
 
-export default connect(mapStateToProps, { registerUser, push })(AuthPage);
+export default connect(mapStateToProps, { registerUser, push })(RegisterPage);

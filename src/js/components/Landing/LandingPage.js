@@ -24,6 +24,7 @@ export class LandingPage extends Component {
 
   componentWillMount() {
     const { user, push, wipeProjectState } = this.props;
+
     if (user.isAuthenticated) {
       // push('/projects')
     }
@@ -82,13 +83,13 @@ export class LandingPage extends Component {
                   <div className={ styles.rightButtons }>
                     <Link className="pt-button pt-minimal pt-icon-projects" route="/projects">Projects</Link>
                     <span className="pt-navbar-divider"></span>
-                    <div className="pt-button pt-minimal pt-icon-log-out" onClick={ this.props.logoutUser }>Log Out</div>
+                    <div className="pt-button pt-minimal pt-icon-log-out" onClick={ this.props.logoutUser }>Log Out of { user.username }</div>
                   </div>
                 }
                 { (!user || !user.username) &&
-                  <div className={ styles.rightButtons }>                    
-                    <Link className="pt-button pt-minimal pt-icon-log-in" route="/login">Log In</Link>
-                    <Link className="pt-button pt-minimal pt-icon-user" route="/register">Register</Link>
+                  <div className={ styles.rightButtons }>
+                    <Link className="pt-button pt-minimal pt-icon-log-in" route="/auth/login">Log In</Link>
+                    <Link className="pt-button pt-minimal pt-icon-user" route="/auth/register">Register</Link>
                   </div>
                 }
               </div>
