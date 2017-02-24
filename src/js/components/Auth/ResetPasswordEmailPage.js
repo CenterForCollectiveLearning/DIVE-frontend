@@ -115,6 +115,7 @@ class ResetPasswordEmailPage extends Component {
                     autoFocus={ true }
                     onChange={ this.handleEmailChange }
                     onSubmit={ this.submit }
+                    disabled={ resetPasswordEmail.sent }
                   />
                   <span className="pt-icon pt-minimal pt-icon-envelope" />
                 </div>

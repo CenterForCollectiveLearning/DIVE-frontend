@@ -78,8 +78,8 @@ export default (
 
     <IndexRoute component={ LandingPage }/>
     <Route path="/landing" component={ LandingPage }>
-      <Route path="/projects" component={ ProjectListPage }/>
-      <Route path="/preloaded" component={ PreloadedProjectListPage }/>
+      <Route path="/projects" component={ requireAuthentication(ProjectListPage) }/>
+      <Route path="/preloaded" component={ requireAuthentication(PreloadedProjectListPage) }/>
       <Route path="/story" component={ StoryPage }/>
     </Route>
 

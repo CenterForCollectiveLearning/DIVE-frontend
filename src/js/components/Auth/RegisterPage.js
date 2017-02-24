@@ -146,7 +146,7 @@ class RegisterPage extends Component {
   }
 
   render() {
-    const { authRequired } = this.props;
+    const { authRequired, register } = this.props;
     const {
       emailError,
       usernameError,
@@ -245,6 +245,7 @@ class RegisterPage extends Component {
               intent={ Intent.PRIMARY }
               disabled={ !validForm }
               onClick={ this.submit }
+              loading={ register.isRegistering }
             />
           </form>
         </AuthModal>
@@ -260,6 +261,7 @@ RegisterPage.propTypes = {
 function mapStateToProps(state) {
   const { user } = state;
   return {
+    register: user.register,
     usernameError: user.register.usernameError,
     emailError: user.register.emailError,
     isAuthenticated: user.isAuthenticated

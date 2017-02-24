@@ -88,6 +88,7 @@ function requestConfirmTokenDispatcher() {
 function receiveConfirmTokenDispatcher(json) {
   return {
     type: RECEIVE_CONFIRM_TOKEN,
+    confirmed: true,
     alreadyActivated: json.alreadyActivated,
     id: json.user.id,
     username: json.user.username,
@@ -113,8 +114,7 @@ export function confirmToken(token) {
           dispatch(errorConfirmTokenDispatcher(json))
         );
       } else {
-        response.json().then( (json) => {
-          console.log(json)
+        response.json().then((json) => {
           window.amplitude.setUserId(json.user.email);
           return dispatch(receiveConfirmTokenDispatcher(json));
         });

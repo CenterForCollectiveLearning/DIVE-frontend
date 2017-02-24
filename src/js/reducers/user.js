@@ -30,7 +30,7 @@ const baseState = {
   username: cookie.load('username') || '',
   email: cookie.load('email') || '',
   id: cookie.load('user_id') || '',
-  confirmed: (cookie.load('confirmed') == 'True') || false,
+  confirmed: (cookie.load('confirmed') == 'True') ? true : false,
   login: {
     error: null,
     success: false,
@@ -39,6 +39,7 @@ const baseState = {
     error: null,
     emailError: null,
     usernameError: null,
+    isRegistering: false,
     success: false,
   },
   logout: {
@@ -75,15 +76,31 @@ export default function user(state = baseState, action) {
     case REQUEST_LOGIN_USER:
       return { ...state, login: baseState.login };
 
-    case REQUEST_REGISTER_USER:
-      return { ...state, register: baseState.register };
+    case RECEIVE_LOGIN_USER:
+      return { ...state,
+        success: { login: action.message, register: '' },
+        confirmed: action.confirmed,
+        isAuthenticated: true,
+        username: action.username,
+        email: action.email,
+        id: action.id
+      };
+
+    case ERROR_LOGIN_USER:
+      return { ...state,
+        login: {
+          error: action.error,
+          success: false
+        }
+      };
 
     case REQUEST_CONFIRM_TOKEN:
       return { ...state, token: { ...state.token, isConfirming: true }};
 
     case RECEIVE_CONFIRM_TOKEN:
       return { ...state,
-        confirmed: true,
+        confirmed: action.confirmed,
+        isAuthenticated: true,
         username: action.username,
         email: action.email,
         id: action.id,
@@ -95,18 +112,7 @@ export default function user(state = baseState, action) {
           message: action.message
       }};
 
-    case RECEIVE_LOGIN_USER:
-      return { ...state,
-        success: { login: action.message, register: '' },
-        confirmed: action.confirmed,
-        isAuthenticated: true,
-        username: action.username,
-        email: action.email,
-        id: action.id
-      };
-
     case ERROR_CONFIRM_TOKEN:
-      console.error('Error confirming token', action.error);
       return { ...state,
         token: { ...state.token,
           isConfirming: false,
@@ -114,17 +120,12 @@ export default function user(state = baseState, action) {
         }
       };
 
-    case ERROR_LOGIN_USER:
-      return { ...state,
-        login: {
-          error: action.error,
-          success: false
-        }
-      };
+    case REQUEST_REGISTER_USER:
+      return { ...state, register: { ...baseState.register, isRegistering: true} };
 
     case RECEIVE_REGISTER_USER:
       return { ...state,
-        register: { ...baseState.success, success: action.message },
+        register: { ...baseState.success, success: action.message, success: true },
         isAuthenticated: true,
         confirmed: false,
         username: action.username,
@@ -135,6 +136,7 @@ export default function user(state = baseState, action) {
     case ERROR_REGISTER_USER:
       return { ...state,
         register: {
+          isRegistering: false,
           success: false,
           emailError: action.emailError,
           usernameError: action.usernameError
@@ -173,10 +175,23 @@ export default function user(state = baseState, action) {
       return { ...state, resetPasswordSubmit: { ...state.resetPasswordSubmit, isResetting: true }};
 
     case RECEIVE_RESET_PASSWORD_SUBMIT:
-      return { ...state, resetPasswordSubmit: { ...state.resetPasswordSubmit, message: action.message, isResetting: false, reset: true }};
+      return { ...state,
+        resetPasswordSubmit: { ...state.resetPasswordSubmit,
+          message: action.message,
+          isResetting: false,
+          reset: true
+        }
+      };
 
     case ERROR_RESET_PASSWORD_SUBMIT:
-      return { ...state, resetPasswordSubmit: { ...state.resetPasswordSubmit, message: action.message, error: action.error, isResetting: false, sent: false }};
+      return { ...state,
+        resetPasswordSubmit: { ...state.resetPasswordSubmit,
+          message: action.message,
+          error: action.error,
+          isResetting: false,
+          reset: false
+        }
+      };
 
     default:
       return state;
