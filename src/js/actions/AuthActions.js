@@ -11,7 +11,7 @@ import {
 } from '../constants/ActionTypes';
 
 import cookie from 'react-cookie';
-import { default } from 'cryptojs';
+import { Crypto } from 'cryptojs';
 import { rawFetch } from './api.js';
 
 
