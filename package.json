@@ -12,7 +12,7 @@
     "autoprefixer-loader": "^3.1.0",
     "canvg-browser": "^1.0.0",
     "component-file-picker": "^0.2.1",
-    "cryptojs": "^2.5.3",
+    "crypto-js": "^3.1.9-1",
     "d3-scale": "^0.6.2",
     "es6-promise": "^3.1.2",
     "es6-shim": "^0.34.4",
