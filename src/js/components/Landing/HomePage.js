@@ -81,7 +81,7 @@ export class HomePage extends Component {
     const { userProjects, preloadedProjects } = projects;
     return (
       <DocumentTitle title='DIVE | Projects'>
-        <div className={ styles.centeredFill }>
+        <div>
           <div className={ styles.ctaBox }>
             <div className={ styles.primaryCopy }>
               {/* <span>Turn Data into Stories</span> */}
