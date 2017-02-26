@@ -61,6 +61,10 @@ export class LandingPage extends Component {
     this.setState({ opaqueNavbar: (e.target.scrollTop > scrollThreshold) });
   }
 
+  closeBetaToast = () => {
+    this.setState({ betaToastOpen: false });
+  }
+
   render() {
     const { user, location } = this.props;
     const onLandingPage = (location.pathname == '/');
