@@ -74,7 +74,7 @@ export class HomePage extends Component {
               {/* <span>Turn Data into Stories</span> */}
               <span>Easy and powerful data exploration</span>
             </div>
-            <div className={ styles.secondaryCopy }>
+            <div className={ styles.secondaryCopy + ' pt-running-text' }>
               DIVE lets you turn data into stories within minutes, without writing a single line of code
             </div>
             {/* <div className={ styles.video }>
