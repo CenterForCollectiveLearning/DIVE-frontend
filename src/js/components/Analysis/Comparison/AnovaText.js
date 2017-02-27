@@ -26,9 +26,9 @@ export default class AnovaText extends Component {
     return (
       <div className={ styles.regressionSummary }>
         <div className={ styles.regressionSummaryColumn }>
-          <div>
+          <p className="pt-running-text">
             This table displays the results of a <strong>{ textParams.anovaType } analysis of variance (ANOVA)</strong> comparing mean of { textParams.dependentVariableName } by { textParams.independentVariableNames }.
-          </div>
+          </p>
         </div>
       </div>
     );
