@@ -3,9 +3,11 @@ import styles from './Landing.sass';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
+import cookie from 'react-cookie';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
+import { landingPageFirstTime } from '../../actions/UserActions';
 
-import { Position, Toaster, Button, Intent } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 
 import ProjectCreateModal from '../Base/ProjectCreateModal';
 import RaisedButton from '../Base/RaisedButton';
@@ -22,22 +24,13 @@ export class HomePage extends Component {
 
     this.state = {
       projectCreateModalOpen: false,
-      betaToastOpen: true
     };
   }
 
   componentWillMount() {
-    const { projects, userId } = this.props;
+    const { projects, firstTime, userId } = this.props;
     this.props.fetchPreloadedProjects(userId);
     this.props.fetchUserProjects(userId);
-
-    if (this.state.betaToastOpen) {
-      this.betaToaster.show({
-        message: 'DIVE in currently in beta',
-        iconName: 'hand',
-        intent: Intent.WARNING
-      });
-    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -70,12 +63,6 @@ export class HomePage extends Component {
     }
   }
 
-  betaToaster = Toaster.create({
-    className: 'beta-toaster',
-    position: Position.TOP,
-    onDismiss: this.closeBetaToast,
-  })
-
   render() {
     const { projects, userId } = this.props;
     const { userProjects, preloadedProjects } = projects;
@@ -87,7 +74,7 @@ export class HomePage extends Component {
               {/* <span>Turn Data into Stories</span> */}
               <span>Easy and powerful data exploration</span>
             </div>
-            <div className={ styles.secondaryCopy }>
+            <div className={ styles.secondaryCopy + ' pt-running-text' }>
               DIVE lets you turn data into stories within minutes, without writing a single line of code
             </div>
             {/* <div className={ styles.video }>
@@ -219,6 +206,6 @@ export class HomePage extends Component {
 }
 function mapStateToProps(state) {
   const { project, projects, user } = state;
-  return { project, projects, user, userId: user.id };
+  return { project, projects, user, firstTime: user.firstTime, userId: user.id };
 }
 export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, push })(HomePage);

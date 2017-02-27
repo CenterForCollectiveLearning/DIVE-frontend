@@ -42,7 +42,6 @@
   background-size: cover
   background-position: 50% 0%
 
-
 .ctaBox
   display: flex
   // margin-top: 70px
@@ -55,9 +54,12 @@
   align-items: center
   flex-shrink: 0
   &:before
+    +move-bg-animation
+
     background: url(../../../assets/images/landing_background.png) no-repeat
     background-size: cover
-    background-position: 50% 0%
+    background-position: 0% 0%
+
     opacity: 0.7
 
     position: absolute
@@ -80,18 +82,14 @@
     margin: 120px auto 5px
 
     color: white
-    font-size: 38px
+    font-size: 34px
     font-weight: 600
     text-transform: uppercase
-    letter-spacing: 1px
 
   .secondaryCopy
     display: flex
-    margin: 10px auto 45px
-    text-align: center
-    letter-spacing: 0.78px
-    font-size: 23px
-    font-weight: 300
+    margin: 5px auto 45px
+    font-size: 22px
     color: white
 
   .ctaContainer
