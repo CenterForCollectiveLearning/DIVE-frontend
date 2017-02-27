@@ -3,7 +3,9 @@ import styles from './Landing.sass';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
+import cookie from 'react-cookie';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
+import { landingPageFirstTime } from '../../actions/UserActions';
 
 import { Button, Intent } from '@blueprintjs/core';
 
@@ -21,12 +23,12 @@ export class HomePage extends Component {
     super(props);
 
     this.state = {
-      projectCreateModalOpen: false
+      projectCreateModalOpen: false,
     };
   }
 
   componentWillMount() {
-    const { projects, userId } = this.props;
+    const { projects, firstTime, userId } = this.props;
     this.props.fetchPreloadedProjects(userId);
     this.props.fetchUserProjects(userId);
   }
@@ -54,11 +56,10 @@ export class HomePage extends Component {
 
   _onUploadClick = () => {
     const { user, userId, push, createProject } = this.props;
-    console.log('Uploading');
     if (user.isAuthenticated) {
       this.setState({ projectCreateModalOpen: true });
     } else {
-      push('/register')
+      push('/auth/register')
     }
   }
 
@@ -67,15 +68,18 @@ export class HomePage extends Component {
     const { userProjects, preloadedProjects } = projects;
     return (
       <DocumentTitle title='DIVE | Projects'>
-        <div className={ styles.centeredFill }>
+        <div>
           <div className={ styles.ctaBox }>
             <div className={ styles.primaryCopy }>
               {/* <span>Turn Data into Stories</span> */}
               <span>Easy and powerful data exploration</span>
             </div>
-            <div className={ styles.secondaryCopy }>
+            <div className={ styles.secondaryCopy + ' pt-running-text' }>
               DIVE lets you turn data into stories within minutes, without writing a single line of code
             </div>
+            {/* <div className={ styles.video }>
+              <iframe src="https://player.vimeo.com/video/179173590" color="#007BD7" width="600" height="340" frameBorder="0" allowFullScreen />
+            </div> */}
             <div className={ styles.ctaContainer }>
               <Button
                 text="Upload Data"
@@ -84,9 +88,16 @@ export class HomePage extends Component {
                 iconName="cloud-upload"
                 onClick={ this._onUploadClick }
               />
-            </div>
-            <div className={ styles.video }>
-              <iframe src="https://player.vimeo.com/video/179173590" color="#007BD7" width="600" height="340" frameBorder="0" allowFullScreen />
+              { !userId &&
+                <Button
+                  text="Create Account"
+                  intent={ Intent.PRIMARY }
+                  className="pt-large"
+                  iconName="user"
+                  style={{'marginLeft': '10px'}}
+                  onClick={ this._onUploadClick }
+                />
+              }
             </div>
           </div>
           <div className={ styles.sections + ' ' + styles.fillContainer }>
@@ -195,6 +206,6 @@ export class HomePage extends Component {
 }
 function mapStateToProps(state) {
   const { project, projects, user } = state;
-  return { project, projects, user, userId: user.id };
+  return { project, projects, user, firstTime: user.firstTime, userId: user.id };
 }
 export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, push })(HomePage);

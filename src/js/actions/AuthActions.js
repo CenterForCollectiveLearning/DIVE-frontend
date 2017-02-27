@@ -26,7 +26,7 @@ import { push } from 'react-router-redux';
 
 import { detectClient } from '../helpers/auth';
 import cookie from 'react-cookie';
-import { default } from 'cryptojs';
+import MD5 from 'crypto-js/md5';
 import { rawFetch } from './api';
 
 
@@ -125,7 +125,7 @@ export function confirmToken(token) {
 }
 
 export function loginUser(email, username, password, rememberMe) {
-  const encryptedPassword = Crypto.MD5(password);
+  const encryptedPassword = MD5(password).toString();
   const params = {
     'email': email,
     'username': username,
@@ -162,7 +162,7 @@ export function loginUser(email, username, password, rememberMe) {
 }
 
 export function registerUser(email, username, password) {
-  const encryptedPassword = Crypto.MD5(password);
+  const encryptedPassword = MD5(password).toString();
   const clientInfo = detectClient();
 
   const params = {
@@ -385,7 +385,9 @@ function errorResetPasswordSubmitDispatcher(error) {
 }
 
 export function sendResetPasswordSubmit(token, password) {
-  const encryptedPassword = Crypto.MD5(password);
+  const encryptedPassword = MD5(password).toString();
+
+  console.log(password, encryptedPassword);
   const params = {
     token: token,
     password: encryptedPassword
