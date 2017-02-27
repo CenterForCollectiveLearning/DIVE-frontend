@@ -51,28 +51,28 @@ export default class RegressionSummary extends Component {
     return (
       <div className={ styles.regressionSummary }>
         <div className={ styles.regressionSummaryColumn }>
-          <div>
+          <p className="pt-running-text">
             This table displays the results of a linear regression explaining the dependent variable { textParams.dependentVariableName } with combinations of the independent variables { textParams.independentVariableNames }.
-          </div>
-          <div>
+          </p>
+          <p className="pt-running-text">
             For each variable, the regression coefficient is the first value, significance is represented by number of asterisks, and standard error by the number in parentheses.
-          </div>
+          </p>
         </div>
         <div className={ styles.regressionSummaryColumn }>
           { ((textParams.rSquaredAdjusted.lowest.index != textParams.rSquaredAdjusted.highest.index) || (textParams.rSquaredAdjusted.lowest.value != textParams.rSquaredAdjusted.highest.value)) &&
-            <div>
+            <p className="pt-running-text">
               The { textParams.rSquaredAdjustedText }, the amount of variance explained by the independent variables, varies from <strong>{ textParams.rSquaredAdjusted.highest.value }</strong> in equation <strong>{ textParams.rSquaredAdjusted.highest.index }</strong> to <strong>{ textParams.rSquaredAdjusted.lowest.value }</strong> in equation <strong>{ textParams.rSquaredAdjusted.lowest.index }</strong>.
-            </div>
+            </p>
           }
           { ((textParams.rSquaredAdjusted.lowest.index == textParams.rSquaredAdjusted.highest.index) && (textParams.rSquaredAdjusted.lowest.value == textParams.rSquaredAdjusted.highest.value)) &&
-            <div>
+            <p className="pt-running-text">
               The { textParams.rSquaredAdjustedText }, the amount of variance explained by the independent variables, is <strong>{ textParams.rSquaredAdjusted.highest.value }</strong>.
-            </div>
+            </p>
           }
           { textParams.contributionToRSquared.highest &&
-            <div>
+            <p className="pt-running-text">
               Contribution to { textParams.rSquaredText }, determined by comparing models without a variable to the full model with all variables, is highest for <strong>{ textParams.contributionToRSquared.highest.name }</strong> and lowest for variable <strong>{ textParams.contributionToRSquared.lowest.name }</strong>.
-            </div>
+            </p>
           }
         </div>
       </div>

@@ -7,12 +7,12 @@ import styles from './Sidebar.sass';
 
 import { HELPER_TEXT } from './HelperText'
 
-export default class SidebarGroup extends Component {
+export default class SidebarCategoryGroup extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      collapsed: false,
+      collapsed: props.initialCollapse,
       showHelperText: false
     }
   }
@@ -32,10 +32,8 @@ export default class SidebarGroup extends Component {
   }
 
   render() {
-    const { className, helperText, helperTextPosition, collapsable } = this.props;
+    const { className, helperText, helperTextPosition } = this.props;
     const { collapsed, showHelperText } = this.state;
-
-    const noop = () => {};
 
     let popoverContent = (
       <div>
@@ -44,11 +42,12 @@ export default class SidebarGroup extends Component {
     );
 
     return (
-      <div className={ styles.sidebarGroup +
+      <div className={ styles.sidebarGroup + ' ' +
+        styles.sidebarCategoryGroup +
         ( collapsed ? (' ' + styles.collapsed) : '')
       }>
         { this.props.heading &&
-          <div className={ styles.sidebarGroupHeading } onClick={ collapsable ? this.onClickCollapse.bind(this) : noop}>
+          <div className={ styles.sidebarGroupHeading + ' ' + styles.sidebarCategoryGroupHeading } onClick={ this.onClickCollapse.bind(this) }>
             <span className={ styles.headingName }>{ this.props.heading }</span>
             { helperText &&
               <Popover content={ popoverContent }
@@ -66,7 +65,7 @@ export default class SidebarGroup extends Component {
                 />
              </Popover>
             }
-            { collapsable && <span className={ styles.collapseArrow }/> }
+            <span className={ styles.collapseArrow }/>
           </div>
         }
         <div className={ styles.sidebarGroupContent +
@@ -81,18 +80,18 @@ export default class SidebarGroup extends Component {
   }
 }
 
-SidebarGroup.propTypes = {
+SidebarCategoryGroup.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
   heading: PropTypes.string,
   helperText: PropTypes.string,
   helperTextPosition: PropTypes.number,
-  collapsable: PropTypes.bool
+  initialCollapse: PropTypes.bool
 };
 
-SidebarGroup.defaultProps = {
+SidebarCategoryGroup.defaultProps = {
   className: "",
   heading: "",
   helperTextPosition: Position.LEFT,
-  collapsable: false
+  initialCollapse: false
 }

@@ -16,7 +16,7 @@
   .sidebarGroup
     display: flex
     flex-direction: column
-    padding-bottom: 20px
+    padding-bottom: 5px
 
     &.collapsed
       .collapseArrow
@@ -36,8 +36,8 @@
     .sidebarGroupHeading
       display: flex
       flex-direction: row
-      padding: 10px 0px 5px 0px
-      border-bottom: 1px solid rgba($small-caps-grey, 0.2)
+      padding-top: 10px
+      // border-bottom: 1px solid rgba($small-caps-grey, 0.2)
       cursor: pointer
 
       .headingName
@@ -75,7 +75,23 @@
           color: $primary-accent
 
     .sidebarGroupContent
-      padding-top: 10px
+      padding-top: 0px
 
     .stacked
       display: flex
+
+  .sidebarCategoryGroup
+    &.collapsed:not(:last-child)
+      padding-bottom: 0px
+
+      .sidebarCategoryGroupHeading
+        border-bottom: none
+
+    .sidebarCategoryGroupHeading
+      font-weight: bold
+      margin: 0 -15px
+      padding: 8px 10px
+      margin-right: 0px
+      padding-right: 0px
+      border-top: 1px solid rgba($small-caps-grey, 0.2)
+      margin-bottom: -1px

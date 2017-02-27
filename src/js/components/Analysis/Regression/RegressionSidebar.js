@@ -14,6 +14,7 @@ import styles from '../Analysis.sass';
 
 import ConditionalSelector from '../../Base/ConditionalSelector';
 import Sidebar from '../../Base/Sidebar';
+import SidebarCategoryGroup from '../../Base/SidebarCategoryGroup';
 import SidebarGroup from '../../Base/SidebarGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -162,7 +163,7 @@ export class RegressionSidebar extends Component {
     return (
       <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Recommendation Type" helperText='regressionModel' helperTextPosition={ Position.LEFT_TOP }>
+          <SidebarCategoryGroup heading="Regression Options" initialCollapse={ true }>
             <Button
               className={ 'pt-fill ' + styles.recommendModelButton + ( recommended ? ' .pt-active' : '' )}
               iconName='predictive-analysis'
@@ -172,181 +173,182 @@ export class RegressionSidebar extends Component {
               onClick={ () => this.setRecommendedState() }
               loading={ regressionSelector.recommendationResult.loading }
             />
-            <DropDownMenu
-              value={ recommendationType }
-              valueMember='value'
-              displayTextMember='label'
-              options={ recommendationTypes }
-              onChange={ (v) => this.clickQueryStringTrackedItem({ recommendationType: v }) }/>
-          </SidebarGroup>
+            <SidebarGroup heading="Recommendation Type" helperText='regressionModel' helperTextPosition={ Position.LEFT_TOP }>
+              <DropDownMenu
+                value={ recommendationType }
+                valueMember='value'
+                displayTextMember='label'
+                options={ recommendationTypes }
+                onChange={ (v) => this.clickQueryStringTrackedItem({ recommendationType: v }) }/>
+            </SidebarGroup>
+            <SidebarGroup heading="Table Layout Mode" helperText='tableLayout'>
+              <DropDownMenu
+                value={ tableLayout }
+                options={ tableLayouts }
+                onChange={ (v) => this.clickQueryStringTrackedItem({ tableLayout: v }) }/>
+            </SidebarGroup>
+            <SidebarGroup heading="Regression Type" helperText='regressionType'>
+              <DropDownMenu
+                value={ regressionType }
+                options={ shownRegressionTypes }
+                onChange={ (v) => this.clickQueryStringTrackedItem({ regressionType: v }) }/>
+            </SidebarGroup>
+          </SidebarCategoryGroup>
         }
-        { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Table Layout Mode" helperText='tableLayout'>
-            <DropDownMenu
-              value={ tableLayout }
-              options={ tableLayouts }
-              onChange={ (v) => this.clickQueryStringTrackedItem({ tableLayout: v }) }/>
-          </SidebarGroup>
-        }
-        { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Regression Type" helperText='regressionType'>
-            <DropDownMenu
-              value={ regressionType }
-              options={ shownRegressionTypes }
-              onChange={ (v) => this.clickQueryStringTrackedItem({ regressionType: v }) }/>
-          </SidebarGroup>
-        }
-        { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Dependent Variable (Y)">
-            <DropDownMenu
-              value={ parseInt(dependentVariableId) }
-              options={ fieldProperties.items.filter((property) => !property.isId) }
-              valueMember="id"
-              displayTextMember="name"
-              onChange={ (v) => this.clickQueryStringTrackedItem({ dependentVariableId: parseInt(v), recommended: false })}/>
-          </SidebarGroup>
-        }
-        { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Explanatory Factors (X)">
-            { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupHeader }>
-                  <div className={ styles.fieldGroupLabel }>Categorical</div>
-                  { independentVariablesIds.length > 0 &&
-                    <div className={ styles.fieldGroupAction }
-                      onClick={ (v) => this.clickClearKeyFromQueryString('independentVariablesIds') }>
-                      Deselect All
-                    </div>
+        <SidebarCategoryGroup heading="Variable Selection">
+          { fieldProperties.items.length != 0 &&
+            <SidebarGroup heading="Dependent Variable (Y)">
+              <DropDownMenu
+                value={ parseInt(dependentVariableId) }
+                options={ fieldProperties.items.filter((property) => !property.isId) }
+                valueMember="id"
+                displayTextMember="name"
+                onChange={ (v) => this.clickQueryStringTrackedItem({ dependentVariableId: parseInt(v), recommended: false })}/>
+            </SidebarGroup>
+          }
+          { fieldProperties.items.length != 0 &&
+            <SidebarGroup heading="Explanatory Factors (X)">
+              { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
+                <div className={ styles.fieldGroup }>
+                  <div className={ styles.fieldGroupHeader }>
+                    <div className={ styles.fieldGroupLabel }>Categorical</div>
+                    { independentVariablesIds.length > 0 &&
+                      <div className={ styles.fieldGroupAction }
+                        onClick={ (v) => this.clickClearKeyFromQueryString('independentVariablesIds') }>
+                        <span>Deselect All</span>
+                        <span className="pt-icon-standard pt-icon-delete" />
+                      </div>
+                    }
+                  </div>
+                  <ToggleButtonGroup
+                    toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
+                      new Object({
+                        id: item.id,
+                        name: item.name,
+                        disabled: (item.id == dependentVariableId) || dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
+                        color: item.color
+                      })
+                    )}
+                    displayTextMember="name"
+                    colorMember="color"
+                    valueMember="id"
+                    externalSelectedItems={ independentVariablesIds }
+                    separated={ true }
+                    onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
+                </div>
+              }
+              { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
+                <div className={ styles.fieldGroup }>
+                  <div className={ styles.fieldGroupLabel }>Temporal</div>
+                  <ToggleButtonGroup
+                    toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
+                      new Object({
+                        id: item.id,
+                        name: item.name,
+                        disabled: (item.id == dependentVariableId) || dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
+                        color: item.color
+                      })
+                    )}
+                    valueMember="id"
+                    colorMember="color"
+                    displayTextMember="name"
+                    externalSelectedItems={ independentVariablesIds }
+                    separated={ true }
+                    onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
+                </div>
+              }
+              { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
+                <div className={ styles.fieldGroup }>
+                  <div className={ styles.fieldGroupLabel }>Quantitative</div>
+                  <ToggleButtonGroup
+                    toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
+                      new Object({
+                        id: item.id,
+                        name: item.name,
+                        disabled: (item.id == dependentVariableId) || dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
+                        color: item.color
+                      })
+                    )}
+                    valueMember="id"
+                    colorMember="color"
+                    displayTextMember="name"
+                    externalSelectedItems={ independentVariablesIds }
+                    separated={ true }
+                    onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
+                </div>
+              }
+              { fieldProperties.interactionTerms.length > 0 &&
+                <div className={ styles.fieldGroup }>
+                  <div className={ styles.fieldGroupLabel }>Interaction Terms</div>
+                  { fieldProperties.interactionTerms.length > 0 ?
+                      <ToggleButtonGroup
+                        toggleItems={ fieldProperties.interactionTerms.map((item) =>
+                          new Object({
+                            id: item.id,
+                            name: createInteractionTermName(item.names)
+                          })
+                        )}
+                        valueMember="id"
+                        displayTextMember="name"
+                        externalSelectedItems={ regressionSelector.interactionTermIds }
+                        separated={ true }
+                        onChange={ selectInteractionTerm }
+                        onDelete={ deleteInteractionTerm } /> : null
                   }
                 </div>
-                <ToggleButtonGroup
-                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
-                    new Object({
-                      id: item.id,
-                      name: item.name,
-                      disabled: (item.id == dependentVariableId) || dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
-                      color: item.color
-                    })
-                  )}
-                  displayTextMember="name"
-                  colorMember="color"
+              }
+            </SidebarGroup>
+          }
+          { fieldProperties.items.length != 0 &&
+            <SidebarGroup
+              className={ styles.interactionTermsSidebarGroup }
+              stacked={ true }
+              heading="Add Interaction Terms"
+            >
+              <div className={ styles.sideBySideDropdowns }>
+                <DropDownMenu
+                  width='50%'
+                  margin='2px'
+                  value={ interactionVariables[0] }
+                  options={ fieldProperties.items.filter((item) =>
+                    item.id != parseInt(dependentVariableId) && item.id != interactionVariables[1]
+                      && filterInteractionTermSelection(item.id, interactionVariables[1], fieldProperties.interactionTerms))
+                  }
                   valueMember="id"
-                  externalSelectedItems={ independentVariablesIds }
-                  separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
-              </div>
-            }
-            { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Temporal</div>
-                <ToggleButtonGroup
-                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
-                    new Object({
-                      id: item.id,
-                      name: item.name,
-                      disabled: (item.id == dependentVariableId) || dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
-                      color: item.color
-                    })
-                  )}
-                  valueMember="id"
-                  colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ independentVariablesIds }
-                  separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
-              </div>
-            }
-            { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Quantitative</div>
-                <ToggleButtonGroup
-                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
-                    new Object({
-                      id: item.id,
-                      name: item.name,
-                      disabled: (item.id == dependentVariableId) || dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
-                      color: item.color
-                    })
-                  )}
+                  onChange={this.onAddInteractionTerm.bind(this, 0)} />
+                <DropDownMenu
+                  width='50%'
+                  value={ interactionVariables[1] }
+                  options={ fieldProperties.items.filter((item) =>
+                    item.id != parseInt(dependentVariableId) && item.id != interactionVariables[0]
+                      && filterInteractionTermSelection(item.id, interactionVariables[0], fieldProperties.interactionTerms))
+                  }
                   valueMember="id"
-                  colorMember="color"
                   displayTextMember="name"
-                  externalSelectedItems={ independentVariablesIds }
-                  separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
+                  onChange={this.onAddInteractionTerm.bind(this, 1)} />
               </div>
-            }
-            { fieldProperties.interactionTerms.length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Interaction Terms</div>
-                { fieldProperties.interactionTerms.length > 0 ?
-                    <ToggleButtonGroup
-                      toggleItems={ fieldProperties.interactionTerms.map((item) =>
-                        new Object({
-                          id: item.id,
-                          name: createInteractionTermName(item.names)
-                        })
-                      )}
-                      valueMember="id"
-                      displayTextMember="name"
-                      externalSelectedItems={ regressionSelector.interactionTermIds }
-                      separated={ true }
-                      onChange={ selectInteractionTerm }
-                      onDelete={ deleteInteractionTerm } /> : null
-                }
-              </div>
-            }
-          </SidebarGroup>
-        }
-        { fieldProperties.items.length != 0 &&
-          <SidebarGroup
-            className={ styles.interactionTermsSidebarGroup }
-            stacked={ true }
-            heading="Add Interaction Terms"
-          >
-            <div className={ styles.sideBySideDropdowns }>
-              <DropDownMenu
-                width='50%'
-                margin='2px'
-                value={ interactionVariables[0] }
-                options={ fieldProperties.items.filter((item) =>
-                  item.id != parseInt(dependentVariableId) && item.id != interactionVariables[1]
-                    && filterInteractionTermSelection(item.id, interactionVariables[1], fieldProperties.interactionTerms))
-                }
-                valueMember="id"
-                displayTextMember="name"
-                onChange={this.onAddInteractionTerm.bind(this, 0)} />
-              <DropDownMenu
-                width='50%'
-                value={ interactionVariables[1] }
-                options={ fieldProperties.items.filter((item) =>
-                  item.id != parseInt(dependentVariableId) && item.id != interactionVariables[0]
-                    && filterInteractionTermSelection(item.id, interactionVariables[0], fieldProperties.interactionTerms))
-                }
-                valueMember="id"
-                displayTextMember="name"
-                onChange={this.onAddInteractionTerm.bind(this, 1)} />
-            </div>
-            <RaisedButton altText="Add" label="Add" centered={true} onClick={this.onCreateInteractionTerm.bind(this)}/>
-          </SidebarGroup>
-        }
-        { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
-          <SidebarGroup heading="Filter by field">
-            { conditionals.items.map((conditional, i) =>
-              <div key={ conditional.conditionalId }>
-                <ConditionalSelector
-                  conditionalIndex={ i }
-                  conditionalId={ conditional.conditionalId }
-                  fieldId={ conditional.fieldId }
-                  combinator={ conditional.combinator }
-                  operator={ conditional.operator }
-                  value={ conditional.value }
-                  fieldProperties={ fieldProperties.items }
-                  selectConditionalValue={ selectConditional }/>
-              </div>
-            )}
-          </SidebarGroup>
-        }
+              <RaisedButton altText="Add" label="Add" centered={true} onClick={this.onCreateInteractionTerm.bind(this)}/>
+            </SidebarGroup>
+          }
+          { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
+            <SidebarGroup heading="Filter by field">
+              { conditionals.items.map((conditional, i) =>
+                <div key={ conditional.conditionalId }>
+                  <ConditionalSelector
+                    conditionalIndex={ i }
+                    conditionalId={ conditional.conditionalId }
+                    fieldId={ conditional.fieldId }
+                    combinator={ conditional.combinator }
+                    operator={ conditional.operator }
+                    value={ conditional.value }
+                    fieldProperties={ fieldProperties.items }
+                    selectConditionalValue={ selectConditional }/>
+                </div>
+              )}
+            </SidebarGroup>
+          }
+        </SidebarCategoryGroup>
       </Sidebar>
     );
   }
