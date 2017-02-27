@@ -20,11 +20,14 @@ import {
   REQUEST_RESET_PASSWORD_SUBMIT,
   RECEIVE_RESET_PASSWORD_SUBMIT,
   ERROR_RESET_PASSWORD_SUBMIT,
+  SHOW_TOAST
 } from '../constants/ActionTypes';
+import { LOCATION_CHANGE } from 'react-router-redux'
 
 import cookie from 'react-cookie';
 
 const baseState = {
+  showToast: (cookie.load('show_toast') == 'False') ? false : true,
   rememberToken: cookie.load('remember_token') || null,
   isAuthenticated: cookie.load('remember_token') ? true : false,
   username: cookie.load('username') || '',
@@ -73,6 +76,9 @@ const baseState = {
 
 export default function user(state = baseState, action) {
   switch (action.type) {
+    case SHOW_TOAST:
+      cookie.save('show_toast', 'False');
+      return { ...state, showToast: false };
     case REQUEST_LOGIN_USER:
       return { ...state, login: baseState.login };
 

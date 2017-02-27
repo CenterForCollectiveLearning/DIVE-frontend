@@ -4,12 +4,22 @@ import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { logoutUser } from '../../actions/AuthActions'
+import { showToast } from '../../actions/UserActions';
 
 import Link from '../Base/Link';
 import HomePage from './HomePage';
 import { wipeProjectState } from '../../actions/ProjectActions';
 
+import { Position, Toaster, Button, Intent } from '@blueprintjs/core';
+
 import Logo from '../../../assets/DIVE_logo_white.svg?name=Logo';
+
+
+const betaToaster = Toaster.create({
+  className: 'beta-toaster',
+  timeout: 2000,
+  position: Position.TOP,
+})
 
 
 export class LandingPage extends Component {
@@ -18,16 +28,28 @@ export class LandingPage extends Component {
 
     this.state = {
       userOptionsOpen: true,
-      opaqueNavbar: false
+      opaqueNavbar: false,
+      betaToastOpen: true,
     };
   }
 
   componentWillMount() {
-    const { user, push, wipeProjectState } = this.props;
+    const { user, push, wipeProjectState, showToast } = this.props;
 
     if (user.isAuthenticated) {
       // push('/projects')
     }
+
+    if (this.state.betaToastOpen && user.showToast) {
+      betaToaster.show({
+        message: <span>DIVE in currently in beta and is still under active development. To report bugs, please contact <a href="mailto:dive@media.mit.edu" target="_blank">dive@media.mit.edu</a>.</span>,
+        iconName: 'hand-right',
+        intent: Intent.WARNING,
+        onDismiss: this.closeBetaToast
+      });
+      showToast();
+    }
+
     // Wipe project on landing page
     wipeProjectState();
   }
@@ -63,6 +85,10 @@ export class LandingPage extends Component {
 
   closeBetaToast = () => {
     this.setState({ betaToastOpen: false });
+  }
+
+  componentWillUnmount() {
+    this.closeBetaToast();
   }
 
   render() {
@@ -117,4 +143,4 @@ function mapStateToProps(state) {
   return { user };
 }
 
-export default connect(mapStateToProps, { wipeProjectState, push, logoutUser })(LandingPage);
+export default connect(mapStateToProps, { showToast, wipeProjectState, push, logoutUser })(LandingPage);

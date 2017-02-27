@@ -1,9 +1,16 @@
 import {
   CREATE_ANONYMOUS_USER,
   SET_USER_EMAIL,
-  SUBMIT_USER
+  SUBMIT_USER,
+  SHOW_TOAST
 } from '../constants/ActionTypes';
 import uuid from 'uuid';
+
+export function showToast() {
+  return (dispatch) => dispatch({
+    type: SHOW_TOAST
+  })
+}
 
 export function createAnonymousUserIfNeeded() {
   return (dispatch, getState) => {
