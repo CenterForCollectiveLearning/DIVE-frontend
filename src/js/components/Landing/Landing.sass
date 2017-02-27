@@ -42,7 +42,6 @@
   background-size: cover
   background-position: 50% 0%
 
-
 .ctaBox
   display: flex
   // margin-top: 70px
@@ -55,9 +54,12 @@
   align-items: center
   flex-shrink: 0
   &:before
+    +move-bg-animation
+      
     background: url(../../../assets/images/landing_background.png) no-repeat
     background-size: cover
-    background-position: 50% 0%
+    background-position: 0% 0%
+
     opacity: 0.7
 
     position: absolute

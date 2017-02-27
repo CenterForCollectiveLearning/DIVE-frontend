@@ -156,6 +156,19 @@ $break-large: 1200px
   cursor: pointer
   outline: none
 
+@keyframes move-bg
+  from
+    background-position-x: 0%
+  to
+    background-position-x: 100%
+
+=move-bg-animation
+  animation-name: move-bg
+  animation-duration: 45s
+  animation-direction: alternate
+  animation-timing-function: easeInOutQuart
+  animation-iteration-count: infinite
+
 .headerControlRow
   display: flex
   flex-direction: row-reverse
