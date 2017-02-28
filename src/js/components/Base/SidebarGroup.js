@@ -17,22 +17,22 @@ export default class SidebarGroup extends Component {
     }
   }
 
-  _showHoverText() {
+  _showHoverText = () => {
     this.setState({ showHelperText: true });
   }
 
-  _hideHoverText() {
+  _hideHoverText = () => {
     this.setState({ showHelperText: false });
   }
 
-  onClickCollapse() {
+  onClickCollapse = () => {
     this.setState({
         collapsed: !this.state.collapsed
     });
   }
 
   render() {
-    const { className, helperText, helperTextPosition, collapsable } = this.props;
+    const { className, helperText, helperTextPosition, collapsable, rightAction } = this.props;
     const { collapsed, showHelperText } = this.state;
 
     const noop = () => {};
@@ -48,25 +48,28 @@ export default class SidebarGroup extends Component {
         ( collapsed ? (' ' + styles.collapsed) : '')
       }>
         { this.props.heading &&
-          <div className={ styles.sidebarGroupHeading } onClick={ collapsable ? this.onClickCollapse.bind(this) : noop}>
+          <div className={ styles.sidebarGroupHeading } onClick={ collapsable ? this.onClickCollapse : noop}>
             <span className={ styles.headingName }>{ this.props.heading }</span>
-            { helperText &&
-              <Popover content={ popoverContent }
-                interactionKind={ PopoverInteractionKind.HOVER }
-                popoverClassName="pt-popover-content-sizing"
-                position={ helperTextPosition }
-                useSmartPositioning={ false }
-                useSmartArrowPositioning={ true }
-                transitionDuration={ 100 }
-                hoverOpenDelay={ 100 }
-                hoverCloseDelay={ 100 }
-              >
-                <i
-                  className={'fa fa-question-circle' + ' ' + styles.helperButton }
-                />
-             </Popover>
-            }
-            { collapsable && <span className={ styles.collapseArrow }/> }
+            <div className={ styles.pullRight }>
+              { helperText &&
+                <Popover content={ popoverContent }
+                  interactionKind={ PopoverInteractionKind.HOVER }
+                  popoverClassName="pt-popover-content-sizing"
+                  position={ helperTextPosition }
+                  useSmartPositioning={ false }
+                  useSmartArrowPositioning={ true }
+                  transitionDuration={ 100 }
+                  hoverOpenDelay={ 100 }
+                  hoverCloseDelay={ 100 }
+                >
+                  <i
+                    className={'fa fa-question-circle' + ' ' + styles.helperButton }
+                  />
+               </Popover>
+              }
+              { rightAction && <span className={ styles.rightAction }>{ rightAction }</span> }
+              { collapsable && <span className={ styles.collapseArrow }/> }
+            </div>
           </div>
         }
         <div className={ styles.sidebarGroupContent +
@@ -87,7 +90,9 @@ SidebarGroup.propTypes = {
   heading: PropTypes.string,
   helperText: PropTypes.string,
   helperTextPosition: PropTypes.number,
-  collapsable: PropTypes.bool
+  initialCollapse: PropTypes.bool,
+  collapsable: PropTypes.bool,
+  rightAction: PropTypes.node
 };
 
 SidebarGroup.defaultProps = {

@@ -26,7 +26,7 @@ export default class Loader extends Component {
           </div>
         }
         {
-          (!error && text) && <div className={ styles.text }>{ text }</div>
+          (!error && text) && <div className={ styles.text + ' pt-monospace-text' }>{ text }</div>
         }
         { error &&
           <NonIdealState

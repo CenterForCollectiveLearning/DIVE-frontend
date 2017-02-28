@@ -32,7 +32,7 @@ export default class SidebarCategoryGroup extends Component {
   }
 
   render() {
-    const { className, helperText, helperTextPosition } = this.props;
+    const { className, helperText, helperTextPosition, iconName, collapsable, initialCollapse, rightAction } = this.props;
     const { collapsed, showHelperText } = this.state;
 
     let popoverContent = (
@@ -48,27 +48,30 @@ export default class SidebarCategoryGroup extends Component {
       }>
         { this.props.heading &&
           <div className={ styles.sidebarGroupHeading + ' ' + styles.sidebarCategoryGroupHeading } onClick={ this.onClickCollapse.bind(this) }>
-            <span className={ styles.headingName }>{ this.props.heading }</span>
-            { helperText &&
-              <Popover content={ popoverContent }
-                interactionKind={ PopoverInteractionKind.HOVER }
-                popoverClassName="pt-popover-content-sizing"
-                position={ helperTextPosition }
-                useSmartPositioning={ false }
-                useSmartArrowPositioning={ true }
-                transitionDuration={ 100 }
-                hoverOpenDelay={ 100 }
-                hoverCloseDelay={ 100 }
-              >
-                <i
-                  className={'fa fa-question-circle' + ' ' + styles.helperButton }
-                />
-             </Popover>
-            }
-            <span className={ styles.collapseArrow }/>
+            <span className={ styles.headingName }>{ iconName && <span className={ `pt-icon-standard pt-icon-${ iconName } ` + styles.icon }  />} { this.props.heading }</span>
+              <div className={ styles.pullRight }>
+              { helperText &&
+                <Popover content={ popoverContent }
+                  interactionKind={ PopoverInteractionKind.HOVER }
+                  popoverClassName="pt-popover-content-sizing"
+                  position={ helperTextPosition }
+                  useSmartPositioning={ false }
+                  useSmartArrowPositioning={ true }
+                  transitionDuration={ 100 }
+                  hoverOpenDelay={ 100 }
+                  hoverCloseDelay={ 100 }
+                >
+                  <i
+                    className={'fa fa-question-circle' + ' ' + styles.helperButton }
+                  />
+               </Popover>
+              }
+              { rightAction && <span className={ styles.rightAction }>{ rightAction }</span> }
+              { collapsable && <span className={ styles.collapseArrow }/> }
+            </div>
           </div>
         }
-        <div className={ styles.sidebarGroupContent +
+        <div className={ styles.sidebarGroupContent + ' ' + styles.sidebarCategoryGroupContent + ' ' +
           ( this.props.className ? (' ' + this.props.className) : '') +
           (this.props.stacked ? ' ' + styles.stacked : '')
         }>
@@ -86,12 +89,16 @@ SidebarCategoryGroup.propTypes = {
   heading: PropTypes.string,
   helperText: PropTypes.string,
   helperTextPosition: PropTypes.number,
-  initialCollapse: PropTypes.bool
+  initialCollapse: PropTypes.bool,
+  collapsable: PropTypes.bool,
+  iconName: PropTypes.string,
+  rightAction: PropTypes.node
 };
 
 SidebarCategoryGroup.defaultProps = {
   className: "",
   heading: "",
   helperTextPosition: Position.LEFT,
-  initialCollapse: false
+  initialCollapse: false,
+  collapsable: true
 }

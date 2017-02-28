@@ -8,6 +8,7 @@ import styles from '../Visualizations.sass';
 
 import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
+import SidebarCategoryGroup from '../../Base/SidebarCategoryGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 import RaisedButton from '../../Base/RaisedButton';
@@ -53,89 +54,89 @@ export class SingleVisualizationSidebar extends Component {
 
     return (
       <Sidebar>
-        { visualizationType && visualizationTypes.length > 1 &&
-          <SidebarGroup heading="Visualization type">
-            <ToggleButtonGroup
-              toggleItems={ visualizationTypes }
-              displayTextMember="label"
-              valueMember="type"
-              imageNameMember="imageName"
-              imageNameSuffix=".chart.svg"
-              onChange={ selectSingleVisualizationVisualizationType } />
-          </SidebarGroup>
-        }
-        { (visualizationType == 'bar' || visualizationType == 'box') &&
-          <SidebarGroup heading="Sort by">
-            <div className={ styles.sortGroup }>
+        <SidebarCategoryGroup heading="Visualization Options" iconName="chart">
+          { visualizationType && visualizationTypes.length > 1 &&
+            <SidebarGroup heading="Visualization type">
               <ToggleButtonGroup
-                className={ styles.sortFields }
-                toggleItems={ visualization.sortFields }
-                valueMember="id"
-                displayTextMember="name"
-                separated={ (visualization.sortFields.length > 3) }
-                onChange={ selectSingleVisualizationSortField } />
-              <ToggleButtonGroup
-                className={ styles.sortOrder }
-                toggleItems={ visualization.sortOrders.map((sortOrder) => new Object({...sortOrder, icon: <i className={ sortOrder.iconName }></i> })) }
-                valueMember="id"
-                displayTextMember="icon"
-                altTextMember="name"
-                onChange={ selectSingleVisualizationSortOrder } />
-            </div>
-          </SidebarGroup>
-        }
-        { visualizationType == 'hist' &&
-          <BinningSelector
-            config={ visualization.spec.config }
-            selectBinningConfig={ selectVisualizationBinningConfig } />
-        }
-        { (visualizationType == 'hist' || visualizationType == 'bar' || visualizationType == 'scatter') &&
-          <SidebarGroup heading="Vertical axis scale">
-              <DropDownMenu
-                value={ visualization.config.vScaleType }
-                options={ visualization.configOptions.scaleType }
-                valueMember="value"
+                toggleItems={ visualizationTypes }
                 displayTextMember="label"
-                onChange={ (value) => selectVisualizationConfig('vScaleType', value) }/>
-          </SidebarGroup>
-        }
-        { (visualizationType == 'scatter') &&
-          <SidebarGroup heading="Horizontal axis scale">
-              <DropDownMenu
-                value={ visualization.config.hScaleType }
-                options={ visualization.configOptions.scaleType }
-                valueMember="value"
-                displayTextMember="label"
-                onChange={ (value) => selectVisualizationConfig('hScaleType', value) }/>
-          </SidebarGroup>
-        }
-        { (visualizationType == 'bar') &&
-          <SidebarGroup heading="Legend">
-              <DropDownMenu
-                value={ visualization.config.legendPosition }
-                options={ visualization.configOptions.legendPosition }
-                valueMember="value"
-                displayTextMember="label"
-                onChange={ (value) => selectVisualizationConfig('legendPosition', value) } />
-          </SidebarGroup>
-        }
-        { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
-          <SidebarGroup heading="Filter by field">
-            { conditionals.items.map((conditional, i) =>
-              <div key={ conditional.conditionalId }>
-                <ConditionalSelector
-                  conditionalIndex={ i }
-                  conditionalId={ conditional.conditionalId }
-                  fieldId={ conditional.fieldId }
-                  combinator={ conditional.combinator }
-                  operator={ conditional.operator }
-                  value={ conditional.value }
-                  fieldProperties={ fieldProperties.items }
-                  selectConditionalValue={ selectConditional }/>
+                valueMember="type"
+                imageNameMember="imageName"
+                imageNameSuffix=".chart.svg"
+                onChange={ selectSingleVisualizationVisualizationType } />
+            </SidebarGroup>
+          }
+          { (visualizationType == 'bar' || visualizationType == 'box') &&
+            <SidebarGroup heading="Sort by">
+              <div className={ styles.sortGroup }>
+                <ToggleButtonGroup
+                  className={ styles.sortFields }
+                  toggleItems={ visualization.sortFields }
+                  valueMember="id"
+                  displayTextMember="name"
+                  separated={ (visualization.sortFields.length > 3) }
+                  onChange={ selectSingleVisualizationSortField } />
+                <ToggleButtonGroup
+                  className={ styles.sortOrder }
+                  toggleItems={ visualization.sortOrders.map((sortOrder) => new Object({...sortOrder, icon: <i className={ sortOrder.iconName }></i> })) }
+                  valueMember="id"
+                  displayTextMember="icon"
+                  altTextMember="name"
+                  onChange={ selectSingleVisualizationSortOrder } />
               </div>
-            )}
-          </SidebarGroup>
-        }
+            </SidebarGroup>
+          }
+          { visualizationType == 'hist' &&
+            <BinningSelector
+              config={ visualization.spec.config }
+              selectBinningConfig={ selectVisualizationBinningConfig } />
+          }
+          { (visualizationType == 'hist' || visualizationType == 'bar' || visualizationType == 'scatter') &&
+            <SidebarGroup heading="Vertical axis scale">
+                <DropDownMenu
+                  value={ visualization.config.vScaleType }
+                  options={ visualization.configOptions.scaleType }
+                  valueMember="value"
+                  displayTextMember="label"
+                  onChange={ (value) => selectVisualizationConfig('vScaleType', value) }/>
+            </SidebarGroup>
+          }
+          { (visualizationType == 'scatter') &&
+            <SidebarGroup heading="Horizontal axis scale">
+                <DropDownMenu
+                  value={ visualization.config.hScaleType }
+                  options={ visualization.configOptions.scaleType }
+                  valueMember="value"
+                  displayTextMember="label"
+                  onChange={ (value) => selectVisualizationConfig('hScaleType', value) }/>
+            </SidebarGroup>
+          }
+          { (visualizationType == 'bar') &&
+            <SidebarGroup heading="Legend">
+                <DropDownMenu
+                  value={ visualization.config.legendPosition }
+                  options={ visualization.configOptions.legendPosition }
+                  valueMember="value"
+                  displayTextMember="label"
+                  onChange={ (value) => selectVisualizationConfig('legendPosition', value) } />
+            </SidebarGroup>
+          }
+        </SidebarCategoryGroup>
+        <SidebarCategoryGroup heading="Filters" iconName="filter">
+          { fieldProperties.items.length != 0 && conditionals.items.length != 0 && conditionals.items.map((conditional, i) =>
+            <div key={ conditional.conditionalId }>
+              <ConditionalSelector
+                conditionalIndex={ i }
+                conditionalId={ conditional.conditionalId }
+                fieldId={ conditional.fieldId }
+                combinator={ conditional.combinator }
+                operator={ conditional.operator }
+                value={ conditional.value }
+                fieldProperties={ fieldProperties.items }
+                selectConditionalValue={ selectConditional }/>
+            </div>
+          )}
+        </SidebarCategoryGroup>
       </Sidebar>
     );
   }

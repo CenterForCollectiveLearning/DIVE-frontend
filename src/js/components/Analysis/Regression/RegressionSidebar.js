@@ -163,7 +163,7 @@ export class RegressionSidebar extends Component {
     return (
       <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
-          <SidebarCategoryGroup heading="Regression Options" initialCollapse={ true }>
+          <SidebarCategoryGroup heading="Regression Options" initialCollapse={ true } iconName='predictive-analysis'>
             <Button
               className={ 'pt-fill ' + styles.recommendModelButton + ( recommended ? ' .pt-active' : '' )}
               iconName='predictive-analysis'
@@ -195,7 +195,7 @@ export class RegressionSidebar extends Component {
             </SidebarGroup>
           </SidebarCategoryGroup>
         }
-        <SidebarCategoryGroup heading="Variable Selection">
+        <SidebarCategoryGroup heading="Variable Selection" iconName="variable">
           { fieldProperties.items.length != 0 &&
             <SidebarGroup heading="Dependent Variable (Y)">
               <DropDownMenu
@@ -207,18 +207,17 @@ export class RegressionSidebar extends Component {
             </SidebarGroup>
           }
           { fieldProperties.items.length != 0 &&
-            <SidebarGroup heading="Explanatory Factors (X)">
+            <SidebarGroup
+              heading="Explanatory Factors (X)"
+              rightAction={ independentVariablesIds.length > 0 &&
+                <div className={ 'pt-icon-standard pt-icon-delete' }
+                  onClick={ (v) => this.clickClearKeyFromQueryString('independentVariablesIds') } />
+              }
+            >
               { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
                 <div className={ styles.fieldGroup }>
                   <div className={ styles.fieldGroupHeader }>
                     <div className={ styles.fieldGroupLabel }>Categorical</div>
-                    { independentVariablesIds.length > 0 &&
-                      <div className={ styles.fieldGroupAction }
-                        onClick={ (v) => this.clickClearKeyFromQueryString('independentVariablesIds') }>
-                        <span>Deselect All</span>
-                        <span className="pt-icon-standard pt-icon-delete" />
-                      </div>
-                    }
                   </div>
                   <ToggleButtonGroup
                     toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
@@ -303,7 +302,7 @@ export class RegressionSidebar extends Component {
             <SidebarGroup
               className={ styles.interactionTermsSidebarGroup }
               stacked={ true }
-              heading="Add Interaction Terms"
+              heading="Interaction Terms"
             >
               <div className={ styles.sideBySideDropdowns }>
                 <DropDownMenu
@@ -328,26 +327,33 @@ export class RegressionSidebar extends Component {
                   displayTextMember="name"
                   onChange={this.onAddInteractionTerm.bind(this, 1)} />
               </div>
-              <RaisedButton altText="Add" label="Add" centered={true} onClick={this.onCreateInteractionTerm.bind(this)}/>
+              {
+                interactionVariables[0] && interactionVariables[1] &&
+                <Button
+                  intent={ Intent.PRIMARY }
+                  className="pt-fill"
+                  text="Add"
+                  onClick={this.onCreateInteractionTerm.bind(this) }
+                />
+              }
+
             </SidebarGroup>
           }
-          { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
-            <SidebarGroup heading="Filter by field">
-              { conditionals.items.map((conditional, i) =>
-                <div key={ conditional.conditionalId }>
-                  <ConditionalSelector
-                    conditionalIndex={ i }
-                    conditionalId={ conditional.conditionalId }
-                    fieldId={ conditional.fieldId }
-                    combinator={ conditional.combinator }
-                    operator={ conditional.operator }
-                    value={ conditional.value }
-                    fieldProperties={ fieldProperties.items }
-                    selectConditionalValue={ selectConditional }/>
-                </div>
-              )}
-            </SidebarGroup>
-          }
+          </SidebarCategoryGroup>
+          <SidebarCategoryGroup heading="Filters" initialCollapse={ true } iconName="filter">
+            { fieldProperties.items.length != 0 && conditionals.items.length != 0 && conditionals.items.map((conditional, i) =>
+              <div key={ conditional.conditionalId }>
+                <ConditionalSelector
+                  conditionalIndex={ i }
+                  conditionalId={ conditional.conditionalId }
+                  fieldId={ conditional.fieldId }
+                  combinator={ conditional.combinator }
+                  operator={ conditional.operator }
+                  value={ conditional.value }
+                  fieldProperties={ fieldProperties.items }
+                  selectConditionalValue={ selectConditional }/>
+              </div>
+            )}
         </SidebarCategoryGroup>
       </Sidebar>
     );
