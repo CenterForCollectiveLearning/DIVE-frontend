@@ -7,35 +7,33 @@ import styles from './Sidebar.sass';
 
 import { HELPER_TEXT } from './HelperText'
 
-export default class SidebarGroup extends Component {
+export default class SidebarCategoryGroup extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      collapsed: false,
+      collapsed: props.initialCollapse,
       showHelperText: false
     }
   }
 
-  _showHoverText = () => {
+  _showHoverText() {
     this.setState({ showHelperText: true });
   }
 
-  _hideHoverText = () => {
+  _hideHoverText() {
     this.setState({ showHelperText: false });
   }
 
-  onClickCollapse = () => {
+  onClickCollapse() {
     this.setState({
         collapsed: !this.state.collapsed
     });
   }
 
   render() {
-    const { className, helperText, helperTextPosition, collapsable, rightAction } = this.props;
+    const { className, helperText, helperTextPosition, iconName, collapsable, initialCollapse, rightAction } = this.props;
     const { collapsed, showHelperText } = this.state;
-
-    const noop = () => {};
 
     let popoverContent = (
       <div>
@@ -44,13 +42,14 @@ export default class SidebarGroup extends Component {
     );
 
     return (
-      <div className={ styles.sidebarGroup +
+      <div className={ styles.sidebarGroup + ' ' +
+        styles.sidebarCategoryGroup +
         ( collapsed ? (' ' + styles.collapsed) : '')
       }>
         { this.props.heading &&
-          <div className={ styles.sidebarGroupHeading } onClick={ collapsable ? this.onClickCollapse : noop}>
-            <span className={ styles.headingName }>{ this.props.heading }</span>
-            <div className={ styles.pullRight }>
+          <div className={ styles.sidebarGroupHeading + ' ' + styles.sidebarCategoryGroupHeading } onClick={ this.onClickCollapse.bind(this) }>
+            <span className={ styles.headingName }>{ iconName && <span className={ `pt-icon-standard pt-icon-${ iconName } ` + styles.icon }  />} { this.props.heading }</span>
+              <div className={ styles.pullRight }>
               { helperText &&
                 <Popover content={ popoverContent }
                   interactionKind={ PopoverInteractionKind.HOVER }
@@ -72,7 +71,7 @@ export default class SidebarGroup extends Component {
             </div>
           </div>
         }
-        <div className={ styles.sidebarGroupContent +
+        <div className={ styles.sidebarGroupContent + ' ' + styles.sidebarCategoryGroupContent + ' ' +
           ( this.props.className ? (' ' + this.props.className) : '') +
           (this.props.stacked ? ' ' + styles.stacked : '')
         }>
@@ -84,7 +83,7 @@ export default class SidebarGroup extends Component {
   }
 }
 
-SidebarGroup.propTypes = {
+SidebarCategoryGroup.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
   heading: PropTypes.string,
@@ -92,12 +91,14 @@ SidebarGroup.propTypes = {
   helperTextPosition: PropTypes.number,
   initialCollapse: PropTypes.bool,
   collapsable: PropTypes.bool,
+  iconName: PropTypes.string,
   rightAction: PropTypes.node
 };
 
-SidebarGroup.defaultProps = {
+SidebarCategoryGroup.defaultProps = {
   className: "",
   heading: "",
   helperTextPosition: Position.LEFT,
-  collapsable: false
+  initialCollapse: false,
+  collapsable: true
 }

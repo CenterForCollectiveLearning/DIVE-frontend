@@ -16,7 +16,10 @@
   .sidebarGroup
     display: flex
     flex-direction: column
-    padding-bottom: 20px
+
+    &:last-child
+      .sidebarGroupContent
+        padding-bottom: 0px
 
     &.collapsed
       .collapseArrow
@@ -36,46 +39,87 @@
     .sidebarGroupHeading
       display: flex
       flex-direction: row
-      padding: 10px 0px 5px 0px
-      border-bottom: 1px solid rgba($small-caps-grey, 0.2)
       cursor: pointer
+      padding-bottom: 4px
+      align-items: flex-start
 
       .headingName
-        +greyHeading
+        +smallCapsBold
+        line-height: 18px
 
-      .collapseArrow
-        cursor: pointer
-        margin-top: 6px
+      .pullRight
         margin-left: auto
-        border-color: #999 transparent transparent
-        border-style: solid
-        border-width: 5px 5px 2.5px
-        display: inline-block
-        height: 0
-        width: 0
 
-      .helperText
-        +regularText
-        position: absolute
-        top: 20px
-        right: 20px
-        z-index: 1000
-        background-color: $center-grey
-        border: 1px solid $ui-line-grey
-        width: 300px
-        padding: 12px 20px
-        display: table
+        > span
+          &:first-child
+            margin-left: 0px
+          margin-left: 5px
 
-      .helperButton
-        margin-left: 6px
-        cursor: pointer
-        z-index: 10000
-        color: $ui-line-grey
-        &:hover
+        .helperText
+          +regularText
+          position: absolute
+          top: 20px
+          right: 20px
+          z-index: 1000
+          background-color: $center-grey
+          border: 1px solid $ui-line-grey
+          width: 300px
+          padding: 12px 20px
+          display: table
+
+        .helperButton
+          position: relative
+          top: -2px
+          margin-left: 6px
+          cursor: pointer
+          z-index: 10000
+          color: $ui-line-grey
+          &:hover
+            color: $primary-accent
+
+        .rightAction
           color: $primary-accent
 
-    .sidebarGroupContent
-      padding-top: 10px
+        .collapseArrow
+          cursor: pointer
+          margin-top: 6px
+          border-color: #999 transparent transparent
+          border-style: solid
+          border-width: 5px 5px 2.5px
+          display: inline-block
+          height: 0
+          width: 0
 
+    .sidebarGroupContent
+      padding-bottom: 20px
+      
     .stacked
       display: flex
+
+  .sidebarCategoryGroup
+    &.collapsed
+      .sidebarCategoryGroupHeading
+        padding-bottom: 8px
+
+    &:last-child
+      border-bottom: 1px solid rgba($small-caps-grey, 0.2)
+      &.collapsed
+        border-bottom: none
+        .sidebarCategoryGroupHeading
+          border-bottom: 1px solid rgba($small-caps-grey, 0.2)
+
+    .sidebarCategoryGroupHeading
+      font-weight: bold
+      margin: 0 -15px
+      padding: 8px 10px
+      padding-bottom: 0px
+      padding-right: 0px
+      margin-right: 0px
+      border-top: 1px solid rgba($small-caps-grey, 0.2)
+
+      .icon
+        padding-right: 3px
+
+
+    .sidebarCategoryGroupContent
+      padding: 20px 0

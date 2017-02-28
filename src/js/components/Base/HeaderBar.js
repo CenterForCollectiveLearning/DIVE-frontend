@@ -39,7 +39,7 @@ export default class HeaderBar extends Component {
         + (className ? ' ' + className : '')
         + (header ? ' ' + styles.hasHeaderText : '')
       }>
-        <div className={
+        <h4 className={
           styles.headerText
           + (textClassName ? ' ' + textClassName : '')
           + (subheader ? '' : ' ' + styles.singleLine)
@@ -50,7 +50,7 @@ export default class HeaderBar extends Component {
               { subheader }
             </div>
           }
-        </div>
+        </h4>
         <div className={ styles.headerRightActions }>
           { helperText &&
             <Popover content={ popoverContent }

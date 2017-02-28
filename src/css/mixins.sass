@@ -128,15 +128,21 @@ $break-large: 1200px
 
 =greyHeading
   +noSelect
-  font-size: 14px
+  font-size: 12px
   color: $small-caps-grey
 
 =smallCaps
   +noSelect
-  font-size: 14px
-  // font-weight: 500
+  font-size: 12px
   text-transform: uppercase
-  color: $small-caps-grey
+  letter-spacing: 0.5px
+  font-family: 'Roboto'
+  color: $black
+  // color: $small-caps-grey
+
+=smallCapsBold
+  +smallCaps
+  font-weight: bold
 
 =watermark
   +titleText
@@ -164,7 +170,7 @@ $break-large: 1200px
 
 =move-bg-animation
   animation-name: move-bg
-  animation-duration: 45s
+  animation-duration: 30s
   animation-direction: alternate
   animation-timing-function: easeInOutQuart
   animation-iteration-count: infinite

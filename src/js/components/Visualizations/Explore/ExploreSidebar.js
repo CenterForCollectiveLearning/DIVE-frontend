@@ -12,6 +12,7 @@ import _ from 'underscore';
 
 import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
+import SidebarCategoryGroup from '../../Base/SidebarCategoryGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 
@@ -76,116 +77,119 @@ export class ExploreSidebar extends Component {
 
     return (
       <Sidebar>
-        <SidebarGroup heading="Recommendation Mode">
-          <ToggleButtonGroup
-            toggleItems={ exploreSelector.recommendationModes }
-            displayTextMember="name"
-            valueMember="id"
-            separated={ false }
-            externalSelectedItems={ [ recommendationMode ] }
-            onChange={ (v) => this.clickQueryStringTrackedItem({ recommendationMode: v }, false) } />
-        </SidebarGroup>
-        <SidebarGroup heading="Sort By">
-          <DropDownMenu
-            options={ exploreSelector.sortingFunctions }
-            valueMember="value"
-            displayTextMember="label"
-            value={ sortBy }
-            onChange={ (v) => this.clickQueryStringTrackedItem({ sortBy: v }, false) } />
-        </SidebarGroup>
-        { visualizationTypes.length > 1 &&
-          <SidebarGroup heading="Filter Visualization type">
+        <SidebarCategoryGroup heading="Recommendation Options" initialCollapse={ true } iconName="predictive-analysis">
+          <SidebarGroup heading="Recommendation Mode">
             <ToggleButtonGroup
-              toggleItems={ activeVisualizationTypes }
+              toggleItems={ exploreSelector.recommendationModes }
+              displayTextMember="name"
+              valueMember="id"
+              separated={ false }
+              externalSelectedItems={ [ recommendationMode ] }
+              onChange={ (v) => this.clickQueryStringTrackedItem({ recommendationMode: v }, false) } />
+          </SidebarGroup>
+          <SidebarGroup heading="Sort By">
+            <DropDownMenu
+              options={ exploreSelector.sortingFunctions }
+              valueMember="value"
               displayTextMember="label"
-              expand={ false }
-              valueMember="type"
-              imageNameMember="imageName"
-              imageNameSuffix=".chart.svg"
-              externalSelectedItems={ filteredVisualizationTypes }
-              onChange={ (v) => this.clickQueryStringTrackedItem({ filteredVisualizationTypes: [ v ] }, false) } />
+              value={ sortBy }
+              onChange={ (v) => this.clickQueryStringTrackedItem({ sortBy: v }, false) } />
           </SidebarGroup>
-        }
-        { fieldProperties.items.length > 0 &&
-          <SidebarGroup heading="Select Fields to Visualize">
-            { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupHeader }>
-                  <div className={ styles.fieldGroupLabel }>Categorical</div>
-                  { (fieldIds.length > 0) &&
-                    <div className={ styles.fieldGroupAction }
-                      onClick={ (v) => this.clickClearKeyFromQueryString('fieldIds') }>
-                      Deselect All
-                    </div>
-                  }
-                </div>
-                <ToggleButtonGroup
-                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
-                    new Object({
-                      id: item.id,
-                      name: item.name,
-                      selected: item.selected,
-                      disabled: item.isId,
-                      color: item.color
-                    })
-                  )}
-                  displayTextMember="name"
-                  valueMember="id"
-                  colorMember="color"
-                  splitMenuItemsMember="values"
-                  separated={ true }
-                  selectMenuItem={ this.clickFieldPropertyValue }
-                  externalSelectedItems={ fieldIds }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ fieldIds: [ parseInt(v) ]}) } />
+          { visualizationTypes.length > 1 &&
+            <SidebarGroup heading="Filter Visualization type">
+              <ToggleButtonGroup
+                toggleItems={ activeVisualizationTypes }
+                displayTextMember="label"
+                expand={ false }
+                valueMember="type"
+                imageNameMember="imageName"
+                imageNameSuffix=".chart.svg"
+                externalSelectedItems={ filteredVisualizationTypes }
+                onChange={ (v) => this.clickQueryStringTrackedItem({ filteredVisualizationTypes: [ v ] }, false) } />
+            </SidebarGroup>
+          }
+        </SidebarCategoryGroup>
+        <SidebarCategoryGroup
+          heading="Variable Selection"
+          initialCollapse={ false }
+          iconName="variable"
+          rightAction={ (fieldIds.length > 0) &&
+            <div className={ 'pt-icon-standard pt-icon-delete' }
+              onClick={ (v) => this.clickClearKeyFromQueryString('fieldIds') }
+            />
+          }
+        >
+          { fieldProperties.items.length > 0 && fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
+            <div className={ styles.fieldGroup }>
+              <div className={ styles.fieldGroupHeader }>
+                <div className={ styles.fieldGroupLabel }>Categorical</div>
               </div>
-            }
-            { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Temporal</div>
-                <ToggleButtonGroup
-                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
-                    new Object({
-                      id: item.id,
-                      name: item.name,
-                      selected: item.selected,
-                      disabled: item.isId,
-                      color: item.color
-                    })
-                  )}
-                  displayTextMember="name"
-                  valueMember="id"
-                  colorMember="color"
-                  separated={ true }
-                  selectMenuItem={ selectAggregationFunction }
-                  externalSelectedItems={ fieldIds }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ fieldIds: [ parseInt(v) ]}) } />
-              </div>
-            }
-            { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Quantitative</div>
-                <ToggleButtonGroup
-                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
-                    new Object({
-                      id: item.id,
-                      name: item.name,
-                      selected: item.selected,
-                      disabled: item.isId,
-                      color: item.color
-                    })
-                  )}
-                  displayTextMember="name"
-                  valueMember="id"
-                  colorMember="color"
-                  splitMenuItemsMember="aggregations"
-                  separated={ true }
-                  selectMenuItem={ selectAggregationFunction }
-                  externalSelectedItems={ fieldIds }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ fieldIds: [ parseInt(v) ]}) } />
-              </div>
-            }
-          </SidebarGroup>
-        }
+              <ToggleButtonGroup
+                toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
+                  new Object({
+                    id: item.id,
+                    name: item.name,
+                    selected: item.selected,
+                    disabled: item.isId,
+                    color: item.color
+                  })
+                )}
+                displayTextMember="name"
+                valueMember="id"
+                colorMember="color"
+                splitMenuItemsMember="values"
+                separated={ true }
+                selectMenuItem={ this.clickFieldPropertyValue }
+                externalSelectedItems={ fieldIds }
+                onChange={ (v) => this.clickQueryStringTrackedItem({ fieldIds: [ parseInt(v) ]}) } />
+            </div>
+          }
+          { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
+            <div className={ styles.fieldGroup }>
+              <div className={ styles.fieldGroupLabel }>Temporal</div>
+              <ToggleButtonGroup
+                toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
+                  new Object({
+                    id: item.id,
+                    name: item.name,
+                    selected: item.selected,
+                    disabled: item.isId,
+                    color: item.color
+                  })
+                )}
+                displayTextMember="name"
+                valueMember="id"
+                colorMember="color"
+                separated={ true }
+                selectMenuItem={ selectAggregationFunction }
+                externalSelectedItems={ fieldIds }
+                onChange={ (v) => this.clickQueryStringTrackedItem({ fieldIds: [ parseInt(v) ]}) } />
+            </div>
+          }
+          { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
+            <div className={ styles.fieldGroup }>
+              <div className={ styles.fieldGroupLabel }>Quantitative</div>
+              <ToggleButtonGroup
+                toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
+                  new Object({
+                    id: item.id,
+                    name: item.name,
+                    selected: item.selected,
+                    disabled: item.isId,
+                    color: item.color
+                  })
+                )}
+                displayTextMember="name"
+                valueMember="id"
+                colorMember="color"
+                splitMenuItemsMember="aggregations"
+                separated={ true }
+                selectMenuItem={ selectAggregationFunction }
+                externalSelectedItems={ fieldIds }
+                onChange={ (v) => this.clickQueryStringTrackedItem({ fieldIds: [ parseInt(v) ]}) } />
+            </div>
+          }
+        </SidebarCategoryGroup>
       </Sidebar>
     );
   }
