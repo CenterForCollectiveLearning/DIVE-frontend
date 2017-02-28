@@ -17,7 +17,7 @@ export default class ComposeVisualizationPreviewBlock extends Component {
     const { spec, fieldNameToColor } = this.props;
 
     return (
-      <div className={ styles.contentPreviewBlockContainer }
+      <div className={ styles.contentPreviewBlockContainer + ' pt-card pt-interactive' }
            onClick={ this.handleClick.bind(this) }>
         <Visualization
           headerClassName={ styles.visualizationPreviewBlockHeader }

@@ -35,7 +35,7 @@ $secondary-accent: #004491
 $navbar-top-logo-height: 48px
 $top-bar-height: 55px
 $left-sidebar-width: 155px
-$right-sidebar-width: 264px
+$right-sidebar-width: 280px
 $center-pane-width: calc(100% - #{$right-sidebar-width})
 
 // Media Query Sizes
@@ -162,6 +162,30 @@ $break-large: 1200px
   cursor: pointer
   outline: none
 
+=heading($font-size, $line-height)
+  color: $dark-gray1
+  font-weight: 600
+  font-size: $font-size
+  line-height: $line-height
+
+=h1
+  +heading(40px, 0.8em)
+
+=h2
+  +heading(27px, 0.8em)
+
+=h3
+  +heading(24px, 0.8em)
+
+=h4
+  +heading(20px, 0.9em)
+
+=h5
+  +heading(17px, 0.9em)
+
+=h6
+  +heading(15px, 0.9em)
+
 @keyframes move-bg
   from
     background-position-x: 0%
@@ -190,26 +214,6 @@ $break-large: 1200px
 
   &.headerControlLong
     min-width: 160px
-
-  > span
-    margin-right: 10px
-
-    white-space: nowrap
-    font-size: 13px
-    font-weight: 300
-
-  > div
-    margin-left: -1px
-    border-radius: 0
-
-    &:first-child
-      margin-left: 0px
-      border-top-left-radius: 3px
-      border-bottom-left-radius: 3px
-    &:last-child
-      border-top-right-radius: 3px
-      border-bottom-right-radius: 3px
-
 
 .sidebarDropdown
   margin-top: 1px
