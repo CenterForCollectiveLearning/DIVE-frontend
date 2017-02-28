@@ -5,10 +5,11 @@ import { selectComposeVisualization } from '../../actions/ComposeActions';
 
 import styles from './Compose.sass';
 
+import ColoredFieldItems from '../Base/ColoredFieldItems';
 import CorrelationTable from '../Analysis/Correlation/CorrelationTable';
 
 export default class ComposeCorrelationPreviewBlock extends Component {
-  handleClick() {
+  handleClick = () => {
     const { spec, onClick, id } = this.props;
     const headers = spec.data.headers;
     const desc = `Correlating ${ headers.slice(0, -1).join(', ') } and ${ headers.slice(-1) }`;
@@ -19,18 +20,11 @@ export default class ComposeCorrelationPreviewBlock extends Component {
     const { spec } = this.props;
 
     return (
-      <div className={ styles.contentPreviewBlockContainer }
-           onClick={ this.handleClick.bind(this) }>
+      <div className={ styles.contentPreviewBlockContainer + ' pt-card pt-interactive'}
+           onClick={ this.handleClick }>
         <div className={ styles.correlationBlock }>
            <span className={ styles.header + ' ' + styles.correlationHeader }>
-             Correlating {
-               spec.data.headers.map((name, i) =>
-                 <span
-                   key={ `correlation-title-${ name }-${ i }` }
-                   className={ `${ styles.field }` }>
-                   { name }
-                 </span>
-               )}
+             Correlating <ColoredFieldItems fields={ spec.data.headers } />
            </span>
           <CorrelationTable correlationResult={ spec.data || {} } preview={ true }/>
         </div>

@@ -35,7 +35,7 @@ export default class ComposeBlockVisualization extends Component {
       ((parentSize[0])*2/3) - 15 : absoluteMaxWidth;
 
     const width = isHalfWidthFormat ? 620 : absoluteMaxWidth;
-    const height = isHalfWidthFormat ? 300 : 400;
+    const height = isHalfWidthFormat ? 300 : null;
 
     const visualizationComponent = <Visualization
       chartId={ `full-compose-visualization-${ chartId }-${ updatedAt }-${ this.state.resizeCounter }` }

@@ -49,14 +49,14 @@ export default class ComposeEditor extends Component {
             + ( editable ? ' ' + styles.editable : '' )
           }>
           { saveStatus && <span className={ styles.saveStatus }>{ saveStatus }</span> }
-          <div className={ styles.editorHeaderText }>
+          <h4 className={ styles.editorHeaderText }>
             <Input
               className={ styles.documentTitle }
               readonly={ !editable }
               type="text"
               value={ this.state.documentHeading }
               onChange={ this.onTitleChange.bind(this) }/>
-          </div>
+          </h4>
         </div>
         <div className={ styles.composeEditor + ' ' + (editable ? styles.editable : '') }>
           { selectedDocument.blocks.map((block, i, blocks) =>
@@ -68,16 +68,6 @@ export default class ComposeEditor extends Component {
               length={ blocks.length }
               editable={ editable } />
           )}
-          { editable &&
-            <ComposeBlockPlaceholder
-              editable={ true }
-              exportedSpecs={ exportedSpecs }
-              exportedCorrelations={ exportedCorrelations }
-              exportedRegressions={ exportedRegressions }
-              selectComposeContent={ selectComposeContent }
-              fieldNameToColor={ fieldNameToColor }
-            />
-          }
         </div>
       </div>
     );
