@@ -72,7 +72,7 @@ export default class ColumnChart extends Component {
 
     return (
       <Chart
-        loader={ <div className={ 'pt-monospace-text' }>Rendering Chart...</div> }
+        loader={ <div className={ styles.renderChartText + ' pt-monospace-text' }>Rendering Chart...</div> }
         chartType="ColumnChart"
         options={ options }
         data={ finalData }

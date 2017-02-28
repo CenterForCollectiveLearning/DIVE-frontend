@@ -83,7 +83,7 @@ export default class BoxPlot extends Component {
 
     return (
       <Chart
-        loader={ <div className={ 'pt-monospace-text' }>Rendering Chart...</div> }
+        loader={ <div className={ styles.renderChartText + ' pt-monospace-text' }>Rendering Chart...</div> }
         chartType="LineChart"
         options={ options }
         data={ finalData }
