@@ -75,11 +75,11 @@ export class AggregationSidebar extends Component {
                     <div className={ styles.fieldGroupLabel }>Categorical</div>
                   </div>
                   <ToggleButtonGroup
-                    toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
+                    toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c' && !property.isId).map((item) =>
                       new Object({
                         id: item.id,
                         name: item.name,
-                        disabled: (item.id == aggregateOn) || item.isId,
+                        disabled: (item.id == aggregateOn),
                         color: item.color
                       })
                     )}

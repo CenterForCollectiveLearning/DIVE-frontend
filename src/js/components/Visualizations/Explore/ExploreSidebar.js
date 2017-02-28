@@ -125,7 +125,7 @@ export class ExploreSidebar extends Component {
                 <div className={ styles.fieldGroupLabel }>Categorical</div>
               </div>
               <ToggleButtonGroup
-                toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
+                toggleItems={ fieldProperties.items.filter((p) => p.generalType == 'c' && !p.isId).map((item) =>
                   new Object({
                     id: item.id,
                     name: item.name,
