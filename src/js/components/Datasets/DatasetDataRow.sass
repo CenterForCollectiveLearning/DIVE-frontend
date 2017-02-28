@@ -58,8 +58,6 @@
         justify-content: center
         text-align: center
         white-space: wrap
-        padding: 0 15px
-        font-size: 14px
 
         min-width: 100px
         width: 100px
@@ -68,9 +66,12 @@
           min-width: 160px
           width: 160px
 
-        .value
-          color: $primary-accent
+        .field
+          +smallCapsBold
+          // color: $small-caps-grey
 
+        .value
+          font-size: 14px
           &.inlineElements
             display: flex
             justify-content: center

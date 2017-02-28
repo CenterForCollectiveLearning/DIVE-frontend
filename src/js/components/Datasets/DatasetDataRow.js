@@ -192,7 +192,7 @@ class DatasetDataRow extends Component {
             </div>
           </div> }
           <div className={ styles.statistic }>
-            <div className={ styles.field }>Unique Values</div>
+            <div className={ styles.field }>Unique</div>
             <div className={ styles.value + ' ' + styles.inlineElements }>
               <Number value={ stats.unique } />
               <Number style={{ marginLeft: '3px' }} value={ (stats.unique / stats.count) * 100 } prefix='(' suffix='%)' />
@@ -200,7 +200,7 @@ class DatasetDataRow extends Component {
           </div>
           <div className={ styles.statistic + ' ' + styles.wide }>
             <div className={ styles.field }>Most Frequent</div>
-            <div className={ styles.value }>{ stats.top }<Number value={ stats.freq } prefix='(' suffix=')' /></div>
+            <div className={ styles.value  + ' ' + styles.inlineElements }><span>{ stats.top }</span><Number style={{ marginLeft: '2px'}} className={ styles.inline } value={ stats.freq } prefix='(' suffix=')' /></div>
           </div>
         </div> : <div/>;
     } else if ( generalType == 'q' ) {
