@@ -16,14 +16,6 @@ import BareDataGrid from '../../Base/BareDataGrid';
 import RaisedButton from '../../Base/RaisedButton';
 
 export class SingleVisualizationView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.saveVisualization = this.saveVisualization.bind(this);
-    this.onClickShare = this.onClickShare.bind(this);
-    this.onClickExplore = this.onClickExplore.bind(this);
-  }
-
   componentWillMount() {
     const { project, datasetSelector, datasets, specId, visualization, fetchSpecVisualizationIfNeeded } = this.props;
 
@@ -48,6 +40,8 @@ export class SingleVisualizationView extends Component {
       fetchDatasets(project.id);
     }
 
+    console.log('ConfigChanged:', configChanged, nextProps.visualization.config, visualization.config);
+
     if (nextProps.project.id && !visualization.isFetching && (!visualization.spec.id || conditionalsChanged || configChanged)) {
       fetchSpecVisualizationIfNeeded(nextProps.project.id, nextProps.specId, nextProps.conditionals.items, nextProps.visualization.config);
     }
@@ -57,7 +51,7 @@ export class SingleVisualizationView extends Component {
     }
   }
 
-  saveAs(filetitle = 'test', format = 'png') {
+  saveAs = (filetitle = 'test', format = 'png') => {
     const svgElement = document.querySelectorAll('*[id^="spec-"]')[0].getElementsByTagName('svg')[0];
     svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     svgElement.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
@@ -102,17 +96,17 @@ export class SingleVisualizationView extends Component {
     }
   }
 
-  saveVisualization(saveAction = true) {
+  saveVisualization = (saveAction = true) => {
     const { project, visualization, createExportedSpec, conditionals } = this.props;
     createExportedSpec(project.id, visualization.spec.id, visualization.visualizationData, conditionals.items, visualization.config, saveAction);
   }
 
-  onClickShare() {
+  onClickShare = () => {
     setShareWindow(window.open('about:blank'));
     this.saveVisualization(false);
   }
 
-  onClickExplore() {
+  onClickExplore = () => {
     const { project, datasetSelector, exploreSelector, push } = this.props;
     push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ exploreSelector.queryString }`);
   }
@@ -143,9 +137,9 @@ export class SingleVisualizationView extends Component {
                 { visualization.isExporting && "Exporting..." }
                 { !visualization.isExporting && "URL" }
               </Button>
-              <Button text="SVG" onClick={ this.saveAs.bind(this, fileName, 'svg') } fullWidth={ true }/>
-              <Button text="PNG" onClick={ this.saveAs.bind(this, fileName, 'png') } fullWidth={ true }/>
-              <Button text="PDF" onClick={ this.saveAs.bind(this, fileName, 'pdf') } fullWidth={ true }/>
+              <Button text="SVG" onClick={ (fileName) => this.saveAs(fileName, 'svg') } fullWidth={ true }/>
+              <Button text="PNG" onClick={ (fileName) => this.saveAs(fileName, 'png') } fullWidth={ true }/>
+              <Button text="PDF" onClick={ (fileName) => this.saveAs(fileName, 'pdf') } fullWidth={ true }/>
             </div>
           </div>
           <div className={ styles.headerControl }>

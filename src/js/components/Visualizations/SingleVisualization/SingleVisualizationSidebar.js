@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { selectSingleVisualizationVisualizationType, selectSingleVisualizationSortOrder, selectSingleVisualizationSortField, selectVisualizationBinningConfig, selectVisualizationConfig } from '../../../actions/VisualizationActions';
+import { selectSingleVisualizationVisualizationType, selectSingleVisualizationSortOrder, selectSingleVisualizationSortField, selectVisualizationBinningConfig, selectVisualizationDataConfig, selectVisualizationDisplayConfig } from '../../../actions/VisualizationActions';
 import { selectConditional } from '../../../actions/ConditionalsActions';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import styles from '../Visualizations.sass';
@@ -39,7 +39,7 @@ export class SingleVisualizationSidebar extends Component {
   }
 
   render() {
-    const { conditionals, fieldProperties, selectSingleVisualizationVisualizationType, selectSingleVisualizationSortField, selectSingleVisualizationSortOrder, selectConditional, selectVisualizationBinningConfig, selectVisualizationConfig, filters, visualization } = this.props;
+    const { conditionals, fieldProperties, selectSingleVisualizationVisualizationType, selectSingleVisualizationSortField, selectSingleVisualizationSortOrder, selectConditional, selectVisualizationBinningConfig, selectVisualizationDataConfig, selectVisualizationDisplayConfig, filters, visualization } = this.props;
     const { visualizationType } = visualization;
 
     console.log('SUBSET IN SIDEBAR:', visualization.subset);
@@ -56,17 +56,19 @@ export class SingleVisualizationSidebar extends Component {
 
     return (
       <Sidebar>
-        <SidebarCategoryGroup heading="Visualization Options" iconName="chart">
-          { visualization.subset &&
+        { visualization.subset &&
+          <SidebarCategoryGroup heading="Data Options" iconName="th">
             <SidebarGroup heading="Number of Elements">
               <DropDownMenu
-                value={ visualization.config.legendPosition }
-                options={ visualization.configOptions.legendPosition }
+                value={ visualization.config.data.subset }
+                options={ visualization.configOptions.subset }
                 valueMember="value"
                 displayTextMember="label"
-                onChange={ (value) => selectVisualizationConfig('legendPosition', value) } />
-            </SidebarGroup>          
-          }
+                onChange={ (value) => selectVisualizationDataConfig('subset', value) } />
+            </SidebarGroup>
+          </SidebarCategoryGroup>
+        }
+        <SidebarCategoryGroup heading="Display Options" iconName="chart">
           { visualizationType && visualizationTypes.length > 1 &&
             <SidebarGroup heading="Visualization type">
               <ToggleButtonGroup
@@ -101,26 +103,26 @@ export class SingleVisualizationSidebar extends Component {
           { visualizationType == 'hist' &&
             <BinningSelector
               config={ visualization.spec.config }
-              selectBinningConfig={ selectVisualizationBinningConfig } />
+              selectBinningConfig={ (config) => selectVisualizationBinningConfig('binning', config) } />
           }
           { (visualizationType == 'hist' || visualizationType == 'bar' || visualizationType == 'scatter') &&
             <SidebarGroup heading="Vertical axis scale">
                 <DropDownMenu
-                  value={ visualization.config.vScaleType }
+                  value={ visualization.config.display.vScaleType }
                   options={ visualization.configOptions.scaleType }
                   valueMember="value"
                   displayTextMember="label"
-                  onChange={ (value) => selectVisualizationConfig('vScaleType', value) }/>
+                  onChange={ (value) => selectVisualizationDisplayConfig('vScaleType', value) }/>
             </SidebarGroup>
           }
           { (visualizationType == 'scatter') &&
             <SidebarGroup heading="Horizontal axis scale">
                 <DropDownMenu
-                  value={ visualization.config.hScaleType }
+                  value={ visualization.config.display.hScaleType }
                   options={ visualization.configOptions.scaleType }
                   valueMember="value"
                   displayTextMember="label"
-                  onChange={ (value) => selectVisualizationConfig('hScaleType', value) }/>
+                  onChange={ (value) => selectVisualizationDisplayConfig('hScaleType', value) }/>
             </SidebarGroup>
           }
           { (visualizationType == 'bar') &&
@@ -130,7 +132,7 @@ export class SingleVisualizationSidebar extends Component {
                   options={ visualization.configOptions.legendPosition }
                   valueMember="value"
                   displayTextMember="label"
-                  onChange={ (value) => selectVisualizationConfig('legendPosition', value) } />
+                  onChange={ (value) => selectVisualizationDisplayConfig('legendPosition', value) } />
             </SidebarGroup>
           }
         </SidebarCategoryGroup>
@@ -180,5 +182,6 @@ export default connect(mapStateToProps, {
   fetchFieldPropertiesIfNeeded,
   selectConditional,
   selectVisualizationBinningConfig,
-  selectVisualizationConfig
+  selectVisualizationDataConfig,
+  selectVisualizationDisplayConfig
 })(SingleVisualizationSidebar);

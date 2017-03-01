@@ -17,26 +17,24 @@ export default class BinningSelector extends Component {
       'num_bins': 7,
       ...this.props.config
     };
-
-    this.updateConfig = this.updateConfig.bind(this);
   }
 
-  updateConfig(newConfig) {
+  updateConfig = (newConfig) => {
     const config = { ...this.state, ...newConfig };
+    console.log(newConfig);
     this.setState(config);
-    this.props.selectBinningConfig(config);
   }
 
-  onSelectBinningType(binningType) {
-    this.updateConfig({ 'binning_type': binningType });
+  onSelectBinningType = (binningType) => {
+    this.props.selectBinningConfig('binning_type', binningType );
   }
 
-  onSelectBinningProcedure(binningProcedure) {
-    this.updateConfig({ 'binning_procedure': binningProcedure });
+  onSelectBinningProcedure = (binningProcedure) => {
+    this.props.selectBinningConfig('binning_procedure', binningProcedure );
   }
 
-  onSelectNumBins(numBins) {
-    this.updateConfig({ 'num_bins': numBins });
+  onSelectNumBins = (numBins) => {
+    this.props.selectBinningConfig( 'num_bins', numBins );
   }
 
   render() {
@@ -77,7 +75,7 @@ export default class BinningSelector extends Component {
               toggleItems={ binningTypes }
               valueMember="value"
               displayTextMember="label"
-              onChange={ this.onSelectBinningType.bind(this) } />
+              onChange={ this.onSelectBinningType } />
           </div>
           { this.state['binning_type'] == 'auto' &&
             <div className={ styles.fieldGroup + ' ' + styles.binningConfigBlock }>
@@ -88,7 +86,7 @@ export default class BinningSelector extends Component {
                 options={ binningProcedures }
                 valueMember="value"
                 displayTextMember="label"
-                onChange={ this.onSelectBinningProcedure.bind(this) }/>
+                onChange={ this.onSelectBinningProcedure }/>
             </div>
           }
           { this.state['binning_type'] == 'manual' &&
@@ -100,7 +98,7 @@ export default class BinningSelector extends Component {
                 options={ numBins }
                 valueMember="value"
                 displayTextMember="label"
-                onChange={ this.onSelectNumBins.bind(this) }/>
+                onChange={ this.onSelectNumBins }/>
             </div>
           }
         </div>

@@ -9,11 +9,30 @@ import {
   SELECT_SINGLE_VISUALIZATION_VISUALIZATION_TYPE,
   SELECT_SINGLE_VISUALIZATION_SORT_FIELD,
   SELECT_SINGLE_VISUALIZATION_SORT_ORDER,
-  SELECT_VISUALIZATION_BINNING_CONFIG,
-  SELECT_VISUALIZATION_CONFIG,
+  SELECT_VISUALIZATION_DATA_CONFIG,
+  SELECT_VISUALIZATION_DISPLAY_CONFIG,
   SET_SHARE_WINDOW,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
+
+const SUBSET_OPTIONS = [
+  {
+    value: 50,
+    label: '50'
+  },
+  {
+    value: 100,
+    label: '100'
+  },
+  {
+    value: 200,
+    label: '200'
+  },
+  {
+    value: 'all',
+    label: 'All'
+  }
+];
 
 const LEGEND_POSITION_OPTIONS = [
   {
@@ -56,12 +75,18 @@ const baseState = {
   lastUpdated: null,
   configOptions: {
     'legendPosition': LEGEND_POSITION_OPTIONS,
-    'scaleType': SCALE_OPTIONS
+    'scaleType': SCALE_OPTIONS,
+    'subset': SUBSET_OPTIONS
   },
   config: {
-    'hScaleType': 'linear',
-    'legendPosition': 'none',
-    'vScaleType': 'linear'
+    display: {
+      hScaleType: 'linear',
+      legendPosition: 'none',
+      vScaleType: 'linear',
+    },
+    data: {
+      subset: null
+    }
   }
 }
 
@@ -104,8 +129,14 @@ export default function visualization(state = baseState, action) {
         })
       });
 
+      let config;
+      if (action.subset) {
+        config = { ...state.config, data: { ...state.config.data, subset: action.subset }};
+      }
+
       return {
         ...state,
+        config: config,
         exported: action.exported,
         exportedSpecId: action.exportedSpecId,
         spec: action.spec,
@@ -141,13 +172,15 @@ export default function visualization(state = baseState, action) {
     case SELECT_SINGLE_VISUALIZATION_VISUALIZATION_TYPE:
       return { ...state, visualizationType: action.selectedType };
 
-    case SELECT_VISUALIZATION_BINNING_CONFIG:
-      return { ...state, config: action.config, lastUpdated: Date.now() };
-
-    case SELECT_VISUALIZATION_CONFIG:
-      var modifiedConfig = state.config;
+    case SELECT_VISUALIZATION_DISPLAY_CONFIG:
+      var modifiedConfig = state.config.display;
       modifiedConfig[action.key] = action.value;
-      return { ...state, config: modifiedConfig, lastUpdated: Date.now() };
+      return { ...state, config: { ...state.config, display: modifiedConfig, lastUpdated: Date.now() }};
+
+    case SELECT_VISUALIZATION_DATA_CONFIG:
+      var modifiedConfig = state.config.data;
+      modifiedConfig[action.key] = action.value;
+      return { ...state, config: { ...state.config, data: modifiedConfig, lastUpdated: Date.now() }};
 
     case REQUEST_CREATE_EXPORTED_SPEC:
       return { ...state, isExporting: true };
