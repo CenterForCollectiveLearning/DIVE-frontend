@@ -371,13 +371,6 @@ export function selectConditional(conditional) {
   }
 }
 
-// export function selectVisualizationBinningConfig(config) {
-//   return {
-//     type: SELECT_VISUALIZATION_BINNING_CONFIG,
-//     config: config
-//   }
-// }
-
 export function selectVisualizationDataConfig(key, value) {
   return {
     type: SELECT_VISUALIZATION_DATA_CONFIG,

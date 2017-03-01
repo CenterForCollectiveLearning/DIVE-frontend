@@ -56,6 +56,21 @@ const SCALE_OPTIONS = [
   }
 ];
 
+const SORT_ORDERS = [
+  {
+    id: 'asc',
+    name: 'Ascending',
+    iconName: 'fa fa-rotate-270 fa-sort-amount-asc',
+    selected: true
+  },
+  {
+    id: 'desc',
+    name: 'Descending',
+    iconName: 'fa fa-rotate-270 fa-sort-amount-desc',
+    selected: false
+  }
+];
+
 const baseState = {
   tableData: [],
   visualizationData: [],
@@ -74,9 +89,9 @@ const baseState = {
   isFetching: false,
   lastUpdated: null,
   configOptions: {
-    'legendPosition': LEGEND_POSITION_OPTIONS,
-    'scaleType': SCALE_OPTIONS,
-    'subset': SUBSET_OPTIONS
+    legendPosition: LEGEND_POSITION_OPTIONS,
+    scaleType: SCALE_OPTIONS,
+    subset: SUBSET_OPTIONS
   },
   config: {
     display: {
@@ -85,27 +100,12 @@ const baseState = {
       vScaleType: 'linear',
     },
     data: {
-      subset: null
+      subset: null,
     }
   }
 }
 
 export default function visualization(state = baseState, action) {
-  const SORT_ORDERS = [
-    {
-      id: 'asc',
-      name: 'Ascending',
-      iconName: 'fa fa-rotate-270 fa-sort-amount-asc',
-      selected: true
-    },
-    {
-      id: 'desc',
-      name: 'Descending',
-      iconName: 'fa fa-rotate-270 fa-sort-amount-desc',
-      selected: false
-    }
-  ];
-
   switch (action.type) {
     case CLEAR_VISUALIZATION:
       return baseState;
@@ -129,9 +129,9 @@ export default function visualization(state = baseState, action) {
         })
       });
 
-      let config;
+      var config = { ...state.config };
       if (action.subset) {
-        config = { ...state.config, data: { ...state.config.data, subset: action.subset }};
+        config.data = { ...state.config.data, subset: action.subset, lastUpdated: Date.now() };
       }
 
       return {
@@ -173,14 +173,16 @@ export default function visualization(state = baseState, action) {
       return { ...state, visualizationType: action.selectedType };
 
     case SELECT_VISUALIZATION_DISPLAY_CONFIG:
-      var modifiedConfig = state.config.display;
-      modifiedConfig[action.key] = action.value;
-      return { ...state, config: { ...state.config, display: modifiedConfig, lastUpdated: Date.now() }};
+      var modifiedDisplayConfig = state.config.display;
+      modifiedDisplayConfig[action.key] = action.value;
+      modifiedDisplayConfig.lastUpdated = Date.now();
+      return { ...state, config: { ...state.config, display: modifiedDisplayConfig }};
 
     case SELECT_VISUALIZATION_DATA_CONFIG:
-      var modifiedConfig = state.config.data;
-      modifiedConfig[action.key] = action.value;
-      return { ...state, config: { ...state.config, data: modifiedConfig, lastUpdated: Date.now() }};
+      var modifiedDataConfig = { ...state.config.data };
+      modifiedDataConfig[action.key] = action.value;
+      modifiedDataConfig.lastUpdated = Date.now();
+      return { ...state, config: { ...state.config, data: modifiedDataConfig }};
 
     case REQUEST_CREATE_EXPORTED_SPEC:
       return { ...state, isExporting: true };

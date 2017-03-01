@@ -29,20 +29,20 @@ export class SingleVisualizationView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { visualization, conditionals, datasets, datasetSelector, project, fetchSpecVisualizationIfNeeded, fetchDatasets } = this.props;
+    const { visualization, dataConfig, conditionals, datasets, datasetSelector, project, fetchSpecVisualizationIfNeeded, fetchDatasets } = this.props;
 
     const exportingChanged = visualization.isExporting != nextProps.visualization.isExporting;
     const conditionalsChanged = nextProps.conditionals.lastUpdated != conditionals.lastUpdated;
-    const configChanged = nextProps.visualization.config != visualization.config;
+    const dataConfigChanged = nextProps.dataConfig.lastUpdated != dataConfig.lastUpdated;
     const projectChanged = (nextProps.project.id !== project.id);
+
+    console.log(nextProps.dataConfig.lastUpdated, this.props.dataConfig.lastUpdated, nextProps.dataConfig.lastUpdated != dataConfig.lastUpdated);
 
     if (projectChanged || (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
       fetchDatasets(project.id);
     }
 
-    console.log('ConfigChanged:', configChanged, nextProps.visualization.config, visualization.config);
-
-    if (nextProps.project.id && !visualization.isFetching && (!visualization.spec.id || conditionalsChanged || configChanged)) {
+    if (nextProps.project.id && !visualization.isFetching && (!visualization.spec.id || conditionalsChanged || dataConfigChanged)) {
       fetchSpecVisualizationIfNeeded(nextProps.project.id, nextProps.specId, nextProps.conditionals.items, nextProps.visualization.config);
     }
 
@@ -167,10 +167,12 @@ SingleVisualizationView.propTypes = {
 
 function mapStateToProps(state) {
   const { project, conditionals, datasets, datasetSelector, fieldProperties, visualization, exploreSelector } = state;
+
   return {
     project,
     fieldNameToColor: fieldProperties.fieldNameToColor,
     visualization,
+    dataConfig: visualization.config.data,
     exploreSelector,
     conditionals,
     datasets,

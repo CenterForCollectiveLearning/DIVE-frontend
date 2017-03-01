@@ -15,14 +15,14 @@ export default class ScatterChart extends Component {
     options = {
       ...options,
       hAxis: {
-        scaleType: config.hScaleType
+        scaleType: config.display.hScaleType
       },
       legend: {
         ...options.legend,
         position: 'none'
       },
       vAxis: {
-        scaleType: config.vScaleType
+        scaleType: config.display.vScaleType
       }
     }
 
