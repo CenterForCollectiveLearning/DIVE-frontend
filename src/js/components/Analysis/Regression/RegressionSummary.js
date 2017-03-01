@@ -42,8 +42,8 @@ export default class RegressionSummary extends Component {
     const textParams = {
       dependentVariableName: <strong>{ dependentVariableName }</strong>,
       independentVariableNames: independentVariableNamesString,
-      rSquaredAdjustedText: <div className={ styles.rSquaredAdjust }><div className={ styles.r }>R</div><sup>2</sup></div>,
-      rSquaredText: <div className={ styles.rSquared }><div className={ styles.r }>R</div><sup>2</sup></div>,
+      rSquaredAdjustedText: <span className={ styles.rSquaredAdjust }><span className={ styles.r }>R</span><sup>2</sup></span>,
+      rSquaredText: <span className={ styles.rSquared }><span className={ styles.r }>R</span><sup>2</sup></span>,
       rSquaredAdjusted: rSquaredAdjustedStrings,
       contributionToRSquared: contributionToRSquaredStrings
     }

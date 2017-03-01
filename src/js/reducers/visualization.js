@@ -27,11 +27,11 @@ const LEGEND_POSITION_OPTIONS = [
 ];
 
 const SCALE_OPTIONS = [
-  { 
+  {
     value:'mirrorLog',
     label:'Logarithmic'
   },
-  { 
+  {
     value: 'linear',
     label: 'Linear'
   }
@@ -45,6 +45,7 @@ const baseState = {
   sortOrders: [],
   spec: {},
   sampleSize: null,
+  subset: null,
   visualizationType: null,
   exported: false,
   exportedSpecId: null,
@@ -111,6 +112,7 @@ export default function visualization(state = baseState, action) {
         bins: action.bins,
         tableData: action.tableData,
         visualizationData: action.visualizationData,
+        subset: action.subset,
         sampleSize: action.sampleSize,
         sortFields: SORT_FIELDS,
         sortOrders: SORT_ORDERS,

@@ -315,6 +315,7 @@ function receiveSpecVisualizationDispatcher(json) {
     bins: json.visualization ? json.visualization.bins : [],
     visualizationData: json.visualization ? json.visualization.visualize : [],
     sampleSize: json.visualization ? json.visualization.count : null,
+    subset: json.visualization.subset,
     receivedAt: Date.now()
   };
 }

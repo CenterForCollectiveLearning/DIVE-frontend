@@ -27,9 +27,9 @@ export default class ToggleButtonGroup extends Component {
               ( colorMember ? (' ' + styles.coloredBorder) : '' ) +
               ( item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) ? ' pt-active' : '')
             }
-            // separated={ separated }
             style={ colorMember ? { 'borderLeftColor': item[colorMember] } : {} }
             onClick={ () => onChange(item[valueMember].toString()) }
+            // separated={ separated }
             // splitMenu={ splitMenuItemsMember ? item[splitMenuItemsMember] : [] }
             // selectMenuItem={ selectMenuItem }
             // onDelete={ onDelete }

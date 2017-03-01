@@ -42,6 +42,8 @@ export class SingleVisualizationSidebar extends Component {
     const { conditionals, fieldProperties, selectSingleVisualizationVisualizationType, selectSingleVisualizationSortField, selectSingleVisualizationSortOrder, selectConditional, selectVisualizationBinningConfig, selectVisualizationConfig, filters, visualization } = this.props;
     const { visualizationType } = visualization;
 
+    console.log('SUBSET IN SIDEBAR:', visualization.subset);
+
     if (!visualization.lastUpdated) {
       return (<div></div>);
     }
@@ -55,6 +57,16 @@ export class SingleVisualizationSidebar extends Component {
     return (
       <Sidebar>
         <SidebarCategoryGroup heading="Visualization Options" iconName="chart">
+          { visualization.subset &&
+            <SidebarGroup heading="Number of Elements">
+              <DropDownMenu
+                value={ visualization.config.legendPosition }
+                options={ visualization.configOptions.legendPosition }
+                valueMember="value"
+                displayTextMember="label"
+                onChange={ (value) => selectVisualizationConfig('legendPosition', value) } />
+            </SidebarGroup>          
+          }
           { visualizationType && visualizationTypes.length > 1 &&
             <SidebarGroup heading="Visualization type">
               <ToggleButtonGroup

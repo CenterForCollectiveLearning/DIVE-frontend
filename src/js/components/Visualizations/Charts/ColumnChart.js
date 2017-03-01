@@ -56,7 +56,7 @@ export default class ColumnChart extends Component {
           scaleType: config.vScaleType,
         },
         legend: {
-          position: config.legendPosition
+          position: config.legendPosition || 'none'
         }
       };
     }
