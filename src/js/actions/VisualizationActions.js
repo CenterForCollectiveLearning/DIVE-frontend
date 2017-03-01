@@ -335,8 +335,6 @@ function fetchSpecVisualization(projectId, specId, conditionals = [], config = n
     params.config = config;
   }
 
-  console.log('FETCHING VISUALIZATION config:', config);
-
   return dispatch => {
     dispatch(requestSpecVisualizationDispatcher());
     return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`, {

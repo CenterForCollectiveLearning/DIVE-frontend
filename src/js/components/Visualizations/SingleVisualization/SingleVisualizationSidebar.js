@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { selectSingleVisualizationVisualizationType, selectSingleVisualizationSortOrder, selectSingleVisualizationSortField, selectVisualizationBinningConfig, selectVisualizationDataConfig, selectVisualizationDisplayConfig } from '../../../actions/VisualizationActions';
+import { selectSingleVisualizationVisualizationType, selectSingleVisualizationSortOrder, selectSingleVisualizationSortField, selectVisualizationDataConfig, selectVisualizationDisplayConfig } from '../../../actions/VisualizationActions';
 import { selectConditional } from '../../../actions/ConditionalsActions';
 import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
 import styles from '../Visualizations.sass';
@@ -39,10 +39,8 @@ export class SingleVisualizationSidebar extends Component {
   }
 
   render() {
-    const { conditionals, fieldProperties, selectSingleVisualizationVisualizationType, selectSingleVisualizationSortField, selectSingleVisualizationSortOrder, selectConditional, selectVisualizationBinningConfig, selectVisualizationDataConfig, selectVisualizationDisplayConfig, filters, visualization } = this.props;
+    const { conditionals, fieldProperties, selectSingleVisualizationVisualizationType, selectSingleVisualizationSortField, selectSingleVisualizationSortOrder, selectConditional, selectVisualizationDataConfig, selectVisualizationDisplayConfig, filters, visualization } = this.props;
     const { visualizationType } = visualization;
-
-    console.log('SUBSET IN SIDEBAR:', visualization.subset);
 
     if (!visualization.lastUpdated) {
       return (<div></div>);
@@ -103,7 +101,7 @@ export class SingleVisualizationSidebar extends Component {
           { visualizationType == 'hist' &&
             <BinningSelector
               config={ visualization.spec.config }
-              selectBinningConfig={ (config) => selectVisualizationBinningConfig('binning', config) } />
+              selectBinningConfig={ selectVisualizationDataConfig } />
           }
           { (visualizationType == 'hist' || visualizationType == 'bar' || visualizationType == 'scatter') &&
             <SidebarGroup heading="Vertical axis scale">
@@ -181,7 +179,6 @@ export default connect(mapStateToProps, {
   selectSingleVisualizationSortField,
   fetchFieldPropertiesIfNeeded,
   selectConditional,
-  selectVisualizationBinningConfig,
   selectVisualizationDataConfig,
   selectVisualizationDisplayConfig
 })(SingleVisualizationSidebar);

@@ -36,8 +36,6 @@ export class SingleVisualizationView extends Component {
     const dataConfigChanged = nextProps.dataConfig.lastUpdated != dataConfig.lastUpdated;
     const projectChanged = (nextProps.project.id !== project.id);
 
-    console.log(nextProps.dataConfig.lastUpdated, this.props.dataConfig.lastUpdated, nextProps.dataConfig.lastUpdated != dataConfig.lastUpdated);
-
     if (projectChanged || (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
       fetchDatasets(project.id);
     }
