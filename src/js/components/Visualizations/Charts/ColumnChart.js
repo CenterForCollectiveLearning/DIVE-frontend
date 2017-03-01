@@ -52,10 +52,10 @@ export default class ColumnChart extends Component {
             bold: true,
             italic: false
           },
-          scaleType: config.display.vScaleType,
+          scaleType: config.display ? config.display.vScaleType : null
         },
         legend: {
-          position: config.display.legendPosition || 'none'
+          position: config.display ? config.display.legendPosition : 'none'
         }
       };
     }

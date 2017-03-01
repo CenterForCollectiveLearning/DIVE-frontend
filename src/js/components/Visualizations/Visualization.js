@@ -288,7 +288,7 @@ Visualization.propTypes = {
   sortFields: PropTypes.array,
   config: PropTypes.object,
   isCard: PropTypes.bool,
-  subset: PropTypes.number
+  subset: PropTypes.any
 };
 
 Visualization.defaultProps = {
