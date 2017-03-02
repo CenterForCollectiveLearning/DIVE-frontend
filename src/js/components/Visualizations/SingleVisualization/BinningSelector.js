@@ -11,37 +11,20 @@ export default class BinningSelector extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      'binning_type': 'auto',
-      'binning_procedure': 'freedman',
-      'num_bins': 7,
-      ...this.props.config
-    };
-
-    this.updateConfig = this.updateConfig.bind(this);
+    console.log(props.config.data);
+    this.state = { ...props.config.data };
   }
 
-  updateConfig(newConfig) {
-    const config = { ...this.state, ...newConfig };
-    this.setState(config);
-    this.props.selectBinningConfig(config);
-  }
-
-  onSelectBinningType(binningType) {
-    this.updateConfig({ 'binning_type': binningType });
-  }
-
-  onSelectBinningProcedure(binningProcedure) {
-    this.updateConfig({ 'binning_procedure': binningProcedure });
-  }
-
-  onSelectNumBins(numBins) {
-    this.updateConfig({ 'num_bins': numBins });
+  updateConfig = (k, v) => {
+    var newStateModifier = { ...this.state };
+    newStateModifier[k] = v;
+    this.setState(newStateModifier);
+    this.props.selectBinningConfig(k, v);
   }
 
   render() {
     const binningTypes = [
-      { label: 'Auto', value: 'auto' },
+      { label: 'Auto', value: 'procedural' },
       { label: 'Manual', value: 'manual' }
     ].map((binningType) =>
       new Object({ ...binningType, selected: binningType.value == this.state['binning_type'] })
@@ -65,7 +48,7 @@ export default class BinningSelector extends Component {
       new Object({ ...binningProcedure, selected: binningProcedure.value == this.state['binning_procedure'] })
     );
 
-    const headerName = this.props.name ? "Binning of " + this.props.name : "Binning Configuration"
+    const headerName = this.props.name ? 'Binning of ' + this.props.name : 'Binning Configuration'
 
     return (
       <SidebarGroup heading={headerName}>
@@ -77,9 +60,9 @@ export default class BinningSelector extends Component {
               toggleItems={ binningTypes }
               valueMember="value"
               displayTextMember="label"
-              onChange={ this.onSelectBinningType.bind(this) } />
+              onChange={ (v) => this.updateConfig('binning_type', v) } />
           </div>
-          { this.state['binning_type'] == 'auto' &&
+          { this.state['binning_type'] == 'procedural' &&
             <div className={ styles.fieldGroup + ' ' + styles.binningConfigBlock }>
               <div className={ styles.fieldGroupLabel }>Procedure</div>
               <DropDownMenu
@@ -88,7 +71,7 @@ export default class BinningSelector extends Component {
                 options={ binningProcedures }
                 valueMember="value"
                 displayTextMember="label"
-                onChange={ this.onSelectBinningProcedure.bind(this) }/>
+                onChange={ (v) => this.updateConfig('binning_procedure', v) }/>
             </div>
           }
           { this.state['binning_type'] == 'manual' &&
@@ -100,7 +83,7 @@ export default class BinningSelector extends Component {
                 options={ numBins }
                 valueMember="value"
                 displayTextMember="label"
-                onChange={ this.onSelectNumBins.bind(this) }/>
+                onChange={ (v) => this.updateConfig('num_bins', v) }/>
             </div>
           }
         </div>

@@ -13,7 +13,6 @@ export default class ColumnChart extends Component {
 
     var options = isMinimalView ? minimalOptions : fullOptions;
 
-
     if (isMinimalView) {
       options = {
         ...options,
@@ -53,10 +52,10 @@ export default class ColumnChart extends Component {
             bold: true,
             italic: false
           },
-          scaleType: config.vScaleType,
+          scaleType: config.display ? config.display.vScaleType : null
         },
         legend: {
-          position: config.legendPosition
+          position: config.display ? config.display.legendPosition : 'none'
         }
       };
     }

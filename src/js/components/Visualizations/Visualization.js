@@ -41,7 +41,7 @@ export default class Visualization extends Component {
   }
 
   render() {
-    const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields, config, isCard } = this.props;
+    const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields, config, isCard, subset } = this.props;
     const { args, meta } = spec;
     const chartId = `${ this.props.chartId || spec.id  }${ ( sortIndex ? '-' + sortIndex : '') }`;
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
@@ -179,6 +179,9 @@ export default class Visualization extends Component {
             + (isMinimalView ? ' ' + styles.minimal : '')
             + (visualizationClassName ? ' ' + visualizationClassName : '')
           }>
+            { subset &&
+              <div className={ styles.subsetMarker }>SUBSET ({ subset })</div>
+            }
             { (defaultVisualizationType == 'box') &&
               <BoxPlot
                 chartId={ `spec-box-${ chartId }` }
@@ -284,7 +287,8 @@ Visualization.propTypes = {
   sortOrders: PropTypes.array,
   sortFields: PropTypes.array,
   config: PropTypes.object,
-  isCard: PropTypes.bool
+  isCard: PropTypes.bool,
+  subset: PropTypes.any
 };
 
 Visualization.defaultProps = {
@@ -300,5 +304,6 @@ Visualization.defaultProps = {
   sortFields: [],
   fieldNameToColor: {},
   config: {},
-  isCard: false
+  isCard: false,
+  subset: false
 };

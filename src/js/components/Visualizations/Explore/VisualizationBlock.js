@@ -28,6 +28,7 @@ export default class VisualizationBlock extends Component {
           spec={ spec }
           data={ spec.data.visualize }
           bins={ spec.data.bins }
+          subset={ spec.data.subset }
           onClick={ this.onClick.bind(this) }
           isMinimalView={ true }
           showHeader={ true } />

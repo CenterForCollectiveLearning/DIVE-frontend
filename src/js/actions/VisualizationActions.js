@@ -32,10 +32,10 @@ import {
   SELECT_SINGLE_VISUALIZATION_SORT_ORDER,
   SELECT_SINGLE_VISUALIZATION_SORT_FIELD,
   SELECT_CONDITIONAL,
-  SELECT_VISUALIZATION_BINNING_CONFIG,
   SET_EXPLORE_QUERY_STRING,
   SELECT_RECOMMENDATION_MODE,
-  SELECT_VISUALIZATION_CONFIG
+  SELECT_VISUALIZATION_DATA_CONFIG,
+  SELECT_VISUALIZATION_DISPLAY_CONFIG
 } from '../constants/ActionTypes';
 
 import _ from 'underscore';
@@ -315,6 +315,7 @@ function receiveSpecVisualizationDispatcher(json) {
     bins: json.visualization ? json.visualization.bins : [],
     visualizationData: json.visualization ? json.visualization.visualize : [],
     sampleSize: json.visualization ? json.visualization.count : null,
+    subset: json.visualization.subset,
     receivedAt: Date.now()
   };
 }
@@ -368,16 +369,17 @@ export function selectConditional(conditional) {
   }
 }
 
-export function selectVisualizationBinningConfig(config) {
+export function selectVisualizationDataConfig(key, value) {
   return {
-    type: SELECT_VISUALIZATION_BINNING_CONFIG,
-    config: config
+    type: SELECT_VISUALIZATION_DATA_CONFIG,
+    key: key,
+    value: value
   }
 }
 
-export function selectVisualizationConfig(key, value) {
+export function selectVisualizationDisplayConfig(key, value) {
   return {
-    type: SELECT_VISUALIZATION_CONFIG,
+    type: SELECT_VISUALIZATION_DISPLAY_CONFIG,
     key: key,
     value: value
   }
