@@ -65,7 +65,7 @@ export class AggregationSidebar extends Component {
             <SidebarGroup
               heading="Independent Variables"
               rightAction={ aggregationVariablesIds.length > 0 &&
-                <div className={ 'pt-icon-standard pt-icon-delete' }
+                <span className={ 'pt-icon-standard pt-icon-delete' }
                   onClick={ (v) => this.clickClearKeyFromQueryString('aggregationVariablesIds') } />
               }
             >

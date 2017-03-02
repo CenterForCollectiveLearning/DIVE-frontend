@@ -114,7 +114,7 @@ export class ExploreSidebar extends Component {
           initialCollapse={ false }
           iconName="variable"
           rightAction={ (fieldIds.length > 0) &&
-            <div className={ 'pt-icon-standard pt-icon-delete' }
+            <span className={ 'pt-icon-standard pt-icon-delete' }
               onClick={ (v) => this.clickClearKeyFromQueryString('fieldIds') }
             />
           }

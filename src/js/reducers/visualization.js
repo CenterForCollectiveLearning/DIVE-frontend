@@ -101,6 +101,9 @@ const baseState = {
     },
     data: {
       subset: null,
+      binning_type: 'procedural',
+      binning_procedure: 'freedman',
+      num_bins: 7
     }
   }
 }

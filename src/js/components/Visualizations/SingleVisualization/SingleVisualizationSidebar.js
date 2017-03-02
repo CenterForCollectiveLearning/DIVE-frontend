@@ -100,7 +100,7 @@ export class SingleVisualizationSidebar extends Component {
           }
           { visualizationType == 'hist' &&
             <BinningSelector
-              config={ visualization.spec.config }
+              config={ visualization.config }
               selectBinningConfig={ selectVisualizationDataConfig } />
           }
           { (visualizationType == 'hist' || visualizationType == 'bar' || visualizationType == 'scatter') &&
