@@ -179,7 +179,7 @@ export default class Visualization extends Component {
             + (isMinimalView ? ' ' + styles.minimal : '')
             + (visualizationClassName ? ' ' + visualizationClassName : '')
           }>
-            { subset &&
+            { subset && subset != 'all' &&
               <div className={ styles.subsetMarker }>SUBSET ({ subset })</div>
             }
             { (defaultVisualizationType == 'box') &&

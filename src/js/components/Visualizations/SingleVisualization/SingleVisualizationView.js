@@ -121,7 +121,7 @@ export class SingleVisualizationView extends Component {
     }
 
     return (
-      <VisualizationView visualization={ visualization } fieldNameToColor={ fieldNameToColor }>
+      <VisualizationView className={ styles.fillContainer } visualization={ visualization } fieldNameToColor={ fieldNameToColor }>
         <div className={ styles.hidden }>
           <canvas id="export-canvas"/>
         </div>
