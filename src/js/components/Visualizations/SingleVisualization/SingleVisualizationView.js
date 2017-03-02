@@ -50,7 +50,6 @@ export class SingleVisualizationView extends Component {
   }
 
   saveAs = (filetitle = 'test', format = 'png') => {
-    console.log('FileTitle:', filetitle)
     const svgElement = document.querySelectorAll('*[id^="spec-"]')[0].getElementsByTagName('svg')[0];
     svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     svgElement.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
@@ -136,9 +135,9 @@ export class SingleVisualizationView extends Component {
                 { visualization.isExporting && "Exporting..." }
                 { !visualization.isExporting && "URL" }
               </Button>
-              <Button text="SVG" onClick={ (fileName) => this.saveAs(fileName, 'svg') } fullWidth={ true }/>
-              <Button text="PNG" onClick={ (fileName) => this.saveAs(fileName, 'png') } fullWidth={ true }/>
-              <Button text="PDF" onClick={ (fileName) => this.saveAs(fileName, 'pdf') } fullWidth={ true }/>
+              <Button text="SVG" onClick={ () => this.saveAs(fileName, 'svg') } fullWidth={ true }/>
+              <Button text="PNG" onClick={ () => this.saveAs(fileName, 'png') } fullWidth={ true }/>
+              <Button text="PDF" onClick={ () => this.saveAs(fileName, 'pdf') } fullWidth={ true }/>
             </div>
           </div>
           <div className={ styles.headerControl }>
