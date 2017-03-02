@@ -11,7 +11,6 @@ export default class BinningSelector extends Component {
   constructor(props) {
     super(props);
 
-    console.log(props.config.data);
     this.state = { ...props.config.data };
   }
 

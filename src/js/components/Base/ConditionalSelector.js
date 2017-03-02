@@ -153,7 +153,7 @@ export class ConditionalSelector extends Component {
           <DropDownMenu
             className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown + ' ' + styles.fieldDropdown }
             value={ fieldId }
-            options={ fieldProperties }
+            options={ fieldProperties.filter((f) => !f.isId) }
             valueMember="id"
             displayTextMember="name"
             onChange={ this.onSelectField }/>
