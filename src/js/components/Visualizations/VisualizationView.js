@@ -4,6 +4,7 @@ import styles from './Visualizations.sass';
 
 import DataGrid from '../Base/DataGrid';
 import HeaderBar from '../Base/HeaderBar';
+import Loader from '../Base/Loader';
 import Visualization from './Visualization';
 import { useWhiteFontFromBackgroundHex } from '../../helpers/helpers';
 
@@ -43,11 +44,16 @@ export default class VisualizationView extends Component {
     return (
       <div className={ styles.visualizationViewContainer }>
         <div className={ styles.innerVisualizationViewContainer } >
-          { visualization.spec.id && !visualization.isFetching &&
-            <div>
-              <HeaderBar
-                header={ visualizationHeader }
-                actions={ this.props.children } />
+          { visualization.isFetching &&
+            <div className={ styles.centeredFill }>
+              <Loader text='Fetching visualization...' />
+            </div>
+          }    
+          <div classname={ styles.fillContainer }>
+            <HeaderBar
+              header={ visualizationHeader }
+              actions={ this.props.children } />
+            { visualization.spec.id && !visualization.isFetching &&
               <div className={ styles.chartsContainer }>
                 <Visualization
                   containerClassName={ styles.visualizationContainer }
@@ -60,9 +66,9 @@ export default class VisualizationView extends Component {
                   sortOrders={ visualization.sortOrders }
                   sortFields={ visualization.sortFields }/>
               </div>
-            </div>
-          }
-          { visualization.tableData.length != 0 &&
+            }
+          </div>
+          { !visualization.isFetching && visualization.tableData.length != 0 &&
             <div>
               <div className={ styles.tableContainer }>
                 <DataGrid

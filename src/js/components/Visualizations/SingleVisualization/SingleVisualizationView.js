@@ -50,6 +50,7 @@ export class SingleVisualizationView extends Component {
   }
 
   saveAs = (filetitle = 'test', format = 'png') => {
+    console.log('FileTitle:', filetitle)
     const svgElement = document.querySelectorAll('*[id^="spec-"]')[0].getElementsByTagName('svg')[0];
     svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     svgElement.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
