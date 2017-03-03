@@ -23,6 +23,13 @@ export function createAnonymousUserIfNeeded() {
   }
 }
 
+export function deleteAnonymousData(userId) {
+  return (dispatch) => {
+    return fetch(`/auth/v1/delete_anonymous_data/${ userId }`, {
+      method: 'get'
+    }).then((json) => console.log(json));
+  }
+}
 
 function requestCreateAnonymousUser() {
   return {

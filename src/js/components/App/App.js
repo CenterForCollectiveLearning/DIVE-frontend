@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import styles from './App.sass';
 import { push } from 'react-router-redux';
 
-import { createAnonymousUserIfNeeded } from '../../actions/UserActions';
+import { createAnonymousUserIfNeeded, deleteAnonymousData } from '../../actions/UserActions';
 import { connect } from 'react-redux';
 
 // this seems real dumb;
@@ -15,15 +15,28 @@ export class App extends Component {
     super(props);
 
     if (!this.props.user.id) {
-      console.log('Creating anonymous user from constructor');
       this.props.createAnonymousUserIfNeeded();
     }
   }
 
+  componentDidMount() {
+    window.onbeforeunload = this.onUnload;
+  }
+
+  componentWillUnmount() {
+    window.onbeforeunload = null;
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.user.id && !nextProps.user.id) {
-      console.log('Creating anonymous user from receiveProps');
       this.props.createAnonymousUserIfNeeded();
+    }
+  }
+
+  onUnload = () => {
+    const { user, deleteAnonymousData } = this.props;
+    if ( user.anonymous ) {
+      deleteAnonymousData(user.id);
     }
   }
 
@@ -48,4 +61,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { createAnonymousUserIfNeeded, push })(App);
+export default connect(mapStateToProps, { createAnonymousUserIfNeeded, deleteAnonymousData, push })(App);
