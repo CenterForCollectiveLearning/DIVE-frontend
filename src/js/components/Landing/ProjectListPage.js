@@ -31,6 +31,10 @@ export class ProjectListPage extends Component {
       this.props.fetchUserProjects(userId);
     }
 
+    if (user.anonymous) {
+      push('/');
+    }
+
     if (user.isAuthenticated && !user.confirmed) {
       push('/auth/unconfirmed');
     }

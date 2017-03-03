@@ -77,12 +77,16 @@ export class ProjectSidebar extends Component {
   }
 
   _onClickLogo = () =>{
-    this.props.push(`/projects`);
+    const { user, push } = this.props;
+    if (user.anonymous) {
+      push(`/`);
+    } else {
+      push ('/projects');
+    }
   }
 
   _logout = () => {
-    const { logoutUser } = this.props;
-    logoutUser();
+    this.props.logoutUser();
   }
 
   onSelectProject = (projectId) => {
