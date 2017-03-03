@@ -74,13 +74,11 @@ class LoginPage extends Component {
   }
 
   clickRegister = () => {
-    const { push } = this.props;
-    push('/auth/register');
+    this.props.push('/auth/register');
   }
 
   clickForgot = () => {
-    const { push } = this.props;
-    push('/auth/reset');
+    this.props.push('/auth/reset');
   }
 
   handleRememberMeChange = (e) => {

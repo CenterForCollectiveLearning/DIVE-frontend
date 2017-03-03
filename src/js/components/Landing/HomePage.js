@@ -5,7 +5,6 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import cookie from 'react-cookie';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
-import { landingPageFirstTime } from '../../actions/UserActions';
 
 import { Button, Intent } from '@blueprintjs/core';
 
@@ -51,7 +50,7 @@ export class HomePage extends Component {
   }
 
   render() {
-    const { projects, userId } = this.props;
+    const { projects, user } = this.props;
     const { userProjects, preloadedProjects } = projects;
     return (
       <DocumentTitle title='DIVE | Projects'>
@@ -75,7 +74,7 @@ export class HomePage extends Component {
                 iconName="cloud-upload"
                 onClick={ this._onUploadClick }
               />
-              { !userId &&
+              { !user.id &&
                 <Button
                   text="Create Account"
                   intent={ Intent.PRIMARY }
@@ -181,7 +180,7 @@ export class HomePage extends Component {
             </div>
           </div>
           <ProjectCreateModal
-            userId={ userId }
+            user={ user }
             closeAction={ this.closeProjectSettingsModal }
             isOpen={ this.state.projectCreateModalOpen }
           />
@@ -193,6 +192,6 @@ export class HomePage extends Component {
 }
 function mapStateToProps(state) {
   const { project, projects, user } = state;
-  return { project, projects, user, firstTime: user.firstTime, userId: user.id };
+  return { project, projects, user };
 }
 export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, push })(HomePage);

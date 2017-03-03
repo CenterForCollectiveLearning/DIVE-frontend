@@ -157,7 +157,7 @@ export class ProjectListPage extends Component {
             </div>
           }
           <ProjectCreateModal
-            userId={ userId }
+            user={ user }
             closeAction={ this.closeProjectSettingsModal }
             isOpen={ this.state.projectCreateModalOpen }
           />
