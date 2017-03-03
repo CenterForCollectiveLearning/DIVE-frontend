@@ -42,7 +42,7 @@ class ProjectCreateModal extends Component {
   }
 
   render() {
-    const { closeAction, isOpen } = this.props;
+    const { user, closeAction, isOpen } = this.props;
     const { projectTitle, projectDescription } = this.state;
 
     return (
@@ -53,10 +53,12 @@ class ProjectCreateModal extends Component {
         isOpen={ isOpen }
       >
         <div className={ Classes.DIALOG_BODY }>
-          <div className='pt-callout pt-intent-warning pt-icon-info-sign'>
-            <h5>Temporary Project</h5>
-            Because you are not logged in, your project will be deleted by the end of your session. To save projects, please <span className={ styles.registerLink } onClick={ this.clickRegister }>create an account</span>.
-          </div>
+          { user.anonymous &&
+            <div className='pt-callout pt-intent-warning pt-icon-info-sign'>
+              <h5>Temporary Project</h5>
+              Because you are not logged in, your project will be deleted by the end of your session. To save projects, please <span className={ styles.registerLink } onClick={ this.clickRegister }>create an account</span>.
+            </div>
+          }
            <div className={ styles.controlSection }>
               <div className={ styles.label }>Title</div>
               <Input

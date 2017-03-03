@@ -29,7 +29,7 @@ import { LOCATION_CHANGE } from 'react-router-redux'
 import cookie from 'react-cookie';
 
 const baseState = {
-  anonymous: cookie.load('anonymous'), false,
+  anonymous: (cookie.load('anonymous') == 'False') ? false : true,
   showToast: (cookie.load('show_toast') == 'False') ? false : true,
   rememberToken: cookie.load('remember_token') || null,
   isAuthenticated: cookie.load('remember_token') ? true : false,
@@ -80,7 +80,6 @@ const baseState = {
 export default function user(state = baseState, action) {
   switch (action.type) {
     case RECEIVE_CREATE_ANONYMOUS_USER:
-      console.log('creating anonymous user in reducer');
       return { ...state,
         id: action.id,
         email: action.email,
@@ -97,9 +96,9 @@ export default function user(state = baseState, action) {
     case RECEIVE_LOGIN_USER:
       return { ...state,
         anonymous: false,
-        success: { login: action.message, register: '' },
-        confirmed: action.confirmed,
         isAuthenticated: true,
+        confirmed: action.confirmed,
+        success: { login: action.message, register: '' },
         username: action.username,
         email: action.email,
         id: action.id,
@@ -118,6 +117,7 @@ export default function user(state = baseState, action) {
 
     case RECEIVE_CONFIRM_TOKEN:
       return { ...state,
+        anonymous: false,
         confirmed: action.confirmed,
         isAuthenticated: true,
         username: action.username,
@@ -144,10 +144,10 @@ export default function user(state = baseState, action) {
 
     case RECEIVE_REGISTER_USER:
       return { ...state,
-        anonymous: true,
-        register: { ...baseState.success, success: action.message, success: true },
-        isAuthenticated: true,
+        anonymous: false,
         confirmed: false,
+        isAuthenticated: true,
+        register: { ...baseState.success, success: action.message, success: true },
         username: action.username,
         email: action.email,
         id: action.id

@@ -6,6 +6,7 @@ import {
   SHOW_TOAST
 } from '../constants/ActionTypes';
 
+import cookie from 'react-cookie';
 import uuid from 'uuid';
 import { fetch } from './api.js';
 
@@ -13,6 +14,15 @@ export function showToast() {
   return (dispatch) => dispatch({
     type: SHOW_TOAST
   })
+}
+
+export function clearCookies() {
+  cookie.remove('anonymous');
+  cookie.remove('remember_token');
+  cookie.remove('username');
+  cookie.remove('email');
+  cookie.remove('user_id');
+  cookie.remove('confirmed');
 }
 
 export function createAnonymousUserIfNeeded() {

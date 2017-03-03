@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import styles from './App.sass';
 import { push } from 'react-router-redux';
 
-import { createAnonymousUserIfNeeded, deleteAnonymousData } from '../../actions/UserActions';
+import { createAnonymousUserIfNeeded, deleteAnonymousData, clearCookies } from '../../actions/UserActions';
 import { connect } from 'react-redux';
 
 // this seems real dumb;
@@ -36,6 +36,7 @@ export class App extends Component {
   onUnload = () => {
     const { user, deleteAnonymousData } = this.props;
     if ( user.anonymous ) {
+      clearCookies();
       deleteAnonymousData(user.id);
     }
   }
@@ -61,4 +62,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { createAnonymousUserIfNeeded, deleteAnonymousData, push })(App);
+export default connect(mapStateToProps, { createAnonymousUserIfNeeded, deleteAnonymousData, clearCookies, push })(App);
