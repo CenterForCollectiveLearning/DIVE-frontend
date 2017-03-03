@@ -9,6 +9,7 @@ import { Popover, PopoverInteractionKind, Position, Menu, MenuItem } from '@blue
 
 import styles from './App/App.sass';
 
+import Link from './Base/Link';
 import DropDownMenu from './Base/DropDownMenu';
 import RaisedButton from './Base/RaisedButton';
 import Tabs from './Base/Tabs';
@@ -76,13 +77,17 @@ export class ProjectSidebar extends Component {
     }
   }
 
-  _onClickLogo = () =>{
+  _onClickLogo = () => {
     const { user, push } = this.props;
     if (user.anonymous) {
       push(`/`);
     } else {
       push ('/projects');
     }
+  }
+
+  onClickRegister = () => {
+    this.props.push('/auth/register');
   }
 
   _logout = () => {
@@ -153,28 +158,36 @@ export class ProjectSidebar extends Component {
             <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
           </TabGroup>
         </Tabs>
-        <div className={ styles.bottom }>
-          <Popover content={ popoverContent }
-            interactionKind={ PopoverInteractionKind.HOVER }
-            position={ Position.TOP_LEFT }
-            useSmartPositioning={ true }
-            transitionDuration={ 100 }
-            hoverOpenDelay={ 100 }
-            hoverCloseDelay={ 100 }
-          >
-            <div>
-              <span className={ styles.username }>{ user.username }</span>
-              <span className={ styles.expandButton + ' pt-icon-standard pt-icon-menu-open' } />
+        <div className={ styles.bottom + ' pt-dark'}>
+          { user.anonymous &&
+            <div className={ styles.anonymousUserBottom }>
+              <div className={ styles.temporary }>Temporary</div>
+              <Link className={ styles.register + " pt-button pt-minimal pt-icon-user" } route="/auth/register">Create Account</Link>
             </div>
-          </Popover>
-          { project.title &&
-            <ProjectSettingsModal
-              projectName={ project.title }
-              projectDescription={ project.description }
-              projectId={ project.id }
-              isOpen={ this.state.projectSettingsModalOpen }
-              closeAction={ this.closeProjectSettingsModal } />
-            }
+          }
+          { !user.anonymous && project.title &&
+            <div>
+              <Popover content={ popoverContent }
+                interactionKind={ PopoverInteractionKind.HOVER }
+                position={ Position.TOP_LEFT }
+                useSmartPositioning={ true }
+                transitionDuration={ 100 }
+                hoverOpenDelay={ 100 }
+                hoverCloseDelay={ 100 }
+              >
+                <div>
+                  <span className={ styles.username }>{ user.username }</span>
+                  <span className={ styles.expandButton + ' pt-icon-standard pt-icon-menu-open' } />
+                </div>
+              </Popover>
+              <ProjectSettingsModal
+                projectName={ project.title }
+                projectDescription={ project.description }
+                projectId={ project.id }
+                isOpen={ this.state.projectSettingsModalOpen }
+                closeAction={ this.closeProjectSettingsModal } />
+            </div>
+          }
         </div>
       </div>
     );

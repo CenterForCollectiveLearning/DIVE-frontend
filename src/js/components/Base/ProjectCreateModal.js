@@ -22,10 +22,10 @@ class ProjectCreateModal extends Component {
   }
 
   submit = () => {
-    const { createProject, closeAction, userId } = this.props;
+    const { createProject, closeAction, user } = this.props;
     const { projectTitle, projectDescription } = this.state;
 
-    createProject(userId, projectTitle, projectDescription);
+    createProject(user.id, projectTitle, projectDescription);
     closeAction();
   }
 
