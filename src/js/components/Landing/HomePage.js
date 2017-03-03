@@ -27,12 +27,6 @@ export class HomePage extends Component {
     };
   }
 
-  componentWillMount() {
-    const { projects, firstTime, userId } = this.props;
-    this.props.fetchPreloadedProjects(userId);
-    this.props.fetchUserProjects(userId);
-  }
-
   componentWillReceiveProps(nextProps) {
     const nextProjectId = nextProps.project.id;
     const nextUserId = nextProps.userId;
@@ -40,13 +34,6 @@ export class HomePage extends Component {
     if (this.props.project.id != nextProjectId) {
       this.props.wipeProjectState();
       this.props.push(`/projects/${ nextProjectId }/datasets/upload`);
-    }
-
-    if (this.props.userId != nextUserId) {
-      nextProps.fetchPreloadedProjects(nextUserId);
-      if (nextUserId) {
-        nextProps.fetchUserProjects(nextUserId);
-      }
     }
   }
 
@@ -56,7 +43,7 @@ export class HomePage extends Component {
 
   _onUploadClick = () => {
     const { user, userId, push, createProject } = this.props;
-    if (user.isAuthenticated) {
+    if (user.isAuthenticated || (user.anonymous && user.id)) {
       this.setState({ projectCreateModalOpen: true });
     } else {
       push('/auth/register')

@@ -27,7 +27,9 @@ export class ProjectListPage extends Component {
 
   componentWillMount() {
     const { projects, userId, user, push } = this.props;
-    this.props.fetchUserProjects(userId);
+    if (userId && !user.anonymous) {
+      this.props.fetchUserProjects(userId);
+    }
 
     if (user.isAuthenticated && !user.confirmed) {
       push('/auth/unconfirmed');

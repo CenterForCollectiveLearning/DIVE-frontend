@@ -36,10 +36,6 @@ export class LandingPage extends Component {
   componentWillMount() {
     const { user, push, wipeProjectState, showToast } = this.props;
 
-    if (user.isAuthenticated) {
-      // push('/projects')
-    }
-
     if (this.state.betaToastOpen && user.showToast) {
       betaToaster.show({
         message: <span>DIVE in currently in beta and is still under active development. To report bugs, please contact <a href="mailto:dive@media.mit.edu" target="_blank">dive@media.mit.edu</a>.</span>,
@@ -109,14 +105,14 @@ export class LandingPage extends Component {
               </div>
             </div>
               <div className="pt-navbar-group pt-align-right">
-                { user && user.username &&
+                { (user.id && !user.anonymous) &&
                   <div className={ styles.rightButtons }>
                     <Link className="pt-button pt-minimal pt-icon-projects" route="/projects">Projects</Link>
                     <span className="pt-navbar-divider"></span>
                     <div className="pt-button pt-minimal pt-icon-log-out" onClick={ this.props.logoutUser }>Log Out of { user.username }</div>
                   </div>
                 }
-                { (!user || !user.username) &&
+                { (user.anonymous || !user.id) &&
                   <div className={ styles.rightButtons }>
                     <Link className="pt-button pt-minimal pt-icon-log-in" route="/auth/login">Log In</Link>
                     <Link className="pt-button pt-minimal pt-icon-user" route="/auth/register">Register</Link>

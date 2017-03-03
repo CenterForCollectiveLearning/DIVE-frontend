@@ -11,12 +11,18 @@ require('../../../css/app.less');
 require('../../../css/griddle.less');
 
 export class App extends Component {
-  componentDidMount() {
-    const { user, push } = this.props;
+  constructor(props) {
+    super(props);
+
+    if (!this.props.user.id) {
+      console.log('Creating anonymous user from constructor');
+      this.props.createAnonymousUserIfNeeded();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user.loaded && !this.props.user.loaded) {
+    if (this.props.user.id && !nextProps.user.id) {
+      console.log('Creating anonymous user from receiveProps');
       this.props.createAnonymousUserIfNeeded();
     }
   }
