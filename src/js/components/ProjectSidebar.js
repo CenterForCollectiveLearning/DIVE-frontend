@@ -161,7 +161,7 @@ export class ProjectSidebar extends Component {
         <div className={ styles.bottom + ' pt-dark'}>
           { user.anonymous &&
             <div className={ styles.anonymousUserBottom }>
-              <div className={ styles.temporary }>Temporary</div>
+              <div className={ styles.temporary }>Temporary Project</div>
               <Link className={ styles.register + " pt-button pt-minimal pt-icon-user" } route="/auth/register">Create Account</Link>
             </div>
           }

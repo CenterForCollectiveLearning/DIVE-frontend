@@ -253,7 +253,7 @@ export function logoutUser() {
       }
     })
     .then(goHome())
-    .catch( error => { console.log('Logout failed', error); });
+    .catch( error => { console.error('Logout failed', error); });
   };
 }
 
