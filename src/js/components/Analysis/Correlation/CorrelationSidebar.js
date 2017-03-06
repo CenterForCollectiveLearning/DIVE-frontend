@@ -56,7 +56,7 @@ export class CorrelationSidebar extends Component {
           heading="Variable Selection"
           iconName="variable"
           rightAction={ correlationVariablesIds.length > 0 &&
-            <div className={ 'pt-icon-standard pt-icon-delete'}
+            <span className={ 'pt-icon-standard pt-icon-delete'}
               onClick={ (v) => this.clickClearKeyFromQueryString('correlationVariablesIds') } />
           }>
           { fieldProperties.items.length != 0 && fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
