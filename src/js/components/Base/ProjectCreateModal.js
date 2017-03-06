@@ -29,11 +29,11 @@ class ProjectCreateModal extends Component {
     closeAction();
   }
 
-  enteredProjectNameInput(event) {
+  enteredProjectNameInput = (event) => {
     this.setState({ projectTitle: event.target.value });
   }
 
-  enteredProjectDescriptionInput(event) {
+  enteredProjectDescriptionInput = (event) => {
     this.setState({ projectDescription: event.target.value });
   }
 
@@ -65,7 +65,7 @@ class ProjectCreateModal extends Component {
                 type="text"
                 placeholder={ projectTitle }
                 autofocus={ true }
-                onChange={ this.enteredProjectNameInput.bind(this) }/>
+                onChange={ this.enteredProjectNameInput }/>
             </div>
             <div className={ styles.controlSection }>
               <div className={ styles.label }>Description</div>
@@ -73,7 +73,7 @@ class ProjectCreateModal extends Component {
                 className='pt-input pt-fill'
                 type="textarea"
                 placeholder={ projectDescription }
-                onChange={ this.enteredProjectDescriptionInput.bind(this) }/>
+                onChange={ this.enteredProjectDescriptionInput }/>
             </div>
 
         </div>
