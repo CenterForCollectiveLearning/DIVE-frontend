@@ -27,7 +27,13 @@ export class ProjectListPage extends Component {
 
   componentWillMount() {
     const { projects, userId, user, push } = this.props;
-    this.props.fetchUserProjects(userId);
+    if (userId && !user.anonymous) {
+      this.props.fetchUserProjects(userId);
+    }
+
+    if (user.anonymous) {
+      push('/');
+    }
 
     if (user.isAuthenticated && !user.confirmed) {
       push('/auth/unconfirmed');
@@ -151,7 +157,7 @@ export class ProjectListPage extends Component {
             </div>
           }
           <ProjectCreateModal
-            userId={ userId }
+            user={ user }
             closeAction={ this.closeProjectSettingsModal }
             isOpen={ this.state.projectCreateModalOpen }
           />

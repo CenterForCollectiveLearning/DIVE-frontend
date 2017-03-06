@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import styles from './App.sass';
 import { push } from 'react-router-redux';
 
-import { createAnonymousUserIfNeeded } from '../../actions/UserActions';
+import { createAnonymousUserIfNeeded, deleteAnonymousData, clearCookies } from '../../actions/UserActions';
 import { connect } from 'react-redux';
 
 // this seems real dumb;
@@ -11,13 +11,33 @@ require('../../../css/app.less');
 require('../../../css/griddle.less');
 
 export class App extends Component {
+  constructor(props) {
+    super(props);
+
+    if (!this.props.user.id) {
+      this.props.createAnonymousUserIfNeeded();
+    }
+  }
+
   componentDidMount() {
-    const { user, push } = this.props;
+    window.onbeforeunload = this.onUnload;
+  }
+
+  componentWillUnmount() {
+    window.onbeforeunload = null;
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user.loaded && !this.props.user.loaded) {
+    if (this.props.user.id && !nextProps.user.id) {
       this.props.createAnonymousUserIfNeeded();
+    }
+  }
+
+  onUnload = () => {
+    const { user, deleteAnonymousData } = this.props;
+    if ( user.anonymous ) {
+      clearCookies();
+      deleteAnonymousData(user.id);
     }
   }
 
@@ -42,4 +62,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { createAnonymousUserIfNeeded, push })(App);
+export default connect(mapStateToProps, { createAnonymousUserIfNeeded, deleteAnonymousData, clearCookies, push })(App);

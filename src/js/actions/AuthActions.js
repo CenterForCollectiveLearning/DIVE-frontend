@@ -161,16 +161,17 @@ export function loginUser(email, username, password, rememberMe) {
   };
 }
 
-export function registerUser(email, username, password) {
+export function registerUser(userId, email, username, password) {
   const encryptedPassword = MD5(password).toString();
   const clientInfo = detectClient();
 
   const params = {
-    'email': email,
-    'username': username,
-    'password': encryptedPassword,
-    'browser': clientInfo.browser,
-    'os': clientInfo.os
+    user_id: userId,
+    email: email,
+    username: username,
+    password: encryptedPassword,
+    browser: clientInfo.browser,
+    os: clientInfo.os
   };
 
   return (dispatch) => {
@@ -252,7 +253,7 @@ export function logoutUser() {
       }
     })
     .then(goHome())
-    .catch( error => { console.log('Logout failed', error); });
+    .catch( error => { console.error('Logout failed', error); });
   };
 }
 

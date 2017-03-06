@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import baseStyles from './AuthModal.sass';
-import { push } from 'react-router-redux';
+import { push, goBack } from 'react-router-redux';
 import { connect } from 'react-redux';
 
 import { Button, Classes, Dialog } from '@blueprintjs/core';
@@ -18,8 +18,12 @@ export class AuthModal extends Component {
     this.goHome = this.goHome.bind(this);
   }
 
-  goHome(){
+  goHome = () => {
     this.props.push(`/`);
+  }
+
+  goBack = () => {
+    this.props.goBack();
   }
 
   render() {
@@ -37,11 +41,18 @@ export class AuthModal extends Component {
         <div className={ Classes.DIALOG_HEADER }>
           <span className={ "pt-icon-large pt-icon-" + iconName }/>
           <h5>{ this.props.titleText }</h5>
-          <Button
-            className={ "pt-minimal " + styles.backButton }
-            iconName="undo"
-            onClick={ closeAction }
-          />
+          <div className={ styles.rightButtons }>
+            <Button
+              className={ "pt-minimal" }
+              iconName="undo"
+              onClick={ this.goBack }
+            />
+            <Button
+              className={ "pt-minimal" }
+              iconName="home"
+              onClick={ this.goHome }
+            />
+          </div>
         </div>
         <div className={ Classes.DIALOG_BODY }>
           { this.props.children }
@@ -89,5 +100,6 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  push
+  push,
+  goBack
 })(AuthModal);

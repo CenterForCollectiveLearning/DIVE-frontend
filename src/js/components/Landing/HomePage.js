@@ -5,7 +5,6 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import cookie from 'react-cookie';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
-import { landingPageFirstTime } from '../../actions/UserActions';
 
 import { Button, Intent } from '@blueprintjs/core';
 
@@ -27,12 +26,6 @@ export class HomePage extends Component {
     };
   }
 
-  componentWillMount() {
-    const { projects, firstTime, userId } = this.props;
-    this.props.fetchPreloadedProjects(userId);
-    this.props.fetchUserProjects(userId);
-  }
-
   componentWillReceiveProps(nextProps) {
     const nextProjectId = nextProps.project.id;
     const nextUserId = nextProps.userId;
@@ -40,13 +33,6 @@ export class HomePage extends Component {
     if (this.props.project.id != nextProjectId) {
       this.props.wipeProjectState();
       this.props.push(`/projects/${ nextProjectId }/datasets/upload`);
-    }
-
-    if (this.props.userId != nextUserId) {
-      nextProps.fetchPreloadedProjects(nextUserId);
-      if (nextUserId) {
-        nextProps.fetchUserProjects(nextUserId);
-      }
     }
   }
 
@@ -56,7 +42,7 @@ export class HomePage extends Component {
 
   _onUploadClick = () => {
     const { user, userId, push, createProject } = this.props;
-    if (user.isAuthenticated) {
+    if (user.isAuthenticated || (user.anonymous && user.id)) {
       this.setState({ projectCreateModalOpen: true });
     } else {
       push('/auth/register')
@@ -64,7 +50,7 @@ export class HomePage extends Component {
   }
 
   render() {
-    const { projects, userId } = this.props;
+    const { projects, user } = this.props;
     const { userProjects, preloadedProjects } = projects;
     return (
       <DocumentTitle title='DIVE | Projects'>
@@ -88,7 +74,7 @@ export class HomePage extends Component {
                 iconName="cloud-upload"
                 onClick={ this._onUploadClick }
               />
-              { !userId &&
+              { !user.id &&
                 <Button
                   text="Create Account"
                   intent={ Intent.PRIMARY }
@@ -194,7 +180,7 @@ export class HomePage extends Component {
             </div>
           </div>
           <ProjectCreateModal
-            userId={ userId }
+            user={ user }
             closeAction={ this.closeProjectSettingsModal }
             isOpen={ this.state.projectCreateModalOpen }
           />
@@ -206,6 +192,6 @@ export class HomePage extends Component {
 }
 function mapStateToProps(state) {
   const { project, projects, user } = state;
-  return { project, projects, user, firstTime: user.firstTime, userId: user.id };
+  return { project, projects, user };
 }
 export default connect(mapStateToProps, { fetchPreloadedProjects, fetchUserProjects, createProject, wipeProjectState, push })(HomePage);

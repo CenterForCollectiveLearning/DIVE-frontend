@@ -130,7 +130,8 @@ class RegisterPage extends Component {
   }
 
   submit = (e) => {
-    const { registerUser } = this.props;
+    const { user, registerUser } = this.props;
+
     const {
       email,
       username,
@@ -141,7 +142,7 @@ class RegisterPage extends Component {
     e.preventDefault();
 
     if (validForm) {
-      registerUser(email, username, password);
+      registerUser(user.id, email, username, password);
     }
   }
 
@@ -261,6 +262,7 @@ RegisterPage.propTypes = {
 function mapStateToProps(state) {
   const { user } = state;
   return {
+    user: user,
     register: user.register,
     usernameError: user.register.usernameError,
     emailError: user.register.emailError,
