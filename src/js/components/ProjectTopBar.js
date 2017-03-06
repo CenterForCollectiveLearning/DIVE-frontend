@@ -46,6 +46,7 @@ export class ProjectTopBar extends Component {
     const { routes } = this.props;
     const tabList = [
       "upload",
+      "preloaded",
       "inspect",
       "transform",
       "explore",
@@ -84,7 +85,7 @@ export class ProjectTopBar extends Component {
     const filteredDatasets = datasets.items.filter((d) =>
       (d.id !== datasetSelector.datasetId)
     )
-    
+
     return (
       <div className={ styles.projectTopBar }>
         { project.title && !project.userProjects &&

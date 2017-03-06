@@ -33,6 +33,7 @@ export class ProjectSidebar extends Component {
   _getSelectedTab = () => {
     const tabList = [
       'upload',
+      'preloaded',
       'inspect',
       'transform',
       'explore',
@@ -141,6 +142,7 @@ export class ProjectSidebar extends Component {
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange } >
           <TabGroup heading="1. Datasets">
             <Tab label="Upload" value="upload" route={ `datasets/upload` } />
+            <Tab label="Preloaded" value="preloaded" route={ `datasets/preloaded` } />
             <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
             <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } disabled={ !datasets.items.length }/>
           </TabGroup>

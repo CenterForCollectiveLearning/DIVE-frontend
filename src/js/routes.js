@@ -27,6 +27,7 @@ import ProjectsPage from './components/ProjectsPage';
 // Dataset
 import DatasetsPage from './components/Datasets/DatasetsPage';
 import DatasetUploadPage from './components/Datasets/DatasetUploadPage';
+import DatasetPreloadedPage from './components/Datasets/DatasetPreloadedPage';
 import DatasetInspectPage from './components/Datasets/DatasetInspectPage';
 import DatasetTransformPage from './components/Datasets/DatasetTransformPage';
 
@@ -90,6 +91,7 @@ export default (
     <Route path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }>
       <Route path="datasets" component={ DatasetsPage }>
         <Route path="upload" component={ DatasetUploadPage }/>
+        <Route path="preloaded" component={ DatasetPreloadedPage }/>
         <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>
         <Route path=":datasetId/transform" component={ DatasetTransformPage }/>
       </Route>

@@ -1,0 +1,43 @@
+@import '../../../css/mixins.sass'
+@import '../../../css/flexbox.sass'
+
+.datasetSearch
+  position: absolute
+  top: 14px
+  right: 10px
+
+.preloadedDatasetsContainer
+  flex-grow: 1
+  display: flex
+  flex-direction: column
+  margin: 10px 15px
+
+  .row
+    display: flex
+    flex-direction: row
+    height: 150px
+    margin-bottom: 10px
+
+    .preloadedDataset
+      +noSelect
+      +regularCopy
+      display: flex
+      flex-direction: column
+      padding: 20px
+      min-height: 100px
+      width: 33.33%
+
+      margin-left: 10px
+
+      align-items: left
+      justify-content: left
+      text-align: left
+
+      background-color: $white
+      color: $black
+
+      cursor: pointer
+      text-decoration: none
+
+      &:first-child
+        margin-left: 0px
