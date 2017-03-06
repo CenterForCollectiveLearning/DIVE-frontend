@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import { createProject } from '../../actions/ProjectActions.js';
 import styles from '../App/App.sass';
@@ -21,39 +22,50 @@ class ProjectCreateModal extends Component {
   }
 
   submit = () => {
-    const { createProject, closeAction, userId } = this.props;
+    const { createProject, closeAction, user } = this.props;
     const { projectTitle, projectDescription } = this.state;
 
-    createProject(userId, projectTitle, projectDescription);
+    createProject(user.id, projectTitle, projectDescription);
     closeAction();
   }
 
-  enteredProjectNameInput(event) {
+  enteredProjectNameInput = (event) => {
     this.setState({ projectTitle: event.target.value });
   }
 
-  enteredProjectDescriptionInput(event) {
+  enteredProjectDescriptionInput = (event) => {
     this.setState({ projectDescription: event.target.value });
   }
 
+  clickRegister = () => {
+    this.props.push('/auth/register');
+  }
+
   render() {
-    const { closeAction, isOpen } = this.props;
+    const { user, closeAction, isOpen } = this.props;
     const { projectTitle, projectDescription } = this.state;
 
     return (
       <Dialog
+        className={ styles.projectCreateModal }
         onClose={ closeAction }
         title='Create New Project'
         isOpen={ isOpen }
       >
         <div className={ Classes.DIALOG_BODY }>
+          { user.anonymous &&
+            <div className='pt-callout pt-intent-warning pt-icon-info-sign'>
+              <h5>Temporary Project</h5>
+              Because you are not logged in, your project will be deleted by the end of your session. To save projects, please <span className={ styles.registerLink } onClick={ this.clickRegister }>create an account</span>.
+            </div>
+          }
            <div className={ styles.controlSection }>
               <div className={ styles.label }>Title</div>
               <Input
                 type="text"
                 placeholder={ projectTitle }
                 autofocus={ true }
-                onChange={ this.enteredProjectNameInput.bind(this) }/>
+                onChange={ this.enteredProjectNameInput }/>
             </div>
             <div className={ styles.controlSection }>
               <div className={ styles.label }>Description</div>
@@ -61,8 +73,9 @@ class ProjectCreateModal extends Component {
                 className='pt-input pt-fill'
                 type="textarea"
                 placeholder={ projectDescription }
-                onChange={ this.enteredProjectDescriptionInput.bind(this) }/>
+                onChange={ this.enteredProjectDescriptionInput }/>
             </div>
+
         </div>
         <div className={ Classes.DIALOG_FOOTER }>
             <div className={ Classes.DIALOG_FOOTER_ACTIONS }>
@@ -75,7 +88,7 @@ class ProjectCreateModal extends Component {
 }
 
 ProjectCreateModal.propTypes = {
-  userId: PropTypes.any.isRequired,
+  user: PropTypes.object.isRequired,
   projectTitle: PropTypes.string,
   projectDescription: PropTypes.string,
   closeAction: PropTypes.func,
@@ -92,4 +105,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { createProject })(ProjectCreateModal);
+export default connect(mapStateToProps, { createProject, push })(ProjectCreateModal);
