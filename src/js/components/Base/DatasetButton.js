@@ -27,7 +27,6 @@ class DatasetButton extends Component {
     const { project, dataset, deleteDataset } = this.props;
     e.stopPropagation()
     e.preventDefault()
-    console.log('Deleting dataset', dataset.datasetId);
 
     this.setState({ deleted: true });
     deleteDataset(project.id, dataset.datasetId);

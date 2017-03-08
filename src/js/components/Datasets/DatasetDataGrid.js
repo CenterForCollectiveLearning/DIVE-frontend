@@ -98,6 +98,7 @@ export default class DatasetDataGrid extends Component {
             data={ headerRows }
             customRowComponent={ DatasetRow }/>
           <DataGrid
+            preloaded={ dataset.preloaded }
             containerClassName={ styles.metadataRowTable }
             datasetId={ `${ dataset.datasetId }` }
             data={ metadataRows }

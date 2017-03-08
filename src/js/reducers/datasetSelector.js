@@ -66,7 +66,11 @@ export default function datasetSelector(state = baseState, action) {
 
     case RECEIVE_DESELECT_PRELOADED_DATASET:
       if (state.id == action.preloadedDataset.id) {
-        return { ...state, id: null };
+        if (action.nextDataset) {
+          return { ...state, id: action.nextDataset.id, title: action.nextDataset.title, preloaded: action.nextDataset.preloaded }
+        } else {
+          return { ...state, id: null };
+        }
       } else {
         return state;
       }

@@ -9,6 +9,7 @@ import {
 } from '../constants/ActionTypes';
 
 import { fetch, httpRequest, pollForTask } from './api.js';
+import { selectDataset } from './DatasetActions';
 
 function requestPreloadedDatasetsDispatcher() {
   return {
@@ -50,7 +51,10 @@ export function selectPreloadedDataset(projectId, datasetId) {
   return dispatch => {
     dispatch(requestSelectPreloadedDatasetDispatcher());
     return fetch(`/datasets/v1/select_preloaded_dataset?project_id=${ projectId }&dataset_id=${ datasetId }`)
-      .then(json => dispatch(receiveSelectPreloadedDatasetDispatcher(json)));
+      .then(json => {
+        dispatch(receiveSelectPreloadedDatasetDispatcher(json))
+        dispatch(selectDataset(projectId, datasetId))
+      });
   };
 }
 
@@ -60,18 +64,19 @@ function requestDeselectPreloadedDatasetDispatcher() {
   };
 }
 
-function receiveDeselectPreloadedDatasetDispatcher(json) {
+function receiveDeselectPreloadedDatasetDispatcher(json, nextDataset={}) {
   return {
     type: RECEIVE_DESELECT_PRELOADED_DATASET,
     preloadedDataset: json.preloadedDataset,
+    nextDataset: nextDataset,
     receivedAt: Date.now()
   };
 }
 
-export function deselectPreloadedDataset(projectId, datasetId) {
+export function deselectPreloadedDataset(projectId, datasetId, nextDataset={}) {
   return dispatch => {
     dispatch(requestDeselectPreloadedDatasetDispatcher());
     return fetch(`/datasets/v1/deselect_preloaded_dataset?project_id=${ projectId }&dataset_id=${ datasetId }`)
-      .then(json => dispatch(receiveDeselectPreloadedDatasetDispatcher(json)));
+      .then(json => dispatch(receiveDeselectPreloadedDatasetDispatcher(json, nextDataset)));
   };
 }

@@ -53,9 +53,13 @@ export class DatasetPreloadedPage extends Component {
   }
 
   render() {
-    const { project, preloadedDatasets, selectPreloadedDataset, deselectPreloadedDataset } = this.props;
+    const { project, datasets, datasetSelector, preloadedDatasets, selectPreloadedDataset, deselectPreloadedDataset } = this.props;
 
     const rows = chunk(preloadedDatasets.items, 3)
+
+    // Workaround for deselect to work properly
+    const unselectedDatasets = datasets.items.filter((d) => d.id != datasetSelector.id );
+    const nextDataset = unselectedDatasets[0];
 
     return (
       <DocumentTitle title={ 'Preloaded' + ( project.title ? ` | ${ project.title }` : '' ) }>
@@ -92,7 +96,7 @@ export class DatasetPreloadedPage extends Component {
                       intent={ Intent.SUCCESS }
                       iconName='tick'
                       text='Selected'
-                      onClick={ () => deselectPreloadedDataset(project.id, d.id) }
+                      onClick={ () => deselectPreloadedDataset(project.id, d.id, nextDataset) }
                     />
                   }
                   { !d.selected &&
@@ -115,8 +119,8 @@ export class DatasetPreloadedPage extends Component {
 }
 
 function mapStateToProps(state) {
-  const { project, datasets, preloadedDatasets } = state;
-  return { project, datasets, preloadedDatasets };
+  const { project, datasets, datasetSelector, preloadedDatasets } = state;
+  return { project, datasets, datasetSelector, preloadedDatasets };
 }
 
 export default connect(mapStateToProps, {
