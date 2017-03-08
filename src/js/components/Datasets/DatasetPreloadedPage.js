@@ -5,7 +5,7 @@ import DocumentTitle from 'react-document-title';
 
 import { Button, Intent } from '@blueprintjs/core';
 
-import { fetchPreloadedDatasets, selectPreloadedDataset } from '../../actions/PreloadedDatasetActions';
+import { fetchPreloadedDatasets, selectPreloadedDataset, deselectPreloadedDataset } from '../../actions/PreloadedDatasetActions';
 import { chunk } from '../../helpers/helpers';
 import datasetsStyles from './Datasets.sass';
 import preloadedDatasetsStyles from './PreloadedDatasets.sass';
@@ -31,7 +31,7 @@ export class DatasetPreloadedPage extends Component {
     const { project, preloadedDatasets, fetchPreloadedDatasets } = this.props;
 
     if (project.id && !preloadedDatasets.fetchedAll && !preloadedDatasets.isFetching) {
-      fetchPreloadedDatasets();
+      fetchPreloadedDatasets(project.id);
     }
   }
 
@@ -42,12 +42,12 @@ export class DatasetPreloadedPage extends Component {
     // }
 
     if (project.id && !preloadedDatasets.fetchedAll && !preloadedDatasets.isFetching) {
-      fetchPreloadedDatasets();
+      fetchPreloadedDatasets(project.id);
     }
   }
 
   render() {
-    const { project, preloadedDatasets, selectPreloadedDataset } = this.props;
+    const { project, preloadedDatasets, selectPreloadedDataset, deselectPreloadedDataset } = this.props;
 
     const rows = chunk(preloadedDatasets.items, 3)
 
@@ -64,8 +64,8 @@ export class DatasetPreloadedPage extends Component {
               />
             </div>
           </div>
-          { rows.map((row) =>
-            <div className= { styles.row }>
+          { rows.map((row, i) =>
+            <div className= { styles.row } key={ `row-${ i }` }>
               { row.map((d) =>
                 <div
                   key={ d.id }
@@ -77,11 +77,23 @@ export class DatasetPreloadedPage extends Component {
                 >
                   <h5>{ d.title }</h5>
                   <p>{ d.description }</p>
-                  <Button
-                    className={ styles.selectButton }
-                    text="Select"
-                    onClick={ () => selectPreloadedDataset(project.id, d.id) }
-                  />
+                  { d.selected &&
+                    <Button
+                      className={ styles.selectButton }
+                      intent={ Intent.SUCCESS }
+                      iconName='tick'
+                      text='Selected'
+                      onClick={ () => deselectPreloadedDataset(project.id, d.id) }
+                    />
+                  }
+                  { !d.selected &&
+                    <Button
+                      className={ styles.selectButton }
+                      text='Select'
+                      onClick={ () => selectPreloadedDataset(project.id, d.id) }
+                    />
+                  }
+
                 </div>
               )}
             </div>
@@ -101,5 +113,6 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   fetchPreloadedDatasets,
   selectPreloadedDataset,
+  deselectPreloadedDataset,
   push
 })(DatasetPreloadedPage);
