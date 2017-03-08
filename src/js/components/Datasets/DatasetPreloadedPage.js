@@ -70,7 +70,10 @@ export class DatasetPreloadedPage extends Component {
               />
             </div>
           </div>
-          { rows.map((row, i) =>
+          { preloadedDatasets.isFetching &&
+            <Loader text='Loading preloaded datasets' />
+          }
+          { !preloadedDatasets.isFetching && rows.length && rows.map((row, i) =>
             <div className= { styles.row } key={ `row-${ i }` }>
               { row.map((d) =>
                 <div
