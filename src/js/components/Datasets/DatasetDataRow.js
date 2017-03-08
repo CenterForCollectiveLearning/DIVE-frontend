@@ -280,7 +280,7 @@ function mapStateToProps(state) {
   const { project, datasetSelector } = state;
   return {
     projectId: project.id,
-    datasetId: datasetSelector.datasetId
+    datasetId: datasetSelector.id
   };
 }
 

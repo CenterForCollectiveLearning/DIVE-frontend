@@ -21,17 +21,17 @@ export class AggregationSidebar extends Component {
   componentWillMount(props) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
 
-    if (project.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
+    if (project.id && datasetSelector.id && !fieldProperties.items.length && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.id)
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = nextProps;
-    const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
+    const datasetIdChanged = datasetSelector.id != this.props.datasetSelector.id;
 
-    if (project.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.loaded) && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
+    if (project.id && datasetSelector.id && (datasetIdChanged || !fieldProperties.loaded) && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.id)
     }
   }
 

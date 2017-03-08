@@ -78,12 +78,12 @@ export class ProjectTopBar extends Component {
   }
 
   render() {
-    const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
+    const { user, projects, project, datasets, datasetSelector } = this.props;
 
-    const datasetId = paramDatasetId || datasetSelector.datasetId;
+    const datasetId = datasetSelector.id;
 
     const filteredDatasets = datasets.items.filter((d) =>
-      (d.id !== datasetSelector.datasetId)
+      (d.id !== datasetSelector.id)
     )
 
     return (
@@ -101,7 +101,7 @@ export class ProjectTopBar extends Component {
                 </span>
               </div>
             </div>
-            { datasetSelector.datasetId &&
+            { datasetSelector.id &&
               <div className={ styles.section }>
                 <span className={ styles.separator }>&#9002;</span>
                 <div className={ styles.item }>
@@ -137,7 +137,7 @@ export class ProjectTopBar extends Component {
               closeAction={ this.closeDatasetSelectionModal }
               datasets={ datasets.items }
               onSelect={ this.onSelectDataset }
-              currentDatasetId={ parseInt(datasetSelector.datasetId) }
+              currentDatasetId={ parseInt(datasetSelector.id) }
             />
           </div>
         }

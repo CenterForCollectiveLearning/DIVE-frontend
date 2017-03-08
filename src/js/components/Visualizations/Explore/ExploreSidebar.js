@@ -21,18 +21,18 @@ export class ExploreSidebar extends Component {
   componentWillMount() {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded, fieldIds } = this.props;
 
-    if (project.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
+    if (project.id && datasetSelector.id && !fieldProperties.items.length && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.id)
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded, fieldIds } = nextProps;
 
-    const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
+    const datasetIdChanged = datasetSelector.id != this.props.datasetSelector.id;
 
-    if (project.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
+    if (project.id && datasetSelector.id && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.id)
     }
   }
 

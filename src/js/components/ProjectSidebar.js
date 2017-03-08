@@ -112,7 +112,7 @@ export class ProjectSidebar extends Component {
   render() {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 
-    const datasetId = paramDatasetId || datasetSelector.datasetId || (datasets.items.length > 0 && datasets.items[0].datasetId);
+    const datasetId = paramDatasetId || datasetSelector.id || (datasets.items.length > 0 && datasets.items[0].datasetId);
 
     let popoverContent = (
       <Menu>

@@ -52,9 +52,9 @@ export class DatasetTransformPage extends Component {
       fetchFieldPropertiesIfNeeded(params.projectId, params.datasetId);
     }
 
-    if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      if (datasetSelector.datasetId) {
-        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/transform`);
+    if (datasetSelector.id != this.props.datasetSelector.id) {
+      if (datasetSelector.id) {
+        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.id }/transform`);
       } else {
         push(`/projects/${ params.projectId }/datasets/upload`);
       }
@@ -88,7 +88,7 @@ export class DatasetTransformPage extends Component {
   onClickDeleteDataset() {
     const { deleteDataset, datasetSelector, project } = this.props;
 
-    deleteDataset(project.id, datasetSelector.datasetId);
+    deleteDataset(project.id, datasetSelector.id);
   }
 
   render() {

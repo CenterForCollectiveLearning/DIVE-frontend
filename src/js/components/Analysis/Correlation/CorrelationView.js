@@ -32,7 +32,7 @@ export class CorrelationView extends Component {
   componentWillMount() {
     const { projectId, datasetId, datasetSelector, datasets, correlationVariableNames, getCorrelations, correlations, conditionals, fetchDatasets } = this.props
 
-    if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
+    if (projectId && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(projectId);
     }
     if (projectId && datasetId && correlationVariableNames.length) {
@@ -167,7 +167,7 @@ function mapStateToProps(state, ownProps) {
     datasetSelector: datasetSelector,
     project: project,
     projectId: project.id,
-    datasetId: datasetSelector.datasetId,
+    datasetId: datasetSelector.id,
     correlationResult: correlationSelector.correlationResult,
     correlationVariableNames: correlationVariableNames,
     correlationScatterplots: correlationScatterplots,

@@ -55,9 +55,9 @@ export class DatasetInspectPage extends Component {
       fetchFieldPropertiesIfNeeded(params.projectId, params.datasetId);
     }
 
-    if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      if (datasetSelector.datasetId) {
-        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+    if (datasetSelector.id != this.props.datasetSelector.id) {
+      if (datasetSelector.id) {
+        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.id }/inspect`);
       } else {
         push(`/projects/${ params.projectId }/datasets/upload`);
       }
@@ -82,7 +82,7 @@ export class DatasetInspectPage extends Component {
   onClickDeleteDataset = () => {
     const { deleteDataset, datasetSelector, project } = this.props;
 
-    deleteDataset(project.id, datasetSelector.datasetId);
+    deleteDataset(project.id, datasetSelector.id);
   }
 
   onClickUploadDataset = () => {
@@ -99,7 +99,7 @@ export class DatasetInspectPage extends Component {
   render() {
     const { datasets, datasetSelector, fieldProperties, params, project, selectedLayoutType } = this.props;
     const dataset = datasets.items.filter((dataset) =>
-      dataset.datasetId == params.datasetId
+      dataset.id == params.datasetId
     )[0];
 
     return (

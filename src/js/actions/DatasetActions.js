@@ -35,7 +35,7 @@ export function selectDataset(projectId, datasetId) {
   return {
     type: SELECT_DATASET,
     projectId: projectId,
-    datasetId: datasetId
+    id: datasetId
   };
 }
 
@@ -97,7 +97,7 @@ function receiveUploadDatasetDispatcher(params, json) {
   if (json) {
     return {
       type: RECEIVE_UPLOAD_DATASET,
-      datasets: [{ datasetId: json.datasetId }],
+      datasets: [{ id: json.id }],
       projectId: params.projectId,
       error: null
     };
@@ -156,14 +156,14 @@ function requestDatasetDispatcher(projectId, datasetId) {
   return {
     type: REQUEST_DATASET,
     projectId: projectId,
-    datasetId: datasetId
+    id: datasetId
   };
 }
 
 function receiveDatasetDispatcher(params, json) {
   return {
     type: RECEIVE_DATASET,
-    datasetId: json.datasetId,
+    id: json.id,
     projectId: json.projectId,
     title: json.title,
     details: json.details,
@@ -182,7 +182,7 @@ export function fetchDataset(projectId, datasetId) {
 function deletedDatasetDispatcher(datasetId, json) {
   return {
     type: DELETED_DATASET,
-    datasetId: datasetId
+    id: datasetId
   };
 }
 
@@ -211,7 +211,7 @@ function errorTransformDispatcher(data) {
 export function requestReduceDatasetColumnsDispatcher(datasetId, columnIds) {
   return {
     type: REQUEST_REDUCE_DATASET_COLUMNS,
-    datasetId: datasetId,
+    id: datasetId,
     columnIds: columnIds
   };
 }
@@ -239,7 +239,7 @@ export function reduceDatasetColumns(projectId, datasetId, columnIds=[]) {
 function requestPivotDatasetColumnsDispatcher(datasetId, variableName, valueName, columnIds) {
   return {
     type: REQUEST_REDUCE_DATASET_COLUMNS,
-    datasetId: datasetId,
+    id: datasetId,
     columnIds: columnIds,
     variableName: variableName,
     valueName: valueName
