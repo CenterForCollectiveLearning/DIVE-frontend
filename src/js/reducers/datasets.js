@@ -2,6 +2,8 @@ import {
   REQUEST_DATASETS,
   RECEIVE_DATASETS,
   RECEIVE_UPLOAD_DATASET,
+  RECEIVE_SELECT_PRELOADED_DATASET,
+  RECEIVE_DESELECT_PRELOADED_DATASET,
   RECEIVE_DATASET,
   DELETED_DATASET,
   WIPE_PROJECT_STATE
@@ -61,6 +63,12 @@ export default function datasets(state = baseState, action) {
         return { ...state, isFetching: false, loaded: true };
       }
       return { ...state, isFetching: false, items: [...state.items, ...action.datasets], loaded: true, projectId: action.projectId };
+
+    case RECEIVE_SELECT_PRELOADED_DATASET:
+      return { ...state, isFetching: false, items: [...state.items, action.preloadedDataset], loaded: true, projectId: action.projectId };
+
+    case RECEIVE_DESELECT_PRELOADED_DATASET:
+      return { ...state, isFetching: false, items: state.items.filter((d) => d.id != action.preloadedDataset), loaded: true, projectId: action.projectId };
 
     case RECEIVE_DATASET:
       const newDataset = [{

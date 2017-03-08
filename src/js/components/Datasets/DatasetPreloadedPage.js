@@ -5,6 +5,7 @@ import DocumentTitle from 'react-document-title';
 
 import { Button, Intent } from '@blueprintjs/core';
 
+import { fetchDatasets } from '../../actions/DatasetActions';
 import { fetchPreloadedDatasets, selectPreloadedDataset, deselectPreloadedDataset } from '../../actions/PreloadedDatasetActions';
 import { chunk } from '../../helpers/helpers';
 import datasetsStyles from './Datasets.sass';
@@ -28,7 +29,11 @@ export class DatasetPreloadedPage extends Component {
   }
 
   componentWillMount() {
-    const { project, preloadedDatasets, fetchPreloadedDatasets } = this.props;
+    const { project, datasets, preloadedDatasets, fetchDatasets, fetchPreloadedDatasets } = this.props;
+
+    if (project.id && !datasets.fetchedAll && !datasets.isFetching) {
+      fetchDatasets(params.projectId);
+    }
 
     if (project.id && !preloadedDatasets.fetchedAll && !preloadedDatasets.isFetching) {
       fetchPreloadedDatasets(project.id);
@@ -36,10 +41,11 @@ export class DatasetPreloadedPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, preloadedDatasets, fetchPreloadedDatasets } = nextProps;
-    // if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-    //   push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
-    // }
+    const { project, datasets, preloadedDatasets, fetchDatasets, fetchPreloadedDatasets } = nextProps;
+
+    if (project.id !== this.props.project.id || (!datasets.fetchedAll && !datasets.isFetching)) {
+      fetchDatasets(project.id);
+    }
 
     if (project.id && !preloadedDatasets.fetchedAll && !preloadedDatasets.isFetching) {
       fetchPreloadedDatasets(project.id);
@@ -106,11 +112,12 @@ export class DatasetPreloadedPage extends Component {
 }
 
 function mapStateToProps(state) {
-  const { project, preloadedDatasets } = state;
-  return { project, preloadedDatasets };
+  const { project, datasets, preloadedDatasets } = state;
+  return { project, datasets, preloadedDatasets };
 }
 
 export default connect(mapStateToProps, {
+  fetchDatasets,
   fetchPreloadedDatasets,
   selectPreloadedDataset,
   deselectPreloadedDataset,

@@ -7,6 +7,8 @@ import {
   RECEIVE_UPLOAD_DATASET,
   RECEIVE_DATASET,
   RECEIVE_DATASETS,
+  RECEIVE_SELECT_PRELOADED_DATASET,
+  RECEIVE_DESELECT_PRELOADED_DATASET,
   SELECT_DATASET_LAYOUT_TYPE,
   SET_DATASET_INSPECT_QUERY_STRING,
   SET_DATASET_TRANSFORM_QUERY_STRING,
@@ -58,10 +60,14 @@ export default function datasetSelector(state = baseState, action) {
       }
       return { ...state, datasetId: action.datasets[0].datasetId, title: action.datasets[0].title, loaded: true, isUploading: false, error: null, projectId: action.projectId };
 
+    case RECEIVE_SELECT_PRELOADED_DATASET:
+      return { ...state, isFetching: false, datasetId: action.preloadedDataset.id, title: action.preloadedDataset.title, loaded: true, projectId: action.projectId };
+
     case RECEIVE_DATASET:
       return { ...state, datasetId: action.datasetId, title: action.title, loaded: true, progress: null, projectId: action.projectId };
 
     case RECEIVE_DATASETS:
+      console.log(action.datasets, state.title, action.datasets[0].title, action.setSelector);
       if (action.datasets.length > 0 && action.setSelector) {
         return { ...state, datasetId: state.datasetId || action.datasets[0].datasetId, title: state.title || action.datasets[0].title, loaded: true, projectId: action.projectId };
       }
