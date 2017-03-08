@@ -165,6 +165,7 @@ function receiveDatasetDispatcher(params, json) {
     type: RECEIVE_DATASET,
     id: json.id,
     projectId: json.projectId,
+    preloaded: json.preloaded,
     title: json.title,
     details: json.details,
     data: json.details ? formatTableData(json.details.fieldNames, json.details.sample) : []

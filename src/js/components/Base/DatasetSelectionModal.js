@@ -23,6 +23,7 @@ class DatasetSelectionModal extends Component {
     const { project, datasets, currentDatasetId, closeAction, isOpen } = this.props;
 
     const datasetTitles = datasets.map((d) => d.title);
+
     return (
       <Dialog
         className={ styles.selectionModal }
@@ -35,13 +36,13 @@ class DatasetSelectionModal extends Component {
           <div className={ styles.listContainer }>
             { datasets.map((dataset) =>
               <DatasetButton
-                key={ `dataset-button-${ dataset.datasetId }`}
+                key={ `dataset-button-${ dataset.id }`}
                 project={ project }
                 dataset={ dataset }
                 minimal={ true }
                 showId={ datasetTitles.filter((datasetTitle) => datasetTitle == dataset.title).length > 1 }
-                selected={ dataset.datasetId == currentDatasetId }
-                onClickButton={ () => this.onSelectDataset(dataset.datasetId) }
+                selected={ dataset.id == currentDatasetId }
+                onClickButton={ () => this.onSelectDataset(dataset.id) }
               />
             ) }
           </div>

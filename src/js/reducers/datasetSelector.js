@@ -33,6 +33,7 @@ const baseState = {
   loaded: false,
   error: null,
   projectId: null,
+  preloaded: false,
   inspectQueryString: null,
   transformQueryString: null
 }
@@ -63,12 +64,19 @@ export default function datasetSelector(state = baseState, action) {
     case RECEIVE_SELECT_PRELOADED_DATASET:
       return { ...state, isFetching: false, id: action.preloadedDataset.id, title: action.preloadedDataset.title, loaded: true, projectId: action.projectId };
 
+    case RECEIVE_DESELECT_PRELOADED_DATASET:
+      if (state.id == action.preloadedDataset.id) {
+        return { ...state, id: null };
+      } else {
+        return state;
+      }
+
     case RECEIVE_DATASET:
-      return { ...state, id: action.id, title: action.title, loaded: true, progress: null, projectId: action.projectId };
+      return { ...state, id: action.id, title: action.title, preloaded: action.preloaded, loaded: true, progress: null, projectId: action.projectId };
 
     case RECEIVE_DATASETS:
       if (action.datasets.length > 0 && action.setSelector) {
-        return { ...state, id: state.id || action.datasets[0].id, title: state.title || action.datasets[0].title, loaded: true, projectId: action.projectId };
+        return { ...state, id: state.id || action.datasets[0].id, title: state.title || action.datasets[0].title, preloaded: action.datasets[0].preloaded, loaded: true, projectId: action.projectId };
       }
       return { ...state, loaded: true, projectId: action.projectId };
 
