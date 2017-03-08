@@ -14,6 +14,7 @@ import {
   FAILED_RECEIVE_SPECS,
   SELECT_FIELD_PROPERTY,
   SET_EXPLORE_QUERY_STRING,
+  SELECT_DATASET,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -46,6 +47,7 @@ export default function specs(state=baseState, action) {
         return state;
       }
 
+    case SELECT_DATASET:
     case WIPE_PROJECT_STATE:
       return baseState;
 

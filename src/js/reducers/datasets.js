@@ -68,7 +68,7 @@ export default function datasets(state = baseState, action) {
       return { ...state, isFetching: false, items: [...state.items, action.preloadedDataset], loaded: true, projectId: action.projectId };
 
     case RECEIVE_DESELECT_PRELOADED_DATASET:
-      return { ...state, isFetching: false, items: state.items.filter((d) => d.id != action.preloadedDataset), loaded: true, projectId: action.projectId };
+      return { ...state, isFetching: false, items: state.items.filter((d) => d.id != action.preloadedDataset.id), loaded: true, projectId: action.projectId };
 
     case RECEIVE_DATASET:
       const newDataset = [{

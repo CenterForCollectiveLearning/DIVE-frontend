@@ -6,6 +6,7 @@ import {
   RECEIVE_SET_FIELD_TYPE,
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_COLOR,
+  SELECT_DATASET,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -86,6 +87,7 @@ export default function fieldProperties(state=baseState, action) {
       );
       return {...state, interactionTerms: interactionTerms }
 
+    case SELECT_DATASET:
     case WIPE_PROJECT_STATE:
       return baseState;
 
