@@ -2,6 +2,8 @@ import {
   REQUEST_PRELOADED_DATASETS,
   RECEIVE_PRELOADED_DATASETS,
   SELECT_PRELOADED_DATASET,
+  REQUEST_SELECT_PRELOADED_DATASET,
+  RECEIVE_SELECT_PRELOADED_DATASET
 } from '../constants/ActionTypes';
 
 import { fetch, httpRequest, pollForTask } from './api.js';
@@ -28,10 +30,24 @@ export function fetchPreloadedDatasets() {
   };
 }
 
-export function selectPreloadedDataset(projectId, datasetId) {
+function requestSelectPreloadedDatasetDispatcher() {
   return {
-    type: SELECT_PRELOADED_DATASET,
-    projectId: projectId,
-    datasetId: datasetId
+    type: REQUEST_SELECT_PRELOADED_DATASET
+  };
+}
+
+function receiveSelectPreloadedDatasetDispatcher(json) {
+  console.log(json);
+  return {
+    type: RECEIVE_SELECT_PRELOADED_DATASET,
+    receivedAt: Date.now()
+  };
+}
+
+export function selectPreloadedDataset(projectId, datasetId) {
+  return dispatch => {
+    dispatch(requestSelectPreloadedDatasetDispatcher());
+    return fetch(`/datasets/v1/select_preloaded_dataset?project_id=${ projectId }&dataset_id=${ datasetId }`)
+      .then(json => dispatch(receiveSelectPreloadedDatasetDispatcher(json)));
   };
 }
