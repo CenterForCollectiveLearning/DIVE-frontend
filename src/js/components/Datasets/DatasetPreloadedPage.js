@@ -53,7 +53,7 @@ export class DatasetPreloadedPage extends Component {
   }
 
   render() {
-    const { project, datasets, datasetSelector, preloadedDatasets, selectPreloadedDataset, deselectPreloadedDataset } = this.props;
+    const { project, datasets, datasetSelector, preloadedDatasets, selectPreloadedDataset, deselectPreloadedDataset, push } = this.props;
 
     const rows = chunk(preloadedDatasets.items, 3)
 
@@ -91,20 +91,31 @@ export class DatasetPreloadedPage extends Component {
                   <h5>{ d.title }</h5>
                   <p>{ d.description }</p>
                   { d.selected &&
-                    <Button
-                      className={ styles.selectButton }
-                      intent={ Intent.SUCCESS }
-                      iconName='tick'
-                      text='Selected'
-                      onClick={ () => deselectPreloadedDataset(project.id, d.id, nextDataset) }
-                    />
+                    <div className={ styles.preloadedDatasetButtons }>
+                      <Button
+                        className={ styles.selectButton }
+                        intent={ Intent.SUCCESS }
+                        iconName='tick'
+                        text='Selected'
+                        onClick={ () => deselectPreloadedDataset(project.id, d.id, nextDataset) }
+                      />
+                      <Button
+                        style={{ marginLeft: '10px'}}
+                        intent={ Intent.PRIMARY }
+                        iconName='eye-open'
+                        text='Inspect'
+                        onClick={ () => push(`/projects/${ project.id }/datasets/${ d.id }/inspect`) }
+                      />
+                    </div>
                   }
                   { !d.selected &&
-                    <Button
-                      className={ styles.selectButton }
-                      text='Select'
-                      onClick={ () => selectPreloadedDataset(project.id, d.id) }
-                    />
+                    <div className={ styles.preloadedDatasetButtons }>
+                      <Button
+                        className={ styles.selectButton }
+                        text='Select'
+                        onClick={ () => selectPreloadedDataset(project.id, d.id) }
+                      />
+                    </div>
                   }
 
                 </div>
