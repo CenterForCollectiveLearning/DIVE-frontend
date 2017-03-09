@@ -43,7 +43,7 @@ Tab.propTypes = {
   onClick: PropTypes.func,
   className: PropTypes.string,
   disabled: PropTypes.bool,
-  selectedClassName: PropTypes.string
+  selectedClassName: PropTypes.string,
 }
 
 Tab.defaultProps = {
@@ -52,7 +52,7 @@ Tab.defaultProps = {
   route: null,
   className: "",
   disabled: false,
-  selectedClassName: null
+  selectedClassName: null,
 }
 
 function mapStateToProps(state) {

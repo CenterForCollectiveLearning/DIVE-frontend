@@ -65,6 +65,10 @@ export class DatasetInspectPage extends Component {
         push(`/projects/${ params.projectId }/datasets/upload`);
       }
     }
+
+    if (datasetSelector.id == null) {
+      this.props.push(`/projects/${ params.projectId }/datasets/upload`);
+    }
   }
 
   setRecommendedInitialState() {
@@ -105,6 +109,8 @@ export class DatasetInspectPage extends Component {
       dataset.id == params.datasetId
     )[0];
 
+    const nextDataset = datasets.items.filter((d) => d.id != datasetSelector.id)[0];
+
     return (
       <DocumentTitle title={ 'Inspect' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
@@ -129,7 +135,7 @@ export class DatasetInspectPage extends Component {
                   <Button
                     iconName='remove'
                     text='Remove'
-                    onClick={ () => deselectPreloadedDataset(project.id, dataset.id )} />
+                    onClick={ () => deselectPreloadedDataset(project.id, dataset.id, nextDataset )} />
                 }
                 { !datasetSelector.preloaded &&
                   <Button
