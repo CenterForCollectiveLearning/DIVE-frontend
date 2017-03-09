@@ -15,7 +15,7 @@
   .row
     display: flex
     flex-direction: row
-    height: 150px
+    height: 200px
     margin-bottom: 10px
 
     .preloadedDataset
@@ -24,7 +24,7 @@
       display: flex
       flex-direction: column
       padding: 20px
-      min-height: 100px
+      min-height: 200px
       width: 33.33%
 
       margin-left: 10px
@@ -42,11 +42,26 @@
       &:first-child
         margin-left: 0px
 
-      p
+      .top
+        display: flex
+
+        .infoLink
+          margin-left: auto
+
+      p.description
         flex-grow: 1
 
-      .preloadedDatasetButtons
+      .bottom
         display: flex
-        align-items: flex-end
-        .selectButton
+        flex-direction: row
+
+        .tags
+          span
+            margin-right: 3px
+
+        .preloadedDatasetButtons
+          display: flex
+          align-items: flex-end
           margin-left: auto
+          .selectButton
+            margin-left: auto

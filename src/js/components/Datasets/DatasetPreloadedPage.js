@@ -88,36 +88,49 @@ export class DatasetPreloadedPage extends Component {
                     styles.preloadedDataset
                   }
                 >
-                  <h5>{ d.title }</h5>
-                  <p>{ d.description }</p>
-                  { d.selected &&
-                    <div className={ styles.preloadedDatasetButtons }>
-                      <Button
-                        className={ styles.selectButton }
-                        intent={ Intent.SUCCESS }
-                        iconName='tick'
-                        text='Selected'
-                        onClick={ () => deselectPreloadedDataset(project.id, d.id, nextDataset) }
-                      />
-                      <Button
-                        style={{ marginLeft: '10px'}}
-                        intent={ Intent.PRIMARY }
-                        iconName='eye-open'
-                        text='Inspect'
-                        onClick={ () => push(`/projects/${ project.id }/datasets/${ d.id }/inspect`) }
-                      />
+                  <div className={ styles.top }>
+                    <h5>{ d.title }</h5>
+                    { d.infoUrl &&
+                      <a className={ 'pt-icon-standard pt-icon-link ' + styles.infoLink } href={ d.infoUrl } target='_blank'/>
+                    }
+                  </div>
+                  <p className={ styles.description }>{ d.description }</p>
+                  <div className={ styles.bottom }>
+                    <div className={ styles.metadata }>
+                      <div className={ styles.tags }>
+                        { d.tags && d.tags.map((t) =>
+                            <span key={ `${ d.id }-tag-${ t }` } className={ 'pt-tag' }>{ t }</span>
+                        )}
+                      </div>
                     </div>
-                  }
-                  { !d.selected &&
-                    <div className={ styles.preloadedDatasetButtons }>
-                      <Button
-                        className={ styles.selectButton }
-                        text='Select'
-                        onClick={ () => selectPreloadedDataset(project.id, d.id) }
-                      />
-                    </div>
-                  }
-
+                    { d.selected &&
+                      <div className={ styles.preloadedDatasetButtons }>
+                        <Button
+                          className={ styles.selectButton }
+                          intent={ Intent.SUCCESS }
+                          iconName='tick'
+                          text='Selected'
+                          onClick={ () => deselectPreloadedDataset(project.id, d.id, nextDataset) }
+                        />
+                        <Button
+                          style={{ marginLeft: '10px'}}
+                          intent={ Intent.PRIMARY }
+                          iconName='eye-open'
+                          text='Inspect'
+                          onClick={ () => push(`/projects/${ project.id }/datasets/${ d.id }/inspect`) }
+                        />
+                      </div>
+                    }
+                    { !d.selected &&
+                      <div className={ styles.preloadedDatasetButtons }>
+                        <Button
+                          className={ styles.selectButton }
+                          text='Select'
+                          onClick={ () => selectPreloadedDataset(project.id, d.id) }
+                        />
+                      </div>
+                    }
+                  </div>
                 </div>
               )}
             </div>
