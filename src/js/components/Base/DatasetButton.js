@@ -66,7 +66,7 @@ class DatasetButton extends Component {
               <Button
                 iconName='remove'
                 text='Remove'
-                onClick={ () => this.props.deselectPreloadedDataset(project.id, dataset.id, nextDataset)} />
+                onClick={ () => this.props.deselectPreloadedDataset(project.id, dataset.id)} />
             }
             { !preloaded &&
               <Button onClick={ this.onClickDeleteDataset } iconName='trash' />

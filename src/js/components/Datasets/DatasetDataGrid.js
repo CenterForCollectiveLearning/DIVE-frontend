@@ -16,7 +16,7 @@ export default class DatasetDataGrid extends Component {
     var headerRows = [];
     var metadataRows = [];
 
-    if (fieldProperties.items.length && fieldProperties.datasetId == dataset.datasetId) {
+    if (fieldProperties.items.length && fieldProperties.datasetId == dataset.id) {
       const createCellContent = function (value, children) {
         return (
           <span
@@ -94,18 +94,18 @@ export default class DatasetDataGrid extends Component {
         <div className={ styles.scrollContainer }>
           <DataGrid
             containerClassName={ styles.headerRowTable }
-            datasetId={ `${ dataset.datasetId }` }
+            datasetId={ `${ dataset.id }` }
             data={ headerRows }
             customRowComponent={ DatasetRow }/>
           <DataGrid
             preloaded={ dataset.preloaded }
             containerClassName={ styles.metadataRowTable }
-            datasetId={ `${ dataset.datasetId }` }
+            datasetId={ `${ dataset.id }` }
             data={ metadataRows }
             customRowComponent={ MetadataRow }/>
           <DataGrid
             containerClassName={ styles.dataRowsTable }
-            datasetId={ `${ dataset.datasetId }` }
+            datasetId={ `${ dataset.id }` }
             data={ dataRows }
             customRowComponent={ DatasetRow }/>
         </div>
