@@ -27,8 +27,6 @@ export class DatasetTransformPage extends Component {
       pivotModalOpen: false,
       mergeDatasetsModalOpen: false
     }
-
-    this.onClickDeleteDataset = this.onClickDeleteDataset.bind(this);
   }
 
   componentWillMount() {
@@ -85,7 +83,7 @@ export class DatasetTransformPage extends Component {
     this.setState({ reduceColumnsModalOpen: false });
   }
 
-  onClickDeleteDataset() {
+  onClickDeleteDataset = () => {
     const { deleteDataset, datasetSelector, project } = this.props;
 
     deleteDataset(project.id, datasetSelector.id);
@@ -94,7 +92,7 @@ export class DatasetTransformPage extends Component {
   render() {
     const { datasets, datasetSelector, fieldProperties, params, project, projectTitle } = this.props;
     const dataset = datasets.items.filter((dataset) =>
-      dataset.datasetId == params.datasetId
+      dataset.id == params.datasetId
     )[0];
 
     return (

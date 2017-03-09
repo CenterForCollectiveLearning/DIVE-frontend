@@ -86,10 +86,18 @@ export class DatasetInspectPage extends Component {
     }
   }
 
-  onClickDeleteDataset = () => {
+  onClickDeleteDataset = (e) => {
     const { deleteDataset, datasetSelector, project } = this.props;
-
+    e.stopPropagation();
+    e.preventDefault();
     deleteDataset(project.id, datasetSelector.id);
+  }
+
+  onClickDeselectPreloadedDataset = (projectId, datasetId, e, nextDataset=null) => {
+    const { deselectPreloadedDataset } = this.props;
+    e.stopPropagation();
+    e.preventDefault();
+    deselectPreloadedDataset(projectId, datasetId, nextDataset);
   }
 
   onClickUploadDataset = () => {
@@ -135,12 +143,12 @@ export class DatasetInspectPage extends Component {
                   <Button
                     iconName='remove'
                     text='Remove'
-                    onClick={ () => deselectPreloadedDataset(project.id, dataset.id, nextDataset )} />
+                    onClick={ (e) => this.onClickDeselectPreloadedDataset(project.id, dataset.id, e, nextDataset )} />
                 }
                 { !datasetSelector.preloaded &&
                   <Button
                     iconName='trash'
-                    onClick={ this.onClickDeleteDataset } />
+                    onClick={ (e) => this.onClickDeleteDataset(e) } />
                 }
               </div>
             }
