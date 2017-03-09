@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { deleteDataset } from '../../actions/DatasetActions.js';
+import { deselectPreloadedDataset } from '../../actions/PreloadedDatasetActions';
 
 import { Button } from '@blueprintjs/core';
 
@@ -33,7 +34,7 @@ class DatasetButton extends Component {
   }
 
   render() {
-    const { project, dataset, className, minimal, showId, format, sortField, viewMode, selected, onClickButton } = this.props;
+    const { project, dataset, className, minimal, showId, format, preloaded, nextDataset, sortField, viewMode, selected, onClickButton } = this.props;
     const { datasetId, title } = dataset;
 
     const noop = () => {};
@@ -61,7 +62,15 @@ class DatasetButton extends Component {
         </div>
         { minimal &&
           <div className={ 'pt-button-group ' + styles.rightButtons }>
-            <Button onClick={ this.onClickDeleteDataset } iconName='trash' />
+            { preloaded &&
+              <Button
+                iconName='remove'
+                text='Remove'
+                onClick={ () => this.props.deselectPreloadedDataset(project.id, dataset.id, nextDataset)} />
+            }
+            { !preloaded &&
+              <Button onClick={ this.onClickDeleteDataset } iconName='trash' />
+            }
           </div>
         }
       </div>
@@ -79,7 +88,9 @@ DatasetButton.propTypes = {
   minimal: PropTypes.bool,
   showId: PropTypes.bool,
   selected: PropTypes.bool,
-  onClickButton: PropTypes.func
+  onClickButton: PropTypes.func,
+  preloaded: PropTypes.bool,
+  nextDataset: PropTypes.object
 }
 
 DatasetButton.defaultProps = {
@@ -87,11 +98,13 @@ DatasetButton.defaultProps = {
   viewMode: 'standard',
   minimal: false,
   showId: false,
-  selected: false
+  selected: false,
+  preloaded: false,
+  nextDataset: {}
 }
 
 function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps, { deleteDataset, push })(DatasetButton);
+export default connect(mapStateToProps, { deselectPreloadedDataset, deleteDataset, push })(DatasetButton);

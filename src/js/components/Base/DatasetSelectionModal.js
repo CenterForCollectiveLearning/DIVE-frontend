@@ -36,6 +36,8 @@ class DatasetSelectionModal extends Component {
           <div className={ styles.listContainer }>
             { datasets.map((dataset) =>
               <DatasetButton
+                nextDataset={ datasets.filter((d) => d.id != dataset.id)[0] }
+                preloaded={ dataset.preloaded }
                 key={ `dataset-button-${ dataset.id }`}
                 project={ project }
                 dataset={ dataset }
