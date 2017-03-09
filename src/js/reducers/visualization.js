@@ -12,6 +12,7 @@ import {
   SELECT_VISUALIZATION_DATA_CONFIG,
   SELECT_VISUALIZATION_DISPLAY_CONFIG,
   SET_SHARE_WINDOW,
+  SELECT_DATASET,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -202,6 +203,7 @@ export default function visualization(state = baseState, action) {
     case SET_SHARE_WINDOW:
       return { ...state, shareWindow: action.shareWindow };
 
+    case SELECT_DATASET:
     case WIPE_PROJECT_STATE:
       return baseState;
 

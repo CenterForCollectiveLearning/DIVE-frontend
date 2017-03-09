@@ -33,6 +33,7 @@ export class ProjectSidebar extends Component {
   _getSelectedTab = () => {
     const tabList = [
       'upload',
+      'preloaded',
       'inspect',
       'transform',
       'explore',
@@ -111,7 +112,7 @@ export class ProjectSidebar extends Component {
   render() {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 
-    const datasetId = paramDatasetId || datasetSelector.datasetId || (datasets.items.length > 0 && datasets.items[0].datasetId);
+    const datasetId = paramDatasetId || datasetSelector.id || (datasets.items.length > 0 && datasets.items[0].datasetId);
 
     let popoverContent = (
       <Menu>
@@ -141,19 +142,20 @@ export class ProjectSidebar extends Component {
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange } >
           <TabGroup heading="1. Datasets">
             <Tab label="Upload" value="upload" route={ `datasets/upload` } />
+            <Tab label="Preloaded" value="preloaded" route={ `datasets/preloaded` } />
             <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
-            <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } disabled={ !datasets.items.length }/>
+            <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } active={ !datasetSelector.preloaded } disabled={ !datasets.items.length }/>
           </TabGroup>
-          <TabGroup heading="2. Visualizations">
+          <TabGroup heading="2. Visualizations" disabled={ !datasetId }>
             <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
           </TabGroup>
-          <TabGroup heading="3. Analyses">
+          <TabGroup heading="3. Analyses" disabled={ !datasetId }>
             <Tab label="Aggregation" value="aggregation" route={ `datasets/${ datasetId }/analyze/aggregation` } disabled={ !datasetId }/>
             <Tab label="Comparison" value="comparison" route={ `datasets/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>
             <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
             <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
           </TabGroup>
-          <TabGroup heading="4. Stories">
+          <TabGroup heading="4. Stories" disabled={ !datasetId }>
             <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>
             <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
           </TabGroup>

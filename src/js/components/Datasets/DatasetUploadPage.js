@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 
+import { Button, Intent } from '@blueprintjs/core';
 import { fetchDatasets } from '../../actions/DatasetActions';
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
@@ -12,12 +13,6 @@ import Loader from '../Base/Loader';
 import HeaderBar from '../Base/HeaderBar';
 
 export class DatasetUploadPage extends Component {
-  constructor(props) {
-    super(props);
-    this.onDrop = this.onDrop.bind(this);
-    this.onOpenClick = this.onOpenClick.bind(this);
-  }
-
   componentWillMount() {
     const { project, datasets, params, fetchDatasets, fetchFieldPropertiesIfNeeded } = this.props;
 
@@ -28,8 +23,8 @@ export class DatasetUploadPage extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { project, datasets, datasetSelector, push, params, fetchDatasets } = nextProps;
-    if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+    if (datasetSelector.id != this.props.datasetSelector.id) {
+      push(`/projects/${ params.projectId }/datasets/${ datasetSelector.id }/inspect`);
     }
 
     if (project.id && !datasets.fetchedAll && !datasets.isFetching) {
@@ -37,15 +32,20 @@ export class DatasetUploadPage extends Component {
     }
   }
 
-  onDrop(files) {
+  onDrop = (files) => {
     const fileSize = files[0].size;
     const fileSizeLimit = 1000; // 100 * (1000 * 1000);
 
     this.props.uploadDataset(this.props.project.id, files[0]);
   }
 
-  onOpenClick() {
+  onOpenClick = () => {
     this.refs.dropzone.open();
+  }
+
+  onPreloadedClick = () => {
+    const { project, push } = this.props;
+    push(`/projects/${ project.id }/datasets/preloaded`);
   }
 
   render() {
@@ -68,14 +68,12 @@ export class DatasetUploadPage extends Component {
             }
             { !datasetSelector.isUploading &&
               <Dropzone ref="dropzone" className={ styles.dropzone + ' ' + styles.centeredFill } onDrop={ this.onDrop } disableClick={ true }>
-                <button
-                  type="button"
-                  className="pt-button pt-intent-primary pt-large"
-                  onClick={ this.onOpenClick }>
-                  Upload Dataset
-                </button>
+                <Button
+                  intent={ Intent.PRIMARY }
+                  className="pt-large"
+                  text="Upload Dataset"
+                  onClick={ this.onOpenClick } />
                 <div className={ styles.dragAndDrop }>or drag and drop files here</div>
-                <div className={ styles.separater }></div>
                 { !datasetSelector.error &&
                   <div className={ styles.uploadDescription }>
                     <div>Supported file types: CSV, TSV, JSON, EXCEL</div>
@@ -87,6 +85,8 @@ export class DatasetUploadPage extends Component {
                     <div>Please try another file</div>
                   </div>
                 }
+                <div className={ styles.separater }></div>
+                <div className={ styles.preloadedNav }>Or select from <span className={ styles.link } onClick={ this.onPreloadedClick }>preloaded datasets</span></div>
               </Dropzone>
             }
           </div>

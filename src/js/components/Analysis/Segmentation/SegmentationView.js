@@ -35,7 +35,7 @@ export class SegmentationView extends Component {
       fetchDatasets
     } = this.props
 
-    if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
+    if (projectId && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(projectId);
     }
 
@@ -198,7 +198,7 @@ function mapStateToProps(state) {
     datasets,
     datasetSelector,
     projectId: project.id,
-    datasetId: datasetSelector.datasetId,
+    datasetId: datasetSelector.id,
     segmentationResult,
     segmentationVariableName,
     segmentationVariableId,

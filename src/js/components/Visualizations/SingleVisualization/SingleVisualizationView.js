@@ -19,7 +19,7 @@ export class SingleVisualizationView extends Component {
   componentWillMount() {
     const { project, datasetSelector, datasets, specId, visualization, fetchSpecVisualizationIfNeeded } = this.props;
 
-    if (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
+    if (project.id && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(project.id);
     }
 
@@ -36,7 +36,7 @@ export class SingleVisualizationView extends Component {
     const dataConfigChanged = nextProps.dataConfig.lastUpdated != dataConfig.lastUpdated;
     const projectChanged = (nextProps.project.id !== project.id);
 
-    if (projectChanged || (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
+    if (projectChanged || (project.id && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded)))) {
       fetchDatasets(project.id);
     }
 
@@ -106,7 +106,7 @@ export class SingleVisualizationView extends Component {
 
   onClickExplore = () => {
     const { project, datasetSelector, exploreSelector, push } = this.props;
-    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ exploreSelector.queryString }`);
+    push(`/projects/${ project.id }/datasets/${ datasetSelector.id }/visualize/explore${ exploreSelector.queryString }`);
   }
 
   render() {

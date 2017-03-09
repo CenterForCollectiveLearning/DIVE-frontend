@@ -15,6 +15,8 @@ import {
   SET_DATASET_INSPECT_QUERY_STRING
 } from '../constants/ActionTypes';
 
+import { batchActions } from 'redux-batched-actions';
+
 import { fetch, httpRequest, pollForTask } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
@@ -35,7 +37,7 @@ export function selectDataset(projectId, datasetId) {
   return {
     type: SELECT_DATASET,
     projectId: projectId,
-    datasetId: datasetId
+    id: datasetId
   };
 }
 
@@ -97,7 +99,7 @@ function receiveUploadDatasetDispatcher(params, json) {
   if (json) {
     return {
       type: RECEIVE_UPLOAD_DATASET,
-      datasets: [{ datasetId: json.datasetId }],
+      datasets: [{ id: json.id }],
       projectId: params.projectId,
       error: null
     };
@@ -145,7 +147,10 @@ export function uploadDataset(projectId, datasetFile) {
 
     const completeEvent = (request) => (evt) => {
       const { taskId } = JSON.parse(request.responseText);
-      dispatch(pollForTask(taskId, REQUEST_UPLOAD_DATASET, {}, receiveUploadDatasetDispatcher, progressTaskUploadDatasetDispatcher, errorTaskUploadDatasetDispatcher));
+      dispatch(pollForTask(taskId, REQUEST_UPLOAD_DATASET, {}, ((params, json) => batchActions([
+        receiveUploadDatasetDispatcher(params, json),
+        selectDataset(params.projectId, json.id)
+      ])), progressTaskUploadDatasetDispatcher, errorTaskUploadDatasetDispatcher));
     };
 
     return httpRequest('POST', '/datasets/v1/upload', formData, completeEvent, uploadEvents);
@@ -156,15 +161,16 @@ function requestDatasetDispatcher(projectId, datasetId) {
   return {
     type: REQUEST_DATASET,
     projectId: projectId,
-    datasetId: datasetId
+    id: datasetId
   };
 }
 
 function receiveDatasetDispatcher(params, json) {
   return {
     type: RECEIVE_DATASET,
-    datasetId: json.datasetId,
+    id: json.id,
     projectId: json.projectId,
+    preloaded: json.preloaded,
     title: json.title,
     details: json.details,
     data: json.details ? formatTableData(json.details.fieldNames, json.details.sample) : []
@@ -182,7 +188,7 @@ export function fetchDataset(projectId, datasetId) {
 function deletedDatasetDispatcher(datasetId, json) {
   return {
     type: DELETED_DATASET,
-    datasetId: datasetId
+    id: datasetId
   };
 }
 
@@ -211,7 +217,7 @@ function errorTransformDispatcher(data) {
 export function requestReduceDatasetColumnsDispatcher(datasetId, columnIds) {
   return {
     type: REQUEST_REDUCE_DATASET_COLUMNS,
-    datasetId: datasetId,
+    id: datasetId,
     columnIds: columnIds
   };
 }
@@ -239,7 +245,7 @@ export function reduceDatasetColumns(projectId, datasetId, columnIds=[]) {
 function requestPivotDatasetColumnsDispatcher(datasetId, variableName, valueName, columnIds) {
   return {
     type: REQUEST_REDUCE_DATASET_COLUMNS,
-    datasetId: datasetId,
+    id: datasetId,
     columnIds: columnIds,
     variableName: variableName,
     valueName: valueName

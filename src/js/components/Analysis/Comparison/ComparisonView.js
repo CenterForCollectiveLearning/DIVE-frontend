@@ -207,7 +207,7 @@ function mapStateToProps(state, ownProps) {
     datasets: datasets,
     datasetSelector: datasetSelector,
     projectId: project.id,
-    datasetId: datasetSelector.datasetId,
+    datasetId: datasetSelector.id,
     canRunNumericalComparisonIndependent: canRunNumericalComparisonIndependent,
     canRunNumericalComparisonDependent: canRunNumericalComparisonDependent,
     independentVariableNames: independentVariableNames,

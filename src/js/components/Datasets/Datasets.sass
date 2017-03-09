@@ -28,7 +28,7 @@
   display: flex
   flex-direction: column
   align-items: center
-  margin-bottom: 20px
+  margin-top: 20px
   line-height: 20px
   align-items: center
 
@@ -40,6 +40,10 @@
   margin-top: 20px
   margin-bottom: 20px
   width: 70%
+
+.preloadedNav
+  .link
+    +linkStyle(14px)
 
 .datasetSelectorContainer
   display: flex
@@ -102,7 +106,6 @@
 
   .fieldTypeDropDown.dropDownMenu
     max-width: 100px
-    height: 20px
 
     > div
       > div:first-of-type
@@ -123,7 +126,7 @@
         > span:last-child
           position: absolute
           right: -9px
-          top: -1px
+          top: 3px
 
           > span:first-child
             border-width: 4px 3px 0
@@ -168,10 +171,9 @@
       border-bottom-color: #CDCDCD
       border-bottom-width: 2px
 
-      font-weight: 500
       padding: 5px 10px 4px
       text-align: left
-      height: 31px
+      height: 44px
       align-items: flex-start
 
       &:last-child

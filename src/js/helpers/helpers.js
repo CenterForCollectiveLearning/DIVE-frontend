@@ -1,6 +1,14 @@
 import React from 'react';
 import _ from 'underscore';
 
+export function chunk(array, size) {
+  return array.reduce(function (res, item, index) {
+    if (index % size === 0) { res.push([]); }
+    res[res.length-1].push(item);
+    return res;
+  }, []);
+}
+
 export function removeFromQueryString(oldQueryObject, key) {
   const newQueryObject = _.omit(oldQueryObject, key);
   return queryObjectToQueryString(newQueryObject);

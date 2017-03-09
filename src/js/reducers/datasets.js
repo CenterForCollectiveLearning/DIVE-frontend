@@ -2,6 +2,8 @@ import {
   REQUEST_DATASETS,
   RECEIVE_DATASETS,
   RECEIVE_UPLOAD_DATASET,
+  RECEIVE_SELECT_PRELOADED_DATASET,
+  RECEIVE_DESELECT_PRELOADED_DATASET,
   RECEIVE_DATASET,
   DELETED_DATASET,
   WIPE_PROJECT_STATE
@@ -14,7 +16,7 @@ function mergeDatasetLists(originalList, newList) {
     mergedList.push(originalListDataset);
 
     var newListDatasetIndex = newList.findIndex((newListDataset, j, datasets) =>
-      newListDataset.datasetId == originalListDataset.datasetId
+      newListDataset.id == originalListDataset.id
     );
 
     if (newListDatasetIndex > -1) {
@@ -28,7 +30,7 @@ function mergeDatasetLists(originalList, newList) {
 
   newList.forEach(function (newListDataset, i, newList) {
     var newListDatasetIndex = mergedList.findIndex((mergedListDataset, j, datasets) =>
-      mergedListDataset.datasetId == newListDataset.datasetId
+      mergedListDataset.id == newListDataset.id
     );
 
     if (newListDatasetIndex < 0) {
@@ -62,9 +64,15 @@ export default function datasets(state = baseState, action) {
       }
       return { ...state, isFetching: false, items: [...state.items, ...action.datasets], loaded: true, projectId: action.projectId };
 
+    case RECEIVE_SELECT_PRELOADED_DATASET:
+      return { ...state, isFetching: false, items: [...state.items, action.preloadedDataset], loaded: true, projectId: action.projectId };
+
+    case RECEIVE_DESELECT_PRELOADED_DATASET:
+      return { ...state, isFetching: false, items: state.items.filter((d) => d.id != action.preloadedDataset.id), loaded: true, projectId: action.projectId };
+
     case RECEIVE_DATASET:
       const newDataset = [{
-          datasetId: action.datasetId,
+          id: action.id,
           title: action.title,
           data: action.data,
           details: action.details
@@ -72,8 +80,7 @@ export default function datasets(state = baseState, action) {
       return { ...state, items: mergeDatasetLists(state.items, newDataset), projectId: action.projectId };
 
     case DELETED_DATASET:
-      var updatedDatasets = state.items.filter((d) => d.datasetId != action.datasetId);
-      console.log('Deleted dataset', action.datasetId);
+      var updatedDatasets = state.items.filter((d) => d.id != action.id);
       return { ...state, items: updatedDatasets };
 
     case WIPE_PROJECT_STATE:

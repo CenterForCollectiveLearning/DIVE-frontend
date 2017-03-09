@@ -12,7 +12,7 @@
     display: flex
     flex-direction: column
     margin-bottom: 13px
-
+    
     .tabGroupHeading
       +smallCapsBold
       color: $white
@@ -21,6 +21,10 @@
       margin-bottom: 5px
       padding-bottom: 5px
       border-bottom: 1px solid $left-sidebar-separator-grey
+
+      &.disabled
+        opacity: 0.3
+        pointer-events: none
 
   .tab
     padding: 0 45px

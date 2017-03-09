@@ -107,7 +107,7 @@ function mapStateToProps(state, ownProps) {
     regressionSelector,
     queryObject,
     pathname,
-    datasetId: datasetSelector.datasetId,
+    datasetId: datasetSelector.id,
     recommendationResult: regressionSelector.recommendationResult,
     persistedQueryString: regressionSelector.queryString,
     recommended: (parseFromQueryObject(queryObject, 'recommended', false) == 'true'),

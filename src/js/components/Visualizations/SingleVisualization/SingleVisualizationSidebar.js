@@ -20,8 +20,8 @@ export class SingleVisualizationSidebar extends Component {
 
   componentWillMount() {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
-    if (project.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.isFetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId);
+    if (project.id && datasetSelector.id && !fieldProperties.items.length && !fieldProperties.isFetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.id);
     }
   }
 
@@ -34,7 +34,7 @@ export class SingleVisualizationSidebar extends Component {
     }
 
     if (project.id && !fieldProperties.isFetching && fieldProperties.items.length == 0) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId);
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.id);
     }
   }
 

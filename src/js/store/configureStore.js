@@ -3,6 +3,7 @@ import { browserHistory } from 'react-router';
 import { routerMiddleware } from 'react-router-redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
+import { enableBatching } from 'redux-batched-actions';
 import { analyticsMiddleware } from '../middleware/analytics';
 import debounce from 'redux-debounced';
 import {
@@ -38,7 +39,7 @@ export default function configureStore(initialState) {
   }
 
   const store = createStore(
-    rootReducer,
+    enableBatching(rootReducer),
     initialState,
     applyMiddleware(
       ...middleware

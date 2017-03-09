@@ -16,14 +16,14 @@ export class DatasetsPage extends Component {
       if (project.id && !datasetSelector.loaded && !datasets.isFetching) {
         fetchDatasets(project.id);
       } else if (datasetSelector.loaded) {
-        if (datasetSelector.datasetId) {
-          replace(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+        if (datasetSelector.id) {
+          replace(`/projects/${ params.projectId }/datasets/${ datasetSelector.id }/inspect`);
         } else {
           replace(`/projects/${ params.projectId }/datasets/upload`);
         }
       }
     } else {
-        if (params.datasetId && params.datasetId != datasetSelector.datasetId) {
+        if (params.datasetId && params.datasetId != datasetSelector.id) {
           selectDataset(params.projectId, params.datasetId);
         }
     }
@@ -31,7 +31,7 @@ export class DatasetsPage extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { push, replace, params, routes, project, datasetSelector, datasets, fetchDatasets } = nextProps;
-    if (params.datasetId && params.datasetId != datasetSelector.datasetId) {
+    if (params.datasetId && params.datasetId != datasetSelector.id) {
       selectDataset(params.projectId, params.datasetId);
     }
 
@@ -39,8 +39,8 @@ export class DatasetsPage extends Component {
       if ((project.id && !datasetSelector.loaded && !datasets.isFetching) || (!datasets.isFetching && datasets.projectId != params.projectId)) {
         fetchDatasets(params.projectId);
       } else if (datasets.loaded && params.projectId == datasetSelector.projectId) {
-        if (datasetSelector.datasetId && params.projectId == datasetSelector.projectId) {
-          replace(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+        if (datasetSelector.id && params.projectId == datasetSelector.projectId) {
+          replace(`/projects/${ params.projectId }/datasets/${ datasetSelector.id }/inspect`);
         } else {
           replace(`/projects/${ params.projectId }/datasets/upload`);
         }

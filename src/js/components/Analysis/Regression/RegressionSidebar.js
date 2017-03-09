@@ -378,7 +378,7 @@ function mapStateToProps(state) {
   return {
     project,
     conditionals,
-    datasetId: datasetSelector.datasetId,
+    datasetId: datasetSelector.id,
     fieldProperties,
     regressionSelector
   };

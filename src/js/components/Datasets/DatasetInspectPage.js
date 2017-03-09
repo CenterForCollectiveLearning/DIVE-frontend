@@ -6,6 +6,9 @@ import { push, replace } from 'react-router-redux';
 import { parseFromQueryObject, updateQueryString } from '../../helpers/helpers';
 import { setInspectQueryString as setPersistedQueryString, getInitialState, fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
+import { deselectPreloadedDataset } from '../../actions/PreloadedDatasetActions';
+
+import { Button, Intent } from '@blueprintjs/core';
 
 import styles from './Datasets.sass';
 
@@ -55,12 +58,16 @@ export class DatasetInspectPage extends Component {
       fetchFieldPropertiesIfNeeded(params.projectId, params.datasetId);
     }
 
-    if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      if (datasetSelector.datasetId) {
-        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+    if (datasetSelector.id != this.props.datasetSelector.id) {
+      if (datasetSelector.id) {
+        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.id }/inspect`);
       } else {
         push(`/projects/${ params.projectId }/datasets/upload`);
       }
+    }
+
+    if (datasetSelector.id == null) {
+      this.props.push(`/projects/${ params.projectId }/datasets/upload`);
     }
   }
 
@@ -79,10 +86,18 @@ export class DatasetInspectPage extends Component {
     }
   }
 
-  onClickDeleteDataset = () => {
+  onClickDeleteDataset = (e) => {
     const { deleteDataset, datasetSelector, project } = this.props;
+    e.stopPropagation();
+    e.preventDefault();
+    deleteDataset(project.id, datasetSelector.id);
+  }
 
-    deleteDataset(project.id, datasetSelector.datasetId);
+  onClickDeselectPreloadedDataset = (projectId, datasetId, e, nextDataset=null) => {
+    const { deselectPreloadedDataset } = this.props;
+    e.stopPropagation();
+    e.preventDefault();
+    deselectPreloadedDataset(projectId, datasetId, nextDataset);
   }
 
   onClickUploadDataset = () => {
@@ -97,10 +112,12 @@ export class DatasetInspectPage extends Component {
   }
 
   render() {
-    const { datasets, datasetSelector, fieldProperties, params, project, selectedLayoutType } = this.props;
+    const { datasets, datasetSelector, fieldProperties, params, project, selectedLayoutType, deselectPreloadedDataset } = this.props;
     const dataset = datasets.items.filter((dataset) =>
-      dataset.datasetId == params.datasetId
+      dataset.id == params.datasetId
     )[0];
+
+    const nextDataset = datasets.items.filter((d) => d.id != datasetSelector.id)[0];
 
     return (
       <DocumentTitle title={ 'Inspect' + ( project.title ? ` | ${ project.title }` : '' ) }>
@@ -108,12 +125,11 @@ export class DatasetInspectPage extends Component {
           <HeaderBar
             actions={
               <div>
-                <button
-                  type="button"
-                  className={ "pt-button pt-intent-primary pt-icon-cloud-upload" }
-                  onClick={ this.onClickUploadDataset }>
-                  Upload New Dataset
-                </button>
+                <Button
+                  intent={ Intent.PRIMARY }
+                  iconName="upload"
+                  onClick={ this.onClickUploadDataset }
+                  text="Upload New Dataset" />
                 <ToggleButtonGroup
                   className={ styles.formatToggle }
                   toggleItems={ datasetSelector.layoutTypes }
@@ -123,10 +139,17 @@ export class DatasetInspectPage extends Component {
                   separated={ false }
                   externalSelectedItems={ [ selectedLayoutType ] }
                   onChange={ (v) => this.clickQueryStringTrackedItem({ selectedLayoutType: v }) } />
-                <button
-                  type="button"
-                  className="pt-button pt-icon-trash"
-                  onClick={ this.onClickDeleteDataset } />
+                { datasetSelector.preloaded &&
+                  <Button
+                    iconName='remove'
+                    text='Remove'
+                    onClick={ (e) => this.onClickDeselectPreloadedDataset(project.id, dataset.id, e, nextDataset )} />
+                }
+                { !datasetSelector.preloaded &&
+                  <Button
+                    iconName='trash'
+                    onClick={ (e) => this.onClickDeleteDataset(e) } />
+                }
               </div>
             }
           />
@@ -168,6 +191,7 @@ export default connect(mapStateToProps, {
   fetchDataset,
   fetchDatasets,
   fetchFieldPropertiesIfNeeded,
+  deselectPreloadedDataset,
   setPersistedQueryString,
   push,
   replace

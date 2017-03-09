@@ -5,28 +5,25 @@ export default class TabGroup extends Component {
   constructor(props) {
     super(props);
 
-    this.renderChildren = this.renderChildren.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-
     this.state = {
       collapsed: false
     }
   }
 
-  handleClick(i) {
-  const { children } = this.props;
-  const childrenAsArray = Array.isArray(children) ? children : [ children ];
+  handleClick = (i) => {
+    const { children } = this.props;
+    const childrenAsArray = Array.isArray(children) ? children : [ children ];
 
-  this.props.onChange(childrenAsArray[i]);
+    this.props.onChange(childrenAsArray[i]);
   }
 
-  onClickCollapse() {
+  onClickCollapse = () => {
     this.setState({
         collapsed: !this.state.collapsed
     });
   }
 
-  renderChildren() {
+  renderChildren = () => {
     const { children } = this.props;
     const childrenAsArray = Array.isArray(children) ? children : [ children ];
 
@@ -51,10 +48,11 @@ export default class TabGroup extends Component {
   }
 
   render() {
+    const { disabled } = this.props;
     const { collapsed } = this.state;
     return (
       <div className={ styles.tabGroup + ' ' + this.props.className }>
-        <div className={ styles.tabGroupHeading }>
+        <div className={ styles.tabGroupHeading + ( disabled ? ' ' + styles.disabled : '')}>
           { this.props.heading }
         </div>
         { this.renderChildren() }
@@ -69,10 +67,12 @@ TabGroup.propTypes = {
   heading: PropTypes.string,
   className: PropTypes.string,
   selectedClassName: PropTypes.string,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  disabled: PropTypes.bool
 }
 
 TabGroup.defaultProps = {
   className: "",
-  selectedClassName: null
+  selectedClassName: null,
+  disabled: false,
 }

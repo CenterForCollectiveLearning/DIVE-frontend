@@ -25,7 +25,7 @@ export class ExploreView extends Component {
     const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = exploreSelector;
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
 
-    if (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
+    if (project.id && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(project.id);
     }
 
@@ -33,10 +33,10 @@ export class ExploreView extends Component {
     const selectedFieldProperties = fieldProperties.items.filter((property) => fieldIds.indexOf(property.id) > -1);
     var isValidSpecLevel = getValidSpecLevelsFromNumFields(numFields, recommendationMode);
 
-    if (project.id && datasetSelector.datasetId && fieldProperties.loaded) {
+    if (project.id && datasetSelector.id && fieldProperties.loaded) {
       for (var i in isFetchingSpecLevel) {
         if (!isFetchingSpecLevel[i] && !loadedSpecLevel[i] && isValidSpecLevel[i]) {
-          fetchSpecs(project.id, datasetSelector.datasetId, selectedFieldProperties, recommendationTypes[i]);
+          fetchSpecs(project.id, datasetSelector.id, selectedFieldProperties, recommendationTypes[i]);
         }
       }
     }
@@ -48,13 +48,13 @@ export class ExploreView extends Component {
     const { datasetSelector, datasets, fieldIds, project, specs, fieldProperties, exploreSelector, exportedSpecs, recommendationMode, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = this.props;
     const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = exploreSelector;
 
-    const datasetChanged = (datasetSelector.datasetId !== previousProps.datasetSelector.datasetId);
+    const datasetChanged = (datasetSelector.id !== previousProps.datasetSelector.id);
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
     const projectChanged = (previousProps.project.id !== project.id);
     const fieldPropertiesSelected = exploreSelector.fieldProperties.find((prop) => prop.selected) != undefined;
 
 
-    if (projectChanged || (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
+    if (projectChanged || (project.id && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded)))) {
       fetchDatasets(project.id);
     }
 
@@ -62,10 +62,10 @@ export class ExploreView extends Component {
     const selectedFieldProperties = fieldProperties.items.filter((property) => fieldIds.indexOf(property.id) > -1);
     var isValidSpecLevel = getValidSpecLevelsFromNumFields(numFields, recommendationMode);
 
-    if (project.id && datasetSelector.datasetId && fieldProperties.loaded) {
+    if (project.id && datasetSelector.id && fieldProperties.loaded) {
       for (var i in isFetchingSpecLevel) {
         if (!isFetchingSpecLevel[i] && !loadedSpecLevel[i] && isValidSpecLevel[i]) {
-          fetchSpecs(project.id, datasetSelector.datasetId, selectedFieldProperties, recommendationTypes[i]);
+          fetchSpecs(project.id, datasetSelector.id, selectedFieldProperties, recommendationTypes[i]);
         }
       }
     }
@@ -80,7 +80,7 @@ export class ExploreView extends Component {
   onClickVisualization = (specId) => {
     const { project, datasetSelector, push, updateVisualizationStats } = this.props;
     // updateVisualizationStats(project.id, specId, 'click');
-    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore/${ specId }`);
+    push(`/projects/${ project.id }/datasets/${ datasetSelector.id }/visualize/explore/${ specId }`);
   }
 
   saveVisualization = (specId, specData, config) => {

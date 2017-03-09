@@ -69,7 +69,7 @@ class DatasetDataRow extends Component {
   }
 
   render() {
-    const { projectId, datasetId, fieldProperty } = this.props;
+    const { projectId, datasetId, fieldProperty, preloaded } = this.props;
     const { id, generalType, type, vizData, typeScores, isChild, isUnique, stats, uniqueValues, numNa, name } = fieldProperty;
     const { color, isId, fieldTypes } = this.state;
 
@@ -129,13 +129,17 @@ class DatasetDataRow extends Component {
             <div className={ styles.nameAndType }>
               <div className={ styles.name }>{ name }{this.state.isId}{ this.state.isId ? ' (ID)' : '' }</div>
               <div className={ styles.type }>
-                <DropDownMenu
+                { preloaded &&
+                  <span>{ fieldProperty.type }</span>
+                }
+                { !preloaded && <DropDownMenu
                   className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
                   valueClassName={ styles.fieldTypeValue }
                   value={ fieldProperty.type }
                   searchable={ true }
                   options={ this.state.fieldTypes }
                   onChange={ this.onSelectFieldType.bind(this) } />
+                }
               </div>
             </div>
             { metadataChildren }
@@ -272,15 +276,20 @@ class DatasetDataRow extends Component {
 }
 
 DatasetDataRow.propTypes = {
+  preloaded: PropTypes.bool,
   fieldProperty: PropTypes.object,
   color: PropTypes.string
+}
+
+DatasetDataRow.defaultProps = {
+  preloaded: false
 }
 
 function mapStateToProps(state) {
   const { project, datasetSelector } = state;
   return {
     projectId: project.id,
-    datasetId: datasetSelector.datasetId
+    datasetId: datasetSelector.id
   };
 }
 

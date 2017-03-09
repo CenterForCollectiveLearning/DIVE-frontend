@@ -101,7 +101,7 @@ function mapStateToProps(state) {
   return {
     datasets: datasets,
     projectId: (project.id ? `${ project.id }` : null),
-    selectedDatasetId: `${ datasetSelector.datasetId }`,
+    selectedDatasetId: `${ datasetSelector.id }`,
     preloadedProject: project.preloaded
   };
 }
