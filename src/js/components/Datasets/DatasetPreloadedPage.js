@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, AnchorButton, Intent } from '@blueprintjs/core';
 
 import { fetchDatasets } from '../../actions/DatasetActions';
 import { fetchPreloadedDatasets, selectPreloadedDataset, deselectPreloadedDataset } from '../../actions/PreloadedDatasetActions';
@@ -91,7 +91,12 @@ export class DatasetPreloadedPage extends Component {
                   <div className={ styles.top }>
                     <h5>{ d.title }</h5>
                     { d.infoUrl &&
-                      <a className={ 'pt-icon-standard pt-icon-link ' + styles.infoLink } href={ d.infoUrl } target='_blank'/>
+                      <AnchorButton
+                        className={ styles.infoLink + ' pt-minimal' }
+                        href={ d.infoUrl }
+                        target='_blank'
+                        iconName='info-sign'
+                      />
                     }
                   </div>
                   <p className={ styles.description }>{ d.description }</p>
