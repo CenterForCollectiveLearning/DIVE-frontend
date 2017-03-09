@@ -53,6 +53,7 @@
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.5.1",
     "redux-auth-wrapper": "^0.3.0",
+    "redux-batched-actions": "^0.1.5",
     "redux-debounce": "^1.0.1",
     "redux-debounced": "^0.1.1",
     "redux-devtools": "^2.1.2",

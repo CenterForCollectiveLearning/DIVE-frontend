@@ -15,6 +15,8 @@ import {
   SET_DATASET_INSPECT_QUERY_STRING
 } from '../constants/ActionTypes';
 
+import { batchActions } from 'redux-batched-actions';
+
 import { fetch, httpRequest, pollForTask } from './api.js';
 import { formatTableData } from './ActionHelpers.js'
 
@@ -145,7 +147,10 @@ export function uploadDataset(projectId, datasetFile) {
 
     const completeEvent = (request) => (evt) => {
       const { taskId } = JSON.parse(request.responseText);
-      dispatch(pollForTask(taskId, REQUEST_UPLOAD_DATASET, {}, receiveUploadDatasetDispatcher, progressTaskUploadDatasetDispatcher, errorTaskUploadDatasetDispatcher));
+      dispatch(pollForTask(taskId, REQUEST_UPLOAD_DATASET, {}, ((params, json) => batchActions([
+        receiveUploadDatasetDispatcher(params, json),
+        selectDataset(params.projectId, json.id)
+      ])), progressTaskUploadDatasetDispatcher, errorTaskUploadDatasetDispatcher));
     };
 
     return httpRequest('POST', '/datasets/v1/upload', formData, completeEvent, uploadEvents);

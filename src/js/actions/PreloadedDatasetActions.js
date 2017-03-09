@@ -8,6 +8,8 @@ import {
   RECEIVE_DESELECT_PRELOADED_DATASET
 } from '../constants/ActionTypes';
 
+import { batchActions } from 'redux-batched-actions';
+
 import { fetch, httpRequest, pollForTask } from './api.js';
 import { selectDataset } from './DatasetActions';
 
@@ -51,10 +53,10 @@ export function selectPreloadedDataset(projectId, datasetId) {
   return dispatch => {
     dispatch(requestSelectPreloadedDatasetDispatcher());
     return fetch(`/datasets/v1/select_preloaded_dataset?project_id=${ projectId }&dataset_id=${ datasetId }`)
-      .then(json => {
-        dispatch(receiveSelectPreloadedDatasetDispatcher(json))
-        dispatch(selectDataset(projectId, datasetId))
-      });
+      .then((json) => dispatch(batchActions([
+        receiveSelectPreloadedDatasetDispatcher(json),
+        selectDataset(projectId, datasetId)
+      ])));
   };
 }
 
