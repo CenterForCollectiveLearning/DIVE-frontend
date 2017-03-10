@@ -25,7 +25,7 @@ class ProjectCreateModal extends Component {
     const { createProject, closeAction, user } = this.props;
     const { projectTitle, projectDescription } = this.state;
 
-    createProject(user.id, projectTitle, projectDescription);
+    createProject(user.id, user.anonymous, projectTitle, projectDescription);
     closeAction();
   }
 

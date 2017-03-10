@@ -89,18 +89,18 @@ function shouldCreateProject(state) {
   return false;
 }
 
-export function createProjectIfNeeded(user_id, title, description) {
+export function createProjectIfNeeded(user_id, anonymous, title, description) {
   return (dispatch, getState) => {
     if (shouldCreateProject(getState())) {
-      return dispatch(createProject(user_id, title, description));
+      return dispatch(createProject(user_id, anonymous, title, description));
     }
   }
 }
 
-export function createProject(userId, title, description) {
+export function createProject(userId, anonymous, title, description) {
   const params = {
     user_id: userId || null,
-    anonymous: userId ? false : true,
+    anonymous: anonymous,
     title: title,
     description: description
   }
