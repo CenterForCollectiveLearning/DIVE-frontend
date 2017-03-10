@@ -23,7 +23,7 @@ export class ProjectsPage extends Component {
   componentDidMount() {
     const { params, user, projects, fetchProjectIfNeeded, fetchUserProjects, push } = this.props;
 
-    if (user.isAuthenticated && !user.confirmed) {
+    if (user.isAuthenticated && !user.anonymous && !user.confirmed) {
       push('/auth/unconfirmed');
     }
 

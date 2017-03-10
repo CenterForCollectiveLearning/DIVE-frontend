@@ -2,6 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import styles from './App.sass';
 import { push } from 'react-router-redux';
 
+import {
+  AUTH_ERROR
+} from '../../constants/ActionTypes';
+
 import { createAnonymousUserIfNeeded } from '../../actions/UserActions';
 import { connect } from 'react-redux';
 
@@ -16,13 +20,13 @@ export class App extends Component {
 
     const { user, createAnonymousUserIfNeeded } = this.props;
 
-    if (!user.id || (user.anonymous && !user.rememberToken)) {
+    if (!user.id || user.anonymous) {
       createAnonymousUserIfNeeded();
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { user, createAnonymousUserIfNeeded } = this.props;
+    const { user, error, createAnonymousUserIfNeeded } = this.props;
     if (user.id && !nextProps.user.id) {
       createAnonymousUserIfNeeded();
     }
@@ -43,9 +47,10 @@ App.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { user } = state;
+  const { user, error } = state;
   return {
-    user: user
+    user: user,
+    error: error
   };
 }
 

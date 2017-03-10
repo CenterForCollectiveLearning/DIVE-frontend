@@ -35,7 +35,7 @@ export class ProjectListPage extends Component {
       push('/');
     }
 
-    if (user.isAuthenticated && !user.confirmed) {
+    if (user.isAuthenticated && !user.anonymous && !user.confirmed) {
       push('/auth/unconfirmed');
     }
   }
