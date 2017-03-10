@@ -13,10 +13,6 @@ import RaisedButton from '../Base/RaisedButton';
 import ProjectButton from '../Base/ProjectButton';
 import Footer from './Footer';
 
-import MediaLabLogo from '../../../assets/MIT_ML_Logo_K_RGB.svg?name=MediaLabLogo';
-import MacroConnectionsLogo from '../../../assets/MacroConnections_Logo_K_RGB.svg?name=MacroConnectionsLogo';
-
-
 export class HomePage extends Component {
   constructor(props) {
     super(props);
@@ -143,7 +139,7 @@ export class HomePage extends Component {
               <div className={ styles.sectionHeader }>DIVE Development Team</div>
               <div className={ styles.sectionContent }>
                 <div className={ styles.textBox }>
-                  <p className="pt-running-text">DIVE is built by <a target="_blank" href="https://twitter.com/KevinZengHu">Kevin Hu</a> and <a target="_blank" href="https://twitter.com/cesifoti">César Hidalgo</a> in the <a target="_blank" href="http://macro.media.mit.edu">Macro Connections Group</a> at the <a target="_blank" href="http://media.mit.edu">MIT Media Lab</a>. To give feedback, compliments, or complaints, please e-mail us at <a href="mailto:dive@media.mit.edu" target="_top">dive@media.mit.edu</a>.</p>
+                  <p className="pt-running-text">DIVE is built by <a target="_blank" href="https://twitter.com/KevinZengHu">Kevin Hu</a> and <a target="_blank" href="https://twitter.com/cesifoti">César Hidalgo</a> in the <a target="_blank" href="http://macro.media.mit.edu">Collective Learning Group</a> at the <a target="_blank" href="http://media.mit.edu">MIT Media Lab</a>. To give feedback, compliments, or complaints, please e-mail us at <a href="mailto:dive@media.mit.edu" target="_top">dive@media.mit.edu</a>.</p>
                 </div>
                 <div className={ styles.mugshotBox }>
                   <div className={ styles.mugshots }>
