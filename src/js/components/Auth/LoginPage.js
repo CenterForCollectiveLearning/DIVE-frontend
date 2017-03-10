@@ -91,9 +91,9 @@ class LoginPage extends Component {
   }
 
   ensureNotLoggedIn(props) {
-    const { isAuthenticated, push } = props;
+    const { user, push } = props;
 
-    if (isAuthenticated){
+    if (user.isAuthenticated && !user.anonymous){
       push(props.location.query.next || '/projects');
     }
   };
@@ -192,7 +192,7 @@ LoginPage.propTypes = {
 function mapStateToProps(state) {
   const { user } = state;
   return {
-    isAuthenticated: user.isAuthenticated,
+    user: user,
     loginError: user.login.error
   };
 }
