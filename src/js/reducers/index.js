@@ -6,6 +6,7 @@ import conditionals from './conditionals';
 import correlationSelector from './correlationSelector';
 import comparisonSelector from './comparisonSelector';
 import datasets from './datasets';
+import error from './error';
 import preloadedDatasets from './preloadedDatasets';
 import datasetSelector from './datasetSelector';
 import documents from './documents'
@@ -37,6 +38,7 @@ const rootReducer = combineReducers({
   datasets,
   datasetSelector,
   documents,
+  error,
   exploreSelector,
   exportedSpec,
   exportedSpecs,

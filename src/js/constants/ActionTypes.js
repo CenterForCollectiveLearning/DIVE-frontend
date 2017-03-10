@@ -9,6 +9,7 @@ export * from './CorrelationActionTypes';
 export * from './AggregationActionTypes';
 export * from './SegmentationActionTypes';
 export * from './UserActionTypes';
+export * from './ErrorActionTypes';
 export * from './ComposeActionTypes';
 
 export const CLEAR_ANALYSIS = 'CLEAR_ANALYSIS';

@@ -16,6 +16,7 @@ import {
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
+import { errorDispatcher } from './ErrorActions';
 import { fetch } from './api.js';
 import { push } from 'react-router-redux';
 
@@ -114,7 +115,7 @@ export function createProject(userId, title, description) {
     }).then(json => {
       dispatch(createdProjectDispatcher(json))
       dispatch(push(`/projects/${ json.id }/datasets/upload`))
-    });
+    }).catch(error => dispatch(errorDispatcher(error)));
   }
 }
 

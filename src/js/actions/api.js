@@ -8,17 +8,23 @@ const API_URL = window.__env.API_URL;
 
 const taskManager = new TaskManager();
 
+
+
 function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300) {
+  const status = response.status;
+  if (status >= 200 && status < 300) {
     return response
   } else {
     const statusText = response.statusText;
-    var error = new Error(statusText)
+    var error = new Error(statusText);
+    error.statusText = statusText;
+    error.status = status;
+    error.response = response;
+
     if (window.__env.NODE_ENV != "DEVELOPMENT") {
       Raven.captureException(error);
-      error.response = response
     }
-    throw error
+    throw error;
   }
 }
 
