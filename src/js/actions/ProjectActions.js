@@ -147,6 +147,7 @@ export function deleteProjectNoReturnHome(projectId) {
     return fetch(`/projects/v1/projects/${ projectId }`, {
       method: 'delete'
     }).then(json => dispatch(deletedProjectDispatcher(json)))
+    .catch(error => dispatch(errorDispatcher(error)))
   }
 }
 
@@ -164,7 +165,8 @@ export function fetchPreloadedProjects(userId) {
   return dispatch => {
     dispatch(requestPreloadedProjectsDispatcher());
     return fetch(`/projects/v1/projects?preloaded=True` + (userId ? `&user_id=${ userId }` : ''))
-      .then(json => dispatch(receivePreloadedProjectsDispatcher(json)));
+      .then(json => dispatch(receivePreloadedProjectsDispatcher(json)))
+      .catch(error => dispatch(errorDispatcher(error)));
   };
 }
 
@@ -172,7 +174,8 @@ export function fetchUserProjects(userId) {
   return dispatch => {
     dispatch(requestUserProjectsDispatcher());
     return fetch(`/projects/v1/projects?private=True` + (userId ? `&user_id=${ userId }` : ''))
-      .then(json => dispatch(receiveUserProjectsDispatcher(json)));
+      .then(json => dispatch(receiveUserProjectsDispatcher(json)))
+      .catch(error => dispatch(errorDispatcher(error)));
   };
 }
 
@@ -180,7 +183,8 @@ function fetchProject(projectId) {
   return dispatch => {
     dispatch(requestProjectDispatcher(projectId));
     return fetch('/projects/v1/projects/' + projectId)
-      .then(json => dispatch(receiveProjectDispatcher(json)));
+      .then(json => dispatch(receiveProjectDispatcher(json)))
+      .catch(error => dispatch(errorDispatcher(error)));
   };
 }
 
@@ -207,7 +211,8 @@ export function updateProject(projectId, params) {
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     })
-    .then(json => dispatch(updatedProjectDispatcher(json)));
+    .then(json => dispatch(updatedProjectDispatcher(json)))
+    .catch(error => dispatch(errorDispatcher(error)));
   };
 }
 

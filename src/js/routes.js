@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, IndexRoute } from 'react-router';
+import { Route, IndexRoute, Redirect } from 'react-router';
 import { push } from 'react-router-redux';
 import { UserAuthWrapper } from 'redux-auth-wrapper';
 
@@ -13,6 +13,8 @@ import ResetPasswordEmailPage from './components/Auth/ResetPasswordEmailPage';
 import ResetPasswordSubmitPage from './components/Auth/ResetPasswordSubmitPage';
 
 // Landing
+import UnauthorizedPage from './components/Landing/UnauthorizedPage';
+import NotFoundPage from './components/Landing/NotFoundPage';
 import AboutPage from './components/Landing/AboutPage';
 import LandingPage from './components/Landing/LandingPage';
 import ProjectListPage from './components/Landing/ProjectListPage';
@@ -23,7 +25,6 @@ import FeaturesPage from './components/Landing/FeaturesPage';
 // Project
 import App from './components/App/App';
 import ProjectsPage from './components/ProjectsPage';
-
 // Dataset
 import DatasetsPage from './components/Datasets/DatasetsPage';
 import DatasetUploadPage from './components/Datasets/DatasetUploadPage';
@@ -114,5 +115,8 @@ export default (
       </Route>
     </Route>
     <Route path="/share/projects/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>
+    <Route path='/unauthorized' component={ UnauthorizedPage }/>    
+    <Route path='/notfound' component={ NotFoundPage }/>
+    <Redirect from='*' to='/notfound' />
   </Route>
 );
