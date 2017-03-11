@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import styles from './NotFoundPage.sass';
+import styles from './UnauthorizedPage.sass';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -13,7 +13,7 @@ import { Position, Toaster, Button, Intent, NonIdealState } from '@blueprintjs/c
 
 import Logo from '../../../assets/DIVE_logo_white.svg?name=Logo';
 
-export class NotFoundPage extends Component {
+export class UnauthorizedPage extends Component {
   goHome = () => {
     this.props.push(`/`);
   }
@@ -22,7 +22,7 @@ export class NotFoundPage extends Component {
     const { user } = this.props;
     return (
       <DocumentTitle title='DIVE | Error'>
-        <div className={ styles.fillContainer + ' ' + styles.notFoundPage }>
+        <div className={ styles.fillContainer + ' ' + styles.unauthorizedPage }>
           <nav className={ 'pt-navbar pt-dark pt-fixed-top ' + styles.header + ' ' + styles.opaque }>
             <div className="pt-navbar-group pt-align-left">
               <div className={ 'pt-navbar-heading ' + styles.logoContainer } onClick={ this.goHome }>
@@ -47,11 +47,11 @@ export class NotFoundPage extends Component {
             </div>
           </nav>
           <NonIdealState
-            className={ styles.centeredFill + ' ' + styles.notFoundPageContent }
-            title='Not Found'
-            description={ <p>The page you requested could not be located.</p> }
+            className={ styles.centeredFill + ' ' + styles.unauthorizedPageContent }
+            title='Not Authorized'
+            description={ <p>You are not authorized to view this resource.</p> }
             action={ <span className={ styles.link } onClick={ this.goHome }>Click here to return to DIVE.</span> }
-            visual='error'
+            visual='lock'
           />
           <Footer />
         </div>
@@ -65,4 +65,4 @@ function mapStateToProps(state) {
   return { user };
 }
 
-export default connect(mapStateToProps, { push })(NotFoundPage);
+export default connect(mapStateToProps, { push })(UnauthorizedPage);

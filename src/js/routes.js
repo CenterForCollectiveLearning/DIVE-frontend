@@ -13,6 +13,7 @@ import ResetPasswordEmailPage from './components/Auth/ResetPasswordEmailPage';
 import ResetPasswordSubmitPage from './components/Auth/ResetPasswordSubmitPage';
 
 // Landing
+import UnauthorizedPage from './components/Landing/UnauthorizedPage';
 import NotFoundPage from './components/Landing/NotFoundPage';
 import AboutPage from './components/Landing/AboutPage';
 import LandingPage from './components/Landing/LandingPage';
@@ -114,6 +115,7 @@ export default (
       </Route>
     </Route>
     <Route path="/share/projects/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>
+    <Route path='/unauthorized' component={ UnauthorizedPage }/>    
     <Route path='/notfound' component={ NotFoundPage }/>
     <Redirect from='*' to='/notfound' />
   </Route>

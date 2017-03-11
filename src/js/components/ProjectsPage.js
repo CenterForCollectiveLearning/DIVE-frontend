@@ -5,6 +5,10 @@ import { push } from 'react-router-redux';
 import { fetchProjectIfNeeded, fetchUserProjects } from '../actions/ProjectActions.js';
 import { closeFeedbackModal } from '../actions/FeedbackActions.js';
 
+import {
+  AUTH_ERROR
+} from '../constants/ActionTypes';
+
 import styles from './App/App.sass';
 
 import ProjectSidebar from './ProjectSidebar';
@@ -21,7 +25,7 @@ export class ProjectsPage extends Component {
   }
 
   componentDidMount() {
-    const { params, user, projects, fetchProjectIfNeeded, fetchUserProjects, push } = this.props;
+    const { params, user, error, projects, fetchProjectIfNeeded, fetchUserProjects, push } = this.props;
 
     if (user.isAuthenticated && !user.anonymous && !user.confirmed) {
       push('/auth/unconfirmed');
@@ -41,7 +45,11 @@ export class ProjectsPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, user, projects, fetchProjectIfNeeded, fetchUserProjects } = nextProps;
+    const { params, user, error, projects, fetchProjectIfNeeded, fetchUserProjects, push } = nextProps;
+
+    if (error.type == AUTH_ERROR) {
+      push('/unauthorized');
+    }
 
     if (params.projectId) {
       fetchProjectIfNeeded(params.projectId);
@@ -107,8 +115,9 @@ ProjectsPage.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { projects, project, feedback, user } = state;
+  const { projects, project, feedback, user, error } = state;
   return {
+    error,
     projects,
     project,
     feedback,
