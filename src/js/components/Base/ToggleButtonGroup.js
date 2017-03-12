@@ -20,7 +20,6 @@ export default class ToggleButtonGroup extends Component {
           <Button
             key={ `toggle-${item[valueMember]}` }
             className={
-              'pt-button ' +
               styles.toggleButton +
               ( imageNameMember ? ' ' + styles.iconButton : '' ) +
               ( item.disabled ? ' pt-disabled' : '') +
@@ -29,6 +28,7 @@ export default class ToggleButtonGroup extends Component {
             }
             style={ colorMember ? { 'borderLeftColor': item[colorMember] } : {} }
             onClick={ () => onChange(item[valueMember].toString()) }
+            iconName={ item.ptIcon ? item.iconName : '' }
             // separated={ separated }
             // splitMenu={ splitMenuItemsMember ? item[splitMenuItemsMember] : [] }
             // selectMenuItem={ selectMenuItem }

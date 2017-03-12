@@ -10,6 +10,8 @@ import ComposeBlockCorrelation from './ComposeBlockCorrelation';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import RaisedButton from '../Base/RaisedButton';
 
+import { Button, Intent } from '@blueprintjs/core';
+
 import { saveBlock, removeComposeBlock, moveComposeBlock } from '../../actions/ComposeActions'
 import { BLOCK_FORMATS } from '../../constants/BlockFormats';
 import { CONTENT_TYPES } from '../../constants/ContentTypes';
@@ -25,34 +27,34 @@ export class ComposeBlock extends Component {
       formatTypes: [
         {
           label: "Content on top",
-          content: <i className="fa fa-caret-up"></i>,
+          ptIcon: true,
+          iconName: "chevron-up",
           value: BLOCK_FORMATS.TEXT_BOTTOM,
           selected: false
         },
         {
           label: "Content on bottom",
-          content: <i className="fa fa-caret-down"></i>,
+          ptIcon: true,
+          iconName: "chevron-down",
           value: BLOCK_FORMATS.TEXT_TOP,
           selected: false
         },
         {
           label: "Content on left",
-          content: <i className="fa fa-caret-left"></i>,
+          ptIcon: true,
+          iconName: "chevron-left",
           value: BLOCK_FORMATS.TEXT_RIGHT,
           selected: false
         },
         {
           label: "Content on right",
-          content: <i className="fa fa-caret-right"></i>,
+          ptIcon: true,
+          iconName: "chevron-right",
           value: BLOCK_FORMATS.TEXT_LEFT,
           selected: true
         }
       ]
     }
-
-    this.onClickRemoveBlock = this.onClickRemoveBlock.bind(this);
-    this.onClickMoveBlockUp = this.onClickMoveBlockUp.bind(this);
-    this.onClickMoveBlockDown = this.onClickMoveBlockDown.bind(this);
   }
 
   componentWillMount() {
@@ -86,7 +88,7 @@ export class ComposeBlock extends Component {
     this.setState({ exportedSpec: exportedSpec });
   }
 
-  autoSetContentType(hasSpec) {
+  autoSetContentType = (hasSpec) => {
     const contentType = hasSpec ? CONTENT_TYPES.VISUALIZATION : CONTENT_TYPES.TEXT;
     console.log('in autoSetContentType', hasSpec, contentType);
     this.setState({ autoSetContentType: true, contentType: contentType });
@@ -106,7 +108,7 @@ export class ComposeBlock extends Component {
     }
   }
 
-  setStateBlockFormat(blockFormat) {
+  setStateBlockFormat = (blockFormat) => {
     const formats = this.state.formatTypes.map((formatType) =>
       new Object({ ...formatType, selected: formatType.value == blockFormat })
     );
@@ -114,7 +116,7 @@ export class ComposeBlock extends Component {
     this.setState({ formatTypes: formats, selectedBlockFormat: blockFormat });
   }
 
-  selectBlockFormat(blockFormat) {
+  selectBlockFormat = (blockFormat) => {
     const { block, saveBlock } = this.props;
 
     if (block.format != blockFormat){
@@ -124,22 +126,22 @@ export class ComposeBlock extends Component {
     this.setStateBlockFormat(blockFormat);
   }
 
-  onClickRemoveBlock() {
+  onClickRemoveBlock = () => {
     const { block, removeComposeBlock } = this.props;
     removeComposeBlock(block.uuid);
   }
 
-  onClickMoveBlockUp() {
+  onClickMoveBlockUp = () => {
     const { block, moveComposeBlock } = this.props;
     moveComposeBlock(block.uuid, -1);
   }
 
-  onClickMoveBlockDown() {
+  onClickMoveBlockDown = () => {
     const { block, moveComposeBlock } = this.props;
     moveComposeBlock(block.uuid, 1);
   }
 
-  getBlockContent() {
+  getBlockContent = () => {
     const { exportedSpec, selectedBlockFormat } = this.state;
     const { block, editable, fieldNameToColor } = this.props;
 
@@ -241,51 +243,46 @@ export class ComposeBlock extends Component {
     return formatBlock;
   }
 
-  getBlockControls() {
+  getBlockControls = () => {
     const { formatTypes, contentType } = this.state;
     const { index, length } = this.props;
 
     let blockControls;
 
     const moveUpButton =
-      <RaisedButton
-        className={ styles.visualizationOverlayButton + ' ' + styles.visualizationOverlayControl }
-        icon
+      <Button
         minWidth={ 24 }
         disabled={ index == 0 }
         altText="Move block up"
-        onClick={ this.onClickMoveBlockUp }>
-        <i className="fa fa-long-arrow-up"></i>
-      </RaisedButton>;
+        onClick={ this.onClickMoveBlockUp }
+        iconName="pt-icon-arrow-up"
+      />
 
     const moveDownButton =
-      <RaisedButton
-        className={ styles.visualizationOverlayButton + ' ' + styles.visualizationOverlayControl }
-        icon
+      <Button
         minWidth={ 24 }
         disabled={ index == length - 1 }
         altText="Move block down"
-        onClick={ this.onClickMoveBlockDown }>
-        <i className="fa fa-long-arrow-down"></i>
-      </RaisedButton>;
+        onClick={ this.onClickMoveBlockDown }
+        iconName="pt-icon-arrow-down" />
 
     const removeBlockButton =
-      <RaisedButton
+      <Button
         className={ styles.visualizationOverlayButton + ' ' + styles.visualizationOverlayControl }
-        icon
         minWidth={ 24 }
         altText="Remove"
-        onClick={ this.onClickRemoveBlock }>
-        <i className="fa">&times;</i>
-      </RaisedButton>;
+        onClick={ this.onClickRemoveBlock }
+        iconName="pt-icon-small-cross" />
 
 
     switch (contentType){
       case CONTENT_TYPES.TEXT:
         blockControls =
           <div className={ styles.composeVisualizationControls }>
-            { moveUpButton }
-            { moveDownButton }
+            <div className={ "pt-button-group " + styles.visualizationOverlayControl }>
+              { moveUpButton }
+              { moveDownButton }
+            </div>
             { removeBlockButton }
           </div>;
         break;
@@ -303,8 +300,10 @@ export class ComposeBlock extends Component {
               displayTextMember="content"
               valueMember="value"
               onChange={ this.selectBlockFormat.bind(this) } />
-            { moveUpButton }
-            { moveDownButton }
+            <div className={ "pt-button-group " + styles.visualizationOverlayControl }>
+              { moveUpButton }
+              { moveDownButton }
+            </div>
             { removeBlockButton }
           </div>;
         break;
