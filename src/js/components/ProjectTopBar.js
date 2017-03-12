@@ -86,15 +86,18 @@ export class ProjectTopBar extends Component {
       (d.id !== datasetSelector.id)
     )
 
+    const multipleProjects = (!project.preloaded && projects.userProjects.length > 1);
+    const multipleDatasets = (datasets.items.length > 1);
+
     return (
       <div className={ styles.projectTopBar }>
         { project.title && !project.userProjects &&
           <div className={ styles.projectTopBarLeft}>
             <div className={ styles.section }>
               <div className={ styles.item }>
-                <div className={ styles.label }>Project</div>
+                <div className={ styles.label }>Project { multipleProjects && <span className={ styles.selectorChevron + ' pt-icon-standard pt-icon-chevron-down'} /> }</div>
                 <span
-                  className={ styles.value + ((!project.preloaded && projects.userProjects.length > 1) ? ' ' + styles.multiple : '') }
+                  className={ styles.value + ( multipleProjects ? ' ' + styles.multiple : '') }
                   onClick={ this.openProjectSelectionModal }
                 >
                   { project.title }
@@ -105,9 +108,9 @@ export class ProjectTopBar extends Component {
               <div className={ styles.section }>
                 <span className={ styles.separator }>&#9002;</span>
                 <div className={ styles.item }>
-                  <div className={ styles.label }>Dataset</div>
+                  <div className={ styles.label }>Dataset { multipleDatasets && <span className={ styles.selectorChevron + ' pt-icon-standard pt-icon-chevron-down'} /> }</div>
                   <span
-                    className={ styles.value + (datasets.items.length > 1 ?  ' ' + styles.multiple : '')}
+                    className={ styles.value + ( multipleDatasets ?  ' ' + styles.multiple : '')}
                     onClick={ this.openDatasetSelectionModal }
                   >
                     { datasetSelector.title }
