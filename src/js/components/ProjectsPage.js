@@ -93,14 +93,13 @@ export class ProjectsPage extends Component {
               <span>Give Feedback</span>
               <span className={ styles.smile }>&#x263a;</span>
           </div>
-          { this.state.feedbackModalOpen &&
-            <FeedbackModal
-              user={ user }
-              project={ project }
-              feedback={ feedback }
-              location={ location }
-              closeAction={ this.closeFeedbackModal }/>
-          }
+          <FeedbackModal
+            isOpen={ this.state.feedbackModalOpen }
+            user={ user }
+            project={ project }
+            feedback={ feedback }
+            location={ location }
+            closeAction={ this.closeFeedbackModal }/>
         </div>
       </DocumentTitle>
     );
