@@ -5,6 +5,8 @@ import { push } from 'react-router-redux';
 import { fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 
+import { Button, Intent } from '@blueprintjs/core';
+
 import stylesDatasets from './Datasets.sass';
 import stylesTransform from './DatasetTransform.sass';
 const styles = { ...stylesDatasets, ...stylesTransform };
@@ -59,27 +61,27 @@ export class DatasetTransformPage extends Component {
     }
   }
 
-  openMergeDatasetsModal() {
+  openMergeDatasetsModal = () => {
     this.setState({ mergeDatasetsModalOpen: true });
   }
 
-  closeMergeDatasetsModal() {
+  closeMergeDatasetsModal = () => {
     this.setState({ mergeDatasetsModalOpen: false });
   }
 
-  openPivotModal() {
+  openPivotModal = () => {
     this.setState({ pivotModalOpen: true });
   }
 
-  closePivotModal() {
+  closePivotModal = () => {
     this.setState({ pivotModalOpen: false });
   }
 
-  openColumnReductionModal() {
+  openColumnReductionModal = () => {
     this.setState({ reduceColumnsModalOpen: true });
   }
 
-  closeColumnReductionModal() {
+  closeColumnReductionModal = () => {
     this.setState({ reduceColumnsModalOpen: false });
   }
 
@@ -102,22 +104,32 @@ export class DatasetTransformPage extends Component {
             actions={
               <div className={ styles.headerControlRow }>
                 <div className={ styles.headerControl }>
-                  <RaisedButton icon onClick={ this.onClickDeleteDataset }>
-                    <i className="fa fa-trash"></i>
-                  </RaisedButton>
+                  <Button
+                    iconName='trash'
+                    onClick={ this.onClickDeleteDataset }
+                  />
                 </div>
               </div>
             }
           />
           <div className={ styles.transformActions }>
             <div className={ styles.transformAction }>
-              <RaisedButton label="Reduce columns" onClick={ this.openColumnReductionModal.bind(this) }/>
+              <Button
+                text="Reduce columns"
+                onClick={ this.openColumnReductionModal }
+              />
             </div>
             <div className={ styles.transformAction }>
-              <RaisedButton label="Pivot" onClick={ this.openPivotModal.bind(this) }/>
+              <Button
+                text="Pivot"
+                onClick={ this.openPivotModal }
+              />
             </div>
             <div className={ styles.transformAction }>
-              <RaisedButton label="Combine datasets" onClick={ this.openMergeDatasetsModal.bind(this) }/>
+              <Button
+                text="Combine datasets"
+                onClick={ this.openMergeDatasetsModal }
+              />
             </div>
           </div>
 

@@ -90,7 +90,7 @@ export class SingleVisualizationSidebar extends Component {
                   onChange={ selectSingleVisualizationSortField } />
                 <ToggleButtonGroup
                   className={ styles.sortOrder }
-                  toggleItems={ visualization.sortOrders.map((sortOrder) => new Object({...sortOrder, icon: <i className={ sortOrder.iconName }></i> })) }
+                  toggleItems={ visualization.sortOrders.map((sortOrder) => new Object({...sortOrder, icon: <span className={ 'pt-icon-standard ' + sortOrder.iconName + ' ' + styles.sortIcon } /> })) }
                   valueMember="id"
                   displayTextMember="icon"
                   altTextMember="name"

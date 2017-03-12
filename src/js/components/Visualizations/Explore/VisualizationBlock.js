@@ -11,7 +11,7 @@ export default class VisualizationBlock extends Component {
     onClick(spec.id);
   }
 
-  saveVisualization() {
+  saveVisualization = () => {
     const { spec, saveVisualization } = this.props;
     saveVisualization(spec.id, spec.data.visualize);
   }
@@ -32,8 +32,8 @@ export default class VisualizationBlock extends Component {
           onClick={ this.onClick.bind(this) }
           isMinimalView={ true }
           showHeader={ true } />
-        <div className={ styles.starContainer } onClick={ this.saveVisualization.bind(this) }>
-          <i className={ exportedSpecs.items.find((exportedSpec) => exportedSpec.specId == spec.id) ? 'fa fa-star ' + styles.starred : 'fa fa-star-o' }></i>
+        <div className={ styles.starContainer } onClick={ this.saveVisualization }>
+          <span className={ 'pt-icon-standard ' + ( exportedSpecs.items.find((exportedSpec) => exportedSpec.specId == spec.id) ? 'pt-icon-star ' + styles.starred : 'pt-icon-star-empty' ) } />
         </div>
         { showStats &&
           <div className={ styles.stats }>

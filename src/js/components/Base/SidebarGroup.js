@@ -62,9 +62,7 @@ export default class SidebarGroup extends Component {
                   hoverOpenDelay={ 100 }
                   hoverCloseDelay={ 100 }
                 >
-                  <i
-                    className={'fa fa-question-circle' + ' ' + styles.helperButton }
-                  />
+                  <span className={ 'pt-icon-standard pt-icon-help ' + styles.helperButton } />
                </Popover>
               }
               { rightAction && <span className={ styles.rightAction }>{ rightAction }</span> }

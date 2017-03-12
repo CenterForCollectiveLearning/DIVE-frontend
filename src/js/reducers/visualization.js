@@ -61,13 +61,13 @@ const SORT_ORDERS = [
   {
     id: 'asc',
     name: 'Ascending',
-    iconName: 'fa fa-rotate-270 fa-sort-amount-asc',
+    iconName: 'pt-icon-sort-asc',
     selected: true
   },
   {
     id: 'desc',
     name: 'Descending',
-    iconName: 'fa fa-rotate-270 fa-sort-amount-desc',
+    iconName: 'pt-icon-sort-desc',
     selected: false
   }
 ];
