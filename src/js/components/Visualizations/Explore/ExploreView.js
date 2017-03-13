@@ -152,7 +152,6 @@ export class ExploreView extends Component {
       }
     ]
 
-    console.log(recommendationTypesWithData);
     const context = this;
 
     return (

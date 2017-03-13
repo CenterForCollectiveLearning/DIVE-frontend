@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Intent, NonIdealState } from '@blueprintjs/core';
 import { fetchDatasets } from '../../actions/DatasetActions';
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
@@ -62,7 +62,19 @@ export class DatasetUploadPage extends Component {
                 <Loader text={ datasetSelector.progress } />
               }
               { datasetSelector.error &&
-                <Loader text={ datasetSelector.error } error={ true }/>
+                <NonIdealState
+                  title='Error uploading dataset'
+                  description={ datasetSelector.error }
+                  visual='error'
+                  action={ <div className={ styles.errorAction }>
+                      <Button
+                        onClick={ () => location.reload() }
+                        iconName='refresh'
+                        intent={ Intent.PRIMARY }
+                        text="Refresh DIVE" />
+                      </div>
+                  }
+                />
               }
               </div>
             }

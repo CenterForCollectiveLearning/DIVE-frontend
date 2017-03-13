@@ -89,11 +89,10 @@ function progressTaskUploadDatasetDispatcher(data) {
   }
 }
 
-function errorTaskUploadDatasetDispatcher(event) {
-  console.error(event, event.message);
+function errorTaskUploadDatasetDispatcher(json) {
   return {
     type: ERROR_UPLOAD_DATASET,
-    error: event.message ? event.message : 'Error uploading dataset ☹'
+    error: json.message ? json.message : 'Error uploading dataset'
   }
 }
 

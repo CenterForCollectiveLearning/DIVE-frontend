@@ -99,9 +99,9 @@ export function pollForTask(taskId, taskMode, taskType, dispatcherParams, dispat
     taskManager.updateTask(taskId);
   }
 
-  // if (DEBUG) {
-  //   taskManager.outputStateAsTable();
-  // }
+  if (DEBUG) {
+    taskManager.outputStateAsTable();
+  }
 
   return dispatch => {
     return isomorphicFetch(completeUrl, {})

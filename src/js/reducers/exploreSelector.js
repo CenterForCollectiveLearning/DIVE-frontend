@@ -132,11 +132,16 @@ export default function exploreSelector(state = baseState, action) {
     case REQUEST_INDIVIDUAL_SPECS:
     case REQUEST_SUBSET_SPECS:
     case REQUEST_EXPANDED_SPECS:
-      var { isFetchingSpecLevel: requestIsFetchingSpecLevel } = state;
+      var {
+        isFetchingSpecLevel: requestIsFetchingSpecLevel,
+        errorByLevel: requestErrorByLevel
+      } = state;
       requestIsFetchingSpecLevel[action.selectedRecommendationLevel] = true;
+      requestErrorByLevel[action.selectedRecommendationLevel] = false;
 
       return {
         ...state,
+        errorByLevel: requestErrorByLevel,
         isFetchingSpecLevel: requestIsFetchingSpecLevel,
         isFetching: true,
         loading: false
@@ -157,7 +162,6 @@ export default function exploreSelector(state = baseState, action) {
     case RECEIVE_INDIVIDUAL_SPECS:
     case RECEIVE_SUBSET_SPECS:
     case RECEIVE_EXPANDED_SPECS:
-
       var {
         isFetchingSpecLevel: receiveIsFetchingSpecLevel,
         loadedSpecLevel: receiveLoadedSpecLevel
@@ -167,9 +171,31 @@ export default function exploreSelector(state = baseState, action) {
 
       return {
         ...state,
+        loadedSpecLevel: receiveLoadedSpecLevel,
         isFetchingSpecLevel: receiveIsFetchingSpecLevel,
-        loadedSpecLevel: receiveLoadedSpecLevel
       };
+
+    case ERROR_EXACT_SPECS:
+    case ERROR_INDIVIDUAL_SPECS:
+    case ERROR_SUBSET_SPECS:
+    case ERROR_EXPANDED_SPECS:
+      const {
+        isFetchingSpecLevel: errorIsFetchingSpecLevel,
+        errorByLevel: errorErrorByLevel,
+        loadedSpecLevel: errorLoadedSpecLevel } = state;
+      const specLevel = specActionTypeToIndex[action.type];
+
+      errorIsFetchingSpecLevel[specLevel] = false;
+      errorErrorByLevel[specLevel] = action.message;
+      errorLoadedSpecLevel[specLevel] = true;
+
+      return { ...state,
+        loadedSpecLevel: errorLoadedSpecLevel,
+        isFetchingSpecLevel: errorIsFetchingSpecLevel,
+        errorByLevel: errorErrorByLevel
+      };
+
+      return state;
 
     case SELECT_DATASET:
     case WIPE_PROJECT_STATE:
@@ -182,6 +208,7 @@ export default function exploreSelector(state = baseState, action) {
         return {
           ...state,
           queryString: action.queryString,
+          errorByLevel: [ null, null, null, null ],
           progressByLevel: [ null, null, null, null ],
           isFetchingSpecLevel: [ false, false, false, false ],
           loadedSpecLevel: [ false, false, false, false ],
