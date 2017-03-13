@@ -2,15 +2,19 @@ import _ from 'underscore';
 
 import {
   COMPARISON_MODE,
+  UPDATE_COMPARISON_INPUT,
   REQUEST_NUMERICAL_COMPARISON,
   RECEIVE_NUMERICAL_COMPARISON,
-  UPDATE_COMPARISON_INPUT,
+  ERROR_NUMERICAL_COMPARISON,
   REQUEST_ANOVA,
   RECEIVE_ANOVA,
+  ERROR_ANOVA,
   REQUEST_ANOVA_BOXPLOT_DATA,
   RECEIVE_ANOVA_BOXPLOT_DATA,
+  ERROR_ANOVA_BOXPLOT_DATA,
   REQUEST_PAIRWISE_COMPARISON_DATA,
   RECEIVE_PAIRWISE_COMPARISON_DATA,
+  ERROR_PAIRWISE_COMPARISON_DATA,
   SELECT_CONDITIONAL,
   SET_COMPARISON_QUERY_STRING
 } from '../constants/ActionTypes';
@@ -77,6 +81,13 @@ function receiveNumericalComparisonDispatcher(json) {
   };
 }
 
+function errorNumericalComparisonDispatcher(json) {
+  return {
+    type: ERROR_NUMERICAL_COMPARISON,
+    message: json.error
+  };
+}
+
 export function runNumericalComparison(projectId, datasetId, independentVariableNames, independence, conditionals=[]) {
   const params = {
     projectId: projectId,
@@ -99,7 +110,10 @@ export function runNumericalComparison(projectId, datasetId, independentVariable
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(json => dispatch(receiveNumericalComparisonDispatcher(json)))
-      .catch(err => console.error("Error performing numerical comparison: ", err));
+      .catch(err => {
+        dispatch(errorNumericalComparisonDispatcher(err));
+        console.error("Error performing numerical comparison: ", err);
+      });
   };
 }
 
@@ -114,6 +128,13 @@ function receiveAnovaDispatcher(json) {
     type: RECEIVE_ANOVA,
     data: json,
     receivedAt: Date.now()
+  };
+}
+
+function errorAnovaDispatcher(json) {
+  return {
+    type: RECEIVE_ANOVA,
+    message: json.error,
   };
 }
 
@@ -139,7 +160,10 @@ export function runAnova(projectId, datasetId, independentVariableNames, depende
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(json => dispatch(receiveAnovaDispatcher(json)))
-      .catch(err => console.error("Error performing anova: ", err));
+      .catch(err => {
+        dispatch(dispatch(errorAnovaDispatcher(err)))
+        console.error("Error performing anova: ", err);
+      });
   };
 }
 
@@ -157,6 +181,12 @@ function receiveAnovaBoxplotDispatcher(json) {
   };
 }
 
+function errorAnovaBoxplotDispatcher(json) {
+  return {
+    type: ERROR_ANOVA_BOXPLOT_DATA,
+    message: json.error
+  };
+}
 
 export function getAnovaBoxplotData(projectId, datasetId, independentVariableNames, dependentVariableNames, conditionals=[]) {
   const params = {
@@ -181,7 +211,10 @@ export function getAnovaBoxplotData(projectId, datasetId, independentVariableNam
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(json => dispatch(receiveAnovaBoxplotDispatcher(json)))
-      .catch(err => console.error("Error getting ANOVA boxplot: ", err));
+      .catch(err => {
+        dispatch(errorCorrelationDispatcher(err));
+        console.error("Error getting ANOVA boxplot: ", err);
+      });
   };
 }
 
@@ -199,6 +232,12 @@ function receivePairwiseComparisonDispatcher(json) {
   };
 }
 
+function errorPairwiseComparisonDispatcher(json) {
+  return {
+    type: RECEIVE_PAIRWISE_COMPARISON_DATA,
+    error: json.message
+  };
+}
 
 export function getPairwiseComparisonData(projectId, datasetId, independentVariableNames, dependentVariableNames, conditionals=[]) {
   const params = {
@@ -217,12 +256,15 @@ export function getPairwiseComparisonData(projectId, datasetId, independentVaria
   }
 
   return (dispatch) => {
-    dispatch(requestPairwiseComparisonDispatcher);
+    dispatch(requestPairwiseComparisonDispatcher());
     return fetch('/statistics/v1/pairwise_comparison', {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(json => dispatch(receivePairwiseComparisonDispatcher(json)))
-      .catch(err => console.error("Error getting pairwise comparison: ", err));
+      .catch(err => {
+        dispatch(errorPairwiseComparisonDispatcher(err))
+        console.error("Error getting pairwise comparison: ", err);
+      });
   };
 }
