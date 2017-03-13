@@ -93,7 +93,7 @@ export const minimalOptions = {
     gridlines: {
       count: 0,
       color: 'transparent'
-    },
+    }
   },
   height: 140,
   highlightOnMouseOver: false,
@@ -120,13 +120,6 @@ export const minimalOptions = {
     }
   },
   vAxes: [
-    {
-      baselineColor: 'transparent',
-      textPosition: 'none',
-      gridlines: {
-        count: 0
-      }
-    },
     {
       baselineColor: 'transparent',
       textPosition: 'none',
