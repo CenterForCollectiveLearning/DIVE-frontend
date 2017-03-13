@@ -127,8 +127,8 @@ function progressAggregationDispatcher(data) {
 
 function errorAggregationDispatcher(json) {
   return {
-    type: PROGRESS_AGGREGATION,
-    progress: 'Error calculating aggregation table, please check console.'
+    type: ERROR_AGGREGATION,
+    message: json.error
   };
 }
 
@@ -193,8 +193,8 @@ function progressOneDAggregationDispatcher(data) {
 
 function errorOneDAggregationDispatcher(json) {
   return {
-    type: PROGRESS_ONE_D_AGGREGATION,
-    progress: 'Error calculating one dimensional aggregation table, please check console.'
+    type: ERROR_ONE_D_AGGREGATION,
+    message: json.error
   };
 }
 

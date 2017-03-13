@@ -80,7 +80,7 @@ function receiveCorrelationDispatcher(params, json) {
 function errorCorrelationDispatcher(json) {
   return {
     type: ERROR_CORRELATION,
-    progress: 'Error running correlations, please check console.'
+    message: json.error
   };
 }
 

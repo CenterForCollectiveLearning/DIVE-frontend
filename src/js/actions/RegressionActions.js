@@ -194,8 +194,8 @@ function progressRunRegressionDispatcher(data) {
 
 function errorRunRegressionDispatcher(data) {
   return {
-    type: PROGRESS_RUN_REGRESSION,
-    progress: 'Error running regressions, please check console.'
+    type: ERROR_RUN_REGRESSION,
+    message: data.error
   };
 }
 

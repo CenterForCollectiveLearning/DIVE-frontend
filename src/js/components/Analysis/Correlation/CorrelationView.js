@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Button, NonIdealState } from '@blueprintjs/core';
+import { Button, NonIdealState, Intent } from '@blueprintjs/core';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { getCorrelations, getCorrelationScatterplot, createExportedCorrelation } from '../../../actions/CorrelationActions';
@@ -86,7 +86,26 @@ export class CorrelationView extends Component {
     const saved = (correlationResult.isSaving || (!correlationResult.isSaving && correlationResult.exportedRegressionId) || correlationResult.exported) ? true : false;
 
     var correlationContent;
-    if (correlationVariableNames.length < 2) {
+    if (correlationResult.error) {
+      correlationContent = <div className={ styles.centeredFill }>
+        <NonIdealState
+          title='Error Running Correlation'
+          description={ correlationResult.error }
+          visual='error'
+          action={ <div className={ styles.errorAction }>
+              <div>Please change your selection or</div>
+              <Button
+                onClick={ () => location.reload() }
+                iconName='refresh'
+                intent={ Intent.PRIMARY }
+                text="Refresh DIVE" />
+              </div>
+          }
+        />
+      </div>
+    }
+
+    if (!correlationResult.error && correlationVariableNames.length < 2) {
       correlationContent = <div className={ styles.centeredFill }>
         <NonIdealState
           title='Too Few Variables Selected'
@@ -95,7 +114,7 @@ export class CorrelationView extends Component {
         />
       </div>
     }
-    else if (twoCorrelationVariablesSelected ) {
+    else if (!correlationResult.error && twoCorrelationVariablesSelected ) {
       correlationContent =
         <div className={ styles.correlationViewContainer }>
           <Card header={

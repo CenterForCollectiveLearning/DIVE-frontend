@@ -3,19 +3,19 @@ import {
   REQUEST_EXACT_SPECS,
   PROGRESS_EXACT_SPECS,
   RECEIVE_EXACT_SPECS,
-  FAILED_RECEIVE_EXACT_SPECS,
+  ERROR_EXACT_SPECS,
   REQUEST_INDIVIDUAL_SPECS,
   PROGRESS_INDIVIDUAL_SPECS,
   RECEIVE_INDIVIDUAL_SPECS,
-  FAILED_RECEIVE_INDIVIDUAL_SPECS,
+  ERROR_INDIVIDUAL_SPECS,
   REQUEST_SUBSET_SPECS,
   PROGRESS_SUBSET_SPECS,
   RECEIVE_SUBSET_SPECS,
-  FAILED_RECEIVE_SUBSET_SPECS,
+  ERROR_SUBSET_SPECS,
   REQUEST_EXPANDED_SPECS,
   PROGRESS_EXPANDED_SPECS,
   RECEIVE_EXPANDED_SPECS,
-  FAILED_RECEIVE_EXPANDED_SPECS,
+  ERROR_EXPANDED_SPECS,
   PROGRESS_SPECS,
   SELECT_RECOMMENDATION_TYPE,
   SELECT_VISUALIZATION_TYPE,
@@ -48,25 +48,25 @@ const specLevelToAction = [
     request: REQUEST_EXACT_SPECS,
     progress: PROGRESS_EXACT_SPECS,
     receive: RECEIVE_EXACT_SPECS,
-    fail: FAILED_RECEIVE_EXACT_SPECS
+    error: ERROR_EXACT_SPECS
   },
   {
     request: REQUEST_SUBSET_SPECS,
     progress: PROGRESS_SUBSET_SPECS,
     receive: RECEIVE_SUBSET_SPECS,
-    fail: FAILED_RECEIVE_SUBSET_SPECS
+    error: ERROR_SUBSET_SPECS
   },
   {
     request: REQUEST_INDIVIDUAL_SPECS,
     progress: PROGRESS_INDIVIDUAL_SPECS,
     receive: RECEIVE_INDIVIDUAL_SPECS,
-    fail: FAILED_RECEIVE_INDIVIDUAL_SPECS
+    error: ERROR_INDIVIDUAL_SPECS
   },
   {
     request: REQUEST_EXPANDED_SPECS,
     progress: PROGRESS_EXPANDED_SPECS,
     receive: RECEIVE_EXPANDED_SPECS,
-    fail: FAILED_RECEIVE_EXPANDED_SPECS
+    error: ERROR_EXPANDED_SPECS
   },
 ]
 
@@ -178,8 +178,8 @@ function progressSpecsDispatcherWrapper(selectedRecommendationLevel) {
 function errorSpecsDispatcherWrapper(selectedRecommendationLevel) {
   return (data) => {
     return {
-      type: specLevelToAction[selectedRecommendationLevel].progress,
-      progress:'Error processing visualizations, please check console.'
+      type: specLevelToAction[selectedRecommendationLevel].error,
+      message: data.error
     };
   }
 }
@@ -197,10 +197,10 @@ function receiveSpecsDispatcher(params, json) {
 
   return {
     ...params,
-    type: specLevelToAction[recommendationLevel].fail,
+    type: specLevelToAction[recommendationLevel].error,
     specs: [],
     receivedAt: Date.now(),
-    error: (json && json.error) ? json.error : "Error retrieving visualizations."
+    error: (json && json.message) ? json.message : "Error retrieving visualizations."
   };
 }
 

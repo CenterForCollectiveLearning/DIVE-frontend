@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { NonIdealState } from '@blueprintjs/core';
+import { Button, Intent, NonIdealState } from '@blueprintjs/core';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { runAggregation, runAggregationOneDimensional } from '../../../actions/AggregationActions';
@@ -109,6 +109,27 @@ export class AggregationView extends Component {
       Aggregating <ColoredFieldItems fields={ aggregationIndependentVariableNames } />
       { (aggregateOn == 'count') ? <span> by count</span> : <span> by { (aggregationFunction ? aggregationFunction.toLowerCase() : '') } of <ColoredFieldItems fields={ [ aggregateOnName ] } /></span>}
     </span>;
+
+    if (aggregationResult.error || oneDimensionAggregationResult.error) {
+        return (
+          <div className={ styles.centeredFill }>
+            <NonIdealState
+              title='Error Running Aggregation'
+              description={ aggregationResult.error || oneDimensionAggregationResult.error }
+              visual='error'
+              action={ <div className={ styles.errorAction }>
+                <div>Please change your selection or</div>
+                <Button
+                  onClick={ () => location.reload() }
+                  iconName='refresh'
+                  intent={ Intent.PRIMARY }
+                  text="Refresh DIVE" />
+                </div>
+            }
+            />
+          </div>
+        )
+      }
 
     if (noAggregationVariablesSelected ) {
       aggregationContent = <div className={ styles.centeredFill }>

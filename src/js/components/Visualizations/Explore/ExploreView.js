@@ -10,7 +10,7 @@ import { useWhiteFontFromBackgroundHex } from '../../../helpers/helpers';
 
 import styles from '../Visualizations.sass';
 
-import { Button, NonIdealState } from '@blueprintjs/core';
+import { Button, Intent, NonIdealState } from '@blueprintjs/core';
 
 import Loader from '../../Base/Loader';
 import HeaderBar from '../../Base/HeaderBar';
@@ -90,7 +90,7 @@ export class ExploreView extends Component {
 
   render() {
     const { filters, datasets, fieldNameToColor, fieldProperties, datasetSelector, filteredVisualizationTypes, exploreSelector, specs, exportedSpecs, recommendationMode, fieldIds, sortBy, selectSortingFunction } = this.props;
-    const { isFetchingSpecLevel, loadedSpecLevel, progressByLevel } = exploreSelector;
+    const { isFetchingSpecLevel, errorByLevel, loadedSpecLevel, progressByLevel } = exploreSelector;
     const isFetching = _.any(isFetchingSpecLevel);
 
     var sortSpecs = function(specA, specB) {
@@ -136,6 +136,15 @@ export class ExploreView extends Component {
                   title='No Visualizations Returned'
                   description='Please change your selection or refresh DIVE.'
                   visual='timeline-line-chart'
+                  action={ <div className={ styles.errorAction }>
+                      <div>Please change your selection or</div>
+                      <Button
+                        onClick={ () => location.reload() }
+                        iconName='refresh'
+                        intent={ Intent.PRIMARY }
+                        text="Refresh DIVE" />
+                      </div>
+                  }
                 />
               </div>
             }
@@ -148,6 +157,23 @@ export class ExploreView extends Component {
                     className={ styles.blockSectionHeader }
                     textClassName={ styles.blockSectionHeaderTitle }
                   />
+                }
+                { errorByLevel[0] && <div className={ styles.centeredFill }>
+                    <NonIdealState
+                      title='Error Creating Visualizations'
+                      description={ errorByLevel[0] }
+                      visual='error'
+                      action={ <div className={ styles.errorAction }>
+                          <div>Please change your selection or</div>
+                          <Button
+                            onClick={ () => location.reload() }
+                            iconName='refresh'
+                            intent={ Intent.PRIMARY }
+                            text="Refresh DIVE" />
+                          </div>
+                      }
+                    />
+                  </div>
                 }
                 { isFetchingSpecLevel[0] && <Loader text={ progressByLevel[0] }/> }
                 { exactSpecs.length > 0 &&
@@ -179,6 +205,23 @@ export class ExploreView extends Component {
                   className={ styles.blockSectionHeader }
                   textClassName={ styles.blockSectionHeaderTitle }
                 />
+                { errorByLevel[1] && <div className={ styles.centeredFill }>
+                    <NonIdealState
+                      title='Error Creating Visualizations'
+                      description={ errorByLevel[0] }
+                      visual='error'
+                      action={ <div className={ styles.errorAction }>
+                          <div>Please change your selection or</div>
+                          <Button
+                            onClick={ () => location.reload() }
+                            iconName='refresh'
+                            intent={ Intent.PRIMARY }
+                            text="Refresh DIVE" />
+                          </div>
+                      }
+                    />
+                  </div>
+                }
                 { isFetchingSpecLevel[1] && <Loader text={ progressByLevel[1] }/> }
                 { subsetSpecs.length > 0 &&
                   <div className={ styles.specs + ' ' + styles.subset }>
