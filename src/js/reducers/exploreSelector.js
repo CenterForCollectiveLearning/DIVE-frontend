@@ -115,6 +115,17 @@ const baseState = {
   updatedAt: 0
 }
 
+const specActionTypeToIndex = {
+  PROGRESS_EXACT_SPECS: 0,
+  PROGRESS_SUBSET_SPECS: 1,
+  PROGRESS_INDIVIDUAL_SPECS: 2,
+  PROGRESS_EXPANDED_SPECS: 3,
+  ERROR_EXACT_SPECS: 0,
+  ERROR_SUBSET_SPECS: 1,
+  ERROR_INDIVIDUAL_SPECS: 2,
+  ERROR_EXPANDED_SPECS: 3
+}
+
 export default function exploreSelector(state = baseState, action) {
   switch (action.type) {
     case REQUEST_EXACT_SPECS:
@@ -132,46 +143,15 @@ export default function exploreSelector(state = baseState, action) {
       };
 
     case PROGRESS_EXACT_SPECS:
-      if (action.progress && action.progress.length){
-        var newProgress = state.progressByLevel.slice();
-        newProgress[0] = action.progress;
-        return { ...state, progressByLevel: newProgress};
-      }
-      return state;
-    case PROGRESS_SUBSET_SPECS:
-      if (action.progress && action.progress.length){
-        var newProgress = state.progressByLevel.slice();
-        newProgress[1] = action.progress;
-        return { ...state, progressByLevel: newProgress};
-      }
-      return state;
     case PROGRESS_INDIVIDUAL_SPECS:
-      if (action.progress && action.progress.length){
-        var newProgress = state.progressByLevel.slice();
-        newProgress[2] = action.progress;
-        return { ...state, progressByLevel: newProgress};
-      }
-      return state;
+    case PROGRESS_SUBSET_SPECS:
     case PROGRESS_EXPANDED_SPECS:
       if (action.progress && action.progress.length){
         var newProgress = state.progressByLevel.slice();
-        newProgress[3] = action.progress;
+        newProgress[specActionTypeToIndex[action.type]] = action.progress;
         return { ...state, progressByLevel: newProgress};
       }
       return state;
-
-    case REQUEST_EXACT_SPECS:
-    case REQUEST_INDIVIDUAL_SPECS:
-    case REQUEST_SUBSET_SPECS:
-    case REQUEST_EXPANDED_SPECS:
-      var { isFetchingSpecLevel: requestIsFetchingSpecLevel } = state;
-      requestIsFetchingSpecLevel[action.selectedRecommendationLevel] = true;
-
-      return {
-        ...state,
-        isFetchingSpecLevel: requestIsFetchingSpecLevel,
-        isFetching: true
-      };
 
     case RECEIVE_EXACT_SPECS:
     case RECEIVE_INDIVIDUAL_SPECS:
