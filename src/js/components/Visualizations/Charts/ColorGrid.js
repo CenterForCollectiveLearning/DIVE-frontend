@@ -7,7 +7,7 @@ import BareDataGrid from '../../Base/BareDataGrid';
 import styles from '../Visualizations.sass';
 import { getRoundedString, useWhiteFontFromBackgroundRGBString } from '../../../helpers/helpers';
 
-var Chart = require('react-google-charts').Chart;
+import { Chart } from 'react-google-charts';
 
 export default class ColorGrid extends Component {
 

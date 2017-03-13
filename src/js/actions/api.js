@@ -58,8 +58,6 @@ export function httpRequest(method, urlPath, formData, completeEvent, uploadEven
 function revokeTasks(taskIds) {
   const completeUrl = API_URL + '/tasks/v1/revoke';
 
-  console.log('Revoking tasks', taskIds);
-
   var options = {
     headers: { 'Content-Type': 'application/json' },
     method: 'post',
@@ -88,19 +86,21 @@ export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, prog
       .then(response => response.json())
       .then(function(data) {
         if (data.state == 'SUCCESS') {
+          console.log(`[SUCCESS] Task ${ taskId } of type ${ taskType } success.`);
           taskManager.removeTask(taskId);
           dispatch(dispatcher(dispatcherParams, data.result));
         } else if (data.state == 'FAILURE') {
-          console.log(`Task ${ taskId } of type ${ taskType } failed.`);
+          console.log(`[FAILURE] Task ${ taskId } of type ${ taskType } failed.`);
           taskManager.removeTask(taskId);
           Raven.captureException(new Error('Failed polling request'));
           dispatch(errorDispatcher(data));
         } else if (data.state == 'REVOKED') {
-          console.log(`Task ${ taskId } of type ${ taskType } revoked.`);
+          console.log(`[REVOKE] Task ${ taskId } of type ${ taskType } revoked.`);
           taskManager.removeTask(taskId);
           Raven.captureException(new Error('Revoked polling request'));
           dispatch(errorDispatcher(data));
         } else if (counter > limit) {
+          console.log(`[TIME OUT] Task ${ taskId } of type ${ taskType } exceeded polling limit.`);
           revokeTasks(taskId).then((revokeData) => {
             dispatch(dispatcher(dispatcherParams, { ...data.result, error: `Polling timed out for task ${ taskId } of type ${ taskType }` }));
           });
