@@ -35,7 +35,7 @@ export class ProjectSidebar extends Component {
       'upload',
       'preloaded',
       'inspect',
-      'transform',
+      // 'transform',
       'explore',
       'starred',
       'aggregation',
@@ -139,12 +139,13 @@ export class ProjectSidebar extends Component {
           </div>
           <div className={ styles.projectTitle } onClick={ this.onClickProjectSettings }>{ project.title }</div>
         </div>
+
+        {/* <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } active={ !datasetSelector.preloaded } disabled={ !datasets.items.length }/> */}
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange } >
           <TabGroup heading="1. Datasets">
             <Tab label="Upload" value="upload" route={ `datasets/upload` } />
             <Tab label="Preloaded" value="preloaded" route={ `datasets/preloaded` } />
-            <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
-            <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } active={ !datasetSelector.preloaded } disabled={ !datasets.items.length }/>
+            <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>          
           </TabGroup>
           <TabGroup heading="2. Visualizations" disabled={ !datasetId }>
             <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>

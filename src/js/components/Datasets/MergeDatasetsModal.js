@@ -2,10 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { mergeDatasets } from '../../actions/DatasetActions';
 
+import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
+
 import styles from './DatasetModal.sass';
 
-import BlockingModal from '../Base/BlockingModal';
-import RaisedButton from '../Base/RaisedButton';
 import SelectGrid from '../Base/SelectGrid';
 import Input from '../Base/Input';
 import DropDownMenu from '../Base/DropDownMenu';
@@ -123,21 +123,23 @@ class MergeDatasetsModal extends Component {
         heading = "Merge with which dataset?";
         phaseFooter =
           <div className={ styles.rightActions }>
-            <RaisedButton primary minWidth={ 100 } onClick={ this.clickedNext.bind(this) }>Next</RaisedButton>
+            <Button
+              intent={ Intent.PRIMARY }
+              onClick={ this.clickedNext.bind(this) }>Next</Button>
           </div>;
         break;
       case 2:
         heading = "Select columns to merge over";
         phaseFooter =
           <div className={ styles.rightActions }>
-            <RaisedButton primary minWidth={ 100 } onClick={ this.submit.bind(this) }>Done</RaisedButton>
-            <RaisedButton icon onClick={ this.clickedBack.bind(this) }><i className="fa fa-angle-left"></i></RaisedButton>
+            <Button primary minWidth={ 100 } onClick={ this.submit.bind(this) }>Done</Button>
+            <Button icon onClick={ this.clickedBack.bind(this) }><i className="fa fa-angle-left"></i></Button>
           </div>;
         break;
       default:
     }
 
-    footer = 
+    footer =
       <div className={ styles.footerContent }>
         <div className={ styles.footerLabel }>
           { error &&
