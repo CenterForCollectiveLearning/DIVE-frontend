@@ -73,7 +73,7 @@ class FeedbackModal extends Component {
       >
         <div className={ Classes.DIALOG_BODY }>
           { feedback.received &&
-            <div className={ styles.receivedFeedbackContainer }>
+            <div className={ styles.receivedFeedbackContainer } onClick={ this.props.closeAction }>
               <span className="pt-icon-standard pt-icon-thumbs-up" />
             </div>
           }
