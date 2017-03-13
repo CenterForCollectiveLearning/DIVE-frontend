@@ -1,4 +1,6 @@
 import {
+  DATASET_MODE,
+  TRANSFORM_MODE,
   SELECT_DATASET,
   REQUEST_DATASET,
   RECEIVE_DATASET,
@@ -145,12 +147,18 @@ export function uploadDataset(projectId, datasetFile) {
       },
     ];
 
-    const completeEvent = (request) => (evt) => {
-      const { taskId } = JSON.parse(request.responseText);
-      dispatch(pollForTask(taskId, REQUEST_UPLOAD_DATASET, {}, ((params, json) => batchActions([
+    const dispatchers = {
+      success: ((params, json) => batchActions([
         receiveUploadDatasetDispatcher(params, json),
         selectDataset(params.projectId, json.id)
-      ])), progressTaskUploadDatasetDispatcher, errorTaskUploadDatasetDispatcher));
+      ])),
+      progress: progressTaskUploadDatasetDispatcher,
+      error: errorTaskUploadDatasetDispatcher
+    }
+
+    const completeEvent = (request) => (evt) => {
+      const { taskId } = JSON.parse(request.responseText);
+      dispatch(pollForTask(taskId, DATASET_MODE, REQUEST_UPLOAD_DATASET, {}, dispatchers));
     };
 
     return httpRequest('POST', '/datasets/v1/upload', formData, completeEvent, uploadEvents);
@@ -229,6 +237,12 @@ export function reduceDatasetColumns(projectId, datasetId, columnIds=[]) {
     'column_ids': columnIds
   };
 
+  const dispatchers = {
+    success: receiveDatasetDispatcher,
+    progress: progressTransformDispatcher,
+    error: errorTransformDispatcher
+  }
+
   return (dispatch) => {
     dispatch(requestReduceDatasetColumnsDispatcher(datasetId, columnIds));
     return fetch(`/datasets/v1/reduce?project_id=${ projectId }`, {
@@ -237,7 +251,7 @@ export function reduceDatasetColumns(projectId, datasetId, columnIds=[]) {
       headers: { 'Content-Type': 'application/json' }
     }).then(function(json) {
         const dispatchParams = { projectId };
-        dispatch(pollForTask(json.taskId, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher, errorTransformDispatcher));
+        dispatch(pollForTask(json.taskId, TRANSFORM_MODE, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, dispatchers));
       });
   };
 }
@@ -261,6 +275,12 @@ export function pivotDatasetColumns(projectId, datasetId, variableName, valueNam
     value_name: valueName
   };
 
+  const dispatchers = {
+    success: receiveDatasetDispatcher,
+    progress: progressTransformDispatcher,
+    error: errorTransformDispatcher
+  }
+
   return (dispatch) => {
     dispatch(requestPivotDatasetColumnsDispatcher(datasetId, variableName, valueName, columnIds));
     return fetch(`/datasets/v1/unpivot?project_id=${ projectId }`, {
@@ -269,7 +289,7 @@ export function pivotDatasetColumns(projectId, datasetId, variableName, valueNam
       headers: { 'Content-Type': 'application/json' }
     }).then(function(json) {
         const dispatchParams = { projectId };
-        dispatch(pollForTask(json.taskId, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher, errorTransformDispatcher));
+        dispatch(pollForTask(json.taskId, TRANSFORM_MODE, REQUEST_REDUCE_DATASET_COLUMNS, dispatchParams, dispatchers));
       });
   };
 }
@@ -293,6 +313,11 @@ export function mergeDatasets(projectId, leftDatasetId, rightDatasetId, onColumn
     how: mergeMethod
   };
 
+  const dispatchers = {
+    success: receiveDatasetDispatcher,
+    progress: progressTransformDispatcher
+  }
+
   return (dispatch) => {
     dispatch(requestMergeDatasetsDispatcher(leftDatasetId, rightDatasetId, onColumnsIds, mergeMethod));
     return fetch(`/datasets/v1/join?project_id=${ projectId }`, {
@@ -301,7 +326,7 @@ export function mergeDatasets(projectId, leftDatasetId, rightDatasetId, onColumn
       headers: { 'Content-Type': 'application/json' }
     }).then(function(json) {
         const dispatchParams = {};
-        dispatch(pollForTask(json.taskId, REQUEST_MERGE_DATASETS, dispatchParams, receiveDatasetDispatcher, progressTransformDispatcher));
+        dispatch(pollForTask(json.taskId, TRANSFORM_MODE, REQUEST_MERGE_DATASETS, dispatchParams, dispatchers));
       });
   };
 }

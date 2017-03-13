@@ -1,4 +1,5 @@
 import {
+  VISUALIZATION_MODE,
   REQUEST_EXACT_SPECS,
   PROGRESS_EXACT_SPECS,
   RECEIVE_EXACT_SPECS,
@@ -236,8 +237,11 @@ export function fetchSpecs(projectId, datasetId, selectedFieldProperties, recomm
     'conditionals': conditionals
   };
 
-  const progressSpecsDispatcher = progressSpecsDispatcherWrapper(selectedRecommendationLevel);
-  const errorSpecsDispatcher = errorSpecsDispatcherWrapper(selectedRecommendationLevel);
+  const dispatchers = {
+    success: receiveSpecsDispatcher,
+    progress: progressSpecsDispatcherWrapper(selectedRecommendationLevel),
+    error: errorSpecsDispatcherWrapper(selectedRecommendationLevel)
+  }
 
   return dispatch => {
     dispatch(requestSpecsDispatcher(selectedRecommendationLevel));
@@ -249,7 +253,7 @@ export function fetchSpecs(projectId, datasetId, selectedFieldProperties, recomm
     }).then(function(json) {
         const dispatchParams = { project_id: projectId, dataset_id: datasetId, recommendationType: recommendationType };
         if (json.compute) {
-          dispatch(pollForTask(json.taskId, specLevelToAction[selectedRecommendationLevel].request, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher, errorSpecsDispatcher));
+          dispatch(pollForTask(json.taskId, VISUALIZATION_MODE, specLevelToAction[selectedRecommendationLevel].request, dispatchParams, dispatchers));
         } else {
           dispatch(receiveSpecsDispatcher(dispatchParams, json.result));
         }

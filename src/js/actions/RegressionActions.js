@@ -5,6 +5,7 @@ import { replace } from 'react-router-redux';
 import { parseFromQueryObject, updateQueryString } from '../helpers/helpers';
 
 import {
+  REGRESSION_MODE,
   SELECT_REGRESSION_TYPE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
@@ -230,6 +231,12 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
     params.conditionals = filteredConditionals;
   }
 
+  const dispatchers = {
+    success: receiveRunRegressionDispatcher,
+    progress: progressRunRegressionDispatcher,
+    error: errorRunRegressionDispatcher
+  }
+
   return (dispatch) => {
     dispatch(requestRunRegressionDispatcher());
     return fetch('/statistics/v1/regression', {
@@ -238,7 +245,7 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
       headers: { 'Content-Type': 'application/json' }
     }).then(function(json) {
         if (json.compute) {
-          dispatch(pollForTask(json.taskId, REQUEST_RUN_REGRESSION, params, receiveRunRegressionDispatcher, progressRunRegressionDispatcher, errorRunRegressionDispatcher));
+          dispatch(pollForTask(json.taskId, REGRESSION_MODE, REQUEST_RUN_REGRESSION, params, dispatchers));
         } else {
           dispatch(receiveRunRegressionDispatcher(params, json));
         }
