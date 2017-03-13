@@ -107,10 +107,10 @@ const baseState = {
   specs: [],
   sortingFunctions: sortingFunctions,
   queryString: "",
-  errorByLevel: [ null, null, null, null ],
   progressByLevel: [ null, null, null, null ],
   isFetchingSpecLevel: [ false, false, false, false ],
   loadedSpecLevel: [ false, false, false, false ],
+  errorByLevel: [ null, null, null, null],
   allowExpandedSpecs: false,
   updatedAt: 0
 }
@@ -173,48 +173,10 @@ export default function exploreSelector(state = baseState, action) {
         isFetching: true
       };
 
-    // TODO Compress this!!!
-    case ERROR_EXACT_SPECS:
-      if (action.message && action.message.length){
-        var newError = state.errorByLevel.slice();
-        newError[0] = action.message;
-        return { ...state,
-          errorByLevel: newError
-        };
-      }
-      return state;
-    case ERROR_SUBSET_SPECS:
-      if (action.message && action.message.length){
-        var newError = state.errorByLevel.slice();
-        newError[1] = action.message;
-        return { ...state,
-          errorByLevel: newError
-        };
-      }
-      return state;
-    case ERROR_INDIVIDUAL_SPECS:
-      if (action.message && action.message.length){
-        var newError = state.errorByLevel.slice();
-        newError[2] = action.message;
-        return { ...state,
-          errorByLevel: newError
-        };
-      }
-      return state;
-    case ERROR_EXPANDED_SPECS:
-      if (action.message && action.message.length){
-        var newError = state.errorByLevel.slice();
-        newError[3] = action.message;
-        return { ...state,
-          errorByLevel: newError
-        };
-      }
-      return state;
-
-    case ERROR_EXACT_SPECS:
-    case ERROR_INDIVIDUAL_SPECS:
-    case ERROR_SUBSET_SPECS:
-    case ERROR_EXPANDED_SPECS:
+    case RECEIVE_EXACT_SPECS:
+    case RECEIVE_INDIVIDUAL_SPECS:
+    case RECEIVE_SUBSET_SPECS:
+    case RECEIVE_EXPANDED_SPECS:
 
       var {
         isFetchingSpecLevel: receiveIsFetchingSpecLevel,

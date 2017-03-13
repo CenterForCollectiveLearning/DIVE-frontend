@@ -125,6 +125,36 @@ export class ExploreView extends Component {
       helperText = 'exploreDefault'
     }
 
+    const recommendationTypesWithData = [
+      {
+        title: 'Exact Matches',
+        helperText: 'exactMatches',
+        showHeader: areFieldsSelected,
+        specs: sortedSpecs.filter((spec) => spec.recommendationType == 'exact')
+      },
+      {
+        title: 'Subset Matches',
+        helperText: 'closeMatches',
+        showHeader: true,
+        specs: sortedSpecs.filter((spec) => spec.recommendationType == 'subset')
+      },
+      {
+        title: 'Individual Matches',
+        helperText: 'individualMatches',
+        showHeader: true,
+        specs: sortedSpecs.filter((spec) => spec.recommendationType == 'baseline')
+      },
+      {
+        title: 'Expanded Matches',
+        helperText: 'expandedMatches',
+        showHeader: true,
+        specs: sortedSpecs.filter((spec) => spec.recommendationType == 'expanded')
+      }
+    ]
+
+    console.log(recommendationTypesWithData);
+    const context = this;
+
     return (
       <div className={ styles.specsContainer }>
         <div className={ styles.innerSpecsContainer }>
@@ -148,162 +178,61 @@ export class ExploreView extends Component {
                 />
               </div>
             }
-            { isValidSpecLevel[0] && !(loadedSpecLevel[0] && exactSpecs.length == 0) &&
-              <div className={ styles.specSection }>
-                { areFieldsSelected &&
-                  <HeaderBar
-                    header={ 'Exact Matches' + ( exactSpecs.length ? ` (${ exactSpecs.length })` : '' ) }
-                    helperText='exactMatches'
-                    className={ styles.blockSectionHeader }
-                    textClassName={ styles.blockSectionHeaderTitle }
-                  />
-                }
-                { errorByLevel[0] && <div className={ styles.centeredFill }>
-                    <NonIdealState
-                      title='Error Creating Visualizations'
-                      description={ errorByLevel[0] }
-                      visual='error'
-                      action={ <div className={ styles.errorAction }>
-                          <div>Please change your selection or</div>
-                          <Button
-                            onClick={ () => location.reload() }
-                            iconName='refresh'
-                            intent={ Intent.PRIMARY }
-                            text="Refresh DIVE" />
-                          </div>
-                      }
-                    />
-                  </div>
-                }
-                { isFetchingSpecLevel[0] && <Loader text={ progressByLevel[0] }/> }
-                { exactSpecs.length > 0 &&
-                  <div className={ styles.specs + ' ' + styles.exact }>
-                    { exactSpecs.map((spec, i) =>
-                      <VisualizationBlock
-                        key={ `${ spec.id }-${ i }` }
-                        spec={ spec }
-                        isCard={ true }
-                        className='exact'
-                        fieldNameToColor={ fieldNameToColor }
-                        filteredVisualizationTypes={ filteredVisualizationTypes }
-                        exportedSpecs={ exportedSpecs }
-                        onClick={ this.onClickVisualization }
-                        saveVisualization={ this.saveVisualization }
-                        showStats={ false }
+            { recommendationTypesWithData.map(function(d, i){
+              if (isValidSpecLevel[i] && !(loadedSpecLevel[i] && d.specs.length == 0)) {
+                return (
+                  <div className={ styles.specSection } key={ `spec-section-${ i }` }>
+                    { d.showHeader &&
+                      <HeaderBar
+                        header={ d.title + ( d.specs.length ? ` (${ d.specs.length })` : '' ) }
+                        helperText={ d.helperText }
+                        className={ styles.blockSectionHeader }
+                        textClassName={ styles.blockSectionHeaderTitle }
                       />
-                      )
                     }
-                  </div>
-               }
-              </div>
-            }
-            { isValidSpecLevel[1] && !(loadedSpecLevel[1] && subsetSpecs.length == 0) &&
-              <div className={ styles.specSection }>
-                <HeaderBar
-                  header={ 'Subset Matches' + ( subsetSpecs.length ? ` (${ subsetSpecs.length })` : '' ) }
-                  helperText='closeMatches'
-                  className={ styles.blockSectionHeader }
-                  textClassName={ styles.blockSectionHeaderTitle }
-                />
-                { errorByLevel[1] && <div className={ styles.centeredFill }>
-                    <NonIdealState
-                      title='Error Creating Visualizations'
-                      description={ errorByLevel[0] }
-                      visual='error'
-                      action={ <div className={ styles.errorAction }>
-                          <div>Please change your selection or</div>
-                          <Button
-                            onClick={ () => location.reload() }
-                            iconName='refresh'
-                            intent={ Intent.PRIMARY }
-                            text="Refresh DIVE" />
-                          </div>
-                      }
-                    />
-                  </div>
-                }
-                { isFetchingSpecLevel[1] && <Loader text={ progressByLevel[1] }/> }
-                { subsetSpecs.length > 0 &&
-                  <div className={ styles.specs + ' ' + styles.subset }>
-                    { subsetSpecs.map((spec) =>
-                      <VisualizationBlock
-                        key={ spec.id }
-                        spec={ spec }
-                        isCard={ true }
-                        className='subset'
-                        fieldNameToColor={ fieldNameToColor }
-                        filteredVisualizationTypes={ filteredVisualizationTypes }
-                        exportedSpecs={ exportedSpecs }
-                        onClick={ this.onClickVisualization }
-                        saveVisualization={ this.saveVisualization }
-                        showStats={ false }
-                      />
-                      )
+                    { errorByLevel[i] && <div className={ styles.centeredFill }>
+                        <NonIdealState
+                          title='Error Creating Visualizations'
+                          description={ errorByLevel[i] }
+                          visual='error'
+                          action={ <div className={ styles.errorAction }>
+                              <div>Please change your selection or</div>
+                              <Button
+                                onClick={ () => location.reload() }
+                                iconName='refresh'
+                                intent={ Intent.PRIMARY }
+                                text="Refresh DIVE" />
+                              </div>
+                          }
+                        />
+                      </div>
                     }
+                    { isFetchingSpecLevel[i] && <Loader text={ progressByLevel[i] }/> }
+                    { d.specs.length > 0 &&
+                      <div className={ styles.specs + ' ' + styles.exact }>
+                        { d.specs.map((spec, j) =>
+                          <VisualizationBlock
+                            key={ `${ spec.id }-${ j }` }
+                            spec={ spec }
+                            isCard={ true }
+                            className='exact'
+                            fieldNameToColor={ fieldNameToColor }
+                            filteredVisualizationTypes={ filteredVisualizationTypes }
+                            exportedSpecs={ exportedSpecs }
+                            onClick={ context.onClickVisualization }
+                            saveVisualization={ context.saveVisualization }
+                            showStats={ false }
+                          />
+                          )
+                        }
+                      </div>
+                   }
                   </div>
-                }
-              </div>
-            }
-            { isValidSpecLevel[2] && !(loadedSpecLevel[2] && baselineSpecs.length == 0) &&
-              <div className={ styles.specSection }>
-                <HeaderBar
-                  header={ 'Individual Matches' + ( baselineSpecs.length ? ` (${ baselineSpecs.length })` : '' ) }
-                  helperText='individualMatches'
-                  className={ styles.blockSectionHeader }
-                  textClassName={ styles.blockSectionHeaderTitle }
-                />
-                { isFetchingSpecLevel[2] && <Loader text={ progressByLevel[2] }/> }
-                { baselineSpecs.length > 0 &&
-                  <div className={ styles.specs + ' ' + styles.baseline }>
-                    { baselineSpecs.map((spec) =>
-                      <VisualizationBlock
-                        key={ spec.id }
-                        spec={ spec }
-                        isCard={ true }
-                        className='baseline'
-                        fieldNameToColor={ fieldNameToColor }
-                        filteredVisualizationTypes={ filteredVisualizationTypes }
-                        exportedSpecs={ exportedSpecs }
-                        onClick={ this.onClickVisualization }
-                        saveVisualization={ this.saveVisualization }
-                        showStats={ false }
-                      />
-                      )
-                    }
-                  </div>
-                }
-              </div>
-            }
-            { isValidSpecLevel[3] && !(loadedSpecLevel[3] && expandedSpecs.length == 0) &&
-              <div className={ styles.specSection }>
-                <HeaderBar
-                  header={ 'Expanded Matches' + ( expandedSpecs.length ? ` (${ expandedSpecs.length })` : '' ) }
-                  helperText='expandedMatches'
-                  className={ styles.blockSectionHeader }
-                  textClassName={ styles.blockSectionHeaderTitle }
-                />
-                { isFetchingSpecLevel[3] && <Loader text={ progressByLevel[3] }/> }
-                { expandedSpecs.length > 0 &&
-                  <div className={ styles.specs + ' ' + styles.expanded }>
-                    { expandedSpecs.map((spec) =>
-                      <VisualizationBlock
-                        key={ spec.id }
-                        spec={ spec }
-                        isCard={ true }
-                        className='expanded'
-                        fieldNameToColor={ fieldNameToColor }
-                        filteredVisualizationTypes={ filteredVisualizationTypes }
-                        exportedSpecs={ exportedSpecs }
-                        onClick={ this.onClickVisualization }
-                        saveVisualization={ this.saveVisualization }
-                        showStats={ false }
-                      />
-                      )
-                    }
-                  </div>
-                }
-              </div>
-            }
+                )
+              } else {
+                return;
+              }
+            })}
           </div>
         </div>
       </div>
