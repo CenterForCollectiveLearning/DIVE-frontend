@@ -46,31 +46,29 @@ export default class VisualizationView extends Component {
 
     return (
       <div className={ styles.visualizationViewContainer }>
+        <HeaderBar
+          header={ visualizationHeader }
+          actions={ this.props.children } />
         <div className={ styles.innerVisualizationViewContainer } >
           { visualization.isFetching &&
             <div className={ styles.centeredFill }>
               <Loader text='Fetching visualization...' />
             </div>
           }
-          <div className={ styles.fillContainer }>
-            <HeaderBar
-              header={ visualizationHeader }
-              actions={ this.props.children } />
-            { visualization.spec.id && !visualization.isFetching &&
-              <div className={ styles.chartsContainer }>
-                <Visualization
-                  containerClassName={ styles.visualizationContainer }
-                  visualizationTypes={ visualizationTypes }
-                  fieldNameToColor={ fieldNameToColor }
-                  config={ visualization.config }
-                  spec={ visualization.spec }
-                  bins={ visualization.bins }
-                  data={ visualization.visualizationData }
-                  sortOrders={ visualization.sortOrders }
-                  sortFields={ visualization.sortFields }/>
-              </div>
-            }
-          </div>
+          { visualization.spec.id && !visualization.isFetching &&
+            <div className={ styles.chartsContainer }>
+              <Visualization
+                containerClassName={ styles.visualizationContainer }
+                visualizationTypes={ visualizationTypes }
+                fieldNameToColor={ fieldNameToColor }
+                config={ visualization.config }
+                spec={ visualization.spec }
+                bins={ visualization.bins }
+                data={ visualization.visualizationData }
+                sortOrders={ visualization.sortOrders }
+                sortFields={ visualization.sortFields }/>
+            </div>
+          }
           { !visualization.isFetching && !visualization.tableData.length &&
             <div className={ styles.tableContainer + ' ' + styles.fillContainer + ' ' + styles.tableDataButton }>
               <Button
