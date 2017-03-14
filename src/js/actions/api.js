@@ -1,14 +1,11 @@
 import { default as isomorphicFetch } from 'isomorphic-fetch';
 import { REQUEST_ONE_D_AGGREGATION, REQUEST_AGGREGATION } from '../constants/ActionTypes';
 
-
 import TaskManager from './TaskManager';
-
-const API_URL = window.__env.API_URL;
-
 const taskManager = new TaskManager();
 
-
+const API_URL = window.__env.API_URL;
+const DEBUG = (window.__env.NODE_ENV == "DEVELOPMENT");
 
 function checkStatus(response) {
   const status = response.status;
@@ -58,8 +55,6 @@ export function httpRequest(method, urlPath, formData, completeEvent, uploadEven
 function revokeTasks(taskIds) {
   const completeUrl = API_URL + '/tasks/v1/revoke';
 
-  console.log('Revoking tasks', taskIds);
-
   var options = {
     headers: { 'Content-Type': 'application/json' },
     method: 'post',
@@ -70,49 +65,78 @@ function revokeTasks(taskIds) {
   return isomorphicFetch(completeUrl, options).then(response => response.json());
 }
 
-export function pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval=1000, limit=50, counter=0) {
-  const aggregationActionTypes = [ REQUEST_ONE_D_AGGREGATION, REQUEST_AGGREGATION ];
+function initializeTask(taskId, taskMode, taskType) {
+  const tasksToRevokeObject = taskManager.addTask(taskId, taskMode, taskType);
 
-  if (aggregationActionTypes.indexOf( taskType ) > -1) {
-    taskType = REQUEST_AGGREGATION
+  const tasksOfDifferentMode = tasksToRevokeObject.differentMode;
+  const tasksOfSameType = tasksToRevokeObject.sameType;
+  const tasksToRevoke = tasksOfDifferentMode + tasksOfSameType;
+
+  console.group(`Initializing task ${ taskId } of type ${ taskType }`)
+  console.debug('Tasks of different mode:', tasksOfDifferentMode);
+  console.debug('Tasks of same type:', tasksOfSameType);
+  console.groupEnd();
+
+  if (tasksToRevoke.length) {
+    revokeTasks(tasksToRevoke);
   }
-  const otherTaskIdsOfSameType = taskManager.addTask(taskId, taskType);
-  if (otherTaskIdsOfSameType.length) {
-    revokeTasks(otherTaskIdsOfSameType);
-  }
+}
+
+export function pollForTask(taskId, taskMode, taskType, dispatcherParams, dispatchers, interval=1000, limit=50, counter=0) {
+  const successDispatcher = dispatchers.success;
+  const progressDispatcher = dispatchers.progress;
+  const errorDispatcher = dispatchers.error;
+
+  const aggregationActionTypes = [ REQUEST_ONE_D_AGGREGATION, REQUEST_AGGREGATION ];
+  taskType = (aggregationActionTypes.indexOf( taskType ) > -1) ? REQUEST_AGGREGATION : taskType;
 
   const completeUrl = API_URL + `/tasks/v1/result/${ taskId }`;
+  const firstIteration = (counter == 0);
+
+  if (firstIteration) {
+    initializeTask(taskId, taskMode, taskType);
+  } else {
+    taskManager.updateTask(taskId);
+  }
+
+  if (DEBUG) {
+    taskManager.outputStateAsTable();
+  }
 
   return dispatch => {
     return isomorphicFetch(completeUrl, {})
       .then(response => response.json())
       .then(function(data) {
+        if (!taskManager.isActiveTask(taskId)) {
+          console.debug(`Received ${ data.state } but task ${ taskId } of type ${ taskType } is no longer active`);
+          return;
+        }
         if (data.state == 'SUCCESS') {
+          console.debug(`[SUCCESS] Task ${ taskId } of type ${ taskType } success.`)
           taskManager.removeTask(taskId);
-          dispatch(dispatcher(dispatcherParams, data.result));
+          dispatch(successDispatcher(dispatcherParams, data.result));
         } else if (data.state == 'FAILURE') {
-          console.log(`Task ${ taskId } of type ${ taskType } failed.`);
+          console.debug(`[FAILURE] Task ${ taskId } of type ${ taskType } failed.`);
+
           taskManager.removeTask(taskId);
           Raven.captureException(new Error('Failed polling request'));
           dispatch(errorDispatcher(data));
         } else if (data.state == 'REVOKED') {
-          console.log(`Task ${ taskId } of type ${ taskType } revoked.`);
+          console.debug(`[REVOKE] Task ${ taskId } of type ${ taskType } revoked.`);
+
           taskManager.removeTask(taskId);
           Raven.captureException(new Error('Revoked polling request'));
           dispatch(errorDispatcher(data));
         } else if (counter > limit) {
+          console.debug(`[TIME OUT] Task ${ taskId } of type ${ taskType } exceeded polling limit.`);
+
           revokeTasks(taskId).then((revokeData) => {
-            dispatch(dispatcher(dispatcherParams, { ...data.result, error: `Polling timed out for task ${ taskId } of type ${ taskType }` }));
+            dispatch(errorDispatcher({ ...data.result, error: `Polling timed out for task ${ taskId } of type ${ taskType }` }));
           });
         } else {
           if (progressDispatcher && data.hasOwnProperty('currentTask')) {
             dispatch(progressDispatcher(data));
-          }
-          if (taskManager.getTasksByID(taskId)) {
-            setTimeout(() => dispatch(pollForTask(taskId, taskType, dispatcherParams, dispatcher, progressDispatcher, errorDispatcher, interval, limit, counter + 1)), interval);
-          } else {
-            console.log('Not polling because taskId not in taskManager:', taskId, taskManager.getAllTasks());
-            taskManager.removeTask(taskId);
+            setTimeout(() => dispatch(pollForTask(taskId, taskMode, taskType, dispatcherParams, dispatchers, interval, limit, counter + 1)), interval);
           }
         }
       });

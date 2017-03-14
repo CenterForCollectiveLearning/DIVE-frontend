@@ -152,29 +152,27 @@ export default function regressionSelector(state = baseState, action) {
       return { ...state, recommendationResult: { loading: false, progress: null, data: state.data } };
 
     case REQUEST_RUN_REGRESSION:
-      return { ...state, regressionResult: { ...state.regressionResult, loading: true } };
+      return { ...state, regressionResult: { ...state.regressionResult, error: null, loading: true } };
 
     case RECEIVE_RUN_REGRESSION:
       return { ...state,
         regressionResult: {
           exported: action.data.exported,
           exportedRegressionId: action.data.exportedRegressionId,
+          error: null,
           loading: false,
           data: action.data
         }
       };
 
-    case ERROR_RUN_REGRESSION:
-      return { ...state, regressionResult: { ...state.regressionResult, error: action.error } };
-
     case PROGRESS_RUN_REGRESSION:
       if (action.progress && action.progress.length){
-        return { ...state, regressionResult: { ...state.regressionResult, progress: action.progress} };
+        return { ...state, regressionResult: { ...state.regressionResult, progress: action.progress, error: null } };
       }
       return state;
 
     case ERROR_RUN_REGRESSION:
-      return { ...state, regressionResult: { loading: false, error: action.error } };
+      return { ...state, regressionResult: { ...state.regressionResult, loading: false, error: action.message } };
 
     case RECEIVE_CREATED_SAVED_REGRESSION:
       return { ...state,

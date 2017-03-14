@@ -1,3 +1,7 @@
+export const DATASET_MODE = 'DATASET_MODE';
+
+export const TRANSFORM_MODE = 'TRANSFORM_MODE';
+
 export const REQUEST_DATASET = 'REQUEST_DATASET';
 export const RECEIVE_DATASET = 'RECEIVE_DATASET';
 

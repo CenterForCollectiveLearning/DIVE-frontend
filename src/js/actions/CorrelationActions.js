@@ -1,6 +1,7 @@
 import _ from 'underscore'
 
 import {
+  CORRELATION_MODE,
   SELECT_CORRELATION_VARIABLE,
   REQUEST_CORRELATION,
   RECEIVE_CORRELATION,
@@ -79,7 +80,7 @@ function receiveCorrelationDispatcher(params, json) {
 function errorCorrelationDispatcher(json) {
   return {
     type: ERROR_CORRELATION,
-    progress: 'Error running correlations, please check console.'
+    message: json.error
   };
 }
 
@@ -97,6 +98,12 @@ export function getCorrelations(projectId, datasetId, correlationVariables, cond
     params.conditionals = filteredConditionals;
   }
 
+  const dispatchers = {
+    success: receiveCorrelationDispatcher,
+    progress: progressCorrelationDispatcher,
+    error: errorCorrelationDispatcher
+  }
+
   return (dispatch) => {
     dispatch(requestCorrelationDispactcher());
     return fetch('/statistics/v1/correlations', {
@@ -106,7 +113,7 @@ export function getCorrelations(projectId, datasetId, correlationVariables, cond
     })
     .then(function(json) {
       if (json.compute) {
-        dispatch(pollForTask(json.taskId, REQUEST_CORRELATION, params, receiveCorrelationDispatcher, progressCorrelationDispatcher, errorCorrelationDispatcher));
+        dispatch(pollForTask(json.taskId, CORRELATION_MODE, REQUEST_CORRELATION, params, dispatchers));
       } else {
         dispatch(receiveCorrelationDispatcher(params, json));
       }

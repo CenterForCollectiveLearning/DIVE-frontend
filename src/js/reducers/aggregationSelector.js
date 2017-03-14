@@ -37,12 +37,6 @@ const baseState = {
     error: null,
     data: null
   },
-  aggregationResult: {
-    loading: false,
-    progress: null,
-    error: null,
-    data: null
-  },
   aggregationFunction: 'SUM',
   weightVariableId: 'UNIFORM',
   aggregationResult: {},
@@ -109,7 +103,7 @@ export default function aggregationSelector(state = baseState, action) {
       return { ...state, loadAggregation: true };
 
     case REQUEST_AGGREGATION:
-      return { ...state, aggregationResult: { ...state.aggregationResult, loading: true }}
+      return { ...state, aggregationResult: { ...state.aggregationResult, error: null, loading: true }, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, error: null }};
 
     case RECEIVE_AGGREGATION:
       return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, data: action.data } };
@@ -121,10 +115,10 @@ export default function aggregationSelector(state = baseState, action) {
       return state;
 
     case ERROR_AGGREGATION:
-      return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, error: action.error } };
+      return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, error: action.message } };
 
     case REQUEST_ONE_D_AGGREGATION:
-      return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: true }}
+      return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: true, error: null }, aggregationResult: { ...state.aggregationResult, error: null }};
 
     case RECEIVE_ONE_D_AGGREGATION:
       return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: false, data: action.data } };
@@ -136,7 +130,7 @@ export default function aggregationSelector(state = baseState, action) {
       return state;
 
     case ERROR_ONE_D_AGGREGATION:
-      return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: false, error: action.error } };
+      return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: false, error: action.message } };
 
     case REQUEST_AGGREGATION_STATISTICS:
       return { ...state, aggregationResult: { ...state.aggregationResult, loading: true }}

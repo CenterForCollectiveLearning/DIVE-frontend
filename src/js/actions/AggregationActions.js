@@ -1,6 +1,7 @@
 import _ from 'underscore';
 
 import {
+  AGGREGATION_MODE,
   SELECT_AGGREGATION_AGGREGATION_VARIABLE,
   SELECT_AGGREGATION_INDEPENDENT_VARIABLE,
   SELECT_AGGREGATION_AGGREGATION_FUNCTION,
@@ -126,8 +127,8 @@ function progressAggregationDispatcher(data) {
 
 function errorAggregationDispatcher(json) {
   return {
-    type: PROGRESS_AGGREGATION,
-    progress: 'Error calculating aggregation table, please check console.'
+    type: ERROR_AGGREGATION,
+    message: json.error
   };
 }
 
@@ -146,6 +147,12 @@ export function runAggregation(projectId, datasetId, aggregationVariable, aggreg
     params.conditionals = filteredConditionals;
   }
 
+  const dispatchers = {
+    success: receiveAggregationDispatcher,
+    progress: progressAggregationDispatcher,
+    error: errorAggregationDispatcher
+  }
+
   return (dispatch) => {
     dispatch(requestAggregationDispatcher());
     return fetch('/statistics/v1/contingency_table', {
@@ -154,7 +161,7 @@ export function runAggregation(projectId, datasetId, aggregationVariable, aggreg
       headers: { 'Content-Type': 'application/json' }
     }).then(function(json) {
         if (json.compute) {
-          dispatch(pollForTask(json.taskId, REQUEST_AGGREGATION, params, receiveAggregationDispatcher, progressAggregationDispatcher, errorAggregationDispatcher));
+          dispatch(pollForTask(json.taskId, AGGREGATION_MODE, REQUEST_AGGREGATION, params, dispatchers));
         } else {
           dispatch(receiveAggregationDispatcher(params, json));
         }
@@ -186,8 +193,8 @@ function progressOneDAggregationDispatcher(data) {
 
 function errorOneDAggregationDispatcher(json) {
   return {
-    type: PROGRESS_ONE_D_AGGREGATION,
-    progress: 'Error calculating one dimensional aggregation table, please check console.'
+    type: ERROR_ONE_D_AGGREGATION,
+    message: json.error
   };
 }
 
@@ -206,6 +213,12 @@ export function runAggregationOneDimensional(projectId, datasetId, aggregationVa
     params.conditionals = filteredConditionals;
   }
 
+  const dispatchers = {
+    success: receiveOneDAggregationDispatcher,
+    progress: progressOneDAggregationDispatcher,
+    error: errorOneDAggregationDispatcher
+  }
+
   return (dispatch) => {
     dispatch(requestOneDAggregationDispatcher());
     return fetch('/statistics/v1/one_dimensional_contingency_table', {
@@ -214,7 +227,7 @@ export function runAggregationOneDimensional(projectId, datasetId, aggregationVa
       headers: { 'Content-Type': 'application/json' }
     }).then(function(json) {
         if (json.compute) {
-          dispatch(pollForTask(json.taskId, REQUEST_ONE_D_AGGREGATION, params, receiveOneDAggregationDispatcher, progressOneDAggregationDispatcher, errorOneDAggregationDispatcher));
+          dispatch(pollForTask(json.taskId, AGGREGATION_MODE, REQUEST_ONE_D_AGGREGATION, params, dispatchers));
         } else {
           dispatch(receiveOneDAggregationDispatcher(params, json));
         }

@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import styles from '../Visualizations.sass';
 
-var Chart = require('react-google-charts').Chart;
+import { Chart } from 'react-google-charts';
 
 export default class ScatterChart extends Component {
 
@@ -15,6 +15,7 @@ export default class ScatterChart extends Component {
     options = {
       ...options,
       hAxis: {
+        ...options.hAxis,
         scaleType: config.display ? config.display.hScaleType : null
       },
       legend: {
@@ -22,6 +23,7 @@ export default class ScatterChart extends Component {
         position: 'none'
       },
       vAxis: {
+        ...options.xAxis,
         scaleType: config.display ? config.display.vScaleType : null
       }
     }

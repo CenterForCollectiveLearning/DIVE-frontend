@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Button, NonIdealState } from '@blueprintjs/core';
+import { Button, Intent, NonIdealState } from '@blueprintjs/core';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { runRegression, getContributionToRSquared, createExportedRegression } from '../../../actions/RegressionActions';
@@ -77,7 +77,7 @@ export class RegressionView extends Component {
     const { datasets, datasetId, regressionResult, recommendationResult, contributionToRSquared, dependentVariableName, independentVariableNames, regressionType, tableLayout } = this.props;
     const saved = (regressionResult.isSaving || (!regressionResult.isSaving && regressionResult.exportedRegressionId) || regressionResult.exported) ? true : false;
 
-    if ( !recommendationResult.loading && !regressionResult.loading && (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0)) {
+    if ( !recommendationResult.loading && !regressionResult.error && !regressionResult.loading && (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0)) {
       return (
         <div className={ styles.regressionViewContainer }></div>
       );
@@ -89,6 +89,27 @@ export class RegressionView extends Component {
     }
 
     var regressionContent = <div className={ styles.centeredFill } />;
+
+    if (regressionResult.error) {
+      return (
+        <div className={ styles.centeredFill }>
+          <NonIdealState
+            title='Error Running Regression'
+            description={ regressionResult.error }
+            visual='error'
+            action={ <div className={ styles.errorAction }>
+              <div>Please change your selection or</div>
+              <Button
+                onClick={ () => location.reload() }
+                iconName='refresh'
+                intent={ Intent.PRIMARY }
+                text="Refresh DIVE" />
+              </div>
+          }
+          />
+        </div>
+      )
+    }
 
     if (independentVariableNames.length == 0) {
       if (recommendationResult.loading) {

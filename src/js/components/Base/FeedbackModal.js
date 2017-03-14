@@ -68,7 +68,7 @@ class FeedbackModal extends Component {
       <Dialog
         className={ styles.feedbackModal }
         onClose={ this.props.closeAction }
-        title={ feedback.received ? "Thank you for your feedback!" : "Help Us Make DIVE Better" }
+        title={ feedback.received ? "Thank you for your feedback!" : "Help Us Improve DIVE" }
         isOpen={ isOpen }
       >
         <div className={ Classes.DIALOG_BODY }>

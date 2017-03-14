@@ -49,11 +49,12 @@ export default function correlationSelector(state = baseState, action) {
       return { ...state, correlationVariableIds: selectedVariableIds};
 
     case REQUEST_CORRELATION:
-      return { ...state, correlationResult: { ...state.correlationResult, loading: true } };
+      return { ...state, correlationResult: { ...state.correlationResult, error: null, loading: true } };
 
     case RECEIVE_CORRELATION:
       return { ...state,
         correlationResult: {
+          error: null,
           loading: false,
           data: action.data,
           exported: action.data.exported,
@@ -62,7 +63,7 @@ export default function correlationSelector(state = baseState, action) {
       };
 
     case ERROR_CORRELATION:
-      return { ...state, correlationResult: { ...state.correlationResult, error: action.error } };
+      return { ...state, correlationResult: { ...state.correlationResult, loading: false, error: action.message } };
 
     case PROGRESS_CORRELATION:
       if (action.progress && action.progress.length) {

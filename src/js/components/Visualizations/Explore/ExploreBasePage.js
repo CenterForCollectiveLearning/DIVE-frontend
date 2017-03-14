@@ -121,6 +121,8 @@ class ExploreBasePage extends Component {
             sortBy={ sortBy }
             recommendationMode={ recommendationMode }
             fieldIds={ fieldIds }
+            pathname={ pathname }
+            queryObject={ queryObject }            
           />
           <ExploreSidebar
             filteredVisualizationTypes={ filteredVisualizationTypes }

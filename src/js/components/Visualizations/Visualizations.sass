@@ -101,6 +101,7 @@
   width: 100%
   .right
     margin-left: auto
+    padding-right: 20px
 
 .headerFragment
   margin-right: 3px
@@ -206,6 +207,7 @@
 .visualizationViewContainer
   .chartsContainer
     +fillContainer
+    min-height: 400px
     padding: 10px
     margin-left: 15px
 
@@ -214,7 +216,16 @@
     overflow-y: auto
 
   .tableContainer
+    display: flex
+    align-items: flex-start
+    min-height: 100px
+    height: 300px
+    max-height: 300px
     padding: 0 25px
+    overflow-y: scroll
+
+    &.tableDataButton
+      align-items: center
 
   .visualizationContainer
     display: flex
@@ -304,6 +315,10 @@
         margin-bottom: 5px
         padding: 5px 0 0 10px
         margin-right: -6px
+
+        &.expandedPlaceholder
+          justify-content: center
+          padding-top: 20px
 
 .visualizationBlocksContainer
   display: flex
