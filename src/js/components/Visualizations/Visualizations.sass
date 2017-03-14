@@ -214,6 +214,9 @@
     overflow-y: auto
 
   .tableContainer
+    display: flex
+    align-items: center
+    min-height: 100px
     padding: 0 25px
 
   .visualizationContainer
@@ -304,6 +307,10 @@
         margin-bottom: 5px
         padding: 5px 0 0 10px
         margin-right: -6px
+
+        &.expandedPlaceholder
+          justify-content: center
+          padding-top: 20px
 
 .visualizationBlocksContainer
   display: flex

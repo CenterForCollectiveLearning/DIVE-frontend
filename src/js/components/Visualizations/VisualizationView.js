@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from './Visualizations.sass';
 
+import { Button, Intent } from '@blueprintjs/core';
+
 import DataGrid from '../Base/DataGrid';
 import HeaderBar from '../Base/HeaderBar';
 import Loader from '../Base/Loader';
@@ -9,6 +11,10 @@ import Visualization from './Visualization';
 import { useWhiteFontFromBackgroundHex } from '../../helpers/helpers';
 
 export default class VisualizationView extends Component {
+
+  getTableData = () => {
+    return;
+  }
   render() {
     const { visualization, fieldNameToColor } = this.props;
 
@@ -37,9 +43,10 @@ export default class VisualizationView extends Component {
 
       visualizationHeader = <div className={ styles.headerText }>
         <div className={ styles.left }>{ visualizationTitle }</div>
-        <div className={ styles.right }>{ visualization.sampleSize } samples</div>
+        { visualization.sampleSize && <div className={ styles.right }>{ visualization.sampleSize } samples</div> }
       </div>;
       }
+
 
     return (
       <div className={ styles.visualizationViewContainer }>
@@ -48,8 +55,8 @@ export default class VisualizationView extends Component {
             <div className={ styles.centeredFill }>
               <Loader text='Fetching visualization...' />
             </div>
-          }    
-          <div classname={ styles.fillContainer }>
+          }
+          <div className={ styles.fillContainer }>
             <HeaderBar
               header={ visualizationHeader }
               actions={ this.props.children } />
@@ -68,16 +75,24 @@ export default class VisualizationView extends Component {
               </div>
             }
           </div>
+          { !visualization.isFetching && !visualization.tableData.length &&
+            <div className={ styles.tableContainer + ' ' + styles.fillContainer }>
+              <Button
+                intent={ Intent.PRIMARY }
+                iconName='th'
+                text='Get Table Data'
+                onClick={ this.getTableData }
+              />
+            </div>
+          }
           { !visualization.isFetching && visualization.tableData.length != 0 &&
-            <div>
-              <div className={ styles.tableContainer }>
-                <DataGrid
-                  id={ `${ visualization.spec.id }` }
-                  useFixedWidth={ false }
-                  data={ visualization.tableData }
-                  tableClassName={ styles.grid }
-                  containerClassName={ styles.gridContainer }/>
-              </div>
+            <div className={ styles.tableContainer }>
+              <DataGrid
+                id={ `${ visualization.spec.id }` }
+                useFixedWidth={ false }
+                data={ visualization.tableData }
+                tableClassName={ styles.grid }
+                containerClassName={ styles.gridContainer }/>
             </div>
           }
         </div>

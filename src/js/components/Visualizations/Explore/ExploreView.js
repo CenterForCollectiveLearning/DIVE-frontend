@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { fetchDatasets } from '../../../actions/DatasetActions';
-import { sortSpecsByFunction, getValidSpecLevelsFromNumFields, clearVisualization, updateVisualizationStats, fetchSpecs, selectSortingFunction, createExportedSpec } from '../../../actions/VisualizationActions';
+import { sortSpecsByFunction, getValidSpecLevelsFromNumFields, clearVisualization, updateVisualizationStats, fetchSpecs, selectSortingFunction, createExportedSpec, setPersistedQueryString } from '../../../actions/VisualizationActions';
 import { fetchExportedVisualizationSpecs } from '../../../actions/ComposeActions';
-import { useWhiteFontFromBackgroundHex } from '../../../helpers/helpers';
+import { useWhiteFontFromBackgroundHex, updateQueryString } from '../../../helpers/helpers';
 
 import styles from '../Visualizations.sass';
 
@@ -88,6 +88,15 @@ export class ExploreView extends Component {
     createExportedSpec(project.id, specId, specData, [], {}, true);
   }
 
+  clickQueryStringTrackedItem = (newObj, resetState=true) => {
+    const { pathname, queryObject, setPersistedQueryString, push } = this.props;
+    const newQueryString = updateQueryString(queryObject, newObj);
+
+    console.log(pathname, queryObject, newQueryString);
+    setPersistedQueryString(newQueryString, resetState);
+    push(`${ pathname }${ newQueryString }`);
+  }
+
   render() {
     const { filters, datasets, fieldNameToColor, fieldProperties, datasetSelector, filteredVisualizationTypes, exploreSelector, specs, exportedSpecs, recommendationMode, fieldIds, sortBy, selectSortingFunction } = this.props;
     const { isFetchingSpecLevel, errorByLevel, loadedSpecLevel, progressByLevel } = exploreSelector;
@@ -153,7 +162,6 @@ export class ExploreView extends Component {
     ]
 
     const context = this;
-
     return (
       <div className={ styles.specsContainer }>
         <div className={ styles.innerSpecsContainer }>
@@ -232,6 +240,24 @@ export class ExploreView extends Component {
                 return;
               }
             })}
+            { areFieldsSelected && (recommendationMode == 'regular') &&
+              <div className={ styles.specSection }>
+                <HeaderBar
+                  header='Expanded Matches (0)'
+                  helperText='expandedMatches'
+                  className={ styles.blockSectionHeader }
+                  textClassName={ styles.blockSectionHeaderTitle }
+                />
+                <div className={ styles.specs + ' ' + styles.expandedPlaceholder}>
+                  <Button
+                    iconName='predictive-analysis'
+                    intent={ Intent.PRIMARY }
+                    text='Click for expanded matches'
+                    onClick={(v) => context.clickQueryStringTrackedItem({ recommendationMode: 'expanded' }, false) }
+                  />
+                </div>
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -249,7 +275,9 @@ ExploreView.propTypes = {
   exportedSpecs: PropTypes.object.isRequired,
   fieldIds: PropTypes.array.isRequired,
   recommendationMode: PropTypes.string,
-  sortBy: PropTypes.string.isRequired
+  sortBy: PropTypes.string.isRequired,
+  pathname: PropTypes.string.isRequired,
+  queryObject: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -263,7 +291,7 @@ function mapStateToProps(state) {
     fieldNameToColor: fieldProperties.fieldNameToColor,
     datasets,
     datasetSelector,
-    exportedSpecs
+    exportedSpecs,
   }
 }
 
@@ -275,5 +303,7 @@ export default connect(mapStateToProps, {
   clearVisualization,
   updateVisualizationStats,
   selectSortingFunction,
-  createExportedSpec
+  createExportedSpec,
+  updateQueryString,
+  setPersistedQueryString
 })(ExploreView);
