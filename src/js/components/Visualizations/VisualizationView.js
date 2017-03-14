@@ -11,12 +11,8 @@ import Visualization from './Visualization';
 import { useWhiteFontFromBackgroundHex } from '../../helpers/helpers';
 
 export default class VisualizationView extends Component {
-
-  getTableData = () => {
-    return;
-  }
   render() {
-    const { visualization, fieldNameToColor } = this.props;
+    const { visualization, fieldNameToColor, getTableData } = this.props;
 
     const visualizationTypes = visualization.visualizationType ? [ visualization.visualizationType ] : [];
 
@@ -76,12 +72,12 @@ export default class VisualizationView extends Component {
             }
           </div>
           { !visualization.isFetching && !visualization.tableData.length &&
-            <div className={ styles.tableContainer + ' ' + styles.fillContainer }>
+            <div className={ styles.tableContainer + ' ' + styles.fillContainer + ' ' + styles.tableDataButton }>
               <Button
                 intent={ Intent.PRIMARY }
                 iconName='th'
                 text='Get Table Data'
-                onClick={ this.getTableData }
+                onClick={ getTableData }
               />
             </div>
           }
@@ -104,5 +100,6 @@ export default class VisualizationView extends Component {
 VisualizationView.propTypes = {
   visualization: PropTypes.object.isRequired,
   children: PropTypes.node,
-  fieldNameToColor: PropTypes.object
+  fieldNameToColor: PropTypes.object,
+  getTableData: PropTypes.func
 }

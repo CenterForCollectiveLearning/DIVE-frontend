@@ -8,7 +8,7 @@ import { saveAs } from 'file-saver';
 import { Button } from '@blueprintjs/core';
 
 import { fetchDatasets } from '../../../actions/DatasetActions';
-import { fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
+import { fetchSpecVisualizationIfNeeded, getVisualizationTableData, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
 import VisualizationView from '../VisualizationView';
@@ -109,6 +109,11 @@ export class SingleVisualizationView extends Component {
     push(`/projects/${ project.id }/datasets/${ datasetSelector.id }/visualize/explore${ exploreSelector.queryString }`);
   }
 
+  getTableData = () => {
+    const { project, visualization, conditionals, getVisualizationTableData, dataConfig } = this.props;
+    getVisualizationTableData(project.id, visualization.spec.id, conditionals.items, dataConfig);
+  }
+
   render() {
     const { visualization, fieldNameToColor } = this.props;
     const saved = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
@@ -121,7 +126,12 @@ export class SingleVisualizationView extends Component {
     }
 
     return (
-      <VisualizationView className={ styles.fillContainer } visualization={ visualization } fieldNameToColor={ fieldNameToColor }>
+      <VisualizationView
+        className={ styles.fillContainer }
+        visualization={ visualization }
+        fieldNameToColor={ fieldNameToColor }
+        getTableData={ this.getTableData }
+      >
         <div className={ styles.hidden }>
           <canvas id="export-canvas"/>
         </div>
@@ -181,6 +191,7 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   push,
   fetchSpecVisualizationIfNeeded,
+  getVisualizationTableData,
   createExportedSpec,
   setShareWindow,
   fetchDatasets,

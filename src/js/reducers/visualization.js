@@ -2,6 +2,8 @@ import {
   CLEAR_VISUALIZATION,
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
+  REQUEST_VISUALIZATION_TABLE_DATA,
+  RECEIVE_VISUALIZATION_TABLE_DATA,
   REQUEST_CREATE_EXPORTED_SPEC,
   RECEIVE_CREATED_EXPORTED_SPEC,
   REQUEST_CREATE_SAVED_SPEC,
@@ -85,6 +87,7 @@ const baseState = {
   exported: false,
   exportedSpecId: null,
   shareWindow: null,
+  isFetchingTableData: null,
   isExporting: false,
   isSaving: false,
   isFetching: false,
@@ -113,6 +116,15 @@ export default function visualization(state = baseState, action) {
   switch (action.type) {
     case CLEAR_VISUALIZATION:
       return baseState;
+
+    case REQUEST_VISUALIZATION_TABLE_DATA:
+      return { ...state, isFetchingTableData: true};
+
+    case RECEIVE_VISUALIZATION_TABLE_DATA:
+      return { ...state,
+        isFetchingTableData: false,
+        tableData: action.tableData
+      }
 
     case REQUEST_VISUALIZATION_DATA:
       return { ...state, isFetching: true };

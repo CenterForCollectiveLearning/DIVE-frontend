@@ -215,9 +215,14 @@
 
   .tableContainer
     display: flex
-    align-items: center
+    align-items: flex-start
     min-height: 100px
+    max-height: 300px
     padding: 0 25px
+    overflow-y: scroll
+
+    &.tableDataButton
+      align-items: center
 
   .visualizationContainer
     display: flex

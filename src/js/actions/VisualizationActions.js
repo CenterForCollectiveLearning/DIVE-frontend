@@ -22,6 +22,8 @@ import {
   SELECT_SINGLE_VISUALIZATION_VISUALIZATION_TYPE,
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
+  REQUEST_VISUALIZATION_TABLE_DATA,
+  RECEIVE_VISUALIZATION_TABLE_DATA,
   CLEAR_VISUALIZATION,
   CLICK_VISUALIZATION,
   REQUEST_CREATE_SAVED_SPEC,
@@ -363,6 +365,48 @@ export function fetchSpecVisualizationIfNeeded(projectId, specId, conditionals, 
     if (shouldFetchSpecVisualization(getState())) {
       return dispatch(fetchSpecVisualization(projectId, specId, conditionals, config));
     }
+  };
+}
+
+function requestVisualizationTableDataDispatcher() {
+  return {
+    type: REQUEST_VISUALIZATION_TABLE_DATA,
+  };
+}
+
+function receiveVisualizationTableDataDispatcher(json) {
+  console.log(json);
+  return {
+    type: RECEIVE_VISUALIZATION_TABLE_DATA,
+    spec: json.spec,
+    tableData: json.visualization ? (json.visualization.table ? formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data) : []) : [],
+    receivedAt: Date.now()
+  };
+}
+
+export function getVisualizationTableData(projectId, specId, conditionals = [], config = null) {
+  const params = {
+    project_id: projectId,
+    data_formats: [ 'table' ]
+  }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
+  }
+
+  if (config) {
+    params.config = config;
+  }
+
+  return dispatch => {
+    dispatch(requestVisualizationTableDataDispatcher());
+    return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(json => dispatch(receiveVisualizationTableDataDispatcher(json)));
   };
 }
 
