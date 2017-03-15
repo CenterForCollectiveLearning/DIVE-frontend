@@ -263,9 +263,10 @@ class DatasetDataRow extends Component {
           <div className={ styles.statistic }>
             <div className={ styles.field }>Range</div>
             <div className={ styles.value + ' ' + styles.inlineElements }>
-              <Number className={ styles.inline } style={{ marginRight: '2px'}}  value={ stats.min } />
+              { stats.first } - { stats.last }
+              {/* <Number className={ styles.inline } style={{ marginRight: '2px'}} value={ stats.first } />
               -
-              <Number className={ styles.inline } style={{ marginLeft: '2px'}} value={ stats.max } />
+              <Number className={ styles.inline } style={{ marginLeft: '2px'}} value={ stats.last } /> */}
             </div>
           </div>
         </div> : <div/>;

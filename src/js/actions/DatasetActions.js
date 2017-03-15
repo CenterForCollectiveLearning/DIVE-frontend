@@ -119,7 +119,10 @@ export function uploadDataset(projectId, datasetFile) {
   formData.append('file', datasetFile);
 
   const fileSize = datasetFile.size;
-  const fileSizeLimit = 10 * (1000 * 1000);
+  let fileSizeLimit = 10 * (1000 * 1000);
+  if (window.__env.NODE_ENV == 'DEVELOPMENT') {
+    fileSizeLimit = 1000 * 1000 * 1000;
+  }
 
   return (dispatch) => {
     if (fileSize > fileSizeLimit) {

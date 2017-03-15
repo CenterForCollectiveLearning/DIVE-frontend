@@ -30,7 +30,7 @@ class DatasetButton extends Component {
     e.preventDefault()
 
     this.setState({ deleted: true });
-    deleteDataset(project.id, dataset.datasetId);
+    deleteDataset(project.id, dataset.id);
   }
 
   onClickDeselectPreloadedDataset = (projectId, datasetId, e, nextDataset=null) => {
@@ -44,7 +44,7 @@ class DatasetButton extends Component {
 
   render() {
     const { project, dataset, className, minimal, showId, format, preloaded, nextDataset, sortField, viewMode, selected, onClickButton } = this.props;
-    const { datasetId, title } = dataset;
+    const { id, title } = dataset;
 
     const noop = () => {};
 
@@ -65,7 +65,7 @@ class DatasetButton extends Component {
         <div className={ styles.projectButtonContent }>
           <div className={ styles.projectButtonContentTop }>
             <div className={ styles.projectLeft }>
-              <div className={ styles.projectTitle }>{ title } { showId && <span>({ datasetId })</span>}</div>
+              <div className={ styles.projectTitle }>{ title } { showId && <span>({ id })</span>}</div>
             </div>
           </div>
         </div>

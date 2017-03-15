@@ -37,7 +37,7 @@ export class SingleVisualizationView extends Component {
     const projectChanged = (nextProps.project.id !== project.id);
 
     if ((projectChanged && nextProps.project.id) || (project.id && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded)))) {
-      fetchDatasets(project.id);
+      fetchDatasets(nextProps.project.id);
     }
 
     if (nextProps.project.id && !visualization.isFetching && (!visualization.spec.id || conditionalsChanged || dataConfigChanged)) {
