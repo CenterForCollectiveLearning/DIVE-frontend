@@ -192,14 +192,14 @@ class DatasetDataRow extends Component {
             <div className={ styles.field }>Null</div>
             <div className={ styles.value }>
               <Number value={ numNa } />
-              { numNa > 0 && <Number value={ (numNa / stats.count) * 100 } prefix='(' suffix='%)' /> }
+              { numNa > 0 && stats.totalCount && <Number value={ (numNa / stats.totalCount) * 100 } prefix='(' suffix='%)' /> }
             </div>
           </div> }
           <div className={ styles.statistic }>
             <div className={ styles.field }>Unique</div>
             <div className={ styles.value + ' ' + styles.inlineElements }>
               <Number value={ stats.unique } />
-              <Number style={{ marginLeft: '3px' }} value={ (stats.unique / stats.count) * 100 } prefix='(' suffix='%)' />
+              { stats.totalCount && <Number style={{ marginLeft: '3px' }} value={ (stats.unique / stats.totalCount) * 100 } prefix='(' suffix='%)' /> }
             </div>
           </div>
           <div className={ styles.statistic + ' ' + styles.wide }>
@@ -223,7 +223,7 @@ class DatasetDataRow extends Component {
             <div className={ styles.field }>Null</div>
             <div className={ styles.value }>
               <Number value={ getRoundedString(numNa) } />
-              { numNa > 0 && <Number value={ (numNa / stats.count) * 100 } prefix='(' suffix='%)' /> }
+              { numNa > 0 && stats.totalCount && <Number value={ (numNa / stats.totalCount) * 100 } prefix='(' suffix='%)' /> }
             </div>
           </div> }
           <div className={ styles.statistic }>
