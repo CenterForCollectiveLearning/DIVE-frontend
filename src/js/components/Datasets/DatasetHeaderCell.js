@@ -16,7 +16,8 @@ export class DatasetHeaderCell extends Component {
   }
 
   onSelectFieldType = (fieldType) => {
-    this.props.setFieldType(this.props.projectId, this.props.fieldProperty.id, fieldType);
+    const { projectId, datasetId, fieldProperty, setFieldType} = this.props;
+    setFieldType(projectId, datasetId, fieldProperty.id, fieldType);
   }
 
   render() {
@@ -41,7 +42,11 @@ DatasetHeaderCell.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  return { projectId: state.project.id };
+  const { project, datasetSelector } = state;
+  return {
+    projectId: project.id,
+    datasetId: datasetSelector.id
+  };
 }
 
 export default connect(mapStateToProps, { setFieldType })(DatasetHeaderCell);

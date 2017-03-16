@@ -38,7 +38,7 @@ class DatasetDataRow extends Component {
   }
 
   onSelectFieldType = (fieldType) => {
-    this.props.setFieldType(this.props.projectId, this.props.fieldProperty.id, fieldType);
+    this.props.setFieldType(this.props.projectId, this.props.datasetId, this.props.fieldProperty.id, fieldType);
   }
 
   onColorPickerClick = () => {
@@ -53,14 +53,14 @@ class DatasetDataRow extends Component {
     const { projectId, fieldProperty, setFieldColor } = this.props;
     const { id: fieldId } = fieldProperty;
     this.setState({ color: color.hex });
-    setFieldColor( projectId, fieldId, color.hex );
+    setFieldColor( projectId, this.props.datasetId, fieldId, color.hex );
   }
 
   onIDCheckboxChange = () => {
     const { projectId, fieldProperty, setFieldIsId } = this.props;
     const { id: fieldId } = fieldProperty;
     this.state.isId = !this.state.isId;
-    setFieldIsId( projectId, fieldId, this.state.isId );
+    setFieldIsId( projectId, this.props.datasetId, fieldId, this.state.isId );
   }
 
   onClickVisualizeField = (id) => {

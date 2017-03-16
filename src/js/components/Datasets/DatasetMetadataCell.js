@@ -40,17 +40,17 @@ class DatasetMetadataCell extends Component {
   }
 
   onColorPickerChange = (color) => {
-    const { projectId, fieldProperty, setFieldColor } = this.props;
+    const { projectId, datasetId, fieldProperty, setFieldColor } = this.props;
     const { id: fieldId } = fieldProperty;
     this.setState({ color: color.hex });
-    setFieldColor( projectId, fieldId, color.hex );
+    setFieldColor( projectId, datasetId, fieldId, color.hex );
   }
 
   onIDCheckboxChange = () => {
-    const { projectId, fieldProperty, setFieldIsId } = this.props;
+    const { projectId, datasetId, fieldProperty, setFieldIsId } = this.props;
     const { id: fieldId } = fieldProperty;
     this.state.isId = !this.state.isId;
-    setFieldIsId( projectId, fieldId, this.state.isId );
+    setFieldIsId( projectId, datasetId, fieldId, this.state.isId );
   }
 
   render() {
@@ -245,9 +245,10 @@ DatasetMetadataCell.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  const { project } = state;
+  const { project, datasetSelector } = state;
   return {
-    projectId: project.id
+    projectId: project.id,
+    datasetId: datasetSelector.id
   };
 }
 
