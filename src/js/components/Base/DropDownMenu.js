@@ -21,7 +21,7 @@ export default class DropDownMenu extends Component {
       return (
         <div className={ styles.valueContainer }>
           { prefixIconMember &&
-            <span className={ `pt-icon-regular pt-icon-${ option[prefixIconMember] } ` + styles.prefixIcon } />
+            <span className={ `pt-icon-standard pt-icon-${ option[prefixIconMember] } ` + styles.prefixIcon } />
           }
           <span className={ styles.value + (valueClassName ? ' ' + valueClassName : '') }>{ option[displayTextMember] }</span>
         </div>
@@ -35,7 +35,7 @@ export default class DropDownMenu extends Component {
             <span className={ styles.prefix }>{ prefix }: </span>
           }
           { prefixIconMember &&
-            <span className={ `pt-icon-regular pt-icon-${ option[prefixIconMember] } ` + styles.prefixIcon } />
+            <span className={ `pt-icon-standard pt-icon-${ option[prefixIconMember] } ` + styles.prefixIcon } />
           }
           <span className={ styles.value + (valueClassName ? ' ' + valueClassName : '') }>{ option[displayTextMember] }</span>
         </div>

@@ -21,23 +21,39 @@ export class DatasetHeaderCell extends Component {
   }
 
   render() {
-    const { fieldProperty } = this.props;
-    return (
-      <DropDownMenu
+    const { fieldProperty, preloaded } = this.props;
+    const { fieldTypes } = this.state;
+    const prefixIcon = fieldTypes.find((ft) => ft.value == fieldProperty.type).prefixIcon;
+
+    let content = <div />;
+    if (preloaded) {
+      content = <span className={ styles.typeContainer }>
+        <span className={`pt-icon-standard pt-icon-${ prefixIcon } ` + styles.prefixIcon }/>
+        <span>{ fieldProperty.type }</span>
+      </span>
+    } else {
+      content = <DropDownMenu
         className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
         valueClassName={ styles.fieldTypeValue }
         value={ fieldProperty.type }
-        options={ this.state.fieldTypes }
-        onChange={ this.onSelectFieldType } />
-    );
+        prefixIconMember='prefixIcon'
+        searchable={ true }
+        options={ fieldTypes }
+        onChange={ this.onSelectFieldType }
+      />
+    }
+
+    return ( content );
   }
 }
 
 DatasetHeaderCell.propTypes = {
-  fieldProperty: PropTypes.object
+  fieldProperty: PropTypes.object,
+  preloaded: PropTypes.bool
 }
 
 DatasetHeaderCell.defaultProps = {
+  preloaded: false,
   fieldProperty: {}
 }
 

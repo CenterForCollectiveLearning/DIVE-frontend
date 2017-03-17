@@ -25,6 +25,7 @@ function mergeDatasetLists(originalList, newList) {
       mergedList[i].title = newListDataset.title ? newListDataset.title : mergedList[i].title;
       mergedList[i].details = newListDataset.details ? newListDataset.details : mergedList[i].details;
       mergedList[i].filename = newListDataset.filename ? newListDataset.filename : mergedList[i].filename;
+      mergedList[i].preloaded = newListDataset.preloaded ? newListDataset.preloaded : mergedList[i].preloaded;
     }
   });
 
@@ -75,7 +76,8 @@ export default function datasets(state = baseState, action) {
           id: action.id,
           title: action.title,
           data: action.data,
-          details: action.details
+          details: action.details,
+          preloaded: action.preloaded
       }];
       return { ...state, items: mergeDatasetLists(state.items, newDataset), projectId: action.projectId };
 

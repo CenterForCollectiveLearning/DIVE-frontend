@@ -123,6 +123,8 @@ class DatasetDataRow extends Component {
       </Menu>
     );
 
+    const prefixIcon = fieldTypes.find((ft) => ft.value == fieldProperty.type).prefixIcon;
+
     const constructFieldContent = (metadataChildren, statsChildren) => {
       return (
         <div className={ styles.datasetDataRow }>
@@ -131,16 +133,21 @@ class DatasetDataRow extends Component {
               <div className={ styles.name }>{ name }{this.state.isId}{ this.state.isId ? ' (ID)' : '' }</div>
               <div className={ styles.type }>
                 { preloaded &&
-                  <span>{ fieldProperty.type }</span>
+                  <span>
+                    <span className={`pt-icon-standard pt-icon-${ prefixIcon } ` + styles.prefixIcon }/>
+                    <span>{ fieldProperty.type }</span>
+                  </span>
                 }
-                { !preloaded && <DropDownMenu
-                  className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
-                  valueClassName={ styles.fieldTypeValue }
-                  value={ fieldProperty.type }
-                  prefixIconMember='prefixIcon'
-                  searchable={ true }
-                  options={ this.state.fieldTypes }
-                  onChange={ this.onSelectFieldType } />
+                { !preloaded &&
+                  <DropDownMenu
+                    className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
+                    valueClassName={ styles.fieldTypeValue }
+                    value={ fieldProperty.type }
+                    prefixIconMember='prefixIcon'
+                    searchable={ true }
+                    options={ fieldTypes }
+                    onChange={ this.onSelectFieldType }
+                />
                 }
               </div>
             </div>

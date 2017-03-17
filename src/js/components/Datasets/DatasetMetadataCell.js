@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { ChromePicker } from 'react-color';
 
 import styles from './Datasets.sass';
-import DropDownMenu from '../Base/DropDownMenu';
 import ColumnChart from '../Visualizations/Charts/ColumnChart';
 import Histogram from '../Visualizations/Charts/Histogram';
 import LineChart from '../Visualizations/Charts/LineChart';

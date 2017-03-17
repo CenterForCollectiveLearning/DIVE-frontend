@@ -218,7 +218,7 @@ export class RegressionSidebar extends Component {
                 <div className={ styles.fieldGroup }>
                   <div className={ styles.fieldGroupHeader }>
                     <span className={ styles.fieldGroupLabel }>Categorical</span>
-                    <span className={ "pt-icon-regular pt-icon-font " + styles.generalTypeIcon } />
+                    <span className={ "pt-icon-standard pt-icon-font " + styles.generalTypeIcon } />
                   </div>
                   <ToggleButtonGroup
                     toggleItems={ fieldProperties.items.filter((p) => p.generalType == 'c' && !p.isId).map((item) =>
@@ -241,7 +241,7 @@ export class RegressionSidebar extends Component {
                 <div className={ styles.fieldGroup }>
                   <div className={ styles.fieldGroupHeader }>
                     <span className={ styles.fieldGroupLabel }>Temporal</span>
-                    <span className={ "pt-icon-regular pt-icon-time " + styles.generalTypeIcon } />
+                    <span className={ "pt-icon-standard pt-icon-time " + styles.generalTypeIcon } />
                   </div>
                   <ToggleButtonGroup
                     toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
@@ -264,7 +264,7 @@ export class RegressionSidebar extends Component {
                 <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupHeader }>
                   <span className={ styles.fieldGroupLabel }>Quantitative</span>
-                  <span className={ "pt-icon-regular pt-icon-numerical " + styles.generalTypeIcon } />
+                  <span className={ "pt-icon-standard pt-icon-numerical " + styles.generalTypeIcon } />
                 </div>
                   <ToggleButtonGroup
                     toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>

@@ -119,6 +119,8 @@ export class DatasetInspectPage extends Component {
 
     const nextDataset = datasets.items.filter((d) => d.id != datasetSelector.id)[0];
 
+    console.log('Dataset:', dataset);
+
     return (
       <DocumentTitle title={ 'Inspect' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>

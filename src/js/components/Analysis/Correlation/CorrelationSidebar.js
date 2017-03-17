@@ -63,7 +63,7 @@ export class CorrelationSidebar extends Component {
             <div className={ styles.fieldGroup }>
               <div className={ styles.fieldGroupHeader }>
                 <span className={ styles.fieldGroupLabel }>Quantitative</span>
-                <span className={ "pt-icon-regular pt-icon-numerical " + styles.generalTypeIcon } />
+                <span className={ "pt-icon-standard pt-icon-numerical " + styles.generalTypeIcon } />
               </div>
               <ToggleButtonGroup
                 toggleItems={ quantitativeVariables.map((item) =>
