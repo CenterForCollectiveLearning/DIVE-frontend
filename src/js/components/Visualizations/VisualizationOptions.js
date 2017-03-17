@@ -38,6 +38,7 @@ export const fullOptions = {
     }
   },
   hAxis: {
+    minValue: 0,
     titleTextStyle: {
       color: "#333",
       italic: false,
@@ -49,6 +50,7 @@ export const fullOptions = {
     }
   },
   vAxis: {
+    minValue: 0,
     titleTextStyle: {
       color: "#333",
       italic: false,
@@ -65,12 +67,6 @@ export const fullOptions = {
         color: "#777",
         italic: false
       }
-    },
-    {
-      textStyle: {
-        color: "#777",
-        italic: false
-      }
     }
   ]
 };
@@ -82,12 +78,13 @@ export const minimalOptions = {
     left: 0,
     top: 0,
     width: '100%',
-    height: '100%'
+    height: '90%'
   },
   enableInteractivity: false,
   fontSize: 0,
   headerHeight: 0,
   hAxis: {
+    minValue: 0,
     baselineColor: 'transparent',
     textPosition: 'none',
     gridlines: {

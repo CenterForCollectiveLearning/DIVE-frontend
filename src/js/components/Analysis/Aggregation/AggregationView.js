@@ -74,7 +74,7 @@ export class AggregationView extends Component {
 
       if (sideBarChanged) {
         if (oneIndependentVariableSelected) {
-          const aggregationList = nextProps.aggregateOnName? ['q', nextProps.aggregateOnName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null;
+          const aggregationList = nextProps.aggregateOnName ? ['q', nextProps.aggregateOnName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null;
           runAggregationOneDimensional(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.aggregationIndependentVariableNamesAndTypes, nextProps.conditionals.items);
         } else if (twoIndependentVariablesSelected) {
           const aggregationList = nextProps.aggregateOnName ? ['q', nextProps.aggregateOnName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null;
@@ -213,7 +213,7 @@ function mapStateToProps(state, ownProps) {
 
   var aggregationIndependentVariableNamesAndTypes  = aggregationIndependentVariables
     .map(function(field){
-      if (field.generalType == 'q'){
+      if (['q', 't'].indexOf(field.generalType) > -1){
         return [field.generalType, field.name, binningConfigX];
       } else {
         return [field.generalType, field.name];
@@ -223,7 +223,7 @@ function mapStateToProps(state, ownProps) {
   if (aggregationIndependentVariables.length == 2){
     var var1 = aggregationIndependentVariables[0]
     var var2 = aggregationIndependentVariables[1]
-    if (var1.generalType == 'q' && var2.generalType == 'q'){
+    if (['q', 't'].indexOf(var1.generalType) >= -1 && ['q', 't'].indexOf(var2.generalType) >= -1){
       aggregationIndependentVariableNamesAndTypes[0] = [var1.generalType, var1.name, binningConfigX]
       aggregationIndependentVariableNamesAndTypes[1] = [var2.generalType, var2.name, binningConfigY]
     }
