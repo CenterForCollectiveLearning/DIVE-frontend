@@ -1,30 +1,6 @@
 @import '../../../css/flexbox.sass'
 @import '../../../css/mixins.sass'
 
-
-.fieldGroup
-  &:first-child
-    .fieldGroupHeader
-      display: flex
-      flex-direction: row
-      align-items: flex-end
-      .fieldGroupLabel
-        margin-top: 7px
-      .fieldGroupAction
-        +smallCaps
-        cursor: pointer
-        color: $primary-accent
-        margin-left: auto
-        margin-bottom: 2px
-
-  + .fieldGroup
-    margin-top: 7px
-
-  .fieldGroupLabel
-    +smallCaps
-    margin-top: 17px
-    margin-bottom: 2px
-
 .recommendModelButton
   margin-bottom: 10px
 

@@ -78,7 +78,7 @@ export const minimalOptions = {
     left: 0,
     top: 0,
     width: '100%',
-    height: '90%'
+    height: '100%'
   },
   enableInteractivity: false,
   fontSize: 0,

@@ -32,6 +32,7 @@ export default class LineChart extends Component {
     options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
     options.colors = colors;
 
+
     return (
       <Chart
         chartType="LineChart"
