@@ -12,9 +12,8 @@ import SidebarCategoryGroup from '../../Base/SidebarCategoryGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 import RaisedButton from '../../Base/RaisedButton';
-
 import ConditionalSelector from '../../Base/ConditionalSelector';
-import BinningSelector from './BinningSelector';
+import BinningSelector from '../../Base/BinningSelector';
 
 export class SingleVisualizationSidebar extends Component {
 
@@ -100,7 +99,7 @@ export class SingleVisualizationSidebar extends Component {
           }
           { visualizationType == 'hist' &&
             <BinningSelector
-              config={ visualization.config }
+              config={ visualization.config.data }
               selectBinningConfig={ selectVisualizationDataConfig } />
           }
           { (visualizationType == 'hist' || visualizationType == 'bar' || visualizationType == 'scatter') &&

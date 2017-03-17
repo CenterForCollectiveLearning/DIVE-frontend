@@ -40,8 +40,14 @@ const baseState = {
   aggregationFunction: 'SUM',
   weightVariableId: 'UNIFORM',
   aggregationResult: {},
-  binningConfigX: {},
-  binningConfigY: {},
+  binningConfigX: {
+    binning_type: 'procedural',
+    binning_procedure: 'freedman',
+  },
+  binningConfigY: {
+    binning_type: 'procedural',
+    binning_procedure: 'freedman',
+  },
   aggregationResult: {
     loading: false,
     progress: null,
