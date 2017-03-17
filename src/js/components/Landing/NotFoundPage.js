@@ -14,38 +14,10 @@ import { Position, Toaster, Button, Intent, NonIdealState } from '@blueprintjs/c
 import Logo from '../../../assets/DIVE_logo_white.svg?name=Logo';
 
 export class NotFoundPage extends Component {
-  goHome = () => {
-    this.props.push(`/`);
-  }
-
   render() {
-    const { user } = this.props;
     return (
       <DocumentTitle title='DIVE | Error'>
         <div className={ styles.fillContainer + ' ' + styles.notFoundPage }>
-          <nav className={ 'pt-navbar pt-dark pt-fixed-top ' + styles.header + ' ' + styles.opaque }>
-            <div className="pt-navbar-group pt-align-left">
-              <div className={ 'pt-navbar-heading ' + styles.logoContainer } onClick={ this.goHome }>
-                <Logo className={ styles.logo } />
-                <div className={ styles.logoText }>DIVE</div>
-              </div>
-            </div>
-            <div className="pt-navbar-group pt-align-right">
-              { (user.id && !user.anonymous) &&
-                <div className={ styles.rightButtons }>
-                  <Link className="pt-button pt-minimal pt-icon-projects" route="/projects">Projects</Link>
-                  <span className="pt-navbar-divider"></span>
-                  <div className="pt-button pt-minimal pt-icon-log-out" onClick={ this.props.logoutUser }>Log Out of { user.username }</div>
-                </div>
-              }
-              { (user.anonymous || !user.id) &&
-                <div className={ styles.rightButtons }>
-                  <Link className="pt-button pt-minimal pt-icon-log-in" route="/auth/login">Log In</Link>
-                  <Link className="pt-button pt-minimal pt-icon-user" route="/auth/register">Register</Link>
-                </div>
-              }
-            </div>
-          </nav>
           <NonIdealState
             className={ styles.centeredFill + ' ' + styles.notFoundPageContent }
             title='Not Found'
@@ -61,8 +33,7 @@ export class NotFoundPage extends Component {
 }
 
 function mapStateToProps(state) {
-  const { user } = state;
-  return { user };
+  return {};
 }
 
 export default connect(mapStateToProps, { push })(NotFoundPage);

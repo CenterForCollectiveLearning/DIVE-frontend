@@ -15,6 +15,7 @@ import ResetPasswordSubmitPage from './components/Auth/ResetPasswordSubmitPage';
 // Landing
 import UnauthorizedPage from './components/Landing/UnauthorizedPage';
 import NotFoundPage from './components/Landing/NotFoundPage';
+import FAQPage from './components/Landing/FAQPage';
 import AboutPage from './components/Landing/AboutPage';
 import LandingPage from './components/Landing/LandingPage';
 import ProjectListPage from './components/Landing/ProjectListPage';
@@ -83,6 +84,10 @@ export default (
       <Route path="/projects" component={ requireAuthentication(ProjectListPage) }/>
       <Route path="/preloaded" component={ requireAuthentication(PreloadedProjectListPage) }/>
       <Route path="/story" component={ StoryPage }/>
+      <Route path="/faq" component={ FAQPage }/>
+      <Route path="/about" component={ AboutPage }/>
+      <Route path='/unauthorized' component={ UnauthorizedPage }/>
+      <Route path='/notfound' component={ NotFoundPage }/>
     </Route>
 
     <Route path="/stories" component={ NarrativeBasePage }>
@@ -115,8 +120,7 @@ export default (
       </Route>
     </Route>
     <Route path="/share/projects/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>
-    <Route path='/unauthorized' component={ UnauthorizedPage }/>    
-    <Route path='/notfound' component={ NotFoundPage }/>
+
     <Redirect from='*' to='/notfound' />
   </Route>
 );

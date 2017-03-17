@@ -6,7 +6,7 @@ import styles from './Landing.sass';
 
 import Footer from './Footer';
 
-export class StoryPage extends Component {
+export class AboutPage extends Component {
   render() {
     return (
       <DocumentTitle title={ 'DIVE | Story' }>
@@ -48,4 +48,4 @@ function mapStateToProps(state) {
   return { };
 }
 
-export default connect(mapStateToProps, { })(StoryPage);
+export default connect(mapStateToProps, { })(AboutPage);

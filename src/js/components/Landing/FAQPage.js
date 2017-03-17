@@ -10,10 +10,10 @@ import { Position, Toaster, Button, Intent, NonIdealState } from '@blueprintjs/c
 
 import Footer from './Footer';
 
-export class AboutPage extends Component {
+export class FAQPage extends Component {
   render() {
     return (
-      <DocumentTitle title={ 'DIVE | About' }>
+      <DocumentTitle title={ 'DIVE | FAQ' }>
         <div className={ styles.contentPage + ' ' + styles.sections }>
           <NonIdealState
             className={ styles.centeredFill + ' ' + styles.notFoundPageContent }
@@ -66,4 +66,4 @@ function mapStateToProps(state) {
   return { };
 }
 
-export default connect(mapStateToProps, { })(AboutPage);
+export default connect(mapStateToProps, { })(FAQPage);
