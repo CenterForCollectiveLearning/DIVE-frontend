@@ -6,6 +6,7 @@ import styles from './Datasets.sass';
 import DropDownMenu from '../Base/DropDownMenu';
 import ColumnChart from '../Visualizations/Charts/ColumnChart';
 import Histogram from '../Visualizations/Charts/Histogram';
+import LineChart from '../Visualizations/Charts/LineChart';
 import { setFieldIsId, setFieldColor } from '../../actions/FieldPropertiesActions';
 import { numberWithCommas, getRoundedString } from '../../helpers/helpers.js';
 
@@ -40,17 +41,17 @@ class DatasetMetadataCell extends Component {
   }
 
   onColorPickerChange = (color) => {
-    const { projectId, fieldProperty, setFieldColor } = this.props;
+    const { projectId, datasetId, fieldProperty, setFieldColor } = this.props;
     const { id: fieldId } = fieldProperty;
     this.setState({ color: color.hex });
-    setFieldColor( projectId, fieldId, color.hex );
+    setFieldColor( projectId, datasetId, fieldId, color.hex );
   }
 
   onIDCheckboxChange = () => {
-    const { projectId, fieldProperty, setFieldIsId } = this.props;
+    const { projectId, datasetId, fieldProperty, setFieldIsId } = this.props;
     const { id: fieldId } = fieldProperty;
     this.state.isId = !this.state.isId;
-    setFieldIsId( projectId, fieldId, this.state.isId );
+    setFieldIsId( projectId, datasetId, fieldId, this.state.isId );
   }
 
   render() {
@@ -70,19 +71,72 @@ class DatasetMetadataCell extends Component {
       },
     };
 
+    let viz = <div />;
+    if (vizData && vizData.spec && vizData.data) {
+      var vizType = vizData.spec.vizTypes[0];
+      if (vizType == 'line') {
+        viz = <LineChart
+            chartId={ `field-line-${ id }` }
+            data={ vizData.data['visualize'] }
+            isMinimalView={ true }
+            colors={ colors }
+            additionalOptions={ additionalOptions }
+          />;
+      } else if (vizType == 'hist') {
+        viz = <Histogram
+          chartId={ `field-hist-${ id }` }
+          data={ vizData.data['visualize'] }
+          bins={ vizData.data['bins'] }
+          isMinimalView={ true }
+          colors={ colors }
+          additionalOptions={ additionalOptions }
+        />;
+      } else if (vizType == 'bar') {
+        viz = <ColumnChart
+          chartId={ `field-bar-${ id }` }
+          data={ vizData.data['visualize'] }
+          isMinimalView={ true }
+          colors={ colors }
+          additionalOptions={ additionalOptions }
+        />;
+      }
+    }
+    if (vizData && !(vizData.spec && vizData.data)) {  // To accomodate old visualization data
+      if ( scale == 'ordinal' || scale == 'nominal')  {
+        viz = <ColumnChart
+          chartId={ `field-bar-${ id }` }
+          data={ vizData['visualize'] }
+          isMinimalView={ true }
+          colors={ colors }
+          additionalOptions={ additionalOptions }
+        />;
+      } else if (scale == 'continuous') {
+        if (generalType == 't') {
+          viz = <LineChart
+            chartId={ `field-line-${ id }` }
+            data={ vizData['visualize'] }
+            isMinimalView={ true }
+            colors={ colors }
+            additionalOptions={ additionalOptions }
+          />;
+        } else {
+          viz = <Histogram
+            chartId={ `field-hist-${ id }` }
+            data={ vizData['visualize'] }
+            bins={ vizData['bins'] }
+            isMinimalView={ true }
+            colors={ colors }
+            additionalOptions={ additionalOptions }
+          />;
+        }
+      }
+    }
+
     let fieldContent;
     if ( generalType == 'c' ) {
       fieldContent =
         <div>
-          { vizData &&
-            <ColumnChart
-              chartId={ `field-bar-${ id }` }
-              data={ vizData['visualize'] }
-              isMinimalView={ true }
-              colors={ colors }
-              additionalOptions={ additionalOptions }
-            />
-          }
+          { viz }
           { stats &&
             <div className={ styles.statistics }>
               <div><span className={ styles.field }>Unique Values</span>: { getRoundedString(stats.unique) } ({ getRoundedString((stats.unique / stats.count) * 100) }%) </div>
@@ -118,16 +172,7 @@ class DatasetMetadataCell extends Component {
     } else if ( generalType == 'q' ) {
       fieldContent =
         <div>
-          { vizData &&
-            <Histogram
-              chartId={ `field-hist-${ id }` }
-              data={ vizData['visualize'] }
-              bins={ vizData['bins'] }
-              isMinimalView={ true }
-              colors={ colors }
-              additionalOptions={ additionalOptions }
-            />
-          }
+          { viz }
           { stats &&
             <div className={ styles.statistics }>
               <div><span className={ styles.field }>Mean</span>: { getRoundedString(stats.mean) }</div>
@@ -164,19 +209,10 @@ class DatasetMetadataCell extends Component {
     } else if ( generalType == 't' ) {
       fieldContent =
       <div>
-        { vizData &&
-          <Histogram
-            chartId={ `field-hist-time-${ id }` }
-            data={ vizData['visualize'] }
-            bins={ vizData['bins'] }
-            isMinimalView={ true }
-            colors={ colors }
-            additionalOptions={ additionalOptions }
-          />
-        }
+        { viz }
         { stats &&
           <div className={ styles.statistics }>
-            <div><span className={ styles.field }>Range</span>: { getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div>
+            <div><span className={ styles.field }>Range</span>: { getRoundedString(stats.first) } - { getRoundedString(stats.last) }</div>
           </div>
         }
         { typeScores && showTypeScores &&
@@ -245,9 +281,10 @@ DatasetMetadataCell.defaultProps = {
 }
 
 function mapStateToProps(state) {
-  const { project } = state;
+  const { project, datasetSelector } = state;
   return {
-    projectId: project.id
+    projectId: project.id,
+    datasetId: datasetSelector.id
   };
 }
 

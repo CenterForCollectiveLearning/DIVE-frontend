@@ -163,14 +163,15 @@ function receiveSetFieldTypeDispatcher(fieldProperty) {
   };
 }
 
-export function setFieldType(projectId, fieldId, fieldType) {
+export function setFieldType(projectId, datasetId, fieldId, fieldType) {
   const params = {
     project_id: projectId,
+    dataset_id: datasetId,
     type: fieldType
   };
 
   return (dispatch) => {
-    dispatch(requestSetFieldTypeDispatcher(projectId, fieldId, fieldType));
+    dispatch(requestSetFieldTypeDispatcher(projectId, datasetId, fieldId, fieldType));
     return fetch(`/datasets/v1/fields/${ fieldId }`, {
       method: 'post',
       body: JSON.stringify(params),
@@ -179,7 +180,7 @@ export function setFieldType(projectId, fieldId, fieldType) {
   };
 }
 
-function requestSetFieldIsIdDispatcher(projectId, fieldId, fieldIsId) {
+function requestSetFieldIsIdDispatcher(projectId, datasetId, fieldId, fieldIsId) {
   return {
     type: REQUEST_SET_FIELD_IS_ID,
     fieldId: fieldId,
@@ -194,14 +195,15 @@ function receiveSetFieldIsIdDispatcher(fieldProperty) {
   };
 }
 
-export function setFieldIsId(projectId, fieldId, fieldIsId) {
+export function setFieldIsId(projectId, datasetId, fieldId, fieldIsId) {
   const params = {
     project_id: projectId,
+    dataset_id: datasetId,
     isId: fieldIsId
   };
 
   return (dispatch) => {
-    dispatch(requestSetFieldIsIdDispatcher(projectId, fieldId, fieldIsId));
+    dispatch(requestSetFieldIsIdDispatcher(projectId, datasetId, fieldId, fieldIsId));
     return fetch(`/datasets/v1/fields/${ fieldId }`, {
       method: 'post',
       body: JSON.stringify(params),
@@ -210,7 +212,7 @@ export function setFieldIsId(projectId, fieldId, fieldIsId) {
   };
 }
 
-function requestSetFieldColorDispatcher(projectId, fieldId, fieldColor) {
+function requestSetFieldColorDispatcher(projectId, datasetId, fieldId, fieldColor) {
   return {
     type: REQUEST_SET_FIELD_COLOR,
     fieldId: fieldId,
@@ -225,14 +227,15 @@ function receiveSetFieldColorDispatcher(fieldProperty) {
   };
 }
 
-export function setFieldColor(projectId, fieldId, fieldColor) {
+export function setFieldColor(projectId, datasetId, fieldId, fieldColor) {
   const params = {
     project_id: projectId,
+    dataset_id: datasetId,
     color: fieldColor
   };
 
   return (dispatch) => {
-    dispatch(requestSetFieldColorDispatcher(projectId, fieldId, fieldColor));
+    dispatch(requestSetFieldColorDispatcher(projectId, datasetId, fieldId, fieldColor));
     return fetch(`/datasets/v1/fields/${ fieldId }`, {
       method: 'post',
       body: JSON.stringify(params),

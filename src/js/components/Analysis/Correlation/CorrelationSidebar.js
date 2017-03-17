@@ -62,7 +62,8 @@ export class CorrelationSidebar extends Component {
           { fieldProperties.items.length != 0 && fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
             <div className={ styles.fieldGroup }>
               <div className={ styles.fieldGroupHeader }>
-                <div className={ styles.fieldGroupLabel }>Quantitative</div>
+                <span className={ styles.fieldGroupLabel }>Quantitative</span>
+                <span className={ "pt-icon-regular pt-icon-numerical " + styles.generalTypeIcon } />
               </div>
               <ToggleButtonGroup
                 toggleItems={ quantitativeVariables.map((item) =>

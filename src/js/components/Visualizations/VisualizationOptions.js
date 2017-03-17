@@ -38,6 +38,7 @@ export const fullOptions = {
     }
   },
   hAxis: {
+    minValue: 0,
     titleTextStyle: {
       color: "#333",
       italic: false,
@@ -49,6 +50,7 @@ export const fullOptions = {
     }
   },
   vAxis: {
+    minValue: 0,
     titleTextStyle: {
       color: "#333",
       italic: false,
@@ -60,12 +62,6 @@ export const fullOptions = {
     }
   },
   vAxes: [
-    {
-      textStyle: {
-        color: "#777",
-        italic: false
-      }
-    },
     {
       textStyle: {
         color: "#777",
@@ -111,7 +107,6 @@ export const minimalOptions = {
     trigger: 'none'
   },
   vAxis: {
-    minValue: 0,
     baselineColor: 'transparent',
     textPosition: 'none',
     gridlines: {

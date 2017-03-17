@@ -212,7 +212,7 @@ $break-large: 1200px
     min-width: 160px
 
 .sidebarDropdown
-  margin-top: 1px
+  margin-top: -1px
 
   > div > div:first-of-type
     margin-top: -1px
@@ -228,3 +228,30 @@ $break-large: 1200px
   margin-top: 10px
   div
     margin-bottom: 5px
+
+.fieldGroup
+  &:first-child
+    .fieldGroupHeader
+      margin-top: 0
+      display: flex
+      flex-direction: row
+      align-items: flex-end
+      .fieldGroupLabel
+
+      .fieldGroupAction
+        +smallCaps
+        cursor: pointer
+        color: $primary-accent
+        margin-left: auto
+
+  .fieldGroupHeader
+    display: flex
+    align-items: center
+    margin-top: 12px
+    margin-bottom: 5px
+
+    .fieldGroupLabel
+      +smallCaps
+
+    .generalTypeIcon
+      margin-left: auto

@@ -64,7 +64,8 @@ export class ComparisonSidebar extends Component {
               { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
                 <div className={ styles.fieldGroup }>
                   <div className={ styles.fieldGroupHeader }>
-                    <div className={ styles.fieldGroupLabel }>Categorical</div>
+                    <span className={ styles.fieldGroupLabel }>Categorical</span>
+                    <span className={ "pt-icon-regular pt-icon-font " + styles.generalTypeIcon } />
                   </div>
                   <ToggleButtonGroup
                     toggleItems={ fieldProperties.items.filter((p) => p.generalType == 'c' && !p.isId).map((item) =>
@@ -85,7 +86,10 @@ export class ComparisonSidebar extends Component {
               }
               { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
                 <div className={ styles.fieldGroup }>
-                  <div className={ styles.fieldGroupLabel }>Temporal</div>
+                  <div className={ styles.fieldGroupHeader }>
+                    <span className={ styles.fieldGroupLabel }>Temporal</span>
+                    <span className={ "pt-icon-regular pt-icon-time " + styles.generalTypeIcon } />
+                  </div>
                   <ToggleButtonGroup
                     toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
                       new Object({
@@ -105,7 +109,10 @@ export class ComparisonSidebar extends Component {
               }
               { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
                 <div className={ styles.fieldGroup }>
-                  <div className={ styles.fieldGroupLabel }>Quantitative</div>
+                  <div className={ styles.fieldGroupHeader }>
+                    <span className={ styles.fieldGroupLabel }>Quantitative</span>
+                    <span className={ "pt-icon-regular pt-icon-numerical " + styles.generalTypeIcon } />
+                  </div>
                   <ToggleButtonGroup
                     toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
                       new Object({
@@ -135,7 +142,8 @@ export class ComparisonSidebar extends Component {
               >
               <div className={ styles.fieldGroup }>
                 <div className={ styles.fieldGroupHeader }>
-                  <div className={ styles.fieldGroupLabel }>Quantitative</div>
+                  <span className={ styles.fieldGroupLabel }>Quantitative</span>
+                  <span className={ "pt-icon-regular pt-icon-numerical " + styles.generalTypeIcon } />
                 </div>
                 <ToggleButtonGroup
                   toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
