@@ -84,7 +84,6 @@ export const minimalOptions = {
   fontSize: 0,
   headerHeight: 0,
   hAxis: {
-    minValue: 0,
     baselineColor: 'transparent',
     textPosition: 'none',
     gridlines: {
@@ -108,7 +107,6 @@ export const minimalOptions = {
     trigger: 'none'
   },
   vAxis: {
-    minValue: 0,
     baselineColor: 'transparent',
     textPosition: 'none',
     gridlines: {
