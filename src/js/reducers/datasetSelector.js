@@ -47,13 +47,13 @@ export default function datasetSelector(state = baseState, action) {
       return { ...state, id: null };
 
     case REQUEST_UPLOAD_DATASET:
-      return { ...state, isUploading: true };
+      return { ...state, isUploading: true, error: null };
 
     case PROGRESS_UPLOAD_DATASET:
       return { ...state, progress: action.progress };
 
     case ERROR_UPLOAD_DATASET:
-      return { ...state, progress: null, error: action.error };
+      return { ...state, progress: null, isUploading: false, error: action.error };
 
     case RECEIVE_UPLOAD_DATASET:
       if (action.error) {

@@ -113,26 +113,82 @@ function receiveUploadDatasetDispatcher(params, json) {
   };
 }
 
+const allSeparators = [ ',', '\t', ':', ' ', ':' ];
+const parseableMimeTypesToSeparators = {
+  'text/csv': [','],
+  'text/x-csv': [','],
+  'text/comma-separated-values': [','],
+  'text/x-comma-separated-values': [','],
+  'application/csv': [','],
+  'application/x-csv': [','],
+  'text/tab-separated-values': ['\t'],
+  'text/plain': allSeparators,
+  'application/octet-stream': allSeparators
+}
+
+const parseableMimeTypes = Object.keys(parseableMimeTypesToSeparators);
+
+const skipParsingMimetimes = [
+  'application/excel',
+  'application/vnd.ms-excel',
+  'application/msexcel',
+  'application/x-msexcel',
+  'application/x-excel',
+  'application/x-dos_ms_excel',
+  'application/xls',
+  'application/x-xls',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/json',
+]
+
+const acceptedMimetypes = parseableMimeTypes + skipParsingMimetimes;
+
+function getNumColumns(rowSample, mimeType) {
+  const columnSeparators = parseableMimeTypesToSeparators[mimeType];
+  var separator = null;
+  var max = 0;
+  for (var row of rowSample) {
+    for (var columnSeparator of columnSeparators) {
+      var numColumns = row.split(columnSeparator).length;
+      if (numColumns > max) {
+        max = numColumns
+        separator = null;
+      }
+    }
+  }
+  return max;
+}
+
+function datasetOverSizeLimit(result, mimeType=null) {
+  const ROW_LIMIT = (window.__env.NODE_ENV == 'DEVELOPMENT') ? Number.MAX_SAFE_INTEGER : 100000;
+  const COLUMN_LIMIT = (window.__env.NODE_ENV == 'DEVELOPMENT') ? Number.MAX_SAFE_INTEGER : 40;
+
+  const rowSeparator = /[\r\n]+/g;
+  const rows = result.split(rowSeparator);
+  const rowSample = rows.slice(0, 10);
+  const numRows = rows.length;
+
+  if (numRows > ROW_LIMIT) {
+    return `Uploaded file has ${ numRows } rows, exceeding row limit of ${ ROW_LIMIT }.`;
+  } else {
+    const numColumns = getNumColumns(rowSample, mimeType)
+    if (numColumns > COLUMN_LIMIT) {
+      return `Uploaded file has ${ numColumns } columns, exceeding column limit of ${ COLUMN_LIMIT }.`;
+    }
+  }
+  return false;
+}
+
 export function uploadDataset(projectId, datasetFile) {
   var formData = new FormData();
   formData.append('data', JSON.stringify({ project_id: projectId }));
   formData.append('file', datasetFile);
 
-  const fileSize = datasetFile.size;
-  let fileSizeLimit = 10 * (1000 * 1000);
-  if (window.__env.NODE_ENV == 'DEVELOPMENT') {
-    fileSizeLimit = 1000 * 1000 * 1000;
-  }
+  const { size: fileSize, type: mimeType } = datasetFile;
+  const MB = 1000 * 1000;
+  let fileSizeLimit = (window.__env.NODE_ENV == 'DEVELOPMENT') ? 1000*MB : 10*MB;
 
   return (dispatch) => {
-    if (fileSize > fileSizeLimit) {
-      return dispatch(errorTaskUploadDatasetDispatcher({
-        type: 'error',
-        message: `File size is too large (${ fileSizeLimit / (1000 * 1000) }MB limit)`
-      }));
-    }
-
-    dispatch(requestUploadDatasetDispatcher());
 
     const uploadEvents = [
       {
@@ -163,7 +219,40 @@ export function uploadDataset(projectId, datasetFile) {
       dispatch(pollForTask(taskId, DATASET_MODE, REQUEST_UPLOAD_DATASET, {}, dispatchers));
     };
 
-    return httpRequest('POST', '/datasets/v1/upload', formData, completeEvent, uploadEvents);
+    if (fileSize > fileSizeLimit) {
+      return dispatch(errorTaskUploadDatasetDispatcher({
+        type: 'error',
+        message: `File size is too large (${ fileSizeLimit / MB }MB limit)`
+      }));
+    }
+
+    if (!acceptedMimetypes.includes(mimeType)) {
+      return dispatch(errorTaskUploadDatasetDispatcher({
+        type: 'error',
+        message: `Uploaded file mimetime ${ mimeType } invalid.`
+      }));
+    }
+
+    if ((window.File && window.FileReader && window.FileList && window.Blob) && parseableMimeTypes.includes(mimeType)) {
+      const fileReader = new FileReader();
+      fileReader.onload = function(event) {
+        const result = event.target.result;
+        const overSizeLimit = datasetOverSizeLimit(result, mimeType);
+        if (overSizeLimit) {
+          return dispatch(errorTaskUploadDatasetDispatcher({
+            type: 'error',
+            message: overSizeLimit
+          }));
+        } else {
+          dispatch(requestUploadDatasetDispatcher());
+          return httpRequest('POST', '/datasets/v1/upload', formData, completeEvent, uploadEvents);
+        }
+      }
+      fileReader.readAsText(datasetFile);
+    } else {
+      dispatch(requestUploadDatasetDispatcher());
+      return httpRequest('POST', '/datasets/v1/upload', formData, completeEvent, uploadEvents);
+    }
   };
 }
 
