@@ -48,6 +48,7 @@ export function httpRequest(method, urlPath, formData, completeEvent, uploadEven
   uploadEvents.forEach((event) =>
     request.upload.addEventListener(event.type, event.function, false)
   );
+  
   request.open(method, completeUrl, true);
   request.send(formData);
 }

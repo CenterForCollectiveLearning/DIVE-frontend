@@ -215,8 +215,14 @@ export function uploadDataset(projectId, datasetFile) {
     }
 
     const completeEvent = (request) => (evt) => {
-      const { taskId } = JSON.parse(request.responseText);
-      dispatch(pollForTask(taskId, DATASET_MODE, REQUEST_UPLOAD_DATASET, {}, dispatchers));
+      const { responseText, status } = request;
+      const json = JSON.parse(responseText);
+      if (status == 202) {
+        const { taskId } = json;
+        dispatch(pollForTask(taskId, DATASET_MODE, REQUEST_UPLOAD_DATASET, {}, dispatchers));
+      } else if ( status > 400 ) {
+        dispatch(errorTaskUploadDatasetDispatcher(json));
+      }
     };
 
     if (fileSize > fileSizeLimit) {
