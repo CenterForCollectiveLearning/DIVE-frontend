@@ -28,7 +28,11 @@ export default class LineChart extends Component {
       ...additionalOptions
     }
 
-    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
+    options.hAxis = {
+      ...options.hAxis,
+      title: labels && labels.x ? labels.x : finalData[0][0],
+      minValue: 'automatic'
+    }
     options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
     options.colors = colors;
 

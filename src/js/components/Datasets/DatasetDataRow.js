@@ -309,7 +309,8 @@ class DatasetDataRow extends Component {
           <div className={ styles.statistic + ' ' + styles.wide}>
             <div className={ styles.field }>Range</div>
             <div className={ styles.value + ' ' + styles.inlineElements }>
-              { stats.first } - { stats.last }
+              { (stats.first && stats.last) && <span>{ stats.first } - { stats.last }</span> }
+              { (stats.min && stats.max) && <span>{ stats.min } - { stats.max }</span> }
             </div>
           </div>
         </div> : <div/>;
