@@ -77,7 +77,7 @@ export default class BareDataGrid extends Component {
                     columnWidth={ columnWidth }
                     minimumColumnWidth={ minimumColumnWidth }
                     nColumns={ nColumns }
-                    collapsed={ row.children.length > 3 }
+                    collapsed={ row.children.length > 5 }
                   />
                 } else {
                   return <Row key={ `${ row.rowClass }-${ i }`} className={ row.rowClass }>{
