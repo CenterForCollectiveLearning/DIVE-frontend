@@ -71,7 +71,7 @@ export default class BareDataGrid extends Component {
               { data.map(function (row, i) {
                 if (row.isNested) {
                   return <NestedRowComponent
-                    key={ i }
+                    key={ `nested-row-component-${ i }` }
                     i={ i }
                     row={ row }
                     columnWidth={ columnWidth }

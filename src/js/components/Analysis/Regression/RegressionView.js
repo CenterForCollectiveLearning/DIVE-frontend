@@ -77,10 +77,25 @@ export class RegressionView extends Component {
     const { datasets, datasetId, regressionResult, recommendationResult, contributionToRSquared, dependentVariableName, independentVariableNames, regressionType, tableLayout } = this.props;
     const saved = (regressionResult.isSaving || (!regressionResult.isSaving && regressionResult.exportedRegressionId) || regressionResult.exported) ? true : false;
 
+    const errorComponent = ( <div className={ styles.centeredFill }>
+      <NonIdealState
+        title='Error Running Regression'
+        description={ regressionResult.error }
+        visual='error'
+        action={ <div className={ styles.errorAction }>
+          <div>Please change your selection or</div>
+          <Button
+            onClick={ () => location.reload() }
+            iconName='refresh'
+            intent={ Intent.PRIMARY }
+            text="Refresh DIVE" />
+          </div>
+      }
+      />
+    </div> );
+
     if ( !recommendationResult.loading && !regressionResult.error && !regressionResult.loading && (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0)) {
-      return (
-        <div className={ styles.regressionViewContainer }></div>
-      );
+      return errorComponent;
     }
 
     let tableCardHeader;
@@ -91,24 +106,7 @@ export class RegressionView extends Component {
     var regressionContent = <div className={ styles.centeredFill } />;
 
     if (regressionResult.error) {
-      return (
-        <div className={ styles.centeredFill }>
-          <NonIdealState
-            title='Error Running Regression'
-            description={ regressionResult.error }
-            visual='error'
-            action={ <div className={ styles.errorAction }>
-              <div>Please change your selection or</div>
-              <Button
-                onClick={ () => location.reload() }
-                iconName='refresh'
-                intent={ Intent.PRIMARY }
-                text="Refresh DIVE" />
-              </div>
-          }
-          />
-        </div>
-      )
+      return errorComponent;
     }
 
     if (independentVariableNames.length == 0) {

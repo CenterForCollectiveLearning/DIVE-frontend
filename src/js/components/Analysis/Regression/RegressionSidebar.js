@@ -76,7 +76,7 @@ export class RegressionSidebar extends Component {
       fetchFieldPropertiesIfNeeded(project.id, datasetId)
     }
 
-    if (project.id && datasetId && dependentVariableId && !regressionSelector.recommendationResult.loading && recommendationTypeChanged) {
+    if (project.id && datasetId && dependentVariableId && !regressionSelector.recommendationResult.loading && (this.props.recommendationType && recommendationTypeChanged)) {
       this.setRecommendedState(nextProps);
     }
   }

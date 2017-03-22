@@ -21,6 +21,7 @@ export class RegressionBasePage extends Component {
       replace(`${ pathname }${ persistedQueryString }`);
     } else {
       if ( project.id && datasetId ) {
+        console.log('Recommending from basepage mount');
         this.setRecommendedInitialState(this.props);
       }
     }
@@ -28,10 +29,11 @@ export class RegressionBasePage extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { queryObject: currentQueryObject, recommendationResult } = this.props;
-    const { queryObject: nextQueryObject, project, datasetId, persistedQueryString } = nextProps;
+    const { queryObject: nextQueryObject, project, datasetId, persistedQueryString, regressionSelector } = nextProps;
 
     const shouldRecommendInitialState = Object.keys(currentQueryObject).length == 0 && Object.keys(nextQueryObject).length == 0 && !recommendationResult.loading && !nextProps.recommendationResult.loading && !persistedQueryString;
-    if ( project.id && datasetId && shouldRecommendInitialState) {
+    if ( project.id && datasetId && shouldRecommendInitialState && !regressionSelector.recommendationResult.loading) {
+      console.log('Recommending from basepage receive props');
       this.setRecommendedInitialState(nextProps);
     }
 
