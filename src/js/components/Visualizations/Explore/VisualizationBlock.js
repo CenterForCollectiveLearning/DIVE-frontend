@@ -24,7 +24,7 @@ export default class VisualizationBlock extends Component {
           onClick={ () => onClick(spec.id) }
           isMinimalView={ true }
           showHeader={ true } />
-        <div className={ styles.starContainer } onClick={ () => saveVisualization(spec.id, spec.data.visualization) }>
+        <div className={ styles.starContainer } onClick={ () => saveVisualization(spec.id, spec.data) }>
           <span className={ 'pt-icon-standard ' + ( exportedSpecs.items.find((exportedSpec) => exportedSpec.specId == spec.id) ? 'pt-icon-star ' + styles.starred : 'pt-icon-star-empty' ) } />
         </div>
         { showStats &&

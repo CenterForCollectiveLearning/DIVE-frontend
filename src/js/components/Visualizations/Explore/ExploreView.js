@@ -52,8 +52,6 @@ export class ExploreView extends Component {
     const projectChanged = (this.props.project.id !== project.id);
     const fieldPropertiesSelected = exploreSelector.fieldProperties.find((prop) => prop.selected) != undefined;
 
-    console.log('In Will Update');
-
     if (projectChanged || (project.id && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded)))) {
       fetchDatasets(project.id);
     }
