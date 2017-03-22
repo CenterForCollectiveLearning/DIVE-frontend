@@ -59,7 +59,7 @@ const SCALE_OPTIONS = [
   }
 ];
 
-const SORT_ORDERS = [
+export const SORT_ORDERS = [
   {
     id: 'asc',
     name: 'Ascending',

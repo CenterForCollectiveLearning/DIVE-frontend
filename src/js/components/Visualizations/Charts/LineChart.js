@@ -28,21 +28,22 @@ export default class LineChart extends Component {
       ...additionalOptions
     }
 
-    options.hAxis = {
-      ...options.hAxis,
-      title: labels && labels.x ? labels.x : finalData[0][0],
-      minValue: 'automatic'
+    if (!isMinimalView) {
+      options.hAxis = {
+        ...options.hAxis,
+        title: labels && labels.x ? labels.x : finalData[0][0],
+        minValue: 'automatic'
+      }
+      options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
     }
-    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
+
     options.colors = colors;
 
-    console.log('Rendering line chart', isMinimalView, chartId, data, config);
     return (
       <Chart
         chartType="LineChart"
         options={ options }
-        data = { finalData }
-        key={ chartId }
+        data={ finalData }
         graph_id={ chartId }
         width={ "100%" }
         height={ "100%" }

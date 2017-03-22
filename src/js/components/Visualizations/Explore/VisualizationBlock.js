@@ -6,18 +6,8 @@ import Visualization from '../Visualization';
 import { getRoundedString } from '../../../helpers/helpers';
 
 export default class VisualizationBlock extends Component {
-  onClick() {
-    const { spec, onClick } = this.props;
-    onClick(spec.id);
-  }
-
-  saveVisualization = () => {
-    const { spec, saveVisualization } = this.props;
-    saveVisualization(spec.id, spec.data.visualize);
-  }
-
   render() {
-    const { spec, exportedSpecs, fieldNameToColor, filteredVisualizationTypes, className, showStats, isCard } = this.props;
+    const { spec, exportedSpecs, fieldNameToColor, filteredVisualizationTypes, className, showStats, isCard, onClick, saveVisualization } = this.props;
 
     return (
       <div className={ styles.visualizationBlocksContainer + ' ' + ( styles[className] || '') }>
@@ -29,10 +19,12 @@ export default class VisualizationBlock extends Component {
           data={ spec.data.visualize }
           bins={ spec.data.bins }
           subset={ spec.data.subset }
-          onClick={ this.onClick.bind(this) }
+          sortFields={ spec.sortFields }
+          sortOrders={ spec.sortOrders }
+          onClick={ () => onClick(spec.id) }
           isMinimalView={ true }
           showHeader={ true } />
-        <div className={ styles.starContainer } onClick={ this.saveVisualization }>
+        <div className={ styles.starContainer } onClick={ () => saveVisualization(spec.id, spec.data.visualization) }>
           <span className={ 'pt-icon-standard ' + ( exportedSpecs.items.find((exportedSpec) => exportedSpec.specId == spec.id) ? 'pt-icon-star ' + styles.starred : 'pt-icon-star-empty' ) } />
         </div>
         { showStats &&

@@ -8,7 +8,7 @@ import { getRoundedString } from '../../../helpers/helpers';
 
 export default class SpecSection extends Component {
   render() {
-    const { specs, exportedSpecs, fieldNameToColor, filteredVisualizationTypes, className, showStats, isCard, onClickVisualization, saveVisualization } = this.props;
+    const { specs, exportedSpecs, fieldNameToColor, filteredVisualizationTypes, className, showStats, isCard, onClick, saveVisualization } = this.props;
 
     return (
       <div className={ styles.specs + ' ' + styles.exact }>
@@ -21,7 +21,7 @@ export default class SpecSection extends Component {
             fieldNameToColor={ fieldNameToColor }
             filteredVisualizationTypes={ filteredVisualizationTypes }
             exportedSpecs={ exportedSpecs }
-            onClick={ onClickVisualization }
+            onClick={ onClick }
             saveVisualization={ saveVisualization }
             showStats={ false }
           />

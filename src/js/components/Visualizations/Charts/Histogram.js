@@ -74,7 +74,6 @@ export default class Histogram extends Component {
       <Chart
         loader={ <div className={ styles.renderChartText + ' pt-monospace-text' }>Rendering Chart...</div> }
         chartType="ColumnChart"
-        key={ chartId }
         graph_id={ chartId }
         options={ options }
         data={ finalData }
