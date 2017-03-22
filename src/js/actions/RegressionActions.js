@@ -45,7 +45,7 @@ function receiveInitialRegressionStateDispatcher(json) {
   };
 }
 
-export function getRecommendation(projectId, datasetId, callback, dependentVariableId=null, recommendationType='forwardR2') {
+export function getRecommendation(projectId, datasetId, callback, dependentVariableId=null, recommendationType='lasso') {
   const params = {
     projectId: projectId,
     datasetId: datasetId,

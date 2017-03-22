@@ -16,8 +16,7 @@ import Loader from '../../Base/Loader';
 import HeaderBar from '../../Base/HeaderBar';
 import DropDownMenu from '../../Base/DropDownMenu';
 import ColoredFieldItems from '../../Base/ColoredFieldItems';
-import Visualization from '../Visualization';
-import VisualizationBlock from './VisualizationBlock';
+import SpecSection from './SpecSection';
 
 export class ExploreView extends Component {
   componentWillMount() {
@@ -44,15 +43,16 @@ export class ExploreView extends Component {
     clearVisualization();
   }
 
-  componentDidUpdate(previousProps) {
-    const { datasetSelector, datasets, fieldIds, project, specs, fieldProperties, exploreSelector, exportedSpecs, recommendationMode, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = this.props;
+  componentWillUpdate(nextProps) {
+    const { datasetSelector, datasets, fieldIds, project, specs, fieldProperties, exploreSelector, exportedSpecs, recommendationMode, fetchExportedVisualizationSpecs, fetchSpecs, fetchDatasets } = nextProps;
     const { isFetchingSpecLevel, loadedSpecLevel, recommendationTypes } = exploreSelector;
 
-    const datasetChanged = (datasetSelector.id !== previousProps.datasetSelector.id);
+    const datasetChanged = (this.props.datasetSelector.id !== datasetSelector.id);
     const notLoadedAndNotFetching = (!specs.loaded && !specs.isFetching && !specs.error);
-    const projectChanged = (previousProps.project.id !== project.id);
+    const projectChanged = (this.props.project.id !== project.id);
     const fieldPropertiesSelected = exploreSelector.fieldProperties.find((prop) => prop.selected) != undefined;
 
+    console.log('In Will Update');
 
     if (projectChanged || (project.id && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded)))) {
       fetchDatasets(project.id);
@@ -136,24 +136,28 @@ export class ExploreView extends Component {
 
     const recommendationTypesWithData = [
       {
+        typeId: 'exact',
         title: 'Exact Matches',
         helperText: 'exactMatches',
         showHeader: areFieldsSelected,
         specs: sortedSpecs.filter((spec) => spec.recommendationType == 'exact')
       },
       {
+        typeId: 'subset',
         title: 'Subset Matches',
         helperText: 'closeMatches',
         showHeader: true,
         specs: sortedSpecs.filter((spec) => spec.recommendationType == 'subset')
       },
       {
+        typeId: 'individual',
         title: 'Individual Matches',
         helperText: 'individualMatches',
         showHeader: true,
         specs: sortedSpecs.filter((spec) => spec.recommendationType == 'baseline')
       },
       {
+        typeId: 'expanded',
         title: 'Expanded Matches',
         helperText: 'expandedMatches',
         showHeader: true,
@@ -216,23 +220,18 @@ export class ExploreView extends Component {
                     }
                     { isFetchingSpecLevel[i] && <Loader text={ progressByLevel[i] }/> }
                     { d.specs.length > 0 &&
-                      <div className={ styles.specs + ' ' + styles.exact }>
-                        { d.specs.map((spec, j) =>
-                          <VisualizationBlock
-                            key={ `${ spec.id }-${ j }` }
-                            spec={ spec }
-                            isCard={ true }
-                            className='exact'
-                            fieldNameToColor={ fieldNameToColor }
-                            filteredVisualizationTypes={ filteredVisualizationTypes }
-                            exportedSpecs={ exportedSpecs }
-                            onClick={ context.onClickVisualization }
-                            saveVisualization={ context.saveVisualization }
-                            showStats={ false }
-                          />
-                          )
-                        }
-                      </div>
+                      <SpecSection
+                        key={ `spec-section-${ d.typeId }`}
+                        specs={ d.specs }
+                        isCard={ true }
+                        className='exact'
+                        fieldNameToColor={ fieldNameToColor }
+                        filteredVisualizationTypes={ filteredVisualizationTypes }
+                        exportedSpecs={ exportedSpecs }
+                        onClick={ context.onClickVisualization }
+                        saveVisualization={ context.saveVisualization }
+                        showStats={ false }
+                      />
                    }
                   </div>
                 )

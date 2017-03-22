@@ -68,7 +68,7 @@ export class RegressionSidebar extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, datasetId, fieldProperties, fetchFieldPropertiesIfNeeded, recommendationType, recommendationResult, regressionSelector } = nextProps;
+    const { project, datasetId, dependentVariableId, fieldProperties, fetchFieldPropertiesIfNeeded, recommendationType, recommendationResult, regressionSelector } = nextProps;
     const datasetIdChanged = datasetId != this.props.datasetId;
     const recommendationTypeChanged = recommendationType != this.props.recommendationType;
 
@@ -76,7 +76,7 @@ export class RegressionSidebar extends Component {
       fetchFieldPropertiesIfNeeded(project.id, datasetId)
     }
 
-    if (project.id && datasetId && !regressionSelector.recommendationResult.loading && recommendationTypeChanged) {
+    if (project.id && datasetId && dependentVariableId && !regressionSelector.recommendationResult.loading && recommendationTypeChanged) {
       this.setRecommendedState(nextProps);
     }
   }

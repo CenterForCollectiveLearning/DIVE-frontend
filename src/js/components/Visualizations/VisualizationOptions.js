@@ -109,6 +109,7 @@ export const minimalOptions = {
   vAxis: {
     baselineColor: 'transparent',
     textPosition: 'none',
+    minValue: 0,
     gridlines: {
       count: 0,
       color: 'transparent'

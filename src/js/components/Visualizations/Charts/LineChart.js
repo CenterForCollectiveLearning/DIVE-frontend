@@ -36,7 +36,7 @@ export default class LineChart extends Component {
     options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
     options.colors = colors;
 
-
+    console.log('Rendering line chart', isMinimalView, chartId, data, config);
     return (
       <Chart
         chartType="LineChart"

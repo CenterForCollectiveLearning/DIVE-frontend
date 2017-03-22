@@ -43,7 +43,7 @@ export default class Visualization extends Component {
   render() {
     const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields, config, isCard, subset } = this.props;
     const { args, meta } = spec;
-    const chartId = `${ this.props.chartId || spec.id  }${ ( sortIndex ? '-' + sortIndex : '') }`;
+    const chartId = `${ this.props.chartId || spec.id }${ ( sortIndex ? '-' + sortIndex : '') }`;
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
     const defaultVisualizationType = validVisualizationTypes[0];
 
@@ -128,8 +128,6 @@ export default class Visualization extends Component {
           (defaultVisualizationType == 'tree' && data.length > MAX_ELEMENTS.full.treemap)
         )
       );
-
-
 
     var tooMuchDataString = '';
     if (tooMuchDataToPreview || tooMuchDataToShowFull) {
@@ -239,12 +237,12 @@ export default class Visualization extends Component {
             }
             { (defaultVisualizationType == 'line' ) &&
               <LineChart
-                chartId={ `spec-bar-${ chartId }` }
+                chartId={ `spec-line-${ chartId }` }
                 data={ finalDataArray }
                 colors={ colors }
                 labels={ labels }
                 isMinimalView={ isMinimalView }
-                config = { config }/>
+                config={ config }/>
             }
             { defaultVisualizationType == 'pie' &&
               <PieChart

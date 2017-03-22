@@ -48,7 +48,7 @@ export function httpRequest(method, urlPath, formData, completeEvent, uploadEven
   uploadEvents.forEach((event) =>
     request.upload.addEventListener(event.type, event.function, false)
   );
-  
+
   request.open(method, completeUrl, true);
   request.send(formData);
 }
@@ -131,7 +131,7 @@ export function pollForTask(taskId, taskMode, taskType, dispatcherParams, dispat
         } else if (counter > limit) {
           console.debug(`[TIME OUT] Task ${ taskId } of type ${ taskType } exceeded polling limit.`);
 
-          revokeTasks(taskId).then((revokeData) => {
+          revokeTasks([ taskId ]).then((revokeData) => {
             dispatch(errorDispatcher({ ...data.result, error: `Polling timed out for task ${ taskId } of type ${ taskType }` }));
           });
         } else {
