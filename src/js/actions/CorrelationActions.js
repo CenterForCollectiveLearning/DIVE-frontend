@@ -7,8 +7,6 @@ import {
   RECEIVE_CORRELATION,
   PROGRESS_CORRELATION,
   ERROR_CORRELATION,
-  REQUEST_CORRELATION_SCATTERPLOT,
-  RECEIVE_CORRELATION_SCATTERPLOT,
   REQUEST_CREATE_SAVED_CORRELATION,
   RECEIVE_CREATED_SAVED_CORRELATION,
   REQUEST_CREATE_EXPORTED_CORRELATION,
@@ -119,43 +117,6 @@ export function getCorrelations(projectId, datasetId, correlationVariables, cond
       }
     })
     .catch(err => console.error("Error creating correlation matrix: ", err));
-  };
-}
-
-function requestCorrelationScatterplotDispatcher() {
-  return {
-    type: REQUEST_CORRELATION_SCATTERPLOT
-  };
-}
-
-function receiveCorrelationScatterplotDispatcher(json) {
-  return {
-    type: RECEIVE_CORRELATION_SCATTERPLOT,
-    data: json,
-    receivedAt: Date.now()
-  };
-}
-
-export function getCorrelationScatterplot(projectId, correlationId, conditionals=[]) {
-
-  const params = {
-    projectId: projectId,
-    correlationId: correlationId
-  }
-
-  const filteredConditionals = getFilteredConditionals(conditionals);
-  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
-    params.conditionals = filteredConditionals;
-  }
-
-  return (dispatch) => {
-    dispatch(requestCorrelationScatterplotDispatcher);
-    return fetch('/statistics/v1/correlation_scatterplot', {
-      method: 'post',
-      body: JSON.stringify(params),
-      headers: { 'Content-Type': 'application/json' }
-    }).then(json => dispatch(receiveCorrelationScatterplotDispatcher(json)))
-      .catch(err => console.error("Error getting correlation scatterplot: ", err));
   };
 }
 
