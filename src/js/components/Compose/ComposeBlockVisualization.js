@@ -43,7 +43,8 @@ export default class ComposeBlockVisualization extends Component {
       visualizationTypes={ spec.vizTypes }
       fieldNameToColor={ fieldNameToColor }
       spec={ spec }
-      data={ spec.data }
+      bins={ spec.data.bins }
+      data={ spec.data.visualize }
       config={ spec.config }
       isMinimalView={ false }
       showHeader={ false }/>

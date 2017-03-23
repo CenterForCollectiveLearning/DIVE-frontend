@@ -17,14 +17,14 @@ export default class ComposeRegressionPreviewBlock extends Component {
 
   render() {
     const { spec, fieldNameToColor } = this.props;
-
+    
     return (
       <div className={ styles.contentPreviewBlockContainer + ' pt-card pt-interactive'}
             onClick={ this.handleClick }>
         <div className={ styles.regressionBlock }>
           <span className={ styles.header }>Explaining <ColoredFieldItems fields={ [spec.spec.dependentVariable] }/></span>
           <RegressionTable
-            regressionResult={ spec.data || {} }
+            regressionResult={ spec.data.table || {} }
             regressionType={ spec.spec.regressionType }
             preview={ true }
           />

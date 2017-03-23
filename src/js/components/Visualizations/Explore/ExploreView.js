@@ -83,6 +83,7 @@ export class ExploreView extends Component {
 
   saveVisualization = (specId, specData, config) => {
     const { project, createExportedSpec } = this.props;
+
     createExportedSpec(project.id, specId, specData, [], {}, true);
   }
 
@@ -90,7 +91,6 @@ export class ExploreView extends Component {
     const { pathname, queryObject, setPersistedQueryString, push } = this.props;
     const newQueryString = updateQueryString(queryObject, newObj);
 
-    console.log(pathname, queryObject, newQueryString);
     setPersistedQueryString(newQueryString, resetState);
     push(`${ pathname }${ newQueryString }`);
   }
