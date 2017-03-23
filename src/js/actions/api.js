@@ -56,6 +56,10 @@ export function httpRequest(method, urlPath, formData, completeEvent, uploadEven
 function revokeTasks(taskIds) {
   const completeUrl = API_URL + '/tasks/v1/revoke';
 
+  if (!Array.isArray(taskIds)) {
+    taskIds = [ taskIds ];
+  }
+
   var options = {
     headers: { 'Content-Type': 'application/json' },
     method: 'post',

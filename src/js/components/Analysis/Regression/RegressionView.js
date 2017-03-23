@@ -94,7 +94,7 @@ export class RegressionView extends Component {
       />
     </div> );
 
-    if ( !recommendationResult.loading && !regressionResult.error && !regressionResult.loading && (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0)) {
+    if ( !recommendationResult.loading && regressionResult.error && !regressionResult.loading && (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0)) {
       return errorComponent;
     }
 
