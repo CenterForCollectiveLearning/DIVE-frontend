@@ -51,7 +51,7 @@ export class AggregationSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, aggregationSelector, selectAggregationIndependentVariable, selectBinningConfigX, selectBinningConfigY, conditionals, selectConditional, aggregationVariablesIds, aggregateOn, weightVariableId, aggregationFunction } = this.props;
+    const { fieldProperties, aggregationSelector, selectAggregationIndependentVariable, selectBinningConfigX, selectBinningConfigY, conditionals, selectConditional, aggregationVariablesIds, aggregationDependentVariableId, weightVariableId, aggregationFunction } = this.props;
     const { binningConfigX, binningConfigY } = aggregationSelector;
     const nonAggregationVariables = fieldProperties.items.filter((item) => aggregationVariablesIds.indexOf(item.id) < 0)
     const aggregationOptions = [{'id': 'count', 'name' : 'count'}, ...nonAggregationVariables.filter((item) => (item.generalType == 'q' || item.generalType == 't'))]
@@ -81,7 +81,7 @@ export class AggregationSidebar extends Component {
                       new Object({
                         id: item.id,
                         name: item.name,
-                        disabled: (item.id == aggregateOn),
+                        disabled: (item.id == aggregationDependentVariableId),
                         color: item.color
                       })
                     )}
@@ -104,7 +104,7 @@ export class AggregationSidebar extends Component {
                       new Object({
                         id: item.id,
                         name: item.name,
-                        disabled: (item.id == aggregateOn),
+                        disabled: (item.id == aggregationDependentVariableId),
                         color: item.color
                       })
                     )}
@@ -127,7 +127,7 @@ export class AggregationSidebar extends Component {
                       new Object({
                         id: item.id,
                         name: item.name,
-                        disabled: (item.id == aggregateOn) || item.isId,
+                        disabled: (item.id == aggregationDependentVariableId) || item.isId,
                         color: item.color
                       })
                     )}
@@ -145,14 +145,14 @@ export class AggregationSidebar extends Component {
         { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Aggregate on">
             <DropDownMenu
-              value={ aggregateOn }
+              value={ aggregationDependentVariableId }
               options={ aggregationOptions }
               valueMember="id"
               displayTextMember="name"
-              onChange={ (v) => this.clickQueryStringTrackedItem({ aggregateOn: v }) }/>
+              onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationDependentVariableId: v }) }/>
           </SidebarGroup>
         }
-        { aggregateOn != 'count' &&
+        { aggregationDependentVariableId != 'count' &&
           <SidebarGroup heading="By">
             <DropDownMenu
               value={ aggregationFunction }
@@ -162,14 +162,14 @@ export class AggregationSidebar extends Component {
               onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationFunction: v }) }/>
           </SidebarGroup>
         }
-        { this.props.aggregationSelector.aggregationFunction == 'MEAN' && aggregateOn != 'count' &&
+        { this.props.aggregationSelector.aggregationFunction == 'MEAN' && aggregationDependentVariableId != 'count' &&
           <SidebarGroup heading="Weighted by:">
             <DropDownMenu
               value={ weightVariableId }
               options={ [{ 'id':'UNIFORM', 'name':'uniform' }, ...fieldProperties.items.filter((item) => item.generalType == 'q')] }
               valueMember="id"
               displayTextMember="name"
-              onChange={ (v) => this.clickQueryStringTrackedItem({ aggregateOn: v }) }/>
+              onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationDependentVariableId: v }) }/>
           </SidebarGroup>
         }
         { n_q >= 1 &&
@@ -214,7 +214,7 @@ AggregationSidebar.propTypes = {
   conditionals: PropTypes.object,
   queryObject: PropTypes.object.isRequired,
   aggregationVariablesIds: PropTypes.array.isRequired,
-  aggregateOn: PropTypes.any,
+  aggregationDependentVariableId: PropTypes.any,
   aggregationFunction: PropTypes.string,
   weightVariableId: PropTypes.string,
 };

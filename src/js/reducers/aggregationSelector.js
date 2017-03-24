@@ -1,7 +1,7 @@
 import _ from 'underscore';
 
 import {
-  SELECT_AGGREGATION_AGGREGATION_VARIABLE,
+  SELECT_AGGREGATION_DEPENDENT_VARIABLE,
   SELECT_AGGREGATION_INDEPENDENT_VARIABLE,
   SELECT_AGGREGATION_AGGREGATION_FUNCTION,
   SELECT_AGGREGATION_AGGREGATION_WEIGHT_VARIABLE,
@@ -11,10 +11,6 @@ import {
   RECEIVE_AGGREGATION,
   PROGRESS_AGGREGATION,
   ERROR_AGGREGATION,
-  REQUEST_ONE_D_AGGREGATION,
-  RECEIVE_ONE_D_AGGREGATION,
-  PROGRESS_ONE_D_AGGREGATION,
-  ERROR_ONE_D_AGGREGATION,
   REQUEST_AGGREGATION_STATISTICS,
   RECEIVE_AGGREGATION_STATISTICS,
   PROGRESS_AGGREGATION_STATISTICS,
@@ -29,14 +25,8 @@ import {
 } from '../constants/ActionTypes';
 
 const baseState = {
-  aggregationVariableId: 'count',
+  aggregationDependentVariableId: 'count',
   aggregationVariablesIds: [],
-  oneDimensionAggregationResult: {
-    loading: false,
-    progress: null,
-    error: null,
-    data: null
-  },
   aggregationFunction: 'SUM',
   weightVariableId: 'UNIFORM',
   aggregationResult: {},
@@ -49,6 +39,9 @@ const baseState = {
     binning_procedure: 'freedman',
   },
   aggregationResult: {
+    exportedAggregationId: null,
+    isExported: false,
+    exported: false,
     loading: false,
     progress: null,
     error: null,
@@ -92,8 +85,8 @@ export default function aggregationSelector(state = baseState, action) {
 
       return { ...state, aggregationVariablesIds: selectedAggregationVariablesIds };
 
-    case SELECT_AGGREGATION_AGGREGATION_VARIABLE:
-      return { ...state, aggregationVariableId: action.aggregationAggregationVariableId };
+    case SELECT_AGGREGATION_DEPENDENT_VARIABLE:
+      return { ...state, aggregationDependentVariableId: action.aggregationDependentVariableId };
 
     case SELECT_AGGREGATION_INDEPENDENT_VARIABLE:
       var aggregationVariablesIds = state.aggregationVariablesIds.slice();
@@ -109,34 +102,33 @@ export default function aggregationSelector(state = baseState, action) {
       return { ...state, loadAggregation: true };
 
     case REQUEST_AGGREGATION:
-      return { ...state, aggregationResult: { ...state.aggregationResult, error: null, loading: true }, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, error: null }};
-
-    case RECEIVE_AGGREGATION:
-      return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, data: action.data } };
+      return { ...state, 
+        aggregationResult: { 
+          ...state.aggregationResult,
+          error: null,
+          loading: true
+        }
+      };
 
     case PROGRESS_AGGREGATION:
       if (action.progress && action.progress.length){
         return { ...state, aggregationResult: { ...state.aggregationResult, progress: action.progress} };
       }
-      return state;
+      return state;      
+
+    case RECEIVE_AGGREGATION:
+      return { ...state,
+        aggregationResult: {
+          ...state.aggregationResult,
+          loading: false,
+          data: action.data,
+          exported: action.data.exported,
+          exportedAggregationId: action.data.exportedAggregationId
+        }
+      };
 
     case ERROR_AGGREGATION:
       return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, error: action.message } };
-
-    case REQUEST_ONE_D_AGGREGATION:
-      return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: true, error: null }, aggregationResult: { ...state.aggregationResult, error: null }};
-
-    case RECEIVE_ONE_D_AGGREGATION:
-      return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: false, data: action.data } };
-
-    case PROGRESS_ONE_D_AGGREGATION:
-      if (action.progress && action.progress.length){
-        return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, progress: action.progress} };
-      }
-      return state;
-
-    case ERROR_ONE_D_AGGREGATION:
-      return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: false, error: action.message } };
 
     case REQUEST_AGGREGATION_STATISTICS:
       return { ...state, aggregationResult: { ...state.aggregationResult, loading: true }}

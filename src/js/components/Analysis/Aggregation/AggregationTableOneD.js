@@ -8,14 +8,14 @@ import Number from '../../Base/Number';
 export default class AggregationTableOneD extends Component {
 
   render() {
-    const { aggregationResult, aggregationVariableNames } = this.props;
+    const { aggregationResult, aggregationVariablesNames } = this.props;
 
     const data = [
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
         items: [
-          <div className={ styles.tableCell + ' ' + styles.aggregationTableHeaderCell }>{ aggregationVariableNames[0] }</div>,
+          <div className={ styles.tableCell + ' ' + styles.aggregationTableHeaderCell }>{ aggregationVariablesNames[0] }</div>,
           <div className={ styles.tableCell + ' ' + styles.aggregationTableHeaderCell }>{ "Total" }</div>
         ]
       },
@@ -48,5 +48,5 @@ export default class AggregationTableOneD extends Component {
 
 AggregationTableOneD.propTypes = {
   aggregationResult: PropTypes.object.isRequired,
-  aggregationVariableNames: PropTypes.array.isRequired,
+  aggregationVariablesNames: PropTypes.array.isRequired,
 }

@@ -2,7 +2,7 @@ import _ from 'underscore';
 
 import {
   AGGREGATION_MODE,
-  SELECT_AGGREGATION_AGGREGATION_VARIABLE,
+  SELECT_AGGREGATION_DEPENDENT_VARIABLE,
   SELECT_AGGREGATION_INDEPENDENT_VARIABLE,
   SELECT_AGGREGATION_AGGREGATION_FUNCTION,
   SELECT_AGGREGATION_AGGREGATION_WEIGHT_VARIABLE,
@@ -20,6 +20,10 @@ import {
   SELECT_AGGREGATION_CONFIG_Y,
   PROGRESS_AGGREGATION_STATISTICS,
   ERROR_AGGREGATION_STATISTICS,
+  REQUEST_CREATE_SAVED_AGGREGATION,
+  RECEIVE_CREATED_SAVED_AGGREGATION,
+  REQUEST_CREATE_EXPORTED_AGGREGATION,
+  RECEIVE_CREATED_EXPORTED_AGGREGATION,  
   SELECT_CONDITIONAL,
   SET_AGGREGATION_QUERY_STRING
 } from '../constants/ActionTypes';
@@ -132,13 +136,17 @@ function errorAggregationDispatcher(json) {
   };
 }
 
-export function runAggregation(projectId, datasetId, aggregationVariable, aggregationVariables, conditionals=[]) {
+export function runAggregation(projectId, datasetId, aggregationVariablesNames, dependentVariableName, aggregationFunction, weightVariableName, binningConfigX, binningConfigY, conditionals=[]) {
   const params = {
     projectId: projectId,
     spec: {
       datasetId: datasetId,
-      dependentVariable: aggregationVariable,
-      aggregationVariables: aggregationVariables
+      dependentVariableName: dependentVariableName,
+      aggregationVariablesNames: aggregationVariablesNames,
+      aggregationFunction: aggregationFunction,
+      weightVariableName: weightVariableName,
+      binningConfigX: binningConfigX,
+      binningConfigY: binningConfigY, 
     }
   }
 
@@ -155,7 +163,7 @@ export function runAggregation(projectId, datasetId, aggregationVariable, aggreg
 
   return (dispatch) => {
     dispatch(requestAggregationDispatcher());
-    return fetch('/statistics/v1/contingency_table', {
+    return fetch('/statistics/v1/aggregation', {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
@@ -166,71 +174,46 @@ export function runAggregation(projectId, datasetId, aggregationVariable, aggreg
           dispatch(receiveAggregationDispatcher(params, json));
         }
       })
-      .catch(err => console.error("Error creating contingency table: ", err));
+      .catch(err => console.error("Error running aggregation: ", err));
   };
 }
 
-function requestOneDAggregationDispatcher(datasetId) {
+function requestCreateExportedRegressionDispatcher(action) {
   return {
-    type: REQUEST_ONE_D_AGGREGATION
+    type: action
   };
 }
 
-function receiveOneDAggregationDispatcher(params, json) {
+function receiveCreatedExportedRegressionDispatcher(action, json) {
   return {
-    type: RECEIVE_ONE_D_AGGREGATION,
-    data: json,
+    type: action,
+    exportedRegressionId: json.id,
+    exportedSpec: json,
     receivedAt: Date.now()
   };
 }
 
-function progressOneDAggregationDispatcher(data) {
-  return {
-    type: PROGRESS_ONE_D_AGGREGATION,
-    progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
-  };
-}
-
-function errorOneDAggregationDispatcher(json) {
-  return {
-    type: ERROR_ONE_D_AGGREGATION,
-    message: json.error
-  };
-}
-
-export function runAggregationOneDimensional(projectId, datasetId, aggregationVariable, aggregationVariables, conditionals=[]) {
-  const params = {
-    projectId: projectId,
-    spec: {
-      datasetId: datasetId,
-      dependentVariable: aggregationVariable,
-      aggregationVariable: aggregationVariables[0]
-    }
-  }
+export function createExportedAggregation(projectId, aggregationId, data, conditionals=[], config={}, saveAction = false) {
+  const requestAction = saveAction ? REQUEST_CREATE_SAVED_AGGREGATION : REQUEST_CREATE_EXPORTED_AGGREGATION;
+  const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_AGGREGATION : RECEIVE_CREATED_EXPORTED_AGGREGATION;
 
   const filteredConditionals = getFilteredConditionals(conditionals);
-  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
-    params.conditionals = filteredConditionals;
+
+  const params = {
+    project_id: projectId,
+    aggregation_id: aggregationId,
+    data: data,
+    conditionals: filteredConditionals ? filteredConditionals : {},
+    config: config
   }
 
-  const dispatchers = {
-    success: receiveOneDAggregationDispatcher,
-    progress: progressOneDAggregationDispatcher,
-    error: errorOneDAggregationDispatcher
-  }
-
-  return (dispatch) => {
-    dispatch(requestOneDAggregationDispatcher());
-    return fetch('/statistics/v1/one_dimensional_contingency_table', {
+  return dispatch => {
+    dispatch(requestCreateExportedAggregationDispatcher(requestAction));
+    return fetch('/exported_aggregation/v1/exported_aggregation', {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(function(json) {
-        if (json.compute) {
-          dispatch(pollForTask(json.taskId, AGGREGATION_MODE, REQUEST_ONE_D_AGGREGATION, params, dispatchers));
-        } else {
-          dispatch(receiveOneDAggregationDispatcher(params, json));
-        }
-      })
+    }).then(json => dispatch(receiveCreatedExportedAggregationDispatcher(receiveAction, json)))
+      .catch(err => console.error("Error creating exported aggregations: ", err));
   };
 }
