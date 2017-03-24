@@ -114,8 +114,8 @@ export class AggregationView extends Component {
     const { aggregationResult, aggregationVariablesNames, aggregationFunction, aggregationDependentVariableName, datasets, datasetId } = this.props;
 
     const { isSaving, isExporting, exportedAggregationId, exported, error, progress, loading, data } = aggregationResult;    
-    const numVariablesSelected = aggregationVariablesNames.length;;
-    const aggregationDictHasElements = aggregationResult.data && aggregationResult.data.rows && aggregationResult.data.rows.length > 0;
+    const { oneDimensionalContingencyTable, twoDimensionalContingencyTable } = data;
+    const numVariablesSelected = aggregationVariablesNames.length;
 
     var aggregationContent = <div></div>;
 
@@ -191,15 +191,15 @@ export class AggregationView extends Component {
             { loading &&
               <Loader text={ progress != null ? progress : 'Calculating Aggregation Result…' } />
             }
-            { (!loading && data) &&
+            { (!loading && oneDimensionalContingencyTable && oneDimensionalContingencyTable.rows) &&
               <AggregationTableOneD
-                aggregationResult={ data }
+                aggregationResult={ oneDimensionalContingencyTable }
                 aggregationVariablesNames={ aggregationVariablesNames }
               />
             }
-            { (!loading && data) &&
+            { (!loading && twoDimensionalContingencyTable && twoDimensionalContingencyTable.rows) &&
               <AggregationTable
-                aggregationResult={ data }
+                aggregationResult={ twoDimensionalContingencyTable }
                 aggregationVariablesNames={ aggregationVariablesNames }
               />
             }            
@@ -258,7 +258,6 @@ function mapStateToProps(state, ownProps) {
 export default connect(mapStateToProps, {
   push,
   runAggregation,
-  runAggregationOneDimensional,
   createExportedAggregation,
   selectDataset,
   fetchDatasets,
