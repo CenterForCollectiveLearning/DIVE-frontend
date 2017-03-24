@@ -11,6 +11,8 @@ import {
   UPDATE_COMPARISON_INPUT,
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_TYPE,
+  REQUEST_CREATE_SAVED_COMPARISON,    
+  RECEIVE_CREATED_SAVED_COMPARISON,  
   SET_COMPARISON_QUERY_STRING,
 } from '../constants/ActionTypes';
 
@@ -77,6 +79,24 @@ export default function comparisonSelector(state = baseState, action) {
       return {
         ...state, queryString: action.queryString
       }
+
+    case REQUEST_CREATE_SAVED_COMPARISON:
+      return { ...state,
+        comparisonResult: {
+          ...state.comparisonResult,
+          isExporting: true
+        }
+      };
+
+    case RECEIVE_CREATED_SAVED_COMPARISON:
+      return { ...state,
+        comparisonResult: {
+          ...state.comparisonResult,
+          isExporting: false,
+          exported: true,
+          exportedComparisonId: action.exportedComparisonId
+        }
+      };      
 
     case SELECT_DATASET:
     case CLEAR_ANALYSIS:

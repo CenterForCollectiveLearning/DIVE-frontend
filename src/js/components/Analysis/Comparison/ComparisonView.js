@@ -7,7 +7,7 @@ import { Button, Intent, NonIdealState } from '@blueprintjs/core';
 import styles from '../Analysis.sass';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
-import { runComparison } from '../../../actions/ComparisonActions';
+import { runComparison, createExportedComparison } from '../../../actions/ComparisonActions';
 import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import Card from '../../Base/Card';
@@ -90,9 +90,19 @@ export class ComparisonView extends Component {
     }
   }
 
+  saveComparison = (saveAction = true) => {
+    const { projectId, comparisonResult, createExportedComparison } = this.props;
+    createExportedComparison(projectId, comparisonResult.data.id, comparisonResult.data, comparisonResult.conditionals, comparisonResult.config, saveAction);
+  }
+
+  onClickShare = () => {
+    setShareWindow(window.open('about:blank'));
+    this.saveComparison(false);
+  }
+
   render() {
     const { datasets, datasetId, fieldNameToColor, comparisonResult, independentVariableNames, dependentVariableNames, canRunNumericalComparison } = this.props;
-    const { loading, progress, error } = comparisonResult;
+    const { isExporting, exportedComparisonId, isSaving, exported, loading, progress, error } = comparisonResult;
     const { anovaBoxplot, pairwiseComparison, anova, numericalComparison } = comparisonResult.data;
 
     const atLeastTwoVariablesSelectedOfOneType = independentVariableNames.length >= 2 || dependentVariableNames.length >= 2;
@@ -106,6 +116,36 @@ export class ComparisonView extends Component {
     } else if (anovaCanBeDisplayed) {
       cardHeader = <span>ANOVA Table Comparing <ColoredFieldItems fields={ independentVariableNames } /> by <ColoredFieldItems fields={ dependentVariableNames } /></span>
     }
+
+    const headerContent = (
+      <HeaderBar
+        actions={
+          <div className={ styles.headerControlRow }>
+            <div className={ styles.headerControl }>
+              <Button
+                iconName='share'
+                onClick={ this.onClickShare }
+                loading={ isExporting }
+              >
+                { !isExporting && "Share" }
+              </Button>
+            </div>
+            <div className={ styles.headerControl }>
+              <Button
+                onClick={ this.saveComparison }
+                loading={ isSaving }>
+                { !isSaving && !exportedComparisonId &&
+                  <div><span className='pt-icon-standard pt-icon-star-empty' />Save</div>
+                }
+                { exportedComparisonId &&
+                  <div><span className='pt-icon-standard pt-icon-star' />Saved</div>
+                }
+              </Button>
+            </div>
+        </div>
+        }
+      />
+    );
 
     const errorComponent = ( <div className={ styles.centeredFill }>
       <NonIdealState
@@ -137,13 +177,17 @@ export class ComparisonView extends Component {
     } else {
       if (canRunNumericalComparison && numericalComparison) {
         comparisonContent =
-          <Card header={ cardHeader }>
-            <StatsTable numericalData={ numericalComparison } />
-          </Card>
+          <div>
+            { headerContent }
+            <Card header={ cardHeader }>
+              <StatsTable numericalData={ numericalComparison } />
+            </Card>
+          </div>
 
       } else if (anovaCanBeDisplayed && anova) {
         comparisonContent =
           <div>
+            { headerContent }
             <Card header={ cardHeader } helperText='anova' >
               <AnovaTable anovaData={ anova } />
               <AnovaText
@@ -224,5 +268,6 @@ export default connect(mapStateToProps, {
   runComparison,
   selectDataset,
   fetchDatasets,
-  clearAnalysis
+  clearAnalysis,
+  createExportedComparison
 })(ComparisonView);

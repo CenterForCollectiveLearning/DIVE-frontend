@@ -15,6 +15,8 @@ import {
   RECEIVE_AGGREGATION_STATISTICS,
   PROGRESS_AGGREGATION_STATISTICS,
   ERROR_AGGREGATION_STATISTICS,
+  REQUEST_CREATE_SAVED_AGGREGATION,    
+  RECEIVE_CREATED_SAVED_AGGREGATION,  
   WIPE_PROJECT_STATE,
   SELECT_DATASET,
   CLEAR_ANALYSIS,
@@ -42,7 +44,7 @@ const baseState = {
   },
   aggregationResult: {
     exportedAggregationId: null,
-    isExported: false,
+    isExporting: false,
     exported: false,
     loading: false,
     progress: null,
@@ -134,6 +136,24 @@ export default function aggregationSelector(state = baseState, action) {
 
     case ERROR_AGGREGATION:
       return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, error: action.message } };
+
+    case REQUEST_CREATE_SAVED_AGGREGATION:
+      return { ...state,
+        aggregationResult: {
+          ...state.aggregationResult,
+          isExporting: true
+        }
+      };
+
+    case RECEIVE_CREATED_SAVED_AGGREGATION:
+      return { ...state,
+        aggregationResult: {
+          ...state.aggregationResult,
+          isExporting: false,
+          exported: true,
+          exportedAggregationId: action.exportedAggregationId
+        }
+      };
 
     case REQUEST_AGGREGATION_STATISTICS:
       return { ...state, aggregationResult: { ...state.aggregationResult, loading: true }}

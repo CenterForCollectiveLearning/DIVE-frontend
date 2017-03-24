@@ -181,7 +181,7 @@ export default function regressionSelector(state = baseState, action) {
       return { ...state,
         regressionResult: {
           ...state.regressionResult,
-          exportedRegression: true,
+          exported: true,
           exportedRegressionId: action.exportedRegressionId
         }
       };
