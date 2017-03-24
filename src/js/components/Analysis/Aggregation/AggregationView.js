@@ -23,7 +23,6 @@ export class AggregationView extends Component {
       projectId,
       datasetId,
       datasets,
-      datasetSelector,
       aggregationVariablesNames,
       aggregationDependentVariableName,
       aggregationFunction,
@@ -35,15 +34,11 @@ export class AggregationView extends Component {
       fetchDatasets,      
     } = this.props
 
-    if (projectId & (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded))) {
+    if (projectId & (!datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(projectId);
     }
 
-    console.log(aggregationVariablesNames);
-
     const numVariablesSelected = aggregationVariablesNames.length;
-
-    console.log('Aggregation Variables Name', aggregationVariablesNames);
 
     if (0 < numVariablesSelected < 3) {
       runAggregation(
@@ -234,15 +229,16 @@ function mapStateToProps(state, ownProps) {
   if (aggregationDependentVariableId == 'count' ) {
     aggregationDependentVariableName = 'count'
   } else {
-    aggregationDependentVariableName = aggregationDependentVariableId ? fieldProperties.items.find((p) => (p.id == aggregationDependentVariableId)).name : null;
+    var aggregationDependentVariable = fieldProperties.items.find((p) => (p.id == aggregationDependentVariableId));
+    aggregationDependentVariableName = aggregationDependentVariable ? aggregationDependentVariable.name : null;
   }
 
-  const weightVariableName = weightVariableId ? weightVariableId : 'UNIFORM';
+  const weightVariable = fieldProperties.items.find((p) => (p.id == weightVariableId));
+  const weightVariableName = weightVariable ? weightVariable.name : 'UNIFORM';
 
   return {
     conditionals,
     datasets,
-    datasetSelector,
     projectId: project.id,
     datasetId: datasetSelector.id,
     aggregationDependentVariableName,

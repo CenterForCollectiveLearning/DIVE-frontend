@@ -33,10 +33,12 @@ const baseState = {
   binningConfigX: {
     binning_type: 'procedural',
     binning_procedure: 'freedman',
+    num_bins: 7
   },
   binningConfigY: {
     binning_type: 'procedural',
     binning_procedure: 'freedman',
+    num_bins: 7
   },
   aggregationResult: {
     exportedAggregationId: null,
@@ -45,7 +47,10 @@ const baseState = {
     loading: false,
     progress: null,
     error: null,
-    data: null
+    data: {
+      oneDimensionalContingencyTable: {},
+      twoDimensionalContingencyTable: {}
+    }
   },
   loadAggregation: false,
   queryString: null
@@ -141,7 +146,7 @@ export default function aggregationSelector(state = baseState, action) {
 
     case PROGRESS_AGGREGATION_STATISTICS:
       if (action.progress && action.progress.length){
-        return { ...state, aggregationResult: { ...state.aggregationResult, progress: action.progress} };
+        return { ...state, aggregationResult: { ...state.aggregationResult, progress: action.progress } };
       }
       return state;
 
@@ -149,16 +154,18 @@ export default function aggregationSelector(state = baseState, action) {
       return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, error: action.error } };
 
     case SELECT_AGGREGATION_AGGREGATION_FUNCTION:
-      return { ...state, aggregationFunction: action.aggregationFunction};
+      return { ...state, aggregationFunction: action.aggregationFunction };
 
     case SELECT_AGGREGATION_AGGREGATION_WEIGHT_VARIABLE:
-      return { ...state, weightVariableId: action.aggregationWeightVariableId }
+      return { ...state, weightVariableId: action.aggregationWeightVariableId };
 
     case SELECT_AGGREGATION_CONFIG_X:
-      return { ...state, binningConfigX: action.config }
+      console.log('config X', action.config);
+      return { ...state, binningConfigX: { ...state.binningConfigX, ...action.config } };
 
     case SELECT_AGGREGATION_CONFIG_Y:
-      return { ...state, binningConfigY: action.config }
+      console.log('config Y', action.config);
+      return { ...state, binningConfigY: { ...state.binningConfigY, ...action.config } };
 
     case SET_AGGREGATION_QUERY_STRING:
       return {

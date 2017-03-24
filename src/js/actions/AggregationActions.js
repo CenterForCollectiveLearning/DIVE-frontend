@@ -50,7 +50,7 @@ export function getInitialState(projectId, datasetId, fieldProperties) {
 
 
   return {
-    aggregateOn: 'count',
+    aggregationDependentVariableId: 'count',
     aggregationVariablesIds: selectedVariablesIds
   }
 }
@@ -94,17 +94,21 @@ export function selectAggregationFunction(selectedAggregationFunction) {
   }
 }
 
-export function selectBinningConfigX(config) {
+export function selectBinningConfigX(k, v) {
+  var updateDict = {};
+  updateDict[k] = v;
   return {
     type: SELECT_AGGREGATION_CONFIG_X,
-    config: config
+    config: updateDict
   }
 }
 
-export function selectBinningConfigY(config) {
+export function selectBinningConfigY(k, v) {
+  var updateDict = {};
+  updateDict[k] = v;  
   return {
     type: SELECT_AGGREGATION_CONFIG_Y,
-    config: config
+    config: updateDict
   }
 }
 
@@ -143,10 +147,12 @@ export function runAggregation(projectId, datasetId, aggregationVariablesNames, 
       datasetId: datasetId,
       dependentVariableName: dependentVariableName,
       aggregationVariablesNames: aggregationVariablesNames,
-      aggregationFunction: aggregationFunction,
-      weightVariableName: weightVariableName,
+    },
+    config: {
+      aggregationFunction: aggregationFunction,   
+      weightVariableName: weightVariableName,      
       binningConfigX: binningConfigX,
-      binningConfigY: binningConfigY, 
+      binningConfigY: binningConfigY,      
     }
   }
 
@@ -178,16 +184,16 @@ export function runAggregation(projectId, datasetId, aggregationVariablesNames, 
   };
 }
 
-function requestCreateExportedRegressionDispatcher(action) {
+function requestCreateExportedAggregationDispatcher(action) {
   return {
     type: action
   };
 }
 
-function receiveCreatedExportedRegressionDispatcher(action, json) {
+function receiveCreatedExportedAggregationDispatcher(action, json) {
   return {
     type: action,
-    exportedRegressionId: json.id,
+    exportedAggregationId: json.id,
     exportedSpec: json,
     receivedAt: Date.now()
   };

@@ -162,14 +162,14 @@ export class AggregationSidebar extends Component {
               onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationFunction: v }) }/>
           </SidebarGroup>
         }
-        { this.props.aggregationSelector.aggregationFunction == 'MEAN' && aggregationDependentVariableId != 'count' &&
+        { aggregationFunction == 'MEAN' && aggregationDependentVariableId != 'count' &&
           <SidebarGroup heading="Weighted by:">
             <DropDownMenu
               value={ weightVariableId }
-              options={ [{ 'id':'UNIFORM', 'name':'uniform' }, ...fieldProperties.items.filter((item) => item.generalType == 'q')] }
+              options={ [{ 'id':'UNIFORM', 'name':'uniform' }, ...fieldProperties.items.filter((item) => item.generalType == 'q' && item.id != aggregationDependentVariableId)] }
               valueMember="id"
               displayTextMember="name"
-              onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationDependentVariableId: v }) }/>
+              onChange={ (v) => this.clickQueryStringTrackedItem({ weightVariableId: v }) }/>
           </SidebarGroup>
         }
         { n_q >= 1 &&
