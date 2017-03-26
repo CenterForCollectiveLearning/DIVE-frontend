@@ -31,9 +31,7 @@ if (useExpress) {
     hot: true,
     quiet: false,
     noInfo: false,
-    historyApiFallback: {
-      index: 'index.html'
-    },
+    historyApiFallback: true,
     open: true,
     stats: { colors: true }
   }).listen(port, host, function (err, result) {
