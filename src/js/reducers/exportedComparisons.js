@@ -1,8 +1,8 @@
 import {
-  REQUEST_EXPORTED_REGRESSIONS,
-  RECEIVE_EXPORTED_REGRESSIONS,
-  RECEIVE_CREATED_EXPORTED_REGRESSION,
-  RECEIVE_CREATED_SAVED_REGRESSION,
+  REQUEST_EXPORTED_COMPARISONS,
+  RECEIVE_EXPORTED_COMPARISONS,
+  RECEIVE_CREATED_EXPORTED_COMPARISON,
+  RECEIVE_CREATED_SAVED_COMPARISON,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -13,15 +13,15 @@ const baseState = {
   updatedAt: 0
 }
 
-export default function exportedRegressions(state=baseState, action) {
+export default function exportedComparisons(state=baseState, action) {
   switch (action.type) {
-    case REQUEST_EXPORTED_REGRESSIONS:
+    case REQUEST_EXPORTED_COMPARISONS:
       return { ...state, isFetching: true, loaded: false };
 
-    case RECEIVE_EXPORTED_REGRESSIONS:
+    case RECEIVE_EXPORTED_COMPARISONS:
       return { ...state, isFetching: false, items: action.items, updatedAt: action.receivedAt, loaded: true };
 
-    case RECEIVE_CREATED_EXPORTED_REGRESSION, RECEIVE_CREATED_SAVED_REGRESSION:
+    case RECEIVE_CREATED_EXPORTED_COMPARISON, RECEIVE_CREATED_SAVED_COMPARISON:
       var updatedSpecs = state.items.slice();
 
       if (!updatedSpecs.find((spec) => spec.id == action.specId)) {

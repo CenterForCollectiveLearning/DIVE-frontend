@@ -75,7 +75,7 @@ export class ComposeView extends Component {
   }
 
   render() {
-    const { documents, composeSelector, selectedDocument, fieldNameToColor, exportedSpecs, exportedRegressions, exportedCorrelations, saveDocumentTitle, selectComposeContent } = this.props;
+    const { documents, composeSelector, selectedDocument, fieldNameToColor, exportedSpecs, exportedAnalyses, saveDocumentTitle, selectComposeContent } = this.props;
     const saveStatus = composeSelector.saving ? <span>Saving</span>: <span>Saved <span className='pt-icon-standard pt-icon-saved'/></span>;
 
     return (
@@ -132,8 +132,7 @@ export class ComposeView extends Component {
         <ComposeSidebar
           exportedSpecs={ exportedSpecs }
           selectComposeContent={ selectComposeContent }
-          exportedRegressions={ exportedRegressions }
-          exportedCorrelations={ exportedCorrelations }
+          exportedAnalyses={ exportedAnalyses }
           fieldNameToColor={ fieldNameToColor }
         />
       </div>
@@ -148,14 +147,13 @@ ComposeView.propTypes = {
 }
 
 function mapStateToProps(state) {
-  const { project, fieldProperties, composeSelector, exportedSpecs, exportedRegressions, exportedCorrelations, documents } = state;
+  const { project, fieldProperties, composeSelector, exportedSpecs,exportedAnalyses, documents } = state;
 
   return {
     projectId: (project.id ? `${ project.id }` : null),
     composeSelector,
     exportedSpecs,
-    exportedRegressions,
-    exportedCorrelations,
+    exportedAnalyses,
     documents,
     fieldNameToColor: fieldProperties.fieldNameToColor,
   };

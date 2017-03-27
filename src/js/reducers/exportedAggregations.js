@@ -1,8 +1,8 @@
 import {
-  REQUEST_EXPORTED_REGRESSIONS,
-  RECEIVE_EXPORTED_REGRESSIONS,
-  RECEIVE_CREATED_EXPORTED_REGRESSION,
-  RECEIVE_CREATED_SAVED_REGRESSION,
+  REQUEST_EXPORTED_AGGREGATIONS,
+  RECEIVE_EXPORTED_AGGREGATIONS,
+  RECEIVE_CREATED_EXPORTED_AGGREGATION,
+  RECEIVE_CREATED_SAVED_AGGREGATION,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -13,15 +13,15 @@ const baseState = {
   updatedAt: 0
 }
 
-export default function exportedRegressions(state=baseState, action) {
+export default function exportedAggregations(state=baseState, action) {
   switch (action.type) {
-    case REQUEST_EXPORTED_REGRESSIONS:
+    case REQUEST_EXPORTED_AGGREGATIONS:
       return { ...state, isFetching: true, loaded: false };
 
-    case RECEIVE_EXPORTED_REGRESSIONS:
+    case RECEIVE_EXPORTED_AGGREGATIONS:
       return { ...state, isFetching: false, items: action.items, updatedAt: action.receivedAt, loaded: true };
 
-    case RECEIVE_CREATED_EXPORTED_REGRESSION, RECEIVE_CREATED_SAVED_REGRESSION:
+    case RECEIVE_CREATED_EXPORTED_AGGREGATION, RECEIVE_CREATED_SAVED_AGGREGATION:
       var updatedSpecs = state.items.slice();
 
       if (!updatedSpecs.find((spec) => spec.id == action.specId)) {

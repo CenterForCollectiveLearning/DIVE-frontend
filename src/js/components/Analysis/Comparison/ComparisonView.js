@@ -114,7 +114,7 @@ export class ComparisonView extends Component {
       const numericalComparisonFields = independentVariableNames.length ? independentVariableNames : dependentVariableNames;
       cardHeader = <span>Comparing Distributions of <ColoredFieldItems fields={ numericalComparisonFields } /></span>
     } else if (anovaCanBeDisplayed) {
-      cardHeader = <span>ANOVA Table Comparing <ColoredFieldItems fields={ independentVariableNames } /> by <ColoredFieldItems fields={ dependentVariableNames } /></span>
+      cardHeader = <span>Comparing <ColoredFieldItems fields={ independentVariableNames } /> by <ColoredFieldItems fields={ dependentVariableNames } /></span>
     }
 
     const headerContent = (

@@ -19,7 +19,7 @@ export default function exportedCorrelations(state=baseState, action) {
       return { ...state, isFetching: true, loaded: false };
 
     case RECEIVE_EXPORTED_CORRELATIONS:
-      return { ...state, isFetching: false, items: action.correlations, updatedAt: action.receivedAt, loaded: true };
+      return { ...state, isFetching: false, items: action.items, updatedAt: action.receivedAt, loaded: true };
 
     case RECEIVE_CREATED_EXPORTED_CORRELATION, RECEIVE_CREATED_SAVED_CORRELATION:
       var updatedSpecs = state.items.slice();

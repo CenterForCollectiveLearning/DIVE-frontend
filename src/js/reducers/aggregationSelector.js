@@ -44,6 +44,7 @@ const baseState = {
   },
   aggregationResult: {
     exportedAggregationId: null,
+    isSaving: false,
     isExporting: false,
     exported: false,
     loading: false,
@@ -141,7 +142,7 @@ export default function aggregationSelector(state = baseState, action) {
       return { ...state,
         aggregationResult: {
           ...state.aggregationResult,
-          isExporting: true
+          isSaving: true
         }
       };
 
@@ -149,7 +150,7 @@ export default function aggregationSelector(state = baseState, action) {
       return { ...state,
         aggregationResult: {
           ...state.aggregationResult,
-          isExporting: false,
+          isSaving: false,
           exported: true,
           exportedAggregationId: action.exportedAggregationId
         }

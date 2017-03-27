@@ -12,10 +12,7 @@ import datasetSelector from './datasetSelector';
 import documents from './documents'
 import exportedSpec from './exportedSpec';
 import exportedSpecs from './exportedSpecs';
-import exportedCorrelation from './exportedCorrelation';
-import exportedCorrelations from './exportedCorrelations';
-import exportedRegression from './exportedRegression';
-import exportedRegressions from './exportedRegressions';
+import exportedAnalyses from './exportedAnalyses';
 import fieldProperties from './fieldProperties';
 import filters from './filters';
 import feedback from './feedback';
@@ -42,10 +39,7 @@ const rootReducer = combineReducers({
   exploreSelector,
   exportedSpec,
   exportedSpecs,
-  exportedCorrelation,
-  exportedCorrelations,
-  exportedRegression,
-  exportedRegressions,
+  exportedAnalyses,
   feedback,
   fieldProperties,
   filters,

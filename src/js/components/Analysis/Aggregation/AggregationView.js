@@ -9,6 +9,7 @@ import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import styles from '../Analysis.sass';
 
+import ErrorComponent from '../../Base/ErrorComponent';
 import Card from '../../Base/Card';
 import Loader from '../../Base/Loader';
 import HeaderBar from '../../Base/HeaderBar';
@@ -112,33 +113,21 @@ export class AggregationView extends Component {
     const { oneDimensionalContingencyTable, twoDimensionalContingencyTable } = data;
     const numVariablesSelected = aggregationVariablesNames.length;
 
-    var aggregationContent = <div></div>;
+    var aggregationContent = <div />;
 
     var header = <span>
       Aggregating <ColoredFieldItems fields={ aggregationVariablesNames } />
       { (aggregationDependentVariableName == 'count') ? <span> by count</span> : <span> by { (aggregationFunction ? aggregationFunction.toLowerCase() : '') } of <ColoredFieldItems fields={ [ aggregationDependentVariableName ] } /></span>}
     </span>;
 
-    if (error) {
-        return (
-          <div className={ styles.centeredFill }>
-            <NonIdealState
-              title='Error Running Aggregation'
-              description={ error }
-              visual='error'
-              action={ <div className={ styles.errorAction }>
-                <div>Please change your selection or</div>
-                <Button
-                  onClick={ () => location.reload() }
-                  iconName='refresh'
-                  intent={ Intent.PRIMARY }
-                  text="Refresh DIVE" />
-                </div>
-            }
-            />
-          </div>
-        )
-      }
+    if (error) { 
+      return (
+        <ErrorComponent 
+          title='Error Running Aggregation'
+          description={ error }
+        />
+      )
+    }
 
     if ( numVariablesSelected == 0 ) {
       aggregationContent = <div className={ styles.centeredFill }>
@@ -161,15 +150,15 @@ export class AggregationView extends Component {
                     iconName='share'
                     onClick={ this.onClickShare }
                     loading={ isExporting }
-                  >
-                    { !isExporting && "Share" }
-                  </Button>
+                  />
                 </div>
                 <div className={ styles.headerControl }>
                   <Button
                     onClick={ this.saveAggregation }
-                    loading={ isSaving }>
-                    { !isSaving && !exportedAggregationId &&
+                    loading={ isSaving }
+                    active={ exported }
+                  >
+                    { !exportedAggregationId &&
                       <div><span className='pt-icon-standard pt-icon-star-empty' />Save</div>
                     }
                     { exportedAggregationId &&
@@ -203,9 +192,13 @@ export class AggregationView extends Component {
       ;
     }
     else {
-      aggregationContent = <div className={ styles.watermark }>
-        Too many variables selected (maximum two)
-      </div>
+      aggregationContent = <div className={ styles.centeredFill }>
+        <NonIdealState
+          title='Too many variables selected (maximum two)'
+          description='Please deselect one or more variables'
+          visual='variable'
+        />
+      </div>      
     }
 
     return (
