@@ -8,15 +8,14 @@ import { fetchDatasets } from '../../actions/DatasetActions';
 import {
   fetchDocuments,
   fetchExportedVisualizationSpecs,
-  fetchExportedRegressions,
-  fetchExportedCorrelations
+  fetchExportedAnalyses
 } from '../../actions/ComposeActions';
 import ComposePage from './ComposePage';
 import ComposeView from './ComposeView';
 
 export class ComposeBasePage extends Component {
   componentWillMount() {
-    const { params, project, datasetSelector, datasets, documents, exportedSpecs, exportedRegressions, exportedCorrelations, replace, fetchDatasets, fetchDocuments, fetchExportedVisualizationSpecs } = this.props;
+    const { params, project, datasetSelector, datasets, documents, exportedSpecs, exportedAnalyses, replace, fetchDatasets, fetchDocuments, fetchExportedVisualizationSpecs, fetchExportedAnalyses } = this.props;
 
     if (project.id) {
       if (!datasetSelector.loaded && !datasets.isFetching) {
@@ -27,12 +26,8 @@ export class ComposeBasePage extends Component {
         fetchExportedVisualizationSpecs(project.id);
       }
 
-      if (exportedRegressions.items.length == 0 && !exportedRegressions.loaded && !exportedRegressions.isFetching) {
-        fetchExportedRegressions(project.id);
-      }
-
-      if (exportedCorrelations.items.length == 0 && !exportedCorrelations.loaded && !exportedCorrelations.isFetching) {
-        fetchExportedCorrelations(project.id);
+      if (!exportedAnalyses.loaded && !exportedAnalyses.isFetching) {
+        fetchExportedAnalyses(project.id);
       }
     }
 
@@ -46,7 +41,7 @@ export class ComposeBasePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { params, composeSelector, project, datasetSelector, datasets, documents, exportedSpecs, exportedRegressions, exportedCorrelations, replace, push, fetchDatasets, fetchDocuments, fetchExportedVisualizationSpecs, fetchExportedRegressions, fetchExportedCorrelations } = nextProps;
+    const { params, composeSelector, project, datasetSelector, datasets, documents, exportedSpecs, exportedAnalyses, replace, push, fetchDatasets, fetchDocuments, fetchExportedVisualizationSpecs, fetchExportedAnalyses } = nextProps;
 
     if (project.id) {
       if (!datasetSelector.loaded && !datasets.isFetching) {
@@ -57,12 +52,8 @@ export class ComposeBasePage extends Component {
         fetchExportedVisualizationSpecs(project.id);
       }
 
-      if (exportedRegressions.items.length == 0 && !exportedRegressions.loaded && !exportedRegressions.isFetching) {
-        fetchExportedRegressions(project.id);
-      }
-
-      if (exportedCorrelations.items.length == 0 && !exportedCorrelations.loaded && !exportedCorrelations.isFetching) {
-        fetchExportedCorrelations(project.id);
+      if (!exportedAnalyses.loaded && !exportedAnalyses.isFetching) {
+        fetchExportedAnalyses(project.id);
       }
 
       if (!params.documentId && documents.items.length > 0) {
@@ -91,7 +82,7 @@ export class ComposeBasePage extends Component {
 }
 
 function mapStateToProps(state) {
-  const { documents, composeSelector, exportedSpecs, exportedRegressions, exportedCorrelations, project, datasetSelector, datasets } = state;
+  const { documents, composeSelector, exportedSpecs, exportedAnalyses, project, datasetSelector, datasets } = state;
   const selectedDocument = {
     blocks: composeSelector.blocks,
     title: composeSelector.title,
@@ -102,8 +93,7 @@ function mapStateToProps(state) {
     documents,
     composeSelector,
     exportedSpecs,
-    exportedRegressions,
-    exportedCorrelations,
+    exportedAnalyses, 
     project,
     datasetSelector,
     datasets,
@@ -115,8 +105,7 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   fetchDocuments,
   fetchExportedVisualizationSpecs,
-  fetchExportedCorrelations,
-  fetchExportedRegressions,
+  fetchExportedAnalyses,
   fetchDatasets,
   push,
   replace

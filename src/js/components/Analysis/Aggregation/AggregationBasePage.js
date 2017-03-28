@@ -38,7 +38,7 @@ export class AggregationBasePage extends Component {
   }
 
   reconcileState(nextProps) {
-    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, aggregateOn, aggregationFunction, aggregationVariablesIds } = nextProps;
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, aggregationDependentVariableId, aggregationFunction, aggregationVariablesIds } = nextProps;
 
     var newQueryStringModifier = {};
 
@@ -49,8 +49,9 @@ export class AggregationBasePage extends Component {
     }
 
     // Auto aggregation function selection
-    if ( aggregateOn && aggregateOn !== 'count' && !aggregationFunction ) {
+    if ( aggregationDependentVariableId && aggregationDependentVariableId !== 'count' && !aggregationFunction ) {
       newQueryStringModifier.aggregationFunction = 'MEAN';
+      newQueryStringModifier.weightVariableId = 'UNIFORM';
     }
 
     if (Object.keys(newQueryStringModifier).length > 0) {
@@ -71,7 +72,7 @@ export class AggregationBasePage extends Component {
   }
 
   render() {
-    const { project, pathname, queryObject, aggregationFunction, weightVariableId, aggregateOn, aggregationVariablesIds } = this.props;
+    const { project, pathname, queryObject, aggregationFunction, weightVariableId, aggregationDependentVariableId, aggregationVariablesIds } = this.props;
 
     return (
       <DocumentTitle title={ 'Aggregation' + ( project.title ? ` | ${ project.title }` : '' ) }>
@@ -79,7 +80,7 @@ export class AggregationBasePage extends Component {
           <AggregationView
             aggregationFunction={ aggregationFunction }
             weightVariableId={ weightVariableId }
-            aggregateOn={ aggregateOn }
+            aggregationDependentVariableId={ aggregationDependentVariableId }
             aggregationVariablesIds={ aggregationVariablesIds }
           />
           <AggregationSidebar
@@ -87,7 +88,7 @@ export class AggregationBasePage extends Component {
             queryObject={ queryObject }
             aggregationFunction={ aggregationFunction }
             weightVariableId={ weightVariableId }
-            aggregateOn={ aggregateOn }
+            aggregationDependentVariableId={ aggregationDependentVariableId }
             aggregationVariablesIds={ aggregationVariablesIds }
           />
         </div>
@@ -111,7 +112,7 @@ function mapStateToProps(state, ownProps) {
     aggregationFunction: parseFromQueryObject(queryObject, 'aggregationFunction'),
     weightVariableId: parseFromQueryObject(queryObject, 'weightVariableId'),
     aggregationVariablesIds: parseFromQueryObject(queryObject, 'aggregationVariablesIds', true),
-    aggregateOn: parseFromQueryObject(queryObject, 'aggregateOn'),
+    aggregationDependentVariableId: parseFromQueryObject(queryObject, 'aggregationDependentVariableId'),
   };
 }
 

@@ -5,11 +5,12 @@ import styles from './Compose.sass';
 
 import _ from 'underscore';
 import { ResizableBox } from 'react-resizable';
-import Visualization from '../Visualizations/Visualization';
+import AggregationTable from '../Analysis/Aggregation/AggregationTable';
+import AggregationTableOneD from '../Analysis/Aggregation/AggregationTableOneD';
 
 import { BLOCK_FORMATS } from '../../constants/BlockFormats';
 
-export default class composeBlockVisualization extends Component {
+export default class ComposeBlockAggregation extends Component {
   constructor(props) {
     super(props);
 
@@ -29,6 +30,9 @@ export default class composeBlockVisualization extends Component {
   render() {
     const { chartId, spec, updatedAt, parentSize, format, editable, fieldNameToColor } = this.props;
 
+    const { oneDimensionalContingencyTable, twoDimensionalContingencyTable } = spec.data;
+    const { aggregationVariablesNames, dependentVariableName, aggregationFunction } = spec.spec;
+
     const absoluteMaxWidth = parentSize ? parentSize[0] - 18 : 908;
     const isHalfWidthFormat = (format == BLOCK_FORMATS.TEXT_LEFT || format == BLOCK_FORMATS.TEXT_RIGHT);
     const maxWidth = parentSize && isHalfWidthFormat ?
@@ -37,18 +41,20 @@ export default class composeBlockVisualization extends Component {
     const width = isHalfWidthFormat ? 620 : absoluteMaxWidth;
     const height = isHalfWidthFormat ? 300 : null;
 
-    const visualizationComponent = <Visualization
-      chartId={ `full-compose-visualization-${ chartId }-${ updatedAt }-${ this.state.resizeCounter }` }
-      containerClassName={ styles.fullComposeVisualization }
-      visualizationTypes={ spec.vizTypes }
-      fieldNameToColor={ fieldNameToColor }
-      spec={ spec }
-      bins={ spec.data.bins }
-      data={ spec.data.visualize }
-      config={ spec.config }
-      isMinimalView={ false }
-      showHeader={ false }/>
+    let component = <div />;
+    if (oneDimensionalContingencyTable && oneDimensionalContingencyTable.rows) {
+      component = <AggregationTableOneD
+        aggregationResult={ oneDimensionalContingencyTable }
+        aggregationVariablesNames={ aggregationVariablesNames }
+      />
+    } else if (twoDimensionalContingencyTable && twoDimensionalContingencyTable.rows) {
+      component = <AggregationTable
+        aggregationResult={ twoDimensionalContingencyTable }
+        aggregationVariablesNames={ aggregationVariablesNames }
+      />
+    }
 
+    console.log('In ComposeBlockAggregation render');
     return (
       <div ref="composeBlockVisualization" className={ styles.composeBlockVisualization }>
         { editable &&
@@ -60,12 +66,12 @@ export default class composeBlockVisualization extends Component {
             height={ height }
             minConstraints={ [200, 200] }
             maxConstraints={ [maxWidth, 600] }>
-            { visualizationComponent }
+            { component }
           </ResizableBox>
         }
         { !editable &&
           <div style={{ width: width, height: height }} className={ styles.resizableContainer }>
-            { visualizationComponent }
+            { component }
           </div>
         }
       </div>
@@ -73,7 +79,7 @@ export default class composeBlockVisualization extends Component {
   }
 }
 
-composeBlockVisualization.propTypes = {
+ComposeBlockAggregation.propTypes = {
   spec: PropTypes.object.isRequired,
   updatedAt: PropTypes.number,
   parentSize: PropTypes.any,

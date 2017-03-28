@@ -50,10 +50,12 @@ const baseState = {
     loading: false,
     progress: null,
     error: null,
-    data: null
+    data: {
+      table: {},
+      contributionToRSquared: []
+    }
   },
   selectedMode: null,
-  contributionToRSquared: [],
   queryString: ''
 }
 
@@ -157,6 +159,7 @@ export default function regressionSelector(state = baseState, action) {
     case RECEIVE_RUN_REGRESSION:
       return { ...state,
         regressionResult: {
+          ...state.regressionResult,
           exported: action.data.exported,
           exportedRegressionId: action.data.exportedRegressionId,
           error: null,
@@ -178,7 +181,7 @@ export default function regressionSelector(state = baseState, action) {
       return { ...state,
         regressionResult: {
           ...state.regressionResult,
-          exportedRegression: true,
+          exported: true,
           exportedRegressionId: action.exportedRegressionId
         }
       };
@@ -188,8 +191,6 @@ export default function regressionSelector(state = baseState, action) {
         ...state, queryString: action.queryString
       }
 
-    case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
-      return { ...state, contributionToRSquared: (action.data.data || []) };
 
     case SELECT_DATASET:
     case WIPE_PROJECT_STATE:

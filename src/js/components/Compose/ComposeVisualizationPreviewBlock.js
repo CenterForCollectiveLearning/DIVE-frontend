@@ -8,9 +8,8 @@ import styles from './Compose.sass';
 import Visualization from '../Visualizations/Visualization';
 
 export default class ComposeVisualizationPreviewBlock extends Component {
-  handleClick() {
+  handleClick = () => {
     const { spec, onClick } = this.props;
-    onClick(spec.id, spec.meta.desc);
   }
 
   render() {
@@ -18,14 +17,15 @@ export default class ComposeVisualizationPreviewBlock extends Component {
 
     return (
       <div className={ styles.contentPreviewBlockContainer + ' pt-card pt-interactive' }
-           onClick={ this.handleClick.bind(this) }>
+           onClick={ this.handleClick }>
         <Visualization
           headerClassName={ styles.visualizationPreviewBlockHeader }
           fieldNameToColor={ fieldNameToColor }
           visualizationTypes={ spec.vizTypes }
           spec={ spec }
           config={ spec.config }
-          data={ spec.data }
+          data={ spec.data.visualize }
+          bins={ spec.data.bins }
           isMinimalView={ true }
           showHeader={ true } />
       </div>

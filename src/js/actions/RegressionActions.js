@@ -18,8 +18,6 @@ import {
   DELETED_INTERACTION_TERM,
   REQUEST_INITIAL_REGRESSION_STATE,
   RECEIVE_INITIAL_REGRESSION_STATE,
-  REQUEST_CONTRIBUTION_TO_R_SQUARED,
-  RECEIVE_CONTRIBUTION_TO_R_SQUARED,
   REQUEST_CREATE_SAVED_REGRESSION,
   RECEIVE_CREATED_SAVED_REGRESSION,
   REQUEST_CREATE_EXPORTED_REGRESSION,
@@ -199,19 +197,6 @@ function errorRunRegressionDispatcher(data) {
   };
 }
 
-function requestContributionToRSquaredDispatcher() {
-  return {
-    type: REQUEST_CONTRIBUTION_TO_R_SQUARED
-  };
-}
-
-function receiveContributionToRSquaredDispatcher(json) {
-  return {
-    type: RECEIVE_CONTRIBUTION_TO_R_SQUARED,
-    data: json,
-    receivedAt: Date.now()
-  };
-}
 
 export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, conditionals=[], tableLayout='leaveOneOut') {
   const params = {
@@ -253,27 +238,6 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
   };
 }
 
-export function getContributionToRSquared(projectId, regressionId, conditionals=[]) {
-  const params = {
-    projectId: projectId,
-    regressionId: regressionId
-  }
-
-  const filteredConditionals = getFilteredConditionals(conditionals);
-  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
-    params.conditionals = filteredConditionals;
-  }
-
-  return (dispatch) => {
-    dispatch(requestContributionToRSquaredDispatcher());
-    return fetch('/statistics/v1/contribution_to_r_squared', {
-      method: 'post',
-      body: JSON.stringify(params),
-      headers: { 'Content-Type': 'application/json' }
-    }).then(json => dispatch(receiveContributionToRSquaredDispatcher(json)))
-      .catch(err => console.error("Error getting contribution to R-squared: ", err));
-  };
-}
 
 function requestCreateExportedRegressionDispatcher(action) {
   return {

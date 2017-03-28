@@ -115,7 +115,6 @@ export default class Visualization extends Component {
     }
 
     // Handle max elements
-
     const tooMuchDataToPreview =
       (isMinimalView &&
         (data.length > MAX_ELEMENTS.preview.all ||
@@ -291,6 +290,7 @@ Visualization.propTypes = {
 
 Visualization.defaultProps = {
   chartId: null,
+  data: [],
   visualizationClassName: null,
   containerClassName: styles.visualizationBlock,
   headerClassName: styles.header,

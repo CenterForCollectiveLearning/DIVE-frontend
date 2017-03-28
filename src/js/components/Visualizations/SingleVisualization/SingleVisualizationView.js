@@ -96,7 +96,8 @@ export class SingleVisualizationView extends Component {
 
   saveVisualization = (saveAction = true) => {
     const { project, visualization, createExportedSpec, conditionals } = this.props;
-    createExportedSpec(project.id, visualization.spec.id, visualization.visualizationData, conditionals.items, visualization.config, saveAction);
+    const { bins, visualizationData, tableData } = visualization;
+    createExportedSpec(project.id, visualization.spec.id, { 'visualize': visualizationData, 'table': tableData, 'bins': bins}, conditionals.items, visualization.config, saveAction);
   }
 
   onClickShare = () => {

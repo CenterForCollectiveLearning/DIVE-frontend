@@ -38,6 +38,10 @@ ColoredFieldItems.propTypes = {
   fields: PropTypes.array.isRequired,
 };
 
+ColoredFieldItems.defaultProps = {
+  fields: []
+}
+
 function mapStateToProps(state) {
   const { fieldProperties } = state;
   return {

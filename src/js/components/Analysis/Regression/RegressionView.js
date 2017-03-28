@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import { Button, Intent, NonIdealState } from '@blueprintjs/core';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
-import { runRegression, getContributionToRSquared, createExportedRegression } from '../../../actions/RegressionActions';
+import { runRegression, createExportedRegression } from '../../../actions/RegressionActions';
 import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import styles from '../Analysis.sass';
@@ -32,7 +32,7 @@ export class RegressionView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, conditionals, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, regressionResult, runRegression, getContributionToRSquared, fetchDatasets, tableLayout, recommendationType } = this.props;
+    const { projectId, datasetId, conditionals, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, regressionResult, runRegression, fetchDatasets, tableLayout, recommendationType } = this.props;
 
     const conditionalsChanged = nextProps.conditionals.lastUpdated != conditionals.lastUpdated;
     const regressionTypeChanged = nextProps.regressionType != regressionType;
@@ -46,10 +46,6 @@ export class RegressionView extends Component {
 
     if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.independentVariableNames.length > 0 && nextProps.regressionType && sidebarChanged) {
       runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames, nextProps.interactionTermIds, nextProps.conditionals.items, nextProps.tableLayout);
-    }
-
-    if (nextProps.projectId && nextProps.regressionResult.data && nextProps.regressionResult.data.id && independentVariableNames.length > 1 && (sidebarChanged || regressionResult.data == null || (nextProps.regressionResult.data.id != regressionResult.data.id)) && (tableLayout == 'leaveOneOut')) {
-      getContributionToRSquared(nextProps.projectId, nextProps.regressionResult.data.id, nextProps.conditionals.items);
     }
   }
 
@@ -74,13 +70,16 @@ export class RegressionView extends Component {
   }
 
   render() {
-    const { datasets, datasetId, regressionResult, recommendationResult, contributionToRSquared, dependentVariableName, independentVariableNames, regressionType, tableLayout } = this.props;
-    const saved = (regressionResult.isSaving || (!regressionResult.isSaving && regressionResult.exportedRegressionId) || regressionResult.exported) ? true : false;
+    const { datasets, datasetId, regressionResult, recommendationResult, dependentVariableName, independentVariableNames, regressionType, tableLayout } = this.props;
+    const { isSaving, isExporting, exportedRegressionId, exported, error, progress, loading, data } = regressionResult;
+    const { table, contributionToRSquared } = data;
+
+    const saved = (isSaving || (!isSaving && exportedRegressionId) || exported) ? true : false;
 
     const errorComponent = ( <div className={ styles.centeredFill }>
       <NonIdealState
         title='Error Running Regression'
-        description={ regressionResult.error }
+        description={ error }
         visual='error'
         action={ <div className={ styles.errorAction }>
           <div>Please change your selection or</div>
@@ -94,7 +93,7 @@ export class RegressionView extends Component {
       />
     </div> );
 
-    if ( !recommendationResult.loading && !regressionResult.error && !regressionResult.loading && (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0)) {
+    if ( !recommendationResult.loading && error && !loading && (!data.table || !data.table.fields || data.table.fields.length == 0)) {
       return errorComponent;
     }
 
@@ -105,7 +104,7 @@ export class RegressionView extends Component {
 
     var regressionContent = <div className={ styles.centeredFill } />;
 
-    if (regressionResult.error) {
+    if (error) {
       return errorComponent;
     }
 
@@ -138,19 +137,19 @@ export class RegressionView extends Component {
                   <Button
                     iconName='share'
                     onClick={ this.onClickShare }
-                    loading={ regressionResult.isExporting }
+                    loading={ isExporting }
                   >
-                    { !regressionResult.isExporting && "Share" }
+                    { !isExporting && "Share" }
                   </Button>
                 </div>
                 <div className={ styles.headerControl }>
                   <Button
                     onClick={ this.saveRegression }
-                    loading={ regressionResult.isSaving }>
-                    { !regressionResult.isSaving && !regressionResult.exportedRegressionId &&
+                    loading={ isSaving }>
+                    { !isSaving && !exportedRegressionId &&
                       <div><span className='pt-icon-standard pt-icon-star-empty' />Save</div>
                     }
-                    { regressionResult.exportedRegressionId &&
+                    { exportedRegressionId &&
                       <div><span className='pt-icon-standard pt-icon-star' />Saved</div>
                     }
                   </Button>
@@ -158,22 +157,22 @@ export class RegressionView extends Component {
             </div>
             }
           />
-          { regressionResult.loading &&
+          { loading &&
             <Card header={ tableCardHeader }>
-              <Loader text={ regressionResult.progress != null ? regressionResult.progress : 'Running regressions…' } />
+              <Loader text={ progress != null ? progress : 'Running regressions…' } />
             </Card>
           }
-          { (!regressionResult.loading && regressionResult.data) &&
+          { (!loading && table) &&
             <RegressionTableCard
               regressionType={ regressionType }
               dependentVariableName={ dependentVariableName }
               independentVariableNames={ independentVariableNames }
-              regressionResult={ regressionResult.data || {} }
+              regressionResult={ table || {} }
               contributionToRSquared={ contributionToRSquared }/>
           }
 
-          { (contributionToRSquared.length > 0 && regressionResult.data && tableLayout == 'leaveOneOut') &&
-            <ContributionToRSquaredCard id={ `${ regressionResult.data.id }` } contributionToRSquared={ contributionToRSquared } />
+          { (!loading && contributionToRSquared.length > 0 && tableLayout == 'leaveOneOut') &&
+            <ContributionToRSquaredCard id={ `${ table.id }` } contributionToRSquared={ contributionToRSquared } />
           }
         </div>
       ;
@@ -189,7 +188,7 @@ export class RegressionView extends Component {
 
 function mapStateToProps(state, ownProps) {
   const { project, datasets, conditionals, regressionSelector, datasetSelector, fieldProperties } = state;
-  const { recommendationResult, progress, error, regressionResult, contributionToRSquared } = regressionSelector;
+  const { recommendationResult, regressionResult } = regressionSelector;
   const { independentVariablesIds, dependentVariableId, regressionType, tableLayout, recommendationType } = ownProps;
 
   const dependentVariable = fieldProperties.items.find((property) => property.id == dependentVariableId);
@@ -211,7 +210,6 @@ function mapStateToProps(state, ownProps) {
     interactionTermIds: regressionSelector.interactionTermIds,
     datasetId: datasetSelector.id,
     regressionResult: regressionResult,
-    contributionToRSquared: contributionToRSquared,
     tableLayout: tableLayout,
     recommendationType: recommendationType
   };
@@ -220,7 +218,6 @@ function mapStateToProps(state, ownProps) {
 export default connect(mapStateToProps, {
   push,
   runRegression,
-  getContributionToRSquared,
   createExportedRegression,
   selectDataset,
   fetchDatasets,

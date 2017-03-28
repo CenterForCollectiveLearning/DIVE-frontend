@@ -16,11 +16,9 @@ export default class ComposeBlockCorrelation extends Component {
     this.state = {
       resizeCounter: 0
     }
-
-    this.onResize = this.onResize.bind(this);
   }
 
-  onResize(event, { element, size }) {
+  onResize = (event, { element, size }) => {
     const { blockId, onSave } = this.props;
     this.setState({ resizeCounter: this.state.resizeCounter + 1 });
     onSave(blockId, 'dimensions', size);
@@ -37,7 +35,7 @@ export default class ComposeBlockCorrelation extends Component {
     const width = isHalfWidthFormat ? 620 : absoluteMaxWidth;
     const height = isHalfWidthFormat ? 300 : null;
 
-    const correlationTableComponent = <CorrelationTable correlationResult={ spec.data || {} } preview={ false }/>
+    const correlationTableComponent = <CorrelationTable correlationResult={ spec.data.table || {} } preview={ false }/>
 
     return (
       <div ref="composeBlockVisualization" className={ styles.composeBlockVisualization }>

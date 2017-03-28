@@ -27,11 +27,14 @@ export default class HeaderBar extends Component {
     const { className, textClassName, header, subheader, actions, helperText } = this.props;
     const { showHelperText } = this.state;
 
-    let popoverContent = (
-      <div>
-        <p>{ HELPER_TEXT[helperText] }</p>
-      </div>
-    );
+    let popoverContent;
+    if (helperText) {
+      popoverContent = (
+        <div>
+          <p>{ HELPER_TEXT[helperText] }</p>
+        </div>
+      );
+    }
 
     return (
       <div className={
