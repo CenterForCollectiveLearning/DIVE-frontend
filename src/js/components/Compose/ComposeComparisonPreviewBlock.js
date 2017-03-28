@@ -9,9 +9,10 @@ import ColoredFieldItems from '../Base/ColoredFieldItems';
 
 export default class ComposeComparisonPreviewBlock extends Component {
   handleClick = () => {
-    const { spec, onClick, id } = this.props;
+    const { spec, onClick } = this.props;
     // const headers = spec.data.table.headers;
     // const desc = `Aggregating ${ headers.slice(0, -1).join(', ') } and ${ headers.slice(-1) }`;
+    const desc = 'TODO';
     onClick(spec.id, desc);
   }
 

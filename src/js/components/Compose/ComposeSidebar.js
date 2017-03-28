@@ -91,7 +91,7 @@ export class ComposeSidebar extends Component {
         }     
         { !exportedAnalyses.isFetching && comparison.length > 0 &&
           <SidebarCategoryGroup
-            heading={ `Correlations (${ comparison.length})` }
+            heading={ `Comparisons (${ comparison.length})` }
             iconName="th"
           >
             { comparison.map((spec) =>

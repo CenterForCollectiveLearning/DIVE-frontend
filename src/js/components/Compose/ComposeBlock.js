@@ -7,6 +7,8 @@ import ComposeBlockText from './ComposeBlockText';
 import ComposeBlockVisualization from './ComposeBlockVisualization';
 import ComposeBlockRegression from './ComposeBlockRegression';
 import ComposeBlockCorrelation from './ComposeBlockCorrelation';
+import ComposeBlockAggregation from './ComposeBlockAggregation';
+import ComposeBlockComparison from './ComposeBlockComparison';
 import ToggleButtonGroup from '../Base/ToggleButtonGroup';
 import RaisedButton from '../Base/RaisedButton';
 
@@ -58,25 +60,31 @@ export class ComposeBlock extends Component {
   }
 
   componentWillMount() {
-    const { block, exportedSpecs, exportedRegressions, exportedCorrelations } = this.props;
+    const { block, exportedSpecs, exportedAnalyses } = this.props;
 
-    let specs;
+    let specs = [];
     switch(block.contentType) {
       case CONTENT_TYPES.VISUALIZATION:
-        specs = exportedSpecs;
+        specs = exportedSpecs.items;
         break;
       case CONTENT_TYPES.REGRESSION:
-        specs = exportedRegressions;
+        specs = exportedAnalyses.data.regression;
         break;
       case CONTENT_TYPES.CORRELATION:
-        specs = exportedCorrelations;
+        specs = exportedAnalyses.data.correlation;
         break;
+      case CONTENT_TYPES.COMPARISON:
+        specs = exportedAnalyses.data.comparison;
+        break;
+      case CONTENT_TYPES.AGGREGATION:
+        specs = exportedAnalyses.data.aggregation;
+        break;                
       default:
-        specs = exportedSpecs;
+        specs = exportedSpecs.items;
         break;
     }
 
-    const exportedSpec = specs.items.find((spec) => spec.id == block.exportedSpecId);
+    const exportedSpec = specs.find((spec) => spec.id == block.exportedSpecId);
     this.setStateBlockFormat(block.format);
 
     if (block.contentType) {
@@ -90,7 +98,6 @@ export class ComposeBlock extends Component {
 
   autoSetContentType = (hasSpec) => {
     const contentType = hasSpec ? CONTENT_TYPES.VISUALIZATION : CONTENT_TYPES.TEXT;
-    console.log('in autoSetContentType', hasSpec, contentType);
     this.setState({ autoSetContentType: true, contentType: contentType });
   }
 
@@ -147,6 +154,8 @@ export class ComposeBlock extends Component {
 
     const spec = exportedSpec ? exportedSpec : block.spec;
 
+    console.log('in getBlockContent', block, spec, exportedSpec);
+
     const composeHeader =
       <ComposeBlockHeader blockId={ block.uuid } onSave={ this.props.saveBlock } heading={ block.heading } editable={ this.props.editable } />;
 
@@ -186,6 +195,28 @@ export class ComposeBlock extends Component {
                     parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
                     spec={ spec } />;
         break;
+      case CONTENT_TYPES.AGGREGATION:
+        composeContent = spec &&
+          <ComposeBlockAggregation
+                    blockId={ block.uuid }
+                    chartId={ `correlation-${ block.uuid }-${ spec.id }` }
+                    editable={ editable }
+                    onSave={ this.props.saveBlock }
+                    format={ selectedBlockFormat }
+                    parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
+                    spec={ spec } />;
+        break;
+      case CONTENT_TYPES.COMPARISON:
+        composeContent = spec &&
+          <ComposeBlockComparison
+                    blockId={ block.uuid }
+                    chartId={ `correlation-${ block.uuid }-${ spec.id }` }
+                    editable={ editable }
+                    onSave={ this.props.saveBlock }
+                    format={ selectedBlockFormat }
+                    parentSize={ this.refs.composeBlock ? [ this.refs.composeBlock.offsetWidth, this.refs.composeBlock.offsetHeight ] : null }
+                    spec={ spec } />;
+        break;                
     }
 
     const composeText =
@@ -331,8 +362,7 @@ export class ComposeBlock extends Component {
 ComposeBlock.propTypes = {
   block: PropTypes.object.isRequired,
   exportedSpecs: PropTypes.object.isRequired,
-  exportedRegressions: PropTypes.object.isRequired,
-  exportedCorrelations: PropTypes.object.isRequired,
+  exportedAnalyses: PropTypes.object.isRequired,
   editable: PropTypes.bool.isRequired,
   index: PropTypes.number.isRequired,
   length: PropTypes.number.isRequired,
@@ -340,8 +370,8 @@ ComposeBlock.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { exportedSpecs, exportedRegressions, exportedCorrelations } = state;
-  return { exportedSpecs, exportedRegressions, exportedCorrelations };
+  const { exportedSpecs, exportedAnalyses } = state;
+  return { exportedSpecs, exportedAnalyses };
 }
 
 export default connect(mapStateToProps, {

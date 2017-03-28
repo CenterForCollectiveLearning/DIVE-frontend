@@ -5,11 +5,16 @@ import styles from './Compose.sass';
 
 import _ from 'underscore';
 import { ResizableBox } from 'react-resizable';
-import Visualization from '../Visualizations/Visualization';
+import StatsTable from '../Analysis/Comparison/StatsTable';
+import NumericalComparisonText from '../Analysis/Comparison/NumericalComparisonText';
+import AnovaTable from '../Analysis/Comparison/AnovaTable';
+import AnovaText from '../Analysis/Comparison/AnovaText';
+import PairwiseComparisonCard from '../Analysis/Comparison/PairwiseComparisonCard';
+import AnovaBoxplotCard from '../Analysis/Comparison/AnovaBoxplotCard';
 
 import { BLOCK_FORMATS } from '../../constants/BlockFormats';
 
-export default class composeBlockVisualization extends Component {
+export default class ComposeBlockComparison extends Component {
   constructor(props) {
     super(props);
 
@@ -28,6 +33,7 @@ export default class composeBlockVisualization extends Component {
 
   render() {
     const { chartId, spec, updatedAt, parentSize, format, editable, fieldNameToColor } = this.props;
+    const { anovaBoxplot, pairwiseComparison, anova, numericalComparison } = spec.data;
 
     const absoluteMaxWidth = parentSize ? parentSize[0] - 18 : 908;
     const isHalfWidthFormat = (format == BLOCK_FORMATS.TEXT_LEFT || format == BLOCK_FORMATS.TEXT_RIGHT);
@@ -37,18 +43,24 @@ export default class composeBlockVisualization extends Component {
     const width = isHalfWidthFormat ? 620 : absoluteMaxWidth;
     const height = isHalfWidthFormat ? 300 : null;
 
-    const visualizationComponent = <Visualization
-      chartId={ `full-compose-visualization-${ chartId }-${ updatedAt }-${ this.state.resizeCounter }` }
-      containerClassName={ styles.fullComposeVisualization }
-      visualizationTypes={ spec.vizTypes }
-      fieldNameToColor={ fieldNameToColor }
-      spec={ spec }
-      bins={ spec.data.bins }
-      data={ spec.data.visualize }
-      config={ spec.config }
-      isMinimalView={ false }
-      showHeader={ false }/>
-
+    let content = <div>
+      { numericalComparison && 
+        <StatsTable numericalData={ numericalComparison } />
+      }
+      { anova &&
+        <AnovaTable anovaData={ anova } />
+      }
+      { pairwiseComparison && pairwiseComparison.rows && pairwiseComparison.rows.length > 0 &&
+        <PairwiseComparisonCard
+          pairwiseComparisonData={ pairwiseComparison }
+        />
+      }
+      { anovaBoxplot && anovaBoxplot.data &&
+        <AnovaBoxplotCard
+          anovaBoxplotData={ anovaBoxplot }
+        />
+      }
+    </div>;
     return (
       <div ref="composeBlockVisualization" className={ styles.composeBlockVisualization }>
         { editable &&
@@ -60,12 +72,12 @@ export default class composeBlockVisualization extends Component {
             height={ height }
             minConstraints={ [200, 200] }
             maxConstraints={ [maxWidth, 600] }>
-            { visualizationComponent }
+            { content }
           </ResizableBox>
         }
         { !editable &&
           <div style={{ width: width, height: height }} className={ styles.resizableContainer }>
-            { visualizationComponent }
+            { content }
           </div>
         }
       </div>
@@ -73,7 +85,7 @@ export default class composeBlockVisualization extends Component {
   }
 }
 
-composeBlockVisualization.propTypes = {
+ComposeBlockComparison.propTypes = {
   spec: PropTypes.object.isRequired,
   updatedAt: PropTypes.number,
   parentSize: PropTypes.any,

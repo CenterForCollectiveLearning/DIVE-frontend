@@ -13,7 +13,7 @@ import { clearAnalysis } from '../../../actions/AnalysisActions';
 import Card from '../../Base/Card';
 import Loader from '../../Base/Loader';
 import StatsTable from './StatsTable';
-import NumericalComparisonText from './NumericalComparisonText'
+import NumericalComparisonText from './NumericalComparisonText';
 import AnovaTable from './AnovaTable';
 import AnovaText from './AnovaText';
 import PairwiseComparisonCard from './PairwiseComparisonCard';
