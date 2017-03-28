@@ -10,13 +10,10 @@ import Visualization from '../Visualizations/Visualization';
 export default class ComposeVisualizationPreviewBlock extends Component {
   handleClick = () => {
     const { spec, onClick } = this.props;
-    onClick(spec.id, spec.meta.desc);
   }
 
   render() {
     const { spec, fieldNameToColor } = this.props;
-
-    console.log(spec, spec.data);
 
     return (
       <div className={ styles.contentPreviewBlockContainer + ' pt-card pt-interactive' }

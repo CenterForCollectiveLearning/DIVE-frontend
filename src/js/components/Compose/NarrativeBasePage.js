@@ -9,7 +9,7 @@ import ComposeEditor from './ComposeEditor';
 
 export class NarrativeBasePage extends Component {
   render() {
-    const { selectedDocument } = this.props;
+    const { selectedDocument, fieldNameToColor } = this.props;
     const { title, blocks, id } = selectedDocument;
     const documentTitle = title || 'DIVE Document';
     return (
@@ -19,6 +19,7 @@ export class NarrativeBasePage extends Component {
             <ComposeEditor
               editable={ false }
               selectedDocument={ selectedDocument }
+              fieldNameToColor={ fieldNameToColor }
             />
           </div>
           { this.props.children }
@@ -29,7 +30,7 @@ export class NarrativeBasePage extends Component {
 }
 
 function mapStateToProps(state) {
-  const { composeSelector } = state;
+  const { composeSelector, fieldProperties } = state;
 
   const selectedDocument = {
     blocks: composeSelector.blocks,
@@ -37,7 +38,11 @@ function mapStateToProps(state) {
     id: composeSelector.documentId
   };
 
-  return { composeSelector, selectedDocument: selectedDocument };
+  return {
+    composeSelector,
+    selectedDocument: selectedDocument,
+    fieldNameToColor: fieldProperties.fieldNameToColor
+  };
 }
 
 export default connect(mapStateToProps, { fetchDocuments })(NarrativeBasePage);

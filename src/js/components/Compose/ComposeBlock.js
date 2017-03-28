@@ -59,8 +59,8 @@ export class ComposeBlock extends Component {
     }
   }
 
-  componentWillMount() {
-    const { block, exportedSpecs, exportedAnalyses } = this.props;
+  getExportedSpec(props) {
+    const { block, exportedSpecs, exportedAnalyses } = props;
 
     let specs = [];
     switch(block.contentType) {
@@ -85,7 +85,15 @@ export class ComposeBlock extends Component {
     }
 
     const exportedSpec = specs.find((spec) => spec.id == block.exportedSpecId);
+    return exportedSpec; 
+  }
+
+  componentWillMount() {
+    const { block } = this.props;
+
     this.setStateBlockFormat(block.format);
+
+    const exportedSpec = this.getExportedSpec(this.props);
 
     if (block.contentType) {
       this.setState({ contentType: block.contentType });
@@ -102,10 +110,16 @@ export class ComposeBlock extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.exportedSpecs.updatedAt != this.props.exportedSpecs.updatedAt) {
-      const exportedSpec = nextProps.exportedSpecs.items.find((spec) => spec.id == nextProps.block.exportedSpecId);
+    const updatedSpecs = nextProps.exportedSpecs.updatedAt != this.props.exportedSpecs.updatedAt;
+    const updatedAnalyses = nextProps.exportedAnalyses.updatedAt != this.props.exportedAnalyses.updatedAt;
+
+    if (updatedSpecs || updatedAnalyses) {
+      const exportedSpec = this.getExportedSpec(nextProps);
+      
       this.setState({ exportedSpec: exportedSpec });
-      if (this.state.autoSetContentType) {
+      if (nextProps.block.contentType) {
+        this.setState({ contentType: nextProps.block.contentType });
+      } else {
         this.autoSetContentType(exportedSpec);
       }
     }
@@ -153,8 +167,6 @@ export class ComposeBlock extends Component {
     const { block, editable, fieldNameToColor } = this.props;
 
     const spec = exportedSpec ? exportedSpec : block.spec;
-
-    console.log('in getBlockContent', block, spec, exportedSpec);
 
     const composeHeader =
       <ComposeBlockHeader blockId={ block.uuid } onSave={ this.props.saveBlock } heading={ block.heading } editable={ this.props.editable } />;
@@ -319,6 +331,8 @@ export class ComposeBlock extends Component {
         break;
 
       case CONTENT_TYPES.VISUALIZATION:
+      case CONTENT_TYPES.AGGREGATION:
+      case CONTENT_TYPES.COMPARISON:      
       case CONTENT_TYPES.REGRESSION:
       case CONTENT_TYPES.CORRELATION:
         blockControls =
@@ -345,17 +359,21 @@ export class ComposeBlock extends Component {
 
   render() {
     const { selectedBlockFormat } = this.state;
-    const { editable } = this.props;
+    const { editable, block } = this.props;
 
-    const formatBlock = this.getBlockContent();
-    const blockControls = this.getBlockControls();
+    if (block.exportedSpecId) {
+      const formatBlock = this.getBlockContent();
+      const blockControls = this.getBlockControls();
 
-    return (
-      <div ref="composeBlock" className={ styles.composeBlock + ' ' + styles[selectedBlockFormat] + (editable ? ' ' + styles.editable : '') }>
-        { blockControls }
-        { formatBlock }
-      </div>
-    );
+      return (
+        <div ref="composeBlock" className={ styles.composeBlock + ' ' + styles[selectedBlockFormat] + (editable ? ' ' + styles.editable : '') }>
+          { blockControls }
+          { formatBlock }
+        </div>
+      );
+    } else {
+      return (<div />);
+    }
   }
 }
 

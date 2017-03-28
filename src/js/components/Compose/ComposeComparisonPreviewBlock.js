@@ -3,16 +3,23 @@ import { connect } from 'react-redux';
 
 import styles from './Compose.sass';
 
+import { formatPlaintextListWithCommas } from '../../helpers/helpers';
 import ColoredFieldItems from '../Base/ColoredFieldItems';
-// import ComparisonTable from '../Analysis/Comparison/ComparisonTable';
-// import ComparisonTableOneD from './Analysis/Aggregation/AggregationTableOneD';
+import AnovaBoxplotCard from '../Analysis/Comparison/AnovaBoxplotCard';
 
 export default class ComposeComparisonPreviewBlock extends Component {
   handleClick = () => {
     const { spec, onClick } = this.props;
-    // const headers = spec.data.table.headers;
-    // const desc = `Aggregating ${ headers.slice(0, -1).join(', ') } and ${ headers.slice(-1) }`;
-    const desc = 'TODO';
+    const { dependentVariablesNames, independentVariablesNames } = spec.spec;
+
+    let desc;
+    if ((independentVariablesNames.length >= 2 && dependentVariablesNames.length == 0) || (independentVariablesNames.length == 0 && dependentVariablesNames.length >= 2)) {
+      const numericalComparisonFields = independentVariablesNames.length ? independentVariablesNames : dependentVariablesNames;
+      desc = `Comparing Distributions of ${ formatPlaintextListWithCommas(numericalComparisonFields) }`;
+    } else {
+      desc = `Comparing ${ formatPlaintextListWithCommas(independentVariablesNames)} by ${ formatPlaintextListWithCommas(dependentVariablesNames) }`;
+    }
+
     onClick(spec.id, desc);
   }
 
@@ -37,7 +44,15 @@ export default class ComposeComparisonPreviewBlock extends Component {
            onClick={ this.handleClick }>
         <div className={ styles.correlationBlock }>
            <span className={ styles.header + ' ' + styles.correlationHeader }>
-             { cardHeader }
+              { cardHeader }
+              { anovaBoxplot && anovaBoxplot.data &&
+                <AnovaBoxplotCard
+                  id={ `preview-${ spec.id }`}
+                  anovaBoxplotData={ anovaBoxplot }
+                  showHeader={ false }
+                  isMinimalView={ true }
+                />
+              }
            </span>
         </div>
       </div>

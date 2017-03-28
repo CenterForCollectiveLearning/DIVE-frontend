@@ -30,7 +30,6 @@ export default function exportedAnalyses(state=baseState, action) {
       return { ...state, isFetching: true, loaded: false };
 
     case RECEIVE_EXPORTED_ANALYSES:
-      console.log('receive', action.data);
       return { ...state, isFetching: false, data: action.data, updatedAt: action.receivedAt, loaded: true };
 
     case RECEIVE_CREATED_EXPORTED_AGGREGATION, RECEIVE_CREATED_SAVED_AGGREGATION:

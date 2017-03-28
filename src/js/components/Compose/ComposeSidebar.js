@@ -52,7 +52,6 @@ export class ComposeSidebar extends Component {
     const { exportedSpecs, exportedAnalyses, fieldNameToColor } = this.props;
     const { aggregation, correlation, regression, comparison } = exportedAnalyses.data;
 
-    console.log(exportedAnalyses, aggregation, correlation, regression, comparison);
     return (
       <Sidebar className={ styles.composeSidebar } selectedTab="correlation">
         <SidebarCategoryGroup

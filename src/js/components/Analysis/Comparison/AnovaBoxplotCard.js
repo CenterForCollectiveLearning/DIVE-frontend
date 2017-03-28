@@ -25,26 +25,40 @@ export default class AnovaBoxplotCard extends Component {
   }
 
   render() {
-    const { id, anovaBoxplotData, colors } = this.props;
+    const { id, anovaBoxplotData, colors, showHeader, isMinimalView } = this.props;
     const data = anovaBoxplotData.data.visualize;
     const labels = anovaBoxplotData.meta.labels;
 
-    return (
-      <Card header={ <span>Boxplot of Group Distribution</span> } helperText='comparisonBoxplot'>
-        <div className={ styles.anovaBoxplot }>
-          <BoxPlot
-            chartId={ `anova-boxplot-${ id }` }
-            data={ data }
-            labels={ labels }
-            isMinimalView={ false }
-          />
-        </div>
-      </Card>
-    );
+    const boxplot = (<div className={ (isMinimalView ? null : styles.anovaBoxplot)}>
+      <BoxPlot
+        chartId={ `anova-boxplot-${ id }` }
+        colors={ colors }
+        data={ data }
+        labels={ labels }
+        isMinimalView={ isMinimalView }
+      />
+    </div>);
+
+    if (isMinimalView) {
+      return boxplot;
+    } else {
+      return (
+        <Card header={ <span>Boxplot of Group Distribution</span> } helperText={ 'comparisonBoxplot'}>
+          { boxplot } 
+        </Card>
+      );
+    }
   }
 }
 
 AnovaBoxplotCard.propTypes = {
   id: PropTypes.string,
-  anovaBoxplotData: PropTypes.object.isRequired
+  anovaBoxplotData: PropTypes.object.isRequired,
+  showHeader: PropTypes.bool,
+  isMinimalView: PropTypes.bool
+}
+
+AnovaBoxplotCard.defaultProps = {
+  showHeader: true,
+  isMinimalView: false
 }
