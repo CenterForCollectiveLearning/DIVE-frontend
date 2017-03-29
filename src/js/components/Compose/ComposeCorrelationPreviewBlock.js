@@ -18,15 +18,20 @@ export default class ComposeCorrelationPreviewBlock extends Component {
 
   render() {
     const { spec } = this.props;
+    const { table } = spec.data;
 
     return (
       <div className={ styles.contentPreviewBlockContainer + ' pt-card pt-interactive'}
            onClick={ this.handleClick }>
         <div className={ styles.correlationBlock }>
-           <span className={ styles.header + ' ' + styles.correlationHeader }>
-             Correlating <ColoredFieldItems fields={ spec.data.headers } />
-           </span>
-          <CorrelationTable correlationResult={ spec.data.table || {} } preview={ true }/>
+          { (table && table.headers) && 
+            <span className={ styles.header + ' ' + styles.correlationHeader }>
+              Correlating <ColoredFieldItems fields={ table.headers } /> }
+            </span>
+          }
+          { (table && table.rows) &&
+            <CorrelationTable correlationResult={ table || {} } preview={ true }/>
+          }
         </div>
       </div>
     );

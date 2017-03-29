@@ -106,7 +106,6 @@ export class CorrelationView extends Component {
       </div>
     }
     else if (!error && twoCorrelationVariablesSelected ) {
-      console.log('Table', table, table.headers, table.rows)
       correlationContent =
         <div className={ styles.correlationViewContainer }>
           <Card header={
