@@ -58,7 +58,7 @@
     "redux-debounced": "^0.1.1",
     "redux-devtools": "^2.1.2",
     "redux-logger": "^1.0.8",
-    "redux-raven-middleware": "^0.3.0",
+    "redux-raven-middleware": "^1.2.0",
     "redux-router": "^2.0.0",
     "redux-storage": "^1.2.3",
     "redux-throttle-actions": "^1.1.0",
