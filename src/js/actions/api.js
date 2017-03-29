@@ -18,9 +18,9 @@ function checkStatus(response) {
     error.status = status;
     error.response = response;
 
-    if (window.__env.NODE_ENV != "DEVELOPMENT") {
-      Raven.captureException(error);
-    }
+    // if (window.__env.NODE_ENV != "DEVELOPMENT") {
+    //   Raven.captureException(error);
+    // }
     throw error;
   }
 }
@@ -124,13 +124,13 @@ export function pollForTask(taskId, taskMode, taskType, dispatcherParams, dispat
           console.debug(`[FAILURE] Task ${ taskId } of type ${ taskType } failed.`);
 
           taskManager.removeTask(taskId);
-          Raven.captureException(new Error('Failed polling request'));
+          // Raven.captureException(new Error('Failed polling request'));
           dispatch(errorDispatcher(data));
         } else if (data.state == 'REVOKED') {
           console.debug(`[REVOKE] Task ${ taskId } of type ${ taskType } revoked.`);
 
           taskManager.removeTask(taskId);
-          Raven.captureException(new Error('Revoked polling request'));
+          // Raven.captureException(new Error('Revoked polling request'));
           dispatch(errorDispatcher(data));
         } else if (counter > limit) {
           console.debug(`[TIME OUT] Task ${ taskId } of type ${ taskType } exceeded polling limit.`);
