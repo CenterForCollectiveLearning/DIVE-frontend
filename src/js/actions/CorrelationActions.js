@@ -116,7 +116,6 @@ export function getCorrelations(projectId, datasetId, correlationVariables, cond
         dispatch(receiveCorrelationDispatcher(params, json));
       }
     })
-    .catch(err => console.error("Error creating correlation matrix: ", err));
   };
 }
 

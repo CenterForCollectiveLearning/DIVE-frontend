@@ -22,13 +22,6 @@ import CorrelationScatterplotCard from './CorrelationScatterplotCard';
 
 export class CorrelationView extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.saveCorrelation = this.saveCorrelation.bind(this);
-    this.onClickShare = this.onClickShare.bind(this);
-  }
-
   componentWillMount() {
     const { projectId, datasetId, datasetSelector, datasets, correlationVariableNames, getCorrelations, correlations, conditionals, fetchDatasets } = this.props
 
@@ -64,12 +57,12 @@ export class CorrelationView extends Component {
     }
   }
 
-  saveCorrelation(saveAction = true) {
+  saveCorrelation = (saveAction = true) => {
     const { project, correlationResult, createExportedCorrelation } = this.props;
     createExportedCorrelation(project.id, correlationResult.data.id, correlationResult.data, correlationResult.conditionals, correlationResult.config, saveAction);
   }
 
-  onClickShare() {
+  onClickShare = () => {
     setShareWindow(window.open('about:blank'));
     this.saveCorrelation(false);
   }
@@ -113,6 +106,7 @@ export class CorrelationView extends Component {
       </div>
     }
     else if (!error && twoCorrelationVariablesSelected ) {
+      console.log('Table', table, table.headers, table.rows)
       correlationContent =
         <div className={ styles.correlationViewContainer }>
           <Card header={
@@ -120,7 +114,7 @@ export class CorrelationView extends Component {
             }
           >
             { loading && <Loader text={ progress != null ? progress : 'Running correlations…' } /> }
-            { (!loading && table) && <CorrelationTable correlationResult={ table } /> }
+            { (!loading && table && table.rows.length && table.headers.length) && <CorrelationTable correlationResult={ table } /> }
             { (!loading && scatterplots) && <CorrelationScatterplotCard data={ scatterplots } /> }
           </Card>
         </div>
