@@ -162,7 +162,7 @@ export class RegressionView extends Component {
               <Loader text={ progress != null ? progress : 'Running regressions…' } />
             </Card>
           }
-          { (!loading && table) &&
+          { (!loading && table.regressionsByColumn && table.fields) &&
             <RegressionTableCard
               regressionType={ regressionType }
               dependentVariableName={ dependentVariableName }

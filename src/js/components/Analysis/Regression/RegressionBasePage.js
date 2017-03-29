@@ -21,7 +21,6 @@ export class RegressionBasePage extends Component {
       replace(`${ pathname }${ persistedQueryString }`);
     } else {
       if ( project.id && datasetId ) {
-        console.log('Recommending from basepage mount');
         this.setRecommendedInitialState(this.props);
       }
     }
