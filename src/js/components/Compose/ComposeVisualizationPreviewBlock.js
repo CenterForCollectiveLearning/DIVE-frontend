@@ -10,6 +10,7 @@ import Visualization from '../Visualizations/Visualization';
 export default class ComposeVisualizationPreviewBlock extends Component {
   handleClick = () => {
     const { spec, onClick } = this.props;
+    onClick(spec.id, spec.meta.desc);
   }
 
   render() {
