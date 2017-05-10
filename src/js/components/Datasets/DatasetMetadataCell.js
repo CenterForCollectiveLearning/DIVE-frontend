@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { ChromePicker } from 'react-color';
 
+import { Button } from '@blueprintjs/core';
+
 import styles from './Datasets.sass';
 import ColumnChart from '../Visualizations/Charts/ColumnChart';
 import Histogram from '../Visualizations/Charts/Histogram';
@@ -152,7 +154,7 @@ class DatasetMetadataCell extends Component {
               ) }
             </div>
           }
-          <div className={ styles.toggles }>
+          {/* <div className={ styles.toggles }>
             <div className={ styles.left }>
               <input type="checkbox"
                 checked={ this.state.isId }
@@ -166,7 +168,7 @@ class DatasetMetadataCell extends Component {
                 style={ { backgroundColor: color } }
                 onClick={ this.onColorPickerClick } />
             </div>
-          </div>
+          </div> */}
         </div>
     } else if ( generalType == 'q' ) {
       fieldContent =
@@ -255,15 +257,32 @@ class DatasetMetadataCell extends Component {
       left: '0px',
     }
     return (
-
       <div>
         { fieldContent }
-        { this.state.displayColorPicker ? <div style={ popover }>
-          <div style={ cover } onClick={ this.onColorPickerClose }/>
-          <ChromePicker
-            color={ color }
-            onChangeComplete={ this.onColorPickerChange }
+        <div className='pt-button-group pt-vertical pt-minimal pt-align-left'>
+          <Button
+            iconName={ this.state.isId ? 'delete' : 'numerical'}
+            onClick={ this.onIDCheckboxChange }
+            text={ this.state.isId ? 'Remove as ID' : 'Mark as ID' }
           />
+          <Button
+            iconName="edit"
+            onClick={ this.onColorPickerClick }
+            text="Change Color"
+          />
+          <Button
+            iconName="timeline-area-chart"
+            onClick={ () => this.onClickVisualizeField(id) }
+            text="Visualize"
+          />
+        </div>      
+        { this.state.displayColorPicker ?
+          <div style={ popover }>
+            <div style={ cover } onClick={ this.onColorPickerClose }/>
+            <ChromePicker
+              color={ color }
+              onChangeComplete={ this.onColorPickerChange }
+            />
         </div> : null }
       </div>
     );
