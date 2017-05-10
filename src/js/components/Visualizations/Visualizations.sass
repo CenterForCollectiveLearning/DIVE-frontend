@@ -109,16 +109,6 @@
     text-transform: capitalize
 
   &.field
-    color: $white
-    background-color: $primary-accent
-    border-radius: 2px
-    padding: 2px 4px
-    font-weight: 500
-
-    &.whiteFont
-      color: $white
-    &.blackFont
-      color: $black
 
   &:nth-last-child(1)
     .field:before
@@ -335,14 +325,20 @@
   overflow: hidden
 
   .header
+    display: flex
     text-align: left
     font-size: 14px
     overflow: hidden
     text-overflow: ellipsis
-    padding-left: 15px
-    padding-top: 10px
-    padding-bottom: 10px
+    padding: 10px 15px
     min-height: 35px
+
+    .colorLegend
+      display: flex
+      margin-left: auto
+      .colorLegendBox
+        min-height: 20px
+        min-width: 20px
 
   .overflowText
     display: flex
