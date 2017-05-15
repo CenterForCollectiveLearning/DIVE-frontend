@@ -99,9 +99,20 @@
   display: flex
   flex-direction: row
   width: 100%
+
   .right
+    display: flex
     margin-left: auto
     padding-right: 20px
+
+    .colorLegend
+      display: flex
+      margin-left: auto
+      padding-right: 10px
+
+      .colorLegendBox
+        min-height: 20px
+        min-width: 20px
 
 .headerFragment
   margin-right: 3px
@@ -274,6 +285,8 @@
           padding-top: 20px
 
 .visualizationBlocksContainer
+  $aspect-ratio: 1.6
+  $height: 187px
   display: flex
   flex-direction: column
   position: relative
@@ -281,10 +294,12 @@
   padding: 8px
 
   &.exact
-    width: 50%
+    width: $height * $aspect-ratio
+    // width: 50%
 
   &.subset, &.baseline
-    width: 33.33333%
+    width: $height * $aspect-ratio
+    // width: 33.33333%
 
   &.expanded
     width: 25%
@@ -295,7 +310,7 @@
 
   .starContainer
     position: absolute
-    top: 15px
+    top: 20px
     right: 18px
     font-size: 13px
     color: $orange
@@ -336,6 +351,8 @@
     .colorLegend
       display: flex
       margin-left: auto
+      padding-right: 20px
+
       .colorLegendBox
         min-height: 20px
         min-width: 20px

@@ -149,14 +149,6 @@ export default class Visualization extends Component {
           <div className={ headerClassName }>
             <div>
             { spec.meta.construction.map(function(construct, i) {
-              var style = {};
-              var whiteFont = true;
-              if (construct.type == 'field') {
-                var backgroundColor = fieldNameToColor[construct.string];
-                whiteFont = useWhiteFontFromBackgroundHex(backgroundColor);
-                style['backgroundColor'] = backgroundColor;
-              }
-
               return <span
                 key={ `construct-${ construct.type }-${ i }` }
                 className={ `${styles.headerFragment} ${styles[construct.type]}` }

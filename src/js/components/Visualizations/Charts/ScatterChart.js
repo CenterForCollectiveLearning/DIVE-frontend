@@ -16,6 +16,7 @@ export default class ScatterChart extends Component {
       ...options,
       hAxis: {
         ...options.hAxis,
+        minValue: 'automatic',
         scaleType: config.display ? config.display.hScaleType : null
       },
       legend: {
@@ -24,6 +25,7 @@ export default class ScatterChart extends Component {
       },
       vAxis: {
         ...options.xAxis,
+        minValue: 'automatic',
         scaleType: config.display ? config.display.vScaleType : null
       }
     }
