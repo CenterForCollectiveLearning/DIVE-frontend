@@ -24,7 +24,7 @@ export default class ScatterChart extends Component {
         position: 'none'
       },
       vAxis: {
-        ...options.xAxis,
+        ...options.vAxis,
         minValue: 'automatic',
         scaleType: config.display ? config.display.vScaleType : null
       }
@@ -38,6 +38,8 @@ export default class ScatterChart extends Component {
       ...options,
       ...additionalOptions,
     }
+
+    console.log(options);
 
     return (
       <Chart
