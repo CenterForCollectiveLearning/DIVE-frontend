@@ -77,10 +77,10 @@ $max-block-width: $block-height * $max-aspect-ratio
   flex-direction: column
   position: relative
   padding: $block-padding
-  background-color: blue
+  // background-color: black
 
-  $blocks-per-row: 4
-  width: calc(25% - (#{$container-left-padding} / #{$blocks-per-row}))		  
+  $blocks-per-row: 5
+  width: calc(20% - (#{$container-left-padding} / #{$blocks-per-row}))		  
 
   // &.exact
   //   width: $height * $aspect-ratio
@@ -117,25 +117,36 @@ $max-block-width: $block-height * $max-aspect-ratio
     &.starred:hover i
       opacity: 0.8
 
-$break-1: 3 * ($min-block-width + 2 * $block-padding) + $left-sidebar-width + $right-sidebar-width
-$break-2: 2 * ($min-block-width + 2 * $block-padding) + $left-sidebar-width + $right-sidebar-width
-$break-3: 1 * ($min-block-width + 2 * $block-padding) + $left-sidebar-width + $right-sidebar-width
+// $break-1: 3 * ($min-block-width + 2 * $block-padding) + $container-left-padding + $left-sidebar-width + $right-sidebar-width
+// $break-2: 2 * ($min-block-width + 2 * $block-padding) + $container-left-padding + $left-sidebar-width + $right-sidebar-width
+// $break-3: 1 * ($min-block-width + 2 * $block-padding) + $container-left-padding + $left-sidebar-width + $right-sidebar-width
+
+$break-1: 4 * ($max-block-width + 2 * $block-padding) + $container-left-padding + $left-sidebar-width + $right-sidebar-width
+$break-2: 3 * ($max-block-width + 2 * $block-padding) + $container-left-padding + $left-sidebar-width + $right-sidebar-width
+$break-3: 2 * ($max-block-width + 2 * $block-padding) + $container-left-padding + $left-sidebar-width + $right-sidebar-width
+$break-4: 1 * ($max-block-width + 2 * $block-padding) + $container-left-padding + $left-sidebar-width + $right-sidebar-width
 
 @media screen and (max-width: $break-1)
-	.visualizationBlockContainer
-		background-color: green
-		$blocks-per-row: 3
-		width: calc(33% - (#{$container-left-padding} / #{$blocks-per-row}))					
+  .visualizationBlockContainer
+    // background-color: blue
+    $blocks-per-row: 4
+    width: calc(25% - (#{$container-left-padding} / #{$blocks-per-row}))      
 
 @media screen and (max-width: $break-2)
-	.visualizationBlockContainer
-		background-color: yellow	
-		$blocks-per-row: 2
-		width: calc(50% - (#{$container-left-padding} / #{$blocks-per-row}))
+  .visualizationBlockContainer
+    // background-color: green
+    $blocks-per-row: 3
+    width: calc(33% - (#{$container-left-padding} / #{$blocks-per-row}))      		
 
 @media screen and (max-width: $break-3)
 	.visualizationBlockContainer
-		background-color: red	
+		// background-color: yellow	
+		$blocks-per-row: 2
+		width: calc(50% - (#{$container-left-padding} / #{$blocks-per-row}))
+
+@media screen and (max-width: $break-4)
+	.visualizationBlockContainer
+		// background-color: red	
 		$blocks-per-row: 1
 		width: calc(100% - #{$container-left-padding})		
 
