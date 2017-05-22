@@ -1,6 +1,8 @@
 @import '../../../css/mixins.sass'
 @import '../../../css/flexbox.sass'
 
+$container-left-padding: 10px
+
 .specsContainer
   .innerSpecsContainer
     display: block
@@ -51,36 +53,48 @@
         align-content: flex-start
         flex-grow: 1
         margin-bottom: 5px
-        padding: 5px 0 0 10px
+        padding: 5px 0 0 $container-left-padding
         margin-right: -6px
 
         &.expandedPlaceholder
           justify-content: center
           padding-top: 20px
 
-.visualizationBlocksContainer
-  $aspect-ratio: 1.6
-  $height: 187px
+
+
+$block-height: 187px
+$min-aspect-ratio: 1.4
+$default-aspect-ratio: 1.6
+$max-aspect-ratio: 2.0
+$block-padding: 8px
+
+$min-block-width: $block-height * $min-aspect-ratio
+$default-block-width: $block-height * $default-aspect-ratio
+$max-block-width: $block-height * $max-aspect-ratio
+
+.visualizationBlockContainer
   display: flex
   flex-direction: column
   position: relative
+  padding: $block-padding
+  background-color: blue
 
-  padding: 8px
+  $blocks-per-row: 4
+  width: calc(25% - (#{$container-left-padding} / #{$blocks-per-row}))		  
 
-  &.exact
-    width: $height * $aspect-ratio
-    // width: 50%
+  // &.exact
+  //   width: $height * $aspect-ratio
+  //   // width: 50%
 
-  &.subset, &.baseline
-    width: $height * $aspect-ratio
-    // width: 33.33333%
+  // &.subset, &.baseline
+  //   width: $height * $aspect-ratio
+  //   // width: 33.33333%
 
-  &.expanded
-    width: 25%
+  // &.expanded
+  //   width: 25%
 
   &:hover .starContainer i
     opacity: 0.5
-
 
   .starContainer
     position: absolute
@@ -102,6 +116,28 @@
 
     &.starred:hover i
       opacity: 0.8
+
+$break-1: 3 * ($min-block-width + 2 * $block-padding) + $left-sidebar-width + $right-sidebar-width
+$break-2: 2 * ($min-block-width + 2 * $block-padding) + $left-sidebar-width + $right-sidebar-width
+$break-3: 1 * ($min-block-width + 2 * $block-padding) + $left-sidebar-width + $right-sidebar-width
+
+@media screen and (max-width: $break-1)
+	.visualizationBlockContainer
+		background-color: green
+		$blocks-per-row: 3
+		width: calc(33% - (#{$container-left-padding} / #{$blocks-per-row}))					
+
+@media screen and (max-width: $break-2)
+	.visualizationBlockContainer
+		background-color: yellow	
+		$blocks-per-row: 2
+		width: calc(50% - (#{$container-left-padding} / #{$blocks-per-row}))
+
+@media screen and (max-width: $break-3)
+	.visualizationBlockContainer
+		background-color: red	
+		$blocks-per-row: 1
+		width: calc(100% - #{$container-left-padding})		
 
 .visualizationBlock
   +block
@@ -152,3 +188,10 @@
     svg
       g
         cursor: pointer!important
+
+.stats
+  padding: 10px 15px
+  background-color: white
+  +smallCaps
+  .value
+    margin-left: 4px

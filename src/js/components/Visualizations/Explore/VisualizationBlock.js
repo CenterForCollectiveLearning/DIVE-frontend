@@ -10,7 +10,7 @@ export default class VisualizationBlock extends Component {
     const { spec, exportedSpecs, fieldNameToColor, filteredVisualizationTypes, className, showStats, isCard, onClick, saveVisualization } = this.props;
 
     return (
-      <div className={ styles.visualizationBlocksContainer + ' ' + ( styles[className] || '') }>
+      <div className={ styles.visualizationBlockContainer + ' ' + ( styles[className] || '') }>
         <Visualization
           visualizationTypes={ filteredVisualizationTypes }
           fieldNameToColor={ fieldNameToColor ? fieldNameToColor : {} }
