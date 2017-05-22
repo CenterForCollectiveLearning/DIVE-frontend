@@ -77,6 +77,7 @@ class DatasetMetadataCell extends Component {
       var vizType = vizData.spec.vizTypes[0];
       if (vizType == 'line') {
         viz = <LineChart
+            className={ styles.metadataViz }
             chartId={ `field-line-${ id }` }
             data={ vizData.data['visualize'] }
             isMinimalView={ true }
@@ -85,6 +86,7 @@ class DatasetMetadataCell extends Component {
           />;
       } else if (vizType == 'hist') {
         viz = <Histogram
+          className={ styles.metadataViz }
           chartId={ `field-hist-${ id }` }
           data={ vizData.data['visualize'] }
           bins={ vizData.data['bins'] }
@@ -94,6 +96,7 @@ class DatasetMetadataCell extends Component {
         />;
       } else if (vizType == 'bar') {
         viz = <ColumnChart
+          className={ styles.metadataViz }
           chartId={ `field-bar-${ id }` }
           data={ vizData.data['visualize'] }
           isMinimalView={ true }
@@ -105,6 +108,7 @@ class DatasetMetadataCell extends Component {
     if (vizData && !(vizData.spec && vizData.data)) {  // To accomodate old visualization data
       if ( scale == 'ordinal' || scale == 'nominal')  {
         viz = <ColumnChart
+          className={ styles.metadataViz }
           chartId={ `field-bar-${ id }` }
           data={ vizData['visualize'] }
           isMinimalView={ true }
@@ -114,6 +118,7 @@ class DatasetMetadataCell extends Component {
       } else if (scale == 'continuous') {
         if (generalType == 't') {
           viz = <LineChart
+            className={ styles.metadataViz }
             chartId={ `field-line-${ id }` }
             data={ vizData['visualize'] }
             isMinimalView={ true }
@@ -122,6 +127,7 @@ class DatasetMetadataCell extends Component {
           />;
         } else {
           viz = <Histogram
+            className={ styles.metadataViz }
             chartId={ `field-hist-${ id }` }
             data={ vizData['visualize'] }
             bins={ vizData['bins'] }
@@ -191,21 +197,6 @@ class DatasetMetadataCell extends Component {
               ) }
             </div>
           }
-          <div className={ styles.toggles }>
-            <div className={ styles.left }>
-              <input type="checkbox"
-                checked={ this.state.isId }
-                onChange={ this.onIDCheckboxChange.bind(this, projectId, datasetId, id) }
-              />
-              <span>ID</span>
-            </div>
-            <div className={ styles.right }>
-              <div
-                className={ styles.colorPickerButton }
-                style={ { backgroundColor: color } }
-                onClick={ this.onColorPickerClick } />
-            </div>
-          </div>
         </div>
     } else if ( generalType == 't' ) {
       fieldContent =
@@ -225,21 +216,6 @@ class DatasetMetadataCell extends Component {
             ) }
           </div>
         }
-        <div className={ styles.toggles }>
-          <div className={ styles.left }>
-            <input type="checkbox"
-              checked={ this.state.isId }
-              onChange={ this.onIDCheckboxChange.bind(this, projectId, datasetId, id) }
-            />
-            <span>ID</span>
-          </div>
-          <div className={ styles.right }>
-            <div
-              className={ styles.colorPickerButton }
-              style={ { backgroundColor: color } }
-              onClick={ this.onColorPickerClick } />
-          </div>
-        </div>
       </div>
     }
 
