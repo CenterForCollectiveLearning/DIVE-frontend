@@ -1,0 +1,154 @@
+@import '../../../css/mixins.sass'
+@import '../../../css/flexbox.sass'
+
+.specsContainer
+  .innerSpecsContainer
+    display: block
+
+  .specContainer
+    display: flex
+    flex-direction: column
+    flex-wrap: wrap
+    align-content: flex-start
+    flex-grow: 1
+
+    .specSection
+      display: flex
+      flex-direction: column
+      flex-wrap: wrap
+      align-content: flex-start
+      flex-grow: 1
+
+      .blockSectionHeader
+        padding-top: 0
+        margin: 20px 0 -10px 15px
+        height: 22px
+        color: $black
+
+        i
+          bottom: 2px
+          font-size: 16px
+
+        .blockSectionHeaderTitle
+          text-transform: capitalize
+          font-size: 15px
+          line-height: 0.9em
+
+        strong
+          font-weight: 500
+
+        .exactTitleField, .subsetTitleField, .baselineTitleField, .expandedTitleField
+          + .exactTitleField:before
+            content: ' and '
+
+          + .subsetTitleField:before, + .expandedTitleField:before, + .baselineTitleField:before
+            content: ' or '
+
+      .specs
+        display: flex
+        flex-direction: row
+        flex-wrap: wrap
+        align-content: flex-start
+        flex-grow: 1
+        margin-bottom: 5px
+        padding: 5px 0 0 10px
+        margin-right: -6px
+
+        &.expandedPlaceholder
+          justify-content: center
+          padding-top: 20px
+
+.visualizationBlocksContainer
+  $aspect-ratio: 1.6
+  $height: 187px
+  display: flex
+  flex-direction: column
+  position: relative
+
+  padding: 8px
+
+  &.exact
+    width: $height * $aspect-ratio
+    // width: 50%
+
+  &.subset, &.baseline
+    width: $height * $aspect-ratio
+    // width: 33.33333%
+
+  &.expanded
+    width: 25%
+
+  &:hover .starContainer i
+    opacity: 0.5
+
+
+  .starContainer
+    position: absolute
+    top: 20px
+    right: 18px
+    font-size: 13px
+    color: $orange
+    cursor: pointer
+
+    i
+      opacity: 0.5
+
+      &.starred
+        color: $orange
+        opacity: 0.6
+
+    &:hover i
+      opacity: 1
+
+    &.starred:hover i
+      opacity: 0.8
+
+.visualizationBlock
+  +block
+  padding: 0px
+  display: flex
+  flex-direction: column
+  border: 1px solid transparent
+  max-height: 187px
+  height: 187px
+  overflow: hidden
+
+  .header
+    display: flex
+    text-align: left
+    font-size: 14px
+    overflow: hidden
+    text-overflow: ellipsis
+    padding: 10px 15px
+    min-height: 35px
+
+    .colorLegend
+      display: flex
+      margin-left: auto
+      padding-right: 20px
+
+      .colorLegendBox
+        min-height: 20px
+        min-width: 20px
+
+  .overflowText
+    display: flex
+    color: #999
+    align-content: center
+    justify-content: center
+    flex-grow: 1
+    flex-direction: column
+    min-height: 150px
+
+  .visualization
+    height: 100%
+    padding: 11px 0 0px
+
+    &.tree
+      svg
+        text
+          fill: rgba(0, 0, 0, 0)
+
+    svg
+      g
+        cursor: pointer!important
