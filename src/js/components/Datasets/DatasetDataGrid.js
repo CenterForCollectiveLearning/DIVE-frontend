@@ -19,14 +19,14 @@ export default class DatasetDataGrid extends Component {
     if (fieldProperties.items.length && fieldProperties.datasetId == dataset.id) {
       const createCellContent = function (value, children) {
         return (
-          <span
+          <div
             key={ `cell-content-${ value }` }
             title={ value }
             className={ styles.cellContent }
           >
             <span className={ styles.fieldValue }>{ value }</span>
             { children }
-          </span>
+          </div>
         );
       };
 
@@ -41,9 +41,9 @@ export default class DatasetDataGrid extends Component {
       const createMetadataCellContent = function(value, fieldProperty, context) {
         const color = fieldProperties.fieldNameToColor[fieldProperty.name] || null;
         return (
-          <span key={ `cell-content-${ fieldProperty.id }` } title={ value } className={ styles.cellContent }>
+          <div key={ `cell-content-${ fieldProperty.id }` } title={ value } className={ styles.cellContent }>
             <DatasetMetadataCell key={ `metadata-cell-${ fieldProperty.id }` } fieldProperty={ fieldProperty } color={ color }/>
-          </span>
+          </div>
         );
       };
 

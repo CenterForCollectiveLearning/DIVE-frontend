@@ -72,7 +72,7 @@ class DatasetMetadataCell extends Component {
       },
     };
 
-    let viz = <div />;
+    let viz = <div className={ styles.metadataViz + ' ' + styles.vizPlaceholder } />;
     if (vizData && vizData.spec && vizData.data) {
       var vizType = vizData.spec.vizTypes[0];
       if (vizType == 'line') {
@@ -233,20 +233,23 @@ class DatasetMetadataCell extends Component {
       left: '0px',
     }
     return (
-      <div>
+      <div className={ styles.metadataCell }>
         { fieldContent }
-        <div className='pt-button-group pt-vertical pt-minimal pt-align-left'>
+        <div className={ `pt-button-group pt-vertical pt-minimal pt-align-left ${ styles.metadataButtonGroup }` }>
           <Button
+            className={ styles.metadataButton }
             iconName={ this.state.isId ? 'delete' : 'numerical'}
             onClick={ this.onIDCheckboxChange }
             text={ this.state.isId ? 'Remove as ID' : 'Mark as ID' }
           />
           <Button
+            className={ styles.metadataButton }          
             iconName="edit"
             onClick={ this.onColorPickerClick }
             text="Change Color"
           />
           <Button
+            className={ styles.metadataButton }          
             iconName="timeline-area-chart"
             onClick={ () => this.onClickVisualizeField(id) }
             text="Visualize"
