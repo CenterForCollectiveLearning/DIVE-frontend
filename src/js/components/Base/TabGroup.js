@@ -1,26 +1,19 @@
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import styles from './Tabs.sass';
 
-export default class TabGroup extends Component {
-  constructor(props) {
-    super(props);
+class TabGroup extends Component {
 
-    this.state = {
-      collapsed: false
-    }
+  handleGroupClick = () => {
+    this.props.onChange(this);
   }
 
-  handleClick = (i) => {
+  handleClick(i) {
     const { children } = this.props;
     const childrenAsArray = Array.isArray(children) ? children : [ children ];
 
     this.props.onChange(childrenAsArray[i]);
-  }
-
-  onClickCollapse = () => {
-    this.setState({
-        collapsed: !this.state.collapsed
-    });
   }
 
   renderChildren = () => {
@@ -31,28 +24,28 @@ export default class TabGroup extends Component {
     return React.Children.map(children, function (child){
       i++;
 
-      if (child.props.value == this.props.value){
-        return React.cloneElement(child, {
-          selected: true,
-          selectedClassName: this.props.selectedClassName,
-          onClick: this.props.onChange ? this.handleClick.bind(this, i) : null
-        });
-      } else {
-        return React.cloneElement(child, {
-          selected: false,
-          selectedClassName: this.props.selectedClassName,
-          onClick: this.props.onChange ? this.handleClick.bind(this, i) : null
-        });
-      }
+      return React.cloneElement(child, {
+        selected: (child.props.value == this.props.value),
+        selectedClassName: this.props.selectedClassName,
+        onClick: this.props.onChange ? this.handleClick.bind(this, i) : null
+      });
     }, this);
   }
 
   render() {
     const { disabled, iconName } = this.props;
-    const { collapsed } = this.state;
+    const selectedClassName = this.props.selectedClassName ? this.props.selectedClassName : styles.selected;
+
     return (
-      <div className={ styles.tabGroup + ' ' + this.props.className }>
-        <span className={ `pt-icon-large pt-icon-${ iconName } ${ styles.sidebarIcon }  `} />
+      <div
+        className={
+          styles.tabGroup
+          + ' ' + this.props.className
+          + (this.props.selected ? ' ' + selectedClassName : '')
+        } 
+        onClick={ this.handleGroupClick }
+      >
+        { iconName && <span className={ `pt-icon-large pt-icon-${ iconName } ${ styles.sidebarIcon }  `} /> }
         <div className={ styles.tabGroupHeading + ( disabled ? ' ' + styles.disabled : '')}>
           { this.props.heading }
         </div>
@@ -70,12 +63,25 @@ TabGroup.propTypes = {
   selectedClassName: PropTypes.string,
   onChange: PropTypes.func,
   disabled: PropTypes.bool,
-  iconName: PropTypes.string
+  iconName: PropTypes.string,
+  route: PropTypes.string,
+  onClick: PropTypes.func,
+  selected: PropTypes.bool,  
+  selectedClassName: PropTypes.string
 }
 
 TabGroup.defaultProps = {
   className: "",
   selectedClassName: null,
   disabled: false,
-  iconName: ''
+  iconName: '',
+  route: null,
+  selected: false,
+  selectedClassName: null
 }
+
+function mapStateToProps(state) {
+  return {};
+}
+
+export default connect(mapStateToProps, { push })(TabGroup);

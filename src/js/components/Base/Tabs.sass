@@ -13,12 +13,17 @@
     flex-direction: column
     margin-bottom: 13px
     margin-top: 20px
+    
+    &.selected
+      .sidebarIcon, .tabGroupHeading
+        color: $primary-accent
 
     .sidebarIcon
-      color: white
+      color: $white
       text-align: center
       font-size: 25px
       padding-bottom: 10px
+      cursor: pointer
     
     .tabGroupHeading
       +smallCapsBold
@@ -29,6 +34,7 @@
       padding-bottom: 5px
       text-align: center
       // border-bottom: 1px solid $left-sidebar-separator-grey
+      cursor: pointer
 
       &.disabled
         opacity: 0.3
