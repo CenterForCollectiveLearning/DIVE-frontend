@@ -48,10 +48,11 @@ export default class TabGroup extends Component {
   }
 
   render() {
-    const { disabled } = this.props;
+    const { disabled, iconName } = this.props;
     const { collapsed } = this.state;
     return (
       <div className={ styles.tabGroup + ' ' + this.props.className }>
+        <span className={ `pt-icon-large pt-icon-${ iconName } ${ styles.sidebarIcon }  `} />
         <div className={ styles.tabGroupHeading + ( disabled ? ' ' + styles.disabled : '')}>
           { this.props.heading }
         </div>
@@ -68,11 +69,13 @@ TabGroup.propTypes = {
   className: PropTypes.string,
   selectedClassName: PropTypes.string,
   onChange: PropTypes.func,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  iconName: PropTypes.string
 }
 
 TabGroup.defaultProps = {
   className: "",
   selectedClassName: null,
   disabled: false,
+  iconName: ''
 }
