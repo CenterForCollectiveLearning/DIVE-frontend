@@ -30,6 +30,26 @@ export class ProjectSidebar extends Component {
     };
   }
 
+  tabs = {
+    'datasets': [
+      'upload',
+      'preloaded',
+      'inspect'
+    ],
+    'visualize': [
+      'explore'
+    ],
+    'analyze': [
+      'aggregation',
+      'comparison',
+      'correlation',
+      'regression'
+    ],
+    'stories': [
+      'compose'
+    ]
+  }
+
   _getSelectedTab = () => {
     const tabList = [
       'datasets',
@@ -82,12 +102,7 @@ export class ProjectSidebar extends Component {
   }
 
   _onClickLogo = () => {
-    const { user, push } = this.props;
-    if (user.anonymous) {
-      push(`/`);
-    } else {
-      push ('/projects');
-    }
+    this.props.push((this.props.user.anonymous ? '/' : '/projects'));
   }
 
   onClickRegister = () => {

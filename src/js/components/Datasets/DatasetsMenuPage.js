@@ -54,18 +54,24 @@ export class DatasetsMenuPage extends Component {
     const menuOptions = [
       {
         title: 'Upload',
-        iconName: 'file',
-        description: 'Upload your dataset'
+        iconName: 'cloud-upload',
+        description: 'Upload your dataset',
+        disabled: false,
+        route: 'upload'
       },
       {
         title: 'Preloaded',
-        iconName: 'file',
-        description: 'Explore preloaded datasets'
+        iconName: 'add-to-folder',
+        description: 'Explore preloaded datasets',
+        disabled: false,
+        route: 'preloaded'
       },
       {
         title: 'Inspect',
-        iconName: 'file',
-        description: 'View datasets in project'
+        iconName: 'eye-open',
+        description: 'View datasets in project',
+        disabled: false,
+        route: 'inspect'
       }
     ]
 
@@ -80,7 +86,8 @@ export class DatasetsMenuPage extends Component {
             }
           >
             <div className={ styles.top }>
-              { e.title }
+              <h5>{ e.title }</h5>
+              <span className={ `pt-icon pt-icon-${ e.iconName }` } />
             </div>
             <p className={ styles.description }>{ e.description }</p>
           </div>
