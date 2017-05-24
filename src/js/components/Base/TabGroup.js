@@ -25,7 +25,7 @@ class TabGroup extends Component {
       i++;
 
       return React.cloneElement(child, {
-        selected: (child.props.value == this.props.value),
+        selected: (child.props.value == this.props.selectedTab),
         selectedClassName: this.props.selectedClassName,
         onClick: this.props.onChange ? this.handleClick.bind(this, i) : null
       });
@@ -33,7 +33,7 @@ class TabGroup extends Component {
   }
 
   render() {
-    const { disabled, iconName } = this.props;
+    const { iconName } = this.props;
     const selectedClassName = this.props.selectedClassName ? this.props.selectedClassName : styles.selected;
 
     return (
@@ -42,11 +42,11 @@ class TabGroup extends Component {
           styles.tabGroup
           + ' ' + this.props.className
           + (this.props.selected ? ' ' + selectedClassName : '')
+          + (this.props.disabled ? ' ' + styles.disabled : '')
         } 
-        onClick={ this.handleGroupClick }
       >
-        { iconName && <span className={ `pt-icon-large pt-icon-${ iconName } ${ styles.sidebarIcon }  `} /> }
-        <div className={ styles.tabGroupHeading + ( disabled ? ' ' + styles.disabled : '')}>
+        { iconName && <span className={ `pt-icon-large pt-icon-${ iconName } ${ styles.sidebarIcon }  `} onClick={ this.handleGroupClick }/> }
+        <div className={ styles.tabGroupHeading } onClick={ this.handleGroupClick }>
           { this.props.heading }
         </div>
         <div className={ styles.tabGroupChildren }>
@@ -59,6 +59,7 @@ class TabGroup extends Component {
 
 TabGroup.propTypes = {
   children: PropTypes.node.isRequired,
+  selectedTab: PropTypes.string,  
   value: PropTypes.string,
   heading: PropTypes.string,
   className: PropTypes.string,

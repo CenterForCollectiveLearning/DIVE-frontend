@@ -10,9 +10,12 @@
 
   .tabGroup
     display: flex
-    flex-direction: column
     margin-bottom: 13px
     margin-top: 40px
+
+    &.disabled
+      opacity: 0.3
+      pointer-events: none
 
     &.selected
       .sidebarIcon, .tabGroupHeading
@@ -63,8 +66,9 @@
       background-color: rgba($primary-accent, 0.7)
 
     &.selected
-      color: $white
-      background-color: rgba($primary-accent, 1)
+      color: $primary-accent
+      // color: $white
+      // background-color: rgba($primary-accent, 1)
 
     &.disabled
       opacity: 0.3

@@ -30,50 +30,106 @@ export class ProjectSidebar extends Component {
     };
   }
 
+  _getTabs = () => {
+    const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
+    const datasetId = paramDatasetId || datasetSelector.id || (datasets.items.length > 0 && datasets.items[0].datasetId);
 
-  _getSelectedTab = () => {
-    const tabList = [
-      'datasets',
-      'upload',
-      'preloaded',
-      'inspect',
-      // 'transform',
-      'explore',
-      'starred',
-      'analyze',
-      'aggregation',
-      'comparison',
-      'correlation',
-      'regression',
-      'segmentation',
-      'timeseries',
-      'compose',
-      'saved'
-    ];
+    const tabs = [{
+      name: 'datasets',
+      iconName: 'document',
+      baseRoute: 'datasets',
+      children: [
+        {
+          name: 'upload',
+          iconName: 'cloud-upload',
+          route: 'upload'
+        },
+        {
+          name: 'preloaded',
+          iconName: 'add-to-folder',
+          route: 'preloaded'
+        },
+        {
+          name: 'inspect',
+          iconName: 'eye-open',
+          route: ( datasetId ? `/${ datasetId }/inspect` : '/' ),
+          disabled: !datasets.items.length
+        }
+      ]
+    }, {
+      name: 'visualize',
+      iconName: 'timeline-area-chart',
+      baseRoute: ( `/${ datasetId }/visualize/explore` ),
+      disabled: !datasetId,
+      children: []
+    }, {
+      name: 'analyze',
+      iconName: 'function',
+      disabled: !datasetId,
+      baseRoute: ( `/${ datasetId }/analyze` ),
+      children: [
+        {
+          name: 'aggregate',
+          iconName: 'group-objects'
+        },
+        {
+          name: 'correlate',
+          iconName: 'scatter-plot'
+        },
+        {
+          name: 'comparison',
+          iconName: 'comparison'
+        },
+        {
+          name: 'regression',
+          iconName: 'th'
+        }
+      ]
+    }, {
+      name: 'stories',
+      iconName: 'share',
+      disabled: !datasetId,
+      children: [],
+      baseRoute: ( `/${ datasetId }/compose` )
+    }]
 
-    const _validTab = ((tabValue) =>
-      tabList.indexOf(tabValue) > -1
-    );
+    return tabs;
+  }
 
-    const _tabValue = ((tabValue) => {
-      console.log(tabValue)
-      const splitTabValue = tabValue.split('/');
-      return splitTabValue.length > 1 && _validTab(splitTabValue[1]) ? splitTabValue[1] : splitTabValue[0];
-    });
-
-    const _lastPath = this.props.routes.slice().reverse().find((route) => {
-      return _validTab(_tabValue(route.path));
-    });
-
-    if (_lastPath) {
-      return _tabValue(_lastPath.path);
-    }
-
-    return "datasets";
+  _getTabList = () => {
+    const tabs = this._getTabs();
+    const topLevelTabs = tabs.map((t) => t.name);
+    const secondLevelTabs = tabs.map((t) => t.children.map((c) => c.name )).reduce((a, b) => a.concat(b));
+    return topLevelTabs.concat(secondLevelTabs);
   }
 
   _toggleSecondaryNav = () => {
     this.setState({ secondaryNavOpen: !this.state.secondaryNavOpen });
+  }
+
+  __handleTabsChange = (tab) => {
+    if (tab.props.value !== this._getSelectedTab()) {
+      this.props.push(`/projects/${ this.props.project.id }/${ tab.props.route }`);
+    }
+  }
+
+  _getSelectedTab = () => {
+    const tabList = this._getTabList();
+    const isValidTab = ((tabValue) => tabList.indexOf(tabValue) > -1 );
+    const getTabValue = ((tabValue) => {
+      const splitTabValue = tabValue.split('/');
+      return splitTabValue.length > 1 && isValidTab(splitTabValue[1]) ? splitTabValue[1] : splitTabValue[0];
+    });
+
+    const lastPath = this.props.routes.slice().reverse().find((route) => {
+      return isValidTab(getTabValue(route.path));
+    });    
+
+    if (lastPath) {
+      return getTabValue(lastPath.path);
+    } else {
+      return 'datasets';
+    }
   }
 
   _handleTabsChange = (tab) => {
@@ -110,62 +166,7 @@ export class ProjectSidebar extends Component {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 
     const datasetId = paramDatasetId || datasetSelector.id || (datasets.items.length > 0 && datasets.items[0].datasetId);
-
-    const tabs = [{
-      name: 'datasets',
-      iconName: 'document',
-      baseRoute: 'datasets',
-      children: [
-        {
-          name: 'upload',
-          iconName: 'cloud-upload',
-          route: 'upload'
-        },
-        {
-          name: 'preloaded',
-          iconName: 'add-to-folder',
-          route: 'preloaded'
-        },
-        {
-          name: 'inspect',
-          iconName: 'eye-open',
-          route: ( datasetId ? `/${ datasetId }/inspect` : '/' ),
-          disabled: !datasets.items.length
-        }
-      ]
-    }, {
-      name: 'visualize',
-      iconName: 'timeline-area-chart',
-      disabled: !datasetId,
-      children: []
-    }, {
-      name: 'analyze',
-      iconName: 'function',
-      disabled: !datasetId,
-      children: [
-        {
-          name: 'aggregate',
-          iconName: 'group-objects'
-        },
-        {
-          name: 'correlate',
-          iconName: 'scatter-plot'
-        },
-        {
-          name: 'comparison',
-          iconName: 'comparison'
-        },
-        {
-          name: 'regression',
-          iconName: 'th'
-        }
-      ]
-    }, {
-      name: 'stories',
-      iconName: 'share',
-      disabled: !datasetId,
-      children: []
-    }]
+    const tabs = this._getTabs();
 
     let popoverContent = (
       <Menu>
@@ -193,12 +194,22 @@ export class ProjectSidebar extends Component {
           {/* <div className={ styles.projectTitle } onClick={ this.onClickProjectSettings }>{ project.title }</div> */}
         </div>
 
-        <Tabs>
+        <Tabs selectedTab={ this._getSelectedTab() } onChange={ this._handleTabsChange } >
           { tabs.map((tabGroup, i) =>
-            <TabGroup heading={ `${ i + 1 }. ${ tabGroup.name }` } iconName={ tabGroup.iconName }>
+            <TabGroup 
+              key={ `tab-group-${ i }` }
+              value={ tabGroup.name }
+              heading={ `${ i + 1 }. ${ tabGroup.name }` }
+              iconName={ tabGroup.iconName }
+              disabled={ tabGroup.disabled }
+              route={ (tabGroup.children ? `${ tabGroup.baseRoute }/menu` : '') }
+            >
               { tabGroup.children.map((tab, j) =>
                 <Tab 
+                  key={ `tab-${ i }-${ j }` }
+                  label={ tab.name }
                   value={ tab.name }
+                  disabled={ tab.disabled }
                   iconName={ tab.iconName } 
                   route={ `${ tabGroup.baseRoute }/${ tab.route }` }
                 />

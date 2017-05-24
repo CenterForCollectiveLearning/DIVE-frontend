@@ -28,7 +28,7 @@ class Tab extends Component {
           { this.props.iconName && 
             <span className={ `pt-icon pt-icon-${ this.props.iconName }` } />
           }
-          { this.props.label }
+          {/* this.props.label */}
         </div>
       );
     } else {

@@ -3,24 +3,18 @@ import styles from './Tabs.sass';
 
 export default class Tabs extends Component {
   renderChildren = () => {
-    const { children, value, onChange, selectedClassName, className } = this.props;
+    const { children, selectedTab, onChange, selectedClassName, className } = this.props;
     const childrenAsArray = Array.isArray(children) ? children : [ children ];
 
     var i = -1;
     return React.Children.map(children, function (child){
       i++;
 
-    //   return React.cloneElement(child, {
-    //     value: value,
-    //     selectedClassName: selectedClassName,
-    //     onChange: onChange ? onChange : null
-    //   });
-    // }, this);
-      console.log(child.props.value, this.props.value);
-    
+      const childValues = child.props.children.map((c) => c.props.value);
       return React.cloneElement(child, {
-        selected: (child.props.value == this.props.value),
-        selectedClassName: this.props.selectedClassName,
+        selectedTab: selectedTab,
+        selected: (child.props.value == selectedTab) || (childValues.indexOf(selectedTab) > -1),
+        selectedClassName: selectedClassName,
         onChange: onChange ? onChange : null
       });
     }, this);    
@@ -37,7 +31,7 @@ export default class Tabs extends Component {
 
 Tabs.propTypes = {
   children: PropTypes.node.isRequired,
-  value: PropTypes.string,
+  selectedTab: PropTypes.string,
   onChange: PropTypes.func,
   className: PropTypes.string,
   selectedClassName: PropTypes.string
