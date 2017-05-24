@@ -25,6 +25,9 @@ class Tab extends Component {
             + (this.props.disabled ? ' ' + styles.disabled : '')
           }
           onClick={ this.handleClick.bind(this) }>
+          { this.props.iconName && 
+            <span className={ `pt-icon pt-icon-${ this.props.iconName }` } />
+          }
           { this.props.label }
         </div>
       );

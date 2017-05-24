@@ -49,7 +49,9 @@ class TabGroup extends Component {
         <div className={ styles.tabGroupHeading + ( disabled ? ' ' + styles.disabled : '')}>
           { this.props.heading }
         </div>
-        { this.renderChildren() }
+        <div className={ styles.tabGroupChildren }>
+          { this.renderChildren() }
+        </div>
       </div>
     );
   }

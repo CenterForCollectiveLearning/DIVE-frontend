@@ -12,8 +12,8 @@
     display: flex
     flex-direction: column
     margin-bottom: 13px
-    margin-top: 20px
-    
+    margin-top: 40px
+
     &.selected
       .sidebarIcon, .tabGroupHeading
         color: $primary-accent
@@ -30,9 +30,10 @@
       color: $white
       // margin-left: 15px
       // margin-right: 15px
-      margin-bottom: 30px
+
       padding-bottom: 5px
       text-align: center
+
       // border-bottom: 1px solid $left-sidebar-separator-grey
       cursor: pointer
 
@@ -40,12 +41,18 @@
         opacity: 0.3
         pointer-events: none
 
+  .tabGroupChildren
+    display: flex
+    justify-content: center
+
   .tab
     // padding: 0 45px
     line-height: 24px
+    text-align: center
+    width: 24px
     height: 24px
 
-    font-size: 8px
+    font-size: 18px
     font-weight: 400
     color: $white
 

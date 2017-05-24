@@ -30,25 +30,6 @@ export class ProjectSidebar extends Component {
     };
   }
 
-  tabs = {
-    'datasets': [
-      'upload',
-      'preloaded',
-      'inspect'
-    ],
-    'visualize': [
-      'explore'
-    ],
-    'analyze': [
-      'aggregation',
-      'comparison',
-      'correlation',
-      'regression'
-    ],
-    'stories': [
-      'compose'
-    ]
-  }
 
   _getSelectedTab = () => {
     const tabList = [
@@ -114,7 +95,7 @@ export class ProjectSidebar extends Component {
   }
 
   onSelectProject = (projectId) => {
-    window.location.href = `/projects/${ projectId }/datasets`;
+    this.props.push(`/projects/${ projectId }/datasets`);
   }
 
   onClickProjectSettings = () => {
@@ -129,6 +110,62 @@ export class ProjectSidebar extends Component {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 
     const datasetId = paramDatasetId || datasetSelector.id || (datasets.items.length > 0 && datasets.items[0].datasetId);
+
+    const tabs = [{
+      name: 'datasets',
+      iconName: 'document',
+      baseRoute: 'datasets',
+      children: [
+        {
+          name: 'upload',
+          iconName: 'cloud-upload',
+          route: 'upload'
+        },
+        {
+          name: 'preloaded',
+          iconName: 'add-to-folder',
+          route: 'preloaded'
+        },
+        {
+          name: 'inspect',
+          iconName: 'eye-open',
+          route: ( datasetId ? `/${ datasetId }/inspect` : '/' ),
+          disabled: !datasets.items.length
+        }
+      ]
+    }, {
+      name: 'visualize',
+      iconName: 'timeline-area-chart',
+      disabled: !datasetId,
+      children: []
+    }, {
+      name: 'analyze',
+      iconName: 'function',
+      disabled: !datasetId,
+      children: [
+        {
+          name: 'aggregate',
+          iconName: 'group-objects'
+        },
+        {
+          name: 'correlate',
+          iconName: 'scatter-plot'
+        },
+        {
+          name: 'comparison',
+          iconName: 'comparison'
+        },
+        {
+          name: 'regression',
+          iconName: 'th'
+        }
+      ]
+    }, {
+      name: 'stories',
+      iconName: 'share',
+      disabled: !datasetId,
+      children: []
+    }]
 
     let popoverContent = (
       <Menu>
@@ -156,15 +193,29 @@ export class ProjectSidebar extends Component {
           {/* <div className={ styles.projectTitle } onClick={ this.onClickProjectSettings }>{ project.title }</div> */}
         </div>
 
+        <Tabs>
+          { tabs.map((tabGroup, i) =>
+            <TabGroup heading={ `${ i + 1 }. ${ tabGroup.name }` } iconName={ tabGroup.iconName }>
+              { tabGroup.children.map((tab, j) =>
+                <Tab 
+                  value={ tab.name }
+                  iconName={ tab.iconName } 
+                  route={ `${ tabGroup.baseRoute }/${ tab.route }` }
+                />
+              )}
+            </TabGroup>
+          )}
+        </Tabs>
+
         {/* <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } active={ !datasetSelector.preloaded } disabled={ !datasets.items.length }/> */}
-        <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange } >
+        {/* <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange } >
           <TabGroup heading="1. Data" value="datasets" iconName='document' route={ `datasets/menu` }>
-            {/* <Tab label="Upload" value="upload" route={ `datasets/upload` } />
+            <Tab label="Upload" value="upload" route={ `datasets/upload` } />
             <Tab label="Preloaded" value="preloaded" route={ `datasets/preloaded` } />
-            <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/> */}
+            <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
           </TabGroup>
           <TabGroup heading="2. Visualize" value="explore" disabled={ !datasetId } iconName='timeline-area-chart' route={ `datasets/${ datasetId }/visualize/explore` }>
-            {/* <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/> */}
+            {/* <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
           </TabGroup>
           <TabGroup heading="3. Analyze" value="analyze" disabled={ !datasetId } iconName='variable' route={ `datasets/${ datasetId }/analyze/menu` }>
             <Tab label="Aggregation" value="aggregation" route={ `datasets/${ datasetId }/analyze/aggregation` } disabled={ !datasetId }/>
@@ -174,9 +225,9 @@ export class ProjectSidebar extends Component {
           </TabGroup>
           <TabGroup heading="4. Stories" value="compose" disabled={ !datasetId } iconName='share' route={ `compose` }>
             {/* <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>
-            <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/> */}
+            <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
           </TabGroup>
-        </Tabs>
+        </Tabs> */}
         <div className={ styles.bottom + ' pt-dark'}>
           { user.anonymous &&
             <div className={ styles.anonymousUserBottom }>
