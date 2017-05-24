@@ -134,7 +134,6 @@ export class ProjectSidebar extends Component {
   }
 
   _handleTabsChange = (tab) => {
-    console.log(tab.props.route)
     if (tab.props.value !== this._getSelectedTab()) {
       this.props.push(`/projects/${ this.props.project.id }/${ tab.props.route }`);
     }

@@ -7,49 +7,14 @@ import { fetchDatasets, selectDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
 export class DatasetsMenuPage extends Component {
-  // constructor(props) {
-  //   super(props);
-
-  //   const { push, replace, params, routes, project, datasetSelector, datasets, fetchDatasets, selectDataset } = this.props;
-
-  //   if (routes.length < 4) {
-  //     if (project.id && !datasetSelector.loaded && !datasets.isFetching) {
-  //       fetchDatasets(project.id);
-  //     } else if (datasetSelector.loaded) {
-  //       if (datasetSelector.id) {
-  //         replace(`/projects/${ params.projectId }/datasets/${ datasetSelector.id }/inspect`);
-  //       } else {
-  //         replace(`/projects/${ params.projectId }/datasets/upload`);
-  //       }
-  //     }
-  //   } else {
-  //       if (params.datasetId && params.datasetId != datasetSelector.id) {
-  //         selectDataset(params.projectId, params.datasetId);
-  //       }
-  //   }
-  // }
-
-  // componentWillReceiveProps(nextProps) {
-  //   const { push, replace, params, routes, project, datasetSelector, datasets, fetchDatasets } = nextProps;
-  //   if (params.datasetId && params.datasetId != datasetSelector.id) {
-  //     selectDataset(params.projectId, params.datasetId);
-  //   }
-
-  //   if (routes.length < 4) {
-  //     if ((project.id && !datasetSelector.loaded && !datasets.isFetching) || (!datasets.isFetching && datasets.projectId != params.projectId)) {
-  //       fetchDatasets(params.projectId);
-  //     } else if (datasets.loaded && params.projectId == datasetSelector.projectId) {
-  //       if (datasetSelector.id && params.projectId == datasetSelector.projectId) {
-  //         replace(`/projects/${ params.projectId }/datasets/${ datasetSelector.id }/inspect`);
-  //       } else {
-  //         replace(`/projects/${ params.projectId }/datasets/upload`);
-  //       }
-  //     }
-  //   }
-  // }
+  onMenuOptionClick = (route) => {
+    this.props.push(`/projects/${ this.props.projectId }/datasets/${ route }`);
+  }
 
   render() {
-    const { projectTitle } = this.props;
+    const { paramDatasetId, projectTitle, datasetSelector, datasets } = this.props;
+
+    const datasetId = paramDatasetId || datasetSelector.id || (datasets.items.length > 0 && datasets.items[0].datasetId);
 
     const menuOptions = [
       {
@@ -70,16 +35,18 @@ export class DatasetsMenuPage extends Component {
         title: 'Inspect',
         iconName: 'eye-open',
         description: 'View datasets in project',
-        disabled: false,
-        route: 'inspect'
+        disabled: !datasetId,
+        route: `${ datasetId }/inspect`
       }
     ]
 
     return (
-      <div className={ styles.fillContainer + ' ' + styles.datasetMenuPageContainer }>
+      <div className={ styles.fillContainer + ' ' + styles.datasetMenuPageContainer + ' ' + styles.centeredFill }>
         { menuOptions.map((e, i) => 
           <div
             key={ `menu-option-${ i }` }
+            onClick={ () => this.onMenuOptionClick(e.route) }
+            disabled={ e.disabled }
             className={
               'pt-card pt-interactive ' +
               styles.menuOption
@@ -87,7 +54,7 @@ export class DatasetsMenuPage extends Component {
           >
             <div className={ styles.top }>
               <h5>{ e.title }</h5>
-              <span className={ `pt-icon pt-icon-${ e.iconName }` } />
+              <span className={ `pt-icon pt-icon-${ e.iconName } ${ styles.menuOptionIcon }` } />
             </div>
             <p className={ styles.description }>{ e.description }</p>
           </div>
@@ -108,9 +75,10 @@ function mapStateToProps(state) {
   const { project, datasets, datasetSelector, datasetId } = state;
   return {
     project,
+    projectId: project.id,
     datasets,
     datasetSelector,
-    datasetId,
+    paramDatasetId: datasetId,
     projectTitle: project.title
   }
 }
