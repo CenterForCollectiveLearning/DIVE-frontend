@@ -30,10 +30,7 @@ export class ProjectSidebar extends Component {
     };
   }
 
-  _getTabs = () => {
-    const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
-    const datasetId = paramDatasetId || datasetSelector.id || (datasets.items.length > 0 && datasets.items[0].datasetId);
-
+  _getTabs = (datasetId=null, datasets={ items: [] }) => {
     const tabs = [{
       name: 'datasets',
       iconName: 'document',
@@ -52,37 +49,41 @@ export class ProjectSidebar extends Component {
         {
           name: 'inspect',
           iconName: 'eye-open',
-          route: ( datasetId ? `/${ datasetId }/inspect` : '/' ),
+          route: ( datasetId ? `${ datasetId }/inspect` : '/' ),
           disabled: !datasets.items.length
         }
       ]
     }, {
       name: 'visualize',
       iconName: 'timeline-area-chart',
-      baseRoute: ( `/${ datasetId }/visualize/explore` ),
+      baseRoute: ( `datasets/${ datasetId }/visualize/explore` ),
       disabled: !datasetId,
       children: []
     }, {
       name: 'analyze',
       iconName: 'function',
       disabled: !datasetId,
-      baseRoute: ( `/${ datasetId }/analyze` ),
+      baseRoute: ( `datasets/${ datasetId }/analyze` ),
       children: [
         {
-          name: 'aggregate',
-          iconName: 'group-objects'
+          name: 'aggregation',
+          iconName: 'group-objects',
+          route: 'aggregation'
         },
         {
-          name: 'correlate',
-          iconName: 'scatter-plot'
+          name: 'correlation',
+          iconName: 'scatter-plot',
+          route: 'correlation'
         },
         {
           name: 'comparison',
-          iconName: 'comparison'
+          iconName: 'comparison',
+          route: 'comparison'
         },
         {
           name: 'regression',
-          iconName: 'th'
+          iconName: 'th',
+          route: 'regression'
         }
       ]
     }, {
@@ -90,7 +91,7 @@ export class ProjectSidebar extends Component {
       iconName: 'share',
       disabled: !datasetId,
       children: [],
-      baseRoute: ( `/${ datasetId }/compose` )
+      baseRoute: ( `compose` )
     }]
 
     return tabs;
@@ -133,6 +134,7 @@ export class ProjectSidebar extends Component {
   }
 
   _handleTabsChange = (tab) => {
+    console.log(tab.props.route)
     if (tab.props.value !== this._getSelectedTab()) {
       this.props.push(`/projects/${ this.props.project.id }/${ tab.props.route }`);
     }
@@ -166,7 +168,7 @@ export class ProjectSidebar extends Component {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 
     const datasetId = paramDatasetId || datasetSelector.id || (datasets.items.length > 0 && datasets.items[0].datasetId);
-    const tabs = this._getTabs();
+    const tabs = this._getTabs(datasetId, datasets);
 
     let popoverContent = (
       <Menu>
@@ -202,7 +204,7 @@ export class ProjectSidebar extends Component {
               heading={ `${ i + 1 }. ${ tabGroup.name }` }
               iconName={ tabGroup.iconName }
               disabled={ tabGroup.disabled }
-              route={ (tabGroup.children ? `${ tabGroup.baseRoute }/menu` : '') }
+              route={ (tabGroup.children.length > 0 ? `${ tabGroup.baseRoute }/menu` : tabGroup.baseRoute ) }
             >
               { tabGroup.children.map((tab, j) =>
                 <Tab 

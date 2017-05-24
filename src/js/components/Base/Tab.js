@@ -5,9 +5,7 @@ import styles from './Tabs.sass';
 
 class Tab extends Component {
   handleClick(e) {
-    console.log('Clicking tab');
     if (this.props.onClick) {
-      console.log('In on Click');
       this.props.onClick(e);
     } else if (this.props.route) {
       this.props.push(this.props.route);

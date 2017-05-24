@@ -120,7 +120,7 @@ export default (
           <Route path="segmentation" component={ SegmentationPage }/>
         </Route>
       </Route>
-      <Route path="compose" component={ ComposeBasePage }>
+      <Route path="stories" component={ ComposeBasePage }>
         <Route path=":documentId" component={ ComposePage }/>
       </Route>
     </Route>

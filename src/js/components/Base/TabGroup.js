@@ -45,8 +45,8 @@ class TabGroup extends Component {
           + (this.props.disabled ? ' ' + styles.disabled : '')
         } 
       >
-        { iconName && <span className={ `pt-icon-large pt-icon-${ iconName } ${ styles.sidebarIcon }  `} onClick={ this.handleGroupClick }/> }
         <div className={ styles.tabGroupHeading } onClick={ this.handleGroupClick }>
+          { iconName && <span className={ `pt-icon-large pt-icon-${ iconName } ${ styles.sidebarIcon }  `} /> }
           { this.props.heading }
         </div>
         <div className={ styles.tabGroupChildren }>
