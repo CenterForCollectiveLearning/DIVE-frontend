@@ -83,7 +83,6 @@ export class ProjectsPage extends Component {
         <div className={ styles.fillContainer + ' ' + styles.projectContainer }>
           <ProjectSidebar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
           <div className={ styles.projectRightContainer }>
-            <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
             { this.props.children }
           </div>
           <div

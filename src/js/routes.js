@@ -93,9 +93,9 @@ export default (
       <Route path='/notfound' component={ NotFoundPage }/>
     </Route>
 
-    <Route path="/stories" component={ NarrativeBasePage }>
+    {/* <Route path="/stories" component={ NarrativeBasePage }>
       <Route path=":documentId" component={ NarrativePage }/>
-    </Route>
+    </Route> */}
 
     <Route path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }>
       <Route path="datasets" component={ DatasetsPage }>

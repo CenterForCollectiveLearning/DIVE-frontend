@@ -91,7 +91,7 @@ export class ProjectSidebar extends Component {
       iconName: 'share',
       disabled: !datasetId,
       children: [],
-      baseRoute: ( `compose` )
+      baseRoute: `stories`
     }]
 
     return tabs;
@@ -109,6 +109,7 @@ export class ProjectSidebar extends Component {
   }
 
   __handleTabsChange = (tab) => {
+    
     if (tab.props.value !== this._getSelectedTab()) {
       this.props.push(`/projects/${ this.props.project.id }/${ tab.props.route }`);
     }

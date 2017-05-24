@@ -33,7 +33,7 @@ export class ComposeBasePage extends Component {
 
     if (!params.documentId) {
       if (documents.items.length > 0) {
-        replace(`/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
+        replace(`/projects/${ params.projectId }/stories/${ documents.items[0].id }`);
       } else {
         fetchDocuments(params.projectId);
       }
@@ -57,12 +57,12 @@ export class ComposeBasePage extends Component {
       }
 
       if (!params.documentId && documents.items.length > 0) {
-        replace(`/projects/${ params.projectId }/compose/${ documents.items[0].id }`);
+        replace(`/projects/${ params.projectId }/stories/${ documents.items[0].id }`);
       }
     }
 
     if (composeSelector.documentId != this.props.composeSelector.documentId && composeSelector.documentId != params.documentId) {
-      push(`/projects/${ params.projectId }/compose/${ composeSelector.documentId }`);
+      push(`/projects/${ params.projectId }/stories/${ composeSelector.documentId }`);
     }
 
   }

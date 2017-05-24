@@ -6,6 +6,7 @@ import DocumentTitle from 'react-document-title';
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers'
 import { setPersistedQueryString, getInitialState } from '../../../actions/VisualizationActions';
 
+import ProjectTopBar from '../../ProjectTopBar';
 import styles from '../Visualizations.sass';
 import ExploreSidebar from './ExploreSidebar';
 import ExploreView from './ExploreView';
@@ -116,14 +117,17 @@ class ExploreBasePage extends Component {
     return (
       <DocumentTitle title={ 'Explore' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.galleryContainer }` }>
-          <ExploreView
-            filteredVisualizationTypes={ filteredVisualizationTypes }
-            sortBy={ sortBy }
-            recommendationMode={ recommendationMode }
-            fieldIds={ fieldIds }
-            pathname={ pathname }
-            queryObject={ queryObject }            
-          />
+          <div className={ styles.left }>
+            <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
+            <ExploreView
+              filteredVisualizationTypes={ filteredVisualizationTypes }
+              sortBy={ sortBy }
+              recommendationMode={ recommendationMode }
+              fieldIds={ fieldIds }
+              pathname={ pathname }
+              queryObject={ queryObject }            
+            />
+          </div>
           <ExploreSidebar
             filteredVisualizationTypes={ filteredVisualizationTypes }
             sortBy={ sortBy }
