@@ -32,12 +32,14 @@ export class ProjectSidebar extends Component {
 
   _getSelectedTab = () => {
     const tabList = [
+      'datasets',
       'upload',
       'preloaded',
       'inspect',
       // 'transform',
       'explore',
       'starred',
+      'analyze',
       'aggregation',
       'comparison',
       'correlation',
@@ -53,6 +55,7 @@ export class ProjectSidebar extends Component {
     );
 
     const _tabValue = ((tabValue) => {
+      console.log(tabValue)
       const splitTabValue = tabValue.split('/');
       return splitTabValue.length > 1 && _validTab(splitTabValue[1]) ? splitTabValue[1] : splitTabValue[0];
     });
@@ -73,7 +76,6 @@ export class ProjectSidebar extends Component {
   }
 
   _handleTabsChange = (tab) => {
-    console.log('in _handleTabsChange', tab, this._getSelectedTab());
     if (tab.props.value !== this._getSelectedTab()) {
       this.props.push(`/projects/${ this.props.project.id }/${ tab.props.route }`);
     }
@@ -108,8 +110,6 @@ export class ProjectSidebar extends Component {
     this.setState({ projectSettingsModalOpen: false });
   }
 
-
-
   render() {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 
@@ -143,7 +143,7 @@ export class ProjectSidebar extends Component {
 
         {/* <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } active={ !datasetSelector.preloaded } disabled={ !datasets.items.length }/> */}
         <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange } >
-          <TabGroup heading="1. Data" value="upload" iconName='document' route={ `datasets/upload` }>
+          <TabGroup heading="1. Data" value="datasets" iconName='document' route={ `datasets/menu` }>
             {/* <Tab label="Upload" value="upload" route={ `datasets/upload` } />
             <Tab label="Preloaded" value="preloaded" route={ `datasets/preloaded` } />
             <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/> */}
@@ -151,11 +151,11 @@ export class ProjectSidebar extends Component {
           <TabGroup heading="2. Visualize" value="explore" disabled={ !datasetId } iconName='timeline-area-chart' route={ `datasets/${ datasetId }/visualize/explore` }>
             {/* <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/> */}
           </TabGroup>
-          <TabGroup heading="3. Analyze" value="aggregation" disabled={ !datasetId } iconName='variable' route={ `datasets/${ datasetId }/analyze/aggregation` }>
-            {/* <Tab label="Aggregation" value="aggregation" route={ `datasets/${ datasetId }/analyze/aggregation` } disabled={ !datasetId }/>
+          <TabGroup heading="3. Analyze" value="analyze" disabled={ !datasetId } iconName='variable' route={ `datasets/${ datasetId }/analyze/menu` }>
+            <Tab label="Aggregation" value="aggregation" route={ `datasets/${ datasetId }/analyze/aggregation` } disabled={ !datasetId }/>
             <Tab label="Comparison" value="comparison" route={ `datasets/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>
             <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
-            <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/> */}
+            <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
           </TabGroup>
           <TabGroup heading="4. Stories" value="compose" disabled={ !datasetId } iconName='share' route={ `compose` }>
             {/* <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>

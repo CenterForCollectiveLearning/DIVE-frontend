@@ -26,8 +26,10 @@ import FeaturesPage from './components/Landing/FeaturesPage';
 // Project
 import App from './components/App/App';
 import ProjectsPage from './components/ProjectsPage';
+
 // Dataset
 import DatasetsPage from './components/Datasets/DatasetsPage';
+import DatasetsMenuPage from './components/Datasets/DatasetsMenuPage';
 import DatasetUploadPage from './components/Datasets/DatasetUploadPage';
 import DatasetPreloadedPage from './components/Datasets/DatasetPreloadedPage';
 import DatasetInspectPage from './components/Datasets/DatasetInspectPage';
@@ -40,6 +42,7 @@ import SingleVisualizationPage from './components/Visualizations/SingleVisualiza
 
 // Analysis
 import AnalysisPage from './components/Analysis/AnalysisPage';
+import AnalysisMenuPage from './components/Analysis/AnalysisMenuPage';
 import RegressionBasePage from './components/Analysis/Regression/RegressionBasePage';
 import SegmentationPage from './components/Analysis/Segmentation/SegmentationPage';
 import AggregationBasePage from './components/Analysis/Aggregation/AggregationBasePage';
@@ -96,6 +99,7 @@ export default (
 
     <Route path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }>
       <Route path="datasets" component={ DatasetsPage }>
+        <Route path="menu" component={ DatasetsMenuPage }/>        
         <Route path="upload" component={ DatasetUploadPage }/>
         <Route path="preloaded" component={ DatasetPreloadedPage }/>
         <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>
@@ -108,6 +112,7 @@ export default (
           <Route path="explore/:specId" component={ SingleVisualizationPage }/>
         </Route>
         <Route path="analyze" component={ AnalysisPage }>
+          <Route path="menu" component={ AnalysisMenuPage }/>                
           <Route path="regression" component={ RegressionBasePage }/>
           <Route path="aggregation" component={ AggregationBasePage }/>
           <Route path="correlation" component={ CorrelationBasePage }/>

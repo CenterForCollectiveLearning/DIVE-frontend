@@ -5,7 +5,6 @@ export default class Tabs extends Component {
   renderChildren = () => {
     const { children, value, onChange, selectedClassName, className } = this.props;
     const childrenAsArray = Array.isArray(children) ? children : [ children ];
-    console.log('Rendering tabs children', value);
 
     var i = -1;
     return React.Children.map(children, function (child){
@@ -17,6 +16,7 @@ export default class Tabs extends Component {
     //     onChange: onChange ? onChange : null
     //   });
     // }, this);
+      console.log(child.props.value, this.props.value);
     
       return React.cloneElement(child, {
         selected: (child.props.value == this.props.value),
