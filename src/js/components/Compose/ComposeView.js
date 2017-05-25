@@ -126,12 +126,14 @@ export class ComposeView extends Component {
         <div className={ styles.fillContainer }>
           <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
           { headerBar }
-          <ComposeEditor
-            saveDocumentTitle={ saveDocumentTitle }
-            selectedDocument={ selectedDocument }
-            fieldNameToColor={ fieldNameToColor }
-            saveStatus={ saveStatus }
-            editable={ true }/>
+          <div className={ styles.composeViewMainPane + ' ' + styles.fillContainer }>
+            <ComposeEditor
+              saveDocumentTitle={ saveDocumentTitle }
+              selectedDocument={ selectedDocument }
+              fieldNameToColor={ fieldNameToColor }
+              saveStatus={ saveStatus }
+              editable={ true }/>
+          </div>
         </div>
         <ComposeSidebar
           exportedSpecs={ exportedSpecs }
