@@ -91,7 +91,7 @@ export class ProjectSidebar extends Component {
       iconName: 'share',
       disabled: !datasetId,
       children: [],
-      baseRoute: `stories`
+      baseRoute: `datasets/${ datasetId }/stories`
     }]
 
     return tabs;
@@ -219,28 +219,6 @@ export class ProjectSidebar extends Component {
             </TabGroup>
           )}
         </Tabs>
-
-        {/* <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } active={ !datasetSelector.preloaded } disabled={ !datasets.items.length }/> */}
-        {/* <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange } >
-          <TabGroup heading="1. Data" value="datasets" iconName='document' route={ `datasets/menu` }>
-            <Tab label="Upload" value="upload" route={ `datasets/upload` } />
-            <Tab label="Preloaded" value="preloaded" route={ `datasets/preloaded` } />
-            <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>
-          </TabGroup>
-          <TabGroup heading="2. Visualize" value="explore" disabled={ !datasetId } iconName='timeline-area-chart' route={ `datasets/${ datasetId }/visualize/explore` }>
-            {/* <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
-          </TabGroup>
-          <TabGroup heading="3. Analyze" value="analyze" disabled={ !datasetId } iconName='variable' route={ `datasets/${ datasetId }/analyze/menu` }>
-            <Tab label="Aggregation" value="aggregation" route={ `datasets/${ datasetId }/analyze/aggregation` } disabled={ !datasetId }/>
-            <Tab label="Comparison" value="comparison" route={ `datasets/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>
-            <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
-            <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
-          </TabGroup>
-          <TabGroup heading="4. Stories" value="compose" disabled={ !datasetId } iconName='share' route={ `compose` }>
-            {/* <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>
-            <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
-          </TabGroup>
-        </Tabs> */}
         <div className={ styles.bottom + ' pt-dark'}>
           { user.anonymous &&
             <div className={ styles.anonymousUserBottom }>

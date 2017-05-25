@@ -116,8 +116,8 @@ class ExploreBasePage extends Component {
 
     return (
       <DocumentTitle title={ 'Explore' + ( project.title ? ` | ${ project.title }` : '' ) }>
-        <div className={ `${ styles.fillContainer } ${ styles.galleryContainer }` }>
-          <div className={ styles.left }>
+        <div className={ `${ styles.fillContainer } ${ styles.flexrow } ${ styles.galleryContainer }` }>
+          <div className={ styles.fillContainer }>
             <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
             <ExploreView
               filteredVisualizationTypes={ filteredVisualizationTypes }

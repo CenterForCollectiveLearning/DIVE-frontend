@@ -119,10 +119,11 @@ export default (
           <Route path="comparison" component={ ComparisonBasePage }/>
           <Route path="segmentation" component={ SegmentationPage }/>
         </Route>
+        <Route path="stories" component={ ComposeBasePage }>
+          <Route path=":documentId" component={ ComposePage }/>
+        </Route>
       </Route>
-      <Route path="stories" component={ ComposeBasePage }>
-        <Route path=":documentId" component={ ComposePage }/>
-      </Route>
+
     </Route>
     <Route path="/share/projects/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>
 
