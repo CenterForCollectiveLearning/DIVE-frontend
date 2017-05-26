@@ -24,7 +24,7 @@ import { formatTableData } from './ActionHelpers.js'
 
 export function getInitialState() {
   return {
-    selectedLayoutType: 'list',
+    selectedLayoutType: 'table',
   };
 }
 

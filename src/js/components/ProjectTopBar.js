@@ -45,6 +45,8 @@ export class ProjectTopBar extends Component {
   _getCurrentPage = () => {
     const { routes } = this.props;
     const tabList = [
+      "datasets",
+      "analyze",
       "upload",
       "preloaded",
       "inspect",

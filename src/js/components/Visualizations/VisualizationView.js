@@ -18,28 +18,30 @@ export default class VisualizationView extends Component {
 
     let visualizationTitle;
     let visualizationHeader;
+    let visualizationLegend;
     if (visualization.spec.id && !visualization.isFetching) {
       visualizationTitle = visualization.spec.meta.construction.map(function(construct, i) {
-        var style = {};
-        var whiteFont = true;
-        if (construct.type == 'field') {
-          var backgroundColor = fieldNameToColor[construct.string];
-          whiteFont = useWhiteFontFromBackgroundHex(backgroundColor);
-          style['backgroundColor'] = backgroundColor;
-        }
-
         return <span
-          style={ style }
           key={ `construct-${ construct.type }-${ i }` }
           className={
             `${styles.headerFragment} ${styles[construct.type]}`
-            + ' ' + ( whiteFont ? styles.whiteFont : styles.blackFont )
         }>{ construct.string }</span>
       });
 
+      visualizationLegend = visualization.spec.meta.construction.filter((item) => item.type == 'field').map(function(construct, i) {
+        return <div
+          style={{ backgroundColor: fieldNameToColor[construct.string]}}
+          key={ `construct-${ construct.type }-${ i }` }
+          className={ styles.colorLegendBox }
+        />
+      })
+
       visualizationHeader = <div className={ styles.headerText }>
         <div className={ styles.left }>{ visualizationTitle }</div>
-        { visualization.sampleSize && <div className={ styles.right }>{ visualization.sampleSize } samples</div> }
+        <div className={ styles.right}>
+          <span className={ styles.colorLegend }>{ visualizationLegend }</span>
+          { visualization.sampleSize &&  <span>{visualization.sampleSize } samples</span> }
+        </div>  
       </div>;
       }
 

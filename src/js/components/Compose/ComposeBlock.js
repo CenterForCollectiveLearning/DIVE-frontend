@@ -317,7 +317,6 @@ export class ComposeBlock extends Component {
         onClick={ this.onClickRemoveBlock }
         iconName="pt-icon-small-cross" />
 
-
     switch (contentType){
       case CONTENT_TYPES.TEXT:
         blockControls =
@@ -361,7 +360,7 @@ export class ComposeBlock extends Component {
     const { selectedBlockFormat } = this.state;
     const { editable, block } = this.props;
 
-    if (block.exportedSpecId) {
+    if (block.exportedSpecId || block.contentType == 'TEXT') {
       const formatBlock = this.getBlockContent();
       const blockControls = this.getBlockControls();
 

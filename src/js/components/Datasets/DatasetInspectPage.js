@@ -12,6 +12,8 @@ import { Button, Intent } from '@blueprintjs/core';
 
 import styles from './Datasets.sass';
 
+
+import ProjectTopBar from '../ProjectTopBar';
 import HeaderBar from '../Base/HeaderBar';
 import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
@@ -122,7 +124,9 @@ export class DatasetInspectPage extends Component {
     return (
       <DocumentTitle title={ 'Inspect' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ styles.fillContainer + ' ' + styles.datasetContainer }>
+          <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
           <HeaderBar
+            sidebar={ false }
             actions={
               <div>
                 <Button

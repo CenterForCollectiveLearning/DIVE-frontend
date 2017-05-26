@@ -1,0 +1,125 @@
+@import '../../../css/mixins.sass'
+@import '../../../css/flexbox.sass'
+
+.visualizationViewContainer
+  .chartsContainer
+    +fillContainer
+    min-height: 400px
+    padding: 10px
+    margin-left: 15px
+
+  .innerVisualizationViewContainer
+    +fillContainer
+    overflow-y: auto
+
+  .tableContainer
+    display: flex
+    align-items: flex-start
+    min-height: 100px
+    height: 300px
+    max-height: 300px
+    padding: 0 25px
+    overflow-y: scroll
+
+    &.tableDataButton
+      align-items: center
+
+  .visualizationContainer
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+
+    min-height: 400px
+    padding-bottom: 20px
+
+    .header
+      text-align: center
+      line-height: 44px
+
+    .visualization
+      +fillContainer
+      position: relative
+
+      > div:first-child
+        position: absolute
+        height: 100%
+        width: 100%
+
+      svg
+        flex-grow: 1
+
+    .overflowText
+      display: flex
+      flex-grow: 1
+      flex-direction: column
+      min-height: 150px
+
+      align-content: center
+      justify-content: center
+      text-align: center
+
+      color: #777
+
+
+.gridContainer
+  .grid
+    width: 100%
+    table-layout: fixed
+    border-collapse: collapse
+
+    th, td
+      padding: 0 10px
+      font-size: 13px
+      text-align: left
+      vertical-align: middle
+      min-width: 50px
+      width: 50px
+
+    th
+      background-color: #eee
+      border: 1px solid #ccc
+      border-bottom-width: 0
+      padding-top: 3px
+      padding-bottom: 3px
+      color: #222
+
+      font-size: 12px
+      font-weight: 500
+      height: 24px
+      line-height: 24px
+
+      overflow: hidden
+      text-overflow: ellipsis
+      word-break: break-word
+
+    td
+      overflow: hidden
+      white-space: nowrap
+      border: 1px solid #ccc
+      text-overflow: ellipsis
+      background-color: white
+      height: 29px
+      line-height: 29px
+
+.hidden
+  max-width: 0
+  max-height: 0
+  overflow: hidden
+
+.sortGroup
+  display: flex
+
+  .sortFields
+    flex-grow: 1
+
+    + .sortOrder
+      margin-left: 8px
+      margin-top: 1px
+      flex-shrink: 0
+
+  .sortIcon
+    transform: rotate(-90deg) scaleX(-1)
+    width: 100%
+    color: $black
+    position: relative
+    top: 1px

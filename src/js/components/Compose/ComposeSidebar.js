@@ -45,7 +45,7 @@ export class ComposeSidebar extends Component {
   }
 
   selectText = () => {
-    this.props.selectComposeContent(CONTENT_TYPES.TEXT);
+    this.props.selectComposeContent(CONTENT_TYPES.TEXT, null, null);
   }
 
   render() {

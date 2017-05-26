@@ -18,6 +18,14 @@ const baseOptions = {
   fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
 }
 
+const gray = "#777";
+const titleTextStyle = {
+  color: "#000",
+  fontSize: 16,
+  italic: false,
+  bold: true
+};
+
 export const fullOptions = {
   ...baseOptions,
   headerColor: 'white',
@@ -39,26 +47,18 @@ export const fullOptions = {
   },
   hAxis: {
     minValue: 0,
-    titleTextStyle: {
-      color: "#333",
-      italic: false,
-      bold: true
-    },
+    titleTextStyle: titleTextStyle,
     textStyle: {
-      color: "#777",
-      italic: false
+      color: gray,
+      italic: false,
     }
   },
   vAxis: {
     minValue: 0,
-    titleTextStyle: {
-      color: "#333",
-      italic: false,
-      bold: true
-    },
+    titleTextStyle:  titleTextStyle,
     textStyle: {
-      color: "#777",
-      italic: false
+      color: gray,
+      italic: false,
     }
   },
   vAxes: [

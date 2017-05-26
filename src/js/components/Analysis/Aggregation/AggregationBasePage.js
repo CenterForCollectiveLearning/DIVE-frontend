@@ -8,6 +8,7 @@ import styles from '../Analysis.sass';
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
 import { setPersistedQueryString, getInitialState } from '../../../actions/AggregationActions';
 
+import ProjectTopBar from '../../ProjectTopBar';
 import AggregationSidebar from './AggregationSidebar';
 import AggregationView from './AggregationView';
 
@@ -77,12 +78,15 @@ export class AggregationBasePage extends Component {
     return (
       <DocumentTitle title={ 'Aggregation' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.summaryContainer }` }>
-          <AggregationView
-            aggregationFunction={ aggregationFunction }
-            weightVariableId={ weightVariableId }
-            aggregationDependentVariableId={ aggregationDependentVariableId }
-            aggregationVariablesIds={ aggregationVariablesIds }
-          />
+          <div className={ styles.fillContainer }>
+            <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
+            <AggregationView
+              aggregationFunction={ aggregationFunction }
+              weightVariableId={ weightVariableId }
+              aggregationDependentVariableId={ aggregationDependentVariableId }
+              aggregationVariablesIds={ aggregationVariablesIds }
+            />
+          </div>
           <AggregationSidebar
             pathname={ pathname }
             queryObject={ queryObject }

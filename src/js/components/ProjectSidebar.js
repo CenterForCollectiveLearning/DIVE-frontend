@@ -30,46 +30,108 @@ export class ProjectSidebar extends Component {
     };
   }
 
-  _getSelectedTab = () => {
-    const tabList = [
-      'upload',
-      'preloaded',
-      'inspect',
-      // 'transform',
-      'explore',
-      'starred',
-      'aggregation',
-      'comparison',
-      'correlation',
-      'regression',
-      'segmentation',
-      'timeseries',
-      'compose',
-      'saved'
-    ];
+  _getTabs = (datasetId=null, datasets={ items: [] }) => {
+    const tabs = [{
+      name: 'datasets',
+      iconName: 'document',
+      baseRoute: 'datasets',
+      children: [
+        {
+          name: 'upload',
+          iconName: 'cloud-upload',
+          route: 'upload'
+        },
+        {
+          name: 'preloaded',
+          iconName: 'add-to-folder',
+          route: 'preloaded'
+        },
+        {
+          name: 'inspect',
+          iconName: 'eye-open',
+          route: ( datasetId ? `${ datasetId }/inspect` : '/' ),
+          disabled: !datasets.items.length
+        }
+      ]
+    }, {
+      name: 'visualize',
+      iconName: 'timeline-area-chart',
+      baseRoute: ( `datasets/${ datasetId }/visualize/explore` ),
+      disabled: !datasetId,
+      children: []
+    }, {
+      name: 'analyze',
+      iconName: 'function',
+      disabled: !datasetId,
+      baseRoute: ( `datasets/${ datasetId }/analyze` ),
+      children: [
+        {
+          name: 'aggregation',
+          iconName: 'group-objects',
+          route: 'aggregation'
+        },
+        {
+          name: 'correlation',
+          iconName: 'scatter-plot',
+          route: 'correlation'
+        },
+        {
+          name: 'comparison',
+          iconName: 'comparison',
+          route: 'comparison'
+        },
+        {
+          name: 'regression',
+          iconName: 'th',
+          route: 'regression'
+        }
+      ]
+    }, {
+      name: 'stories',
+      iconName: 'share',
+      disabled: !datasetId,
+      children: [],
+      baseRoute: `datasets/${ datasetId }/stories`
+    }]
 
-    const _validTab = ((tabValue) =>
-      tabList.indexOf(tabValue) > -1
-    );
+    return tabs;
+  }
 
-    const _tabValue = ((tabValue) => {
-      const splitTabValue = tabValue.split('/');
-      return splitTabValue.length > 1 && _validTab(splitTabValue[1]) ? splitTabValue[1] : splitTabValue[0];
-    });
-
-    const _lastPath = this.props.routes.slice().reverse().find((route) => {
-      return _validTab(_tabValue(route.path));
-    });
-
-    if (_lastPath) {
-      return _tabValue(_lastPath.path);
-    }
-
-    return "datasets";
+  _getTabList = () => {
+    const tabs = this._getTabs();
+    const topLevelTabs = tabs.map((t) => t.name);
+    const secondLevelTabs = tabs.map((t) => t.children.map((c) => c.name )).reduce((a, b) => a.concat(b));
+    return topLevelTabs.concat(secondLevelTabs);
   }
 
   _toggleSecondaryNav = () => {
     this.setState({ secondaryNavOpen: !this.state.secondaryNavOpen });
+  }
+
+  __handleTabsChange = (tab) => {
+    
+    if (tab.props.value !== this._getSelectedTab()) {
+      this.props.push(`/projects/${ this.props.project.id }/${ tab.props.route }`);
+    }
+  }
+
+  _getSelectedTab = () => {
+    const tabList = this._getTabList();
+    const isValidTab = ((tabValue) => tabList.indexOf(tabValue) > -1 );
+    const getTabValue = ((tabValue) => {
+      const splitTabValue = tabValue.split('/');
+      return splitTabValue.length > 1 && isValidTab(splitTabValue[1]) ? splitTabValue[1] : splitTabValue[0];
+    });
+
+    const lastPath = this.props.routes.slice().reverse().find((route) => {
+      return isValidTab(getTabValue(route.path));
+    });    
+
+    if (lastPath) {
+      return getTabValue(lastPath.path);
+    } else {
+      return 'datasets';
+    }
   }
 
   _handleTabsChange = (tab) => {
@@ -79,12 +141,7 @@ export class ProjectSidebar extends Component {
   }
 
   _onClickLogo = () => {
-    const { user, push } = this.props;
-    if (user.anonymous) {
-      push(`/`);
-    } else {
-      push ('/projects');
-    }
+    this.props.push((this.props.user.anonymous ? '/' : '/projects'));
   }
 
   onClickRegister = () => {
@@ -96,7 +153,7 @@ export class ProjectSidebar extends Component {
   }
 
   onSelectProject = (projectId) => {
-    window.location.href = `/projects/${ projectId }/datasets`;
+    this.props.push(`/projects/${ projectId }/datasets`);
   }
 
   onClickProjectSettings = () => {
@@ -107,12 +164,11 @@ export class ProjectSidebar extends Component {
     this.setState({ projectSettingsModalOpen: false });
   }
 
-
-
   render() {
     const { paramDatasetId, user, projects, project, datasets, datasetSelector } = this.props;
 
     const datasetId = paramDatasetId || datasetSelector.id || (datasets.items.length > 0 && datasets.items[0].datasetId);
+    const tabs = this._getTabs(datasetId, datasets);
 
     let popoverContent = (
       <Menu>
@@ -137,29 +193,31 @@ export class ProjectSidebar extends Component {
             </div>
             <Logo className={ styles.logo } />
           </div>
-          <div className={ styles.projectTitle } onClick={ this.onClickProjectSettings }>{ project.title }</div>
+          {/* <div className={ styles.projectTitle } onClick={ this.onClickProjectSettings }>{ project.title }</div> */}
         </div>
 
-        {/* <Tab label="Transform" value="transform" route={ `datasets${ datasetId ? `/${ datasetId }/transform` : '/combine' }` } active={ !datasetSelector.preloaded } disabled={ !datasets.items.length }/> */}
-        <Tabs value={ this._getSelectedTab() } onChange={ this._handleTabsChange } >
-          <TabGroup heading="1. Datasets">
-            <Tab label="Upload" value="upload" route={ `datasets/upload` } />
-            <Tab label="Preloaded" value="preloaded" route={ `datasets/preloaded` } />
-            <Tab label="Inspect" value="inspect" route={ `datasets${ datasetId ? `/${ datasetId }/inspect` : '/' }` } disabled={ !datasets.items.length }/>          
-          </TabGroup>
-          <TabGroup heading="2. Visualizations" disabled={ !datasetId }>
-            <Tab label="Explore" value="explore" route={ `datasets/${ datasetId }/visualize/explore` } disabled={ !datasetId }/>
-          </TabGroup>
-          <TabGroup heading="3. Analyses" disabled={ !datasetId }>
-            <Tab label="Aggregation" value="aggregation" route={ `datasets/${ datasetId }/analyze/aggregation` } disabled={ !datasetId }/>
-            <Tab label="Comparison" value="comparison" route={ `datasets/${ datasetId }/analyze/comparison` } disabled={ !datasetId }/>
-            <Tab label="Correlation" value="correlation" route={ `datasets/${ datasetId }/analyze/correlation` } disabled={ !datasetId }/>
-            <Tab label="Regression" value="regression" route={ `datasets/${ datasetId }/analyze/regression` } disabled={ !datasetId }/>
-          </TabGroup>
-          <TabGroup heading="4. Stories" disabled={ !datasetId }>
-            <Tab label="Compose" value="compose" route={ `compose` } disabled={ !datasets.items.length }/>
-            <Tab label="Saved" value="saved" route={ `compose/saved` } disabled={ true }/>
-          </TabGroup>
+        <Tabs selectedTab={ this._getSelectedTab() } onChange={ this._handleTabsChange } >
+          { tabs.map((tabGroup, i) =>
+            <TabGroup 
+              key={ `tab-group-${ i }` }
+              value={ tabGroup.name }
+              heading={ `${ i + 1 }. ${ tabGroup.name }` }
+              iconName={ tabGroup.iconName }
+              disabled={ tabGroup.disabled }
+              route={ (tabGroup.children.length > 0 ? `${ tabGroup.baseRoute }/menu` : tabGroup.baseRoute ) }
+            >
+              { tabGroup.children.map((tab, j) =>
+                <Tab 
+                  key={ `tab-${ i }-${ j }` }
+                  label={ tab.name }
+                  value={ tab.name }
+                  disabled={ tab.disabled }
+                  iconName={ tab.iconName } 
+                  route={ `${ tabGroup.baseRoute }/${ tab.route }` }
+                />
+              )}
+            </TabGroup>
+          )}
         </Tabs>
         <div className={ styles.bottom + ' pt-dark'}>
           { user.anonymous &&

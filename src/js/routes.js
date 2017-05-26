@@ -26,8 +26,10 @@ import FeaturesPage from './components/Landing/FeaturesPage';
 // Project
 import App from './components/App/App';
 import ProjectsPage from './components/ProjectsPage';
+
 // Dataset
 import DatasetsPage from './components/Datasets/DatasetsPage';
+import DatasetsMenuPage from './components/Datasets/DatasetsMenuPage';
 import DatasetUploadPage from './components/Datasets/DatasetUploadPage';
 import DatasetPreloadedPage from './components/Datasets/DatasetPreloadedPage';
 import DatasetInspectPage from './components/Datasets/DatasetInspectPage';
@@ -40,6 +42,7 @@ import SingleVisualizationPage from './components/Visualizations/SingleVisualiza
 
 // Analysis
 import AnalysisPage from './components/Analysis/AnalysisPage';
+import AnalysisMenuPage from './components/Analysis/AnalysisMenuPage';
 import RegressionBasePage from './components/Analysis/Regression/RegressionBasePage';
 import SegmentationPage from './components/Analysis/Segmentation/SegmentationPage';
 import AggregationBasePage from './components/Analysis/Aggregation/AggregationBasePage';
@@ -90,12 +93,13 @@ export default (
       <Route path='/notfound' component={ NotFoundPage }/>
     </Route>
 
-    <Route path="/stories" component={ NarrativeBasePage }>
+    <Route path="/exportedstory" component={ NarrativeBasePage }>
       <Route path=":documentId" component={ NarrativePage }/>
     </Route>
 
     <Route path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }>
       <Route path="datasets" component={ DatasetsPage }>
+        <Route path="menu" component={ DatasetsMenuPage }/>        
         <Route path="upload" component={ DatasetUploadPage }/>
         <Route path="preloaded" component={ DatasetPreloadedPage }/>
         <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>
@@ -108,16 +112,18 @@ export default (
           <Route path="explore/:specId" component={ SingleVisualizationPage }/>
         </Route>
         <Route path="analyze" component={ AnalysisPage }>
+          <Route path="menu" component={ AnalysisMenuPage }/>                
           <Route path="regression" component={ RegressionBasePage }/>
           <Route path="aggregation" component={ AggregationBasePage }/>
           <Route path="correlation" component={ CorrelationBasePage }/>
           <Route path="comparison" component={ ComparisonBasePage }/>
           <Route path="segmentation" component={ SegmentationPage }/>
         </Route>
+        <Route path="stories" component={ ComposeBasePage }>
+          <Route path=":documentId" component={ ComposePage }/>
+        </Route>
       </Route>
-      <Route path="compose" component={ ComposeBasePage }>
-        <Route path=":documentId" component={ ComposePage }/>
-      </Route>
+
     </Route>
     <Route path="/share/projects/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>
 

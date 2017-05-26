@@ -17,12 +17,12 @@ import {
 
 const layoutTypes = [
   {
-    id: 'list',
-    label: 'List',
-  },
-  {
     id: 'table',
     label: 'Table',
+  },
+  {
+    id: 'list',
+    label: 'List',
   }
 ]
 

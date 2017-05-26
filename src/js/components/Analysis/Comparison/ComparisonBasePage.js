@@ -8,6 +8,7 @@ import styles from '../Analysis.sass';
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
 import { setPersistedQueryString, getInitialState } from '../../../actions/ComparisonActions';
 
+import ProjectTopBar from '../../ProjectTopBar';
 import ComparisonSidebar from './ComparisonSidebar';
 import ComparisonView from './ComparisonView';
 
@@ -74,10 +75,13 @@ export class ComparisonBasePage extends Component {
     return (
       <DocumentTitle title={ 'Comparison' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.summaryContainer }` }>
-          <ComparisonView
-            independentVariablesIds={ independentVariablesIds }
-            dependentVariablesIds={ dependentVariablesIds }
-          />
+          <div className={ styles.fillContainer }>
+            <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />      
+            <ComparisonView
+              independentVariablesIds={ independentVariablesIds }
+              dependentVariablesIds={ dependentVariablesIds }
+            />
+          </div>
           <ComparisonSidebar
             pathname={ pathname }
             queryObject={ queryObject }

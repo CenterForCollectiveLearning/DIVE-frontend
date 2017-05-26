@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { ChromePicker } from 'react-color';
 
+import { Button } from '@blueprintjs/core';
+
 import styles from './Datasets.sass';
 import ColumnChart from '../Visualizations/Charts/ColumnChart';
 import Histogram from '../Visualizations/Charts/Histogram';
@@ -70,11 +72,12 @@ class DatasetMetadataCell extends Component {
       },
     };
 
-    let viz = <div />;
+    let viz = <div className={ styles.metadataViz + ' ' + styles.vizPlaceholder } />;
     if (vizData && vizData.spec && vizData.data) {
       var vizType = vizData.spec.vizTypes[0];
       if (vizType == 'line') {
         viz = <LineChart
+            className={ styles.metadataViz }
             chartId={ `field-line-${ id }` }
             data={ vizData.data['visualize'] }
             isMinimalView={ true }
@@ -83,6 +86,7 @@ class DatasetMetadataCell extends Component {
           />;
       } else if (vizType == 'hist') {
         viz = <Histogram
+          className={ styles.metadataViz }
           chartId={ `field-hist-${ id }` }
           data={ vizData.data['visualize'] }
           bins={ vizData.data['bins'] }
@@ -92,6 +96,7 @@ class DatasetMetadataCell extends Component {
         />;
       } else if (vizType == 'bar') {
         viz = <ColumnChart
+          className={ styles.metadataViz }
           chartId={ `field-bar-${ id }` }
           data={ vizData.data['visualize'] }
           isMinimalView={ true }
@@ -103,6 +108,7 @@ class DatasetMetadataCell extends Component {
     if (vizData && !(vizData.spec && vizData.data)) {  // To accomodate old visualization data
       if ( scale == 'ordinal' || scale == 'nominal')  {
         viz = <ColumnChart
+          className={ styles.metadataViz }
           chartId={ `field-bar-${ id }` }
           data={ vizData['visualize'] }
           isMinimalView={ true }
@@ -112,6 +118,7 @@ class DatasetMetadataCell extends Component {
       } else if (scale == 'continuous') {
         if (generalType == 't') {
           viz = <LineChart
+            className={ styles.metadataViz }
             chartId={ `field-line-${ id }` }
             data={ vizData['visualize'] }
             isMinimalView={ true }
@@ -120,6 +127,7 @@ class DatasetMetadataCell extends Component {
           />;
         } else {
           viz = <Histogram
+            className={ styles.metadataViz }
             chartId={ `field-hist-${ id }` }
             data={ vizData['visualize'] }
             bins={ vizData['bins'] }
@@ -152,7 +160,7 @@ class DatasetMetadataCell extends Component {
               ) }
             </div>
           }
-          <div className={ styles.toggles }>
+          {/* <div className={ styles.toggles }>
             <div className={ styles.left }>
               <input type="checkbox"
                 checked={ this.state.isId }
@@ -166,7 +174,7 @@ class DatasetMetadataCell extends Component {
                 style={ { backgroundColor: color } }
                 onClick={ this.onColorPickerClick } />
             </div>
-          </div>
+          </div> */}
         </div>
     } else if ( generalType == 'q' ) {
       fieldContent =
@@ -189,21 +197,6 @@ class DatasetMetadataCell extends Component {
               ) }
             </div>
           }
-          <div className={ styles.toggles }>
-            <div className={ styles.left }>
-              <input type="checkbox"
-                checked={ this.state.isId }
-                onChange={ this.onIDCheckboxChange.bind(this, projectId, datasetId, id) }
-              />
-              <span>ID</span>
-            </div>
-            <div className={ styles.right }>
-              <div
-                className={ styles.colorPickerButton }
-                style={ { backgroundColor: color } }
-                onClick={ this.onColorPickerClick } />
-            </div>
-          </div>
         </div>
     } else if ( generalType == 't' ) {
       fieldContent =
@@ -223,21 +216,6 @@ class DatasetMetadataCell extends Component {
             ) }
           </div>
         }
-        <div className={ styles.toggles }>
-          <div className={ styles.left }>
-            <input type="checkbox"
-              checked={ this.state.isId }
-              onChange={ this.onIDCheckboxChange.bind(this, projectId, datasetId, id) }
-            />
-            <span>ID</span>
-          </div>
-          <div className={ styles.right }>
-            <div
-              className={ styles.colorPickerButton }
-              style={ { backgroundColor: color } }
-              onClick={ this.onColorPickerClick } />
-          </div>
-        </div>
       </div>
     }
 
@@ -255,15 +233,35 @@ class DatasetMetadataCell extends Component {
       left: '0px',
     }
     return (
-
-      <div>
+      <div className={ styles.metadataCell }>
         { fieldContent }
-        { this.state.displayColorPicker ? <div style={ popover }>
-          <div style={ cover } onClick={ this.onColorPickerClose }/>
-          <ChromePicker
-            color={ color }
-            onChangeComplete={ this.onColorPickerChange }
+        <div className={ `pt-button-group pt-vertical pt-minimal pt-align-left ${ styles.metadataButtonGroup }` }>
+          <Button
+            className={ styles.metadataButton }
+            iconName={ this.state.isId ? 'delete' : 'numerical'}
+            onClick={ this.onIDCheckboxChange }
+            text={ this.state.isId ? 'Remove as ID' : 'Mark as ID' }
           />
+          <Button
+            className={ styles.metadataButton }          
+            iconName="edit"
+            onClick={ this.onColorPickerClick }
+            text="Change Color"
+          />
+          <Button
+            className={ styles.metadataButton }          
+            iconName="timeline-area-chart"
+            onClick={ () => this.onClickVisualizeField(id) }
+            text="Visualize"
+          />
+        </div>      
+        { this.state.displayColorPicker ?
+          <div style={ popover }>
+            <div style={ cover } onClick={ this.onColorPickerClose }/>
+            <ChromePicker
+              color={ color }
+              onChangeComplete={ this.onColorPickerChange }
+            />
         </div> : null }
       </div>
     );
