@@ -42,6 +42,8 @@ export default class ComposeEditor extends Component {
       return (<div></div>);
     }
 
+    console.log('Blocks:', selectedDocument.blocks)
+
     return (
       <div className={ styles.composeEditorContainer }>
         <div className={

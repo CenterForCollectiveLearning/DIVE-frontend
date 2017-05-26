@@ -53,9 +53,9 @@ export class ComposeView extends Component {
   }
 
   onSelectDocument = (documentId) => {
-    const { projectId, push } = this.props;
+    const { projectId, datasetId, push } = this.props;
     if (documentId) {
-      push(`/projects/${ projectId }/compose/${ documentId }`);
+      push(`/projects/${ projectId }/datasets/${ datasetId }/stories/${ documentId }`);
     }
   }
 
@@ -68,11 +68,11 @@ export class ComposeView extends Component {
     const { projectId, documents, composeSelector, deleteDocument, push } = this.props;
     deleteDocument(projectId, composeSelector.documentId);
     const nextDocId = documents.items.find((doc) => doc.id != composeSelector.documentId).id;
-    push(`/projects/${ projectId }/compose/${ nextDocId }`);
+    push(`/projects/${ projectId }/datasets/${ datasetId }/stories/${ nextDocId }`);
   }
 
   onClickShareDocument = () => {
-    window.open(`/stories/${ this.props.composeSelector.documentId }`, '_blank');
+    window.open(`/exportedstory/${ this.props.composeSelector.documentId }`, '_blank');
   }
 
   render() {
@@ -147,10 +147,11 @@ export class ComposeView extends Component {
 }
 
 function mapStateToProps(state) {
-  const { project, fieldProperties, composeSelector, exportedSpecs,exportedAnalyses, documents } = state;
+  const { project, datasetSelector, fieldProperties, composeSelector, exportedSpecs, exportedAnalyses, documents } = state;
 
   return {
     projectId: (project.id ? `${ project.id }` : null),
+    datasetId: datasetSelector.id,
     composeSelector,
     exportedSpecs,
     exportedAnalyses,

@@ -28,6 +28,7 @@ import _ from 'underscore'
 import { fetch, pollForTask } from './api.js';
 
 export function selectComposeContent(contentType, contentId, title) {
+  console.log('Selecting compose content', contentType, contentId)
   return {
     type: SELECT_COMPOSE_CONTENT,
     contentType: contentType,

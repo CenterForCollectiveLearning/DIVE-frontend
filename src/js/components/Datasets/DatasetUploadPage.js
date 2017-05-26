@@ -8,6 +8,7 @@ import { fetchDatasets } from '../../actions/DatasetActions';
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
+import ProjectTopBar from '../ProjectTopBar';
 import Dropzone from 'react-dropzone';
 import Loader from '../Base/Loader';
 import HeaderBar from '../Base/HeaderBar';
@@ -51,6 +52,7 @@ export class DatasetUploadPage extends Component {
     return (
       <DocumentTitle title={ 'Upload' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
         <div className={ styles.fillContainer }>
+          <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
           <div
             className={ styles.datasetUploadBox }>
             { datasetSelector.isUploading &&

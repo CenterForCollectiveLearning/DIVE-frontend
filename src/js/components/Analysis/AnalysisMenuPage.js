@@ -5,8 +5,10 @@ import DocumentTitle from 'react-document-title';
 
 import styles from './Analysis.sass';
 
+import ProjectTopBar from '../ProjectTopBar';
+
 export class AnalysisMenuPage extends Component {
-onMenuOptionClick = (route) => {
+  onMenuOptionClick = (route) => {
     this.props.push(`/projects/${ this.props.projectId }/datasets/${ route }`);
   }
 
@@ -47,24 +49,27 @@ onMenuOptionClick = (route) => {
     ]
 
     return (
-      <div className={ styles.fillContainer + ' ' + styles.analysisMenuPageContainer + ' ' + styles.centeredFill }>
-        { menuOptions.map((e, i) => 
-          <div
-            key={ `menu-option-${ i }` }
-            onClick={ () => this.onMenuOptionClick(e.route) }
-            disabled={ e.disabled }
-            className={
-              'pt-card pt-interactive ' +
-              styles.menuOption
-            }
-          >
-            <div className={ styles.top }>
-              <h5>{ e.title }</h5>
-              <span className={ `pt-icon pt-icon-${ e.iconName } ${ styles.menuOptionIcon }` } />
+      <div className={ styles.fillContainer }>
+        <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />      
+        <div className={ styles.fillContainer + ' ' + styles.analysisMenuPageContainer + ' ' + styles.centeredFill }>
+          { menuOptions.map((e, i) => 
+            <div
+              key={ `menu-option-${ i }` }
+              onClick={ () => this.onMenuOptionClick(e.route) }
+              className={
+                'pt-card pt-interactive ' +
+                styles.menuOption + 
+                  ( e.disabled ? ' ' + styles.disabled : '')
+              }
+            >
+              <div className={ styles.top }>
+                <h5>{ e.title }</h5>
+                <span className={ `pt-icon pt-icon-${ e.iconName } ${ styles.menuOptionIcon }` } />
+              </div>
+              <p className={ styles.description }>{ e.description }</p>
             </div>
-            <p className={ styles.description }>{ e.description }</p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }
