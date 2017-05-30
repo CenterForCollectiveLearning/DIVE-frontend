@@ -9,13 +9,29 @@ import BareDataGrid from '../../Base/BareDataGrid';
 import Number from '../../Base/Number';
 import { useWhiteFontFromBackgroundRGBString } from '../../../helpers/helpers';
 
+import ScatterChart from '../../Visualizations/Charts/ScatterChart';
+
 export default class CorrelationTable extends Component {
 
   render() {
-    const { correlationResult, preview } = this.props;
+    const { correlationResult, scatterplotData, preview } = this.props;
 
     const backgroundColorScale = d3Scale.scaleLinear().domain([-1, 0, 1]).range(['red', 'white', 'green']);
     const fontColorScale = d3Scale.scaleThreshold().domain([-1, 0, 1]).range(['white', 'black', 'white']);
+
+    var additionalOptions = {
+      pointSize: 2,
+      chartArea: {
+        width: '100%',
+        height: '100%'
+      },
+      hAxis: {
+        title: ''
+      },
+      vAxis: {
+        title: ''
+      }
+    };
 
     const renderDataColumn = function(property, customStyles={}) {
       return (
@@ -30,6 +46,21 @@ export default class CorrelationTable extends Component {
       );
     }
 
+    const renderScatterplotCell = function(scatterplotData, customStyles={}) {
+      return (
+        <div style={ customStyles } className={ styles.dataCell }>
+          <div className={ styles.correlationScatterplot }>
+            <ScatterChart
+              chartId={ `scatterplot-${ scatterplotData.x }-${ scatterplotData.y }` }
+              data={ scatterplotData.data }
+              additionalOptions={ additionalOptions }
+              flip={ false }
+            />
+          </div>
+        </div>
+      );
+    }
+
     const data = [
       {
         rowClass: styles.tableHeaderRow,
@@ -37,11 +68,27 @@ export default class CorrelationTable extends Component {
         items: preview ? _.range(correlationResult.headers.length + 1).map((i) => <div></div>) : ["", ...correlationResult.headers.map((column) => <div className={ styles.tableCell }>{ column }</div>) ]
       },
       ...correlationResult.rows.map(function(row) {
+        const rowField = row.field;
+
         return new Object({
           rowClass: styles.dataRow,
-          columnClass: styles.dataColumn,
-          items: [ ( preview ? '' : row.field ), ...row.data.map(function(column){
-            if (column[0] == null) { return ""; }
+          columnClass: `${ styles.dataColumn } ${ styles.correlationDataColumn }`,
+          items: [ ( preview ? '' : row.field ), ...row.data.map(function(column, i){
+            const columnField = correlationResult.headers[i];
+
+            if (column[0] == null) {
+              const d = scatterplotData.find((d) => (d.x == rowField && d.y == columnField) || (d.y == rowField && d.x == columnField));
+
+              if (d) {
+                return (renderScatterplotCell(d));
+              } else {
+                return "";
+              }
+            }
+            if (rowField == columnField) {
+              return (<div className={ styles.correlationDiagonal } />);
+            }
+
             var backgroundColor = backgroundColorScale(column[0]);
             var whiteFont = useWhiteFontFromBackgroundRGBString(backgroundColor);
 
@@ -73,5 +120,6 @@ CorrelationTable.defaultProps = {
 
 CorrelationTable.propTypes = {
   correlationResult: PropTypes.object.isRequired,
+  scatterplotData: PropTypes.array.isRequired,
   preview: PropTypes.bool
 }

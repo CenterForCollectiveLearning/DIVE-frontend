@@ -15,8 +15,9 @@ export default class CorrelationScatterplotCard extends Component {
     var additionalOptions = {
       pointSize: 2,
       chartArea: {
-        top: '5%',
-        width: '70%',
+        bottom: '10%',
+        left: '10%',
+        width: '80%',
         height: '80%'
       },
       hAxis: {

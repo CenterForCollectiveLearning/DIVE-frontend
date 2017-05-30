@@ -8,9 +8,18 @@ import { Chart } from 'react-google-charts';
 export default class ScatterChart extends Component {
 
   render() {
-    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, colors, labels, additionalOptions, config } = this.props;
+    const { data, fieldNames, generatingProcedure, isMinimalView, chartId, colors, labels, flip, additionalOptions, config } = this.props;
 
     var options = isMinimalView ? minimalOptions : fullOptions;
+
+    console.log(data);
+    let finalData;
+    if (flip) {
+      finalData = data.map((d) => [d[1], d[0]]);
+    } else {
+      finalData = data;
+    }
+    console.log(finalData);
 
     options = {
       ...options,
@@ -46,9 +55,9 @@ export default class ScatterChart extends Component {
         graph_id={ chartId }
         chartType="ScatterChart"
         options={ options }
-        data={ data }
+        data={ finalData }
         width={ "100%" }
-        height={ "100%" }
+        height={ "80px" }
         loader={ <div className={ styles.renderChartText + ' pt-monospace-text' }>Rendering Chart...</div> }
        />
     );
@@ -62,7 +71,8 @@ ScatterChart.propTypes = {
   additionalOptions: PropTypes.object,
   labels: PropTypes.object,
   colors: PropTypes.array,
-  config: PropTypes.object
+  config: PropTypes.object,
+  flip: PropTypes.bool
 };
 
 ScatterChart.defaultProps = {
@@ -70,5 +80,6 @@ ScatterChart.defaultProps = {
   additionalOptions: {},
   labels: {},
   colors: [ '#007BD7' ],
-  config: {}
+  config: {},
+  flip: false
 };
