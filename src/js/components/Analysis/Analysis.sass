@@ -163,13 +163,28 @@
   color: #999
 
 .dataCell, .textCell
+  height: 100%
   width: 100%
   padding: 4px
+  display: flex
+  flex-direction: column
+  justify-content: center
 
   > div
     display: flex
     padding: 4px
     justify-content: center
+
+.correlationDiagonal
+  width: 100%
+  height: 100%
+  // Draw an SVG top left to bottom right 
+  // background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 10 10'> <path d='M0 0 L0 10 L10 10' fill='#CFCFCF' /></svg>")
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 10 10'> <path d='M0 0 L10 10' stroke='#CFCFCF' stroke-width='0.1' /></svg>")
+  background-repeat:no-repeat
+  background-position:center center
+  //scale it 
+  background-size: 100% 100%, auto
 
 .dataColumn, .footerColumn
   &:first-child
@@ -177,6 +192,13 @@
 
   &:not(:first-child)
     font-size: 13px
+
+.correlationDataColumn
+  min-height: 80px
+
+  .dataCell, .dataCell > div
+    padding: 0px
+
 
 .dataRow
   .dataColumn

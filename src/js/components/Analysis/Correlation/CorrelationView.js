@@ -113,8 +113,9 @@ export class CorrelationView extends Component {
             }
           >
             { loading && <Loader text={ progress != null ? progress : 'Running correlations…' } /> }
-            { (!loading && table && table.rows && table.headers) && <CorrelationTable correlationResult={ table } /> }
-            { (!loading && scatterplots) && <CorrelationScatterplotCard data={ scatterplots } /> }
+            { (!loading && table && table.rows && table.headers && scatterplots) && 
+              <CorrelationTable correlationResult={ table } scatterplotData={ scatterplots } /> 
+            }
           </Card>
         </div>
       ;
