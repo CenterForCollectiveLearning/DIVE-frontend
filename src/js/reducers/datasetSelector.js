@@ -18,11 +18,15 @@ import {
 const layoutTypes = [
   {
     id: 'table',
-    label: 'Table',
+    // label: 'Table',
+    iconName: 'th',
+    ptIcon: true
   },
   {
     id: 'list',
-    label: 'List',
+    // label: 'List',
+    iconName: 'list',
+    ptIcon: true
   }
 ]
 
