@@ -1,18 +1,26 @@
 @import '../../../css/mixins.sass'
 
 .tabs
-  margin-top: 30px
   background-color: transparent
   display: flex
   flex-direction: column
   flex-grow: 1
   flex-shrink: 0
+  justify-content: center
+  max-height: 500px
+  margin-top: auto
 
   .tabGroup
     display: flex
     flex-direction: column
     margin-bottom: 13px
-    margin-top: 45px
+    margin-top: 60px
+
+    &:first-child
+      margin-top: 0px
+
+    &:last-child
+      margin-bottom: 0px
 
     &.disabled
       opacity: 0.3
@@ -27,8 +35,6 @@
       display: flex
       flex-direction: column
       color: $white
-      // margin-left: 15px
-      // margin-right: 15px
 
       border-radius: 3px
       padding-top: 8px
@@ -37,7 +43,6 @@
       margin-right: 8px
       text-align: center
 
-      // border-bottom: 1px solid $left-sidebar-separator-grey
       cursor: pointer
 
       .sidebarIcon
@@ -60,6 +65,7 @@
   .tabGroupChildren
     display: flex
     justify-content: center
+    margin-top: 2px
 
   .tab
     // padding: 0 45px
@@ -87,3 +93,9 @@
     &.disabled
       opacity: 0.3
       pointer-events: none
+
+$sidebar-break: 1000px
+@media screen and (max-height: $sidebar-break)
+  .tabs
+    .tabGroup
+      margin-top: 30px
