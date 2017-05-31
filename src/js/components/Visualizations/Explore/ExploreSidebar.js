@@ -75,9 +75,11 @@ export class ExploreSidebar extends Component {
 
     const activeVisualizationTypes = visualizationTypes.filter((type) => !type.disabled);
 
+    const initialCollapse = (fieldProperties.items.length > 10);
+
     return (
       <Sidebar>
-        <SidebarCategoryGroup heading="Recommendation Options" initialCollapse={ true } iconName="predictive-analysis">
+        <SidebarCategoryGroup heading="Recommendation Options" initialCollapse={ initialCollapse } iconName="predictive-analysis">
           <SidebarGroup heading="Recommendation Mode">
             <ToggleButtonGroup
               toggleItems={ exploreSelector.recommendationModes }

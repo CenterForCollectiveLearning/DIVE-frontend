@@ -160,10 +160,12 @@ export class RegressionSidebar extends Component {
       }
     }
 
+    const initialCollapse = (fieldProperties.items.length > 10);
+
     return (
       <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
-          <SidebarCategoryGroup heading="Regression Options" initialCollapse={ true } iconName='predictive-analysis'>
+          <SidebarCategoryGroup heading="Regression Options" initialCollapse={ initialCollapse } iconName='predictive-analysis'>
             <Button
               className={ 'pt-fill ' + styles.recommendModelButton + ( recommended ? ' .pt-active' : '' )}
               iconName='predictive-analysis'
