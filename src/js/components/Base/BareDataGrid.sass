@@ -48,6 +48,13 @@
     .column
       border-top-width: 0px
 
+.footerRow
+  border-top: 1px solid $ui-line-grey
+  background-color: #fbfbfb
+
+.footerRow ~ .footerRow
+  border-top: none
+
 .nestedRow
   cursor: pointer
 
@@ -84,3 +91,27 @@
       -ms-transform: rotate(90deg)
       -o-transform: rotate(90deg)
       transform: rotate(90deg)
+
+.dataRow
+  .dataColumn
+    &:first-child
+      align-items: flex-start
+
+.dataRow, .footerRow
+  .dataColumn, .footerColumn
+    white-space: normal
+    text-overflow: ellipsis
+    overflow: hidden
+    word-break: break-word
+
+    &:first-child
+      background-color: $regression-header-grey
+      font-weight: 500
+
+  .dataColumnOneD
+    white-space: normal
+    text-overflow: ellipsis
+    overflow: hidden
+    word-break: break-word
+    padding: 8px
+

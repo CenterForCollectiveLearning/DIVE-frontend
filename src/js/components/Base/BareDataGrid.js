@@ -21,7 +21,7 @@ export default class BareDataGrid extends Component {
   }
 
   render() {
-    const { data, id, tableClassName, containerClassName, preview } = this.props;
+    const { data, id, tableClassName, containerClassName, preview, placeholder } = this.props;
 
     const columnWidth = preview ? 0 : 200;
     const minimumColumnWidth = preview ? 0 : 105;
@@ -71,13 +71,14 @@ export default class BareDataGrid extends Component {
               { data.map(function (row, i) {
                 if (row.isNested) {
                   return <NestedRowComponent
+                    placeholder={ placeholder }
                     key={ `nested-row-component-${ i }` }
                     i={ i }
                     row={ row }
                     columnWidth={ columnWidth }
                     minimumColumnWidth={ minimumColumnWidth }
                     nColumns={ nColumns }
-                    collapsed={ row.children.length > 5 }
+                    collapsed={ row.initialCollapse ? row.initialCollapse : row.children.length > 5 }
                   />
                 } else {
                   return <Row key={ `${ row.rowClass }-${ i }`} className={ row.rowClass }>{

@@ -21,28 +21,28 @@ export class AnalysisMenuPage extends Component {
       {
         title: 'Aggregation',
         iconName: 'group-objects',
-        description: 'Upload your dataset',
+        description: 'Count or aggregate groups of data points',
         disabled: !datasetId,
         route: `${ datasetId }/analyze/aggregation`
       },    
       {
         title: 'Correlation',
         iconName: 'scatter-plot',
-        description: 'Upload your dataset',
+        description: 'Find linear relationship between quantitative fields',
         disabled: !datasetId,
         route: `${ datasetId }/analyze/correlation`
       },
       {
         title: 'Comparison',
         iconName: 'comparison',
-        description: 'Explore preloaded datasets',
+        description: 'Analyze differences between different groups',
         disabled: !datasetId,
         route: `${ datasetId }/analyze/comparison`
       },
       {
         title: 'Regression',
         iconName: 'th',
-        description: 'View datasets in project',
+        description: 'Estimate relationship among fields',
         disabled: !datasetId,
         route: `${ datasetId }/analyze/regression`
       }

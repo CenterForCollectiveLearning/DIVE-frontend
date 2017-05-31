@@ -87,6 +87,8 @@ export default class RegressionTable extends Component {
           isNested: false,
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
+          placeholder: '✓',
+          collapsed: true,
           items: [ ( preview ? '' : field.formattedName ), ...regressionResult.regressionsByColumn.map(function (column) {
             const property = column.regression.propertiesByField.find((property) => property.baseField == field.name);
             if (!property) return '';
@@ -136,18 +138,25 @@ export default class RegressionTable extends Component {
           )
         ]
       },
-      ...regressionMeasures[regressionType].map((val, key) => {
-        return {
-          rowClass: styles.footerRow,
-          columnClass: styles.footerColumn,
-          items: [
-            <div className="cmu">{ val.name }</div>,
-            ...regressionResult.regressionsByColumn.map((column) =>
-              <Number className={ styles.footerCell } value={ column.columnProperties[val.prop] } />
-            )
-          ]
-        }
-      })
+      {
+        isNested: true,
+        parentName: 'Model Properties',
+        placeholder: '...',
+        initialCollapse: true,
+        children: regressionMeasures[regressionType].map(function(val, key) {
+          return new Object({
+            rowClass: `${ styles.footerRow } ${ styles.nestedFooterRow }`,
+            columnClass: `${ styles.footerColumn} ${ styles.nestedFooterColumn }`,
+            items: [
+              <div className="cmu">{ val.name }</div>,
+              ...regressionResult.regressionsByColumn.map((column) =>
+                <Number className={ styles.footerCell } value={ column.columnProperties[val.prop] } />
+              )
+            ]
+          })
+        })
+      }
+
     ]
 
     const data = preview ? baseData : baseData.concat(additionalData);

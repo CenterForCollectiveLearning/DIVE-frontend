@@ -1,5 +1,6 @@
 @import '../../../css/flexbox.sass'
 @import '../../../css/mixins.sass'
+@import '../Base/BareDataGrid.sass'
 
 .analysisMenuPageContainer
   flex-grow: 1
@@ -152,7 +153,7 @@
     position: absolute
 
 .tableHeaderColumn
-  background-color: #F6F6F6
+  background-color: $regression-header-grey // #F6F6F6
   font-weight: 500
   padding: 8px
 
@@ -199,37 +200,6 @@
   .dataCell, .dataCell > div
     padding: 0px
 
-
-.dataRow
-  .dataColumn
-
-    &:first-child
-      align-items: flex-start
-
-.dataRow, .footerRow
-  .dataColumn, .footerColumn
-    white-space: normal
-    text-overflow: ellipsis
-    overflow: hidden
-    word-break: break-word
-
-    &:first-child
-      background-color: #F6F6F6
-      font-weight: 500
-
-  .dataColumnOneD
-    white-space: normal
-    text-overflow: ellipsis
-    overflow: hidden
-    word-break: break-word
-    padding: 8px
-
-.footerRow
-  border-top: 1px solid $ui-line-grey
-  background-color: #fbfbfb
-
-.footerRow ~ .footerRow
-  border-top: none
 
 .aggregationTable
   padding: 0 20px 20px
@@ -306,3 +276,10 @@
     text-align: center
     font-weight: 500
     font-size: 12px
+
+.nestedRow
+  .footerRow
+    border-top-width: 0px !important
+
+.nestedFooterColumn
+  border-top-width: 0px !important
