@@ -66,7 +66,7 @@ class DatasetDataRow extends Component {
 
   onClickVisualizeField = (id) => {
     const { projectId, datasetId, push } = this.props;
-    push(`/projects/${ projectId }/datasets/${ datasetId }/visualize/explore?fieldsIds=${ id }`);
+    push(`/projects/${ projectId }/datasets/${ datasetId }/visualize/explore?fieldIds=${ id }`);
   }
 
   render() {

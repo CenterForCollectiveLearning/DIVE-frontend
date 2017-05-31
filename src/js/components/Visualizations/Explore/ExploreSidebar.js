@@ -97,7 +97,7 @@ export class ExploreSidebar extends Component {
               value={ sortBy }
               onChange={ (v) => this.clickQueryStringTrackedItem({ sortBy: v }, false) } />
           </SidebarGroup>
-          { visualizationTypes.length > 1 &&
+          { (visualizationTypes.length > 1 && filteredVisualizationTypes.length > 0) &&
             <SidebarGroup heading="Filter Visualization type">
               <ToggleButtonGroup
                 toggleItems={ activeVisualizationTypes }

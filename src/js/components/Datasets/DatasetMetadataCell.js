@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { ChromePicker } from 'react-color';
 
 import { Button } from '@blueprintjs/core';
@@ -31,6 +32,11 @@ class DatasetMetadataCell extends Component {
       color: color,
       isId: isId
     })
+  }
+
+  onClickVisualizeField = (id) => {
+    const { projectId, datasetId, push } = this.props;
+    push(`/projects/${ projectId }/datasets/${ datasetId }/visualize/explore?fieldIds=${ id }`);
   }
 
   onColorPickerClick = () => {
@@ -287,5 +293,6 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   setFieldIsId,
-  setFieldColor
+  setFieldColor,
+  push
 })(DatasetMetadataCell);

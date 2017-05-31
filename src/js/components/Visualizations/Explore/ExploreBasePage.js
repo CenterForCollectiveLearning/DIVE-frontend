@@ -22,13 +22,13 @@ class ExploreBasePage extends Component {
   }
 
   componentWillMount() {
-    const { fieldProperties, persistedQueryString, pathname, replace } = this.props;
+    const { fieldProperties, persistedQueryString, pathname, replace, queryObject: currentQueryObject } = this.props;
 
     this.setState({
       uniqueSpecVisualizationTypes: this.getUniqueSpecVisualizationTypes(this.props.specs)
     }, () => this.updateVisualizationTypes(this.props.filters.visualizationTypes));
 
-    if ( persistedQueryString ) {
+    if ( persistedQueryString && !Object.keys(currentQueryObject)) {
       replace(`${ pathname }${ persistedQueryString }`);
     } else {
       if ( fieldProperties.items.length ) {
