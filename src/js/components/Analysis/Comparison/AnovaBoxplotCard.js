@@ -43,7 +43,7 @@ export default class AnovaBoxplotCard extends Component {
       return boxplot;
     } else {
       return (
-        <Card header={ <span>Boxplot of Group Distribution</span> } helperText={ 'comparisonBoxplot'}>
+        <Card header={ <span>Group Distributions</span> } helperText={ 'comparisonBoxplot'}>
           { boxplot } 
         </Card>
       );

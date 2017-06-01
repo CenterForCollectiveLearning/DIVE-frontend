@@ -6,6 +6,8 @@ export default class AnovaText extends Component {
   render() {
     const { dependentVariableNames, independentVariableNames, anovaData } = this.props;
 
+    console.log(anovaData);
+
     const independentVariableNamesString = independentVariableNames.length > 1 ?
       independentVariableNames
         .map((name) => <strong>{ name }</strong>)
@@ -14,6 +16,19 @@ export default class AnovaText extends Component {
         )
       : <strong>{ independentVariableNames }</strong>;
 
+
+    const pValue = anovaData.stats[0].stats[4];
+    let significanceRating;
+    switch (true) {
+      case (pValue <= 0.1):
+        significanceRating = 'significant';
+      case (pValue <= 0.05):
+        significanceRating = 'very significant';
+      case (pValue <= 0.01):
+        significanceRating = 'extremely significant';
+    }
+
+    console.log(pValue, significanceRating, anovaData.stats[0].stats[4])
 
     const textParams = {
       anovaType: ( independentVariableNames.length > 1 ? 'two-way' : 'one-way' ),
@@ -25,11 +40,9 @@ export default class AnovaText extends Component {
 
     return (
       <div className={ styles.regressionSummary }>
-        <div className={ styles.regressionSummaryColumn }>
-          <p className="pt-running-text">
-            This table displays the results of a <strong>{ textParams.anovaType } analysis of variance (ANOVA)</strong> comparing mean of { textParams.dependentVariableName } by { textParams.independentVariableNames }.
-          </p>
-        </div>
+        <p className="pt-running-text">
+          A <strong>{ textParams.anovaType } analysis of variance (ANOVA)</strong> comparing the different groups of { textParams.dependentVariableName } by { textParams.independentVariableNames } indicates that the groups are distinct, and is <b>{ significanceRating }</b> with a p-value of { pValue }.
+        </p>
       </div>
     );
   }

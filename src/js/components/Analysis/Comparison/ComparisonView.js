@@ -114,7 +114,7 @@ export class ComparisonView extends Component {
       const numericalComparisonFields = independentVariableNames.length ? independentVariableNames : dependentVariableNames;
       cardHeader = <span>Comparing Distributions of <ColoredFieldItems fields={ numericalComparisonFields } /></span>
     } else if (anovaCanBeDisplayed) {
-      cardHeader = <span>Comparing <ColoredFieldItems fields={ independentVariableNames } /> by <ColoredFieldItems fields={ dependentVariableNames } /></span>
+      cardHeader = <span>Comparing <ColoredFieldItems fields={ dependentVariableNames } /> by <ColoredFieldItems fields={ independentVariableNames } /></span>
     }
 
     const headerContent = (
@@ -186,27 +186,31 @@ export class ComparisonView extends Component {
 
       } else if (anovaCanBeDisplayed && anova) {
         comparisonContent =
-          <div>
-            { headerContent }
-            <Card header={ cardHeader } helperText='anova' >
-              <AnovaTable anovaData={ anova } />
-              <AnovaText
-                dependentVariableNames={ dependentVariableNames }
-                independentVariableNames={ independentVariableNames }
-                anovaData={ anova }
-              />
-            </Card>
-            { pairwiseComparison && pairwiseComparison.rows && pairwiseComparison.rows.length > 0 &&
-              <PairwiseComparisonCard
-                pairwiseComparisonData={ pairwiseComparison }
-              />
-            }
-            { anovaBoxplot && anovaBoxplot.data &&
-              <AnovaBoxplotCard
-                anovaBoxplotData={ anovaBoxplot }
-              />
-            }
-          </div>
+          <Card header={ cardHeader } helperText='anova' >
+            <div className={ styles.anovaContainer }>
+              { headerContent }
+              <div className={ styles.left }>
+                { anovaBoxplot && anovaBoxplot.data &&          
+                  <AnovaBoxplotCard
+                    anovaBoxplotData={ anovaBoxplot }
+                  />
+                }
+                { pairwiseComparison && pairwiseComparison.rows && pairwiseComparison.rows.length > 0 &&
+                    <PairwiseComparisonCard
+                      pairwiseComparisonData={ pairwiseComparison }
+                    />
+                }
+              </div>            
+              <div className={ styles.right }>
+                {/* <AnovaTable anovaData={ anova } /> */}
+                <AnovaText
+                  dependentVariableNames={ dependentVariableNames }
+                  independentVariableNames={ independentVariableNames }
+                  anovaData={ anova }
+                />
+              </div>
+            </div>
+          </Card>
         } else {
         comparisonContent = <div className={ styles.centeredFill }>
           <NonIdealState
