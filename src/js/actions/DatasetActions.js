@@ -161,7 +161,7 @@ function getNumColumns(rowSample, mimeType) {
 
 function datasetOverSizeLimit(result, mimeType=null) {
   const ROW_LIMIT = (window.__env.NODE_ENV == 'DEVELOPMENT') ? Number.MAX_SAFE_INTEGER : 100000;
-  const COLUMN_LIMIT = (window.__env.NODE_ENV == 'DEVELOPMENT') ? Number.MAX_SAFE_INTEGER : 40;
+  const COLUMN_LIMIT = (window.__env.NODE_ENV == 'DEVELOPMENT') ? Number.MAX_SAFE_INTEGER : 60;
 
   const rowSeparator = /[\r\n]+/g;
   const rows = result.split(rowSeparator);
