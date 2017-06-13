@@ -191,14 +191,10 @@ export class ComparisonView extends Component {
               { headerContent }
               <div className={ styles.left }>
                 { anovaBoxplot && anovaBoxplot.data &&          
-                  <AnovaBoxplotCard
-                    anovaBoxplotData={ anovaBoxplot }
-                  />
+                  <AnovaBoxplotCard anovaBoxplotData={ anovaBoxplot } />
                 }
                 { pairwiseComparison && pairwiseComparison.rows && pairwiseComparison.rows.length > 0 &&
-                    <PairwiseComparisonCard
-                      pairwiseComparisonData={ pairwiseComparison }
-                    />
+                  <PairwiseComparisonCard pairwiseComparisonData={ pairwiseComparison } />
                 }
               </div>            
               <div className={ styles.right }>

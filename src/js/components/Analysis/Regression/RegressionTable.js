@@ -12,13 +12,14 @@ export default class RegressionTable extends Component {
   }
 
   getPValueString = (pValue) => {
-    var pValueString = ''
-    if (pValue < 0.01){
-      pValueString = '***';
-    } else if (pValue < 0.05) {
+    let pValueString = ''
+     
+    if (pValue < 0.5) {
+      pValueString = '*'
+    } else if (pValue < 0.01) {
       pValueString = '**';
-    } else if (pValue < 0.1) {
-      pValueString = ''
+    } else if (pValue < 0.001){
+      pValueString = '***';
     }
     return pValueString;
   }
@@ -128,6 +129,16 @@ export default class RegressionTable extends Component {
     }
 
     const additionalData  = [
+      {
+        rowClass: styles.dataRow,
+        columnClass: styles.dataColumn,
+        items: [
+          <div className={ styles.constant }>Constant</div>,
+          ...regressionResult.regressionsByColumn.map((column) => 
+            renderDataColumn(column.regression.constants, true)
+          )
+        ]
+      },    
       {
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
