@@ -55,6 +55,7 @@ export default class CorrelationTable extends Component {
               data={ scatterplotData.data }
               additionalOptions={ additionalOptions }
               flip={ false }
+              height="80px"
             />
           </div>
         </div>
