@@ -34,13 +34,22 @@ export default class CorrelationTable extends Component {
     };
 
     const renderDataColumn = function(property, customStyles={}) {
+      let significance = '';
+      const pValue = property[1];
+      if (pValue < 0.05) {
+        significance = '*'
+      } else if (pValue < 0.01) {
+        significance = '**'
+      } else if (pValue < 0.001) {
+        significance = '***'
+      }
       return (
         <div style={ customStyles } className={ styles.dataCell }>
           { !preview &&
-            <Number className={ styles.coefficient } value={ property[0] } />
+            <Number className={ styles.coefficient } value={ property[0] } suffix={ significance } />
           }
           { !preview &&
-            <Number className={ styles.standardError } value={ property[0] } prefix='(' suffix=')' />
+            <Number className={ styles.standardError } value={ property[1] } prefix='(' suffix=')' />
           }
       </div>
       );
