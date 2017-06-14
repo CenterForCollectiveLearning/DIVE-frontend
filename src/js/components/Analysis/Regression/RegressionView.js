@@ -120,7 +120,7 @@ export class RegressionView extends Component {
       } else {
         regressionContent = <div className={ styles.centeredFill }>
           <NonIdealState
-            title='Too Few Independent Variables Selected'
+            title='Select More Independent Variables'
             description='To run a regression, please select one or more independent variables'
             visual='variable'
           />
