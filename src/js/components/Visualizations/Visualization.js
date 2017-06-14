@@ -162,13 +162,13 @@ export default class Visualization extends Component {
             }
           </div>
           <div className={ styles.colorLegend }>
-            { spec.meta.construction.filter((item) => item.type == 'field').map(function(construct, i) {
+            {/* spec.meta.construction.filter((item) => item.type == 'field').map(function(construct, i) {
               return <div
                 style={{ backgroundColor: fieldNameToColor[construct.string]}}
                 key={ `construct-${ construct.type }-${ i }` }
                 className={ styles.colorLegendBox }
               />
-            })}
+            })*/}
             { (tooMuchDataToPreview || tooMuchDataToShowFull) &&
               <span className={ `${styles.headerFragment} ${styles.tooMuchData}` }>
                 ({ tooMuchDataString })

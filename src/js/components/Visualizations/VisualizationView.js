@@ -39,7 +39,7 @@ export default class VisualizationView extends Component {
       visualizationHeader = <div className={ styles.headerText }>
         <div className={ styles.left }>{ visualizationTitle }</div>
         <div className={ styles.right}>
-          <span className={ styles.colorLegend }>{ visualizationLegend }</span>
+          {/* <span className={ styles.colorLegend }>{ visualizationLegend }</span> */}
           { visualization.sampleSize &&  <span>{visualization.sampleSize } samples</span> }
         </div>  
       </div>;

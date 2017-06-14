@@ -116,7 +116,7 @@ export default class RegressionTable extends Component {
 
     const regressionMeasures = {
       linear: [
-        { name: 'DOF', prop: 'dof' },
+        { name: 'N', prop: 'dof' },
         { name: 'F', prop: 'fTest' },
         { name: 'BIC', prop: 'bic' }
       ],

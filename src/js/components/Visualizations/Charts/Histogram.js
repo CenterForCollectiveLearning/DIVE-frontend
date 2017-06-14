@@ -50,13 +50,13 @@ export default class Histogram extends Component {
             bold: true,
             italic: false
           },
-          scaleType: config.vScaleType,
+          scaleType: config.display ? config.display.vScaleType : null
         },
         tooltip: {
           isHtml: true
         },
         legend: {
-          position: 'none'
+          position: config.display ? config.display.legendPosition : 'none'
         }
       };
     }
