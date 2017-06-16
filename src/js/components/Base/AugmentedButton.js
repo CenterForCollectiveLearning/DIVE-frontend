@@ -1,0 +1,112 @@
+import React, { Component, PropTypes } from 'react';
+import styles from './ToggleButtonGroup.sass';
+
+import { Button } from '@blueprintjs/core';
+import DropDownMenu from './DropDownMenu';
+
+export default class AugmentedButton extends Component {
+  constructor (props) {
+    super(props);
+
+    this.handleClick = this.handleClick.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.selectMenuItem = this.selectMenuItem.bind(this);
+  }
+
+  handleClick (event) {
+    this.props.onChange(this.props.value);
+  }
+
+  handleDelete (event) {
+    if(!this.props.isSelected) {
+      event.stopPropagation();
+    }
+    this.props.onDelete(this.props.value);
+  }
+
+  selectMenuItem (menuItem) {
+    this.props.selectMenuItem(this.props.value, menuItem);
+  }
+
+  render() {
+    const { item, className, buttonClassName, colorMember, toggleItems, altTextMember, valueMember, displayTextMember, imageNameMember, imageNameSuffix, externalSelectedItems, separated, column, splitMenuItemsMember, selectMenuItem, onChange, onDelete, expand } = this.props;
+    const stringifiedExternalSelectedItems = externalSelectedItems ? externalSelectedItems.map((item) => `${item}`) : null;
+
+    console.log(item, splitMenuItemsMember);
+    const splitMenu = splitMenuItemsMember ? item[splitMenuItemsMember] : [];
+
+    const selectedMenuItemIndex = splitMenu.findIndex((menuItem) =>
+      menuItem.selected == true
+    );
+
+    const selectedMenuItem = selectedMenuItemIndex >= 0 ? splitMenu[selectedMenuItemIndex] : null;
+    const selectedMenuItemIsDefault = selectedMenuItemIndex == 0;
+
+    console.log('splitMenu:', splitMenu);
+    return (
+      <Button
+        className={
+          styles.augmentedButton + ' ' +
+          styles.toggleButton +
+          ( imageNameMember ? ' ' + styles.iconButton : '' ) +
+          ( item.disabled ? ' pt-disabled' : '') +
+          ( colorMember ? (' ' + styles.coloredBorder) : '' ) +
+          ( item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) ? ' pt-active' : '')
+        }
+        style={ colorMember ? { 'borderLeftColor': item[colorMember] } : {} }
+        onClick={ () => onChange(item[valueMember].toString()) }
+        iconName={ item.ptIcon ? item.iconName : '' }
+        // separated={ separated }
+        
+        // selectMenuItem={ selectMenuItem }
+        // onDelete={ onDelete }
+      >
+        { imageNameMember ?
+          <img
+            src={ imageNameMember ? `/assets/${item[imageNameMember]}${imageNameSuffix}` : null  }
+            alt={ altTextMember ? item[altTextMember] : item[displayTextMember] } />
+          : this.props.content
+        }
+        { !imageNameMember &&
+          item[displayTextMember]
+        }
+        { splitMenuItemsMember && splitMenu.length > 0 &&
+          <div className={ styles.splitButtonSelect } title={ selectedMenuItem.label }>
+            <DropDownMenu
+              className={ styles.dropDownMenu + (selectedMenuItemIsDefault ? ' ' + styles.defaultDropdown : '') }
+              value={ selectedMenuItem.value }
+              options={ splitMenu }
+              onChange={ this.selectMenuItem } />
+          </div>
+        }
+      </Button>      
+    );
+  }
+}
+
+AugmentedButton.propTypes = {
+  item: PropTypes.object.isRequired,
+  className: PropTypes.string,
+  buttonClassName: PropTypes.string,
+  toggleItems: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+  valueMember: PropTypes.string.isRequired,
+  altTextMember: PropTypes.string,
+  colorMember: PropTypes.string,
+  displayTextMember: PropTypes.string.isRequired,
+  splitMenuItemsMember: PropTypes.string,
+  imageNameMember: PropTypes.string,
+  imageNameSuffix: PropTypes.string,
+  selectMenuItem: PropTypes.func,
+  separated: PropTypes.bool,
+  expand: PropTypes.bool,
+  externalSelectedItems: PropTypes.array,
+  onDelete: PropTypes.func,
+  selectMenuItem: PropTypes.func,  
+}
+
+AugmentedButton.defaultProps = {
+  altText: "",
+  separated: false,
+  isDisabled: false
+}

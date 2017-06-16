@@ -23,6 +23,24 @@ function requestFieldPropertiesDispatcher() {
 
 function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFieldPropertyNames) {
 
+  const TRANSFORMATIONS = [
+    {
+      value: "linear",
+      label: "x",
+      selected: true
+    },
+    {
+      value: "log",
+      label: "log(x)",
+      selected: false
+    },
+    {
+      value: "square",
+      label: "x<sup>2</sup>",
+      selected: false
+    }
+  ];
+
   const AGGREGATIONS = [
     {
       value: "ALL_TYPES",
@@ -74,7 +92,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
         new Object({
           ...property,
           selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
-          aggregations: AGGREGATIONS
+          aggregations: AGGREGATIONS,
         })
       );
 
@@ -85,7 +103,8 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
       new Object({
         ...property,
         selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
-        aggregations: AGGREGATIONS
+        aggregations: AGGREGATIONS,
+        transformations: TRANSFORMATIONS
       })
     );
 

@@ -274,11 +274,13 @@ export class RegressionSidebar extends Component {
                         id: item.id,
                         name: item.name,
                         disabled: (item.id == dependentVariableId) || dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
-                        color: item.color
+                        color: item.color,
+                        transformations: item.transformations
                       })
                     )}
                     valueMember="id"
                     colorMember="color"
+                    splitMenuItemsMember="transformations"
                     displayTextMember="name"
                     externalSelectedItems={ independentVariablesIds }
                     separated={ true }
