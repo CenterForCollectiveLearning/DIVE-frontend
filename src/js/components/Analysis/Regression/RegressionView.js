@@ -32,7 +32,7 @@ export class RegressionView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, conditionals, regressionType, dependentVariable, independentVariables, dependentVariableName, independentVariableNames, interactionTermIds, regressionResult, runRegression, fetchDatasets, tableLayout, recommendationType } = this.props;
+    const { projectId, datasetId, conditionals, fieldProperties, regressionType, dependentVariable, independentVariables, dependentVariableName, independentVariableNames, interactionTermIds, regressionResult, runRegression, fetchDatasets, tableLayout, recommendationType } = this.props;
 
     const conditionalsChanged = nextProps.conditionals.lastUpdated != conditionals.lastUpdated;
     const regressionTypeChanged = nextProps.regressionType != regressionType;
@@ -42,7 +42,8 @@ export class RegressionView extends Component {
     const interactionTermsChanged = nextProps.interactionTermIds != interactionTermIds;
     const tableLayoutChanged = nextProps.tableLayout != tableLayout;
     const recommendationTypeChanged = nextProps.recommendationType != recommendationType;
-    const sidebarChanged = conditionalsChanged || dependentVariableChanged || independentVariablesChanged || regressionTypeChanged || interactionTermsChanged || tableLayoutChanged;
+    const fieldPropertiesChanged = nextProps.fieldProperties.lastUpdated != fieldProperties.lastUpdated;
+    const sidebarChanged = conditionalsChanged || dependentVariableChanged || independentVariablesChanged || fieldPropertiesChanged || regressionTypeChanged || interactionTermsChanged || tableLayoutChanged;
 
     if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.independentVariableNames.length > 0 && nextProps.regressionType && sidebarChanged) {
       runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariable, nextProps.independentVariables, nextProps.interactionTermIds, nextProps.conditionals.items, nextProps.tableLayout);
@@ -203,6 +204,7 @@ function mapStateToProps(state, ownProps) {
     conditionals,
     datasets,
     datasetSelector,
+    fieldProperties,
     projectId: project.id,
     regressionType: regressionType,
     recommendationResult: recommendationResult,

@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import styles from './ToggleButtonGroup.sass';
+import toggleButtonGroupStyles from './ToggleButtonGroup.sass';
+import augmentedButtonStyles from './AugmentedButton.sass';
+const styles = { ...toggleButtonGroupStyles, ...augmentedButtonStyles };
 
 import { Button } from '@blueprintjs/core';
 import DropDownMenu from './DropDownMenu';

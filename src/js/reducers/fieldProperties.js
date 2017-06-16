@@ -106,7 +106,7 @@ export default function fieldProperties(state=baseState, action) {
         }
     });
 
-    return { ...state, items: newFieldProperties };
+    return { ...state, items: newFieldProperties, lastUpdated: Date.now() };
 
     case SELECT_DATASET:
     case WIPE_PROJECT_STATE:

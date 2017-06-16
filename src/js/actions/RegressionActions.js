@@ -199,6 +199,13 @@ function errorRunRegressionDispatcher(data) {
 
 
 export function runRegression(projectId, datasetId, regressionType, dependentVariable, independentVariables, interactionTermIds, conditionals=[], tableLayout='leaveOneOut') {
+
+  let transformations = {};
+  transformations = independentVariables
+    .filter((iv) => (iv.transformations && iv.transformations.find((t) => t.selected).value != 'linear'))
+    .map((iv) => [ iv.name, iv.transformations.find((t) => t.selected).value])
+    .reduce((obj, [ k, v ]) => { return { ...obj, [ k ]: v }}, {});
+
   const params = {
     projectId: projectId,
     spec: {
@@ -206,6 +213,7 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
       regressionType: regressionType,
       dependentVariable: dependentVariable.name,
       independentVariables: independentVariables.map((iv) => iv.name),
+      transformations: transformations,
       interactionTerms: interactionTermIds,
       tableLayout: tableLayout
     }
