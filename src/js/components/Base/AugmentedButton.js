@@ -5,71 +5,67 @@ import { Button } from '@blueprintjs/core';
 import DropDownMenu from './DropDownMenu';
 
 export default class AugmentedButton extends Component {
-  constructor (props) {
-    super(props);
 
-    this.handleClick = this.handleClick.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.selectMenuItem = this.selectMenuItem.bind(this);
+  handleClick = (event) => {
+    this.props.onChange(this.props.item[this.props.valueMember]);
   }
 
-  handleClick (event) {
-    this.props.onChange(this.props.value);
-  }
-
-  handleDelete (event) {
+  handleDelete = (event) => {
     if(!this.props.isSelected) {
       event.stopPropagation();
     }
-    this.props.onDelete(this.props.value);
+    this.props.onDelete(this.props.item[this.props.valueMember]);
   }
 
-  selectMenuItem (menuItem) {
-    this.props.selectMenuItem(this.props.value, menuItem);
+  selectMenuItem = (menuItem) => {
+    this.props.selectMenuItem(this.props.item[this.props.valueMember], menuItem);
   }
 
   render() {
     const { item, className, buttonClassName, colorMember, toggleItems, altTextMember, valueMember, displayTextMember, imageNameMember, imageNameSuffix, externalSelectedItems, separated, column, splitMenuItemsMember, selectMenuItem, onChange, onDelete, expand } = this.props;
     const stringifiedExternalSelectedItems = externalSelectedItems ? externalSelectedItems.map((item) => `${item}`) : null;
 
-    console.log(item, splitMenuItemsMember);
-    const splitMenu = splitMenuItemsMember ? item[splitMenuItemsMember] : [];
+    let splitMenu = [];
+    let selectedMenuItemIndex;
+    let selectedMenuItem;
+    let selectedMenuItemIsDefault;
+    if (splitMenuItemsMember) {
+      splitMenu = splitMenuItemsMember ? item[splitMenuItemsMember] : [];
+      selectedMenuItemIndex = splitMenu.findIndex((menuItem) => menuItem.selected == true );
+      selectedMenuItem = selectedMenuItemIndex >= 0 ? splitMenu[selectedMenuItemIndex] : null;
+      selectedMenuItemIsDefault = selectedMenuItemIndex == 0;
+    }
 
-    const selectedMenuItemIndex = splitMenu.findIndex((menuItem) =>
-      menuItem.selected == true
-    );
-
-    const selectedMenuItem = selectedMenuItemIndex >= 0 ? splitMenu[selectedMenuItemIndex] : null;
-    const selectedMenuItemIsDefault = selectedMenuItemIndex == 0;
-
-    console.log('splitMenu:', splitMenu);
     return (
-      <Button
-        className={
-          styles.augmentedButton + ' ' +
-          styles.toggleButton +
-          ( imageNameMember ? ' ' + styles.iconButton : '' ) +
-          ( item.disabled ? ' pt-disabled' : '') +
-          ( colorMember ? (' ' + styles.coloredBorder) : '' ) +
-          ( item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) ? ' pt-active' : '')
-        }
-        style={ colorMember ? { 'borderLeftColor': item[colorMember] } : {} }
-        onClick={ () => onChange(item[valueMember].toString()) }
-        iconName={ item.ptIcon ? item.iconName : '' }
-        // separated={ separated }
-        
-        // selectMenuItem={ selectMenuItem }
-        // onDelete={ onDelete }
-      >
-        { imageNameMember ?
-          <img
-            src={ imageNameMember ? `/assets/${item[imageNameMember]}${imageNameSuffix}` : null  }
-            alt={ altTextMember ? item[altTextMember] : item[displayTextMember] } />
-          : this.props.content
-        }
-        { !imageNameMember &&
-          item[displayTextMember]
-        }
+      <div className={ styles.augmentedButton + ' ' + 'pt-button-group' }>
+        <Button
+          className={
+            styles.augmentedButton + ' ' +
+            styles.toggleButton +
+            ( imageNameMember ? ' ' + styles.iconButton : '' ) +
+            ( item.disabled ? ' pt-disabled' : '') +
+            ( colorMember ? (' ' + styles.coloredBorder) : '' ) +
+            ( item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) ? ' pt-active' : '')
+          }
+          style={ colorMember ? { 'borderLeftColor': item[colorMember] } : {} }
+          onClick={ () => onChange(item[valueMember].toString()) }
+          iconName={ item.ptIcon ? item.iconName : '' }
+          // separated={ separated }
+          
+          // selectMenuItem={ selectMenuItem }
+          // onDelete={ onDelete }
+        >
+          { imageNameMember ?
+            <img
+              src={ imageNameMember ? `/assets/${item[imageNameMember]}${imageNameSuffix}` : null  }
+              alt={ altTextMember ? item[altTextMember] : item[displayTextMember] } />
+            : this.props.content
+          }
+          { !imageNameMember &&
+            item[displayTextMember]
+          }
+
+        </Button>    
         { splitMenuItemsMember && splitMenu.length > 0 &&
           <div className={ styles.splitButtonSelect } title={ selectedMenuItem.label }>
             <DropDownMenu
@@ -78,8 +74,8 @@ export default class AugmentedButton extends Component {
               options={ splitMenu }
               onChange={ this.selectMenuItem } />
           </div>
-        }
-      </Button>      
+        }  
+      </div>
     );
   }
 }

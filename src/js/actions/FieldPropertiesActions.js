@@ -1,9 +1,12 @@
+import React, { Component, PropTypes } from 'react';
+
 import {
   SELECT_FIELD_PROPERTY,
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES,
   SELECT_FIELD_PROPERTY_VALUE,
   SELECT_AGGREGATION_FUNCTION,
+  SELECT_TRANSFORMATION_FUNCTION,
   REQUEST_SET_FIELD_TYPE,
   RECEIVE_SET_FIELD_TYPE,
   REQUEST_SET_FIELD_IS_ID,
@@ -36,7 +39,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
     },
     {
       value: "square",
-      label: "x<sup>2</sup>",
+      label: <span>x<sup>2</sup></span>,
       selected: false
     }
   ];
@@ -162,6 +165,14 @@ export function selectFieldPropertyValue(selectedFieldPropertyId, selectedFieldP
 export function selectAggregationFunction(selectedFieldPropertyId, selectedFieldPropertyValueId) {
   return {
     type: SELECT_AGGREGATION_FUNCTION,
+    selectedFieldPropertyId: selectedFieldPropertyId,
+    selectedFieldPropertyValueId: selectedFieldPropertyValueId
+  }
+}
+
+export function selectTransformationFunction(selectedFieldPropertyId, selectedFieldPropertyValueId) {
+  return {
+    type: SELECT_TRANSFORMATION_FUNCTION,
     selectedFieldPropertyId: selectedFieldPropertyId,
     selectedFieldPropertyValueId: selectedFieldPropertyValueId
   }

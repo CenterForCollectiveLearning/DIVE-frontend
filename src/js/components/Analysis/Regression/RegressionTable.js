@@ -28,6 +28,8 @@ export default class RegressionTable extends Component {
     const { regressionResult, regressionType, preview } = this.props;
     const context = this;
 
+    console.log('regressionResult:', regressionResult);
+
     const allRegressedFields = regressionResult.fields.map(function (field){
       if (!field.values) {
         // numeric

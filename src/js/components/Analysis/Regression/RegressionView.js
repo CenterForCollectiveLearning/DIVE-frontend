@@ -32,7 +32,7 @@ export class RegressionView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, conditionals, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, regressionResult, runRegression, fetchDatasets, tableLayout, recommendationType } = this.props;
+    const { projectId, datasetId, conditionals, regressionType, dependentVariable, independentVariables, dependentVariableName, independentVariableNames, interactionTermIds, regressionResult, runRegression, fetchDatasets, tableLayout, recommendationType } = this.props;
 
     const conditionalsChanged = nextProps.conditionals.lastUpdated != conditionals.lastUpdated;
     const regressionTypeChanged = nextProps.regressionType != regressionType;
@@ -45,7 +45,7 @@ export class RegressionView extends Component {
     const sidebarChanged = conditionalsChanged || dependentVariableChanged || independentVariablesChanged || regressionTypeChanged || interactionTermsChanged || tableLayoutChanged;
 
     if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.independentVariableNames.length > 0 && nextProps.regressionType && sidebarChanged) {
-      runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames, nextProps.interactionTermIds, nextProps.conditionals.items, nextProps.tableLayout);
+      runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariable, nextProps.independentVariables, nextProps.interactionTermIds, nextProps.conditionals.items, nextProps.tableLayout);
     }
   }
 
@@ -194,9 +194,10 @@ function mapStateToProps(state, ownProps) {
   const dependentVariable = fieldProperties.items.find((property) => property.id == dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;
 
-  const independentVariableNames = fieldProperties.items
-    .filter((property) => independentVariablesIds.indexOf(property.id) >= 0)
-    .map((independentVariable) => independentVariable.name);
+  const independentVariables = fieldProperties.items
+    .filter((property) => independentVariablesIds.indexOf(property.id) >= 0);
+
+  const independentVariableNames = independentVariables.map((independentVariable) => independentVariable.name);
 
   return {
     conditionals,
@@ -205,6 +206,8 @@ function mapStateToProps(state, ownProps) {
     projectId: project.id,
     regressionType: regressionType,
     recommendationResult: recommendationResult,
+    dependentVariable: dependentVariable,
+    independentVariables: independentVariables,
     dependentVariableName: dependentVariableName,
     independentVariableNames: independentVariableNames,
     interactionTermIds: regressionSelector.interactionTermIds,

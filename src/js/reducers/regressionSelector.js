@@ -20,6 +20,7 @@ import {
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_TYPE,
   SET_REGRESSION_QUERY_STRING,
+  SELECT_TRANSFORMATION_FUNCTION,
   CLEAR_ANALYSIS
 } from '../constants/ActionTypes';
 
@@ -190,7 +191,6 @@ export default function regressionSelector(state = baseState, action) {
       return {
         ...state, queryString: action.queryString
       }
-
 
     case SELECT_DATASET:
     case WIPE_PROJECT_STATE:

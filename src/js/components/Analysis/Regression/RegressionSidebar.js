@@ -5,7 +5,7 @@ import { push, replace } from 'react-router-redux';
 import { Button, Intent, Position } from '@blueprintjs/core';
 
 import { removeFromQueryString, parseFromQueryObject, queryObjectToQueryString, updateQueryString } from '../../../helpers/helpers';
-import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
+import { fetchFieldPropertiesIfNeeded, selectTransformationFunction } from '../../../actions/FieldPropertiesActions';
 import { setPersistedQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, getRecommendation } from '../../../actions/RegressionActions';
 import { selectConditional } from '../../../actions/ConditionalsActions';
 import { createURL, createInteractionTermName, filterInteractionTermSelection } from '../../../helpers/helpers.js';
@@ -143,6 +143,7 @@ export class RegressionSidebar extends Component {
       regressionType,
       dependentVariableId,
       independentVariablesIds,
+      selectTransformationFunction
     } = this.props;
 
     const { interactionVariables } = this.state;
@@ -284,6 +285,7 @@ export class RegressionSidebar extends Component {
                     displayTextMember="name"
                     externalSelectedItems={ independentVariablesIds }
                     separated={ true }
+                    selectMenuItem={ selectTransformationFunction }
                     onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
                 </div>
               }
@@ -403,6 +405,7 @@ export default connect(mapStateToProps, {
   selectConditional,
   setPersistedQueryString,
   getRecommendation,
+  selectTransformationFunction,
   replace,
   push
 })(RegressionSidebar);
