@@ -198,18 +198,28 @@ function errorRunRegressionDispatcher(data) {
 }
 
 
-export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, conditionals=[], tableLayout='leaveOneOut') {
+export function runRegression(projectId, datasetId, regressionType, dependentVariable, independentVariables, interactionTermIds, conditionals=[], tableLayout='leaveOneOut') {
+
+  let transformations = {};
+  transformations = independentVariables
+    .filter((iv) => (iv.transformations && iv.transformations.find((t) => t.selected).value != 'linear'))
+    .map((iv) => [ iv.name, iv.transformations.find((t) => t.selected).value])
+    .reduce((obj, [ k, v ]) => { return { ...obj, [ k ]: v }}, {});
+
   const params = {
     projectId: projectId,
     spec: {
       datasetId: datasetId,
       regressionType: regressionType,
-      dependentVariable: dependentVariableName,
-      independentVariables: independentVariableNames,
+      dependentVariable: dependentVariable.name,
+      independentVariables: independentVariables.map((iv) => iv.name),
+      transformations: transformations,
       interactionTerms: interactionTermIds,
       tableLayout: tableLayout
     }
   }
+
+  console.log('RUNNING REGRESSION', params)
 
   const filteredConditionals = getFilteredConditionals(conditionals);
   if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {

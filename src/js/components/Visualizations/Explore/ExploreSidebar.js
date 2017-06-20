@@ -140,7 +140,7 @@ export class ExploreSidebar extends Component {
                 displayTextMember="name"
                 valueMember="id"
                 colorMember="color"
-                splitMenuItemsMember="values"
+                // splitMenuItemsMember="values"
                 separated={ true }
                 selectMenuItem={ this.clickFieldPropertyValue }
                 externalSelectedItems={ fieldIds }
@@ -191,7 +191,7 @@ export class ExploreSidebar extends Component {
                 displayTextMember="name"
                 valueMember="id"
                 colorMember="color"
-                splitMenuItemsMember="aggregations"
+                // splitMenuItemsMember="aggregations"
                 separated={ true }
                 selectMenuItem={ selectAggregationFunction }
                 externalSelectedItems={ fieldIds }

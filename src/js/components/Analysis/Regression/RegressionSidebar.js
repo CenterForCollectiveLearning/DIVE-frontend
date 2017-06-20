@@ -5,7 +5,7 @@ import { push, replace } from 'react-router-redux';
 import { Button, Intent, Position } from '@blueprintjs/core';
 
 import { removeFromQueryString, parseFromQueryObject, queryObjectToQueryString, updateQueryString } from '../../../helpers/helpers';
-import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
+import { fetchFieldPropertiesIfNeeded, selectTransformationFunction } from '../../../actions/FieldPropertiesActions';
 import { setPersistedQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, getRecommendation } from '../../../actions/RegressionActions';
 import { selectConditional } from '../../../actions/ConditionalsActions';
 import { createURL, createInteractionTermName, filterInteractionTermSelection } from '../../../helpers/helpers.js';
@@ -143,6 +143,7 @@ export class RegressionSidebar extends Component {
       regressionType,
       dependentVariableId,
       independentVariablesIds,
+      selectTransformationFunction
     } = this.props;
 
     const { interactionVariables } = this.state;
@@ -274,14 +275,17 @@ export class RegressionSidebar extends Component {
                         id: item.id,
                         name: item.name,
                         disabled: (item.id == dependentVariableId) || dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
-                        color: item.color
+                        color: item.color,
+                        transformations: item.transformations
                       })
                     )}
                     valueMember="id"
                     colorMember="color"
+                    splitMenuItemsMember="transformations"
                     displayTextMember="name"
                     externalSelectedItems={ independentVariablesIds }
                     separated={ true }
+                    selectMenuItem={ selectTransformationFunction }
                     onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
                 </div>
               }
@@ -324,7 +328,7 @@ export class RegressionSidebar extends Component {
                   }
                   valueMember="id"
                   displayTextMember="name"
-                  onChange={this.onAddInteractionTerm.bind(this, 0)} />
+                  onChange={ this.onAddInteractionTerm.bind(this, 0) } />
                 <DropDownMenu
                   width='50%'
                   value={ interactionVariables[1] }
@@ -334,7 +338,7 @@ export class RegressionSidebar extends Component {
                   }
                   valueMember="id"
                   displayTextMember="name"
-                  onChange={this.onAddInteractionTerm.bind(this, 1)} />
+                  onChange={ this.onAddInteractionTerm.bind(this, 1) } />
               </div>
               {
                 interactionVariables[0] && interactionVariables[1] &&
@@ -342,7 +346,7 @@ export class RegressionSidebar extends Component {
                   intent={ Intent.PRIMARY }
                   className="pt-fill"
                   text="Add"
-                  onClick={this.onCreateInteractionTerm.bind(this) }
+                  onClick={ this.onCreateInteractionTerm.bind(this) }
                 />
               }
 
@@ -401,6 +405,7 @@ export default connect(mapStateToProps, {
   selectConditional,
   setPersistedQueryString,
   getRecommendation,
+  selectTransformationFunction,
   replace,
   push
 })(RegressionSidebar);

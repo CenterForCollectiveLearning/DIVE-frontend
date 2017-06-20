@@ -1,9 +1,12 @@
+import React, { Component, PropTypes } from 'react';
+
 import {
   SELECT_FIELD_PROPERTY,
   REQUEST_FIELD_PROPERTIES,
   RECEIVE_FIELD_PROPERTIES,
   SELECT_FIELD_PROPERTY_VALUE,
   SELECT_AGGREGATION_FUNCTION,
+  SELECT_TRANSFORMATION_FUNCTION,
   REQUEST_SET_FIELD_TYPE,
   RECEIVE_SET_FIELD_TYPE,
   REQUEST_SET_FIELD_IS_ID,
@@ -22,6 +25,26 @@ function requestFieldPropertiesDispatcher() {
 }
 
 function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFieldPropertyNames) {
+
+  const TRANSFORMATIONS = [
+    {
+      value: "linear",
+      label: "x",
+      selected: true
+    },
+    {
+      value: "log",
+      label: "log(x)",
+      selected: false
+    },
+    {
+      value: "square",
+      label: <span>x<sup>2</sup></span>,
+      selected: false
+    }
+  ];
+
+  const TRANSFORMATIONS_NO_LOG = TRANSFORMATIONS.filter((t) => t.value != 'log');
 
   const AGGREGATIONS = [
     {
@@ -74,7 +97,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
         new Object({
           ...property,
           selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
-          aggregations: AGGREGATIONS
+          aggregations: AGGREGATIONS,
         })
       );
 
@@ -85,7 +108,8 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
       new Object({
         ...property,
         selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
-        aggregations: AGGREGATIONS
+        aggregations: AGGREGATIONS,
+        transformations: (property.stats.min < 0) ? TRANSFORMATIONS_NO_LOG : TRANSFORMATIONS
       })
     );
 
@@ -143,6 +167,14 @@ export function selectFieldPropertyValue(selectedFieldPropertyId, selectedFieldP
 export function selectAggregationFunction(selectedFieldPropertyId, selectedFieldPropertyValueId) {
   return {
     type: SELECT_AGGREGATION_FUNCTION,
+    selectedFieldPropertyId: selectedFieldPropertyId,
+    selectedFieldPropertyValueId: selectedFieldPropertyValueId
+  }
+}
+
+export function selectTransformationFunction(selectedFieldPropertyId, selectedFieldPropertyValueId) {
+  return {
+    type: SELECT_TRANSFORMATION_FUNCTION,
     selectedFieldPropertyId: selectedFieldPropertyId,
     selectedFieldPropertyValueId: selectedFieldPropertyValueId
   }
