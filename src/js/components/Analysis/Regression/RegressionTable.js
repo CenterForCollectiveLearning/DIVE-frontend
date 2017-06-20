@@ -33,7 +33,7 @@ export default class RegressionTable extends Component {
         let formattedName = field.name;
 
         if (field.name.indexOf('np.log') > -1) {
-          formattedName = field.name.replace('np.log', 'log');
+          formattedName = field.name.slice(0, field.name.indexOf(' + np.min')).replace('np.log', 'log') + ')';
         }
         if (field.name.indexOf('** 2') > -1) {
           formattedName = <span>{ field.name.slice(0, -5) }<sup>2</sup></span>

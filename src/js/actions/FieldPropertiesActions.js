@@ -44,6 +44,8 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
     }
   ];
 
+  const TRANSFORMATIONS_NO_LOG = TRANSFORMATIONS.filter((t) => t.value != 'log');
+
   const AGGREGATIONS = [
     {
       value: "ALL_TYPES",
@@ -107,7 +109,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
         ...property,
         selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
         aggregations: AGGREGATIONS,
-        transformations: TRANSFORMATIONS
+        transformations: (property.stats.min < 0) ? TRANSFORMATIONS_NO_LOG : TRANSFORMATIONS
       })
     );
 

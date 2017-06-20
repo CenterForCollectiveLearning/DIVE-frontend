@@ -173,7 +173,10 @@ export class RegressionView extends Component {
           }
 
           { (!loading && contributionToRSquared.length > 0 && tableLayout == 'leaveOneOut') &&
-            <ContributionToRSquaredCard id={ `${ table.id }` } contributionToRSquared={ contributionToRSquared } />
+            <ContributionToRSquaredCard 
+              id={ `${ table.id }` }
+              contributionToRSquared={ contributionToRSquared }
+            />
           }
         </div>
       ;

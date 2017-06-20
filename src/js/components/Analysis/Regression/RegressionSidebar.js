@@ -328,7 +328,7 @@ export class RegressionSidebar extends Component {
                   }
                   valueMember="id"
                   displayTextMember="name"
-                  onChange={this.onAddInteractionTerm.bind(this, 0)} />
+                  onChange={ this.onAddInteractionTerm.bind(this, 0) } />
                 <DropDownMenu
                   width='50%'
                   value={ interactionVariables[1] }
@@ -338,7 +338,7 @@ export class RegressionSidebar extends Component {
                   }
                   valueMember="id"
                   displayTextMember="name"
-                  onChange={this.onAddInteractionTerm.bind(this, 1)} />
+                  onChange={ this.onAddInteractionTerm.bind(this, 1) } />
               </div>
               {
                 interactionVariables[0] && interactionVariables[1] &&
@@ -346,7 +346,7 @@ export class RegressionSidebar extends Component {
                   intent={ Intent.PRIMARY }
                   className="pt-fill"
                   text="Add"
-                  onClick={this.onCreateInteractionTerm.bind(this) }
+                  onClick={ this.onCreateInteractionTerm.bind(this) }
                 />
               }
 
