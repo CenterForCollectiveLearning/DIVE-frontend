@@ -22,7 +22,7 @@ export default class DatasetDataGrid extends Component {
           <div
             key={ `cell-content-${ value }` }
             title={ value }
-            className={ styles.cellContent }
+            className={ styles.cellContent + ' ' + styles.dataCellContent + ' ' + ((value === null) ? ' ' + styles.nullContent : '')}
           >
             <span className={ styles.fieldValue }>{ value }</span>
             { children }
@@ -42,7 +42,7 @@ export default class DatasetDataGrid extends Component {
         const color = fieldProperties.fieldNameToColor[fieldProperty.name] || null;
         return (
           <div key={ `cell-content-${ fieldProperty.id }` } title={ value } className={ styles.cellContent }>
-            <DatasetMetadataCell key={ `metadata-cell-${ fieldProperty.id }` } fieldProperty={ fieldProperty } color={ color }/>
+            <DatasetMetadataCell key={ `metadata-cell-${ fieldProperty.id }` } fieldProperty={ fieldProperty } color={ color } preloaded={ dataset.preloaded }/>
           </div>
         );
       };

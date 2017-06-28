@@ -44,7 +44,6 @@ export class DatasetHeaderCell extends Component {
     }
     const content = <div className={ styles.datasetHeaderCell }>
       <div className={ styles.fieldName }>{ value }</div>
-      { typeContainer }
     </div>
 
     return ( content );

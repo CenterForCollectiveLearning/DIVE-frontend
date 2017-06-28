@@ -6,10 +6,12 @@ import { ChromePicker } from 'react-color';
 import { Button, Checkbox } from '@blueprintjs/core';
 
 import styles from './Datasets.sass';
+import FieldTypes from '../../constants/FieldTypes';
 import ColumnChart from '../Visualizations/Charts/ColumnChart';
 import Histogram from '../Visualizations/Charts/Histogram';
 import LineChart from '../Visualizations/Charts/LineChart';
-import { setFieldIsId, setFieldColor } from '../../actions/FieldPropertiesActions';
+import DropDownMenu from '../Base/DropDownMenu';
+import { setFieldIsId, setFieldColor, setFieldType } from '../../actions/FieldPropertiesActions';
 import { numberWithCommas, getRoundedString } from '../../helpers/helpers.js';
 
 
@@ -20,7 +22,8 @@ class DatasetMetadataCell extends Component {
     this.state = {
       color: '#007BD7',
       isId: false,
-      displayColorPicker: false
+      displayColorPicker: false,
+      fieldTypes: FieldTypes
     };
   }
 
@@ -32,6 +35,11 @@ class DatasetMetadataCell extends Component {
       color: color,
       isId: isId
     })
+  }
+
+  onSelectFieldType = (fieldType) => {
+    const { projectId, datasetId, fieldProperty, setFieldType} = this.props;
+    setFieldType(projectId, datasetId, fieldProperty.id, fieldType);
   }
 
   onClickVisualizeField = (id) => {
@@ -62,9 +70,11 @@ class DatasetMetadataCell extends Component {
   }
 
   render() {
-    const { projectId, datasetId, fieldProperty } = this.props;
+    const { projectId, datasetId, fieldProperty, preloaded } = this.props;
     const { id, generalType, vizData, typeScores, isChild, isUnique, stats, uniqueValues } = fieldProperty;
-    const { color, isId } = this.state;
+    const { color, isId, fieldTypes } = this.state;
+    const prefixIcon = fieldTypes.find((ft) => ft.value == fieldProperty.type).prefixIcon;
+
 
     const colors = [ color ];
     const showTypeScores = false;
@@ -77,6 +87,25 @@ class DatasetMetadataCell extends Component {
         height: 70
       },
     };
+
+    let typeContainer;
+    if (preloaded) {
+      typeContainer = <div className={ styles.typeContainer }>
+        <span className={`pt-icon-standard pt-icon-${ prefixIcon } ` + styles.prefixIcon }/>
+        <span>{ fieldProperty.type }</span>
+      </div>
+    } else {
+      typeContainer = <DropDownMenu
+        minimal={ true }
+        className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
+        valueClassName={ styles.fieldTypeValue }
+        value={ fieldProperty.type }
+        prefixIconMember='prefixIcon'
+        searchable={ true }
+        options={ fieldTypes }
+        onChange={ this.onSelectFieldType }
+      />
+    }
 
     let viz = <div className={ styles.metadataViz + ' ' + styles.vizPlaceholder } />;
     if (vizData && vizData.spec && vizData.data) {
@@ -111,7 +140,7 @@ class DatasetMetadataCell extends Component {
         />;
       }
     }
-    if (vizData && !(vizData.spec && vizData.data)) {  // To accomodate old visualization data
+    else if (vizData && !(vizData.spec && vizData.data)) {  // To accomodate old visualization data
       if ( scale == 'ordinal' || scale == 'nominal')  {
         viz = <ColumnChart
           className={ styles.metadataViz }
@@ -143,6 +172,8 @@ class DatasetMetadataCell extends Component {
           />;
         }
       }
+    } else if (this.state.isId) {
+      viz = <div className={ styles.idPlaceholder }>ID</div>
     }
 
     let fieldContent;
@@ -152,9 +183,9 @@ class DatasetMetadataCell extends Component {
           { viz }
           { stats &&
             <div className={ styles.statistics }>
-              <div><span className={ styles.field }>Unique Values</span>: { getRoundedString(stats.unique) } ({ getRoundedString((stats.unique / stats.count) * 100) }%) </div>
-              <div><span className={ styles.field }>Most Frequent</span>: { stats.top }</div>
-              <div><span className={ styles.field }>Most Occurrences</span>: { getRoundedString(stats.freq) }</div>
+              <div><span className={ styles.field }>Unique Values</span><span className={ styles.value }>{ getRoundedString(stats.unique) } ({ getRoundedString((stats.unique / stats.count) * 100) }%)</span></div>
+              <div><span className={ styles.field }>Most Frequent</span><span className={ styles.value }>{ stats.top }</span></div>
+              <div><span className={ styles.field }>Most Occurrences</span><span className={ styles.value }>{ getRoundedString(stats.freq) }</span></div>
             </div>
           }
           { typeScores && showTypeScores &&
@@ -188,10 +219,10 @@ class DatasetMetadataCell extends Component {
           { viz }
           { stats &&
             <div className={ styles.statistics }>
-              <div><span className={ styles.field }>Mean</span>: { getRoundedString(stats.mean) }</div>
-              <div><span className={ styles.field }>Median</span>: { getRoundedString(stats['50%']) }</div>
-              <div><span className={ styles.field }>Range</span>: { getRoundedString(stats.min) } - { getRoundedString(stats.max) }</div>
-              <div><span className={ styles.field }>Std</span>: { getRoundedString(stats.std) }</div>
+              <div><span className={ styles.field }>Mean</span><span className={ styles.value }>{ getRoundedString(stats.mean) }</span></div>
+              <div><span className={ styles.field }>Median</span><span className={ styles.value }>{ getRoundedString(stats['50%']) }</span></div>
+              <div><span className={ styles.field }>Range</span><span className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</span></div>
+              <div><span className={ styles.field }>Std</span><span className={ styles.value }>{ getRoundedString(stats.std) }</span></div>
             </div>
           }
           { typeScores && showTypeScores &&
@@ -240,17 +271,25 @@ class DatasetMetadataCell extends Component {
     }
     return (
       <div className={ styles.metadataCell }>
-        { fieldContent }
-        <div className={ `pt-button-group pt-minimal pt-align-left ${ styles.metadataButtonGroup }` }>
-          <Checkbox checked={ this.state.isId } label="ID" onChange={ this.onIDCheckboxChange } />
-          <div className={ styles.colorPickerButton } onClick={ this.onColorPickerClick } ><div style={{ background: color }}/></div>
-          <Button
+        <div className={ styles.metadataProperties }>
+          { fieldContent }
+        </div>
+        <div className={ styles.metadataInputGroup }>          
+          {/* <div className={ `pt-button-group pt-minimal pt-align-left`}> */}
+          <div className={ styles.left }>
+            <Checkbox checked={ this.state.isId } label="ID" onChange={ this.onIDCheckboxChange } className={ styles.idCheckbox }/>
+            <div className={ styles.colorPickerButton } onClick={ this.onColorPickerClick } ><div style={{ background: color }}/></div>             
+          </div>
+          <div className={ styles.right }>
+            { typeContainer }
+          </div>
+          {/* <Button
             className={ styles.metadataButton }          
             iconName="timeline-area-chart"
             onClick={ () => this.onClickVisualizeField(id) }
             // text="Visualize"
-          />
-        </div>      
+          /> */}   
+        </div>  
         { this.state.displayColorPicker ?
           <div style={ popover }>
             <div style={ cover } onClick={ this.onColorPickerClose }/>
@@ -266,10 +305,12 @@ class DatasetMetadataCell extends Component {
 
 DatasetMetadataCell.propTypes = {
   fieldProperty: PropTypes.object,
-  color: PropTypes.string
+  color: PropTypes.string,
+  preloaded: PropTypes.bool
 }
 
 DatasetMetadataCell.defaultProps = {
+  preloaded: false,
   fieldProperty: {}
 }
 
@@ -282,6 +323,7 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
+  setFieldType,
   setFieldIsId,
   setFieldColor,
   push
