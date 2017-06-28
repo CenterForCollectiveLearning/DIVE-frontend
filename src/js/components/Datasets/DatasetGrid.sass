@@ -269,8 +269,16 @@
 .datasetHeaderCell
   width: 100%
   .fieldName
+    text-overflow: ellipsis
+    overflow: hidden
+    white-space: nowrap  
     font-size: 16px
     // font-weight: bold
+
+    &:hover
+      position: absolute
+      overflow: visible
+      background-color: $ui-header-grey
 
 .colorPickerButton
   width: 32px
