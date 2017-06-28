@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { ChromePicker } from 'react-color';
 
-import { Button } from '@blueprintjs/core';
+import { Button, Checkbox } from '@blueprintjs/core';
 
 import styles from './Datasets.sass';
 import ColumnChart from '../Visualizations/Charts/ColumnChart';
@@ -242,12 +242,7 @@ class DatasetMetadataCell extends Component {
       <div className={ styles.metadataCell }>
         { fieldContent }
         <div className={ `pt-button-group pt-vertical pt-minimal pt-align-left ${ styles.metadataButtonGroup }` }>
-          <Button
-            className={ styles.metadataButton }
-            iconName={ this.state.isId ? 'delete' : 'numerical'}
-            onClick={ this.onIDCheckboxChange }
-            text={ this.state.isId ? 'Remove as ID' : 'Mark as ID' }
-          />
+          <Checkbox checked={ this.state.isId } label="ID" onChange={ this.onIDCheckboxChange } />
           <Button
             className={ styles.metadataButton }          
             iconName="edit"

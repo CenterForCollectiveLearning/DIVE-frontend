@@ -33,8 +33,8 @@ export default class DatasetDataGrid extends Component {
       const createDataCellContent = ((value) => createCellContent(value));
 
       const createHeaderCellContent = function(value, fieldProperty, context) {
-        return createCellContent(value,
-          <DatasetHeaderCell key={ `header-cell-${ value }` } fieldProperty={ fieldProperty } preloaded={ dataset.preloaded }/>
+        return (
+          <DatasetHeaderCell key={ `header-cell-${ value }` } value={ value } fieldProperty={ fieldProperty } preloaded={ dataset.preloaded }/>
         );
       };
 

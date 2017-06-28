@@ -21,18 +21,18 @@ export class DatasetHeaderCell extends Component {
   }
 
   render() {
-    const { fieldProperty, preloaded } = this.props;
+    const { fieldProperty, preloaded, value } = this.props;
     const { fieldTypes } = this.state;
     const prefixIcon = fieldTypes.find((ft) => ft.value == fieldProperty.type).prefixIcon;
 
-    let content = <div />;
+    let typeContainer;
     if (preloaded) {
-      content = <span className={ styles.typeContainer }>
+      typeContainer = <div className={ styles.typeContainer }>
         <span className={`pt-icon-standard pt-icon-${ prefixIcon } ` + styles.prefixIcon }/>
         <span>{ fieldProperty.type }</span>
-      </span>
+      </div>
     } else {
-      content = <DropDownMenu
+      typeContainer = <DropDownMenu
         className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
         valueClassName={ styles.fieldTypeValue }
         value={ fieldProperty.type }
@@ -42,6 +42,10 @@ export class DatasetHeaderCell extends Component {
         onChange={ this.onSelectFieldType }
       />
     }
+    const content = <div className={ styles.datasetHeaderCell }>
+      <div className={ styles.fieldName }>{ value }</div>
+      { typeContainer }
+    </div>
 
     return ( content );
   }
@@ -49,12 +53,14 @@ export class DatasetHeaderCell extends Component {
 
 DatasetHeaderCell.propTypes = {
   fieldProperty: PropTypes.object,
-  preloaded: PropTypes.bool
+  preloaded: PropTypes.bool,
+  value: PropTypes.string
 }
 
 DatasetHeaderCell.defaultProps = {
   preloaded: false,
-  fieldProperty: {}
+  fieldProperty: {},
+  value: ''
 }
 
 function mapStateToProps(state) {

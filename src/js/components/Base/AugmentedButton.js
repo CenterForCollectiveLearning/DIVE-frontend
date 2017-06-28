@@ -38,47 +38,52 @@ export default class AugmentedButton extends Component {
       selectedMenuItemIsDefault = selectedMenuItemIndex == 0;
     }
 
-    return (
-      <div className={ styles.augmentedButton + ' ' + 'pt-button-group' }>
-        <Button
-          className={
-            styles.augmentedButton + ' ' +
-            styles.toggleButton +
-            ( imageNameMember ? ' ' + styles.iconButton : '' ) +
-            ( item.disabled ? ' pt-disabled' : '') +
-            ( colorMember ? (' ' + styles.coloredBorder) : '' ) +
-            ( item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) ? ' pt-active' : '')
-          }
-          style={ colorMember ? { 'borderLeftColor': item[colorMember] } : {} }
-          onClick={ () => onChange(item[valueMember].toString()) }
-          iconName={ item.ptIcon ? item.iconName : '' }
-          // separated={ separated }
-          
-          // selectMenuItem={ selectMenuItem }
-          // onDelete={ onDelete }
-        >
-          { imageNameMember ?
-            <img
-              src={ imageNameMember ? `/assets/${item[imageNameMember]}${imageNameSuffix}` : null  }
-              alt={ altTextMember ? item[altTextMember] : item[displayTextMember] } />
-            : this.props.content
-          }
-          { !imageNameMember &&
-            item[displayTextMember]
-          }
+    const buttonContent = <Button
+      className={
+        styles.augmentedButton + ' ' +
+        styles.toggleButton +
+        ( imageNameMember ? ' ' + styles.iconButton : '' ) +
+        ( item.disabled ? ' pt-disabled' : '') +
+        ( colorMember ? (' ' + styles.coloredBorder) : '' ) +
+        ( item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) ? ' pt-active' : '')
+      }
+      style={ colorMember ? { 'borderLeftColor': item[colorMember] } : {} }
+      onClick={ () => onChange(item[valueMember].toString()) }
+      iconName={ item.ptIcon ? item.iconName : '' }
+      // separated={ separated }
+      
+      // selectMenuItem={ selectMenuItem }
+      // onDelete={ onDelete }
+    >
+      { imageNameMember ?
+        <img
+          src={ imageNameMember ? `/assets/${item[imageNameMember]}${imageNameSuffix}` : null  }
+          alt={ altTextMember ? item[altTextMember] : item[displayTextMember] } />
+        : this.props.content
+      }
+      { !imageNameMember &&
+        item[displayTextMember]
+      }
+    </Button>
 
-        </Button>    
-        { splitMenuItemsMember && splitMenu.length > 0 &&
-          <div className={ styles.splitButtonSelect } title={ selectedMenuItem.label }>
-            <DropDownMenu
-              className={ styles.dropDownMenu + (selectedMenuItemIsDefault ? ' ' + styles.defaultDropdown : '') }
-              value={ selectedMenuItem.value }
-              options={ splitMenu }
-              onChange={ this.selectMenuItem } />
-          </div>
-        }  
-      </div>
-    );
+    if (splitMenuItemsMember) {
+      return (
+        <div className={ styles.augmentedButton + ( splitMenuItemsMember ? ' pt-button-group' : '') }>
+          { buttonContent }
+          { splitMenuItemsMember && splitMenu.length > 0 &&
+            <div className={ styles.splitButtonSelect } title={ selectedMenuItem.label }>
+              <DropDownMenu
+                className={ styles.dropDownMenu + (selectedMenuItemIsDefault ? ' ' + styles.defaultDropdown : '') }
+                value={ selectedMenuItem.value }
+                options={ splitMenu }
+                onChange={ this.selectMenuItem } />
+            </div>
+          }  
+        </div>
+      );
+    } else {
+      return ( buttonContent );
+    }
   }
 }
 
