@@ -241,19 +241,14 @@ class DatasetMetadataCell extends Component {
     return (
       <div className={ styles.metadataCell }>
         { fieldContent }
-        <div className={ `pt-button-group pt-vertical pt-minimal pt-align-left ${ styles.metadataButtonGroup }` }>
+        <div className={ `pt-button-group pt-minimal pt-align-left ${ styles.metadataButtonGroup }` }>
           <Checkbox checked={ this.state.isId } label="ID" onChange={ this.onIDCheckboxChange } />
-          <Button
-            className={ styles.metadataButton }          
-            iconName="edit"
-            onClick={ this.onColorPickerClick }
-            text="Change Color"
-          />
+          <div className={ styles.colorPickerButton } onClick={ this.onColorPickerClick } ><div style={{ background: color }}/></div>
           <Button
             className={ styles.metadataButton }          
             iconName="timeline-area-chart"
             onClick={ () => this.onClickVisualizeField(id) }
-            text="Visualize"
+            // text="Visualize"
           />
         </div>      
         { this.state.displayColorPicker ?
