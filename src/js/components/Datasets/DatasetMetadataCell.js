@@ -176,6 +176,7 @@ class DatasetMetadataCell extends Component {
       viz = <div className={ styles.idPlaceholder }>ID</div>
     }
 
+    console.log('STATS:', stats);
     let fieldContent;
     if ( generalType == 'c' ) {
       fieldContent =
@@ -241,7 +242,12 @@ class DatasetMetadataCell extends Component {
         { viz }
         { stats &&
           <div className={ styles.statistics }>
-            <div><span className={ styles.field }>Range</span>: { getRoundedString(stats.first) } - { getRoundedString(stats.last) }</div>
+            { stats.first && stats.last &&
+              <div><span className={ styles.field }>Range</span><span className={ styles.value }>{ getRoundedString(stats.first) } - { getRoundedString(stats.last) }</span></div>
+            }
+            { stats.min && stats.max &&
+              <div><span className={ styles.field }>Range</span><span className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</span></div>
+            }
           </div>
         }
         { typeScores && showTypeScores &&
