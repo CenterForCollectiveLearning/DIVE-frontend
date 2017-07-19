@@ -43,7 +43,6 @@ export default class ColumnChart extends Component {
           }
         ],
         vAxis: {
-          minValue: 0,
           textStyle: {
             color: '#888'
           },

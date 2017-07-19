@@ -54,7 +54,7 @@ export const fullOptions = {
     }
   },
   vAxis: {
-    minValue: 0,
+    minValue: 'automatic',
     titleTextStyle:  titleTextStyle,
     textStyle: {
       color: gray,
@@ -109,7 +109,7 @@ export const minimalOptions = {
   vAxis: {
     baselineColor: 'transparent',
     textPosition: 'none',
-    minValue: 0,
+    minValue: 'automatic',
     gridlines: {
       count: 0,
       color: 'transparent'

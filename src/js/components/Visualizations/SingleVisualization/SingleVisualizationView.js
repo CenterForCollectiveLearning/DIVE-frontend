@@ -116,7 +116,7 @@ export class SingleVisualizationView extends Component {
   }
 
   render() {
-    const { visualization, fieldNameToColor } = this.props;
+    const { visualization, fieldNameToColor, specs, exportedSpecs } = this.props;
     const saved = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
 
     let visualizationTitle;
@@ -126,12 +126,22 @@ export class SingleVisualizationView extends Component {
       fileName = 'DIVE | ' + visualizationTitle.charAt(0).toUpperCase() + visualizationTitle.slice(1);
     }
 
+    const visualizationId = visualization.spec.id;
+    const visualizationFieldIds = visualization.spec.fieldIds;
+    let relatedSpecs = [];
+    if (visualizationFieldIds) {
+      relatedSpecs = specs.items.filter((s) => (s.id !== visualizationId && s.fieldIds.filter((n) => visualizationFieldIds.indexOf(n) !== -1).length > 0));
+    }
+    console.log('Related', specs, visualizationFieldIds, relatedSpecs);
+
     return (
       <VisualizationView
         className={ styles.fillContainer }
         visualization={ visualization }
         fieldNameToColor={ fieldNameToColor }
         getTableData={ this.getTableData }
+        relatedSpecs={ relatedSpecs }
+        exportedSpecs={ exportedSpecs }
       >
         <div className={ styles.hidden }>
           <canvas id="export-canvas"/>
@@ -175,17 +185,19 @@ SingleVisualizationView.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { project, conditionals, datasets, datasetSelector, fieldProperties, visualization, exploreSelector } = state;
+  const { project, conditionals, datasets, datasetSelector, exportedSpecs, specs, fieldProperties, visualization, exploreSelector } = state;
 
   return {
     project,
     fieldNameToColor: fieldProperties.fieldNameToColor,
     visualization,
+    specs,
     dataConfig: visualization.config.data,
     exploreSelector,
     conditionals,
     datasets,
     datasetSelector,
+    exportedSpecs
   }
 }
 

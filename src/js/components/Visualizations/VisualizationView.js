@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import styles from './Visualizations.sass';
 
@@ -9,10 +11,18 @@ import HeaderBar from '../Base/HeaderBar';
 import Loader from '../Base/Loader';
 import Visualization from './Visualization';
 import { useWhiteFontFromBackgroundHex } from '../../helpers/helpers';
+import SpecSection from './Explore/SpecSection';
 
-export default class VisualizationView extends Component {
+export class VisualizationView extends Component {
+
+  onClickVisualization = (specId) => {
+    const { project, datasetSelector, push, updateVisualizationStats } = this.props;
+    // updateVisualizationStats(project.id, specId, 'click');
+    push(`/projects/${ project.id }/datasets/${ datasetSelector.id }/visualize/explore/${ specId }`);
+  }
+
   render() {
-    const { visualization, fieldNameToColor, getTableData } = this.props;
+    const { visualization, relatedSpecs, exportedSpecs, fieldNameToColor, getTableData } = this.props;
 
     const visualizationTypes = visualization.visualizationType ? [ visualization.visualizationType ] : [];
 
@@ -80,7 +90,7 @@ export default class VisualizationView extends Component {
                 onClick={ getTableData }
               />
             </div>
-          }
+          }  
           { !visualization.isFetching && visualization.tableData.length != 0 &&
             <div className={ styles.tableContainer }>
               <DataGrid
@@ -91,6 +101,22 @@ export default class VisualizationView extends Component {
                 containerClassName={ styles.gridContainer }/>
             </div>
           }
+        { relatedSpecs.length &&
+          <div>
+            <HeaderBar
+              header={ 'Related Visualizations' }
+             />
+            <SpecSection
+              specs={ relatedSpecs }
+              className='exact'
+              fieldNameToColor={ fieldNameToColor }
+              filteredVisualizationTypes={ [] }
+              exportedSpecs={ exportedSpecs }
+              onClick={ this.onClickVisualization }
+              showStats={ false }
+            />
+          </div>
+        }
         </div>
       </div>
     );
@@ -98,8 +124,33 @@ export default class VisualizationView extends Component {
 }
 
 VisualizationView.propTypes = {
+  project: PropTypes.object,
+  datasetSelector: PropTypes.object,
   visualization: PropTypes.object.isRequired,
   children: PropTypes.node,
   fieldNameToColor: PropTypes.object,
-  getTableData: PropTypes.func
+  getTableData: PropTypes.func,
+  exportedSpecs: PropTypes.array,
+  relatedSpecs: PropTypes.array
 }
+
+function mapStateToProps(state) {
+  const { project, conditionals, datasets, datasetSelector, exportedSpecs, specs, fieldProperties, visualization, exploreSelector } = state;
+
+  return {
+    project,
+    fieldNameToColor: fieldProperties.fieldNameToColor,
+    visualization,
+    specs,
+    dataConfig: visualization.config.data,
+    exploreSelector,
+    conditionals,
+    datasets,
+    datasetSelector,
+    exportedSpecs
+  }
+}
+
+export default connect(mapStateToProps, {
+  push,
+})(VisualizationView);

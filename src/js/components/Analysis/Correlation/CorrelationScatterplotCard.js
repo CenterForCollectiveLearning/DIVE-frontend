@@ -25,7 +25,10 @@ export default class CorrelationScatterplotCard extends Component {
       },
       vAxis: {
         title: ''
-      }
+      },
+      tooltip: {
+        isHtml: true
+      },
     };
 
     return (
