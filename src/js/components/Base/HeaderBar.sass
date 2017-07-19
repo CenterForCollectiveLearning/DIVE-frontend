@@ -77,3 +77,8 @@
   &.hasSidebar
     .pageRightActions
       right: 295px
+
+@media screen and (max-width: $break-large)
+  .headerBar.hasSidebar
+    .pageRightActions
+      right: calc(100% - #{$left-sidebar-width} - #{$center-pane-width})

@@ -39,6 +39,11 @@ export default class ScatterChart extends Component {
         ...options.vAxis,
         minValue: 'automatic',
         scaleType: config.display ? config.display.vScaleType : null
+      },
+      trendlines: {
+        0: {
+          type: 'linear'
+        },
       }
     }
     const minimumPointSize = isMinimalView ? 3 : 4;

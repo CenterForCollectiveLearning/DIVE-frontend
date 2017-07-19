@@ -15,7 +15,7 @@ export const MAX_ELEMENTS = {
 const baseOptions = {
   backgroundColor: 'transparent',
   fontName: 'Roboto, Helvetica, Arial, sans-serif',
-  fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+  fontFamily: 'Roboto, Helvetica, Arial, sans-serif'
 }
 
 const gray = "#777";
