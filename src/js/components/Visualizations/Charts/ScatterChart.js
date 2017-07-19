@@ -3,6 +3,8 @@ import React, { Component, PropTypes } from 'react';
 import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import styles from '../Visualizations.sass';
 
+import * as d3Scale from 'd3-scale';
+
 import { Chart } from 'react-google-charts';
 
 export default class ScatterChart extends Component {
@@ -30,13 +32,19 @@ export default class ScatterChart extends Component {
         ...options.legend,
         position: 'none'
       },
+      tooltip: {
+        isHtml: true
+      },
       vAxis: {
         ...options.vAxis,
         minValue: 'automatic',
         scaleType: config.display ? config.display.vScaleType : null
       }
     }
+    const minimumPointSize = isMinimalView ? 3 : 4;
+    const pointSize = 15 * Math.exp(-(1/10) * finalData.length) + minimumPointSize;
 
+    options.pointSize = pointSize;
     options.hAxis.title = labels && labels.x ? labels.x : data[0][0];
     options.vAxis.title = labels && labels.y ? labels.y : data[0][1];
     options.colors = colors;
@@ -45,8 +53,6 @@ export default class ScatterChart extends Component {
       ...options,
       ...additionalOptions,
     }
-
-    console.log(options);
 
     return (
       <Chart
