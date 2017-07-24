@@ -76,7 +76,7 @@ class ExploreBasePage extends Component {
   setRecommendedInitialState(fieldProperties) {
     const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
 
-    const initialState = getInitialState(project.id, datasetSelector.id, fieldProperties.items);
+    const initialState = getInitialState(project.id, datasetSelector, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
     setPersistedQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);

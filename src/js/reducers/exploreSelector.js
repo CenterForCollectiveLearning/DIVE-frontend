@@ -103,7 +103,7 @@ const baseState = {
   recommendationTypesToLevel: recommendationTypesToLevel,
   recommendationTypes: recommendationTypes,
   recommendationModes: recommendationModes,
-  selectedRecommendationMode: 'regular',
+  selectedRecommendationMode: 'expanded',
   specs: [],
   sortingFunctions: sortingFunctions,
   queryString: "",
@@ -111,7 +111,7 @@ const baseState = {
   isFetchingSpecLevel: [ false, false, false, false ],
   loadedSpecLevel: [ false, false, false, false ],
   errorByLevel: [ null, null, null, null],
-  allowExpandedSpecs: false,
+  allowExpandedSpecs: true,
   updatedAt: 0
 }
 
