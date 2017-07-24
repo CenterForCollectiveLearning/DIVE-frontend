@@ -11,15 +11,18 @@ export default class RegressionTable extends Component {
   componentWillReceiveProps(nextProps) {
   }
 
+  pValueThresholds = [
+    { threshold: 0.5, symbol: '*' },
+    { threshold: 0.01, symbol: '**' },
+    { threshold:  0.001, symbol: '***' }
+  ]
+
   getPValueString = (pValue) => {
     let pValueString = ''
-     
-    if (pValue < 0.5) {
-      pValueString = '*'
-    } else if (pValue < 0.01) {
-      pValueString = '**';
-    } else if (pValue < 0.001){
-      pValueString = '***';
+    for ( var pValueThreshold in this.pValueThresholds ) {
+      if (pValue < pValueThreshold.threshold) {
+        pValueString = pValueThreshold.symbol
+      }
     }
     return pValueString;
   }
@@ -183,7 +186,12 @@ export default class RegressionTable extends Component {
 
     return (
       <div className={ styles.regressionTable }>
-        <BareDataGrid data={ data } preview={ preview }/>
+        <BareDataGrid data={ data } preview={ preview }/>     
+        <div className={ styles.pValueLegend }>
+          { this.pValueThresholds.map((pValueThreshold) =>
+            <span>{ `${ pValueThreshold.symbol } p < ${ pValueThreshold.threshold }` }</span>
+          )}
+        </div>
       </div>
     );
   }
