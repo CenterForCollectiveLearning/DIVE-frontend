@@ -100,7 +100,11 @@ export class RegressionView extends Component {
 
     let tableCardHeader;
     if (dependentVariableName) {
-      tableCardHeader = <span>Explaining <ColoredFieldItems fields={[ dependentVariableName ]} /> in terms of <ColoredFieldItems fields={ independentVariableNames } /></span>
+      if (independentVariableNames.length) {
+        tableCardHeader = <span>Explaining <ColoredFieldItems fields={[ dependentVariableName ]} /> in terms of <ColoredFieldItems fields={ independentVariableNames } /></span>
+      } else {
+        tableCardHeader = <span>Explaining <ColoredFieldItems fields={[ dependentVariableName ]} /></span>        
+      }
     }
 
     var regressionContent = <div className={ styles.centeredFill } />;
@@ -111,13 +115,12 @@ export class RegressionView extends Component {
 
     if (independentVariableNames.length == 0) {
       if (recommendationResult.loading) {
-        regressionContent = <div className={ styles.centeredFill }>
+        regressionContent = 
           <Card header={ tableCardHeader }>
             { recommendationResult.loading &&
               <Loader text={ recommendationResult.progress != null ? recommendationResult.progress : 'Recommending initial state' } />
             }
           </Card>
-        </div>
       } else {
         regressionContent = <div className={ styles.centeredFill }>
           <NonIdealState
