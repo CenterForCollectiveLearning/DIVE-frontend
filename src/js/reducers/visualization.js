@@ -39,12 +39,12 @@ const SUBSET_OPTIONS = [
 
 const LEGEND_POSITION_OPTIONS = [
   {
-    value:'top',
-    label:'Yes'
+    value: 'top',
+    label: 'Yes'
   },
   {
-    value:'none',
-    label:'No'
+    value: 'none',
+    label: 'No'
   }
 ];
 

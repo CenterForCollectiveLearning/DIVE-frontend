@@ -125,7 +125,7 @@ export class SingleVisualizationSidebar extends Component {
           { (visualizationType == 'bar') &&
             <SidebarGroup heading="Legend">
                 <DropDownMenu
-                  value={ visualization.config.legendPosition }
+                  value={ visualization.config.display.legendPosition }
                   options={ visualization.configOptions.legendPosition }
                   valueMember="value"
                   displayTextMember="label"
