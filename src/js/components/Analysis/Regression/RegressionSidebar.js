@@ -155,10 +155,14 @@ export class RegressionSidebar extends Component {
     var shownRegressionTypes = regressionTypes;
 
     if(fieldProperties.items.length > 0) {
-      const dependentVariableType = fieldProperties.items.find((property) => property.id == dependentVariableId);
-      if(dependentVariableType == 'decimal') {
-        shownRegressionTypes = regressionTypes.filter((type) => type.value != 'logistic')
+      const dependentVariable = fieldProperties.items.find((property) => property.id == dependentVariableId);
+
+      if(dependentVariable.scale == 'nominal') {
+        shownRegressionTypes = regressionTypes.filter((type) => type.value == 'logistic')
       }
+      if(dependentVariable.scale != 'nominal') {
+        shownRegressionTypes = regressionTypes.filter((type) => type.value != 'logistic')
+      }      
     }
 
     const initialCollapse = (fieldProperties.items.length > 10);
