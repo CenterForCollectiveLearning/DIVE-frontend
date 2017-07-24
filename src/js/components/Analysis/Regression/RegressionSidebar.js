@@ -157,10 +157,10 @@ export class RegressionSidebar extends Component {
     if(fieldProperties.items.length > 0) {
       const dependentVariable = fieldProperties.items.find((property) => property.id == dependentVariableId);
 
-      if(dependentVariable.scale == 'nominal') {
+      if(dependentVariable && dependentVariable.scale == 'nominal') {
         shownRegressionTypes = regressionTypes.filter((type) => type.value == 'logistic')
       }
-      if(dependentVariable.scale != 'nominal') {
+      if(dependentVariable && dependentVariable.scale != 'nominal') {
         shownRegressionTypes = regressionTypes.filter((type) => type.value != 'logistic')
       }      
     }
