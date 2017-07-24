@@ -64,11 +64,17 @@ export default class RegressionTable extends Component {
               className={ styles.coefficient }
               value={ property.coefficient }
               suffix={ context.getPValueString(property.pValue ) }
-              hoverContent={ <div>P value: { property.pValue }</div> }
+              hoverLabel='Coefficient'
+              additionalHoverContent={ [ { label: 'P value', value: property.pValue } ] }
             />
           }
           { enabled &&
-            <Number className={ styles.standardError } value={ property.standardError } prefix='(' suffix=')' />
+            <Number
+              className={ styles.standardError }
+              value={ property.standardError }
+              hoverLabel='Standard Error'
+              prefix='(' suffix=')'
+            />
           }
           { !enabled &&
             <span>✓</span>
