@@ -128,21 +128,12 @@ export class DatasetInspectPage extends Component {
           <HeaderBar
             sidebar={ false }
             actions={
-              <div>
+              <div className={ styles.pageRightActions }>
                 <Button
                   intent={ Intent.PRIMARY }
                   iconName="upload"
                   onClick={ this.onClickUploadDataset }
                   text="Upload New Dataset" />
-                <ToggleButtonGroup
-                  className={ styles.formatToggle }
-                  toggleItems={ datasetSelector.layoutTypes }
-                  valueMember="id"
-                  displayTextMember="label"
-                  expand={ false }
-                  separated={ false }
-                  externalSelectedItems={ [ selectedLayoutType ] }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ selectedLayoutType: v }) } />
                 { datasetSelector.preloaded &&
                   <Button
                     iconName='remove'
@@ -157,8 +148,22 @@ export class DatasetInspectPage extends Component {
               </div>
             }
           />
-          { dataset && false && dataset.details &&
-            <DatasetPropertiesPane dataset={ dataset } fieldProperties={ fieldProperties }/>
+          { dataset && dataset.details &&
+            <DatasetPropertiesPane 
+              dataset={ dataset }
+              fieldProperties={ fieldProperties }
+              rightActions={ 
+                <ToggleButtonGroup
+                  className={ styles.formatToggle }
+                  toggleItems={ datasetSelector.layoutTypes }
+                  valueMember="id"
+                  displayTextMember="label"
+                  expand={ false }
+                  separated={ false }
+                  externalSelectedItems={ [ selectedLayoutType ] }
+                  onChange={ (v) => this.clickQueryStringTrackedItem({ selectedLayoutType: v }) } />
+              }
+            />
           }
           { dataset && dataset.details && ( selectedLayoutType == 'table' ) &&
             <DatasetDataGrid dataset={ dataset } fieldProperties={ fieldProperties }/>

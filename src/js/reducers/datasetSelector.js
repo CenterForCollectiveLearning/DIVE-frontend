@@ -67,7 +67,7 @@ export default function datasetSelector(state = baseState, action) {
       return { ...state, id: action.datasets[0].id, title: action.datasets[0].title, loaded: true, isUploading: false, error: null, projectId: action.projectId, details: action.details };
 
     case RECEIVE_SELECT_PRELOADED_DATASET:
-      return { ...state, isFetching: false, id: action.preloadedDataset.id, title: action.preloadedDataset.title, loaded: true, projectId: action.projectId, details: action.nextDataset.details };
+      return { ...state, isFetching: false, id: action.preloadedDataset.id, title: action.preloadedDataset.title, loaded: true, projectId: action.projectId, details: action.preloadedDataset.details };
 
     case RECEIVE_DESELECT_PRELOADED_DATASET:
       if (state.id == action.preloadedDataset.id) {
