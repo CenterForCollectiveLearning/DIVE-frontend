@@ -3,13 +3,14 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 
-import { Button, Intent, NonIdealState } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 import { fetchDatasets } from '../../actions/DatasetActions';
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
 import ProjectTopBar from '../ProjectTopBar';
 import Dropzone from 'react-dropzone';
+import ErrorComponent from '../Base/ErrorComponent';
 import Loader from '../Base/Loader';
 import HeaderBar from '../Base/HeaderBar';
 
@@ -58,21 +59,12 @@ export class DatasetUploadPage extends Component {
             { datasetSelector.isUploading &&
               <div className={ styles.uploadingZone + ' ' + styles.centeredFill }>
                 { datasetSelector.progress && <Loader text={ datasetSelector.progress } /> }
-                {/* { !datasetSelector.isUploading && datasetSelector.error &&
-                  <NonIdealState
+                { !datasetSelector.isUploading && datasetSelector.error &&
+                  <ErrorComponent
                     title='Error uploading dataset'
                     description={ datasetSelector.error }
-                    visual='error'
-                    action={ <div className={ styles.errorAction }>
-                      <Button
-                        onClick={ () => location.reload() }
-                        iconName='refresh'
-                        intent={ Intent.PRIMARY }
-                        text="Refresh DIVE" />
-                      </div>
-                    }
                   />
-                } */}
+                }
               </div>
             }
             { !datasetSelector.isUploading &&

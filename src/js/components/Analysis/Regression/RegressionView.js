@@ -12,6 +12,7 @@ import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
 import Loader from '../../Base/Loader';
+import ErrorComponent from '../../Base/ErrorComponent';
 import HeaderBar from '../../Base/HeaderBar';
 import RaisedButton from '../../Base/RaisedButton';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -77,22 +78,10 @@ export class RegressionView extends Component {
 
     const saved = (isSaving || (!isSaving && exportedRegressionId) || exported) ? true : false;
 
-    const errorComponent = ( <div className={ styles.centeredFill }>
-      <NonIdealState
-        title='Error Running Regression'
-        description={ error }
-        visual='error'
-        action={ <div className={ styles.errorAction }>
-          <div>Please change your selection or</div>
-          <Button
-            onClick={ () => location.reload() }
-            iconName='refresh'
-            intent={ Intent.PRIMARY }
-            text="Refresh DIVE" />
-          </div>
-      }
-      />
-    </div> );
+    const errorComponent = <ErrorComponent
+      title='Error Running Regression'
+      description={ error }
+    />;
 
     if ( !recommendationResult.loading && error && !loading && (!data.table || !data.table.fields || data.table.fields.length == 0)) {
       return errorComponent;

@@ -11,6 +11,7 @@ import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import styles from '../Analysis.sass';
 
+import ErrorComponent from '../../Base/ErrorComponent';
 import Card from '../../Base/Card';
 import Loader from '../../Base/Loader';
 import HeaderBar from '../../Base/HeaderBar';
@@ -78,22 +79,10 @@ export class CorrelationView extends Component {
 
     var correlationContent;
     if (error) {
-      correlationContent = <div className={ styles.centeredFill }>
-        <NonIdealState
-          title='Error Running Correlation'
-          description={ error }
-          visual='error'
-          action={ <div className={ styles.errorAction }>
-              <div>Please change your selection or</div>
-              <Button
-                onClick={ () => location.reload() }
-                iconName='refresh'
-                intent={ Intent.PRIMARY }
-                text="Refresh DIVE" />
-              </div>
-          }
-        />
-      </div>
+      correlationContent = <ErrorComponent
+        title='Error Running Correlation'
+        description={ error }
+      />;
     }
 
     if (!error && correlationVariableNames.length < 2) {

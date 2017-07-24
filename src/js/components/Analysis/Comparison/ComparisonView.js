@@ -19,6 +19,7 @@ import AnovaText from './AnovaText';
 import PairwiseComparisonCard from './PairwiseComparisonCard';
 import AnovaBoxplotCard from './AnovaBoxplotCard';
 
+import ErrorComponent from '../../Base/ErrorComponent';
 import HeaderBar from '../../Base/HeaderBar';
 import RaisedButton from '../../Base/RaisedButton';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -147,22 +148,10 @@ export class ComparisonView extends Component {
       />
     );
 
-    const errorComponent = ( <div className={ styles.centeredFill }>
-      <NonIdealState
-        title='Error Running Comparison'
-        description={ error }
-        visual='error'
-        action={ <div className={ styles.errorAction }>
-          <div>Please change your selection or</div>
-          <Button
-            onClick={ () => location.reload() }
-            iconName='refresh'
-            intent={ Intent.PRIMARY }
-            text="Refresh DIVE" />
-          </div>
-      }
-      />
-    </div> );
+    const errorComponent = <ErrorComponent
+      title='Error Running Comparison'
+      description={ error }
+    />;
 
     if (!loading && error) {
       return errorComponent;

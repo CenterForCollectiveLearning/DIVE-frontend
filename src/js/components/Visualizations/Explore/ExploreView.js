@@ -10,8 +10,9 @@ import { useWhiteFontFromBackgroundHex, updateQueryString } from '../../../helpe
 
 import styles from '../Visualizations.sass';
 
-import { Button, Intent, NonIdealState } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 
+import ErrorComponent from '../../Base/ErrorComponent';
 import Loader from '../../Base/Loader';
 import HeaderBar from '../../Base/HeaderBar';
 import DropDownMenu from '../../Base/DropDownMenu';
@@ -170,22 +171,11 @@ export class ExploreView extends Component {
           <HeaderBar header={ pageHeader } helperText={ helperText } />
           <div className={ styles.specContainer + ' ' + styles.fillContainer}>
             { !isFetching && sortedSpecs.length == 0 &&
-              <div className={ styles.centeredFill }>
-                <NonIdealState
-                  title='No Visualizations Returned'
-                  description='Please change your selection or refresh DIVE.'
-                  visual='timeline-line-chart'
-                  action={ <div className={ styles.errorAction }>
-                      <div>Please change your selection or</div>
-                      <Button
-                        onClick={ () => location.reload() }
-                        iconName='refresh'
-                        intent={ Intent.PRIMARY }
-                        text="Refresh DIVE" />
-                      </div>
-                  }
-                />
-              </div>
+              <ErrorComponent
+                title='No Visualizations Returned'
+                description='Please change your selection or refresh DIVE.'
+                visual='timeline-line-chart'
+              />
             }
             { recommendationTypesWithData.map(function(d, i){
               if (isValidSpecLevel[i] && !(loadedSpecLevel[i] && d.specs.length == 0)) {
@@ -199,22 +189,11 @@ export class ExploreView extends Component {
                         textClassName={ styles.blockSectionHeaderTitle }
                       />
                     }
-                    { errorByLevel[i] && <div className={ styles.centeredFill }>
-                        <NonIdealState
-                          title='Error Creating Visualizations'
-                          description={ errorByLevel[i] }
-                          visual='error'
-                          action={ <div className={ styles.errorAction }>
-                              <div>Please change your selection or</div>
-                              <Button
-                                onClick={ () => location.reload() }
-                                iconName='refresh'
-                                intent={ Intent.PRIMARY }
-                                text="Refresh DIVE" />
-                              </div>
-                          }
-                        />
-                      </div>
+                    { errorByLevel[i] &&
+                      <ErrorComponent
+                        title='Error Creating Visualizations'
+                        description={ errorByLevel[i] }
+                      />
                     }
                     { isFetchingSpecLevel[i] && <Loader text={ progressByLevel[i] }/> }
                     { d.specs.length > 0 &&

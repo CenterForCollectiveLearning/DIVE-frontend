@@ -11,7 +11,7 @@ export default class ErrorComponent extends Component {
 		return (
 			<div className={ styles.centeredFill }>
 	      <NonIdealState
-	        title='Error Running Aggregation'
+	        title={ title }
 	        description={ description }
 	        visual='error'
 	        action={ <div className={ styles.errorAction }>
