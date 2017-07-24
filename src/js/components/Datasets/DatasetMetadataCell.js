@@ -176,7 +176,6 @@ class DatasetMetadataCell extends Component {
       viz = <div className={ styles.idPlaceholder }>ID</div>
     }
 
-    console.log('STATS:', stats);
     let fieldContent;
     if ( generalType == 'c' ) {
       fieldContent =
