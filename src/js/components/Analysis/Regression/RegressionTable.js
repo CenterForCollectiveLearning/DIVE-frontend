@@ -12,7 +12,7 @@ export default class RegressionTable extends Component {
   }
 
   pValueThresholds = [
-    { threshold: 0.5, symbol: '*' },
+    { threshold: 0.05, symbol: '*' },
     { threshold: 0.01, symbol: '**' },
     { threshold:  0.001, symbol: '***' }
   ]
@@ -60,7 +60,12 @@ export default class RegressionTable extends Component {
       return (
         <div className={ styles.dataCell }>
           { enabled &&
-            <Number className={ styles.coefficient } value={ property.coefficient } suffix={ context.getPValueString(property.pValue ) }/>
+            <Number
+              className={ styles.coefficient }
+              value={ property.coefficient }
+              suffix={ context.getPValueString(property.pValue ) }
+              hoverContent={ <div>P value: { property.pValue }</div> }
+            />
           }
           { enabled &&
             <Number className={ styles.standardError } value={ property.standardError } prefix='(' suffix=')' />

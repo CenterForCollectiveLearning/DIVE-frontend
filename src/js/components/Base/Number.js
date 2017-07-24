@@ -42,6 +42,7 @@ export default class Number extends Component {
       prefix,
       suffix,
       fullPrecisionOnMouseOver,
+      hoverContent,
       style
     } = this.props;
 
@@ -90,7 +91,10 @@ export default class Number extends Component {
     let popoverContent;
     if (reduceInformation) {
       popoverContent = (
-        <div className={ styles.fullPrecision }>{ value.toString() }</div>
+        <div className={ styles.fullPrecision }>
+          { value.toString() }
+          { hoverContent && hoverContent }
+        </div>
       );
     }
 
@@ -130,6 +134,7 @@ Number.propTypes = {
   prefix: PropTypes.string,
   suffix: PropTypes.string,
   fullPrecisionOnMouseOver: PropTypes.bool,
+  hoverContent: PropTypes.node,
   style: PropTypes.object
 }
 
