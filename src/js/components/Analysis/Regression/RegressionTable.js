@@ -19,9 +19,9 @@ export default class RegressionTable extends Component {
 
   getPValueString = (pValue) => {
     let pValueString = ''
-    for ( var pValueThreshold in this.pValueThresholds ) {
-      if (pValue < pValueThreshold.threshold) {
-        pValueString = pValueThreshold.symbol
+    for ( var o of this.pValueThresholds ) {
+      if (pValue < o.threshold) {
+        pValueString = o.symbol;
       }
     }
     return pValueString;

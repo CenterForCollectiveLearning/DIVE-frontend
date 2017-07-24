@@ -42,7 +42,9 @@ export default class ScatterChart extends Component {
       },
       trendlines: {
         0: {
-          type: 'linear'
+          type: 'linear',
+          showR2: true,
+          visibleInLegend: true
         },
       }
     }
