@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import DynamicFont from 'react-dynamic-font';
 
 import styles from './Visualizations.sass';
 
@@ -21,11 +22,13 @@ export default class VisualizationView extends Component {
     let visualizationLegend;
     if (visualization.spec.id && !visualization.isFetching) {
       visualizationTitle = visualization.spec.meta.construction.map(function(construct, i) {
+        return construct.string + ' '
+      /* visualizationTitle = visualization.spec.meta.construction.map(function(construct, i) {
         return <span
           key={ `construct-${ construct.type }-${ i }` }
           className={
             `${styles.headerFragment} ${styles[construct.type]}`
-        }>{ construct.string }</span>
+        }>{ construct.string }</span> */
       });
 
       visualizationLegend = visualization.spec.meta.construction.filter((item) => item.type == 'field').map(function(construct, i) {
@@ -37,7 +40,7 @@ export default class VisualizationView extends Component {
       })
 
       visualizationHeader = <div className={ styles.headerText }>
-        <div className={ styles.left }>{ visualizationTitle }</div>
+        <div className={ styles.left }><DynamicFont smooth content={ visualizationTitle } /></div>
         <div className={ styles.right}>
           {/* <span className={ styles.colorLegend }>{ visualizationLegend }</span> */}
           { visualization.sampleSize &&  <span>{visualization.sampleSize } samples</span> }

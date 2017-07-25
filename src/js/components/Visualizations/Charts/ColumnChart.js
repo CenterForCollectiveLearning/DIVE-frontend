@@ -10,7 +10,7 @@ export default class ColumnChart extends Component {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, additionalOptions, colors, labels, config } = this.props;
 
     var finalData = data;
-    finalData[0] = finalData[0].map((d) => d.toString());
+    finalData[0] = [ { id: finalData[0][0], label: finalData[0][0], type: 'string' }, ...finalData[0].slice(1).map((d) => d.toString()) ];
 
     var options = isMinimalView ? minimalOptions : fullOptions;
 

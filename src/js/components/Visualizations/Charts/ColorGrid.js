@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from 'react';
 
 import * as d3Scale from 'd3-scale';
 
+import Number from '../../Base/Number';
 import BareDataGrid from '../../Base/BareDataGrid';
 import styles from '../Visualizations.sass';
 import { getRoundedString, useWhiteFontFromBackgroundRGBString } from '../../../helpers/helpers';
@@ -49,7 +50,7 @@ export default class ColorGrid extends Component {
         <div style={ customStyles } className={ styles.dataCell }>
           { !preview &&
             <div className={ styles.value }>
-              { getRoundedString(property, 3, true) }
+              <Number value={ getRoundedString(property, 3, true) } />
             </div>
           }
       </div>
