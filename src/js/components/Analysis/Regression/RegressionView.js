@@ -18,6 +18,7 @@ import RaisedButton from '../../Base/RaisedButton';
 import DropDownMenu from '../../Base/DropDownMenu';
 import ColoredFieldItems from '../../Base/ColoredFieldItems';
 import RegressionTableCard from './RegressionTableCard';
+import RegressionSummary from './RegressionSummary';
 import ContributionToRSquaredCard from './ContributionToRSquaredCard';
 
 export class RegressionView extends Component {
@@ -163,7 +164,15 @@ export class RegressionView extends Component {
               regressionResult={ table || {} }
               contributionToRSquared={ contributionToRSquared }/>
           }
-
+          { (!loading && table.regressionsByColumn && table.fields) &&
+            <Card header='Summary'>
+              <RegressionSummary
+                dependentVariableName={ dependentVariableName }
+                independentVariableNames={ independentVariableNames }
+                regressionResult={ table || {} }
+                contributionToRSquared={ contributionToRSquared }/>
+            </Card>
+          }
           { (!loading && contributionToRSquared.length > 0 && tableLayout == 'leaveOneOut') &&
             <ContributionToRSquaredCard 
               id={ `${ table.id }` }

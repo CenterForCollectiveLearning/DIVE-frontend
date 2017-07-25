@@ -17,7 +17,6 @@ export default class StatsTable extends Component {
         items: [ 'Test', 'Statistic', 'p-value' ]
       },
       ...numericalData.map(function(d) {
-        console.log(numericalData, d, d.test, d.values);
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,

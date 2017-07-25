@@ -43,7 +43,7 @@ function receiveInitialRegressionStateDispatcher(json) {
   };
 }
 
-export function getRecommendation(projectId, datasetId, callback, dependentVariableId=null, recommendationType='lasso') {
+export function getRecommendation(projectId, datasetId, callback, dependentVariableId=null, recommendationType='forwardR2') {
   const params = {
     projectId: projectId,
     datasetId: datasetId,
@@ -218,8 +218,6 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
       tableLayout: tableLayout
     }
   }
-
-  console.log('RUNNING REGRESSION', params)
 
   const filteredConditionals = getFilteredConditionals(conditionals);
   if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {

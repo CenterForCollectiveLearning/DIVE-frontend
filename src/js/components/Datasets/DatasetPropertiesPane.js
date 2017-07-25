@@ -11,7 +11,6 @@ export default class DatasetPropertiesPane extends Component {
     const numIds = fieldProperties.items.filter((fp) => fp.isId).length;
     const numFieldTypes = [ ...new Set(fieldProperties.items.map((fp) => fp.type)) ].length;
 
-    console.log(numIds, (numIds && (numIds > 0)), numFieldTypes);
     return (
       <div className={ styles.datasetPropertiesPane }>
         <div className={ styles.left }>
