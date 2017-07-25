@@ -125,7 +125,6 @@ export class SingleVisualizationView extends Component {
       visualizationTitle = (visualization.spec.meta.desc || 'visualization');
       fileName = 'DIVE | ' + visualizationTitle.charAt(0).toUpperCase() + visualizationTitle.slice(1);
     }
-
     return (
       <VisualizationView
         className={ styles.fillContainer }

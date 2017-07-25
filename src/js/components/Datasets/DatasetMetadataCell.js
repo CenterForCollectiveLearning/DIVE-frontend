@@ -76,7 +76,6 @@ class DatasetMetadataCell extends Component {
     const { color, isId, fieldTypes } = this.state;
     const prefixIcon = fieldTypes.find((ft) => ft.value == fieldProperty.type).prefixIcon;
 
-    console.log(fieldProperty, numNa, stats);
     const colors = [ color ];
     const showTypeScores = false;
     const additionalOptions = {

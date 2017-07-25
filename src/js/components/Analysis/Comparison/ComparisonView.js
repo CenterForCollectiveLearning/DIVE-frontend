@@ -228,14 +228,13 @@ function mapStateToProps(state, ownProps) {
     .map((field) => field.name);
 
   const qIndependentVariableCount = fieldProperties.items
-    .filter((fp) => independentVariablesIds.indexOf(fp.id) >= 0 && fp.generalType == 'q').length;
+    .filter((fp) => independentVariablesIds.indexOf(fp.id) >= 0 && fp.scale == 'continuous').length;
 
   const qDependentVariableCount = fieldProperties.items
-    .filter((fp) => dependentVariablesIds.indexOf(fp.id) >= 0 && fp.generalType == 'q').length;
+    .filter((fp) => dependentVariablesIds.indexOf(fp.id) >= 0 && fp.scale == 'continuous').length;
 
   const canRunNumericalComparison = (qIndependentVariableCount >= 2 || qDependentVariableCount >= 2);
   const canRunAnova = independentVariableNames.length >= 1 && dependentVariableNames.length >= 1;
-
 
   return {
     datasets,

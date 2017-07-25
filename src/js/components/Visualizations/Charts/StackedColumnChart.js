@@ -10,7 +10,6 @@ export default class StackedColumnChart extends Component {
   render() {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, additionalOptions, colors, labels, config } = this.props;
 
-    console.log('Rendering stacked column chart')
     var finalData = data;
 
     var options = isMinimalView ? minimalOptions : fullOptions;
