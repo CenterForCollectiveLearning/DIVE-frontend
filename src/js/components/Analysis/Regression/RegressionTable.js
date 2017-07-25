@@ -8,9 +8,6 @@ import BareDataGrid from '../../Base/BareDataGrid';
 
 export default class RegressionTable extends Component {
 
-  componentWillReceiveProps(nextProps) {
-  }
-
   pValueThresholds = [
     { threshold: 0.05, symbol: '*' },
     { threshold: 0.01, symbol: '**' },
@@ -200,7 +197,7 @@ export default class RegressionTable extends Component {
         <BareDataGrid data={ data } preview={ preview }/>     
         <div className={ styles.pValueLegend }>
           { this.pValueThresholds.map((pValueThreshold) =>
-            <span>{ `${ pValueThreshold.symbol } p < ${ pValueThreshold.threshold }` }</span>
+            <span>{ `${ pValueThreshold.symbol } p < `} <Number value={ pValueThreshold.threshold } style={{ marginLeft: '3px' }} /></span>
           )}
         </div>
       </div>

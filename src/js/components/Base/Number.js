@@ -44,6 +44,7 @@ export default class Number extends Component {
       fullPrecisionOnMouseOver,
       hoverLabel,
       additionalHoverContent,
+      inline,
       style
     } = this.props;
 
@@ -113,7 +114,11 @@ export default class Number extends Component {
 
     return (
       <div
-        className={ styles.number + (this.props.className ? ' ' + this.props.className : '') }
+        className={ 
+          styles.number + 
+          (this.props.className ? ' ' + this.props.className : '') +
+          (inline ? ' ' + styles.inline : '')
+        }
         style={ style }
       >
         { fullPrecisionOnMouseOver && reduceInformation &&
@@ -145,7 +150,8 @@ Number.propTypes = {
   fullPrecisionOnMouseOver: PropTypes.bool,
   hoverLabel: PropTypes.string,
   additionalHoverContent: PropTypes.node,
-  style: PropTypes.object
+  style: PropTypes.object,
+  inline: PropTypes.bool
 }
 
 Number.defaultProps = {
