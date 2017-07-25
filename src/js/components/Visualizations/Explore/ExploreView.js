@@ -208,6 +208,7 @@ export class ExploreView extends Component {
                         onClick={ context.onClickVisualization }
                         saveVisualization={ context.saveVisualization }
                         showStats={ false }
+                        sortBy={ sortBy }
                       />
                    }
                   </div>

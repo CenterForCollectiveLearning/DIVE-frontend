@@ -12,6 +12,10 @@ export default class DatasetDataGrid extends Component {
   render() {
     const { dataset, fieldProperties } = this.props;
 
+    if (!dataset.data) {
+      return;
+    }    
+
     var dataRows = [];
     var headerRows = [];
     var metadataRows = [];
@@ -61,12 +65,8 @@ export default class DatasetDataGrid extends Component {
       const createHeaderCell = ((key, i) => createCell(key, i, key, createHeaderCellContent));
       const createMetadataCell = ((key, i) => createCell(key, i, key, createMetadataCellContent));
 
-      let headerRow = [];
-      let metadataRow = []
-      if (dataset.data && dataset.data.length) {
-        headerRow = [...dataset.data[0].keys()].map(createHeaderCell);
-        metadataRow = [...dataset.data[0].keys()].map(createMetadataCell);        
-      }
+      const headerRow = [...dataset.data[0].keys()].map(createHeaderCell);
+      const metadataRow = [...dataset.data[0].keys()].map(createMetadataCell);        
 
       dataRows = dataset.data.map(function(row, i) {
         const createDataCell = ((key, j) => createCell(key, j, row.get(key), createDataCellContent));

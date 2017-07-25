@@ -102,8 +102,8 @@ $max-block-width: $block-height * $max-aspect-ratio
 
   .starContainer
     position: absolute
-    top: 20px
-    right: 18px
+    top: 17px
+    right: 15px
     font-size: 13px
     color: $orange
     cursor: pointer
@@ -170,8 +170,11 @@ $break-4: 1 * ($max-block-width + 2 * $block-padding) + $container-left-padding 
     font-size: 14px
     overflow: hidden
     text-overflow: ellipsis
-    padding: 10px 15px
-    min-height: 35px
+    padding: 8px 10px
+    padding-right: 25px
+    min-height: 48px
+    height: 28px
+    line-height: 14px
 
     .colorLegend
       display: flex
@@ -207,6 +210,11 @@ $break-4: 1 * ($max-block-width + 2 * $block-padding) + $container-left-padding 
 .stats
   padding: 10px 15px
   background-color: white
-  +smallCaps
+  .type
+    text-transform: capitalize
+
   .value
     margin-left: 4px
+
+  > div
+    display: flex

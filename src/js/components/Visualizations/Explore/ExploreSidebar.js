@@ -75,7 +75,7 @@ export class ExploreSidebar extends Component {
 
     const activeVisualizationTypes = visualizationTypes.filter((type) => !type.disabled);
 
-    const initialCollapse = (fieldProperties.items.length > 10);
+    const initialCollapse = false; // (fieldProperties.items.length > 10);
 
     return (
       <Sidebar>

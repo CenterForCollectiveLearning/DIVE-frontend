@@ -2,12 +2,21 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from '../Visualizations.sass';
 
+import Number from '../../Base/Number';
 import Visualization from '../Visualization';
 import { getRoundedString } from '../../../helpers/helpers';
 
 export default class VisualizationBlock extends Component {
   render() {
-    const { spec, exportedSpecs, fieldNameToColor, filteredVisualizationTypes, className, showStats, isCard, onClick, saveVisualization } = this.props;
+    const { spec, exportedSpecs, fieldNameToColor, filteredVisualizationTypes, className, showStats, showStat, isCard, onClick, saveVisualization } = this.props;
+
+    // const scores = spec.scores.filter((score) => (score.type !== 'relevance' && score.score !== 0.0));
+    const scores = spec.scores;
+
+    let score;
+    if (showStat) {
+      score = scores.filter((score) => score.type == showStat)[0];
+    }
 
     return (
       <div className={ styles.visualizationBlockContainer + ' ' + ( styles[className] || '') }>
@@ -29,12 +38,18 @@ export default class VisualizationBlock extends Component {
         </div>
         { showStats &&
           <div className={ styles.stats }>
-             { spec.scores.filter((score) => score.score !== null).map((score) =>
+             { scores.filter((score) => score.score !== null).map((score) =>
                <div>
-                  <span className={ styles.type }>{ score.type }</span>:
-                  <span className={ styles.value }>{ getRoundedString(score.score) }</span>
+                  <span className={ styles.type }>{ score.type }</span><Number value={ score.score } />
                </div>
              )}
+          </div>
+        }
+        { showStat &&
+          <div className={ styles.stats }>
+            <div>
+              <span className={ styles.type }>{ score.type }</span><Number value={ score.score } />
+            </div>
           </div>
         }
       </div>
@@ -51,5 +66,10 @@ VisualizationBlock.propTypes = {
   exportedSpecs: PropTypes.object.isRequired,
   saveVisualization: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
-  showStats: PropTypes.bool
+  showStats: PropTypes.bool,
+  showStat: PropTypes.string
 };
+
+VisualizationBlock.defaultProps = {
+  showStats: false
+}

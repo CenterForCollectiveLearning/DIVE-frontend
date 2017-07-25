@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import DynamicFont from 'react-dynamic-font';
 
 import styles from './Visualizations.sass';
 
@@ -143,39 +144,29 @@ export default class Visualization extends Component {
       );
     }
 
+    const headerSpans = spec.meta.construction.map(function(construct, i) {
+      return <span
+        key={ `construct-${ construct.type }-${ i }` }
+        className={ `${styles.headerFragment} ${styles[construct.type]}` }
+      >
+        { construct.string }</span>
+    });
+
+    const headerPlainText = spec.meta.construction.map(function(construct, i) {
+      return construct.string + ' '
+    });
+
     return (
       <div className={ ( isCard ? 'pt-card pt-interactive ' : '' )+ containerClassName } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
           <div className={ headerClassName }>
-            <div>
-            { spec.meta.construction.map(function(construct, i) {
-              return <span
-                key={ `construct-${ construct.type }-${ i }` }
-                className={ `${styles.headerFragment} ${styles[construct.type]}` }
-              >
-                { construct.string }</span>
-            })}
+            { headerPlainText }
             { (tooMuchDataToPreview || tooMuchDataToShowFull) &&
               <span className={ `${styles.headerFragment} ${styles.tooMuchData}` }>
                 ({ tooMuchDataString })
               </span>
             }
-          </div>
-          <div className={ styles.colorLegend }>
-            {/* spec.meta.construction.filter((item) => item.type == 'field').map(function(construct, i) {
-              return <div
-                style={{ backgroundColor: fieldNameToColor[construct.string]}}
-                key={ `construct-${ construct.type }-${ i }` }
-                className={ styles.colorLegendBox }
-              />
-            })*/}
-            { (tooMuchDataToPreview || tooMuchDataToShowFull) &&
-              <span className={ `${styles.headerFragment} ${styles.tooMuchData}` }>
-                ({ tooMuchDataString })
-              </span>
-            }
-          </div>  
-        </div>        
+          </div>        
         }
         <div className={ styles.visualization
             + ' ' + styles[defaultVisualizationType]
