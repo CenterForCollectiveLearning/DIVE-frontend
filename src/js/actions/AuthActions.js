@@ -164,6 +164,7 @@ export function loginUser(email, username, password, rememberMe) {
 export function registerUser(userId, email, username, password) {
   const encryptedPassword = MD5(password).toString();
   const clientInfo = detectClient();
+  const siteUrl = location.host;
 
   const params = {
     user_id: userId,
@@ -171,7 +172,8 @@ export function registerUser(userId, email, username, password) {
     username: username,
     password: encryptedPassword,
     browser: clientInfo.browser,
-    os: clientInfo.os
+    os: clientInfo.os,
+    site_url: siteUrl
   };
 
   return (dispatch) => {
@@ -278,11 +280,13 @@ function errorResendEmailDispatcher(error) {
 
 export function resendConfirmationEmail(email) {
   const clientInfo = detectClient();
+  const siteUrl = location.host;
 
   const params = {
-    'email': email,
-    'browser': clientInfo.browser,
-    'os': clientInfo.os
+    email: email,
+    browser: clientInfo.browser,
+    os: clientInfo.os,
+    site_url: siteUrl
   };
 
   return (dispatch) => {
@@ -332,11 +336,13 @@ function errorResetPasswordEmailDispatcher(error) {
 
 export function sendResetPasswordEmail(email) {
   const clientInfo = detectClient();
+  const siteUrl = location.host;
 
   const params = {
-    'email': email,
-    'browser': clientInfo.browser,
-    'os': clientInfo.os
+    email: email,
+    browser: clientInfo.browser,
+    os: clientInfo.os,
+    site_url: siteUrl
   };
 
   return (dispatch) => {
@@ -388,7 +394,6 @@ function errorResetPasswordSubmitDispatcher(error) {
 export function sendResetPasswordSubmit(token, password) {
   const encryptedPassword = MD5(password).toString();
 
-  console.log(password, encryptedPassword);
   const params = {
     token: token,
     password: encryptedPassword
