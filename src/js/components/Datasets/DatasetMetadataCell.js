@@ -10,6 +10,7 @@ import FieldTypes from '../../constants/FieldTypes';
 import ColumnChart from '../Visualizations/Charts/ColumnChart';
 import Histogram from '../Visualizations/Charts/Histogram';
 import LineChart from '../Visualizations/Charts/LineChart';
+import Number from '../Base/Number';
 import DropDownMenu from '../Base/DropDownMenu';
 import { setFieldIsId, setFieldColor, setFieldType } from '../../actions/FieldPropertiesActions';
 import { numberWithCommas, getRoundedString } from '../../helpers/helpers.js';
@@ -71,11 +72,11 @@ class DatasetMetadataCell extends Component {
 
   render() {
     const { projectId, datasetId, fieldProperty, preloaded } = this.props;
-    const { id, generalType, vizData, typeScores, isChild, isUnique, stats, uniqueValues } = fieldProperty;
+    const { id, generalType, vizData, typeScores, isChild, isUnique, stats, uniqueValues, numNa } = fieldProperty;
     const { color, isId, fieldTypes } = this.state;
     const prefixIcon = fieldTypes.find((ft) => ft.value == fieldProperty.type).prefixIcon;
 
-
+    console.log(fieldProperty, numNa, stats);
     const colors = [ color ];
     const showTypeScores = false;
     const additionalOptions = {
@@ -186,6 +187,12 @@ class DatasetMetadataCell extends Component {
               <div><span className={ styles.field }>Unique Values</span><span className={ styles.value }>{ getRoundedString(stats.unique) } ({ getRoundedString((stats.unique / stats.count) * 100) }%)</span></div>
               <div><span className={ styles.field }>Most Frequent</span><span className={ styles.value }>{ stats.top }</span></div>
               <div><span className={ styles.field }>Most Occurrences</span><span className={ styles.value }>{ getRoundedString(stats.freq) }</span></div>
+              <div>
+                <span className={ styles.field }>Null</span>
+                <span className={ styles.value }>
+                  <Number value={ getRoundedString(numNa) } />{ numNa > 0 && stats.totalCount && <Number value={ (numNa / stats.totalCount) * 100 } prefix='(' suffix='%)' style={{ marginLeft: '3px' }} /> }
+                </span>
+              </div>              
             </div>
           }
           { typeScores && showTypeScores &&
@@ -222,7 +229,13 @@ class DatasetMetadataCell extends Component {
               <div><span className={ styles.field }>Mean</span><span className={ styles.value }>{ getRoundedString(stats.mean) }</span></div>
               <div><span className={ styles.field }>Median</span><span className={ styles.value }>{ getRoundedString(stats['50%']) }</span></div>
               <div><span className={ styles.field }>Range</span><span className={ styles.value }>{ getRoundedString(stats.min) } - { getRoundedString(stats.max) }</span></div>
-              <div><span className={ styles.field }>Std</span><span className={ styles.value }>{ getRoundedString(stats.std) }</span></div>
+              <div><span className={ styles.field }>Std</span><span className={ styles.value }>{ getRoundedString(stats.std) }</span></div> 
+              <div>
+                <span className={ styles.field }>Null</span>
+                <span className={ styles.value }>
+                  <Number value={ getRoundedString(numNa) } />{ numNa > 0 && stats.totalCount && <Number value={ (numNa / stats.totalCount) * 100 } prefix='(' suffix='%)' style={{ marginLeft: '3px' }} />  }
+                </span>
+              </div>
             </div>
           }
           { typeScores && showTypeScores &&

@@ -75,7 +75,7 @@ const specLevelToAction = [
 export function getInitialState(projectId, datasetSelector, fieldProperties) {
   const { nRows, nCols } = datasetSelector.details;
   let recommendationMode = 'expanded';
-  if (nCols > 20) {
+  if (nCols > 40 && nRows > 1000) {
     recommendationMode = 'regular'
   }
   return {
