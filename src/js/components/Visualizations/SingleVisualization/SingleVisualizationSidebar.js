@@ -47,9 +47,10 @@ export class SingleVisualizationSidebar extends Component {
 
     const visualizationTypes = filters.visualizationTypes.filter((visualizationType) =>
       (visualization.spec.vizTypes.indexOf(visualizationType.type) > -1)
-    ).map((visualizationType) =>
-      new Object({ ...visualizationType, selected: visualizationType.type == visualizationType })
+    ).map((visualizationTypeObject) =>
+      new Object({ ...visualizationTypeObject, selected: visualizationTypeObject.type == visualizationType })
     );
+
 
     return (
       <Sidebar>
