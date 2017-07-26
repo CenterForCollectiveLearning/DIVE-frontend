@@ -76,7 +76,7 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
   };
 
   const cFieldProperties = json.fieldProperties
-    .filter((property) => property.generalType == 'c' || property.scale == 'ordinal')
+    .filter((property) => property.generalType == 'c')
     .map((property) =>
       new Object({
         ...property,
@@ -109,7 +109,14 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
         ...property,
         selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
         aggregations: AGGREGATIONS,
-        transformations: (property.stats.min < 0) ? TRANSFORMATIONS_NO_LOG : TRANSFORMATIONS
+        transformations: (property.stats.min < 0) ? TRANSFORMATIONS_NO_LOG : TRANSFORMATIONS,
+        values: (property.uniqueValues && property.scale == 'ordinal') ? [allValuesMenuItem, ...property.uniqueValues.map((value, i) =>
+          new Object({
+            selected: false,
+            value: `${ value }`,
+            label: value
+          })
+        )] : [allValuesMenuItem]
       })
     );
 
