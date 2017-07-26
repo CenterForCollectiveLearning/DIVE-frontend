@@ -131,8 +131,8 @@ export default class Visualization extends Component {
 
     var tooMuchDataString = '';
     if (tooMuchDataToPreview || tooMuchDataToShowFull) {
-      tooMuchDataString = 'Top 20';
-      finalDataArray = data.slice(0, 20);
+      tooMuchDataString = 'Top 1000';
+      finalDataArray = data.slice(0, 1000);
     }
 
     const noData = finalDataArray.length == 1;
