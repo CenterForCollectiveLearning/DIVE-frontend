@@ -191,6 +191,7 @@ export class ComparisonView extends Component {
                 <AnovaText
                   dependentVariableNames={ dependentVariableNames }
                   independentVariableNames={ independentVariableNames }
+                  pairwiseComparisonData={ pairwiseComparison }
                   anovaData={ anova }
                 />
               </div>

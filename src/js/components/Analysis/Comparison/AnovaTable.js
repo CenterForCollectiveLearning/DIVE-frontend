@@ -10,11 +10,13 @@ export default class AnovaTable extends Component {
   render() {
     const { anovaData } = this.props;
 
+    console.log('In AnovaTable', anovaData.columnHeaders);
+
     const data = [
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
-        items: ["", ...anovaData.columnHeaders]
+        items: ["", ...anovaData.columnHeaders.slice(0, anovaData.columnHeaders.length - 2), 'Identical']
       },
       ...anovaData.stats.map(function(object) {
         return new Object({

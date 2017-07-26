@@ -113,7 +113,7 @@ export default class Number extends Component {
     );
 
     return (
-      <div
+      <span
         className={ 
           styles.number + 
           (this.props.className ? ' ' + this.props.className : '') +
@@ -134,7 +134,7 @@ export default class Number extends Component {
           </Popover>
         }
         { !(fullPrecisionOnMouseOver && reduceInformation) && finalContent }
-      </div>
+      </span>
     );
   }
 }
