@@ -141,10 +141,10 @@ export class SingleVisualizationView extends Component {
           </div>
           <div className={ styles.headerControl }>
             <div className="pt-button-group">
-              <Button onClick={ this.onClickShare }>
+              {/* <Button onClick={ this.onClickShare }>
                 { visualization.isExporting && "Exporting..." }
                 { !visualization.isExporting && "URL" }
-              </Button>
+              </Button> */}
               <Button text="SVG" onClick={ () => this.saveAs(fileName, 'svg') } fullWidth={ true }/>
               <Button text="PNG" onClick={ () => this.saveAs(fileName, 'png') } fullWidth={ true }/>
               <Button text="PDF" onClick={ () => this.saveAs(fileName, 'pdf') } fullWidth={ true }/>

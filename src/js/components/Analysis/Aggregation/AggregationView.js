@@ -145,13 +145,13 @@ export class AggregationView extends Component {
           <HeaderBar
             actions={
               <div className={ styles.headerControlRow }>
-                <div className={ styles.headerControl }>
+                {/* <div className={ styles.headerControl }>
                   <Button
                     iconName='share'
                     onClick={ this.onClickShare }
                     loading={ isExporting }
                   />
-                </div>
+                </div> */}
                 <div className={ styles.headerControl }>
                   <Button
                     onClick={ this.saveAggregation }

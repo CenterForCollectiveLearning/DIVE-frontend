@@ -115,7 +115,7 @@ export class CorrelationView extends Component {
         <HeaderBar
           actions={
             <div className={ styles.headerControlRow }>
-              <div className={ styles.headerControl }>
+              {/* <div className={ styles.headerControl }>
                 <Button
                   iconName='share'
                   onClick={ this.onClickShare }
@@ -123,7 +123,7 @@ export class CorrelationView extends Component {
                 >
                   { !isExporting && "Share" }
                 </Button>
-              </div>
+              </div> */}
               <div className={ styles.headerControl }>
                 <Button
                   onClick={ this.saveCorrelation }
