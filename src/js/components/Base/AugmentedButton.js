@@ -39,6 +39,7 @@ export default class AugmentedButton extends Component {
       selectedMenuItemIsDefault = selectedMenuItemIndex == 0;
     }
 
+
     const buttonContent = <Button
       className={
         styles.augmentedButton + ' ' +
@@ -53,7 +54,6 @@ export default class AugmentedButton extends Component {
       iconName={ item.ptIcon ? item.iconName : '' }
       disabled={ item.disabled }
       // separated={ separated }
-      
       // selectMenuItem={ selectMenuItem }
       // onDelete={ onDelete }
     >
@@ -63,7 +63,7 @@ export default class AugmentedButton extends Component {
           alt={ altTextMember ? item[altTextMember] : item[displayTextMember] } />
         : this.props.content
       }
-      { !imageNameMember &&
+      { !imageNameMember && item[displayTextMember] &&
         <DynamicFont smooth content={ item[displayTextMember] } />
       }
     </Button>

@@ -44,8 +44,8 @@ export class ComparisonBasePage extends Component {
     var newQueryStringModifier = {};
 
     const numIndependentFields = independentVariablesIds.length;
-    if ( numIndependentFields > 2 ) {
-      newQueryStringModifier.independentVariablesIds = independentVariablesIds.slice(0, numIndependentFields - 2);
+    if ( numIndependentFields > 1 ) {
+      newQueryStringModifier.independentVariablesIds = independentVariablesIds.slice(0, numIndependentFields - 1);
     }
 
     const numDependentFields = dependentVariablesIds.length;

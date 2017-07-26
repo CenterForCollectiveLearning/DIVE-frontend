@@ -16,12 +16,16 @@ export default class AnovaText extends Component {
         )
       : <b>{ independentVariableNames }</b>;
 
-    console.log(pairwiseComparisonData);
     const F = anovaData.stats[0].stats[3]
     const pValue = anovaData.stats[0].stats[4];
     const numGroups = anovaData.stats[0].stats[0] + 1;
-    const numComparisons = pairwiseComparisonData.rows.length;
-    const numDistinct = pairwiseComparisonData.rows.filter((r) => r[5] < 0.05).length;
+
+    let numComparisons;
+    let numDistinct;
+    if (pairwiseComparisonData.rows) {
+      numComparisons = pairwiseComparisonData.rows.length;
+      numDistinct = pairwiseComparisonData.rows.filter((r) => r[5] < 0.05).length;      
+    }
 
     let significanceRating;
     let distinct = false;
@@ -48,9 +52,9 @@ export default class AnovaText extends Component {
         <p className="pt-running-text">
           A { textParams.anovaType } analysis of variance (ANOVA) comparing <b>{ textParams.dependentVariableName }</b> by <b>{ textParams.independentVariableNames }</b> indicates that the different groups of <b>{ textParams.independentVariableNames }</b> are <b>{ distinct ? '' : 'not' } distinct</b>, <b>{ significanceRating }</b> with a p-value of <b>{ getRoundedString(pValue) }</b> (F = { getRoundedString(F) }; significance cut-off p &lt; 0.05).
         </p>
-        <p className="pt-running-text">
+        { pairwiseComparisonData.rows && <p className="pt-running-text">
           Post-hoc pairwise comparisons between { numGroups } groups of <b>{ textParams.independentVariableNames }</b> using the Tukey HSD test indicated that <b>{ textParams.dependentVariableName }</b> is significantly distinct (p &lt; 0.05) between { numDistinct } groups.
-        </p>
+        </p> }
       </div>
     );
   }
