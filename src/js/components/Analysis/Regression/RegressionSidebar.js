@@ -295,7 +295,10 @@ export class RegressionSidebar extends Component {
               }
               { fieldProperties.interactionTerms.length > 0 &&
                 <div className={ styles.fieldGroup }>
-                  <div className={ styles.fieldGroupLabel }>Interaction Terms</div>
+                  <div className={ styles.fieldGroupHeader }>
+                    <span className={ styles.fieldGroupLabel }>Interaction Terms</span>
+                    <span className={ "pt-icon-standard pt-icon-unresolve " + styles.generalTypeIcon } />
+                  </div>
                   { fieldProperties.interactionTerms.length > 0 ?
                       <ToggleButtonGroup
                         toggleItems={ fieldProperties.interactionTerms.map((item) =>
@@ -327,7 +330,8 @@ export class RegressionSidebar extends Component {
                   margin='2px'
                   value={ interactionVariables[0] }
                   options={ fieldProperties.items.filter((item) =>
-                    item.id != parseInt(dependentVariableId) && item.id != interactionVariables[1]
+                    !item.isId
+                      && item.id != parseInt(dependentVariableId) && item.id != interactionVariables[1]
                       && filterInteractionTermSelection(item.id, interactionVariables[1], fieldProperties.interactionTerms))
                   }
                   valueMember="id"
@@ -337,7 +341,8 @@ export class RegressionSidebar extends Component {
                   width='50%'
                   value={ interactionVariables[1] }
                   options={ fieldProperties.items.filter((item) =>
-                    item.id != parseInt(dependentVariableId) && item.id != interactionVariables[0]
+                    !item.isId
+                      && item.id != parseInt(dependentVariableId) && item.id != interactionVariables[0]
                       && filterInteractionTermSelection(item.id, interactionVariables[0], fieldProperties.interactionTerms))
                   }
                   valueMember="id"
