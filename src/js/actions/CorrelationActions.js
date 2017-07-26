@@ -19,7 +19,7 @@ import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
 
 export function getInitialState(projectId, datasetId, fieldProperties) {
-  var quantitativeItemIds = fieldProperties.filter((item) => (item.generalType == 'q' && !item.isId)).map((item) => item.id)
+  var quantitativeItemIds = fieldProperties.filter((item) => (item.generalType == 'q' && item.scale == 'continuous' && !item.isId)).map((item) => item.id)
   var n_q = quantitativeItemIds.length;
   var selectedVariablesIds = [];
 

@@ -49,7 +49,7 @@ export class CorrelationSidebar extends Component {
 
   render() {
     const { fieldProperties, conditionals, correlationVariablesIds, selectConditional } = this.props;
-    const quantitativeVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q')
+    const quantitativeVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q' && item.scale == 'continuous')
     return (
       <Sidebar selectedTab="correlation">
         <SidebarCategoryGroup
