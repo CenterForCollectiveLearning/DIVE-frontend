@@ -19,7 +19,7 @@ import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
 
 export function getInitialState(projectId, datasetId, fieldProperties) {
-  var categoricalItemIds = fieldProperties.filter((item) => ((item.generalType == 'c') && (!item.isId))).map((item) => item.id);
+  var categoricalItemIds = fieldProperties.filter((item) => ((item.generalType == 'c') && (!item.isId) && (item.stats.unique > 1))).map((item) => item.id);
   var quantitativeItemIds = fieldProperties.filter((item) => ((item.generalType == 'q') && (!item.isId))).map((item) => item.id);
   var n_c = categoricalItemIds.length;
   var n_q = quantitativeItemIds.length;

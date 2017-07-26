@@ -51,6 +51,7 @@ export default class AugmentedButton extends Component {
       style={ colorMember ? { 'borderLeftColor': item[colorMember] } : {} }
       onClick={ () => onChange(item[valueMember].toString()) }
       iconName={ item.ptIcon ? item.iconName : '' }
+      disabled={ item.disabled }
       // separated={ separated }
       
       // selectMenuItem={ selectMenuItem }

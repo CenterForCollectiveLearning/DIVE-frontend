@@ -128,7 +128,7 @@ export class ExploreSidebar extends Component {
                 <span className={ "pt-icon-standard pt-icon-font " + styles.generalTypeIcon } />
               </div>
               <ToggleButtonGroup
-                toggleItems={ fieldProperties.items.filter((p) => p.generalType == 'c' && !p.isId).map((item) =>
+                toggleItems={ fieldProperties.items.filter((p) => p.generalType == 'c').map((item) =>
                   new Object({
                     id: item.id,
                     name: item.name,
