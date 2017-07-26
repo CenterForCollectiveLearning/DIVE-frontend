@@ -71,12 +71,12 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
 
   const allValuesMenuItem = {
     selected: true,
-    value: "ALL_VALUES",
+    value: "ALL VALUES",
     label: "All Values"
   };
 
   const cFieldProperties = json.fieldProperties
-    .filter((property) => property.generalType == 'c')
+    .filter((property) => property.generalType == 'c' || property.scale == 'ordinal')
     .map((property) =>
       new Object({
         ...property,
