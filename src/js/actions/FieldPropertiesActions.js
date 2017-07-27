@@ -98,6 +98,13 @@ function receiveFieldPropertiesDispatcher(projectId, datasetId, json, selectedFi
           ...property,
           selected: selectedFieldPropertyNames.indexOf(property.name) >= 0,
           aggregations: AGGREGATIONS,
+          values: (property.uniqueValues && property.scale == 'ordinal') ? [allValuesMenuItem, ...property.uniqueValues.map((value, i) =>
+            new Object({
+              selected: false,
+              value: `${ value }`,
+              label: value
+            })
+          )] : [allValuesMenuItem]         
         })
       );
 
