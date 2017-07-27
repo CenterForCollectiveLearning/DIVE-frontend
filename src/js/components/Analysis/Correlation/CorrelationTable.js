@@ -19,6 +19,10 @@ export default class CorrelationTable extends Component {
     const backgroundColorScale = d3Scale.scaleLinear().domain([-1, 0, 1]).range(['red', 'white', 'green']);
     const fontColorScale = d3Scale.scaleThreshold().domain([-1, 0, 1]).range(['white', 'black', 'white']);
 
+    if (!correlationResult || !scatterplotData) {
+      return <div />;
+    }
+
     var additionalOptions = {
       pointSize: 2,
       chartArea: {

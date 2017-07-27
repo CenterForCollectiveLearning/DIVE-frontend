@@ -196,7 +196,7 @@ export default class RegressionTable extends Component {
       <div className={ styles.regressionTable }>
         <BareDataGrid data={ data } preview={ preview }/>     
         <div className={ styles.pValueLegend }>
-          { this.pValueThresholds.map((pValueThreshold) =>
+          { !preview && this.pValueThresholds.map((pValueThreshold) =>
             <span>{ `${ pValueThreshold.symbol } p < `} <Number value={ pValueThreshold.threshold } style={{ marginLeft: '3px' }} /></span>
           )}
         </div>

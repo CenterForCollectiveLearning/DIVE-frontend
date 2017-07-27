@@ -35,7 +35,7 @@ export default class ComposeBlockCorrelation extends Component {
     const width = isHalfWidthFormat ? 620 : absoluteMaxWidth;
     const height = isHalfWidthFormat ? 300 : null;
 
-    const correlationTableComponent = <CorrelationTable correlationResult={ spec.data.table || {} } preview={ false }/>
+    const correlationTableComponent = <CorrelationTable correlationResult={ spec.data.table || {} } scatterplotData={ spec.data.scatterplots || [] } preview={ false }/>
 
     return (
       <div ref="composeBlockVisualization" className={ styles.composeBlockVisualization }>

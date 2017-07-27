@@ -18,7 +18,7 @@ export default class ComposeCorrelationPreviewBlock extends Component {
 
   render() {
     const { spec } = this.props;
-    const { table } = spec.data;
+    const { table, scatterplots } = spec.data;
 
     return (
       <div className={ styles.contentPreviewBlockContainer + ' pt-card pt-interactive'}
@@ -30,7 +30,7 @@ export default class ComposeCorrelationPreviewBlock extends Component {
             </span>
           }
           { (table && table.rows) &&
-            <CorrelationTable correlationResult={ table || {} } preview={ true }/>
+            <CorrelationTable correlationResult={ table || {} } scatterplotData={ scatterplots } preview={ true }/>
           }
         </div>
       </div>
