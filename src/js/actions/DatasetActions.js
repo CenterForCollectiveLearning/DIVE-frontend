@@ -225,6 +225,16 @@ export function uploadDataset(projectId, datasetFile) {
       }
     };
 
+    if (window.__env.SUBDOMAIN == 'elc') {
+      const permittedElcFilenames = [ 'Eyeshadow_data.csv' ];
+      if (permittedElcFilenames.indexOf(datasetFile.name) < 0) {
+        return dispatch(errorTaskUploadDatasetDispatcher({
+          type: 'error',
+          message: `File not permitted.`
+        }));    
+      }
+    }    
+
     if (fileSize > fileSizeLimit) {
       return dispatch(errorTaskUploadDatasetDispatcher({
         type: 'error',
