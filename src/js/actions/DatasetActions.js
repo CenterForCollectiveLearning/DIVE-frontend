@@ -179,6 +179,14 @@ function datasetOverSizeLimit(result, mimeType=null) {
   return false;
 }
 
+const permittedElcFilenames = [
+  'EyeBrow_Ratings_Reviews.csv',
+  'EyeShadow_Ratings_Reviews.csv',
+  'Foundation_Ratings_Reviews.csv',
+  'Sephora_Foundation_TimeSeries.csv',
+  'Ulta_Foundation_TimeSeries.csv'
+]
+
 export function uploadDataset(projectId, datasetFile) {
   var formData = new FormData();
   formData.append('data', JSON.stringify({ project_id: projectId }));
@@ -226,7 +234,6 @@ export function uploadDataset(projectId, datasetFile) {
     };
 
     if (window.__env.SUBDOMAIN == 'elc') {
-      const permittedElcFilenames = [ 'Eyeshadow_data.csv' ];
       if (permittedElcFilenames.indexOf(datasetFile.name) < 0) {
         return dispatch(errorTaskUploadDatasetDispatcher({
           type: 'error',
