@@ -22,7 +22,7 @@
     "griddle-react": "^0.2.14",
     "history": "1.17.0",
     "isomorphic-fetch": "^2.1.1",
-    "jspdf": "git://github.com/MrRio/jsPDF/#76edb3387cda3d5292e212765134b06150030364",
+    "jspdf": "git+https://github.com/MrRio/jsPDF/#76edb3387cda3d5292e212765134b06150030364",
     "jsx-loader": "^0.13.2",
     "less": "^2.5.3",
     "less-loader": "^2.2.1",
