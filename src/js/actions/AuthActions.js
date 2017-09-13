@@ -64,6 +64,7 @@ function requestRegisterUserDispatcher() {
 function receiveRegisterUserDispatcher(json) {
   return {
     type: RECEIVE_REGISTER_USER,
+    confirmed: json.user.confirmed,
     id: json.user.id,
     username: json.user.username,
     email: json.user.email,
