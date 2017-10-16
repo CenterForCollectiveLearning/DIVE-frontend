@@ -205,9 +205,9 @@ class DatasetMetadataCell extends Component {
           }
           { ( children.length > 0 || parents.length > 0 || oneToOnes.length > 0 ) &&
             <div className={ styles.relationships + ' ' + styles.statistics }>
-              { ( children.length > 0 ) && <div><span className={ styles.field }>Children ({ children.length })</span><span className={ styles.value }>{ children.join(', ') }</span></div> }
-              { ( parents.length > 0 ) && <div><span className={ styles.field }>Parents ({ parents.length })</span><span className={ styles.value }>{ parents.join(', ') }</span></div> }
-              { ( oneToOnes.length > 0 ) && <div><span className={ styles.field }>One-to-One ({ oneToOnes.length })</span><span className={ styles.value }>{ oneToOnes.join(', ') }</span></div> }
+              { ( children && children.length > 0 ) && <div><span className={ styles.field }>Children ({ children.length })</span><span className={ styles.value }>{ children.join(', ') }</span></div> }
+              { ( parents && parents.length > 0 ) && <div><span className={ styles.field }>Parents ({ parents.length })</span><span className={ styles.value }>{ parents.join(', ') }</span></div> }
+              { ( oneToOnes && oneToOnes.length > 0 ) && <div><span className={ styles.field }>One-to-One ({ oneToOnes.length })</span><span className={ styles.value }>{ oneToOnes.join(', ') }</span></div> }
             </div>
           }
           {/* <div className={ styles.toggles }>
