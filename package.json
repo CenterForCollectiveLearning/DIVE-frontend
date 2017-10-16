@@ -33,6 +33,7 @@
     "node-sass": "^4.5.3",
     "normalize.css": "^7.0.0",
     "postcss-import": "^11.0.0",
+    "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-addons-css-transition-group": "^15.4.2",
     "react-color": "^2.2.6",
@@ -42,6 +43,7 @@
     "react-dom": "^16.0.0",
     "react-dropzone": "^4.2.0",
     "react-dynamic-font": "0.0.4",
+    "react-fittext": "^1.0.0",
     "react-ga": "^2.1.2",
     "react-hot-loader": "^3.0.0-beta.4",
     "react-keydown": "^1.4.8",
@@ -112,6 +114,7 @@
     "string-replace-loader": "^1.0.3",
     "style-loader": "^0.19.0",
     "svg-react-loader": "^0.4.5",
+    "universal-cookie": "^2.1.0",
     "webpack": "^3.7.1",
     "webpack-dev-server": "^2.9.2",
     "webpack-isomorphic-tools": "^3.0.5"

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import baseStyles from './AuthModal.sass';
 import { push, goBack } from 'react-router-redux';
 import { connect } from 'react-redux';

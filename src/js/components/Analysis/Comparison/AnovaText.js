@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { getRoundedString } from '../../../helpers/helpers';
 import Number from '../../Base/Number';

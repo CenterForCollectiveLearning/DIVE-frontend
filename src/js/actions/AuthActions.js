@@ -25,7 +25,6 @@ import {
 import { push } from 'react-router-redux';
 
 import { detectClient } from '../helpers/auth';
-import cookie from 'react-cookie';
 import MD5 from 'crypto-js/md5';
 import { rawFetch } from './api';
 

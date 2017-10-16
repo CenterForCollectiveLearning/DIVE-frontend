@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styles from './Number.sass';
 
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem } from '@blueprintjs/core';
