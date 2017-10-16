@@ -72,7 +72,7 @@ class DatasetMetadataCell extends Component {
 
   render() {
     const { projectId, datasetId, fieldProperty, preloaded } = this.props;
-    const { id, generalType, vizData, typeScores, isChild, isUnique, stats, uniqueValues, numNa } = fieldProperty;
+    const { id, generalType, vizData, typeScores, isChild, isUnique, stats, uniqueValues, numNa, children, parents, oneToOnes } = fieldProperty;
     const { color, isId, fieldTypes } = this.state;
     const prefixIcon = fieldTypes.find((ft) => ft.value == fieldProperty.type).prefixIcon;
 
@@ -203,6 +203,11 @@ class DatasetMetadataCell extends Component {
               ) }
             </div>
           }
+          <div className={ styles.relationships + ' ' + styles.statistics }>
+            { ( children.length > 0 ) && <div><span className={ styles.field }>Children ({ children.length })</span><span className={ styles.value }>{ children.join(', ') }</span></div> }
+            { ( parents.length > 0 ) && <div><span className={ styles.field }>Parents ({ parents.length })</span><span className={ styles.value }>{ parents.join(', ') }</span></div> }
+            { ( oneToOnes.length > 0 ) && <div><span className={ styles.field }>One-to-One ({ oneToOnes.length })</span><span className={ styles.value }>{ oneToOnes.join(', ') }</span></div> }
+          </div>
           {/* <div className={ styles.toggles }>
             <div className={ styles.left }>
               <input type="checkbox"
