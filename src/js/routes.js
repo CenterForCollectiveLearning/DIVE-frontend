@@ -87,16 +87,36 @@ const routes = [
         { path: 'reset/:token', component: ResetPasswordSubmitPage },          
       ]
     },{
-      path: 'landing',
+      path: '/landing',
       component: { LandingPage },
       routes: [
+        { path: '/projects', component: requireAuthentication(ProjectListPage) }    
       ]
     }
     ]
+  },
+  {
+    path: '/',
+    exact: true,
+    component: LandingPage
   }
 ]
 
-export default routes;
+const RouteWithSubRoutes = (route) => (
+  <Route path={ route.path } render={ props => (
+    <route.component { ...props } routes={ route.routes }/>
+  )}/>
+)
+
+export default (
+  <div>
+    { routes.map((route, i) => (
+      <RouteWithSubRoutes key={i} {...route} />
+    ))}
+  </div>
+);
+
+<Redirect from='*' to='/notfound' />
 
 // export default (
 //   <Router>

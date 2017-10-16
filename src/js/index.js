@@ -39,20 +39,10 @@ history.listen(function(location) {
   window.ReactGA.pageview(fullPath);
 });
 
-const RouteWithSubRoutes = (route) => (
-  <Route path={route.path} render={props => (
-    <route.component {...props} routes={route.routes}/>
-  )}/>
-)
-
 ReactDOM.render((
   <Provider store={ store }>
     <ConnectedRouter history={ history }>
-      <div>
-        { routes.map((route, i) => (
-          <RouteWithSubRoutes key={i} {...route} />
-        ))}
-      </div>
+      { routes }
     </ConnectedRouter>
   </Provider>
   ), document.getElementById('main')

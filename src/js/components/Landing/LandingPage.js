@@ -92,6 +92,7 @@ export class LandingPage extends Component {
     const { user, location } = this.props;
     const onLandingPage = (location.pathname == '/');
 
+    console.log('In landing page');
     return (
       <DocumentTitle title='DIVE | Landing'>
         <div className={ styles.fillContainer + ' ' + styles.landingPage } onScroll={ this._handleScroll }>

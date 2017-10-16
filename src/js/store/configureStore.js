@@ -4,6 +4,7 @@ import { routerMiddleware } from 'react-router-redux';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import { enableBatching } from 'redux-batched-actions';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import { analyticsMiddleware } from '../middleware/analytics';
 import debounce from 'redux-debounced';
 import {
@@ -46,9 +47,9 @@ export default function configureStore(initialState) {
   const store = createStore(
     enableBatching(rootReducer),
     initialState,
-    applyMiddleware(
+    composeWithDevTools(applyMiddleware(
       ...middleware
-    )
+    )),
   );
 
   if (module.hot) {

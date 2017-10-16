@@ -6,8 +6,9 @@ import { push } from 'react-router-redux';
 import styles from './Link.sass';
 
 export class Link extends Component {
-  goToRoute() {
+  goToRoute = () => {
     const { route, push } = this.props;
+    console.log('Go to', route);
     push(route);
   }
 
@@ -16,7 +17,7 @@ export class Link extends Component {
     return (
       <div
         className={ styles.link + (className ? ' ' + className : '') }
-        onClick={ route ? this.goToRoute.bind(this) : onClick }>
+        onClick={ route ? this.goToRoute : onClick }>
         { children }
       </div>
     );
