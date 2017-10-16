@@ -1,7 +1,7 @@
 import React from 'react';
-import { Route, IndexRoute, Redirect } from 'react-router';
+import { ConnectedRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { push } from 'react-router-redux';
-import { UserAuthWrapper } from 'redux-auth-wrapper';
+import connectedAuthWrapper from 'redux-auth-wrapper/connectedAuthWrapper'
 
 // Auth
 import LoginPage from './components/Auth/LoginPage';
@@ -57,8 +57,8 @@ import NarrativeBasePage from './components/Compose/NarrativeBasePage';
 import NarrativePage from './components/Compose/NarrativePage';
 
 
-const requireAuthentication = UserAuthWrapper({
-  authSelector: state => state.user,
+const requireAuthentication = connectedAuthWrapper({
+  authenticatedSelector: state => state.user,
   predicate: user => (user.isAuthenticated || (user.anonymous && user.id)),
   failureRedirectPath: '/auth/login',
   redirectAction: function({ pathname, query }){
@@ -71,62 +71,95 @@ const requireAuthentication = UserAuthWrapper({
   wrapperDisplayName: 'UserIsAuthenticated'
 })
 
-export default (
-  <Route path="/" component={ App }>
-    <Route path="/auth" component={ AuthPage }>
-      <Route path="login" component={ LoginPage }/>
-      <Route path="register" component={ RegisterPage }/>
-      <Route path="activate/:token" component={ ActivatePage } />
-      <Route path="unconfirmed" component={ UnconfirmedPage }/>
-      <Route path="reset" component={ ResetPasswordEmailPage }/>
-      <Route path="reset/:token" component={ ResetPasswordSubmitPage }/>
-    </Route>
+const routes = [
+  {
+    path: '/',
+    component: App,
+    routes: [{
+      path: '/auth',
+      component: AuthPage,
+      routes: [
+        { path: 'login', component: LoginPage },
+        { path: 'register', component: RegisterPage },
+        { path: 'activate/:token', component: ActivatePage },
+        { path: 'unconfirmed', component: UnconfirmedPage },
+        { path: 'reset', component: ResetPasswordEmailPage },
+        { path: 'reset/:token', component: ResetPasswordSubmitPage },          
+      ]
+    },{
+      path: 'landing',
+      component: { LandingPage },
+      routes: [
+      ]
+    }
+    ]
+  }
+]
 
-    <IndexRoute component={ LandingPage }/>
-    <Route path="/landing" component={ LandingPage }>
-      <Route path="/projects" component={ requireAuthentication(ProjectListPage) }/>
-      <Route path="/preloaded" component={ requireAuthentication(PreloadedProjectListPage) }/>
-      <Route path="/story" component={ StoryPage }/>
-      <Route path="/faq" component={ FAQPage }/>
-      <Route path="/about" component={ AboutPage }/>
-      <Route path='/unauthorized' component={ UnauthorizedPage }/>
-      <Route path='/notfound' component={ NotFoundPage }/>
-    </Route>
+export default routes;
 
-    <Route path="/exportedstory" component={ NarrativeBasePage }>
-      <Route path=":documentId" component={ NarrativePage }/>
-    </Route>
+// export default (
+//   <Router>
+//     { routes.map((route, i) => (
+//       <RouteWithSubRoutes key={i} {...route} />
+//     ))}
+//   </Router>
+// );
 
-    <Route path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }>
-      <Route path="datasets" component={ DatasetsPage }>
-        <Route path="menu" component={ DatasetsMenuPage }/>        
-        <Route path="upload" component={ DatasetUploadPage }/>
-        <Route path="preloaded" component={ DatasetPreloadedPage }/>
-        <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>
-        <Route path=":datasetId/transform" component={ DatasetTransformPage }/>
-      </Route>
+//   <App>
+//     <Route exact path='/' component={ LandingPage }/>
 
-      <Route path="datasets/:datasetId" component={ DatasetsPage }>
-        <Route path="visualize" component={ VisualizationsPage }>
-          <Route path="explore" component={ ExploreBasePage }/>
-          <Route path="explore/:specId" component={ SingleVisualizationPage }/>
-        </Route>
-        <Route path="analyze" component={ AnalysisPage }>
-          <Route path="menu" component={ AnalysisMenuPage }/>                
-          <Route path="regression" component={ RegressionBasePage }/>
-          <Route path="aggregation" component={ AggregationBasePage }/>
-          <Route path="correlation" component={ CorrelationBasePage }/>
-          <Route path="comparison" component={ ComparisonBasePage }/>
-          <Route path="segmentation" component={ SegmentationPage }/>
-        </Route>
-        <Route path="stories" component={ ComposeBasePage }>
-          <Route path=":documentId" component={ ComposePage }/>
-        </Route>
-      </Route>
+//     <Route path="/auth" component={ AuthPage }>
+//       <Route path="login" component={ LoginPage }/>
+//       <Route path="register" component={ RegisterPage }/>
+//       <Route path="activate/:token" component={ ActivatePage } />
+//       <Route path="unconfirmed" component={ UnconfirmedPage }/>
+//       <Route path="reset" component={ ResetPasswordEmailPage }/>
+//       <Route path="reset/:token" component={ ResetPasswordSubmitPage }/>
+//     </Route>
 
-    </Route>
-    <Route path="/share/projects/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>
+//     <Route path="/landing" component={ LandingPage }>
+//       <Route path="/projects" component={ requireAuthentication(ProjectListPage) }/>
+//       <Route path="/preloaded" component={ requireAuthentication(PreloadedProjectListPage) }/>
+//       <Route path="/story" component={ StoryPage }/>
+//       <Route path="/faq" component={ FAQPage }/>
+//       <Route path="/about" component={ AboutPage }/>
+//       <Route path='/unauthorized' component={ UnauthorizedPage }/>
+//       <Route path='/notfound' component={ NotFoundPage }/>
+//     </Route>
 
-    <Redirect from='*' to='/notfound' />
-  </Route>
-);
+//     <Route path="/exportedstory" component={ NarrativeBasePage }>
+//       <Route path=":documentId" component={ NarrativePage }/>
+//     </Route>
+
+//     <Route path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }>
+//       <Route path="datasets" component={ DatasetsPage }>
+//         <Route path="menu" component={ DatasetsMenuPage }/>        
+//         <Route path="upload" component={ DatasetUploadPage }/>
+//         <Route path="preloaded" component={ DatasetPreloadedPage }/>
+//         <Route path=":datasetId/inspect" component={ DatasetInspectPage }/>
+//         <Route path=":datasetId/transform" component={ DatasetTransformPage }/>
+//       </Route>
+
+//       <Route path="datasets/:datasetId" component={ DatasetsPage }>
+//         <Route path="visualize" component={ VisualizationsPage }>
+//           <Route path="explore" component={ ExploreBasePage }/>
+//           <Route path="explore/:specId" component={ SingleVisualizationPage }/>
+//         </Route>
+//         <Route path="analyze" component={ AnalysisPage }>
+//           <Route path="menu" component={ AnalysisMenuPage }/>                
+//           <Route path="regression" component={ RegressionBasePage }/>
+//           <Route path="aggregation" component={ AggregationBasePage }/>
+//           <Route path="correlation" component={ CorrelationBasePage }/>
+//           <Route path="comparison" component={ ComparisonBasePage }/>
+//           <Route path="segmentation" component={ SegmentationPage }/>
+//         </Route>
+//         <Route path="stories" component={ ComposeBasePage }>
+//           <Route path=":documentId" component={ ComposePage }/>
+//         </Route>
+//       </Route>
+//     </Route>
+//     <Route path="/share/projects/:projectId/visualizations/:exportedSpecId" component={ ExportedVisualizationPage }/>
+//     <Redirect from='*' to='/notfound' />
+//   </App>
+// );

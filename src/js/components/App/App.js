@@ -34,6 +34,7 @@ export class App extends Component {
   }
 
   render() {
+    console.log('In App.js');
     return (
       <div className={ styles.fillContainer + ' ' + styles.appContainer }>
         { this.props.children }
