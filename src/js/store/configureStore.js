@@ -15,7 +15,7 @@ import {
 import rootReducer from '../reducers/index';
 import RavenMiddleware from 'redux-raven-middleware';
 
-import createHistory from 'history/lib/createBrowserHistory';
+import createHistory from 'history/createBrowserHistory';
 
 const loggerMiddleware = createLogger({
   level: 'info',
