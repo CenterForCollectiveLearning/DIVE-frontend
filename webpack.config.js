@@ -46,7 +46,7 @@ module.exports = {
       debug: true
     }),
     new webpack.HotModuleReplacementPlugin(),
-    // new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     devFlagPlugin,
     new ExtractTextPlugin('app.css'),
     new webpack.ProvidePlugin({
@@ -70,9 +70,8 @@ module.exports = {
       { test: /\.css$/, loader: ExtractTextPlugin.extract([ 'css-loader?module', 'postcss-loader' ]) },
       { test: /\.sass$/, loader: [
         'style-loader',
-        'css-loader?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]',
-        'postcss-loader',
-        'sass-loader?indentedSyntax&outputStyle=expanded&sourceMap'
+        'css-loader',
+        'sass-loader'
       ] },
       { test: /\.less$/, loader: [
         'style-loader',
