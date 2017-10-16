@@ -41,9 +41,9 @@ history.listen(function(location) {
 
 ReactDOM.render((
   <Provider store={ store }>
-    <ConnectedRouter history={ history }>
+    <Router history={ history }>
       { routes }
-    </ConnectedRouter>
+    </Router>
   </Provider>
   ), document.getElementById('main')
 );

@@ -70,8 +70,8 @@ module.exports = {
       { test: /\.css$/, loader: ExtractTextPlugin.extract([ 'css-loader?module', 'postcss-loader' ]) },
       { test: /\.sass$/, loader: [
         'style-loader',
-        'css-loader',
-        'sass-loader'
+        'css-loader?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]',
+        'sass-loader?indentedSyntax&outputStyle=expanded&sourceMap'
       ] },
       { test: /\.less$/, loader: [
         'style-loader',
@@ -80,11 +80,14 @@ module.exports = {
       ] },
       { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&minetype=application/font-woff" },
       { test: /\.(ttf|eot|ttf)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
-      { test: /\.svg(\?.*)?$/, loader: 'babel-loader!svg-react-loader' +
+      { test: /\.svg(\?.*)?$/, loader: [
+        'babel-loader',
+        'svg-react-loader',
         // removes xmlns tag from svg (see https://github.com/jhamlet/svg-react-loader/issues/25)
-        '!string-replace-loader?search=%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22&replace=' +
+        'string-replace-loader?search=%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22&replace=',
         // removes data-name attributes
-        '!string-replace-loader?search=%20data-name%3D%22%5B%5Cw%5Cs_-%5D*%22&replace=&flags=ig' },
+        'string-replace-loader?search=%20data-name%3D%22%5B%5Cw%5Cs_-%5D*%22&replace=&flags=ig'
+      ] },
       { test: /\.png$/, loader: "url-loader?mimetype=image/png" },
     ]
   }
