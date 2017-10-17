@@ -1,6 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import { browserHistory } from 'react-router';
-import { routerMiddleware } from 'react-router-redux';
+import { routerMiddleware, routerReducer } from 'react-router-redux';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import { enableBatching } from 'redux-batched-actions';
@@ -16,18 +15,16 @@ import {
 import rootReducer from '../reducers/index';
 import RavenMiddleware from 'redux-raven-middleware';
 
-import createHistory from 'history/createBrowserHistory';
-
 const loggerMiddleware = createLogger({
   level: 'info',
   collapsed: true
 });
 
-export default function configureStore(initialState) {
+export default function configureStore(initialState, history) {
   const middleware = [
     debounce,
     thunkMiddleware,
-    routerMiddleware(browserHistory)
+    routerMiddleware(history)
   ];
 
   if (window.__env.NODE_ENV == "DEVELOPMENT") {

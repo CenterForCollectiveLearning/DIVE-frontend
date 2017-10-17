@@ -6,8 +6,8 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import { Provider } from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
 
-import { Router, Route, browserHistory } from 'react-router-dom'
-import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux'
+import { Router, browserHistory } from 'react-router'
+import { syncHistoryWithStore, push } from 'react-router-redux'
 
 import { FocusStyleManager } from '@blueprintjs/core';
 
@@ -31,7 +31,8 @@ injectTapEventPlugin();
 FocusStyleManager.onlyShowFocusOnTabs();
 
 const store = configureStore();
-const history = createHistory();
+const history = syncHistoryWithStore(browserHistory, store);
+
 history.listen(function(location) {
   const fullPath = location.pathname + location.search;
   window.amplitude.logEvent('Page View', { pathname: fullPath });

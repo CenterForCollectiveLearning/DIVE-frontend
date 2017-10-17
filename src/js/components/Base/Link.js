@@ -9,6 +9,7 @@ export class Link extends Component {
   goToRoute = () => {
     const { route, push } = this.props;
     console.log('Go to', route);
+    console.log(push, this.props);
     push(route);
   }
 
