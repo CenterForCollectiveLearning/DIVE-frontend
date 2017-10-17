@@ -94,6 +94,7 @@ class LoginPage extends Component {
   ensureNotLoggedIn(props) {
     const { user, push } = props;
 
+    console.log('Props in location', props);
     if (user.isAuthenticated && !user.anonymous){
       push(props.location.query.next || '/projects');
     }

@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
+import { routerReducer as routing } from 'react-router-redux';
 
 import composeSelector from './composeSelector';
 import conditionals from './conditionals';
@@ -53,7 +53,7 @@ const rootReducer = combineReducers({
   transformSelector,
   user,
   visualization,
-  routing: routerReducer
+  routing
 });
 
 export default rootReducer;
