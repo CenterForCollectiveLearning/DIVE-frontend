@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import { routerMiddleware, routerReducer } from 'react-router-redux';
 import { browserHistory } from 'react-router';
+import { routerMiddleware } from 'react-router-redux';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import { enableBatching } from 'redux-batched-actions';
@@ -16,7 +16,7 @@ const loggerMiddleware = createLogger({
   collapsed: true
 });
 
-export default function configureStore(initialState, history) {
+export default function configureStore(initialState) {
   const middleware = [
     debounce,
     thunkMiddleware,
@@ -25,9 +25,7 @@ export default function configureStore(initialState, history) {
 
   if (window.__env.NODE_ENV == "DEVELOPMENT") {
     middleware.push(loggerMiddleware)
-  }
-
-  if (window.__env.NODE_ENV != "DEVELOPMENT") {
+  } else {
     middleware.push(analyticsMiddleware)
     middleware.push(RavenMiddleware(
       'https://34b21b0198eb43d4bebc0a35ddd11b5c@app.getsentry.com/75309', {

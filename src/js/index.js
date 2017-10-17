@@ -4,10 +4,8 @@ import ReactGA from 'react-ga';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import { Provider } from 'react-redux';
-import createHistory from 'history/createBrowserHistory';
-
-import { Router, browserHistory } from 'react-router'
-import { syncHistoryWithStore, push } from 'react-router-redux'
+import { Router, browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 
 import { FocusStyleManager } from '@blueprintjs/core';
 
@@ -42,9 +40,7 @@ history.listen(function(location) {
 
 ReactDOM.render((
   <Provider store={ store }>
-    <Router history={ history }>
-      { routes }
-    </Router>
+    <Router history={ history } routes ={ routes } />
   </Provider>
   ), document.getElementById('main')
 );
