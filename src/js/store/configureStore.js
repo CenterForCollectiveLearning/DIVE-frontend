@@ -1,17 +1,13 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware, routerReducer } from 'react-router-redux';
+import { browserHistory } from 'react-router';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import { enableBatching } from 'redux-batched-actions';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { analyticsMiddleware } from '../middleware/analytics';
 import debounce from 'redux-debounced';
-import {
-    REQUEST_EXACT_SPECS,
-    REQUEST_INDIVIDUAL_SPECS,
-    REQUEST_SUBSET_SPECS,
-    REQUEST_EXPANDED_SPECS
-} from '../constants/ActionTypes';
+
 import rootReducer from '../reducers/index';
 import RavenMiddleware from 'redux-raven-middleware';
 
@@ -24,7 +20,7 @@ export default function configureStore(initialState, history) {
   const middleware = [
     debounce,
     thunkMiddleware,
-    routerMiddleware(history)
+    routerMiddleware(browserHistory)
   ];
 
   if (window.__env.NODE_ENV == "DEVELOPMENT") {

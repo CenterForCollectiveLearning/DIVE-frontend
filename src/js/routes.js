@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConnectedRouter, IndexRoute, Route, Switch, Redirect } from 'react-router';
+import { ConnectedRouter, IndexRoute, Route, Switch, Redirect, withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 import connectedAuthWrapper from 'redux-auth-wrapper/connectedAuthWrapper'
 
