@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './App.sass';
 import { push } from 'react-router-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { requireAuthentication } from '../../routes';
 
-import LoginPage from '../Auth/LoginPage';
+import ProjectListPage from '../Landing/ProjectListPage';
 import LandingPage from '../Landing/LandingPage';
-import RegisterPage from '../Auth/RegisterPage';
+import NotFoundPage from '../Landing/NotFoundPage';
+import AboutPage from '../Landing/AboutPage';
+import AuthPage from '../Auth/AuthPage';
 import ProjectsPage from '../ProjectsPage';
 
 import {
@@ -17,6 +19,10 @@ import {
 
 import { createAnonymousUserIfNeeded } from '../../actions/UserActions';
 import { connect } from 'react-redux';
+
+const ConnectedSwitch = connect(state => ({
+  location: state.location
+}))(Switch);
 
 // this seems real dumb;
 require('react-select/less/select.less');
@@ -42,15 +48,12 @@ export class App extends Component {
   }
 
   render() {
-    console.log('In App.js', this);
     return (
       <div className={ styles.fillContainer + ' ' + styles.appContainer }>
         <Switch>
-          <Route exact path="/login" component={ LoginPage }/>
-          <Route exact path="/register" component={ RegisterPage }/>    
-          <Route exact path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }/>    
-          <Route exact path="/register" component={ RegisterPage }/>    
-          <Route exact path="/" component={ LandingPage }/>    
+          <Route path="/" component={ LandingPage }/> 
+          <Route path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }/> 
+          <Redirect to="/notfound" />
         </Switch>
       </div>
     );
@@ -64,9 +67,10 @@ App.propTypes = {
 
 function mapStateToProps(state) {
   const { user, error } = state;
+
   return {
-    user: user,
-    error: error
+    user,
+    error
   };
 }
 

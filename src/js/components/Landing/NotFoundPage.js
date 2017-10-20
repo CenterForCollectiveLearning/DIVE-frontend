@@ -16,6 +16,7 @@ import Logo from '../../../assets/DIVE_logo_white.svg?name=Logo';
 
 export class NotFoundPage extends Component {
   render() {
+    console.log('In not found page');
     return (
       <DocumentTitle title='DIVE | Error'>
         <div className={ styles.fillContainer + ' ' + styles.notFoundPage }>

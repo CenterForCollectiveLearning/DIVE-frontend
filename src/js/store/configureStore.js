@@ -1,5 +1,4 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import { browserHistory } from 'react-router';
 import { routerMiddleware } from 'react-router-redux';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
@@ -16,11 +15,11 @@ const loggerMiddleware = createLogger({
   collapsed: true
 });
 
-export default function configureStore(initialState) {
+export default function configureStore(history, initialState={}) {
   const middleware = [
     debounce,
     thunkMiddleware,
-    routerMiddleware(browserHistory)
+    routerMiddleware(history)
   ];
 
   if (window.__env.NODE_ENV == "DEVELOPMENT") {
@@ -38,12 +37,10 @@ export default function configureStore(initialState) {
   const store = createStore(
     enableBatching(rootReducer),
     initialState,
-    composeWithDevTools(applyMiddleware(
-      ...middleware
-    )),
+    composeWithDevTools(applyMiddleware(...middleware))
   );
 
-  if (module.hot) {
+  if (module.hot) {``
     // Enable Webpack hot module replacement for reducers
     module.hot.accept('../reducers', () => {
       const nextRootReducer = require('../reducers/index');

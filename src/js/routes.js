@@ -18,7 +18,7 @@ import NotFoundPage from './components/Landing/NotFoundPage';
 import FAQPage from './components/Landing/FAQPage';
 import AboutPage from './components/Landing/AboutPage';
 import LandingPage from './components/Landing/LandingPage';
-import ProjectListPage from './components/Landing/ProjectListPage';
+
 import PreloadedProjectListPage from './components/Landing/PreloadedProjectListPage';
 import StoryPage from './components/Landing/StoryPage';
 import FeaturesPage from './components/Landing/FeaturesPage';

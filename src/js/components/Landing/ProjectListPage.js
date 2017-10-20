@@ -74,6 +74,8 @@ export class ProjectListPage extends Component {
     const { userProjects, isFetchingUserProjects } = projects;
     const { sortField, viewMode } = this.state;
 
+    console.log('In ProjectListPage');
+
     const sortedProjects = userProjects
       .sort(function(a, b) {
         var aValue = a[sortField];

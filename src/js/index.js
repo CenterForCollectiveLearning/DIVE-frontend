@@ -4,9 +4,8 @@ import ReactGA from 'react-ga';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory';
-import { ConnectedRouter, syncHistoryWithStore } from 'react-router-redux';
+import { ConnectedRouter as Router } from 'react-router-redux';
 
 import { FocusStyleManager } from '@blueprintjs/core';
 
@@ -30,8 +29,8 @@ injectTapEventPlugin();
 // Focus management
 FocusStyleManager.onlyShowFocusOnTabs();
 
-const store = configureStore();
-const history = createHistory(); //syncHistoryWithStore(createBrowserHistory(), store);
+const history = createHistory();
+const store = configureStore(history);
 
 history.listen((location, action) => {
   const fullPath = location.pathname + location.search;
@@ -42,9 +41,9 @@ history.listen((location, action) => {
 
 ReactDOM.render((
   <Provider store={ store }>
-    <ConnectedRouter history={ history }>
+    <Router history={ history }>
       <App />
-    </ConnectedRouter>
+    </Router>
   </Provider>
   ), document.getElementById('main')
 );

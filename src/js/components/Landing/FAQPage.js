@@ -13,6 +13,7 @@ import Footer from './Footer';
 
 export class FAQPage extends Component {
   render() {
+    console.log('In FAQPage');
     return (
       <DocumentTitle title={ 'DIVE | FAQ' }>
         <div className={ styles.contentPage + ' ' + styles.sections }>
