@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './Landing.sass';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router-dom';
-import { routeActions } from 'react-router-redux';
+import { push } from 'react-router-redux';
 import { Route, Switch, Link } from 'react-router-dom';
 import { logoutUser } from '../../actions/AuthActions'
 import { showToast } from '../../actions/UserActions';
@@ -60,8 +59,8 @@ export class LandingPage extends Component {
 
   _onClickLogo = () => {
     console.log('in _onClickLogo', this.props);
-    // this.props.push(`/`);
-    this.props.history.push('/projects');
+    // this.props.,(`/`);
+    this.props.push('/projects');
   }
 
   _getSelectedTab = () => {
@@ -160,4 +159,4 @@ function mapStateToProps(state) {
   return { user };
 }
 
-export default connect(mapStateToProps, { showToast, wipeProjectState, logoutUser })(LandingPage);
+export default connect(mapStateToProps, { showToast, wipeProjectState, logoutUser, push })(LandingPage);

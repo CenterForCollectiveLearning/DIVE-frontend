@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './App.sass';
+import { ConnectedRouter as Router } from 'react-router-redux';
 import { push } from 'react-router-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
@@ -48,13 +49,16 @@ export class App extends Component {
   }
 
   render() {
+    console.o
     return (
       <div className={ styles.fillContainer + ' ' + styles.appContainer }>
-        <Switch>
-          <Route path="/" component={ LandingPage }/> 
-          <Route path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }/> 
-          <Redirect to="/notfound" />
-        </Switch>
+        <Router history={ this.props.history }>
+          <Switch>
+            <Route path="/" component={ LandingPage }/> 
+            <Route path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }/> 
+            <Redirect to="/notfound" />
+          </Switch>
+        </Router>
       </div>
     );
   }
