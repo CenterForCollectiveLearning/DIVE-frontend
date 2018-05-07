@@ -130,19 +130,20 @@ body
       cursor: pointer
 
       .logo
-        width: 24px
-        height: 30px
+        width: 22px
+        height: 24px
         margin-left: 6px
         margin-top: 9px
 
       .logoText
-        font-size: 31px
+        font-size: 26px
         font-weight: 800
         margin-top: 4px
-        margin-left: 15px
+        margin-left: 11px
         color: $white
+        
     .projectTitle
-      margin-left: 16px
+      margin-left: 5px
       margin-right: 10px
       word-wrap: break-word
       color: $white
@@ -233,13 +234,14 @@ body
         flex-direction: column
         .label
           +smallCapsBold
-          line-height: 0px
+          line-height: 20px
           margin-top: 10px
           max-height: 0px
           padding-bottom: 3px
           margin-top: 11px
-          position: relative
-          top: 10px
+
+          .selectorChevron
+            margin-left: 0px
 
         .value
           color: $left-sidebar-grey
@@ -252,7 +254,8 @@ body
             text-transform: capitalize
 
       span.separator
-        padding: 0 14px
+        padding-left: 10px
+        padding-right: 20px
         position: relative
         top: 1px
         left: 7px
@@ -332,7 +335,7 @@ body
               // display: block
               // height: 20px
 
-.projectCreateModal
+.projectCreateModal, .feedbackModal
   .controlSection
     .label
       +smallCapsBold
@@ -344,3 +347,13 @@ body
 
   .registerLink, .loginLink
     +linkStyle(14px)
+
+.receivedFeedbackContainer
+  text-align: center
+  span
+    cursor: pointer
+    color: $primary-accent
+    border: 3px solid $primary-accent
+    padding: 20px
+    border-radius: 80px
+    font-size: 55px

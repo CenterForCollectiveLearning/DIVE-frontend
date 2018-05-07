@@ -1,17 +1,17 @@
 import React, { Component, PropTypes } from 'react';
 
-import styles from '../Visualizations.sass';
+import styles from './BinningSelector.sass';
 import _ from 'underscore';
 
-import SidebarGroup from '../../Base/SidebarGroup';
-import DropDownMenu from '../../Base/DropDownMenu';
-import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
+import SidebarGroup from './SidebarGroup';
+import DropDownMenu from './DropDownMenu';
+import ToggleButtonGroup from './ToggleButtonGroup';
 
 export default class BinningSelector extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { ...props.config.data };
+    this.state = { ...props.config };
   }
 
   updateConfig = (k, v) => {

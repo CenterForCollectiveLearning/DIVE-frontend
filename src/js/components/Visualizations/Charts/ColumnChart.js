@@ -3,13 +3,21 @@ import React, { Component, PropTypes } from 'react';
 import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import styles from '../Visualizations.sass';
 
-var Chart = require('react-google-charts').Chart;
+import { Chart } from 'react-google-charts';
 
 export default class ColumnChart extends Component {
   render() {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, additionalOptions, colors, labels, config } = this.props;
 
     var finalData = data;
+    finalData[0] = [ { id: finalData[0][0], label: finalData[0][0], type: 'string' }, 
+      ...finalData[0].slice(1).map(function(d) { 
+        if (!isNaN(parseFloat(d)) && isFinite(d)) {
+          return d.toString();
+        } else {
+          return d;
+        }
+      }) ];
 
     var options = isMinimalView ? minimalOptions : fullOptions;
 

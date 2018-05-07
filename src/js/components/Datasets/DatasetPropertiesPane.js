@@ -1,27 +1,33 @@
 import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 
-import styles from './Datasets.sass';
-import DatasetRow from './DatasetRow';
-import MetadataRow from './MetadataRow';
-import DatasetHeaderCell from './DatasetHeaderCell';
-import DatasetMetadataCell from './DatasetMetadataCell';
-import DataGrid from '../Base/DataGrid';
+import styles from './DatasetProperties.sass';
 
 export default class DatasetPropertiesPane extends Component {
 
   render() {
-    const { dataset, fieldProperties } = this.props;
+    const { dataset, fieldProperties, rightActions } = this.props;
     const { nRows, nCols, fieldNames, isTimeSeries, creationDate, updateDate } = dataset.details;
+    const numIds = fieldProperties.items.filter((fp) => fp.isId).length;
+    const numFieldTypes = [ ...new Set(fieldProperties.items.map((fp) => fp.type)) ].length;
+
     return (
       <div className={ styles.datasetPropertiesPane }>
-        Rows: { nRows }
-        Columns: { nCols }
-        Created at: { moment(creationDate).format('LLL') }
-        Updated at: { moment(updateDate).format('LLL') }
-        <div>Cross-Sectional</div>
-        <div>Longitudinal</div>
-        <div>Time Series</div>
+        <div className={ styles.left }>
+          <div><span className={ styles.value }>{ nRows }</span> Rows</div>
+          <div><span className={ styles.value }>{ nCols }</span> Columns</div>
+          { numIds > 0 &&         
+            <div><span className={ styles.value }>{ numIds }</span> { numIds == 1 ? 'ID Field' : 'ID Fields' }</div>    
+          } 
+          { numFieldTypes > 0 && 
+            <div><span className={ styles.value }>{ numFieldTypes }</span> { numFieldTypes == 1 ? 'Field Type' : 'Field Types' }</div>
+          }
+        </div>
+        { rightActions &&
+          <div className={ styles.right }>
+            { rightActions }
+          </div>
+        }
       </div>
     );
   }
@@ -29,7 +35,8 @@ export default class DatasetPropertiesPane extends Component {
 
 DatasetPropertiesPane.propTypes = {
   dataset: PropTypes.object.isRequired,
-  fieldProperties: PropTypes.object.isRequired
+  fieldProperties: PropTypes.object.isRequired,
+  rightActions: PropTypes.node
 }
 
 DatasetPropertiesPane.defaultProps = {

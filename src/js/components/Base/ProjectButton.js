@@ -107,7 +107,7 @@ class ProjectButton extends Component {
       >
         { !minimal &&
           <div className={ styles.starContainer } onClick={ this.onClickStarProject }>
-            <i className={ starred ? 'fa fa-star ' + styles.starred : 'fa fa-star-o' }></i>
+            <span className={ styles.star + ' pt-icon-standard ' + (starred ? 'pt-icon-star ' + styles.starred : 'pt-icon-star-empty') } />
           </div>
         }
         <div className={ styles.projectButtonContent }>

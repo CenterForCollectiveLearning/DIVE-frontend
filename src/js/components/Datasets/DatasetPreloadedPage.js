@@ -15,6 +15,7 @@ const styles = {
   ...preloadedDatasetsStyles
 }
 
+import ProjectTopBar from '../ProjectTopBar';
 import Dropzone from 'react-dropzone';
 import Loader from '../Base/Loader';
 import HeaderBar from '../Base/HeaderBar';
@@ -62,85 +63,87 @@ export class DatasetPreloadedPage extends Component {
     const nextDataset = unselectedDatasets[0];
 
     return (
-      <DocumentTitle title={ 'Preloaded' + ( project.title ? ` | ${ project.title }` : '' ) }>
-        <div className={ styles.fillContainer + ' ' + styles.preloadedDatasetsContainer }>
-          <div className={ styles.headerControlRow + ' ' + styles.datasetSearch }>
-            <div className='pt-input-group'>
-              <span className='pt-icon pt-icon-search' />
-              <input
-                className='pt-input'
-                type="search"
-                placeholder="search..."
-              />
+      <DocumentTitle title={ 'Preloaded' + ( project.title ? ` | ${ project.title }` : '' ) }>        
+        <div className={ styles.fillContainer }>
+          <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
+          <div className={ styles.fillContainer + ' ' + styles.preloadedDatasetsContainer }>
+            <div className={ styles.headerControlRow + ' ' + styles.datasetSearch }>
+              <div className='pt-input-group'>
+                <span className='pt-icon pt-icon-search' />
+                <input
+                  className='pt-input'
+                  type="search"
+                  placeholder="search..."
+                />
+              </div>
             </div>
-          </div>
-          { preloadedDatasets.isFetching &&
-            <Loader text='Loading preloaded datasets' />
-          }
-          { !preloadedDatasets.isFetching && rows.length && rows.map((row, i) =>
-            <div className= { styles.row } key={ `row-${ i }` }>
-              { row.map((d) =>
-                <div
-                  key={ d.id }
-                  className={
-                    'pt-card pt-interactive ' +
-                    styles.selectButton + ' ' +
-                    styles.preloadedDataset
-                  }
-                >
-                  <div className={ styles.top }>
-                    <h5>{ d.title }</h5>
-                    { d.infoUrl &&
-                      <AnchorButton
-                        className={ styles.infoLink + ' pt-minimal' }
-                        href={ d.infoUrl }
-                        target='_blank'
-                        iconName='info-sign'
-                      />
+            { preloadedDatasets.isFetching &&
+              <Loader text='Loading preloaded datasets' />
+            }
+            { !preloadedDatasets.isFetching && rows.length && rows.map((row, i) =>
+              <div className= { styles.row } key={ `row-${ i }` }>
+                { row.map((d) =>
+                  <div
+                    key={ d.id }
+                    className={
+                      'pt-card pt-interactive ' +
+                      styles.selectButton + ' ' +
+                      styles.preloadedDataset
                     }
-                  </div>
-                  <p className={ styles.description }>{ d.description }</p>
-                  <div className={ styles.bottom }>
-                    <div className={ styles.metadata }>
-                      <div className={ styles.tags }>
-                        { d.tags && d.tags.map((t) =>
-                            <span key={ `${ d.id }-tag-${ t }` } className={ 'pt-tag' }>{ t }</span>
-                        )}
-                      </div>
+                  >
+                    <div className={ styles.top }>
+                      <h5>{ d.title }</h5>
+                      { d.infoUrl &&
+                        <AnchorButton
+                          className={ styles.infoLink + ' pt-minimal' }
+                          href={ d.infoUrl }
+                          target='_blank'
+                          iconName='info-sign'
+                        />
+                      }
                     </div>
-                    { d.selected &&
-                      <div className={ styles.preloadedDatasetButtons }>
-                        <Button
-                          className={ styles.selectButton }
-                          intent={ Intent.SUCCESS }
-                          iconName='tick'
-                          text='Selected'
-                          onClick={ () => deselectPreloadedDataset(project.id, d.id, nextDataset) }
-                        />
-                        <Button
-                          style={{ marginLeft: '10px'}}
-                          intent={ Intent.PRIMARY }
-                          iconName='eye-open'
-                          text='Inspect'
-                          onClick={ () => push(`/projects/${ project.id }/datasets/${ d.id }/inspect`) }
-                        />
+                    <p className={ styles.description }>{ d.description }</p>
+                    <div className={ styles.bottom }>
+                      <div className={ styles.metadata }>
+                        <div className={ styles.tags }>
+                          { d.tags && d.tags.map((t) =>
+                              <span key={ `${ d.id }-tag-${ t }` } className={ 'pt-tag' }>{ t }</span>
+                          )}
+                        </div>
                       </div>
-                    }
-                    { !d.selected &&
-                      <div className={ styles.preloadedDatasetButtons }>
-                        <Button
-                          className={ styles.selectButton }
-                          text='Select'
-                          onClick={ () => selectPreloadedDataset(project.id, d.id) }
-                        />
-                      </div>
-                    }
+                      { d.selected &&
+                        <div className={ styles.preloadedDatasetButtons }>
+                          <Button
+                            className={ styles.selectButton }
+                            intent={ Intent.SUCCESS }
+                            iconName='tick'
+                            text='Selected'
+                            onClick={ () => deselectPreloadedDataset(project.id, d.id, nextDataset) }
+                          />
+                          <Button
+                            style={{ marginLeft: '10px'}}
+                            intent={ Intent.PRIMARY }
+                            iconName='eye-open'
+                            text='Inspect'
+                            onClick={ () => push(`/projects/${ project.id }/datasets/${ d.id }/inspect`) }
+                          />
+                        </div>
+                      }
+                      { !d.selected &&
+                        <div className={ styles.preloadedDatasetButtons }>
+                          <Button
+                            className={ styles.selectButton }
+                            text='Select'
+                            onClick={ () => selectPreloadedDataset(project.id, d.id) }
+                          />
+                        </div>
+                      }
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          )}
-
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </DocumentTitle>
     );

@@ -103,6 +103,9 @@ export class LandingPage extends Component {
                 <Logo className={ styles.logo } />
                 <div className={ styles.logoText }>DIVE</div>
               </div>
+              <span className="pt-navbar-divider"></span>
+              <Link className="pt-button pt-minimal pt-icon-help" route="/faq">FAQ</Link>
+              <Link className="pt-button pt-minimal pt-icon-info-sign" route="/about">About</Link>
             </div>
               <div className="pt-navbar-group pt-align-right">
                 { (user.id && !user.anonymous) &&

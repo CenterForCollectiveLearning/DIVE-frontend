@@ -5,7 +5,7 @@ import { push, replace } from 'react-router-redux';
 import { Button, Intent, Position } from '@blueprintjs/core';
 
 import { removeFromQueryString, parseFromQueryObject, queryObjectToQueryString, updateQueryString } from '../../../helpers/helpers';
-import { fetchFieldPropertiesIfNeeded } from '../../../actions/FieldPropertiesActions';
+import { fetchFieldPropertiesIfNeeded, selectTransformationFunction } from '../../../actions/FieldPropertiesActions';
 import { setPersistedQueryString, createInteractionTerm, selectInteractionTerm, deleteInteractionTerm, getRecommendation } from '../../../actions/RegressionActions';
 import { selectConditional } from '../../../actions/ConditionalsActions';
 import { createURL, createInteractionTermName, filterInteractionTermSelection } from '../../../helpers/helpers.js';
@@ -68,7 +68,7 @@ export class RegressionSidebar extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project, datasetId, fieldProperties, fetchFieldPropertiesIfNeeded, recommendationType, recommendationResult, regressionSelector } = nextProps;
+    const { project, datasetId, dependentVariableId, fieldProperties, fetchFieldPropertiesIfNeeded, recommendationType, recommendationResult, regressionSelector } = nextProps;
     const datasetIdChanged = datasetId != this.props.datasetId;
     const recommendationTypeChanged = recommendationType != this.props.recommendationType;
 
@@ -76,7 +76,7 @@ export class RegressionSidebar extends Component {
       fetchFieldPropertiesIfNeeded(project.id, datasetId)
     }
 
-    if (project.id && datasetId && !regressionSelector.recommendationResult.loading && recommendationTypeChanged) {
+    if (project.id && datasetId && dependentVariableId && !regressionSelector.recommendationResult.loading && (this.props.recommendationType && recommendationTypeChanged)) {
       this.setRecommendedState(nextProps);
     }
   }
@@ -143,6 +143,7 @@ export class RegressionSidebar extends Component {
       regressionType,
       dependentVariableId,
       independentVariablesIds,
+      selectTransformationFunction
     } = this.props;
 
     const { interactionVariables } = this.state;
@@ -154,16 +155,22 @@ export class RegressionSidebar extends Component {
     var shownRegressionTypes = regressionTypes;
 
     if(fieldProperties.items.length > 0) {
-      const dependentVariableType = fieldProperties.items.find((property) => property.id == dependentVariableId);
-      if(dependentVariableType == 'decimal') {
-        shownRegressionTypes = regressionTypes.filter((type) => type.value != 'logistic')
+      const dependentVariable = fieldProperties.items.find((property) => property.id == dependentVariableId);
+
+      if(dependentVariable && dependentVariable.scale == 'nominal') {
+        shownRegressionTypes = regressionTypes.filter((type) => type.value == 'logistic')
       }
+      if(dependentVariable && dependentVariable.scale != 'nominal') {
+        shownRegressionTypes = regressionTypes.filter((type) => type.value != 'logistic')
+      }      
     }
+
+    const initialCollapse = (fieldProperties.items.length > 10);
 
     return (
       <Sidebar selectedTab="regression">
         { fieldProperties.items.length != 0 &&
-          <SidebarCategoryGroup heading="Regression Options" initialCollapse={ true } iconName='predictive-analysis'>
+          <SidebarCategoryGroup heading="Regression Options" initialCollapse={ initialCollapse } iconName='predictive-analysis'>
             <Button
               className={ 'pt-fill ' + styles.recommendModelButton + ( recommended ? ' .pt-active' : '' )}
               iconName='predictive-analysis'
@@ -217,7 +224,8 @@ export class RegressionSidebar extends Component {
               { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
                 <div className={ styles.fieldGroup }>
                   <div className={ styles.fieldGroupHeader }>
-                    <div className={ styles.fieldGroupLabel }>Categorical</div>
+                    <span className={ styles.fieldGroupLabel }>Categorical</span>
+                    <span className={ "pt-icon-standard pt-icon-font " + styles.generalTypeIcon } />
                   </div>
                   <ToggleButtonGroup
                     toggleItems={ fieldProperties.items.filter((p) => p.generalType == 'c' && !p.isId).map((item) =>
@@ -238,7 +246,10 @@ export class RegressionSidebar extends Component {
               }
               { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
                 <div className={ styles.fieldGroup }>
-                  <div className={ styles.fieldGroupLabel }>Temporal</div>
+                  <div className={ styles.fieldGroupHeader }>
+                    <span className={ styles.fieldGroupLabel }>Temporal</span>
+                    <span className={ "pt-icon-standard pt-icon-time " + styles.generalTypeIcon } />
+                  </div>
                   <ToggleButtonGroup
                     toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
                       new Object({
@@ -258,27 +269,36 @@ export class RegressionSidebar extends Component {
               }
               { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
                 <div className={ styles.fieldGroup }>
-                  <div className={ styles.fieldGroupLabel }>Quantitative</div>
+                <div className={ styles.fieldGroupHeader }>
+                  <span className={ styles.fieldGroupLabel }>Quantitative</span>
+                  <span className={ "pt-icon-standard pt-icon-numerical " + styles.generalTypeIcon } />
+                </div>
                   <ToggleButtonGroup
                     toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
                       new Object({
                         id: item.id,
                         name: item.name,
                         disabled: (item.id == dependentVariableId) || dependentVariableId == null || ( item.generalType == 'c' && item.isUnique),
-                        color: item.color
+                        color: item.color,
+                        transformations: item.transformations
                       })
                     )}
                     valueMember="id"
                     colorMember="color"
+                    splitMenuItemsMember="transformations"
                     displayTextMember="name"
                     externalSelectedItems={ independentVariablesIds }
                     separated={ true }
+                    selectMenuItem={ selectTransformationFunction }
                     onChange={ (v) => this.clickQueryStringTrackedItem({ independentVariablesIds: [ parseInt(v) ], recommended: false }) } />
                 </div>
               }
               { fieldProperties.interactionTerms.length > 0 &&
                 <div className={ styles.fieldGroup }>
-                  <div className={ styles.fieldGroupLabel }>Interaction Terms</div>
+                  <div className={ styles.fieldGroupHeader }>
+                    <span className={ styles.fieldGroupLabel }>Interaction Terms</span>
+                    <span className={ "pt-icon-standard pt-icon-unresolve " + styles.generalTypeIcon } />
+                  </div>
                   { fieldProperties.interactionTerms.length > 0 ?
                       <ToggleButtonGroup
                         toggleItems={ fieldProperties.interactionTerms.map((item) =>
@@ -310,22 +330,24 @@ export class RegressionSidebar extends Component {
                   margin='2px'
                   value={ interactionVariables[0] }
                   options={ fieldProperties.items.filter((item) =>
-                    item.id != parseInt(dependentVariableId) && item.id != interactionVariables[1]
+                    !item.isId
+                      && item.id != parseInt(dependentVariableId) && item.id != interactionVariables[1]
                       && filterInteractionTermSelection(item.id, interactionVariables[1], fieldProperties.interactionTerms))
                   }
                   valueMember="id"
                   displayTextMember="name"
-                  onChange={this.onAddInteractionTerm.bind(this, 0)} />
+                  onChange={ this.onAddInteractionTerm.bind(this, 0) } />
                 <DropDownMenu
                   width='50%'
                   value={ interactionVariables[1] }
                   options={ fieldProperties.items.filter((item) =>
-                    item.id != parseInt(dependentVariableId) && item.id != interactionVariables[0]
+                    !item.isId
+                      && item.id != parseInt(dependentVariableId) && item.id != interactionVariables[0]
                       && filterInteractionTermSelection(item.id, interactionVariables[0], fieldProperties.interactionTerms))
                   }
                   valueMember="id"
                   displayTextMember="name"
-                  onChange={this.onAddInteractionTerm.bind(this, 1)} />
+                  onChange={ this.onAddInteractionTerm.bind(this, 1) } />
               </div>
               {
                 interactionVariables[0] && interactionVariables[1] &&
@@ -333,7 +355,7 @@ export class RegressionSidebar extends Component {
                   intent={ Intent.PRIMARY }
                   className="pt-fill"
                   text="Add"
-                  onClick={this.onCreateInteractionTerm.bind(this) }
+                  onClick={ this.onCreateInteractionTerm.bind(this) }
                 />
               }
 
@@ -392,6 +414,7 @@ export default connect(mapStateToProps, {
   selectConditional,
   setPersistedQueryString,
   getRecommendation,
+  selectTransformationFunction,
   replace,
   push
 })(RegressionSidebar);

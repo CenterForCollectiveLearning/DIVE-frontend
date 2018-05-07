@@ -19,7 +19,7 @@ export default function exportedRegressions(state=baseState, action) {
       return { ...state, isFetching: true, loaded: false };
 
     case RECEIVE_EXPORTED_REGRESSIONS:
-      return { ...state, isFetching: false, items: action.regressions, updatedAt: action.receivedAt, loaded: true };
+      return { ...state, isFetching: false, items: action.items, updatedAt: action.receivedAt, loaded: true };
 
     case RECEIVE_CREATED_EXPORTED_REGRESSION, RECEIVE_CREATED_SAVED_REGRESSION:
       var updatedSpecs = state.items.slice();

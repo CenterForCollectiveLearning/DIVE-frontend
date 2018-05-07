@@ -1,10 +1,8 @@
 import {
   REQUEST_EXPORTED_VISUALIZATION_SPECS,
   RECEIVE_EXPORTED_VISUALIZATION_SPECS,
-  REQUEST_EXPORTED_CORRELATIONS,
-  RECEIVE_EXPORTED_CORRELATIONS,
-  REQUEST_EXPORTED_REGRESSIONS,
-  RECEIVE_EXPORTED_REGRESSIONS,
+  REQUEST_EXPORTED_ANALYSES,
+  RECEIVE_EXPORTED_ANALYSES, 
   SELECT_DOCUMENT,
   REQUEST_PUBLISHED_DOCUMENT,
   RECEIVE_PUBLISHED_DOCUMENT,
@@ -30,6 +28,7 @@ import _ from 'underscore'
 import { fetch, pollForTask } from './api.js';
 
 export function selectComposeContent(contentType, contentId, title) {
+  console.log('Selecting compose content', contentType, contentId)
   return {
     type: SELECT_COMPOSE_CONTENT,
     contentType: contentType,
@@ -68,58 +67,30 @@ export function setVisualizationFormat(exportedSpecId, format) {
   }
 }
 
-function requestExportedCorrelationsDispatcher() {
+function requestExportedAnalysesDispatcher() {
   return {
-    type: REQUEST_EXPORTED_CORRELATIONS
+    type: REQUEST_EXPORTED_ANALYSES
   };
 }
 
-function receiveExportedCorrelationsDispatcher(params, json) {
+function receiveExportedAnalysesDispatcher(params, json) {
   if (json && !json.error) {
     return {
       ...params,
-      type: RECEIVE_EXPORTED_CORRELATIONS,
-      correlations: json,
+      type: RECEIVE_EXPORTED_ANALYSES,
+      data: json,
       receivedAt: Date.now()
     };
   }
 }
 
-function requestExportedRegressionsDispatcher() {
-  return {
-    type: REQUEST_EXPORTED_REGRESSIONS
-  };
-}
-
-function receiveExportedRegressionsDispatcher(params, json) {
-  if (json && !json.error) {
-    return {
-      ...params,
-      type: RECEIVE_EXPORTED_REGRESSIONS,
-      regressions: json,
-      receivedAt: Date.now()
-    };
-  }
-}
-
-export function fetchExportedCorrelations(projectId) {
+export function fetchExportedAnalyses(projectId) {
   return (dispatch) => {
-    dispatch(requestExportedCorrelationsDispatcher());
-    return fetch(`/exported_results/v1/exported_results?project_id=${projectId}&result_type=correlation`)
+    dispatch(requestExportedAnalysesDispatcher());
+    return fetch(`/exported_analyses/v1/exported_analyses?project_id=${projectId}`)
       .then(function(json) {
         const dispatchParams = {};
-        dispatch(receiveExportedCorrelationsDispatcher(dispatchParams, json.result))
-      });
-  };
-}
-
-export function fetchExportedRegressions(projectId) {
-  return (dispatch) => {
-    dispatch(requestExportedRegressionsDispatcher());
-    return fetch(`/exported_results/v1/exported_results?project_id=${projectId}&result_type=regression`)
-      .then(function(json) {
-        const dispatchParams = {};
-        dispatch(receiveExportedRegressionsDispatcher(dispatchParams, json.result))
+        dispatch(receiveExportedAnalysesDispatcher(dispatchParams, json))
       });
   };
 }

@@ -5,6 +5,7 @@ import { replace } from 'react-router-redux';
 import { parseFromQueryObject, updateQueryString } from '../helpers/helpers';
 
 import {
+  REGRESSION_MODE,
   SELECT_REGRESSION_TYPE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
   SELECT_REGRESSION_DEPENDENT_VARIABLE,
@@ -17,8 +18,6 @@ import {
   DELETED_INTERACTION_TERM,
   REQUEST_INITIAL_REGRESSION_STATE,
   RECEIVE_INITIAL_REGRESSION_STATE,
-  REQUEST_CONTRIBUTION_TO_R_SQUARED,
-  RECEIVE_CONTRIBUTION_TO_R_SQUARED,
   REQUEST_CREATE_SAVED_REGRESSION,
   RECEIVE_CREATED_SAVED_REGRESSION,
   REQUEST_CREATE_EXPORTED_REGRESSION,
@@ -193,33 +192,28 @@ function progressRunRegressionDispatcher(data) {
 
 function errorRunRegressionDispatcher(data) {
   return {
-    type: PROGRESS_RUN_REGRESSION,
-    progress: 'Error running regressions, please check console.'
+    type: ERROR_RUN_REGRESSION,
+    message: data.error
   };
 }
 
-function requestContributionToRSquaredDispatcher() {
-  return {
-    type: REQUEST_CONTRIBUTION_TO_R_SQUARED
-  };
-}
 
-function receiveContributionToRSquaredDispatcher(json) {
-  return {
-    type: RECEIVE_CONTRIBUTION_TO_R_SQUARED,
-    data: json,
-    receivedAt: Date.now()
-  };
-}
+export function runRegression(projectId, datasetId, regressionType, dependentVariable, independentVariables, interactionTermIds, conditionals=[], tableLayout='leaveOneOut') {
 
-export function runRegression(projectId, datasetId, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, conditionals=[], tableLayout='leaveOneOut') {
+  let transformations = {};
+  transformations = independentVariables
+    .filter((iv) => (iv.transformations && iv.transformations.find((t) => t.selected).value != 'linear'))
+    .map((iv) => [ iv.name, iv.transformations.find((t) => t.selected).value])
+    .reduce((obj, [ k, v ]) => { return { ...obj, [ k ]: v }}, {});
+
   const params = {
     projectId: projectId,
     spec: {
       datasetId: datasetId,
       regressionType: regressionType,
-      dependentVariable: dependentVariableName,
-      independentVariables: independentVariableNames,
+      dependentVariable: dependentVariable.name,
+      independentVariables: independentVariables.map((iv) => iv.name),
+      transformations: transformations,
       interactionTerms: interactionTermIds,
       tableLayout: tableLayout
     }
@@ -230,6 +224,12 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
     params.conditionals = filteredConditionals;
   }
 
+  const dispatchers = {
+    success: receiveRunRegressionDispatcher,
+    progress: progressRunRegressionDispatcher,
+    error: errorRunRegressionDispatcher
+  }
+
   return (dispatch) => {
     dispatch(requestRunRegressionDispatcher());
     return fetch('/statistics/v1/regression', {
@@ -238,7 +238,7 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
       headers: { 'Content-Type': 'application/json' }
     }).then(function(json) {
         if (json.compute) {
-          dispatch(pollForTask(json.taskId, REQUEST_RUN_REGRESSION, params, receiveRunRegressionDispatcher, progressRunRegressionDispatcher, errorRunRegressionDispatcher));
+          dispatch(pollForTask(json.taskId, REGRESSION_MODE, REQUEST_RUN_REGRESSION, params, dispatchers));
         } else {
           dispatch(receiveRunRegressionDispatcher(params, json));
         }
@@ -246,27 +246,6 @@ export function runRegression(projectId, datasetId, regressionType, dependentVar
   };
 }
 
-export function getContributionToRSquared(projectId, regressionId, conditionals=[]) {
-  const params = {
-    projectId: projectId,
-    regressionId: regressionId
-  }
-
-  const filteredConditionals = getFilteredConditionals(conditionals);
-  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
-    params.conditionals = filteredConditionals;
-  }
-
-  return (dispatch) => {
-    dispatch(requestContributionToRSquaredDispatcher());
-    return fetch('/statistics/v1/contribution_to_r_squared', {
-      method: 'post',
-      body: JSON.stringify(params),
-      headers: { 'Content-Type': 'application/json' }
-    }).then(json => dispatch(receiveContributionToRSquaredDispatcher(json)))
-      .catch(err => console.error("Error getting contribution to R-squared: ", err));
-  };
-}
 
 function requestCreateExportedRegressionDispatcher(action) {
   return {

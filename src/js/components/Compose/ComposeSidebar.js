@@ -18,12 +18,23 @@ import DropDownMenu from '../Base/DropDownMenu';
 import ComposeVisualizationPreviewBlock from './ComposeVisualizationPreviewBlock';
 import ComposeRegressionPreviewBlock from './ComposeRegressionPreviewBlock';
 import ComposeCorrelationPreviewBlock from './ComposeCorrelationPreviewBlock';
+import ComposeAggregationPreviewBlock from './ComposeAggregationPreviewBlock';
+import ComposeComparisonPreviewBlock from './ComposeComparisonPreviewBlock';
 import { CONTENT_TYPES } from '../../constants/ContentTypes';
 
 export class ComposeSidebar extends Component {
+
   selectVisualization = (specId, specHeading) => {
     this.props.selectComposeContent(CONTENT_TYPES.VISUALIZATION, specId, specHeading);
   }
+
+  selectAggregation = (specId, specHeading) => {
+    this.props.selectComposeContent(CONTENT_TYPES.AGGREGATION, specId, specHeading);
+  }
+
+  selectComparison = (specId, specHeading) => {
+    this.props.selectComposeContent(CONTENT_TYPES.COMPARISON, specId, specHeading);
+  }  
 
   selectCorrelation = (specId, specHeading) => {
     this.props.selectComposeContent(CONTENT_TYPES.CORRELATION, specId, specHeading);
@@ -34,11 +45,12 @@ export class ComposeSidebar extends Component {
   }
 
   selectText = () => {
-    this.props.selectComposeContent(CONTENT_TYPES.TEXT);
+    this.props.selectComposeContent(CONTENT_TYPES.TEXT, null, null);
   }
 
   render() {
-    const { exportedSpecs, exportedCorrelations, exportedRegressions, fieldNameToColor } = this.props;
+    const { exportedSpecs, exportedAnalyses, fieldNameToColor } = this.props;
+    const { aggregation, correlation, regression, comparison } = exportedAnalyses.data;
 
     return (
       <Sidebar className={ styles.composeSidebar } selectedTab="correlation">
@@ -66,22 +78,42 @@ export class ComposeSidebar extends Component {
           )}
           </SidebarCategoryGroup>
         }
-        { !exportedCorrelations.isFetching && exportedCorrelations.items.length > 0 &&
+        { !exportedAnalyses.isFetching && aggregation.length > 0 &&
           <SidebarCategoryGroup
-            heading={ `Correlations (${ exportedCorrelations.items.length})` }
+            heading={ `Aggregation (${ aggregation.length})` }
             iconName="th"
           >
-            { exportedCorrelations.items.map((spec) =>
+            { aggregation.map((spec) =>
+              <ComposeAggregationPreviewBlock onClick={ this.selectAggregation } spec={ spec } key={ spec.id }/>
+            )}
+          </SidebarCategoryGroup>
+        }     
+        { !exportedAnalyses.isFetching && comparison.length > 0 &&
+          <SidebarCategoryGroup
+            heading={ `Comparisons (${ comparison.length})` }
+            iconName="th"
+          >
+            { comparison.map((spec) =>
+              <ComposeComparisonPreviewBlock onClick={ this.selectComparison } spec={ spec } key={ spec.id }/>
+            )}
+          </SidebarCategoryGroup>
+        }           
+        { !exportedAnalyses.isFetching && correlation.length > 0 &&
+          <SidebarCategoryGroup
+            heading={ `Correlations (${ correlation.length})` }
+            iconName="th"
+          >
+            { correlation.map((spec) =>
               <ComposeCorrelationPreviewBlock onClick={ this.selectCorrelation } spec={ spec } key={ spec.id }/>
             )}
           </SidebarCategoryGroup>
         }
-        { !exportedRegressions.isFetching && exportedRegressions.items.length > 0 &&
+        { !exportedAnalyses.isFetching && regression.length > 0 &&
           <SidebarCategoryGroup
-            heading={ `Regressions (${ exportedRegressions.items.length })` }
+            heading={ `Regressions (${ regression.length })` }
             iconName="th"
           >
-            { exportedRegressions.items.map((spec) =>
+            { regression.map((spec) =>
               <ComposeRegressionPreviewBlock onClick={ this.selectRegression } spec={ spec } key={ spec.id }/>
             )}
           </SidebarCategoryGroup>
@@ -94,8 +126,7 @@ export class ComposeSidebar extends Component {
 
 ComposeSidebar.propTypes = {
   exportedSpecs: PropTypes.object,
-  exportedCorrelations: PropTypes.object,
-  exportedRegressions: PropTypes.object,
+  exportedAnalyses: PropTypes.object,
   selectComposeContent: PropTypes.func,
   fieldNameToColor: PropTypes.object
 };

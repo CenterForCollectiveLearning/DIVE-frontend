@@ -75,9 +75,11 @@ export class ExploreSidebar extends Component {
 
     const activeVisualizationTypes = visualizationTypes.filter((type) => !type.disabled);
 
+    const initialCollapse = false; // (fieldProperties.items.length > 10);
+
     return (
       <Sidebar>
-        <SidebarCategoryGroup heading="Recommendation Options" initialCollapse={ true } iconName="predictive-analysis">
+        <SidebarCategoryGroup heading="Recommendation Options" initialCollapse={ initialCollapse } iconName="predictive-analysis">
           <SidebarGroup heading="Recommendation Mode">
             <ToggleButtonGroup
               toggleItems={ exploreSelector.recommendationModes }
@@ -95,7 +97,7 @@ export class ExploreSidebar extends Component {
               value={ sortBy }
               onChange={ (v) => this.clickQueryStringTrackedItem({ sortBy: v }, false) } />
           </SidebarGroup>
-          { visualizationTypes.length > 1 &&
+          { (visualizationTypes.length > 1 && filteredVisualizationTypes.length > 0) &&
             <SidebarGroup heading="Filter Visualization type">
               <ToggleButtonGroup
                 toggleItems={ activeVisualizationTypes }
@@ -122,10 +124,11 @@ export class ExploreSidebar extends Component {
           { fieldProperties.items.length > 0 && fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
             <div className={ styles.fieldGroup }>
               <div className={ styles.fieldGroupHeader }>
-                <div className={ styles.fieldGroupLabel }>Categorical</div>
+                <span className={ styles.fieldGroupLabel }>Categorical</span>
+                <span className={ "pt-icon-standard pt-icon-font " + styles.generalTypeIcon } />
               </div>
               <ToggleButtonGroup
-                toggleItems={ fieldProperties.items.filter((p) => p.generalType == 'c' && !p.isId).map((item) =>
+                toggleItems={ fieldProperties.items.filter((p) => p.generalType == 'c').map((item) =>
                   new Object({
                     id: item.id,
                     name: item.name,
@@ -137,7 +140,7 @@ export class ExploreSidebar extends Component {
                 displayTextMember="name"
                 valueMember="id"
                 colorMember="color"
-                splitMenuItemsMember="values"
+                // splitMenuItemsMember="values"
                 separated={ true }
                 selectMenuItem={ this.clickFieldPropertyValue }
                 externalSelectedItems={ fieldIds }
@@ -146,7 +149,10 @@ export class ExploreSidebar extends Component {
           }
           { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
             <div className={ styles.fieldGroup }>
-              <div className={ styles.fieldGroupLabel }>Temporal</div>
+              <div className={ styles.fieldGroupHeader }>
+                <span className={ styles.fieldGroupLabel }>Temporal</span>
+                <span className={ "pt-icon-standard pt-icon-time " + styles.generalTypeIcon } />
+              </div>
               <ToggleButtonGroup
                 toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
                   new Object({
@@ -168,7 +174,10 @@ export class ExploreSidebar extends Component {
           }
           { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
             <div className={ styles.fieldGroup }>
-              <div className={ styles.fieldGroupLabel }>Quantitative</div>
+              <div className={ styles.fieldGroupHeader }>
+                <span className={ styles.fieldGroupLabel }>Quantitative</span>
+                <span className={ "pt-icon-standard pt-icon-numerical " + styles.generalTypeIcon } />
+              </div>
               <ToggleButtonGroup
                 toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
                   new Object({
@@ -182,7 +191,7 @@ export class ExploreSidebar extends Component {
                 displayTextMember="name"
                 valueMember="id"
                 colorMember="color"
-                splitMenuItemsMember="aggregations"
+                // splitMenuItemsMember="aggregations"
                 separated={ true }
                 selectMenuItem={ selectAggregationFunction }
                 externalSelectedItems={ fieldIds }

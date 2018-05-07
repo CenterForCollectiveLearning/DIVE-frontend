@@ -1,14 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { NonIdealState } from '@blueprintjs/core';
+import { Button, Intent, NonIdealState } from '@blueprintjs/core';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
-import { runAggregation, runAggregationOneDimensional } from '../../../actions/AggregationActions';
+import { runAggregation, runAggregationOneDimensional, createExportedAggregation } from '../../../actions/AggregationActions';
 import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import styles from '../Analysis.sass';
 
+import ErrorComponent from '../../Base/ErrorComponent';
 import Card from '../../Base/Card';
 import Loader from '../../Base/Loader';
 import HeaderBar from '../../Base/HeaderBar';
@@ -23,64 +24,65 @@ export class AggregationView extends Component {
       projectId,
       datasetId,
       datasets,
-      datasetSelector,
-      aggregationIndependentVariableNamesAndTypes,
-      getVariableAggregationStatistics,
-      aggregateOnName,
+      aggregationVariablesNames,
+      aggregationDependentVariableName,
       aggregationFunction,
       weightVariableName,
-      runAggregation,
-      runAggregationOneDimensional,
-      allAggregationVariableIds,
       conditionals,
-      fetchDatasets
+      binningConfigX,
+      binningConfigY,
+      runAggregation,      
+      fetchDatasets,      
     } = this.props
 
-    if (projectId && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded))) {
+    if (projectId & (!datasetId || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(projectId);
     }
 
-    const noIndependentVariablesSelected = aggregationIndependentVariableNamesAndTypes.length == 0;
-    const oneIndependentVariableSelected = aggregationIndependentVariableNamesAndTypes.length == 1;
-    const twoIndependentVariablesSelected = aggregationIndependentVariableNamesAndTypes.length == 2;
+    const numVariablesSelected = aggregationVariablesNames.length;
 
-    if (oneIndependentVariableSelected) {
-      const aggregationList = aggregateOnName ? ['q', aggregateOnName, [aggregationFunction, weightVariableName]] : null;
-      runAggregationOneDimensional(projectId, datasetId, aggregationList, aggregationIndependentVariableNamesAndTypes, conditionals.items);
-    } else if (twoIndependentVariablesSelected) {
-      const aggregationList = aggregateOnName ? ['q', aggregateOnName, [aggregationFunction, weightVariableName]] : null;
-      runAggregation(projectId, datasetId, aggregationList, aggregationIndependentVariableNamesAndTypes, conditionals.items);
+    if (0 < numVariablesSelected < 3) {
+      runAggregation(
+        projectId,
+        datasetId,
+        aggregationVariablesNames,
+        aggregationDependentVariableName,
+        aggregationFunction,
+        weightVariableName,
+        binningConfigX,
+        binningConfigY,        
+        conditionals.items
+      );
     }
 
     clearAnalysis();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, datasets, binningConfigX, binningConfigY, loadAggregation, aggregationIndependentVariableNamesAndTypes, aggregateOnName, aggregationFunction, weightVariableName, runAggregation, runAggregationOneDimensional, allAggregationVariableIds, conditionals, fetchDatasets } = this.props;
-    const aggregationIndependentVariablesChanged = nextProps.aggregationIndependentVariableNamesAndTypes.length != aggregationIndependentVariableNamesAndTypes.length;
-    const aggregationVariableChanged = nextProps.aggregateOnName != aggregateOnName;
+    const { projectId, datasetId, datasets, binningConfigX, binningConfigY, aggregationVariablesNames, aggregationDependentVariableName, aggregationFunction, weightVariableName, runAggregation, conditionals, fetchDatasets } = this.props;
+
+    const aggregationIndependentVariablesChanged = nextProps.aggregationVariablesNames.length != aggregationVariablesNames.length;
+    const aggregationDependentVariableChanged = nextProps.aggregationDependentVariableName != aggregationDependentVariableName;
     const aggregationFunctionChanged = nextProps.aggregationFunction != aggregationFunction;
     const weightVariableChanged = nextProps.weightVariableName != weightVariableName;
-    const shouldLoadAggregation = nextProps.loadAggregation != loadAggregation;
     const binningConfigsChanged = nextProps.binningConfigX != binningConfigX || nextProps.binningConfigY != binningConfigY
 
     const conditionalsChanged = nextProps.conditionals.lastUpdated != conditionals.lastUpdated;
-    const sideBarChanged = binningConfigsChanged || aggregationIndependentVariablesChanged || aggregationVariableChanged || aggregationFunctionChanged || weightVariableChanged || conditionalsChanged;
-    const noIndependentVariablesSelected = nextProps.aggregationIndependentVariableNamesAndTypes.length == 0;
-    const oneIndependentVariableSelected = nextProps.aggregationIndependentVariableNamesAndTypes.length == 1;
-    const twoIndependentVariablesSelected = nextProps.aggregationIndependentVariableNamesAndTypes.length == 2;
+    const sideBarChanged = binningConfigsChanged || aggregationIndependentVariablesChanged || aggregationDependentVariableChanged || aggregationFunctionChanged || weightVariableChanged || conditionalsChanged;
+    const numVariablesSelected = aggregationVariablesNames.length;
 
-    if (nextProps.projectId && nextProps.datasetId) {
-
-      if (sideBarChanged) {
-        if (oneIndependentVariableSelected) {
-          const aggregationList = nextProps.aggregateOnName? ['q', nextProps.aggregateOnName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null;
-          runAggregationOneDimensional(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.aggregationIndependentVariableNamesAndTypes, nextProps.conditionals.items);
-        } else if (twoIndependentVariablesSelected) {
-          const aggregationList = nextProps.aggregateOnName ? ['q', nextProps.aggregateOnName, [nextProps.aggregationFunction, nextProps.weightVariableName]] : null;
-          runAggregation(nextProps.projectId, nextProps.datasetId, aggregationList, nextProps.aggregationIndependentVariableNamesAndTypes, nextProps.conditionals.items);
-        }
-      }
+    if (nextProps.projectId && nextProps.datasetId && sideBarChanged && 0 < numVariablesSelected < 3) {
+      runAggregation(
+        nextProps.projectId,
+        nextProps.datasetId,
+        nextProps.aggregationVariablesNames,
+        nextProps.aggregationDependentVariableName,
+        nextProps.aggregationFunction,
+        nextProps.weightVariableName,
+        nextProps.binningConfigX,
+        nextProps.binningConfigY,        
+        nextProps.conditionals.items
+      );      
     }
   }
 
@@ -94,23 +96,40 @@ export class AggregationView extends Component {
     }
   }
 
+  saveAggregation = (saveAction = true) => {
+    const { projectId, aggregationResult, createExportedAggregation } = this.props;
+    createExportedAggregation(projectId, aggregationResult.data.id, aggregationResult.data, aggregationResult.conditionals, aggregationResult.config, saveAction);
+  }
+
+  onClickShare = () => {
+    setShareWindow(window.open('about:blank'));
+    this.saveAggregation(false);
+  }  
+
   render() {
-    const { aggregationResult, oneDimensionAggregationResult, aggregationIndependentVariableNames, aggregationFunction, aggregateOn, aggregateOnName, datasets, datasetId } = this.props;
+    const { aggregationResult, aggregationVariablesNames, aggregationFunction, aggregationDependentVariableName, datasets, datasetId } = this.props;
 
-    const noAggregationVariablesSelected = aggregationIndependentVariableNames.length == 0;
-    const oneAggregationVariableSelected = aggregationIndependentVariableNames.length == 1;
-    const twoAggregationVariablesSelected = aggregationIndependentVariableNames.length == 2;
-    const oneDimensionDictHasElements = oneDimensionAggregationResult.data && oneDimensionAggregationResult.data.rows && oneDimensionAggregationResult.data.rows.length > 0;
-    const aggregationDictHasElements = aggregationResult.data && aggregationResult.data.rows && aggregationResult.data.rows.length > 0;
+    const { isSaving, isExporting, exportedAggregationId, exported, error, progress, loading, data } = aggregationResult;    
+    const { oneDimensionalContingencyTable, twoDimensionalContingencyTable } = data;
+    const numVariablesSelected = aggregationVariablesNames.length;
 
-    var aggregationContent = <div></div>;
+    var aggregationContent = <div />;
 
     var header = <span>
-      Aggregating <ColoredFieldItems fields={ aggregationIndependentVariableNames } />
-      { (aggregateOn == 'count') ? <span> by count</span> : <span> by { (aggregationFunction ? aggregationFunction.toLowerCase() : '') } of <ColoredFieldItems fields={ [ aggregateOnName ] } /></span>}
+      Aggregating <ColoredFieldItems fields={ aggregationVariablesNames } />
+      { (aggregationDependentVariableName == 'count') ? <span> by count</span> : <span> by { (aggregationFunction ? aggregationFunction.toLowerCase() : '') } of <ColoredFieldItems fields={ [ aggregationDependentVariableName ] } /></span>}
     </span>;
 
-    if (noAggregationVariablesSelected ) {
+    if (error) { 
+      return (
+        <ErrorComponent 
+          title='Error Running Aggregation'
+          description={ error }
+        />
+      )
+    }
+
+    if ( numVariablesSelected == 0 ) {
       aggregationContent = <div className={ styles.centeredFill }>
         <NonIdealState
           title='Too Few Variables Selected'
@@ -120,50 +139,66 @@ export class AggregationView extends Component {
       </div>
     }
 
-    else if (oneAggregationVariableSelected) {
+    else if (0 < numVariablesSelected < 3) {
       aggregationContent =
         <div className={ styles.aggregationViewContainer }>
+          <HeaderBar
+            actions={
+              <div className={ styles.headerControlRow }>
+                {/* <div className={ styles.headerControl }>
+                  <Button
+                    iconName='share'
+                    onClick={ this.onClickShare }
+                    loading={ isExporting }
+                  />
+                </div> */}
+                <div className={ styles.headerControl }>
+                  <Button
+                    onClick={ this.saveAggregation }
+                    loading={ isSaving }
+                    active={ exported }
+                  >
+                    { !exportedAggregationId &&
+                      <div><span className='pt-icon-standard pt-icon-star-empty' />Save</div>
+                    }
+                    { exportedAggregationId &&
+                      <div><span className='pt-icon-standard pt-icon-star' />Saved</div>
+                    }
+                  </Button>
+                </div>
+            </div>
+            }
+          />
           <Card
             header={ header }
           >
-            { oneDimensionAggregationResult.loading &&
-              <Loader text={ oneDimensionAggregationResult.progress != null ? oneDimensionAggregationResult.progress : 'Calculating Aggregation Result…' } />
+            { loading &&
+              <Loader text={ progress != null ? progress : 'Calculating Aggregation Result…' } />
             }
-            { (!oneDimensionAggregationResult.loading && oneDimensionDictHasElements) &&
+            { (!loading && oneDimensionalContingencyTable && oneDimensionalContingencyTable.rows) &&
               <AggregationTableOneD
-                aggregationResult={ oneDimensionAggregationResult.data }
-                aggregationVariableNames={ aggregationIndependentVariableNames }
+                aggregationResult={ oneDimensionalContingencyTable }
+                aggregationVariablesNames={ aggregationVariablesNames }
               />
             }
-          </Card>
-        </div>
-      ;
-    }
-
-    else if (twoAggregationVariablesSelected) {
-      aggregationContent =
-        <div className={ styles.aggregationViewContainer }>
-        <Card
-          header={ header }
-        >
-            { aggregationResult.loading &&
-              <Loader text={ aggregationResult.progress != null ? aggregationResult.progress : 'Calculating aggregation result…' } />
-            }
-            { (!aggregationResult.loading && aggregationDictHasElements) &&
+            { (!loading && twoDimensionalContingencyTable && twoDimensionalContingencyTable.rows) &&
               <AggregationTable
-                aggregationResult={ aggregationResult.data }
-                aggregationIndependentVariableNames={ aggregationIndependentVariableNames }
+                aggregationResult={ twoDimensionalContingencyTable }
+                aggregationVariablesNames={ aggregationVariablesNames }
               />
-            }
+            }            
           </Card>
         </div>
       ;
     }
-
     else {
-      aggregationContent = <div className={ styles.watermark }>
-        Too many variables selected (maximum two)
-      </div>
+      aggregationContent = <div className={ styles.centeredFill }>
+        <NonIdealState
+          title='Too many variables selected (maximum two)'
+          description='Please deselect one or more variables'
+          visual='variable'
+        />
+      </div>      
     }
 
     return (
@@ -176,55 +211,33 @@ export class AggregationView extends Component {
 
 function mapStateToProps(state, ownProps) {
   const { project, datasets, aggregationSelector, datasetSelector, fieldProperties, conditionals } = state;
-  const { aggregationResult, oneDimensionAggregationResult, binningConfigX, binningConfigY } = aggregationSelector;
-  const { aggregationFunction, weightVariableId, aggregateOn, aggregationVariablesIds } = ownProps;
+  const { aggregationResult, binningConfigX, binningConfigY } = aggregationSelector;
+  const { aggregationFunction, weightVariableId, aggregationDependentVariableId, aggregationVariablesIds } = ownProps;
 
-  const allAggregationVariableIds = fieldProperties.items.map((field) => field.id);
-
-  const aggregateOnProperty = fieldProperties.items.find((property) => property.id == aggregateOn);
-  const aggregateOnName = aggregateOnProperty ? aggregateOnProperty.name : null;
-
-  const aggregationIndependentVariables = fieldProperties.items
+  const aggregationVariablesNames = fieldProperties.items
     .filter((property) => aggregationVariablesIds.indexOf(property.id) >= 0)
+    .map((property) => property.name );
 
-  const aggregationIndependentVariableNames = aggregationIndependentVariables
-    .map((field) => field.name);
-
-  var aggregationIndependentVariableNamesAndTypes  = aggregationIndependentVariables
-    .map(function(field){
-      if (field.generalType == 'q'){
-        return [field.generalType, field.name, binningConfigX];
-      } else {
-        return [field.generalType, field.name];
-      }
-    });
-
-  if (aggregationIndependentVariables.length == 2){
-    var var1 = aggregationIndependentVariables[0]
-    var var2 = aggregationIndependentVariables[1]
-    if (var1.generalType == 'q' && var2.generalType == 'q'){
-      aggregationIndependentVariableNamesAndTypes[0] = [var1.generalType, var1.name, binningConfigX]
-      aggregationIndependentVariableNamesAndTypes[1] = [var2.generalType, var2.name, binningConfigY]
-    }
+  let aggregationDependentVariableName;
+  if (aggregationDependentVariableId == 'count' ) {
+    aggregationDependentVariableName = 'count'
+  } else {
+    var aggregationDependentVariable = fieldProperties.items.find((p) => (p.id == aggregationDependentVariableId));
+    aggregationDependentVariableName = aggregationDependentVariable ? aggregationDependentVariable.name : null;
   }
 
-  const weightVariableName = weightVariableId ? weightVariableId : 'UNIFORM';
+  const weightVariable = fieldProperties.items.find((p) => (p.id == weightVariableId));
+  const weightVariableName = weightVariable ? weightVariable.name : 'UNIFORM';
 
   return {
     conditionals,
     datasets,
-    datasetSelector,
     projectId: project.id,
     datasetId: datasetSelector.id,
+    aggregationDependentVariableName,
     aggregationResult,
-    aggregationIndependentVariableNames,
-    aggregationIndependentVariableNamesAndTypes,
-    oneDimensionAggregationResult,
-    allAggregationVariableIds,
-    loadAggregation: aggregationSelector.loadAggregation,
-    aggregateOnName,
+    aggregationVariablesNames,
     weightVariableName,
-    aggregateOn,
     aggregationFunction,
     binningConfigX,
     binningConfigY
@@ -234,7 +247,7 @@ function mapStateToProps(state, ownProps) {
 export default connect(mapStateToProps, {
   push,
   runAggregation,
-  runAggregationOneDimensional,
+  createExportedAggregation,
   selectDataset,
   fetchDatasets,
   clearAnalysis

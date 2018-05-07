@@ -12,9 +12,8 @@ import SidebarCategoryGroup from '../../Base/SidebarCategoryGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 import RaisedButton from '../../Base/RaisedButton';
-
 import ConditionalSelector from '../../Base/ConditionalSelector';
-import BinningSelector from './BinningSelector';
+import BinningSelector from '../../Base/BinningSelector';
 
 export class SingleVisualizationSidebar extends Component {
 
@@ -48,9 +47,10 @@ export class SingleVisualizationSidebar extends Component {
 
     const visualizationTypes = filters.visualizationTypes.filter((visualizationType) =>
       (visualization.spec.vizTypes.indexOf(visualizationType.type) > -1)
-    ).map((visualizationType) =>
-      new Object({ ...visualizationType, selected: visualizationType.type == visualizationType })
+    ).map((visualizationTypeObject) =>
+      new Object({ ...visualizationTypeObject, selected: visualizationTypeObject.type == visualizationType })
     );
+
 
     return (
       <Sidebar>
@@ -90,7 +90,7 @@ export class SingleVisualizationSidebar extends Component {
                   onChange={ selectSingleVisualizationSortField } />
                 <ToggleButtonGroup
                   className={ styles.sortOrder }
-                  toggleItems={ visualization.sortOrders.map((sortOrder) => new Object({...sortOrder, icon: <i className={ sortOrder.iconName }></i> })) }
+                  toggleItems={ visualization.sortOrders.map((sortOrder) => new Object({...sortOrder, icon: <span className={ 'pt-icon-standard ' + sortOrder.iconName + ' ' + styles.sortIcon } /> })) }
                   valueMember="id"
                   displayTextMember="icon"
                   altTextMember="name"
@@ -100,7 +100,7 @@ export class SingleVisualizationSidebar extends Component {
           }
           { visualizationType == 'hist' &&
             <BinningSelector
-              config={ visualization.config }
+              config={ visualization.config.data }
               selectBinningConfig={ selectVisualizationDataConfig } />
           }
           { (visualizationType == 'hist' || visualizationType == 'bar' || visualizationType == 'scatter') &&
@@ -126,7 +126,7 @@ export class SingleVisualizationSidebar extends Component {
           { (visualizationType == 'bar') &&
             <SidebarGroup heading="Legend">
                 <DropDownMenu
-                  value={ visualization.config.legendPosition }
+                  value={ visualization.config.display.legendPosition }
                   options={ visualization.configOptions.legendPosition }
                   valueMember="value"
                   displayTextMember="label"

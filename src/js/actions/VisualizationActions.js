@@ -1,26 +1,29 @@
 import {
+  VISUALIZATION_MODE,
   REQUEST_EXACT_SPECS,
   PROGRESS_EXACT_SPECS,
   RECEIVE_EXACT_SPECS,
-  FAILED_RECEIVE_EXACT_SPECS,
+  ERROR_EXACT_SPECS,
   REQUEST_INDIVIDUAL_SPECS,
   PROGRESS_INDIVIDUAL_SPECS,
   RECEIVE_INDIVIDUAL_SPECS,
-  FAILED_RECEIVE_INDIVIDUAL_SPECS,
+  ERROR_INDIVIDUAL_SPECS,
   REQUEST_SUBSET_SPECS,
   PROGRESS_SUBSET_SPECS,
   RECEIVE_SUBSET_SPECS,
-  FAILED_RECEIVE_SUBSET_SPECS,
+  ERROR_SUBSET_SPECS,
   REQUEST_EXPANDED_SPECS,
   PROGRESS_EXPANDED_SPECS,
   RECEIVE_EXPANDED_SPECS,
-  FAILED_RECEIVE_EXPANDED_SPECS,
+  ERROR_EXPANDED_SPECS,
   PROGRESS_SPECS,
   SELECT_RECOMMENDATION_TYPE,
   SELECT_VISUALIZATION_TYPE,
   SELECT_SINGLE_VISUALIZATION_VISUALIZATION_TYPE,
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
+  REQUEST_VISUALIZATION_TABLE_DATA,
+  RECEIVE_VISUALIZATION_TABLE_DATA,
   CLEAR_VISUALIZATION,
   CLICK_VISUALIZATION,
   REQUEST_CREATE_SAVED_SPEC,
@@ -47,31 +50,36 @@ const specLevelToAction = [
     request: REQUEST_EXACT_SPECS,
     progress: PROGRESS_EXACT_SPECS,
     receive: RECEIVE_EXACT_SPECS,
-    fail: FAILED_RECEIVE_EXACT_SPECS
+    error: ERROR_EXACT_SPECS
   },
   {
     request: REQUEST_SUBSET_SPECS,
     progress: PROGRESS_SUBSET_SPECS,
     receive: RECEIVE_SUBSET_SPECS,
-    fail: FAILED_RECEIVE_SUBSET_SPECS
+    error: ERROR_SUBSET_SPECS
   },
   {
     request: REQUEST_INDIVIDUAL_SPECS,
     progress: PROGRESS_INDIVIDUAL_SPECS,
     receive: RECEIVE_INDIVIDUAL_SPECS,
-    fail: FAILED_RECEIVE_INDIVIDUAL_SPECS
+    error: ERROR_INDIVIDUAL_SPECS
   },
   {
     request: REQUEST_EXPANDED_SPECS,
     progress: PROGRESS_EXPANDED_SPECS,
     receive: RECEIVE_EXPANDED_SPECS,
-    fail: FAILED_RECEIVE_EXPANDED_SPECS
+    error: ERROR_EXPANDED_SPECS
   },
 ]
 
-export function getInitialState(projectId, datasetId, fieldProperties) {
+export function getInitialState(projectId, datasetSelector, fieldProperties) {
+  const { nRows, nCols } = datasetSelector.details;
+  let recommendationMode = 'expanded';
+  if (nCols > 40 && nRows > 1000) {
+    recommendationMode = 'regular'
+  }
   return {
-    recommendationMode: 'regular',
+    recommendationMode: recommendationMode,
     sortBy: 'relevance'
   };
 }
@@ -177,8 +185,8 @@ function progressSpecsDispatcherWrapper(selectedRecommendationLevel) {
 function errorSpecsDispatcherWrapper(selectedRecommendationLevel) {
   return (data) => {
     return {
-      type: specLevelToAction[selectedRecommendationLevel].progress,
-      progress:'Error processing visualizations, please check console.'
+      type: specLevelToAction[selectedRecommendationLevel].error,
+      message: data.error
     };
   }
 }
@@ -196,10 +204,10 @@ function receiveSpecsDispatcher(params, json) {
 
   return {
     ...params,
-    type: specLevelToAction[recommendationLevel].fail,
+    type: specLevelToAction[recommendationLevel].error,
     specs: [],
     receivedAt: Date.now(),
-    error: (json && json.error) ? json.error : "Error retrieving visualizations."
+    error: (json && json.message) ? json.message : "Error retrieving visualizations."
   };
 }
 
@@ -236,8 +244,11 @@ export function fetchSpecs(projectId, datasetId, selectedFieldProperties, recomm
     'conditionals': conditionals
   };
 
-  const progressSpecsDispatcher = progressSpecsDispatcherWrapper(selectedRecommendationLevel);
-  const errorSpecsDispatcher = errorSpecsDispatcherWrapper(selectedRecommendationLevel);
+  const dispatchers = {
+    success: receiveSpecsDispatcher,
+    progress: progressSpecsDispatcherWrapper(selectedRecommendationLevel),
+    error: errorSpecsDispatcherWrapper(selectedRecommendationLevel)
+  }
 
   return dispatch => {
     dispatch(requestSpecsDispatcher(selectedRecommendationLevel));
@@ -249,7 +260,7 @@ export function fetchSpecs(projectId, datasetId, selectedFieldProperties, recomm
     }).then(function(json) {
         const dispatchParams = { project_id: projectId, dataset_id: datasetId, recommendationType: recommendationType };
         if (json.compute) {
-          dispatch(pollForTask(json.taskId, specLevelToAction[selectedRecommendationLevel].request, dispatchParams, receiveSpecsDispatcher, progressSpecsDispatcher, errorSpecsDispatcher));
+          dispatch(pollForTask(json.taskId, VISUALIZATION_MODE, specLevelToAction[selectedRecommendationLevel].request, dispatchParams, dispatchers));
         } else {
           dispatch(receiveSpecsDispatcher(dispatchParams, json.result));
         }
@@ -359,6 +370,48 @@ export function fetchSpecVisualizationIfNeeded(projectId, specId, conditionals, 
     if (shouldFetchSpecVisualization(getState())) {
       return dispatch(fetchSpecVisualization(projectId, specId, conditionals, config));
     }
+  };
+}
+
+function requestVisualizationTableDataDispatcher() {
+  return {
+    type: REQUEST_VISUALIZATION_TABLE_DATA,
+  };
+}
+
+function receiveVisualizationTableDataDispatcher(json) {
+  console.log(json);
+  return {
+    type: RECEIVE_VISUALIZATION_TABLE_DATA,
+    spec: json.spec,
+    tableData: json.visualization ? (json.visualization.table ? formatVisualizationTableData(json.visualization.table.columns, json.visualization.table.data) : []) : [],
+    receivedAt: Date.now()
+  };
+}
+
+export function getVisualizationTableData(projectId, specId, conditionals = [], config = null) {
+  const params = {
+    project_id: projectId,
+    data_formats: [ 'table' ]
+  }
+
+  const filteredConditionals = getFilteredConditionals(conditionals);
+  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
+    params.conditionals = filteredConditionals;
+  }
+
+  if (config) {
+    params.config = config;
+  }
+
+  return dispatch => {
+    dispatch(requestVisualizationTableDataDispatcher());
+    return fetch(`/specs/v1/specs/${ specId }/visualization?project_id=${ projectId }`, {
+      method: 'post',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(json => dispatch(receiveVisualizationTableDataDispatcher(json)));
   };
 }
 

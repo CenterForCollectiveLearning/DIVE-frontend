@@ -1,10 +1,13 @@
 @import '../../../css/mixins.sass'
 
 .sidebar
+  // position: absolute
+  // top: 0px
+  // right: 0px
   flex-direction: column
   flex-shrink: 0
   // background-color: $right-sidebar-grey  // white
-  background-color: $center-grey
+  background-color: $right-sidebar-grey  // center-grey
 
   overflow-y: auto
 
@@ -107,7 +110,7 @@
       &.collapsed
         border-bottom: none
         .sidebarCategoryGroupHeading
-          border-bottom: 1px solid rgba($small-caps-grey, 0.2)
+          border-top: 1px solid rgba($small-caps-grey, 0.2)
 
     .sidebarCategoryGroupHeading
       font-weight: bold

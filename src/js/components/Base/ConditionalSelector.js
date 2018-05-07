@@ -79,7 +79,6 @@ export class ConditionalSelector extends Component {
 
     this.setState(conditional);
 
-    console.log(createNewConditional)
     this.props.selectConditionalValue(conditional, createNewConditional);
 
     // Whether to create add new conditional
@@ -91,7 +90,7 @@ export class ConditionalSelector extends Component {
 
   onSelectField = (fieldId) => {
     const selectedField = this.props.fieldProperties.find((item) => item.id == fieldId);
-    const value = "ALL_VALUES";
+    const value = "ALL VALUES";
     const operator = "==";
     this.updateConditional({ fieldId: fieldId, value: value, operator: operator });
   }
@@ -112,13 +111,13 @@ export class ConditionalSelector extends Component {
   }
 
   onSelectFieldValue = (fieldValue) => {
-    const createNewConditional = (this.state.value == 'ALL_VALUES' && fieldValue != null);;
+    const createNewConditional = (this.state.value == 'ALL VALUES' && fieldValue != null);;
     this.updateConditional({ value: fieldValue }, createNewConditional);
   }
 
   onTypeFieldValue = (e) => {
     const val = e.target.value;
-    const createNewConditional = (this.state.value == 'ALL_VALUES' && val != null);
+    const createNewConditional = (this.state.value == 'ALL VALUES' && val != null);
     this.updateConditional({ value: Number.parseInt(val) }, createNewConditional);
   }
 
@@ -129,6 +128,8 @@ export class ConditionalSelector extends Component {
     const selectedField = fieldProperties.find((item) => item.id == fieldId);
     const fieldValues = selectedField ? selectedField.values : [];
 
+
+    console.log(selectedField);
     const combinators = this.combinators
       .map((combinatorFromList) => new Object({ ...combinatorFromList, selected: combinator == combinatorFromList.value }));
 
@@ -168,7 +169,7 @@ export class ConditionalSelector extends Component {
               displayTextMember="label"
               onChange={ this.onSelectOperator }/>
 
-            { (!selectedField || selectedField.generalType == 'c') &&
+            { (!selectedField || selectedField.generalType == 'c' || selectedField.scale == 'ordinal') &&
               <DropDownMenu
                 className={ styles.conditionalDropdown + ' ' + styles.sidebarDropdown + ' ' + styles.fieldValueDropdown + (fieldId == null ? ' ' + styles.disabledDropdown : '') }
                 value={ value }
@@ -178,7 +179,7 @@ export class ConditionalSelector extends Component {
                 displayTextMember="label"
                 onChange={ this.onSelectFieldValue }/>
             }
-            { selectedField && (selectedField.generalType == 'q' || selectedField.generalType == 't') &&
+            { selectedField && (selectedField.scale == 'continuous') &&
               <Input
                 className={ styles.conditionalInput + (fieldId == null ? ' ' + styles.disabledInput : '') }
                 placeholder={ `${ value }` }

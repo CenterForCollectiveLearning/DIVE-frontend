@@ -14,7 +14,7 @@ if (useExpress) {
       res.sendFile('index.html', {
         root: static_path
       });
-    }).listen(process.env.PORT || 8080, function (err) {
+    }).listen(process.env.PORT || 3009, function (err) {
       if (err) { console.log(err) };
       console.log(`>>> Listening at ${ host }:${ port }`);
     });

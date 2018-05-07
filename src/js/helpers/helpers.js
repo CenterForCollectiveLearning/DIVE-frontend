@@ -284,12 +284,26 @@ export function filterInteractionTermSelection(item, alreadySelectedTerm, intera
   return showVariable;
 }
 
+export function formatPlaintextListWithCommas(li) {
+  const numEles = li.length;
+  var result = li.map(function(ele, i) {
+    if (i == 0) {
+      return `${ ele }`;
+    } else if (i > 0 && i < numEles - 1 && numEles > 2) {
+      return `, ${ ele }`;
+    } else {
+      return ` and ${ ele }`;
+    }
+  })
+  return result.join('');
+}
+
 export function formatListWithCommas(li) {
   const numEles = li.length;
   return li.map(function(ele, i) {
     if (i == 0) {
       return <span>{ ele }</span>
-    } else if (i > 0 && i < numEles - 1) {
+    } else if (i > 0 && i < numEles - 1 && numEles > 2) {
       return <span>, { ele }</span>
     } else {
       return <span> and { ele }</span>

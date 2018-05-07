@@ -19,7 +19,7 @@ export default function exportedSpecs(state=baseState, action) {
       return { ...state, isFetching: true, loaded: false };
 
     case RECEIVE_EXPORTED_VISUALIZATION_SPECS:
-      return { ...state, isFetching: false, items: action.specs, updatedAt: action.receivedAt, loaded: true };
+      return { ...state, isFetching: false, items: action.specs.filter((s) => s.exportedSpecId !== null), updatedAt: action.receivedAt, loaded: true };
 
     case RECEIVE_CREATED_EXPORTED_SPEC, RECEIVE_CREATED_SAVED_SPEC:
       var updatedSpecs = state.items.slice();

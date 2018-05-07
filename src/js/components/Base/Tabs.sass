@@ -1,37 +1,81 @@
 @import '../../../css/mixins.sass'
 
 .tabs
-  margin-top: 30px
   background-color: transparent
   display: flex
   flex-direction: column
   flex-grow: 1
   flex-shrink: 0
+  justify-content: center
+  max-height: 500px
+  margin-top: auto
 
   .tabGroup
     display: flex
     flex-direction: column
     margin-bottom: 13px
-    
+    margin-top: 60px
+
+    &:first-child
+      margin-top: 0px
+
+    &:last-child
+      margin-bottom: 0px
+
+    &.disabled
+      opacity: 0.3
+      pointer-events: none
+
+    &.selected
+      .tabGroupHeading
+        background-color: $primary-accent
+
     .tabGroupHeading
       +smallCapsBold
+      display: flex
+      flex-direction: column
       color: $white
-      margin-left: 15px
-      // margin-right: 15px
-      margin-bottom: 5px
+
+      border-radius: 3px
+      padding-top: 8px
       padding-bottom: 5px
-      border-bottom: 1px solid $left-sidebar-separator-grey
+      margin-left: 8px
+      margin-right: 8px
+      text-align: center
+
+      cursor: pointer
+
+      .sidebarIcon
+        color: $white
+        text-align: center
+        font-size: 25px
+        padding-bottom: 10px
+        cursor: pointer      
+
+      &:hover
+        background-color: $primary-accent
+        color: $white
+        .sidebarIcon
+          color: $white
 
       &.disabled
         opacity: 0.3
         pointer-events: none
 
-  .tab
-    padding: 0 45px
-    line-height: 24px
-    height: 24px
+  .tabGroupChildren
+    display: flex
+    justify-content: center
+    margin-top: 2px
 
-    font-size: 14px
+  .tab
+    // padding: 0 45px
+    line-height: 24px
+    text-align: center
+    width: 24px
+    height: 24px
+    border-radius: 2px
+
+    font-size: 18px
     font-weight: 400
     color: $white
 
@@ -42,9 +86,16 @@
       background-color: rgba($primary-accent, 0.7)
 
     &.selected
-      color: $white
-      background-color: rgba($primary-accent, 1)
+      color: $primary-accent
+      // color: $white
+      // background-color: rgba($primary-accent, 1)
 
     &.disabled
       opacity: 0.3
       pointer-events: none
+
+$sidebar-break: 1000px
+@media screen and (max-height: $sidebar-break)
+  .tabs
+    .tabGroup
+      margin-top: 30px

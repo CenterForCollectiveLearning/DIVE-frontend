@@ -2,11 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import styles from './ToggleButtonGroup.sass';
 
 import { Button } from '@blueprintjs/core';
+import AugmentedButton from './AugmentedButton';
 
 export default class ToggleButtonGroup extends Component {
   render() {
     const { className, buttonClassName, colorMember, toggleItems, altTextMember, valueMember, displayTextMember, imageNameMember, imageNameSuffix, externalSelectedItems, separated, column, splitMenuItemsMember, selectMenuItem, onChange, onDelete, expand } = this.props;
-
     const stringifiedExternalSelectedItems = externalSelectedItems ? externalSelectedItems.map((item) => `${item}`) : null;
 
     return (
@@ -17,33 +17,11 @@ export default class ToggleButtonGroup extends Component {
         ( ( expand || imageNameMember ) ? (' pt-fill') : '' )
       }>
         { toggleItems.map((item) =>
-          <Button
-            key={ `toggle-${item[valueMember]}` }
-            className={
-              'pt-button ' +
-              styles.toggleButton +
-              ( imageNameMember ? ' ' + styles.iconButton : '' ) +
-              ( item.disabled ? ' pt-disabled' : '') +
-              ( colorMember ? (' ' + styles.coloredBorder) : '' ) +
-              ( item.selected || (stringifiedExternalSelectedItems && stringifiedExternalSelectedItems.indexOf(`${item[valueMember]}`) >= 0) ? ' pt-active' : '')
-            }
-            style={ colorMember ? { 'borderLeftColor': item[colorMember] } : {} }
-            onClick={ () => onChange(item[valueMember].toString()) }
-            // separated={ separated }
-            // splitMenu={ splitMenuItemsMember ? item[splitMenuItemsMember] : [] }
-            // selectMenuItem={ selectMenuItem }
-            // onDelete={ onDelete }
-          >
-            { imageNameMember ?
-              <img
-                src={ imageNameMember ? `/assets/${item[imageNameMember]}${imageNameSuffix}` : null  }
-                alt={ altTextMember ? item[altTextMember] : item[displayTextMember] } />
-              : this.props.content
-            }
-            { !imageNameMember &&
-              item[displayTextMember]
-            }
-          </Button>
+          <AugmentedButton
+            key={ `toggle-button-${item[valueMember]}` }
+            item={ item }
+            { ...this.props }
+          />  
         )}
       </div>
     );

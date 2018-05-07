@@ -49,7 +49,7 @@ export class CorrelationSidebar extends Component {
 
   render() {
     const { fieldProperties, conditionals, correlationVariablesIds, selectConditional } = this.props;
-    const quantitativeVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q')
+    const quantitativeVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q' && item.scale == 'continuous')
     return (
       <Sidebar selectedTab="correlation">
         <SidebarCategoryGroup
@@ -62,7 +62,8 @@ export class CorrelationSidebar extends Component {
           { fieldProperties.items.length != 0 && fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
             <div className={ styles.fieldGroup }>
               <div className={ styles.fieldGroupHeader }>
-                <div className={ styles.fieldGroupLabel }>Quantitative</div>
+                <span className={ styles.fieldGroupLabel }>Quantitative</span>
+                <span className={ "pt-icon-standard pt-icon-numerical " + styles.generalTypeIcon } />
               </div>
               <ToggleButtonGroup
                 toggleItems={ quantitativeVariables.map((item) =>

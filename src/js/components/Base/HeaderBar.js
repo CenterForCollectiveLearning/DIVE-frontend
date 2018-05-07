@@ -24,20 +24,24 @@ export default class HeaderBar extends Component {
 
 
   render() {
-    const { className, textClassName, header, subheader, actions, helperText } = this.props;
+    const { className, textClassName, header, subheader, actions, helperText, sidebar } = this.props;
     const { showHelperText } = this.state;
 
-    let popoverContent = (
-      <div>
-        <p>{ HELPER_TEXT[helperText] }</p>
-      </div>
-    );
+    let popoverContent;
+    if (helperText) {
+      popoverContent = (
+        <div>
+          <p>{ HELPER_TEXT[helperText] }</p>
+        </div>
+      );
+    }
 
     return (
       <div className={
         styles.headerBar
         + (className ? ' ' + className : '')
         + (header ? ' ' + styles.hasHeaderText : '')
+        + (sidebar ? ' ' + styles.hasSidebar : '')
       }>
         <h4 className={
           styles.headerText
@@ -82,5 +86,10 @@ HeaderBar.propTypes = {
   actions: PropTypes.node,
   className: PropTypes.string,
   textClassName: PropTypes.string,
-  helperText: PropTypes.string
+  helperText: PropTypes.string,
+  sidebar: PropTypes.bool
 };
+
+HeaderBar.defaultProps = {
+  sidebar: true
+}

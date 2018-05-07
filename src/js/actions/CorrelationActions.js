@@ -1,13 +1,12 @@
 import _ from 'underscore'
 
 import {
+  CORRELATION_MODE,
   SELECT_CORRELATION_VARIABLE,
   REQUEST_CORRELATION,
   RECEIVE_CORRELATION,
   PROGRESS_CORRELATION,
   ERROR_CORRELATION,
-  REQUEST_CORRELATION_SCATTERPLOT,
-  RECEIVE_CORRELATION_SCATTERPLOT,
   REQUEST_CREATE_SAVED_CORRELATION,
   RECEIVE_CREATED_SAVED_CORRELATION,
   REQUEST_CREATE_EXPORTED_CORRELATION,
@@ -20,7 +19,7 @@ import { fetch, pollForTask } from './api.js';
 import { getFilteredConditionals } from './ActionHelpers.js'
 
 export function getInitialState(projectId, datasetId, fieldProperties) {
-  var quantitativeItemIds = fieldProperties.filter((item) => (item.generalType == 'q' && !item.isId)).map((item) => item.id)
+  var quantitativeItemIds = fieldProperties.filter((item) => (item.generalType == 'q' && item.scale == 'continuous' && !item.isId)).map((item) => item.id)
   var n_q = quantitativeItemIds.length;
   var selectedVariablesIds = [];
 
@@ -79,7 +78,7 @@ function receiveCorrelationDispatcher(params, json) {
 function errorCorrelationDispatcher(json) {
   return {
     type: ERROR_CORRELATION,
-    progress: 'Error running correlations, please check console.'
+    message: json.error
   };
 }
 
@@ -97,6 +96,12 @@ export function getCorrelations(projectId, datasetId, correlationVariables, cond
     params.conditionals = filteredConditionals;
   }
 
+  const dispatchers = {
+    success: receiveCorrelationDispatcher,
+    progress: progressCorrelationDispatcher,
+    error: errorCorrelationDispatcher
+  }
+
   return (dispatch) => {
     dispatch(requestCorrelationDispactcher());
     return fetch('/statistics/v1/correlations', {
@@ -106,49 +111,11 @@ export function getCorrelations(projectId, datasetId, correlationVariables, cond
     })
     .then(function(json) {
       if (json.compute) {
-        dispatch(pollForTask(json.taskId, REQUEST_CORRELATION, params, receiveCorrelationDispatcher, progressCorrelationDispatcher, errorCorrelationDispatcher));
+        dispatch(pollForTask(json.taskId, CORRELATION_MODE, REQUEST_CORRELATION, params, dispatchers));
       } else {
         dispatch(receiveCorrelationDispatcher(params, json));
       }
     })
-    .catch(err => console.error("Error creating correlation matrix: ", err));
-  };
-}
-
-function requestCorrelationScatterplotDispatcher() {
-  return {
-    type: REQUEST_CORRELATION_SCATTERPLOT
-  };
-}
-
-function receiveCorrelationScatterplotDispatcher(json) {
-  return {
-    type: RECEIVE_CORRELATION_SCATTERPLOT,
-    data: json,
-    receivedAt: Date.now()
-  };
-}
-
-export function getCorrelationScatterplot(projectId, correlationId, conditionals=[]) {
-
-  const params = {
-    projectId: projectId,
-    correlationId: correlationId
-  }
-
-  const filteredConditionals = getFilteredConditionals(conditionals);
-  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
-    params.conditionals = filteredConditionals;
-  }
-
-  return (dispatch) => {
-    dispatch(requestCorrelationScatterplotDispatcher);
-    return fetch('/statistics/v1/correlation_scatterplot', {
-      method: 'post',
-      body: JSON.stringify(params),
-      headers: { 'Content-Type': 'application/json' }
-    }).then(json => dispatch(receiveCorrelationScatterplotDispatcher(json)))
-      .catch(err => console.error("Error getting correlation scatterplot: ", err));
   };
 }
 

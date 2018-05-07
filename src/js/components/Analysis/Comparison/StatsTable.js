@@ -14,13 +14,13 @@ export default class StatsTable extends Component {
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
-        items: [ 'TEST', 'TEST-STATISTIC', 'P-VALUE' ]
+        items: [ 'Test', 'Statistic', 'p-value' ]
       },
-      ...numericalData.map(function(object) {
+      ...numericalData.map(function(d) {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
-          items: [ object.test, ...object.values.map((num) => <Number className={ styles.dataCell } value={ num } />) ]
+          items: [ d.test, <Number className={ styles.dataCell } value={ d.values.statistic } />, <Number className={ styles.dataCell } value={ d.values.pvalue } /> ]
         })
       })
     ];

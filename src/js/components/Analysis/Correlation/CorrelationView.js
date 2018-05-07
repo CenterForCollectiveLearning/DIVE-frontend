@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Button, NonIdealState } from '@blueprintjs/core';
+import { Button, NonIdealState, Intent } from '@blueprintjs/core';
 
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
 import { getCorrelations, getCorrelationScatterplot, createExportedCorrelation } from '../../../actions/CorrelationActions';
@@ -11,6 +11,7 @@ import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import styles from '../Analysis.sass';
 
+import ErrorComponent from '../../Base/ErrorComponent';
 import Card from '../../Base/Card';
 import Loader from '../../Base/Loader';
 import HeaderBar from '../../Base/HeaderBar';
@@ -22,13 +23,6 @@ import CorrelationScatterplotCard from './CorrelationScatterplotCard';
 
 export class CorrelationView extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.saveCorrelation = this.saveCorrelation.bind(this);
-    this.onClickShare = this.onClickShare.bind(this);
-  }
-
   componentWillMount() {
     const { projectId, datasetId, datasetSelector, datasets, correlationVariableNames, getCorrelations, correlations, conditionals, fetchDatasets } = this.props
 
@@ -37,7 +31,6 @@ export class CorrelationView extends Component {
     }
     if (projectId && datasetId && correlationVariableNames.length) {
       getCorrelations(projectId, datasetId, correlationVariableNames, conditionals.items)
-      getCorrelationScatterplot(projectId, datasetId, correlationVariableNames, conditionals.items)
     }
 
     clearAnalysis();
@@ -53,10 +46,6 @@ export class CorrelationView extends Component {
     if (nextProps.projectId && nextProps.datasetId && sideBarChanged && twoVariablesSelected) {
       getCorrelations(nextProps.projectId, nextProps.datasetId, nextProps.correlationVariableNames, nextProps.conditionals.items)
     }
-
-    if (nextProps.projectId && nextProps.correlationResult.data && nextProps.correlationResult.data.id && (this.props.correlationResult.data == null || (nextProps.correlationResult.data.id != this.props.correlationResult.data.id))) {
-      getCorrelationScatterplot(nextProps.projectId, nextProps.correlationResult.data.id, nextProps.conditionals.items);
-    }
   }
 
   componentDidUpdate(previousProps) {
@@ -69,24 +58,34 @@ export class CorrelationView extends Component {
     }
   }
 
-  saveCorrelation(saveAction = true) {
+  saveCorrelation = (saveAction = true) => {
     const { project, correlationResult, createExportedCorrelation } = this.props;
     createExportedCorrelation(project.id, correlationResult.data.id, correlationResult.data, correlationResult.conditionals, correlationResult.config, saveAction);
   }
 
-  onClickShare() {
+  onClickShare = () => {
     setShareWindow(window.open('about:blank'));
     this.saveCorrelation(false);
   }
 
   render() {
-    const { correlationResult, correlationVariableNames, correlationScatterplots, datasets, datasetId } = this.props;
+    const { correlationResult, correlationVariableNames,  datasets, datasetId } = this.props;
+
+    const { error, loading, progress, data, isExporting, isSaving, exportedRegressionId } = correlationResult;
+    const { table, scatterplots } = data;
+
     const twoCorrelationVariablesSelected = correlationVariableNames.length >= 2;
-    const correlationResultHasElements = correlationResult.data && correlationResult.data.rows && correlationResult.data.rows.length > 0;
-    const saved = (correlationResult.isSaving || (!correlationResult.isSaving && correlationResult.exportedRegressionId) || correlationResult.exported) ? true : false;
+    const saved = (isSaving || (!isSaving && exportedRegressionId) || correlationResult.exported) ? true : false;
 
     var correlationContent;
-    if (correlationVariableNames.length < 2) {
+    if (error) {
+      correlationContent = <ErrorComponent
+        title='Error Running Correlation'
+        description={ error }
+      />;
+    }
+
+    if (!error && correlationVariableNames.length < 2) {
       correlationContent = <div className={ styles.centeredFill }>
         <NonIdealState
           title='Too Few Variables Selected'
@@ -95,25 +94,18 @@ export class CorrelationView extends Component {
         />
       </div>
     }
-    else if (twoCorrelationVariablesSelected ) {
+    else if (!error && twoCorrelationVariablesSelected ) {
       correlationContent =
         <div className={ styles.correlationViewContainer }>
           <Card header={
               <span>Correlating <ColoredFieldItems fields={ correlationVariableNames } /></span>
             }
           >
-            { correlationResult.loading &&
-              <Loader text={ correlationResult.progress != null ? correlationResult.progress : 'Running correlations…' } />
-            }
-            { (!correlationResult.loading && correlationResultHasElements) &&
-              <CorrelationTable correlationResult={ correlationResult.data || {} } />
+            { loading && <Loader text={ progress != null ? progress : 'Running correlations…' } /> }
+            { (!loading && table && table.rows && table.headers && scatterplots) && 
+              <CorrelationTable correlationResult={ table } scatterplotData={ scatterplots } /> 
             }
           </Card>
-          { (correlationResultHasElements && correlationScatterplots.length > 0) &&
-            <CorrelationScatterplotCard
-              data={ correlationScatterplots }
-            />
-          }
         </div>
       ;
     }
@@ -123,19 +115,19 @@ export class CorrelationView extends Component {
         <HeaderBar
           actions={
             <div className={ styles.headerControlRow }>
-              <div className={ styles.headerControl }>
+              {/* <div className={ styles.headerControl }>
                 <Button
                   iconName='share'
                   onClick={ this.onClickShare }
-                  loading={ correlationResult.isExporting }
+                  loading={ isExporting }
                 >
-                  { !correlationResult.isExporting && "Share" }
+                  { !isExporting && "Share" }
                 </Button>
-              </div>
+              </div> */}
               <div className={ styles.headerControl }>
                 <Button
                   onClick={ this.saveCorrelation }
-                  loading={ correlationResult.isSaving }>
+                  loading={ isSaving }>
                   { !correlationResult.isSaving && !correlationResult.exportedCorrelationId &&
                     <div><span className='pt-icon-standard pt-icon-star-empty' />Save</div>
                   }
@@ -155,7 +147,6 @@ export class CorrelationView extends Component {
 function mapStateToProps(state, ownProps) {
   const { project, datasets, correlationSelector, datasetSelector, fieldProperties, conditionals } = state;
   const { correlationVariablesIds } = ownProps;
-  const { correlationScatterplots } = correlationSelector;
 
   const correlationVariableNames = fieldProperties.items
     .filter((property) => correlationVariablesIds.indexOf(property.id) >= 0)
@@ -169,8 +160,7 @@ function mapStateToProps(state, ownProps) {
     projectId: project.id,
     datasetId: datasetSelector.id,
     correlationResult: correlationSelector.correlationResult,
-    correlationVariableNames: correlationVariableNames,
-    correlationScatterplots: correlationScatterplots,
+    correlationVariableNames: correlationVariableNames
   }
 }
 

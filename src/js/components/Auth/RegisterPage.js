@@ -106,9 +106,9 @@ class RegisterPage extends Component {
   }
 
   ensureNotLoggedIn(props) {
-    const { isAuthenticated, push } = props;
+    const { user, push } = props;
 
-    if (isAuthenticated){
+    if (user.isAuthenticated && !user.anonymous){
       push(props.location.query.next || '/projects');
     }
   };

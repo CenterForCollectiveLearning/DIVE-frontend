@@ -35,7 +35,7 @@ export class ProjectListPage extends Component {
       push('/');
     }
 
-    if (user.isAuthenticated && !user.confirmed) {
+    if (user.isAuthenticated && !user.anonymous && !user.confirmed) {
       push('/auth/unconfirmed');
     }
   }
@@ -141,7 +141,7 @@ export class ProjectListPage extends Component {
             </div>
           }
           { !isFetchingUserProjects && userProjects.length == 0 &&
-            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer }>
+            <div className={ styles.projectsContainer + ' ' + styles.myProjectsContainer + ' ' + styles.centeredFill}>
               <div className={ styles.projectListSidebar }></div>
               <NonIdealState
                 title='No projects'

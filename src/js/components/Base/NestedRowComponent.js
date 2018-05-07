@@ -7,10 +7,8 @@ export default class NestedRowComponent extends Component {
     super(props);
 
     this.state = {
-      collapsed: false
+      collapsed: props.collapsed
     }
-
-    this.collapseNestedRow = this.collapseNestedRow.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -19,7 +17,7 @@ export default class NestedRowComponent extends Component {
     }
   }
 
-  collapseNestedRow() {
+  collapseNestedRow = () => {
     this.setState({
       collapsed: !this.state.collapsed
     })
@@ -69,7 +67,7 @@ export default class NestedRowComponent extends Component {
       columnClass: firstChildRow.columnClass,
       items: [
         row.parentName,
-        ...firstChildRow.items.slice(1).map((column) => ((column !== '') ? '✓' : ''))
+        ...firstChildRow.items.slice(1).map((column) => ((column !== '') ? ( row.placeholder ? row.placeholder : '✓' ) : ''))
       ]
     };
 
@@ -106,7 +104,7 @@ export default class NestedRowComponent extends Component {
 }
 
 NestedRowComponent.defaultProps = {
-  collapsed: true,
+  collapsed: false,
   i: 0
 }
 

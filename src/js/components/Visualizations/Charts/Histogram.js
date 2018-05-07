@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import styles from '../Visualizations.sass';
 
-var Chart = require('react-google-charts').Chart;
+import { Chart } from 'react-google-charts';
 
 export default class Histogram extends Component {
   render() {
@@ -21,8 +21,9 @@ export default class Histogram extends Component {
         hAxis: {
           title: labels && labels.x ? labels.x : finalData[0][0],
           ticks: bins,
-          slantedText: true,
-          slantedTextAngle: 45,
+          slantedText: false,
+          // slantedText: true,
+          // slantedTextAngle: 45,
           textStyle: {
             color: '#888'
           },
@@ -50,13 +51,13 @@ export default class Histogram extends Component {
             bold: true,
             italic: false
           },
-          scaleType: config.vScaleType,
+          scaleType: config.display ? config.display.vScaleType : null
         },
         tooltip: {
           isHtml: true
         },
         legend: {
-          position: 'none'
+          position: config.display ? config.display.legendPosition : 'none'
         }
       };
     }
@@ -74,7 +75,6 @@ export default class Histogram extends Component {
       <Chart
         loader={ <div className={ styles.renderChartText + ' pt-monospace-text' }>Rendering Chart...</div> }
         chartType="ColumnChart"
-        key={ chartId }
         graph_id={ chartId }
         options={ options }
         data={ finalData }

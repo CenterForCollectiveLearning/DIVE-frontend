@@ -1,7 +1,7 @@
 import _ from 'underscore';
 
 import {
-  SELECT_AGGREGATION_AGGREGATION_VARIABLE,
+  SELECT_AGGREGATION_DEPENDENT_VARIABLE,
   SELECT_AGGREGATION_INDEPENDENT_VARIABLE,
   SELECT_AGGREGATION_AGGREGATION_FUNCTION,
   SELECT_AGGREGATION_AGGREGATION_WEIGHT_VARIABLE,
@@ -11,14 +11,12 @@ import {
   RECEIVE_AGGREGATION,
   PROGRESS_AGGREGATION,
   ERROR_AGGREGATION,
-  REQUEST_ONE_D_AGGREGATION,
-  RECEIVE_ONE_D_AGGREGATION,
-  PROGRESS_ONE_D_AGGREGATION,
-  ERROR_ONE_D_AGGREGATION,
   REQUEST_AGGREGATION_STATISTICS,
   RECEIVE_AGGREGATION_STATISTICS,
   PROGRESS_AGGREGATION_STATISTICS,
   ERROR_AGGREGATION_STATISTICS,
+  REQUEST_CREATE_SAVED_AGGREGATION,    
+  RECEIVE_CREATED_SAVED_AGGREGATION,  
   WIPE_PROJECT_STATE,
   SELECT_DATASET,
   CLEAR_ANALYSIS,
@@ -29,30 +27,33 @@ import {
 } from '../constants/ActionTypes';
 
 const baseState = {
-  aggregationVariableId: 'count',
+  aggregationDependentVariableId: 'count',
   aggregationVariablesIds: [],
-  oneDimensionAggregationResult: {
-    loading: false,
-    progress: null,
-    error: null,
-    data: null
-  },
-  aggregationResult: {
-    loading: false,
-    progress: null,
-    error: null,
-    data: null
-  },
   aggregationFunction: 'SUM',
   weightVariableId: 'UNIFORM',
   aggregationResult: {},
-  binningConfigX: {},
-  binningConfigY: {},
+  binningConfigX: {
+    binning_type: 'procedural',
+    binning_procedure: 'freedman',
+    num_bins: 7
+  },
+  binningConfigY: {
+    binning_type: 'procedural',
+    binning_procedure: 'freedman',
+    num_bins: 7
+  },
   aggregationResult: {
+    exportedAggregationId: null,
+    isSaving: false,
+    isExporting: false,
+    exported: false,
     loading: false,
     progress: null,
     error: null,
-    data: null
+    data: {
+      oneDimensionalContingencyTable: {},
+      twoDimensionalContingencyTable: {}
+    }
   },
   loadAggregation: false,
   queryString: null
@@ -92,8 +93,8 @@ export default function aggregationSelector(state = baseState, action) {
 
       return { ...state, aggregationVariablesIds: selectedAggregationVariablesIds };
 
-    case SELECT_AGGREGATION_AGGREGATION_VARIABLE:
-      return { ...state, aggregationVariableId: action.aggregationAggregationVariableId };
+    case SELECT_AGGREGATION_DEPENDENT_VARIABLE:
+      return { ...state, aggregationDependentVariableId: action.aggregationDependentVariableId };
 
     case SELECT_AGGREGATION_INDEPENDENT_VARIABLE:
       var aggregationVariablesIds = state.aggregationVariablesIds.slice();
@@ -109,34 +110,51 @@ export default function aggregationSelector(state = baseState, action) {
       return { ...state, loadAggregation: true };
 
     case REQUEST_AGGREGATION:
-      return { ...state, aggregationResult: { ...state.aggregationResult, loading: true }}
-
-    case RECEIVE_AGGREGATION:
-      return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, data: action.data } };
+      return { ...state, 
+        aggregationResult: { 
+          ...state.aggregationResult,
+          error: null,
+          loading: true
+        }
+      };
 
     case PROGRESS_AGGREGATION:
       if (action.progress && action.progress.length){
         return { ...state, aggregationResult: { ...state.aggregationResult, progress: action.progress} };
       }
-      return state;
+      return state;      
+
+    case RECEIVE_AGGREGATION:
+      return { ...state,
+        aggregationResult: {
+          ...state.aggregationResult,
+          loading: false,
+          data: action.data,
+          exported: action.data.exported,
+          exportedAggregationId: action.data.exportedAggregationId
+        }
+      };
 
     case ERROR_AGGREGATION:
-      return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, error: action.error } };
+      return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, error: action.message } };
 
-    case REQUEST_ONE_D_AGGREGATION:
-      return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: true }}
+    case REQUEST_CREATE_SAVED_AGGREGATION:
+      return { ...state,
+        aggregationResult: {
+          ...state.aggregationResult,
+          isSaving: true
+        }
+      };
 
-    case RECEIVE_ONE_D_AGGREGATION:
-      return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: false, data: action.data } };
-
-    case PROGRESS_ONE_D_AGGREGATION:
-      if (action.progress && action.progress.length){
-        return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, progress: action.progress} };
-      }
-      return state;
-
-    case ERROR_ONE_D_AGGREGATION:
-      return { ...state, oneDimensionAggregationResult: { ...state.oneDimensionAggregationResult, loading: false, error: action.error } };
+    case RECEIVE_CREATED_SAVED_AGGREGATION:
+      return { ...state,
+        aggregationResult: {
+          ...state.aggregationResult,
+          isSaving: false,
+          exported: true,
+          exportedAggregationId: action.exportedAggregationId
+        }
+      };
 
     case REQUEST_AGGREGATION_STATISTICS:
       return { ...state, aggregationResult: { ...state.aggregationResult, loading: true }}
@@ -149,7 +167,7 @@ export default function aggregationSelector(state = baseState, action) {
 
     case PROGRESS_AGGREGATION_STATISTICS:
       if (action.progress && action.progress.length){
-        return { ...state, aggregationResult: { ...state.aggregationResult, progress: action.progress} };
+        return { ...state, aggregationResult: { ...state.aggregationResult, progress: action.progress } };
       }
       return state;
 
@@ -157,16 +175,18 @@ export default function aggregationSelector(state = baseState, action) {
       return { ...state, aggregationResult: { ...state.aggregationResult, loading: false, error: action.error } };
 
     case SELECT_AGGREGATION_AGGREGATION_FUNCTION:
-      return { ...state, aggregationFunction: action.aggregationFunction};
+      return { ...state, aggregationFunction: action.aggregationFunction };
 
     case SELECT_AGGREGATION_AGGREGATION_WEIGHT_VARIABLE:
-      return { ...state, weightVariableId: action.aggregationWeightVariableId }
+      return { ...state, weightVariableId: action.aggregationWeightVariableId };
 
     case SELECT_AGGREGATION_CONFIG_X:
-      return { ...state, binningConfigX: action.config }
+      console.log('config X', action.config);
+      return { ...state, binningConfigX: { ...state.binningConfigX, ...action.config } };
 
     case SELECT_AGGREGATION_CONFIG_Y:
-      return { ...state, binningConfigY: action.config }
+      console.log('config Y', action.config);
+      return { ...state, binningConfigY: { ...state.binningConfigY, ...action.config } };
 
     case SET_AGGREGATION_QUERY_STRING:
       return {

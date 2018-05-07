@@ -8,7 +8,7 @@ import { saveAs } from 'file-saver';
 import { Button } from '@blueprintjs/core';
 
 import { fetchDatasets } from '../../../actions/DatasetActions';
-import { fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
+import { fetchSpecVisualizationIfNeeded, getVisualizationTableData, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
 import VisualizationView from '../VisualizationView';
@@ -36,8 +36,8 @@ export class SingleVisualizationView extends Component {
     const dataConfigChanged = nextProps.dataConfig.lastUpdated != dataConfig.lastUpdated;
     const projectChanged = (nextProps.project.id !== project.id);
 
-    if (projectChanged || (project.id && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded)))) {
-      fetchDatasets(project.id);
+    if ((projectChanged && nextProps.project.id) || (project.id && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded)))) {
+      fetchDatasets(nextProps.project.id);
     }
 
     if (nextProps.project.id && !visualization.isFetching && (!visualization.spec.id || conditionalsChanged || dataConfigChanged)) {
@@ -96,7 +96,8 @@ export class SingleVisualizationView extends Component {
 
   saveVisualization = (saveAction = true) => {
     const { project, visualization, createExportedSpec, conditionals } = this.props;
-    createExportedSpec(project.id, visualization.spec.id, visualization.visualizationData, conditionals.items, visualization.config, saveAction);
+    const { bins, visualizationData, tableData } = visualization;
+    createExportedSpec(project.id, visualization.spec.id, { 'visualize': visualizationData, 'table': tableData, 'bins': bins}, conditionals.items, visualization.config, saveAction);
   }
 
   onClickShare = () => {
@@ -109,6 +110,11 @@ export class SingleVisualizationView extends Component {
     push(`/projects/${ project.id }/datasets/${ datasetSelector.id }/visualize/explore${ exploreSelector.queryString }`);
   }
 
+  getTableData = () => {
+    const { project, visualization, conditionals, getVisualizationTableData, dataConfig } = this.props;
+    getVisualizationTableData(project.id, visualization.spec.id, conditionals.items, dataConfig);
+  }
+
   render() {
     const { visualization, fieldNameToColor } = this.props;
     const saved = (visualization.isSaving || (!visualization.isSaving && visualization.exportedSpecId) || visualization.exported) ? true : false;
@@ -119,9 +125,13 @@ export class SingleVisualizationView extends Component {
       visualizationTitle = (visualization.spec.meta.desc || 'visualization');
       fileName = 'DIVE | ' + visualizationTitle.charAt(0).toUpperCase() + visualizationTitle.slice(1);
     }
-
     return (
-      <VisualizationView className={ styles.fillContainer } visualization={ visualization } fieldNameToColor={ fieldNameToColor }>
+      <VisualizationView
+        className={ styles.fillContainer }
+        visualization={ visualization }
+        fieldNameToColor={ fieldNameToColor }
+        getTableData={ this.getTableData }
+      >
         <div className={ styles.hidden }>
           <canvas id="export-canvas"/>
         </div>
@@ -131,10 +141,10 @@ export class SingleVisualizationView extends Component {
           </div>
           <div className={ styles.headerControl }>
             <div className="pt-button-group">
-              <Button onClick={ this.onClickShare }>
+              {/* <Button onClick={ this.onClickShare }>
                 { visualization.isExporting && "Exporting..." }
                 { !visualization.isExporting && "URL" }
-              </Button>
+              </Button> */}
               <Button text="SVG" onClick={ () => this.saveAs(fileName, 'svg') } fullWidth={ true }/>
               <Button text="PNG" onClick={ () => this.saveAs(fileName, 'png') } fullWidth={ true }/>
               <Button text="PDF" onClick={ () => this.saveAs(fileName, 'pdf') } fullWidth={ true }/>
@@ -181,6 +191,7 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   push,
   fetchSpecVisualizationIfNeeded,
+  getVisualizationTableData,
   createExportedSpec,
   setShareWindow,
   fetchDatasets,

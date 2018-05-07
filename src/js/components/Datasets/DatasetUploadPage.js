@@ -8,7 +8,9 @@ import { fetchDatasets } from '../../actions/DatasetActions';
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
+import ProjectTopBar from '../ProjectTopBar';
 import Dropzone from 'react-dropzone';
+import ErrorComponent from '../Base/ErrorComponent';
 import Loader from '../Base/Loader';
 import HeaderBar from '../Base/HeaderBar';
 
@@ -33,9 +35,6 @@ export class DatasetUploadPage extends Component {
   }
 
   onDrop = (files) => {
-    const fileSize = files[0].size;
-    const fileSizeLimit = 1000; // 100 * (1000 * 1000);
-
     this.props.uploadDataset(this.props.project.id, files[0]);
   }
 
@@ -54,20 +53,28 @@ export class DatasetUploadPage extends Component {
     return (
       <DocumentTitle title={ 'Upload' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
         <div className={ styles.fillContainer }>
+          <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
           <div
             className={ styles.datasetUploadBox }>
             { datasetSelector.isUploading &&
               <div className={ styles.uploadingZone + ' ' + styles.centeredFill }>
-              { datasetSelector.progress &&
-                <Loader text={ datasetSelector.progress } />
-              }
-              { datasetSelector.error &&
-                <Loader text={ datasetSelector.error } error={ true }/>
-              }
+                { datasetSelector.progress && <Loader text={ datasetSelector.progress } /> }
+                { !datasetSelector.isUploading && datasetSelector.error &&
+                  <ErrorComponent
+                    title='Error uploading dataset'
+                    description={ datasetSelector.error }
+                  />
+                }
               </div>
             }
             { !datasetSelector.isUploading &&
-              <Dropzone ref="dropzone" className={ styles.dropzone + ' ' + styles.centeredFill } onDrop={ this.onDrop } disableClick={ true }>
+              <Dropzone
+                ref="dropzone"
+                className={ styles.dropzone + ' ' + styles.centeredFill }
+                onDrop={ this.onDrop }
+                disableClick={ true }
+                multiple={ false }
+              >
                 <Button
                   intent={ Intent.PRIMARY }
                   className="pt-large"
@@ -76,13 +83,15 @@ export class DatasetUploadPage extends Component {
                 <div className={ styles.dragAndDrop }>or drag and drop files here</div>
                 { !datasetSelector.error &&
                   <div className={ styles.uploadDescription }>
-                    <div>Supported file types: CSV, TSV, JSON, EXCEL</div>
+                    <div>Supported file types: CSV, TSV, and Excel.</div>
                   </div>
                 }
                 { datasetSelector.error &&
                   <div className={ styles.errorDescription }>
-                    <div>{ datasetSelector.error }</div>
-                    <div>Please try another file</div>
+                    <div className="pt-callout pt-intent-danger pt-icon-error">
+                      <h5>Upload Error</h5>
+                      { datasetSelector.error } Please try another file.
+                    </div>
                   </div>
                 }
                 <div className={ styles.separater }></div>

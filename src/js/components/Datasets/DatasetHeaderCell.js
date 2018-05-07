@@ -16,32 +16,58 @@ export class DatasetHeaderCell extends Component {
   }
 
   onSelectFieldType = (fieldType) => {
-    this.props.setFieldType(this.props.projectId, this.props.fieldProperty.id, fieldType);
+    const { projectId, datasetId, fieldProperty, setFieldType} = this.props;
+    setFieldType(projectId, datasetId, fieldProperty.id, fieldType);
   }
 
   render() {
-    const { fieldProperty } = this.props;
-    return (
-      <DropDownMenu
+    const { fieldProperty, preloaded, value } = this.props;
+    const { fieldTypes } = this.state;
+    const prefixIcon = fieldTypes.find((ft) => ft.value == fieldProperty.type).prefixIcon;
+
+    let typeContainer;
+    if (preloaded) {
+      typeContainer = <div className={ styles.typeContainer }>
+        <span className={`pt-icon-standard pt-icon-${ prefixIcon } ` + styles.prefixIcon }/>
+        <span>{ fieldProperty.type }</span>
+      </div>
+    } else {
+      typeContainer = <DropDownMenu
         className={ styles.fieldTypeDropDown + ' ' + styles.dropDownMenu }
         valueClassName={ styles.fieldTypeValue }
         value={ fieldProperty.type }
-        options={ this.state.fieldTypes }
-        onChange={ this.onSelectFieldType } />
-    );
+        prefixIconMember='prefixIcon'
+        searchable={ true }
+        options={ fieldTypes }
+        onChange={ this.onSelectFieldType }
+      />
+    }
+    const content = <div className={ styles.datasetHeaderCell }>
+      <div className={ styles.fieldName }>{ value }</div>
+    </div>
+
+    return ( content );
   }
 }
 
 DatasetHeaderCell.propTypes = {
-  fieldProperty: PropTypes.object
+  fieldProperty: PropTypes.object,
+  preloaded: PropTypes.bool,
+  value: PropTypes.string
 }
 
 DatasetHeaderCell.defaultProps = {
-  fieldProperty: {}
+  preloaded: false,
+  fieldProperty: {},
+  value: ''
 }
 
 function mapStateToProps(state) {
-  return { projectId: state.project.id };
+  const { project, datasetSelector } = state;
+  return {
+    projectId: project.id,
+    datasetId: datasetSelector.id
+  };
 }
 
 export default connect(mapStateToProps, { setFieldType })(DatasetHeaderCell);

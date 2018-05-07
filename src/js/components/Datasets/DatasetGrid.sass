@@ -1,0 +1,307 @@
+@import '../../../css/mixins.sass'
+@import '../../../css/flexbox.sass'
+
+.dataCellContent
+  padding: 2px 10px
+  font-family: 'Work Sans', monospace  
+  font-size: 13px
+  font-feature-settings: 'tnum'
+
+  &.nullContent
+    background-color: #eeeeee // $ui-header-grey
+    padding: 0
+
+.cellContent
+  display: flex
+  flex-grow: 1
+  align-items: center
+  max-width: 100%
+  height: 100%
+
+  .fieldType
+    display: flex
+
+  .fieldValue
+    display: inline
+    flex-grow: 1
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+.datasetPropertiesPane
+  height: 80px
+
+.gridContainer
+  display: flex
+  flex-grow: 1
+  flex-direction: column
+  overflow-x: scroll
+  position: relative
+  margin-top: -1px
+
+  .scrollContainer
+    position: absolute
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+    max-height: 100%
+    height: 100%
+    min-width: 100%
+
+.headerRowTable, .metadataRowTable, .dataRowsTable
+  > div
+    width: auto!important
+    overflow: visible!important
+
+  .fieldTypeDropDown.dropDownMenu
+    > div
+      > div:first-of-type
+        height: 20px
+        line-height: 20px
+        padding: 0
+        background-color: transparent
+        border: none
+        box-shadow: none
+        text-align: right
+        position: relative
+
+        > div:first-child
+          height: 20px
+          line-height: 20px
+          padding-right: 12px
+
+        > span:last-child
+          position: absolute
+          right: -9px
+          top: 3px
+
+          > span:first-child
+            border-width: 4px 3px 0
+
+      > div:nth-of-type(2)
+        width: auto
+        right: 0
+
+        > div
+          > div
+            text-align: right
+            padding-right: 10px
+
+    .fieldTypeValue
+      font-weight: 400
+      font-size: 12px
+      color: #888
+
+.dataRowsTable
+  overflow-y: auto
+  height: 100%
+
+  .cell
+    overflow: hidden
+    white-space: nowrap
+    border: 1px solid #EBEBEB
+    text-overflow: ellipsis
+    background-color: white
+
+    &.decimal, &.datetime, &.integer
+      .fieldValue
+        text-align: right
+
+.headerRowTable, .metadataRowTable
+  .row
+    .cell
+      background-color: white
+      border: 1px solid #CCCCCC
+      border-left-width: 0
+      border-top-color: #C0C0C0
+      border-bottom-color: #CDCDCD
+
+      padding: 5px 10px 4px
+      text-align: left
+      height: 44px
+      align-items: flex-start
+
+      &:last-child
+        border-right-width: 0px
+
+.headerRowTable
+  .row
+    .cell
+      border-bottom: none // 1px solid $ui-line-grey
+      background-color: $ui-header-grey
+      height: auto
+
+      .typeContainer
+        display: flex
+        align-content: center
+
+        .prefixIcon
+          margin-right: 5px
+
+.metadataRowTable
+  .row
+    .cell
+      position: relative
+      padding: 0px
+      font-weight: 400
+      border-top: 0px
+      height: 235px
+      overflow-x: hidden
+      overflow-y: auto
+      overflow: visible
+
+      .metadataCell
+        display: flex
+        flex-direction: column
+        width: 100%
+        height: 100%
+
+        .metadataProperties
+          padding: 5px
+
+        .idPlaceholder
+          font-weight: bold
+          font-size: 55px
+          color: $ui-line-grey
+
+        .metadataInputGroup
+          margin-top: auto
+          padding: 0px
+          background-color: $ui-header-grey
+          border-top: none // 1px solid $ui-line-grey
+          display: flex
+          flex-direction: row
+
+          .left
+            padding-left: 5px
+            display: flex         
+            align-items: center          
+            
+            .idCheckbox
+              margin-bottom: 0px
+              min-height: 0px
+              margin-right: 10px            
+
+          .right
+            margin-left: auto
+            width: 115px
+            .prefixIcon
+              margin-right: 4px
+              position: relative
+              top: 1px
+
+            .typeContainer
+              text-align: right
+              padding-right: 3px
+              
+      .metadataViz, .vizPlaceholder
+        height: 70px
+
+      .relationships
+        border-top: 1px solid $ui-line-grey
+        margin-top: 5px
+
+      .statistics, .typeScores
+        padding-top: 5px
+        line-height: 12px
+
+        > div
+          display: flex
+          + div
+            margin-top: 5px
+
+          // .field
+          //   font-weight: bold
+          .value
+            display: flex
+            margin-left: auto
+            text-align: right 
+            font-family: 'Work Sans', monospace  
+            // font-size: 13px
+            font-feature-settings: 'tnum'           
+
+            max-width: 110px
+            text-overflow: ellipsis
+            overflow: hidden
+            white-space: nowrap
+
+            &:hover
+              position: absolute
+              right: 5px
+              max-width: 100%
+              overflow: visible
+              background-color: white
+
+      .metadataButtonGroup
+        width: 100%
+        margin-top: auto
+        padding-bottom: 5px
+
+        .metadataButton
+          line-height: 15px
+          min-height: 15px
+          padding: 0
+
+      .toggles
+        position: absolute
+        display: flex
+        flex-direction: row
+        bottom: 5px
+
+        .left
+          input
+            margin-left: 0px
+
+        .right
+          .colorPickerButton
+            cursor: pointer
+            border: 1px solid $ui-line-grey
+            border-radius: 10px
+            width: 15px
+            height: 15px
+            margin-right: 20px
+            margin-left: auto
+
+.row
+  display: flex
+  flex-direction: row
+
+  .cell
+    display: flex
+    flex-grow: 1
+    align-items: center
+    height: 24px
+    font-size: 12px
+    color: #333
+    border-left-width: 0
+    border-bottom-width: 0
+    width: 235px
+    max-width: 300px
+
+    &:last-child
+      border-right-width: 0px
+
+.datasetHeaderCell
+  width: 100%
+  .fieldName
+    text-overflow: ellipsis
+    overflow: hidden
+    white-space: nowrap  
+    font-size: 16px
+    // font-weight: bold
+
+    &:hover
+      position: absolute
+      overflow: visible
+      background-color: $ui-header-grey
+
+.colorPickerButton
+  width: 32px
+  height: 18px
+  border-radius: 2px
+  cursor: pointer
+  padding: 3px
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1)
+
+  div
+    height: 12px

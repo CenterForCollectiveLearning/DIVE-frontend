@@ -2,7 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import styles from './App.sass';
 import { push } from 'react-router-redux';
 
-import { createAnonymousUserIfNeeded, deleteAnonymousData, clearCookies } from '../../actions/UserActions';
+import {
+  AUTH_ERROR
+} from '../../constants/ActionTypes';
+
+import { createAnonymousUserIfNeeded } from '../../actions/UserActions';
 import { connect } from 'react-redux';
 
 // this seems real dumb;
@@ -14,30 +18,17 @@ export class App extends Component {
   constructor(props) {
     super(props);
 
-    if (!this.props.user.id) {
-      this.props.createAnonymousUserIfNeeded();
+    const { user, createAnonymousUserIfNeeded } = this.props;
+
+    if (!user.id || user.anonymous) {
+      createAnonymousUserIfNeeded();
     }
-  }
-
-  componentDidMount() {
-    window.onbeforeunload = this.onUnload;
-  }
-
-  componentWillUnmount() {
-    window.onbeforeunload = null;
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.user.id && !nextProps.user.id) {
-      this.props.createAnonymousUserIfNeeded();
-    }
-  }
-
-  onUnload = () => {
-    const { user, deleteAnonymousData } = this.props;
-    if ( user.anonymous ) {
-      clearCookies();
-      deleteAnonymousData(user.id);
+    const { user, error, createAnonymousUserIfNeeded } = this.props;
+    if (user.id && !nextProps.user.id) {
+      createAnonymousUserIfNeeded();
     }
   }
 
@@ -56,10 +47,11 @@ App.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { user } = state;
+  const { user, error } = state;
   return {
-    user: user
+    user: user,
+    error: error
   };
 }
 
-export default connect(mapStateToProps, { createAnonymousUserIfNeeded, deleteAnonymousData, clearCookies, push })(App);
+export default connect(mapStateToProps, { createAnonymousUserIfNeeded, push })(App);

@@ -6,15 +6,13 @@ import conditionals from './conditionals';
 import correlationSelector from './correlationSelector';
 import comparisonSelector from './comparisonSelector';
 import datasets from './datasets';
+import error from './error';
 import preloadedDatasets from './preloadedDatasets';
 import datasetSelector from './datasetSelector';
 import documents from './documents'
 import exportedSpec from './exportedSpec';
 import exportedSpecs from './exportedSpecs';
-import exportedCorrelation from './exportedCorrelation';
-import exportedCorrelations from './exportedCorrelations';
-import exportedRegression from './exportedRegression';
-import exportedRegressions from './exportedRegressions';
+import exportedAnalyses from './exportedAnalyses';
 import fieldProperties from './fieldProperties';
 import filters from './filters';
 import feedback from './feedback';
@@ -37,13 +35,11 @@ const rootReducer = combineReducers({
   datasets,
   datasetSelector,
   documents,
+  error,
   exploreSelector,
   exportedSpec,
   exportedSpecs,
-  exportedCorrelation,
-  exportedCorrelations,
-  exportedRegression,
-  exportedRegressions,
+  exportedAnalyses,
   feedback,
   fieldProperties,
   filters,

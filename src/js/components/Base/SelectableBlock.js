@@ -29,6 +29,6 @@ SelectableBlock.propTypes = {
   selected: PropTypes.bool
 }
 
-SelectableBlock.defaultPropTypes = {
+SelectableBlock.defaultProps = {
   selected: false
 }

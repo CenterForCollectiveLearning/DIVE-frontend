@@ -1,6 +1,9 @@
 @import '../../../css/mixins.sass'
 @import '../../../css/flexbox.sass'
 
+@import './InspectList.sass'
+@import './InspectGrid.sass'
+
 .datasetSearch
   position: absolute
   top: 14px
@@ -55,9 +58,12 @@
       .bottom
         display: flex
         flex-direction: row
+        align-items: center
+        width: 100%
 
         .tags
           span
+            margin: 2px
             margin-right: 3px
 
         .preloadedDatasetButtons

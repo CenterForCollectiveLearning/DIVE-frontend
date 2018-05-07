@@ -2,6 +2,8 @@ import {
   CLEAR_VISUALIZATION,
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
+  REQUEST_VISUALIZATION_TABLE_DATA,
+  RECEIVE_VISUALIZATION_TABLE_DATA,
   REQUEST_CREATE_EXPORTED_SPEC,
   RECEIVE_CREATED_EXPORTED_SPEC,
   REQUEST_CREATE_SAVED_SPEC,
@@ -30,6 +32,14 @@ const SUBSET_OPTIONS = [
     label: '200'
   },
   {
+    value: 500,
+    label: '500'
+  },  
+  {
+    value: 1000,
+    label: '1000'
+  },  
+  {
     value: 'all',
     label: 'All'
   }
@@ -37,12 +47,12 @@ const SUBSET_OPTIONS = [
 
 const LEGEND_POSITION_OPTIONS = [
   {
-    value:'top',
-    label:'Yes'
+    value: 'top',
+    label: 'Yes'
   },
   {
-    value:'none',
-    label:'No'
+    value: 'none',
+    label: 'No'
   }
 ];
 
@@ -57,17 +67,17 @@ const SCALE_OPTIONS = [
   }
 ];
 
-const SORT_ORDERS = [
+export const SORT_ORDERS = [
   {
     id: 'asc',
     name: 'Ascending',
-    iconName: 'fa fa-rotate-270 fa-sort-amount-asc',
+    iconName: 'pt-icon-sort-asc',
     selected: true
   },
   {
     id: 'desc',
     name: 'Descending',
-    iconName: 'fa fa-rotate-270 fa-sort-amount-desc',
+    iconName: 'pt-icon-sort-desc',
     selected: false
   }
 ];
@@ -85,6 +95,7 @@ const baseState = {
   exported: false,
   exportedSpecId: null,
   shareWindow: null,
+  isFetchingTableData: null,
   isExporting: false,
   isSaving: false,
   isFetching: false,
@@ -113,6 +124,15 @@ export default function visualization(state = baseState, action) {
   switch (action.type) {
     case CLEAR_VISUALIZATION:
       return baseState;
+
+    case REQUEST_VISUALIZATION_TABLE_DATA:
+      return { ...state, isFetchingTableData: true};
+
+    case RECEIVE_VISUALIZATION_TABLE_DATA:
+      return { ...state,
+        isFetchingTableData: false,
+        tableData: action.tableData
+      }
 
     case REQUEST_VISUALIZATION_DATA:
       return { ...state, isFetching: true };

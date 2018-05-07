@@ -16,8 +16,8 @@ $landing-grey-background: #EBF2F6
 // Project
 $left-sidebar-grey: #313F4E
 $left-sidebar-separator-grey: #CFCFCF // rgba($white, 0.3)
-$right-sidebar-grey: #CED9E0
-$center-grey: #EBF2F6
+$right-sidebar-grey: #EBF2F6  // #CED9E0
+$center-grey: $white // #EBF2F6
 
 // UI
 $ui-line-grey: #CFCFCF  // card borders, sidebar separators
@@ -25,6 +25,7 @@ $ui-deselected-grey: #EBF2F6  // deselected buttons
 $ui-header-grey: #F5F8FA  // card header, table header
 $ui-grey-font: #444444
 $small-caps-grey: #666666 // sidebar categories
+$regression-header-grey: #F6F6F6
 
 // Accents
 $primary-accent: #007BD7 // #5499D8
@@ -34,13 +35,18 @@ $secondary-accent: #004491
 // Sizes
 $navbar-top-logo-height: 48px
 $top-bar-height: 55px
-$left-sidebar-width: 155px
+$left-sidebar-width: 110px
 $right-sidebar-width: 280px
-$center-pane-width: calc(100% - #{$right-sidebar-width})
+$center-pane-width: calc(100% - #{$left-sidebar-width} - #{$right-sidebar-width})
+$page-width: ($left-sidebar-width + $right-sidebar-width + $right-sidebar-width)
 
 // Media Query Sizes
 $break-small: 320px
 $break-large: 1200px
+
+=workSans
+  font-family: 'Work Sans', monospace
+  font-feature-settings: 'tnum'        
 
 =centerPaneWithSidebar
   max-width: $center-pane-width
@@ -212,7 +218,7 @@ $break-large: 1200px
     min-width: 160px
 
 .sidebarDropdown
-  margin-top: 1px
+  margin-top: -1px
 
   > div > div:first-of-type
     margin-top: -1px
@@ -221,3 +227,30 @@ $break-large: 1200px
 
     > div:first-child
       font-size: 12px
+
+.fieldGroup
+  &:first-child
+    .fieldGroupHeader
+      margin-top: 0
+      display: flex
+      flex-direction: row
+      align-items: flex-end
+      .fieldGroupLabel
+
+      .fieldGroupAction
+        +smallCaps
+        cursor: pointer
+        color: $primary-accent
+        margin-left: auto
+
+  .fieldGroupHeader
+    display: flex
+    align-items: center
+    margin-top: 12px
+    margin-bottom: 5px
+
+    .fieldGroupLabel
+      +smallCaps
+
+    .generalTypeIcon
+      margin-left: auto

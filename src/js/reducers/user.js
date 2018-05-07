@@ -145,7 +145,7 @@ export default function user(state = baseState, action) {
     case RECEIVE_REGISTER_USER:
       return { ...state,
         anonymous: false,
-        confirmed: false,
+        confirmed: action.confirmed,
         isAuthenticated: true,
         register: { ...baseState.success, success: action.message, success: true },
         username: action.username,

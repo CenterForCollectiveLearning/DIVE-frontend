@@ -1,7 +1,8 @@
 import _ from 'underscore';
 
 import {
-  SELECT_AGGREGATION_AGGREGATION_VARIABLE,
+  AGGREGATION_MODE,
+  SELECT_AGGREGATION_DEPENDENT_VARIABLE,
   SELECT_AGGREGATION_INDEPENDENT_VARIABLE,
   SELECT_AGGREGATION_AGGREGATION_FUNCTION,
   SELECT_AGGREGATION_AGGREGATION_WEIGHT_VARIABLE,
@@ -9,16 +10,16 @@ import {
   RECEIVE_AGGREGATION,
   PROGRESS_AGGREGATION,
   ERROR_AGGREGATION,
-  REQUEST_ONE_D_AGGREGATION,
-  RECEIVE_ONE_D_AGGREGATION,
-  PROGRESS_ONE_D_AGGREGATION,
-  ERROR_ONE_D_AGGREGATION,
   REQUEST_AGGREGATION_STATISTICS,
   RECEIVE_AGGREGATION_STATISTICS,
   SELECT_AGGREGATION_CONFIG_X,
   SELECT_AGGREGATION_CONFIG_Y,
   PROGRESS_AGGREGATION_STATISTICS,
   ERROR_AGGREGATION_STATISTICS,
+  REQUEST_CREATE_SAVED_AGGREGATION,
+  RECEIVE_CREATED_SAVED_AGGREGATION,
+  REQUEST_CREATE_EXPORTED_AGGREGATION,
+  RECEIVE_CREATED_EXPORTED_AGGREGATION,  
   SELECT_CONDITIONAL,
   SET_AGGREGATION_QUERY_STRING
 } from '../constants/ActionTypes';
@@ -45,7 +46,7 @@ export function getInitialState(projectId, datasetId, fieldProperties) {
 
 
   return {
-    aggregateOn: 'count',
+    aggregationDependentVariableId: 'count',
     aggregationVariablesIds: selectedVariablesIds
   }
 }
@@ -89,17 +90,21 @@ export function selectAggregationFunction(selectedAggregationFunction) {
   }
 }
 
-export function selectBinningConfigX(config) {
+export function selectBinningConfigX(k, v) {
+  var updateDict = {};
+  updateDict[k] = v;
   return {
     type: SELECT_AGGREGATION_CONFIG_X,
-    config: config
+    config: updateDict
   }
 }
 
-export function selectBinningConfigY(config) {
+export function selectBinningConfigY(k, v) {
+  var updateDict = {};
+  updateDict[k] = v;  
   return {
     type: SELECT_AGGREGATION_CONFIG_Y,
-    config: config
+    config: updateDict
   }
 }
 
@@ -126,98 +131,91 @@ function progressAggregationDispatcher(data) {
 
 function errorAggregationDispatcher(json) {
   return {
-    type: PROGRESS_AGGREGATION,
-    progress: 'Error calculating aggregation table, please check console.'
+    type: ERROR_AGGREGATION,
+    message: json.error
   };
 }
 
-export function runAggregation(projectId, datasetId, aggregationVariable, aggregationVariables, conditionals=[]) {
+export function runAggregation(projectId, datasetId, aggregationVariablesNames, dependentVariableName, aggregationFunction, weightVariableName, binningConfigX, binningConfigY, conditionals=[]) {
   const params = {
     projectId: projectId,
     spec: {
       datasetId: datasetId,
-      dependentVariable: aggregationVariable,
-      aggregationVariables: aggregationVariables
+      dependentVariableName: dependentVariableName,
+      aggregationVariablesNames: aggregationVariablesNames,
+    },
+    config: {
+      aggregationFunction: aggregationFunction,   
+      weightVariableName: weightVariableName,      
+      binningConfigX: binningConfigX,
+      binningConfigY: binningConfigY,      
     }
   }
 
   const filteredConditionals = getFilteredConditionals(conditionals);
   if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
     params.conditionals = filteredConditionals;
+  }
+
+  const dispatchers = {
+    success: receiveAggregationDispatcher,
+    progress: progressAggregationDispatcher,
+    error: errorAggregationDispatcher
   }
 
   return (dispatch) => {
     dispatch(requestAggregationDispatcher());
-    return fetch('/statistics/v1/contingency_table', {
+    return fetch('/statistics/v1/aggregation', {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
     }).then(function(json) {
         if (json.compute) {
-          dispatch(pollForTask(json.taskId, REQUEST_AGGREGATION, params, receiveAggregationDispatcher, progressAggregationDispatcher, errorAggregationDispatcher));
+          dispatch(pollForTask(json.taskId, AGGREGATION_MODE, REQUEST_AGGREGATION, params, dispatchers));
         } else {
           dispatch(receiveAggregationDispatcher(params, json));
         }
       })
-      .catch(err => console.error("Error creating contingency table: ", err));
+      .catch(err => console.error("Error running aggregation: ", err));
   };
 }
 
-function requestOneDAggregationDispatcher(datasetId) {
+function requestCreateExportedAggregationDispatcher(action) {
   return {
-    type: REQUEST_ONE_D_AGGREGATION
+    type: action
   };
 }
 
-function receiveOneDAggregationDispatcher(params, json) {
+function receiveCreatedExportedAggregationDispatcher(action, json) {
   return {
-    type: RECEIVE_ONE_D_AGGREGATION,
-    data: json,
+    type: action,
+    exportedAggregationId: json.id,
+    exportedSpec: json,
     receivedAt: Date.now()
   };
 }
 
-function progressOneDAggregationDispatcher(data) {
-  return {
-    type: PROGRESS_ONE_D_AGGREGATION,
-    progress: (data.currentTask && data.currentTask.length) ? data.currentTask : data.previousTask
-  };
-}
-
-function errorOneDAggregationDispatcher(json) {
-  return {
-    type: PROGRESS_ONE_D_AGGREGATION,
-    progress: 'Error calculating one dimensional aggregation table, please check console.'
-  };
-}
-
-export function runAggregationOneDimensional(projectId, datasetId, aggregationVariable, aggregationVariables, conditionals=[]) {
-  const params = {
-    projectId: projectId,
-    spec: {
-      datasetId: datasetId,
-      dependentVariable: aggregationVariable,
-      aggregationVariable: aggregationVariables[0]
-    }
-  }
+export function createExportedAggregation(projectId, aggregationId, data, conditionals=[], config={}, saveAction = false) {
+  const requestAction = saveAction ? REQUEST_CREATE_SAVED_AGGREGATION : REQUEST_CREATE_EXPORTED_AGGREGATION;
+  const receiveAction = saveAction ? RECEIVE_CREATED_SAVED_AGGREGATION : RECEIVE_CREATED_EXPORTED_AGGREGATION;
 
   const filteredConditionals = getFilteredConditionals(conditionals);
-  if (filteredConditionals && Object.keys(filteredConditionals).length > 0) {
-    params.conditionals = filteredConditionals;
+
+  const params = {
+    project_id: projectId,
+    aggregation_id: aggregationId,
+    data: data,
+    conditionals: filteredConditionals ? filteredConditionals : {},
+    config: config
   }
 
-  return (dispatch) => {
-    dispatch(requestOneDAggregationDispatcher());
-    return fetch('/statistics/v1/one_dimensional_contingency_table', {
+  return dispatch => {
+    dispatch(requestCreateExportedAggregationDispatcher(requestAction));
+    return fetch('/exported_aggregation/v1/exported_aggregation', {
       method: 'post',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' }
-    }).then(function(json) {
-        if (json.compute) {
-          dispatch(pollForTask(json.taskId, REQUEST_ONE_D_AGGREGATION, params, receiveOneDAggregationDispatcher, progressOneDAggregationDispatcher, errorOneDAggregationDispatcher));
-        } else {
-          dispatch(receiveOneDAggregationDispatcher(params, json));
-        }
-      })
+    }).then(json => dispatch(receiveCreatedExportedAggregationDispatcher(receiveAction, json)))
+      .catch(err => console.error("Error creating exported aggregations: ", err));
   };
 }

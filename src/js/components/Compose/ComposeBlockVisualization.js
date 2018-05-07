@@ -9,7 +9,7 @@ import Visualization from '../Visualizations/Visualization';
 
 import { BLOCK_FORMATS } from '../../constants/BlockFormats';
 
-export default class ComposeBlockVisualization extends Component {
+export default class composeBlockVisualization extends Component {
   constructor(props) {
     super(props);
 
@@ -43,7 +43,8 @@ export default class ComposeBlockVisualization extends Component {
       visualizationTypes={ spec.vizTypes }
       fieldNameToColor={ fieldNameToColor }
       spec={ spec }
-      data={ spec.data }
+      bins={ spec.data.bins }
+      data={ spec.data.visualize }
       config={ spec.config }
       isMinimalView={ false }
       showHeader={ false }/>
@@ -72,7 +73,7 @@ export default class ComposeBlockVisualization extends Component {
   }
 }
 
-ComposeBlockVisualization.propTypes = {
+composeBlockVisualization.propTypes = {
   spec: PropTypes.object.isRequired,
   updatedAt: PropTypes.number,
   parentSize: PropTypes.any,

@@ -8,6 +8,7 @@ import styles from '../Analysis.sass';
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
 import { setPersistedQueryString, getRecommendation } from '../../../actions/RegressionActions';
 
+import ProjectTopBar from '../../ProjectTopBar';
 import RegressionSidebar from './RegressionSidebar';
 import RegressionView from './RegressionView';
 import { selectDependentVariable, selectRegressionType } from '../../../actions/RegressionActions';
@@ -28,10 +29,11 @@ export class RegressionBasePage extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { queryObject: currentQueryObject, recommendationResult } = this.props;
-    const { queryObject: nextQueryObject, project, datasetId, persistedQueryString } = nextProps;
+    const { queryObject: nextQueryObject, project, datasetId, persistedQueryString, regressionSelector } = nextProps;
 
     const shouldRecommendInitialState = Object.keys(currentQueryObject).length == 0 && Object.keys(nextQueryObject).length == 0 && !recommendationResult.loading && !nextProps.recommendationResult.loading && !persistedQueryString;
-    if ( project.id && datasetId && shouldRecommendInitialState) {
+    if ( project.id && datasetId && shouldRecommendInitialState && !regressionSelector.recommendationResult.loading) {
+      console.log('Recommending from basepage receive props');
       this.setRecommendedInitialState(nextProps);
     }
 
@@ -86,8 +88,11 @@ export class RegressionBasePage extends Component {
     const { project, pathname, queryObject, regressionType, recommendationType, tableLayout, recommended, dependentVariableId, independentVariablesIds } = this.props;
     return (
       <DocumentTitle title={ 'Regression' + ( project.title ? ` | ${ project.title }` : '' ) }>
-        <div className={ `${ styles.fillContainer } ${ styles.regressionContainer }` }>
-          <RegressionView { ...this.props } />
+        <div className={ `${ styles.fillContainer } ${ styles.flexrow } ${ styles.regressionContainer }` }>
+          <div className={ styles.fillContainer }>
+            <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
+            <RegressionView { ...this.props } />
+          </div>
           <RegressionSidebar { ...this.props } />
           { this.props.children }
         </div>
