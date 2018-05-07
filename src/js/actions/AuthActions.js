@@ -228,6 +228,7 @@ function goHome() {
 }
 
 export function logoutUser() {
+  console.log('In logoutUser');
   const params = {};
 
   return (dispatch) => {
