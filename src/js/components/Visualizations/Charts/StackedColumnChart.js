@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import styles from '../Visualizations.sass';
 
-var Chart = require('react-google-charts').Chart;
+import { Chart } from 'react-google-charts';
 
 export default class StackedColumnChart extends Component {
 
@@ -16,7 +16,6 @@ export default class StackedColumnChart extends Component {
     options = {
       ...options,
       hAxis: {
-        title: data[0][0],
         titleTextStyle: {
           color: '#333',
           bold: true,
@@ -25,7 +24,6 @@ export default class StackedColumnChart extends Component {
       },
       vAxis: {
         minValue: 0,
-        title: data[0][1],
         titleTextStyle: {
           color: '#333',
           bold: true,
@@ -51,7 +49,7 @@ export default class StackedColumnChart extends Component {
         graph_id={ chartId }
         width={ "100%" }
         height={ "100%" }
-        loader={ <div className={ styles.renderChartText }>Rendering Chart...</div> }
+        loader={ <div className={ styles.renderChartText + ' pt-monospace-text' }>Rendering Chart...</div> }
       />
     );
   }

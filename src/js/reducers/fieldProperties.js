@@ -6,6 +6,8 @@ import {
   RECEIVE_SET_FIELD_TYPE,
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_COLOR,
+  SELECT_TRANSFORMATION_FUNCTION,
+  SELECT_DATASET,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -86,6 +88,27 @@ export default function fieldProperties(state=baseState, action) {
       );
       return {...state, interactionTerms: interactionTerms }
 
+    case SELECT_TRANSFORMATION_FUNCTION:
+      const newFieldProperties = state.items.slice().map(function(fieldProperty) {
+        if (fieldProperty.id == action.selectedFieldPropertyId) {
+          const newTransformations = fieldProperty.transformations.map((t) =>
+            new Object({
+              ...t,
+              selected: (t.value == action.selectedFieldPropertyValueId)
+            })
+          );
+          return {
+            ...fieldProperty,
+            transformations: newTransformations
+          }
+        } else {
+          return fieldProperty;
+        }
+    });
+
+    return { ...state, items: newFieldProperties, lastUpdated: Date.now() };
+
+    case SELECT_DATASET:
     case WIPE_PROJECT_STATE:
       return baseState;
 

@@ -3,33 +3,25 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from '../Analysis.sass';
 
+import Number from '../../Base/Number';
 import BareDataGrid from '../../Base/BareDataGrid';
-import { getRoundedString } from '../../../helpers/helpers';
 
 export default class RegressionTable extends Component {
-  constructor(props) {
-    super(props);
 
-    this.getCoefficientString = this.getCoefficientString.bind(this);
-  }
+  pValueThresholds = [
+    { threshold: 0.05, symbol: '*' },
+    { threshold: 0.01, symbol: '**' },
+    { threshold:  0.001, symbol: '***' }
+  ]
 
-  componentWillReceiveProps(nextProps) {
-  }
-
-  getCoefficientString(coefficient, pValue, enabled) {
-    if (!enabled) {
-      return '✓';
+  getPValueString = (pValue) => {
+    let pValueString = ''
+    for ( var o of this.pValueThresholds ) {
+      if (pValue < o.threshold) {
+        pValueString = o.symbol;
+      }
     }
-
-    var pValueString = ''
-    if (pValue < 0.01){
-      pValueString = '***';
-    } else if (pValue < 0.05) {
-      pValueString = '**';
-    } else if (pValue < 0.1) {
-      pValueString = ''
-    }
-    return getRoundedString(coefficient) + pValueString;
+    return pValueString;
   }
 
   render() {
@@ -38,8 +30,17 @@ export default class RegressionTable extends Component {
 
     const allRegressedFields = regressionResult.fields.map(function (field){
       if (!field.values) {
+        let formattedName = field.name;
+
+        if (field.name.indexOf('np.log') > -1) {
+          formattedName = field.name.slice(0, field.name.indexOf(' + np.min')).replace('np.log', 'log') + ')';
+        }
+        if (field.name.indexOf('** 2') > -1) {
+          formattedName = <span>{ field.name.slice(0, -5) }<sup>2</sup></span>
+        }
+
         // numeric
-        return { ...field, formattedName: field.name, enabled: true };
+        return { ...field, formattedName: formattedName, enabled: true };
 
       } else if (field.values.length == 1) {
         // categorical binary
@@ -48,7 +49,6 @@ export default class RegressionTable extends Component {
       } else {
         // categorical fixed effects
         return { ...field, formattedName: field.name, enabled: true };
-
       }
     });
 
@@ -56,13 +56,25 @@ export default class RegressionTable extends Component {
     const renderDataColumn = function(property, enabled) {
       return (
         <div className={ styles.dataCell }>
-          <div className={ styles.coefficient }>
-            { context.getCoefficientString(property.coefficient, property.pValue, enabled) }
-          </div>
           { enabled &&
-            <div className={ styles.standardError }>
-              ({ getRoundedString(property.standardError) })
-            </div>
+            <Number
+              className={ styles.coefficient }
+              value={ property.coefficient }
+              suffix={ context.getPValueString(property.pValue ) }
+              hoverLabel='Coefficient'
+              additionalHoverContent={ [ { label: 'P value', value: property.pValue } ] }
+            />
+          }
+          { enabled &&
+            <Number
+              className={ styles.standardError }
+              value={ property.standardError }
+              hoverLabel='Standard Error'
+              prefix='(' suffix=')'
+            />
+          }
+          { !enabled &&
+            <span>✓</span>
           }
         </div>
       );
@@ -78,7 +90,7 @@ export default class RegressionTable extends Component {
             return new Object({
               rowClass: styles.dataRow,
               columnClass: styles.dataColumn,
-              items: [ ( preview ? '' : fieldValue ), ...regressionResult.regressionsByColumn.map(function (column) {
+              items: [ ( preview ? '✓' : fieldValue ), ...regressionResult.regressionsByColumn.map(function (column) {
                 const property = column.regression.propertiesByField.find((property) => ((property.baseField == field.name) && (property.valueField == fieldValue)));
                 if (!property) return '';
 
@@ -96,6 +108,8 @@ export default class RegressionTable extends Component {
           isNested: false,
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
+          placeholder: '✓',
+          collapsed: true,
           items: [ ( preview ? '' : field.formattedName ), ...regressionResult.regressionsByColumn.map(function (column) {
             const property = column.regression.propertiesByField.find((property) => property.baseField == field.name);
             if (!property) return '';
@@ -122,7 +136,7 @@ export default class RegressionTable extends Component {
 
     const regressionMeasures = {
       linear: [
-        { name: 'DOF', prop: 'dof' },
+        { name: 'N', prop: 'dof' },
         { name: 'F', prop: 'fTest' },
         { name: 'BIC', prop: 'bic' }
       ],
@@ -134,36 +148,58 @@ export default class RegressionTable extends Component {
       ]
     }
 
-    const additionalData = [
+    const additionalData  = [
+      {
+        rowClass: styles.dataRow,
+        columnClass: styles.dataColumn,
+        items: [
+          <div className={ styles.constant }>Constant</div>,
+          ...regressionResult.regressionsByColumn.map((column) => 
+            renderDataColumn(column.regression.constants, true)
+          )
+        ]
+      },    
       {
         rowClass: styles.footerRow,
         columnClass: styles.footerColumn,
         items: [
           <div className={ styles.rSquaredAdjust }>{ regressionType == 'logistic' ? <div className="cmu">Pseudo</div> : null }<div className={ styles.r }>R</div><sup className="cmu">2</sup></div>,
           ...regressionResult.regressionsByColumn.map((column) =>
-            <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties.rSquaredAdj) }</div>
+            <Number className={ styles.footerCell } value={ column.columnProperties.rSquaredAdj } />
           )
         ]
       },
-      ...regressionMeasures[regressionType].map((val, key) => {
-        return {
-          rowClass: styles.footerRow,
-          columnClass: styles.footerColumn,
-          items: [
-            <div className="cmu">{ val.name }</div>,
-            ...regressionResult.regressionsByColumn.map((column) =>
-              <div className={ styles.footerCell }>{ getRoundedString(column.columnProperties[val.prop]) }</div>
-            )
-          ]
-        }
-      })
+      {
+        isNested: true,
+        parentName: 'Model Properties',
+        placeholder: '...',
+        initialCollapse: true,
+        children: regressionMeasures[regressionType].map(function(val, key) {
+          return new Object({
+            rowClass: `${ styles.footerRow } ${ styles.nestedFooterRow }`,
+            columnClass: `${ styles.footerColumn} ${ styles.nestedFooterColumn }`,
+            items: [
+              <div className="cmu">{ val.name }</div>,
+              ...regressionResult.regressionsByColumn.map((column) =>
+                <Number className={ styles.footerCell } value={ column.columnProperties[val.prop] } />
+              )
+            ]
+          })
+        })
+      }
+
     ]
 
     const data = preview ? baseData : baseData.concat(additionalData);
 
     return (
       <div className={ styles.regressionTable }>
-        <BareDataGrid data={ data } preview={ preview }/>
+        <BareDataGrid data={ data } preview={ preview }/>     
+        <div className={ styles.pValueLegend }>
+          { !preview && this.pValueThresholds.map((pValueThreshold) =>
+            <span>{ `${ pValueThreshold.symbol } p < `} <Number value={ pValueThreshold.threshold } style={{ marginLeft: '3px' }} /></span>
+          )}
+        </div>
       </div>
     );
   }

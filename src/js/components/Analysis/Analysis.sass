@@ -1,31 +1,46 @@
 @import '../../../css/flexbox.sass'
 @import '../../../css/mixins.sass'
+@import '../Base/BareDataGrid.sass'
+@import './Comparison.sass'
 
+.analysisMenuPageContainer
+  flex-grow: 1
+  display: flex
+  flex-direction: row
+  align-items: center
 
-.fieldGroup
-  &:first-child
-    .fieldGroupHeader
-      display: flex
-      flex-direction: row
-      .fieldGroupLabel
-        margin-top: 0
-      .fieldGroupAction
-        +smallCaps
-        cursor: pointer
-        color: $primary-accent
-        margin-left: auto
+  .menuOption
+    display: flex
+    flex-direction: column
+    padding: 20px
+    height: 200px
+    width: 250px
 
-  + .fieldGroup
-    margin-top: 7px
+    margin-left: 10px
 
-  .fieldGroupLabel
-    margin-top: 17px
-    margin-bottom: 10px
+    align-items: center
+    justify-content: center
+    text-align: center
 
-    font-size: 11px
-    font-weight: 500
-    color: $small-caps-grey
-    text-transform: uppercase
+    background-color: $white
+    color: $black
+
+    cursor: pointer
+    text-decoration: none
+
+    &.disabled
+      opacity: 0.3
+      pointer-events: none
+
+    .menuOptionIcon
+      padding-top: 10px
+      font-size: 48px
+
+    .description
+      padding-top: 15px
+
+.recommendModelButton
+  margin-bottom: 10px
 
 .watermark
   +watermark
@@ -51,10 +66,11 @@
   overflow: hidden
 
 .analysisViewContainer
-  +centerPaneWithSidebar
   background-color: $center-grey
   +fillContainer
   overflow-y: auto
+  overflow-x: auto
+  max-width: 100%
 
 .summaryVariableContainer
   display: flex
@@ -86,17 +102,32 @@
     right: 0
     bottom: 0
 
+  &.minimalBoxplot
+    min-height: 187px
+    max-height: 187px
+    height: 187px
+
+    > div
+      padding: 0
+
 .regressionTable, .summaryTable, .comparisonTable, .correlationTable
   margin: 0 20px 10px
   background-color: white
 
+  .pValueLegend
+    display: flex
+    > span
+      margin-right: 10px
+      display: flex
+
+.anovaSummary
+  display: flex
+  flex-direction: column
+  padding: 10px 22px 20px
+
 .regressionSummary
   display: flex
   padding: 10px 22px 20px
-  font-size: 15px
-  line-height: 20px
-  color: #333
-  font-weight: 300
 
   strong
     font-weight: 500
@@ -136,7 +167,7 @@
     position: absolute
 
 .tableHeaderColumn
-  background-color: #F6F6F6
+  background-color: $regression-header-grey // #F6F6F6
   font-weight: 500
   padding: 8px
 
@@ -147,13 +178,28 @@
   color: #999
 
 .dataCell, .textCell
+  height: 100%
   width: 100%
   padding: 4px
+  display: flex
+  flex-direction: column
+  justify-content: center
 
   > div
     display: flex
     padding: 4px
     justify-content: center
+
+.correlationDiagonal
+  width: 100%
+  height: 100%
+  // Draw an SVG top left to bottom right 
+  // background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 10 10'> <path d='M0 0 L0 10 L10 10' fill='#CFCFCF' /></svg>")
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 10 10'> <path d='M0 0 L10 10' stroke='#CFCFCF' stroke-width='0.1' /></svg>")
+  background-repeat:no-repeat
+  background-position:center center
+  //scale it 
+  background-size: 100% 100%, auto
 
 .dataColumn, .footerColumn
   &:first-child
@@ -162,36 +208,12 @@
   &:not(:first-child)
     font-size: 13px
 
-.dataRow
-  .dataColumn
-    &:first-child
-      align-items: flex-start
+.correlationDataColumn
+  min-height: 80px
 
+  .dataCell, .dataCell > div
+    padding: 0px
 
-.dataRow, .footerRow
-  .dataColumn, .footerColumn
-    white-space: normal
-    text-overflow: ellipsis
-    overflow: hidden
-    word-break: break-word
-
-    &:first-child
-      background-color: #F6F6F6
-      font-weight: 500
-
-  .dataColumnOneD
-    white-space: normal
-    text-overflow: ellipsis
-    overflow: hidden
-    word-break: break-word
-    padding: 8px
-
-.footerRow
-  border-top: 1px solid $ui-line-grey
-  background-color: #fbfbfb
-
-.footerRow ~ .footerRow
-  border-top: none
 
 .aggregationTable
   padding: 0 20px 20px
@@ -233,7 +255,6 @@
   flex-wrap: wrap
   align-content: flex-start
   flex-grow: 1
-  padding-top: 15px
 
   .correlationScatterplot
     width: 33.333333%
@@ -269,3 +290,10 @@
     text-align: center
     font-weight: 500
     font-size: 12px
+
+.nestedRow
+  .footerRow
+    border-top-width: 0px !important
+
+.nestedFooterColumn
+  border-top-width: 0px !important

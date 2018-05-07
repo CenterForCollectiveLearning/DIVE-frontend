@@ -1,8 +1,68 @@
 @import '../../../css/mixins.sass'
 @import '../../../css/flexbox.sass'
+@import './ExplorePage.sass'
+@import './SingleVisualizationPage.sass'
 
-.visualizationsPageContainer
-  overflow: hidden
+.headerText
+  display: flex
+  flex-direction: row
+  width: 100%
+
+  .right
+    display: flex
+    margin-left: auto
+    padding-right: 20px
+
+    .colorLegend
+      display: flex
+      margin-left: auto
+      padding-right: 10px
+
+      .colorLegendBox
+        min-height: 20px
+        min-width: 20px
+
+.headerFragment
+  margin-right: 3px
+  &:first-child
+    text-transform: capitalize
+
+  &.field
+
+  &:nth-last-child(1)
+    .field:before
+      content: ', and'
+
+  &.operation, &.plain, &.transformation, &.tooMuchData
+    color: $left-sidebar-grey
+
+.galleryContainer, .SingleVisualizationContainer
+  background-color: $center-grey
+
+  .specsContainer, .visualizationViewContainer
+    +fillContainer
+    max-width: 100%
+    max-height: 100%
+    overflow-y: auto
+    overflow-x: hidden
+
+.watermark
+  +watermark
+  padding: 200px 0 260px
+
+  &.watermarkNoSpacer
+    padding: 0
+
+.subsetMarker
+  position: absolute
+  bottom: 14px
+  right: 20px
+  font-size: 12px
+  background-color: $orange
+  padding: 2px 5px
+  border-radius: 2px
+  color: white
+  z-index: 10
 
 .renderChartText
   display: flex
@@ -13,437 +73,83 @@
   align-content: center
   align-items: center
   justify-content: center
-  +smallCaps
-  color: $primary-accent
-
-.colorGrid
-  height: 100%
-  padding: 0 15px
-  .columnFieldLabel, .rowFieldLabel
-    font-size: 13px
-    color: #555
-    font-weight: 600
-    text-transform: uppercase
-
-  .columnFieldLabel
-    display: flex
-    align-items: center
-    justify-content: center
-    margin: 10px 0
-
-  .gridWithRowFieldLabel
-    display: flex
-    flex-direction: row
-    align-items: center
-    justify-content: center
-
-  .rowFieldLabel
-    transform: rotate(-90deg)
-    margin-left: -40px
-    width: 40px
-
-  .dataRow
-    .dataColumn
-      &:first-child
-        align-items: flex-start
-
-  .dataRow, .footerRow
-    .dataColumn, .footerColumn
-      white-space: normal
-      text-overflow: ellipsis
-      overflow: hidden
-      word-break: break-word
-
-      &:first-child
-        background-color: #F6F6F6
-        font-weight: 500
-
-    .dataColumnOneD
-      white-space: normal
-      text-overflow: ellipsis
-      overflow: hidden
-      word-break: break-word
-      padding: 8px
-
-  .dataColumn, .footerColumn
-    &:first-child
-      padding: 8px
-
-    &:not(:first-child)
-      font-size: 13px
-
-  .dataRow
-    .dataColumn
-      &:first-child
-        align-items: flex-start
-
-
-  .tableHeaderColumn
-    background-color: #F6F6F6
-    font-weight: 500
-    padding: 8px
-
-  .dataCell, .textCell
-    width: 100%
-    padding: 4px
-
-    > div
-      display: flex
-      padding: 4px
-      justify-content: center
-
-
-.hidden
-  max-width: 0
-  max-height: 0
-  overflow: hidden
-
-.headerText
-  display: flex
-  flex-direction: row
-  width: 100%
-  .right
-    margin-left: auto
-
-.headerFragment
-  margin-right: 3px
-  &:first-child
-    text-transform: capitalize
-
-  &.field
-    color: $white
-    background-color: $primary-accent
-    border-radius: 2px
-    padding: 2px 4px
-    font-weight: 500
-
-    &.whiteFont
-      color: $white
-    &.blackFont
-      color: $black
-
-  &:nth-last-child(1)
-    .field:before
-      content: ', and'
-
-  &.operation, &.plain, &.transformation, &.tooMuchData
-    color: $left-sidebar-grey
-
-.fieldGroup
-  &:first-child
-    .fieldGroupHeader
-      display: flex
-      flex-direction: row
-      .fieldGroupLabel
-        margin-top: 0
-      .fieldGroupAction
-        +smallCaps
-        cursor: pointer
-        color: $primary-accent
-        margin-left: auto
-
-  + .fieldGroup
-    margin-top: 7px
-
-  .fieldGroupLabel
-    +smallCaps
-    margin-top: 17px
-    margin-bottom: 5px
-
-    text-transform: uppercase
-
-.sortGroup
-  display: flex
-
-  .sortFields
-    flex-grow: 1
-
-    + .sortOrder
-      margin-left: 8px
-      margin-top: 1px
-      flex-shrink: 0
-
-
-
-.binningConfigContainer
-  display: flex
-
-  .binningConfigBlock
-    margin-top: 0
-
-    &:first-child
-      width: 60%
-
-    &:last-child
-      padding-left: 7px
-      width: 40%
-
-    .fieldGroupLabel
-      margin-top: -6px
-
-.galleryContainer, .SingleVisualizationContainer
-  background-color: $center-grey
-  display: flex
-  flex-direction: row
-  overflow: hidden
-
-.watermark
-  +watermark
-  padding: 200px 0 260px
-
-  &.watermarkNoSpacer
-    padding: 0
-
-
-.specsContainer, .visualizationViewContainer
-  +fillContainer
-  max-width: 100%
-  max-height: 100%
-  overflow-y: auto
-
-.visualizationViewContainer
-  .chartsContainer
-    +fillContainer
-    padding: 10px
-    margin-left: 15px
-
-  .innerVisualizationViewContainer
-    +fillContainer
-    overflow-y: auto
-
-  .tableContainer
-    padding: 0 25px
-    overflow: scroll
-
-  .visualizationContainer
-    display: flex
-    flex-direction: column
-    flex-grow: 1
-
-    min-height: 400px
-    padding-bottom: 20px
-
-    .header
-      text-align: center
-      line-height: 44px
-
-    .visualization
-      +fillContainer
-      position: relative
-
-      > div:first-child
-        position: absolute
-        height: 100%
-        width: 100%
-
-      svg
-        flex-grow: 1
-
-    .overflowText
-      display: flex
-      flex-grow: 1
-      flex-direction: column
-      min-height: 150px
-
-      align-content: center
-      justify-content: center
-      text-align: center
-
-      color: #777
-
-.specsContainer
-  .innerSpecsContainer
-    display: block
-
-  .specContainer
-    display: flex
-    flex-direction: column
-    flex-wrap: wrap
-    align-content: flex-start
-    flex-grow: 1
-
-    .specSection
-      display: flex
-      flex-direction: column
-      flex-wrap: wrap
-      align-content: flex-start
-      flex-grow: 1
-
-      .blockSectionHeader
-        +smallCaps
-        margin: 5px 0 0 15px
-        padding-top: 0px
-        padding-left: 8px
-        padding-bottom: 3px
-        border-bottom: 1px solid $ui-line-grey
-        height: 22px
-        color: $black
-
-        i
-          bottom: 2px
-          font-size: 16px
-
-        .blockSectionHeaderTitle
-          text-transform: uppercase
-          color: $small-caps-grey
-          font-weight: 600
-          font-size: 11px
-
-        strong
-          font-weight: 500
-
-        .exactTitleField, .subsetTitleField, .baselineTitleField, .expandedTitleField
-          + .exactTitleField:before
-            content: ' and '
-
-          + .subsetTitleField:before, + .expandedTitleField:before, + .baselineTitleField:before
-            content: ' or '
-
-      .specs
-        display: flex
-        flex-direction: row
-        flex-wrap: wrap
-        align-content: flex-start
-        flex-grow: 1
-        margin-bottom: 5px
-        padding: 5px 0 0 10px
-        margin-right: -6px
-
-.visualizationBlocksContainer
-  display: flex
-  flex-direction: column
-  position: relative
-
-  padding: 6px
-
-  &.exact
-    width: 50%
-
-  &.subset, &.baseline
-    width: 33.33333%
-
-  &.expanded
-    width: 25%
-
-  &:hover .starContainer i
-    opacity: 0.5
-
-
-  .starContainer
-    position: absolute
-    top: 15px
-    right: 18px
-    font-size: 13px
-    color: $primary-accent
-    cursor: pointer
-
-    i
-      opacity: 0.5
-
-      &.starred
-        color: $primary-accent
-        opacity: 0.6
-
-    &:hover i
-      opacity: 1
-
-    &.starred:hover i
-      opacity: 0.8
-
-.visualizationBlock
-  +block
-  padding: 0px
-  display: flex
-  flex-direction: column
-  border: 1px solid transparent
-  max-height: 187px
-  height: 187px
-  overflow: hidden
-
-  &:hover
-    border-color: $primary-accent
-
-  .header
-    text-align: left
-    font-size: 12px
-    overflow: hidden
-    text-overflow: ellipsis
-    padding-left: 15px
-    padding-top: 10px
-    padding-bottom: 10px
-    min-height: 35px
-
-  .overflowText
-    display: flex
-    color: #999
-    align-content: center
-    justify-content: center
-    flex-grow: 1
-    flex-direction: column
-    min-height: 150px
-
-  .visualization
-    height: 100%
-    padding: 11px 0 0px
-
-    &.tree
-      svg
-        text
-          fill: rgba(0, 0, 0, 0)
-
-    svg
-      g
-        cursor: pointer!important
-
-.stats
-  padding: 10px 15px
-  background-color: white
-  +smallCaps
-  .value
-    margin-left: 4px
-
-.gridContainer
-  .grid
-    width: 100%
-    table-layout: fixed
-    border-collapse: collapse
-
-    th, td
-      padding: 0 10px
-      font-size: 13px
-      text-align: left
-      vertical-align: middle
-      min-width: 50px
-      width: 50px
-
-    th
-      background-color: #eee
-      border: 1px solid #ccc
-      border-bottom-width: 0
-      padding-top: 3px
-      padding-bottom: 3px
-      color: #222
-
-      font-size: 12px
-      font-weight: 500
-      height: 24px
-      line-height: 24px
-
-      overflow: hidden
-      text-overflow: ellipsis
-      word-break: break-word
-
-    td
-      overflow: hidden
-      white-space: nowrap
-      border: 1px solid #ccc
-      text-overflow: ellipsis
-      background-color: white
-      height: 29px
-      line-height: 29px
-
 
 .visualization
+  .colorGrid
+    height: 100%
+    padding: 0 15px
+    .columnFieldLabel, .rowFieldLabel
+      font-size: 13px
+      color: #555
+      font-weight: 600
+
+    .columnFieldLabel
+      display: flex
+      align-items: center
+      justify-content: center
+      margin: 10px 0
+
+    .gridWithRowFieldLabel
+      display: flex
+      flex-direction: row
+      align-items: center
+      justify-content: center
+
+    .rowFieldLabel
+      transform: rotate(-90deg)
+      margin-left: -40px
+      width: 40px
+
+    .dataRow
+      .dataColumn
+        &:first-child
+          align-items: flex-start
+
+    .dataRow, .footerRow
+      .dataColumn, .footerColumn
+        white-space: normal
+        text-overflow: ellipsis
+        overflow: hidden
+        word-break: break-word
+
+        &:first-child
+          background-color: #F6F6F6
+          font-weight: 500
+
+      .dataColumnOneD
+        white-space: normal
+        text-overflow: ellipsis
+        overflow: hidden
+        word-break: break-word
+        padding: 8px
+
+    .dataColumn, .footerColumn
+      &:first-child
+        padding: 8px
+
+      &:not(:first-child)
+        font-size: 13px
+
+    .dataRow
+      .dataColumn
+        &:first-child
+          align-items: flex-start
+
+
+    .tableHeaderColumn
+      background-color: #F6F6F6
+      font-weight: 500
+      padding: 8px
+
+    .dataCell, .textCell
+      width: 100%
+      padding: 4px
+
+      > div
+        display: flex
+        padding: 4px
+        justify-content: center
+
   &.tree
     svg
       g

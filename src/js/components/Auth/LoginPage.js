@@ -4,19 +4,17 @@ import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { loginUser } from '../../actions/AuthActions';
+import { validateEmail } from '../../helpers/auth';
 
+import { Button, Intent, Checkbox } from '@blueprintjs/core';
 import styles from './Auth.sass';
 
 import Input from '../Base/Input'
 import AuthModal from '../Base/AuthModal';
 import RaisedButton from '../Base/RaisedButton';
 
-function validateEmail(email) {
-    var re = /\S+@\S+\.\S+/;
-    return re.test(email);
-}
 
-class AuthPage extends Component {
+class LoginPage extends Component {
   constructor(props) {
     super(props);
 
@@ -70,28 +68,17 @@ class AuthPage extends Component {
     }
   }
 
-  goHome = () => {
-    const { push } = this.props;
-    push('/')
-  }
-
   handlePasswordChange = (e) => {
     this.sanitizeBackendErrors();
     this.setState({ password: e.target.value });
   }
 
   clickRegister = () => {
-    const { push } = this.props;
-    push('/register')
-  }
-
-  clickRegister = () => {
-    const { push } = this.props;
-    push('/register')
+    this.props.push('/auth/register');
   }
 
   clickForgot = () => {
-    alert('Functionality in progress');
+    this.props.push('/auth/reset');
   }
 
   handleRememberMeChange = (e) => {
@@ -104,16 +91,18 @@ class AuthPage extends Component {
   }
 
   ensureNotLoggedIn(props) {
-    const { isAuthenticated, push } = props;
+    const { user, push } = props;
 
-    if (isAuthenticated){
+    if (user.isAuthenticated && !user.anonymous){
       push(props.location.query.next || '/projects');
     }
   };
 
-  submit = () => {
+  submit = (e) => {
     const { loginUser } = this.props;
     const { email, username, password, rememberMe } = this.state;
+
+    e.preventDefault();
     loginUser(email, username, password, rememberMe);
   }
 
@@ -130,64 +119,65 @@ class AuthPage extends Component {
       <DocumentTitle title='DIVE | Login'>
         <AuthModal
           scrollable
+          titleText="Log in to DIVE"
+          isOpen={ true }
           closeAction={ this.closeLoginPage }
           className={ styles.loginModal }
           blackBackground={ true }
+          iconName='log-in'
           footer={
             <div className={ styles.registerText }>
               Don&#39;t have an account? <span className={ styles.registerLink } onClick={ this.clickRegister }>Click here to create one</span>.
             </div>
           }>
-          <form className={ styles.authForm } >
+          <form className={ styles.authForm } onSubmit={ this.submit }>
             <div className={ styles.authInputGroup }>
               { (loginError == 'E-mail not found' || loginError == 'Username not found') &&
                 <div className={ styles.authInputError }>Not found</div>
               }
-              <Input
-                type="text"
-                className={ styles.usernameOrEmail }
-                placeholder="Username or E-mail"
-                autocomplete="on"
-                onChange={ this.handleUsernameOrEmailChange }
-                autofocus={ true }
-                onSubmit={ this.submit }
-              />
+              <div className="pt-input-group pt-large">
+                <input
+                  type="text"
+                  className={ "pt-input pt-large pt-icon-user pt-fill " + ((loginError == 'E-mail not found' || loginError == 'Username not found') ? 'pt-intent-warning' : '') }
+                  placeholder="Username or E-mail"
+                  autoComplete="on"
+                  onChange={ this.handleUsernameOrEmailChange }
+                  autoFocus={ true }
+                />
+                <span className="pt-icon pt-minimal pt-icon-user" />
+              </div>
             </div>
             <div className={ styles.authInputGroup }>
               { (loginError == 'Incorrect credentials') &&
                 <div className={ styles.authInputError }>Incorrect</div>
               }
-              <Input
-                className={ styles.password }
-                type="password"
-                placeholder="Password"
-                onChange={ this.handlePasswordChange }
-                onSubmit={ this.submit }
-              />
-            </div>
-            <div className={ styles.authInputGroup }>
-              <div className={ styles.checkbox }>
-                <div className={ styles.authInputLabelAndError}>
-                  <input
-                    type="checkbox"
-                    onChange={ this.handleRememberMeChange }
-                    checked={ this.state.rememberMe }
-                    onSubmit={ this.submit }
-                  />
-                  <span className={ styles.authInputLabel }>Remember Me</span>
-                  <span className={ styles.forgotPassword } onClick={ this.clickForgot }>Forgot Password?</span>
-                </div>
+              <div className="pt-input-group pt-large">
+                <input
+                  className={ 'pt-input pt-large pt-icon-lock pt-fill ' + ((loginError == 'Incorrect credentials') ? 'pt-intent-warning' : '' ) }
+                  type="password"
+                  placeholder="Password"
+                  onChange={ this.handlePasswordChange }
+                />
+                <span className="pt-icon pt-minimal pt-icon-lock" />
               </div>
             </div>
-            <RaisedButton
-              primary
-              className={ styles.submitButton }
+            <div className={ styles.authInputGroup }>
+              <Checkbox
+                className={ styles.rememberMe }
+                checked={ this.state.rememberMe }
+                onChange={ this.handleRememberMeChange }
+                label="Remember Me"
+              />
+              <span className={ styles.forgotPassword } onClick={ this.clickForgot }>Forgot Password?</span>
+            </div>
+            <Button
+              className="pt-large pt-fill"
+              text="Login"
+              type="submit"
+              intent={ Intent.PRIMARY }
               disabled={ loginDisabled }
               onClick={ this.submit }
-              minWidth={ 100 }
-            >
-              Login
-            </RaisedButton>
+            />
           </form>
         </AuthModal>
       </DocumentTitle>
@@ -195,19 +185,19 @@ class AuthPage extends Component {
   }
 }
 
-AuthPage.propTypes = {
+LoginPage.propTypes = {
   authRequired: React.PropTypes.bool
 };
 
 function mapStateToProps(state) {
   const { user } = state;
   return {
-    isAuthenticated: user.isAuthenticated,
-    loginError: user.error.login
+    user: user,
+    loginError: user.login.error
   };
 }
 
 export default connect(mapStateToProps, {
   loginUser,
   push
-})(AuthPage);
+})(LoginPage);

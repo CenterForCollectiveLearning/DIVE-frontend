@@ -7,7 +7,6 @@ import {
   PROGRESS_CORRELATION,
   ERROR_CORRELATION,
   RECEIVE_FIELD_PROPERTIES,
-  RECEIVE_CORRELATION_SCATTERPLOT,
   RECEIVE_CREATED_SAVED_CORRELATION,
   WIPE_PROJECT_STATE,
   SET_CORRELATION_QUERY_STRING,
@@ -24,9 +23,11 @@ const baseState = {
     loading: false,
     progress: null,
     error: null,
-    data: null
+    data: {
+      table: {},
+      scatterplots: []
+    }
   },
-  correlationScatterplots: [],
   queryString: null
 }
 
@@ -49,11 +50,12 @@ export default function correlationSelector(state = baseState, action) {
       return { ...state, correlationVariableIds: selectedVariableIds};
 
     case REQUEST_CORRELATION:
-      return { ...state, correlationResult: { ...state.correlationResult, loading: true } };
+      return { ...state, correlationResult: { ...state.correlationResult, error: null, loading: true } };
 
     case RECEIVE_CORRELATION:
       return { ...state,
         correlationResult: {
+          error: null,
           loading: false,
           data: action.data,
           exported: action.data.exported,
@@ -62,7 +64,7 @@ export default function correlationSelector(state = baseState, action) {
       };
 
     case ERROR_CORRELATION:
-      return { ...state, correlationResult: { ...state.correlationResult, error: action.error } };
+      return { ...state, correlationResult: { ...state.correlationResult, loading: false, error: action.message } };
 
     case PROGRESS_CORRELATION:
       if (action.progress && action.progress.length) {
@@ -84,11 +86,10 @@ export default function correlationSelector(state = baseState, action) {
         ...state, queryString: action.queryString
       }
 
-    case WIPE_PROJECT_STATE, CLEAR_ANALYSIS, SELECT_DATASET:
+    case WIPE_PROJECT_STATE:
+    case CLEAR_ANALYSIS:
+    case SELECT_DATASET:
       return baseState;
-
-    case RECEIVE_CORRELATION_SCATTERPLOT:
-      return { ...state, correlationScatterplots: (action.data.data || []) };
 
     default:
       return state;

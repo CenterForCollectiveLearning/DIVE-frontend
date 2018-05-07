@@ -4,12 +4,22 @@ import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { logoutUser } from '../../actions/AuthActions'
+import { showToast } from '../../actions/UserActions';
 
 import Link from '../Base/Link';
 import HomePage from './HomePage';
 import { wipeProjectState } from '../../actions/ProjectActions';
 
+import { Position, Toaster, Button, Intent } from '@blueprintjs/core';
+
 import Logo from '../../../assets/DIVE_logo_white.svg?name=Logo';
+
+
+const betaToaster = Toaster.create({
+  className: 'beta-toaster',
+  timeout: 2000,
+  position: Position.TOP,
+})
 
 
 export class LandingPage extends Component {
@@ -18,23 +28,33 @@ export class LandingPage extends Component {
 
     this.state = {
       userOptionsOpen: true,
+      opaqueNavbar: false,
+      betaToastOpen: true,
     };
   }
 
   componentWillMount() {
-    const { user, push, wipeProjectState } = this.props;
-    if (user.isAuthenticated) {
-      // push('/projects')
+    const { user, push, wipeProjectState, showToast } = this.props;
+
+    if (this.state.betaToastOpen && user.showToast) {
+      betaToaster.show({
+        message: <span>DIVE in currently in beta and is still under active development. To report bugs, please contact <a href="mailto:dive@media.mit.edu" target="_blank">dive@media.mit.edu</a>.</span>,
+        iconName: 'hand-right',
+        intent: Intent.WARNING,
+        onDismiss: this.closeBetaToast
+      });
+      showToast();
     }
+
     // Wipe project on landing page
     wipeProjectState();
   }
 
-  _onClickLogo(){
+  _onClickLogo = () => {
     this.props.push(`/`);
   }
 
-  _getSelectedTab(){
+  _getSelectedTab = () => {
     const tabList = ["/projects", "/about"];
     const _validTab = function (tabValue) {
       return tabList.indexOf(tabValue) > -1;
@@ -54,49 +74,57 @@ export class LandingPage extends Component {
     this.setState({ userOptionsOpen: false });
   }
 
+  _handleScroll = (e) => {
+    const scrollThreshold = 200;
+    this.setState({ opaqueNavbar: (e.target.scrollTop > scrollThreshold) });
+  }
+
+  closeBetaToast = () => {
+    this.setState({ betaToastOpen: false });
+  }
+
+  componentWillUnmount() {
+    this.closeBetaToast();
+  }
+
   render() {
-    const { user } = this.props;
+    const { user, location } = this.props;
+    const onLandingPage = (location.pathname == '/');
+
     return (
       <DocumentTitle title='DIVE | Landing'>
-        <div className={ styles.fillContainer + ' ' + styles.landingPage }>
-          <div className={ styles.background }>
-          </div>
-          <div className={ styles.landingPageContent + ( this.props.children ? ' ' + styles.landingPageProjects : ' ' + styles.landingPageHome) }>
-            <div className={ styles.header }>
-              <div className={ styles.logoContainer } onClick={ this._onClickLogo.bind(this) }>
-                <div className={ styles.logoText }>
-                  DIVE
-                </div>
+        <div className={ styles.fillContainer + ' ' + styles.landingPage } onScroll={ this._handleScroll }>
+          <div
+            className={ styles.fillContainer + ' ' + styles.landingPageContent + ( this.props.children ? ' ' + styles.landingPageProjects : ' ' + styles.landingPageHome) }
+          >
+          <nav className={ 'pt-navbar pt-dark pt-fixed-top ' + styles.header + ( onLandingPage ? ( this.state.opaqueNavbar ? ' ' + styles.opaque : '') : ' ' + styles.opaque) }>
+            <div className="pt-navbar-group pt-align-left">
+              <div className={ 'pt-navbar-heading ' + styles.logoContainer } onClick={ this._onClickLogo }>
                 <Logo className={ styles.logo } />
+                <div className={ styles.logoText }>DIVE</div>
               </div>
-              <div className={ styles.topRightControls }>
-                { user && user.username &&
-                  <div className={ styles.linkContainer }>
-                    <Link route="/preloaded">Preloaded Projects</Link>
-                    <Link route="/projects">Your Projects</Link>
-                    <div className={ styles.userOptions + ( this.state.userOptionsOpen ? ' ' + styles.open : '' )} >
-                      <div className={ styles.usernameAndChevron }>
-                        <span className={ styles.username }>{ user.username }</span>
-                        <div className={ styles.userOptionsMenu }>
-                          <div>Settings</div>
-                          <div onClick={ this.props.logoutUser }>Sign Out</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                }
-                { (!user || !user.username) &&
-                  <div className={ styles.linkContainer }>
-                    <Link route="/login">Log In</Link>
-                  </div>
-                }
-              </div>
-
+              <span className="pt-navbar-divider"></span>
+              <Link className="pt-button pt-minimal pt-icon-help" route="/faq">FAQ</Link>
+              <Link className="pt-button pt-minimal pt-icon-info-sign" route="/about">About</Link>
             </div>
-            <div className={ styles.centeredFill }>
-              { this.props.children ||
-                <HomePage />
-              }
+              <div className="pt-navbar-group pt-align-right">
+                { (user.id && !user.anonymous) &&
+                  <div className={ styles.rightButtons }>
+                    <Link className="pt-button pt-minimal pt-icon-projects" route="/projects">Projects</Link>
+                    <span className="pt-navbar-divider"></span>
+                    <div className="pt-button pt-minimal pt-icon-log-out" onClick={ this.props.logoutUser }>Log Out of { user.username }</div>
+                  </div>
+                }
+                { (user.anonymous || !user.id) &&
+                  <div className={ styles.rightButtons }>
+                    <Link className="pt-button pt-minimal pt-icon-log-in" route="/auth/login">Log In</Link>
+                    <Link className="pt-button pt-minimal pt-icon-user" route="/auth/register">Register</Link>
+                  </div>
+                }
+              </div>
+            </nav>
+            <div className={ styles.fillContainer }>
+              { this.props.children || <HomePage /> }
             </div>
           </div>
         </div>
@@ -114,4 +142,4 @@ function mapStateToProps(state) {
   return { user };
 }
 
-export default connect(mapStateToProps, { wipeProjectState, push, logoutUser })(LandingPage);
+export default connect(mapStateToProps, { showToast, wipeProjectState, push, logoutUser })(LandingPage);

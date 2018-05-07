@@ -23,7 +23,10 @@ class Tab extends Component {
             + (this.props.disabled ? ' ' + styles.disabled : '')
           }
           onClick={ this.handleClick.bind(this) }>
-          { this.props.label }
+          { this.props.iconName && 
+            <span className={ `pt-icon pt-icon-${ this.props.iconName }` } />
+          }
+          {/* this.props.label */}
         </div>
       );
     } else {
@@ -43,7 +46,7 @@ Tab.propTypes = {
   onClick: PropTypes.func,
   className: PropTypes.string,
   disabled: PropTypes.bool,
-  selectedClassName: PropTypes.string
+  selectedClassName: PropTypes.string,
 }
 
 Tab.defaultProps = {
@@ -52,7 +55,7 @@ Tab.defaultProps = {
   route: null,
   className: "",
   disabled: false,
-  selectedClassName: null
+  selectedClassName: null,
 }
 
 function mapStateToProps(state) {

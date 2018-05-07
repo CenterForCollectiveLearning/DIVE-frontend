@@ -6,12 +6,13 @@ import DatasetDataRow from './DatasetDataRow';
 export default class DatasetDataList extends Component {
 
   render() {
-    const { dataset, fieldProperties } = this.props;
+    const { preloaded, dataset, fieldProperties } = this.props;
     return (
       <div className={ styles.datasetDataList }>
         {
           fieldProperties.items.map((fieldProperty) =>
             <DatasetDataRow
+              preloaded={ dataset.preloaded }
               key={ `dataset-data-row-${ fieldProperty.id }` }
               fieldProperty={ fieldProperty }
               color = { fieldProperties.fieldNameToColor[fieldProperty.name] }

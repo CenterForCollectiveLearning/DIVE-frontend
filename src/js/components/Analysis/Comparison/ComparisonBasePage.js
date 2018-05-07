@@ -8,6 +8,7 @@ import styles from '../Analysis.sass';
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
 import { setPersistedQueryString, getInitialState } from '../../../actions/ComparisonActions';
 
+import ProjectTopBar from '../../ProjectTopBar';
 import ComparisonSidebar from './ComparisonSidebar';
 import ComparisonView from './ComparisonView';
 
@@ -43,8 +44,8 @@ export class ComparisonBasePage extends Component {
     var newQueryStringModifier = {};
 
     const numIndependentFields = independentVariablesIds.length;
-    if ( numIndependentFields > 2 ) {
-      newQueryStringModifier.independentVariablesIds = independentVariablesIds.slice(0, numIndependentFields - 2);
+    if ( numIndependentFields > 1 ) {
+      newQueryStringModifier.independentVariablesIds = independentVariablesIds.slice(0, numIndependentFields - 1);
     }
 
     const numDependentFields = dependentVariablesIds.length;
@@ -63,7 +64,7 @@ export class ComparisonBasePage extends Component {
   setRecommendedInitialState(fieldProperties) {
     const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
 
-    const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
+    const initialState = getInitialState(project.id, datasetSelector.id, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
     setPersistedQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);
@@ -74,10 +75,13 @@ export class ComparisonBasePage extends Component {
     return (
       <DocumentTitle title={ 'Comparison' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.summaryContainer }` }>
-          <ComparisonView
-            independentVariablesIds={ independentVariablesIds }
-            dependentVariablesIds={ dependentVariablesIds }
-          />
+          <div className={ styles.fillContainer }>
+            <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />      
+            <ComparisonView
+              independentVariablesIds={ independentVariablesIds }
+              dependentVariablesIds={ dependentVariablesIds }
+            />
+          </div>
           <ComparisonSidebar
             pathname={ pathname }
             queryObject={ queryObject }

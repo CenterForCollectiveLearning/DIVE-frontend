@@ -5,17 +5,28 @@ import styles from './DropDownMenu.sass';
 import Select from 'react-select';
 
 export default class DropDownMenu extends Component {
-  onChange(item) {
+  onChange = (item) => {
     const { onChange, valueMember } = this.props;
     this.props.onChange(item[valueMember]);
   }
 
   render() {
-    const { value, autosize, options, label, valueMember, displayTextMember, onChange, multi, clearable, searchable, className, valueClassName, labelClassName, prefix } = this.props;
+    const { value, minimal, autosize, options, label, valueMember, displayTextMember, onChange, multi, clearable, searchable, className, valueClassName, labelClassName, prefix, prefixIconMember } = this.props;
 
     const selectedValueObject = options.find((option) => option.selected);
     const selectedValue = (value == null && selectedValueObject) ?
       selectedValueObject[valueMember] : value;
+
+    const optionRenderer = (option) => {
+      return (
+        <div className={ styles.valueContainer }>
+          { prefixIconMember &&
+            <span className={ `pt-icon-standard pt-icon-${ option[prefixIconMember] } ` + styles.prefixIcon } />
+          }
+          <span className={ styles.value + (valueClassName ? ' ' + valueClassName : '') }>{ option[displayTextMember] }</span>
+        </div>
+      );
+    }
 
     const valueRenderer = (option) => {
       return (
@@ -23,13 +34,16 @@ export default class DropDownMenu extends Component {
           { prefix &&
             <span className={ styles.prefix }>{ prefix }: </span>
           }
+          { prefixIconMember &&
+            <span className={ `pt-icon-standard pt-icon-${ option[prefixIconMember] } ` + styles.prefixIcon } />
+          }
           <span className={ styles.value + (valueClassName ? ' ' + valueClassName : '') }>{ option[displayTextMember] }</span>
         </div>
       );
     }
 
     return (
-      <div style={{ width: this.props.width || '100%', marginRight: this.props.margin || '0px' }} className={ styles.dropDownMenu + (className ? ' ' + className : '') }>
+      <div style={{ width: this.props.width || '100%', marginRight: this.props.margin || '0px' }} className={ styles.dropDownMenu + (className ? ' ' + className : '') + (minimal ? ' ' + styles.minimal : '') }>
         { label &&
           <div className={ styles.dropDownLabel + ( labelClassName ? ' ' + labelClassName : '' ) }>{ label } </div>
         }
@@ -39,17 +53,19 @@ export default class DropDownMenu extends Component {
           labelKey={ displayTextMember }
           valueKey={ valueMember }
           options={ options }
-          onChange={ this.onChange.bind(this) }
+          onChange={ this.onChange }
           multi={ multi }
           clearable={ clearable }
           searchable={ searchable }
-          valueRenderer={ valueRenderer.bind(this) }/>
+          optionRenderer={ optionRenderer }
+          valueRenderer={ valueRenderer }/>
       </div>
     );
   }
 }
 
 DropDownMenu.propTypes = {
+  minimal: PropTypes.bool,
   value: PropTypes.any,
   options: PropTypes.array,
   valueMember: PropTypes.string,
@@ -64,10 +80,12 @@ DropDownMenu.propTypes = {
   valueClassName: PropTypes.string,
   labelClassName: PropTypes.string,
   prefix: PropTypes.string,
-  width: PropTypes.any
+  width: PropTypes.any,
+  prefixIconMember: PropTypes.string
 };
 
 DropDownMenu.defaultProps = {
+  minimal: false,
   className: null,
   valueClassName: null,
   labelClassName: null,
@@ -80,5 +98,6 @@ DropDownMenu.defaultProps = {
   valueMember: "value",
   displayTextMember: "label",
   options: [],
-  width: null
+  width: null,
+  prefixIconMember: null
 }

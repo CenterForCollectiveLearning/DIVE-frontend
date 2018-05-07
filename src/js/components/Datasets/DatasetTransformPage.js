@@ -5,6 +5,8 @@ import { push } from 'react-router-redux';
 import { fetchDataset, fetchDatasets, deleteDataset } from '../../actions/DatasetActions';
 import { fetchFieldPropertiesIfNeeded } from '../../actions/FieldPropertiesActions';
 
+import { Button, Intent } from '@blueprintjs/core';
+
 import stylesDatasets from './Datasets.sass';
 import stylesTransform from './DatasetTransform.sass';
 const styles = { ...stylesDatasets, ...stylesTransform };
@@ -27,8 +29,6 @@ export class DatasetTransformPage extends Component {
       pivotModalOpen: false,
       mergeDatasetsModalOpen: false
     }
-
-    this.onClickDeleteDataset = this.onClickDeleteDataset.bind(this);
   }
 
   componentWillMount() {
@@ -52,49 +52,49 @@ export class DatasetTransformPage extends Component {
       fetchFieldPropertiesIfNeeded(params.projectId, params.datasetId);
     }
 
-    if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      if (datasetSelector.datasetId) {
-        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/transform`);
+    if (datasetSelector.id != this.props.datasetSelector.id) {
+      if (datasetSelector.id) {
+        push(`/projects/${ params.projectId }/datasets/${ datasetSelector.id }/transform`);
       } else {
         push(`/projects/${ params.projectId }/datasets/upload`);
       }
     }
   }
 
-  openMergeDatasetsModal() {
+  openMergeDatasetsModal = () => {
     this.setState({ mergeDatasetsModalOpen: true });
   }
 
-  closeMergeDatasetsModal() {
+  closeMergeDatasetsModal = () => {
     this.setState({ mergeDatasetsModalOpen: false });
   }
 
-  openPivotModal() {
+  openPivotModal = () => {
     this.setState({ pivotModalOpen: true });
   }
 
-  closePivotModal() {
+  closePivotModal = () => {
     this.setState({ pivotModalOpen: false });
   }
 
-  openColumnReductionModal() {
+  openColumnReductionModal = () => {
     this.setState({ reduceColumnsModalOpen: true });
   }
 
-  closeColumnReductionModal() {
+  closeColumnReductionModal = () => {
     this.setState({ reduceColumnsModalOpen: false });
   }
 
-  onClickDeleteDataset() {
+  onClickDeleteDataset = () => {
     const { deleteDataset, datasetSelector, project } = this.props;
 
-    deleteDataset(project.id, datasetSelector.datasetId);
+    deleteDataset(project.id, datasetSelector.id);
   }
 
   render() {
     const { datasets, datasetSelector, fieldProperties, params, project, projectTitle } = this.props;
     const dataset = datasets.items.filter((dataset) =>
-      dataset.datasetId == params.datasetId
+      dataset.id == params.datasetId
     )[0];
 
     return (
@@ -104,22 +104,32 @@ export class DatasetTransformPage extends Component {
             actions={
               <div className={ styles.headerControlRow }>
                 <div className={ styles.headerControl }>
-                  <RaisedButton icon onClick={ this.onClickDeleteDataset }>
-                    <i className="fa fa-trash"></i>
-                  </RaisedButton>
+                  <Button
+                    iconName='trash'
+                    onClick={ this.onClickDeleteDataset }
+                  />
                 </div>
               </div>
             }
           />
           <div className={ styles.transformActions }>
             <div className={ styles.transformAction }>
-              <RaisedButton label="Reduce columns" onClick={ this.openColumnReductionModal.bind(this) }/>
+              <Button
+                text="Reduce columns"
+                onClick={ this.openColumnReductionModal }
+              />
             </div>
             <div className={ styles.transformAction }>
-              <RaisedButton label="Pivot" onClick={ this.openPivotModal.bind(this) }/>
+              <Button
+                text="Pivot"
+                onClick={ this.openPivotModal }
+              />
             </div>
             <div className={ styles.transformAction }>
-              <RaisedButton label="Combine datasets" onClick={ this.openMergeDatasetsModal.bind(this) }/>
+              <Button
+                text="Combine datasets"
+                onClick={ this.openMergeDatasetsModal }
+              />
             </div>
           </div>
 

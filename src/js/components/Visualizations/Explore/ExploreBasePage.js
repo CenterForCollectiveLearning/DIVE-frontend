@@ -6,6 +6,7 @@ import DocumentTitle from 'react-document-title';
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers'
 import { setPersistedQueryString, getInitialState } from '../../../actions/VisualizationActions';
 
+import ProjectTopBar from '../../ProjectTopBar';
 import styles from '../Visualizations.sass';
 import ExploreSidebar from './ExploreSidebar';
 import ExploreView from './ExploreView';
@@ -21,13 +22,13 @@ class ExploreBasePage extends Component {
   }
 
   componentWillMount() {
-    const { fieldProperties, persistedQueryString, pathname, replace } = this.props;
+    const { fieldProperties, persistedQueryString, pathname, replace, queryObject: currentQueryObject } = this.props;
 
     this.setState({
       uniqueSpecVisualizationTypes: this.getUniqueSpecVisualizationTypes(this.props.specs)
     }, () => this.updateVisualizationTypes(this.props.filters.visualizationTypes));
 
-    if ( persistedQueryString ) {
+    if ( persistedQueryString && !Object.keys(currentQueryObject)) {
       replace(`${ pathname }${ persistedQueryString }`);
     } else {
       if ( fieldProperties.items.length ) {
@@ -75,7 +76,7 @@ class ExploreBasePage extends Component {
   setRecommendedInitialState(fieldProperties) {
     const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
 
-    const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
+    const initialState = getInitialState(project.id, datasetSelector, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
     setPersistedQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);
@@ -115,13 +116,18 @@ class ExploreBasePage extends Component {
 
     return (
       <DocumentTitle title={ 'Explore' + ( project.title ? ` | ${ project.title }` : '' ) }>
-        <div className={ `${ styles.fillContainer } ${ styles.galleryContainer }` }>
-          <ExploreView
-            filteredVisualizationTypes={ filteredVisualizationTypes }
-            sortBy={ sortBy }
-            recommendationMode={ recommendationMode }
-            fieldIds={ fieldIds }
-          />
+        <div className={ `${ styles.fillContainer } ${ styles.flexrow } ${ styles.galleryContainer }` }>
+          <div className={ styles.fillContainer }>
+            <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
+            <ExploreView
+              filteredVisualizationTypes={ filteredVisualizationTypes }
+              sortBy={ sortBy }
+              recommendationMode={ recommendationMode }
+              fieldIds={ fieldIds }
+              pathname={ pathname }
+              queryObject={ queryObject }            
+            />
+          </div>
           <ExploreSidebar
             filteredVisualizationTypes={ filteredVisualizationTypes }
             sortBy={ sortBy }

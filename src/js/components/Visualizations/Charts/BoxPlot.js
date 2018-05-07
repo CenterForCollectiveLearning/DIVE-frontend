@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import styles from '../Visualizations.sass';
 
-var Chart = require('react-google-charts').Chart;
+import { Chart } from 'react-google-charts';
 
 export default class BoxPlot extends Component {
   render() {
@@ -83,7 +83,7 @@ export default class BoxPlot extends Component {
 
     return (
       <Chart
-        loader={ <div className={ styles.renderChartText }>Rendering Chart...</div> }
+        loader={ <div className={ styles.renderChartText + ' pt-monospace-text' }>Rendering Chart...</div> }
         chartType="LineChart"
         options={ options }
         data={ finalData }

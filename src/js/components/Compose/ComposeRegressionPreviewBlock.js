@@ -5,25 +5,26 @@ import { selectComposeVisualization } from '../../actions/ComposeActions';
 
 import styles from './Compose.sass';
 
+import ColoredFieldItems from '../Base/ColoredFieldItems';
 import RegressionTable from '../Analysis/Regression/RegressionTable';
 
 export default class ComposeRegressionPreviewBlock extends Component {
-  handleClick() {
+  handleClick = () => {
     const { spec, onClick } = this.props;
     const desc = `Explaining ${ spec.spec.dependentVariable }`;
     onClick(spec.id, desc);
   }
 
   render() {
-    const { spec } = this.props;
-
+    const { spec, fieldNameToColor } = this.props;
+    
     return (
-      <div className={ styles.contentPreviewBlockContainer }
-            onClick={ this.handleClick.bind(this) }>
+      <div className={ styles.contentPreviewBlockContainer + ' pt-card pt-interactive'}
+            onClick={ this.handleClick }>
         <div className={ styles.regressionBlock }>
-          <span className={ styles.header }>Explaining <strong className={ styles.dependentVariableTitle }>{ spec.spec.dependentVariable }</strong></span>
+          <span className={ styles.header }>Explaining <ColoredFieldItems fields={ [spec.spec.dependentVariable] }/></span>
           <RegressionTable
-            regressionResult={ spec.data || {} }
+            regressionResult={ spec.data.table || {} }
             regressionType={ spec.spec.regressionType }
             preview={ true }
           />

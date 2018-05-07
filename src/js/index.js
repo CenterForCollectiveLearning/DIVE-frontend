@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import ReactGA from 'react-ga';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import { Provider } from 'react-redux';
 import { Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux'
+
+import { FocusStyleManager } from '@blueprintjs/core';
 
 import configureStore from './store/configureStore';
 
@@ -19,11 +22,11 @@ if (window.__env.NODE_ENV == "PRODUCTION") {
 }
 window.ReactGA = ReactGA;
 
+// Tap event support
+injectTapEventPlugin();
 
-// The following works in React 0.14 but isn't supported by standard Material UI yet
-import EventPluginHub from 'react/lib/EventPluginHub';
-import TapEventPlugin from 'react/lib/TapEventPlugin';
-EventPluginHub.injection.injectEventPluginsByName({ TapEventPlugin });
+// Focus management
+FocusStyleManager.onlyShowFocusOnTabs();
 
 const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);

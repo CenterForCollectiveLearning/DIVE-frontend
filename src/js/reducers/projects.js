@@ -39,10 +39,6 @@ export default function projects(state = {
             return project;
           }
       });
-      console.log(userProjectsUpdated, userProjects, action.projectProperties);
-      return { ...state, userProjects: userProjectsUpdated };
-
-      ((project) => project.id != action.projectProperties.id);
       return { ...state, userProjects: userProjectsUpdated };
 
     case DELETED_PROJECT:

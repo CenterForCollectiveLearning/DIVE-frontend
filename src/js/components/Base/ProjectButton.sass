@@ -1,5 +1,6 @@
 @import '../../../css/mixins.sass'
 
+
 .projectButton
   +noSelect
   +regularCopy
@@ -7,8 +8,8 @@
   flex-direction: row
   min-height: 100px
   width: calc(100% - 100px)
+  padding: 0 !important
 
-  align-items: left
   justify-content: left
   text-align: left
 
@@ -17,7 +18,7 @@
   margin-bottom: 10px
   background-color: $white
   color: $black
-  font-size: 12px
+  font-size: 14px
 
   cursor: pointer
   text-decoration: none
@@ -25,26 +26,23 @@
   &:first-of-type
     border-top: 1px solid $ui-line-grey
 
-  &:hover
-    border-color: $primary-accent
-
   .starContainer
     display: flex
     align-items: center
     padding-left: 25px
     padding-right: 10px
 
-    i
+    .star
       opacity: 0.5
+      color: $orange
 
-      &.starred
-        color: $primary-accent
+      &.starred  
         opacity: 0.6
 
-    &:hover i
+    &:hover .star
       opacity: 1
 
-    &.starred:hover i
+    &.starred:hover .star
       opacity: 0.8
 
   .projectButtonContent
@@ -52,7 +50,7 @@
     .projectButtonContentTop
       display: flex
       flex-direction: row
-      min-height: 100px
+      height: 100%
       .projectLeft
         display: flex
         flex-direction: column
@@ -86,16 +84,18 @@
             flex-direction: column
             padding: 0 8px
             .label
-              +smallCaps
+              +smallCapsBold
               margin-right: 5px
 
             .value
               white-space: nowrap
               overflow: hidden
               text-overflow: ellipsis
-              font-weight: 600
+              font-size: 16px
               text-align: center
-              font-size: 25px
+              // font-weight: 600
+              // text-align: center
+              // font-size: 25px
     .projectButtonContentBottom
       padding: 0px 16px
       padding-bottom: 16px
@@ -116,51 +116,42 @@
     align-items: center
     justify-content: center
     width: 35px
+    height: 100%
 
-    .dropdown
-      position: absolute
-      opacity: 0
-      user-select: none
-      pointer-events: none
-      top: 95px
-      right: 0
-      background-color: white
-      z-index: 100
-      min-width: 150px
-
-      border: 1px solid $ui-line-grey
-      border-radius: 3px
-      position: absolute
-      padding: 3px 0px
-
-      .dropdownOption
-        padding: 8px 12px
-        cursor: pointer
-
-        &:hover
-          background-color: $primary-accent
-          color: white
-
-    &:after
-      content: "︿"
-      font-weight: bold
-      position: relative
-      top: -3px
-
-    &:hover
+    &.pt-popover-open
       background-color: $ui-header-grey
-
-      &:after
-        content: "﹀"
-        top: 3px
-
-      .dropdown
-        opacity: 1
-        pointer-events: auto
-        user-select: text
-
-
+      &:before
+        content: '\E655'
 
   &.showDatasets
     .projectButtonTop
       min-height: 70px
+
+
+.projectButton.minimal
+  $minimalHeight: 40px
+  min-height: $minimalHeight
+  line-height: $minimalHeight
+  margin-bottom: -2px
+  width: 100%
+  align-items: center
+
+  &.selected, &:hover
+    box-shadow: inset 0 0 0 0px rgba(16, 22, 26, 0.2), inset 0 1px 1px rgba(16, 22, 26, 0.2)
+    background-color: #d8e1e8
+    background-image: none
+
+  &.selected
+    pointer-events: none
+
+    .rightButtons
+      pointer-events: all
+
+  .projectButtonContent
+    .projectButtonContentTop
+      .projectTitle
+        line-height: $minimalHeight
+        font-weight: normal
+  .rightButtons
+    height: 30px
+    margin-right: 10px

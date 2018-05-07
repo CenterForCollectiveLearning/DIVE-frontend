@@ -16,7 +16,7 @@ module.exports = {
   ],
   output: {
     path: path.join(__dirname, 'dist'),
-    publicPath: '/dist/',
+    publicPath: '/',
     filename: 'bundle.js'
   },
   plugins: [
@@ -59,8 +59,8 @@ module.exports = {
         exclude: /node_modules/ },
       { test: /\.css$/, exclude: /\.useable\.css$/, loader: ExtractTextPlugin.extract('css-loader?module!cssnext-loader') },
       { test: /\.useable\.css$/, loader: "style/useable!css" },
-      { test: /\.sass$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?indentedSyntax&outputStyle=expanded&sourceMap' },
-      { test: /\.less$/,  loader: "style!css!less" },
+      { test: /\.sass$/, loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=2&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?indentedSyntax&outputStyle=compressed&sourceMap') },
+      { test: /\.less$/,  loader: ExtractTextPlugin.extract('style', 'css!less') },
       { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url?limit=10000&minetype=application/font-woff" },
       { test: /\.(ttf|eot)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file" },
       { test: /\.svg(\?.*)?$/, loader: 'babel!svg-react' +
@@ -68,7 +68,7 @@ module.exports = {
         '!string-replace?search=%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22&replace=' +
         // removes data-name attributes
         '!string-replace?search=%20data-name%3D%22%5B%5Cw%5Cs_-%5D*%22&replace=&flags=ig' },
-      { test: /\.png$/, loader: "url-loader?mimetype=image/png" },
+      { test: /\.png$/, loader: "url-loader?limit=10000&mimetype=image/png&publicPath=../&name=assets/images/[name].[ext]" },
     ]
   },
   resolve: {

@@ -1,0 +1,74 @@
+@import '../../../css/mixins.sass'
+@import '../../../css/flexbox.sass'
+
+@import './InspectList.sass'
+@import './InspectGrid.sass'
+
+.datasetSearch
+  position: absolute
+  top: 14px
+  right: 10px
+
+.preloadedDatasetsContainer
+  flex-grow: 1
+  display: flex
+  flex-direction: column
+  margin: 10px 15px
+
+  .row
+    display: flex
+    flex-direction: row
+    height: 200px
+    min-height: 200px
+    margin-bottom: 10px
+
+    .preloadedDataset
+      display: flex
+      flex-direction: column
+      padding: 20px
+      min-height: 200px
+      width: 33.33%
+
+      margin-left: 10px
+
+      align-items: left
+      justify-content: left
+      text-align: left
+
+      background-color: $white
+      color: $black
+
+      cursor: pointer
+      text-decoration: none
+
+      &:first-child
+        margin-left: 0px
+
+      .top
+        display: flex
+        align-items: center
+        margin-bottom: 10px
+
+        .infoLink
+          margin-left: auto
+
+      p.description
+        flex-grow: 1
+
+      .bottom
+        display: flex
+        flex-direction: row
+        align-items: center
+        width: 100%
+
+        .tags
+          span
+            margin: 2px
+            margin-right: 3px
+
+        .preloadedDatasetButtons
+          display: flex
+          align-items: flex-end
+          margin-left: auto
+          .selectButton
+            margin-left: auto

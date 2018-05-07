@@ -3,7 +3,8 @@ import {
   RECEIVE_DOCUMENTS,
   RECEIVE_CREATE_DOCUMENT,
   RECEIVE_DELETE_DOCUMENT,
-  REQUEST_SAVE_DOCUMENT
+  REQUEST_SAVE_DOCUMENT,
+  WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
 const baseState = {
@@ -36,6 +37,9 @@ export default function documents(state=baseState, action) {
     case RECEIVE_DELETE_DOCUMENT:
       const reducedDocuments = state.items.filter((doc) => doc.id != parseInt(action.documentId));
       return { ...state, items: reducedDocuments };
+
+    case WIPE_PROJECT_STATE:
+      return baseState;
 
     default:
       return state;

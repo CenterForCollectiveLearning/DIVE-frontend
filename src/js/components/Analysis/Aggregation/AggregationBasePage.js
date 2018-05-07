@@ -8,6 +8,7 @@ import styles from '../Analysis.sass';
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
 import { setPersistedQueryString, getInitialState } from '../../../actions/AggregationActions';
 
+import ProjectTopBar from '../../ProjectTopBar';
 import AggregationSidebar from './AggregationSidebar';
 import AggregationView from './AggregationView';
 
@@ -38,7 +39,7 @@ export class AggregationBasePage extends Component {
   }
 
   reconcileState(nextProps) {
-    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, aggregateOn, aggregationFunction, aggregationVariablesIds } = nextProps;
+    const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString, aggregationDependentVariableId, aggregationFunction, aggregationVariablesIds } = nextProps;
 
     var newQueryStringModifier = {};
 
@@ -49,8 +50,9 @@ export class AggregationBasePage extends Component {
     }
 
     // Auto aggregation function selection
-    if ( aggregateOn && aggregateOn !== 'count' && !aggregationFunction ) {
+    if ( aggregationDependentVariableId && aggregationDependentVariableId !== 'count' && !aggregationFunction ) {
       newQueryStringModifier.aggregationFunction = 'MEAN';
+      newQueryStringModifier.weightVariableId = 'UNIFORM';
     }
 
     if (Object.keys(newQueryStringModifier).length > 0) {
@@ -64,30 +66,33 @@ export class AggregationBasePage extends Component {
   setRecommendedInitialState(fieldProperties) {
     const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
 
-    const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
+    const initialState = getInitialState(project.id, datasetSelector.id, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
     setPersistedQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);
   }
 
   render() {
-    const { project, pathname, queryObject, aggregationFunction, weightVariableId, aggregateOn, aggregationVariablesIds } = this.props;
+    const { project, pathname, queryObject, aggregationFunction, weightVariableId, aggregationDependentVariableId, aggregationVariablesIds } = this.props;
 
     return (
       <DocumentTitle title={ 'Aggregation' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.summaryContainer }` }>
-          <AggregationView
-            aggregationFunction={ aggregationFunction }
-            weightVariableId={ weightVariableId }
-            aggregateOn={ aggregateOn }
-            aggregationVariablesIds={ aggregationVariablesIds }
-          />
+          <div className={ styles.fillContainer }>
+            <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
+            <AggregationView
+              aggregationFunction={ aggregationFunction }
+              weightVariableId={ weightVariableId }
+              aggregationDependentVariableId={ aggregationDependentVariableId }
+              aggregationVariablesIds={ aggregationVariablesIds }
+            />
+          </div>
           <AggregationSidebar
             pathname={ pathname }
             queryObject={ queryObject }
             aggregationFunction={ aggregationFunction }
             weightVariableId={ weightVariableId }
-            aggregateOn={ aggregateOn }
+            aggregationDependentVariableId={ aggregationDependentVariableId }
             aggregationVariablesIds={ aggregationVariablesIds }
           />
         </div>
@@ -111,7 +116,7 @@ function mapStateToProps(state, ownProps) {
     aggregationFunction: parseFromQueryObject(queryObject, 'aggregationFunction'),
     weightVariableId: parseFromQueryObject(queryObject, 'weightVariableId'),
     aggregationVariablesIds: parseFromQueryObject(queryObject, 'aggregationVariablesIds', true),
-    aggregateOn: parseFromQueryObject(queryObject, 'aggregateOn'),
+    aggregationDependentVariableId: parseFromQueryObject(queryObject, 'aggregationDependentVariableId'),
   };
 }
 

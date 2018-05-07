@@ -2,19 +2,23 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
+import { Button, Intent, NonIdealState } from '@blueprintjs/core';
+
 import { selectDataset, fetchDatasets } from '../../../actions/DatasetActions';
-import { runRegression, getContributionToRSquared, createExportedRegression } from '../../../actions/RegressionActions';
+import { runRegression, createExportedRegression } from '../../../actions/RegressionActions';
 import { clearAnalysis } from '../../../actions/AnalysisActions';
 
 import styles from '../Analysis.sass';
 
 import Card from '../../Base/Card';
 import Loader from '../../Base/Loader';
+import ErrorComponent from '../../Base/ErrorComponent';
 import HeaderBar from '../../Base/HeaderBar';
 import RaisedButton from '../../Base/RaisedButton';
 import DropDownMenu from '../../Base/DropDownMenu';
 import ColoredFieldItems from '../../Base/ColoredFieldItems';
 import RegressionTableCard from './RegressionTableCard';
+import RegressionSummary from './RegressionSummary';
 import ContributionToRSquaredCard from './ContributionToRSquaredCard';
 
 export class RegressionView extends Component {
@@ -22,7 +26,7 @@ export class RegressionView extends Component {
   componentWillMount() {
     const { projectId, datasets, conditionals, datasetSelector, fetchDatasets } = this.props;
 
-    if (projectId && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
+    if (projectId && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(projectId);
     }
 
@@ -30,7 +34,7 @@ export class RegressionView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { projectId, datasetId, conditionals, regressionType, dependentVariableName, independentVariableNames, interactionTermIds, regressionResult, runRegression, getContributionToRSquared, fetchDatasets } = this.props;
+    const { projectId, datasetId, conditionals, fieldProperties, regressionType, dependentVariable, independentVariables, dependentVariableName, independentVariableNames, interactionTermIds, regressionResult, runRegression, fetchDatasets, tableLayout, recommendationType } = this.props;
 
     const conditionalsChanged = nextProps.conditionals.lastUpdated != conditionals.lastUpdated;
     const regressionTypeChanged = nextProps.regressionType != regressionType;
@@ -38,14 +42,13 @@ export class RegressionView extends Component {
     const dependentVariableChanged = (nextProps.dependentVariableName != dependentVariableName);
     const dependentVariableExists = (nextProps.dependentVariableName != null);
     const interactionTermsChanged = nextProps.interactionTermIds != interactionTermIds;
-    const sidebarChanged = conditionalsChanged || dependentVariableChanged || independentVariablesChanged || regressionTypeChanged || interactionTermsChanged;
+    const tableLayoutChanged = nextProps.tableLayout != tableLayout;
+    const recommendationTypeChanged = nextProps.recommendationType != recommendationType;
+    const fieldPropertiesChanged = nextProps.fieldProperties.lastUpdated != fieldProperties.lastUpdated;
+    const sidebarChanged = conditionalsChanged || dependentVariableChanged || independentVariablesChanged || fieldPropertiesChanged || regressionTypeChanged || interactionTermsChanged || tableLayoutChanged;
 
-    if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.regressionType && sidebarChanged) {
-      runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariableName, nextProps.independentVariableNames, nextProps.interactionTermIds, nextProps.conditionals.items);
-    }
-
-    if (nextProps.projectId && nextProps.regressionResult.data && nextProps.regressionResult.data.id && (sidebarChanged || regressionResult.data == null || (nextProps.regressionResult.data.id != regressionResult.data.id))) {
-      getContributionToRSquared(nextProps.projectId, nextProps.regressionResult.data.id, nextProps.conditionals.items);
+    if (nextProps.projectId && nextProps.datasetId && dependentVariableExists && nextProps.independentVariableNames.length > 0 && nextProps.regressionType && sidebarChanged) {
+      runRegression(nextProps.projectId, nextProps.datasetId, nextProps.regressionType, nextProps.dependentVariable, nextProps.independentVariables, nextProps.interactionTermIds, nextProps.conditionals.items, nextProps.tableLayout);
     }
   }
 
@@ -70,26 +73,53 @@ export class RegressionView extends Component {
   }
 
   render() {
-    const { datasets, datasetId, regressionResult, contributionToRSquared, dependentVariableName, independentVariableNames, regressionType } = this.props;
-    const saved = (regressionResult.isSaving || (!regressionResult.isSaving && regressionResult.exportedRegressionId) || regressionResult.exported) ? true : false;
+    const { datasets, datasetId, regressionResult, recommendationResult, dependentVariableName, independentVariableNames, regressionType, tableLayout } = this.props;
+    const { isSaving, isExporting, exportedRegressionId, exported, error, progress, loading, data } = regressionResult;
+    const { table, contributionToRSquared } = data;
 
-    if ( !regressionResult.loading && (!regressionResult.data || !regressionResult.data.fields || regressionResult.data.fields.length == 0)) {
-      return (
-        <div className={ styles.regressionViewContainer }></div>
-      );
+    const saved = (isSaving || (!isSaving && exportedRegressionId) || exported) ? true : false;
+
+    const errorComponent = <ErrorComponent
+      title='Error Running Regression'
+      description={ error }
+    />;
+
+    if ( !recommendationResult.loading && error && !loading && (!data.table || !data.table.fields || data.table.fields.length == 0)) {
+      return errorComponent;
     }
 
     let tableCardHeader;
     if (dependentVariableName) {
-      tableCardHeader = <span>Explaining <ColoredFieldItems fields={[ dependentVariableName ]} /> in terms of <ColoredFieldItems fields={ independentVariableNames } /></span>
+      if (independentVariableNames.length) {
+        tableCardHeader = <span>Explaining <ColoredFieldItems fields={[ dependentVariableName ]} /> in terms of <ColoredFieldItems fields={ independentVariableNames } /></span>
+      } else {
+        tableCardHeader = <span>Explaining <ColoredFieldItems fields={[ dependentVariableName ]} /></span>        
+      }
     }
 
-    var regressionContent = <div></div>;
+    var regressionContent = <div className={ styles.centeredFill } />;
+
+    if (error) {
+      return errorComponent;
+    }
 
     if (independentVariableNames.length == 0) {
-      regressionContent = <div className={ styles.watermark }>
-        Please Select One or More Independent Variables
-      </div>
+      if (recommendationResult.loading) {
+        regressionContent = 
+          <Card header={ tableCardHeader }>
+            { recommendationResult.loading &&
+              <Loader text={ recommendationResult.progress != null ? recommendationResult.progress : 'Recommending initial state' } />
+            }
+          </Card>
+      } else {
+        regressionContent = <div className={ styles.centeredFill }>
+          <NonIdealState
+            title='Too Few Independent Variables Selected'
+            description='To run a regression, please select one or more independent variables'
+            visual='variable'
+          />
+        </div>
+      }
     }
     else if (independentVariableNames.length >= 1) {
       regressionContent =
@@ -97,37 +127,57 @@ export class RegressionView extends Component {
           <HeaderBar
             actions={
               <div className={ styles.headerControlRow }>
+                {/* <div className={ styles.headerControl }>
+                  <Button
+                    iconName='share'
+                    onClick={ this.onClickShare }
+                    loading={ isExporting }
+                  >
+                    { !isExporting && "Share" }
+                  </Button>
+                </div> */}
                 <div className={ styles.headerControl }>
-                  <RaisedButton onClick={ this.onClickShare }>
-                    { regressionResult.isExporting && "Exporting..." }
-                    { !regressionResult.isExporting && "Share" }
-                  </RaisedButton>
-                </div>
-                <div className={ styles.headerControl }>
-                  <RaisedButton onClick={ this.saveRegression } active={ saved }>
-                    { !regressionResult.isSaving && regressionResult.exportedRegressionId && <i className="fa fa-star"></i> }
-                    { !regressionResult.exportedRegressionId && <i className="fa fa-star-o"></i> }
-                  </RaisedButton>
+                  <Button
+                    onClick={ this.saveRegression }
+                    loading={ isSaving }>
+                    { !isSaving && !exportedRegressionId &&
+                      <div><span className='pt-icon-standard pt-icon-star-empty' />Save</div>
+                    }
+                    { exportedRegressionId &&
+                      <div><span className='pt-icon-standard pt-icon-star' />Saved</div>
+                    }
+                  </Button>
                 </div>
             </div>
             }
           />
-          { regressionResult.loading &&
+          { loading &&
             <Card header={ tableCardHeader }>
-              <Loader text={ regressionResult.progress != null ? regressionResult.progress : 'Running regressions…' } />
+              <Loader text={ progress != null ? progress : 'Running regressions…' } />
             </Card>
           }
-          { (!regressionResult.loading && regressionResult.data) &&
+          { (!loading && table.regressionsByColumn && table.fields) &&
             <RegressionTableCard
               regressionType={ regressionType }
               dependentVariableName={ dependentVariableName }
               independentVariableNames={ independentVariableNames }
-              regressionResult={ regressionResult.data || {} }
+              regressionResult={ table || {} }
               contributionToRSquared={ contributionToRSquared }/>
           }
-
-          { (contributionToRSquared.length > 0 && regressionResult.data) &&
-            <ContributionToRSquaredCard id={ `${ regressionResult.data.id }` } contributionToRSquared={ contributionToRSquared } />
+          { (!loading && table.regressionsByColumn && table.fields) &&
+            <Card header='Summary'>
+              <RegressionSummary
+                dependentVariableName={ dependentVariableName }
+                independentVariableNames={ independentVariableNames }
+                regressionResult={ table || {} }
+                contributionToRSquared={ contributionToRSquared }/>
+            </Card>
+          }
+          { (!loading && contributionToRSquared.length > 0 && tableLayout == 'leaveOneOut') &&
+            <ContributionToRSquaredCard 
+              id={ `${ table.id }` }
+              contributionToRSquared={ contributionToRSquared }
+            />
           }
         </div>
       ;
@@ -143,35 +193,40 @@ export class RegressionView extends Component {
 
 function mapStateToProps(state, ownProps) {
   const { project, datasets, conditionals, regressionSelector, datasetSelector, fieldProperties } = state;
-  const { progress, error, regressionResult, contributionToRSquared } = regressionSelector;
-  const { independentVariablesIds, dependentVariableId, regressionType } = ownProps;
+  const { recommendationResult, regressionResult } = regressionSelector;
+  const { independentVariablesIds, dependentVariableId, regressionType, tableLayout, recommendationType } = ownProps;
 
   const dependentVariable = fieldProperties.items.find((property) => property.id == dependentVariableId);
   const dependentVariableName = dependentVariable ? dependentVariable.name : null;
 
-  const independentVariableNames = fieldProperties.items
-    .filter((property) => independentVariablesIds.indexOf(property.id) >= 0)
-    .map((independentVariable) => independentVariable.name);
+  const independentVariables = fieldProperties.items
+    .filter((property) => independentVariablesIds.indexOf(property.id) >= 0);
+
+  const independentVariableNames = independentVariables.map((independentVariable) => independentVariable.name);
 
   return {
     conditionals,
     datasets,
     datasetSelector,
+    fieldProperties,
     projectId: project.id,
     regressionType: regressionType,
+    recommendationResult: recommendationResult,
+    dependentVariable: dependentVariable,
+    independentVariables: independentVariables,
     dependentVariableName: dependentVariableName,
     independentVariableNames: independentVariableNames,
     interactionTermIds: regressionSelector.interactionTermIds,
-    datasetId: datasetSelector.datasetId,
+    datasetId: datasetSelector.id,
     regressionResult: regressionResult,
-    contributionToRSquared: contributionToRSquared,
+    tableLayout: tableLayout,
+    recommendationType: recommendationType
   };
 }
 
 export default connect(mapStateToProps, {
   push,
   runRegression,
-  getContributionToRSquared,
   createExportedRegression,
   selectDataset,
   fetchDatasets,

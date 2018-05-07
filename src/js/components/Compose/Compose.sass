@@ -1,6 +1,7 @@
 @import '../../../css/flexbox.sass'
 @import '../../../css/mixins.sass'
 
+
 .documentControls
   display: flex
 
@@ -20,20 +21,22 @@
     flex-direction: column
     flex-grow: 1
     overflow-y: auto
-    align-items: center
 
     .headerBar
       width: 100%
 
+  .composeViewMainPane
+    align-items: center
     .composeEditorContainer
       position: relative
       flex-grow: 1
-      flex-shrink: 0
       background-color: white
       width: 960px
-      margin-top: 15px
-      margin-bottom: 30px
-      padding: 15px 10px 10px
+      padding: 25px 10px 10px
+      max-width: 100%
+      max-height: 100%
+      overflow-y: auto
+      overflow-x: hidden
 
 .editorHeader
   padding: 10px
@@ -49,20 +52,62 @@
     padding-right: 6px
 
     .documentTitle
-      color: #333
-      background-color: transparent
-      font-family: 'Source Sans Pro', sans-serif
-      font-size: 40px
-      font-weight: 300
       line-height: 1
       padding-left: 11px
-      letter-spacing: -.003em
       height: auto
       border-color: transparent
+      color: $dark-gray1
+      font-weight: 600
+      margin-left: 10px
+      padding: 0
+      line-height: 0.8em
+      font-size: 24px
 
   &.editable
     .documentTitle:hover
       border-color: #eee
+
+.composeSidebar
+  .contentPreviewBlockContainer
+    padding: 0
+    margin-bottom: 6px
+
+    &:last-child
+      margin-bottom: 0
+
+    .textBlock, .regressionBlock, .correlationBlock
+      display: flex
+      flex-direction: column
+      font-size: 13px
+      font-weight: 500
+      color: #444444
+
+    .textBlock
+      padding-top: 30px
+      padding-bottom: 30px
+
+    .regressionBlock, .correlationBlock
+      .header, .correlationHeader
+        line-height: 24px
+        padding-bottom: 8px
+        text-align: left
+        font-size: 14px
+        overflow: hidden
+        text-overflow: ellipsis
+        padding-left: 15px
+        padding-top: 10px
+        padding-bottom: 10px
+        min-height: 35px
+
+      .correlationHeader
+        .field
+          font-weight: 500
+          color: #444444
+          text-transform: lowercase
+
+          + .field:before
+            font-weight: 400
+            content: ', '
 
 .composeEditor
   display: flex
@@ -114,25 +159,6 @@
         width: 70%
         margin-right: 7px
 
-    &.composeBlockPlaceholder
-      min-height: 60px
-      border-color: rgba(0, 0, 0, 0.1)
-      border-radius: 2px
-      text-align: center
-      justify-content: center
-      align-items: center
-
-      &.phase1
-        +watermark
-        flex-grow: 0
-        letter-spacing: 0
-        color: #999
-        cursor: pointer
-
-        &:hover
-          border-style: solid
-          border-color: #959595
-          color: #333
 
       &.phase2
         background-color: rgba(0, 0, 0, 0.01)
@@ -153,42 +179,6 @@
         width: 100%
         position: relative
 
-        .contentPreviewBlockContainer
-          margin: 10px 1.5%
-          width: 30.33%
-
-          > div
-            box-shadow: none
-
-          .textBlock, .regressionBlock, .correlationBlock
-            +block
-            box-shadow: none
-
-            font-size: 13px
-            font-weight: 500
-            color: #444444
-
-          .textBlock
-            padding-top: 30px
-            padding-bottom: 30px
-
-          .regressionBlock, .correlationBlock
-            padding: 11px
-
-            .header, .correlationHeader
-              padding-bottom: 8px
-              font-weight: 400
-
-            .correlationHeader
-              .field
-                font-weight: 500
-                color: #444444
-                text-transform: lowercase
-
-                + .field:before
-                  font-weight: 400
-                  content: ', '
-
     .flexrow
       max-width: 100%
 
@@ -196,12 +186,7 @@
     display: flex
 
     .composeBlockHeaderText
-      font-family: 'Source Sans Pro', sans-serif
-      font-size: 20px
-      line-height: 1.2
-      letter-spacing: -.02em
-      color: rgba(0,0,0,.8)
-      font-weight: 300
+      +h5
       word-break: break-word
 
       height: auto
@@ -237,18 +222,7 @@
       opacity: 0.8
 
     .visualizationOverlayControl
-      &.visualizationOverlayButton
-        height: 30px
-        line-height: 29px
-        padding: 0 7px
-        border-color: #D0D0D0
-
-        i
-          font-weight: 600
-          font-size: 12px
-
-      + .visualizationOverlayControl
-        margin-left: 5px
+      margin-left: 5px
 
     .visualizationOverlayButton
       min-width: 24px
@@ -295,7 +269,6 @@
 
   .composeBlockText
     display: flex
-    min-height: 100px
     border: 1px solid transparent
     border-radius: 2px
     margin-bottom: 7px

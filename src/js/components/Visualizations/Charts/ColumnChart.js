@@ -3,16 +3,23 @@ import React, { Component, PropTypes } from 'react';
 import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import styles from '../Visualizations.sass';
 
-var Chart = require('react-google-charts').Chart;
+import { Chart } from 'react-google-charts';
 
 export default class ColumnChart extends Component {
   render() {
     const { data, fieldNames, generatingProcedure, isMinimalView, chartId, additionalOptions, colors, labels, config } = this.props;
 
     var finalData = data;
+    finalData[0] = [ { id: finalData[0][0], label: finalData[0][0], type: 'string' }, 
+      ...finalData[0].slice(1).map(function(d) { 
+        if (!isNaN(parseFloat(d)) && isFinite(d)) {
+          return d.toString();
+        } else {
+          return d;
+        }
+      }) ];
 
     var options = isMinimalView ? minimalOptions : fullOptions;
-
 
     if (isMinimalView) {
       options = {
@@ -53,10 +60,10 @@ export default class ColumnChart extends Component {
             bold: true,
             italic: false
           },
-          scaleType: config.vScaleType,
+          scaleType: config.display ? config.display.vScaleType : null
         },
         legend: {
-          position: config.legendPosition
+          position: config.display ? config.display.legendPosition : 'none'
         }
       };
     }
@@ -72,7 +79,7 @@ export default class ColumnChart extends Component {
 
     return (
       <Chart
-        loader={ <div className={ styles.renderChartText }>Rendering Chart...</div> }
+        loader={ <div className={ styles.renderChartText + ' pt-monospace-text' }>Rendering Chart...</div> }
         chartType="ColumnChart"
         options={ options }
         data={ finalData }

@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { fullOptions, minimalOptions } from '../VisualizationOptions';
 import styles from '../Visualizations.sass';
 
-var Chart = require('react-google-charts').Chart;
+import { Chart } from 'react-google-charts';
 
 export default class LineChart extends Component {
 
@@ -28,20 +28,26 @@ export default class LineChart extends Component {
       ...additionalOptions
     }
 
-    options.hAxis.title = labels && labels.x ? labels.x : finalData[0][0];
-    options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
+    if (!isMinimalView) {
+      options.hAxis = {
+        ...options.hAxis,
+        title: labels && labels.x ? labels.x : finalData[0][0],
+        minValue: 'automatic'
+      }
+      options.vAxis.title = labels && labels.y ? labels.y : finalData[0][1];
+    }
+
     options.colors = colors;
 
     return (
       <Chart
         chartType="LineChart"
         options={ options }
-        data = { finalData }
-        key={ chartId }
+        data={ finalData }
         graph_id={ chartId }
         width={ "100%" }
         height={ "100%" }
-        loader={ <div className={ styles.renderChartText }>Rendering Chart...</div> }
+        loader={ <div className={ styles.renderChartText + ' pt-monospace-text' }>Rendering Chart...</div> }
       />
     );
   }

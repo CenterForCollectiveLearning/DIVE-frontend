@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import { HELPER_TEXT } from './HelperText'
 import styles from './HeaderBar.sass';
 
@@ -23,16 +24,26 @@ export default class HeaderBar extends Component {
 
 
   render() {
-    const { className, textClassName, header, subheader, actions, helperText } = this.props;
+    const { className, textClassName, header, subheader, actions, helperText, sidebar } = this.props;
     const { showHelperText } = this.state;
+
+    let popoverContent;
+    if (helperText) {
+      popoverContent = (
+        <div>
+          <p>{ HELPER_TEXT[helperText] }</p>
+        </div>
+      );
+    }
 
     return (
       <div className={
         styles.headerBar
         + (className ? ' ' + className : '')
         + (header ? ' ' + styles.hasHeaderText : '')
+        + (sidebar ? ' ' + styles.hasSidebar : '')
       }>
-        <div className={
+        <h4 className={
           styles.headerText
           + (textClassName ? ' ' + textClassName : '')
           + (subheader ? '' : ' ' + styles.singleLine)
@@ -43,17 +54,22 @@ export default class HeaderBar extends Component {
               { subheader }
             </div>
           }
-        </div>
+        </h4>
         <div className={ styles.headerRightActions }>
           { helperText &&
-            <i
-              onMouseOut={ this._hideHoverText.bind(this) }
-              onMouseOver={ this._showHoverText.bind(this) }
-              className={'fa fa-question-circle' + ' ' + styles.helperButton }
-            />
-          }
-          { helperText && showHelperText &&
-            <div className={ styles.helperText }>{ HELPER_TEXT[helperText] }</div>
+            <Popover content={ popoverContent }
+              interactionKind={ PopoverInteractionKind.HOVER_TARGET_ONLY }
+              popoverClassName="pt-popover-content-sizing"
+              position={ Position.LEFT }
+              useSmartPositioning={ true }
+              transitionDuration={ 100 }
+              hoverOpenDelay={ 100 }
+              hoverCloseDelay={ 100 }
+            >
+              <span
+                className={'pt-icon pt-icon-help ' + styles.helperButton }
+              />
+           </Popover>
           }
         </div>
         <div className={ styles.pageRightActions } >
@@ -70,5 +86,10 @@ HeaderBar.propTypes = {
   actions: PropTypes.node,
   className: PropTypes.string,
   textClassName: PropTypes.string,
-  helperText: PropTypes.string
+  helperText: PropTypes.string,
+  sidebar: PropTypes.bool
 };
+
+HeaderBar.defaultProps = {
+  sidebar: true
+}

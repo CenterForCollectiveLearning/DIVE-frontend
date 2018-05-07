@@ -12,25 +12,26 @@ import styles from '../Analysis.sass';
 import ConditionalSelector from '../../Base/ConditionalSelector';
 import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
+import SidebarCategoryGroup from '../../Base/SidebarCategoryGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
-import BinningSelector from '../../Visualizations/SingleVisualization/BinningSelector';
+import BinningSelector from '../../Base/BinningSelector';
 
 export class AggregationSidebar extends Component {
   componentWillMount(props) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
 
-    if (project.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
+    if (project.id && datasetSelector.id && !fieldProperties.items.length && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.id)
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = nextProps;
-    const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
+    const datasetIdChanged = datasetSelector.id != this.props.datasetSelector.id;
 
-    if (project.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.loaded) && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
+    if (project.id && datasetSelector.id && (datasetIdChanged || !fieldProperties.loaded) && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.id)
     }
   }
 
@@ -50,98 +51,108 @@ export class AggregationSidebar extends Component {
   }
 
   render() {
-    const { fieldProperties, aggregationSelector, selectAggregationIndependentVariable, selectBinningConfigX, selectBinningConfigY, conditionals, selectConditional, aggregationVariablesIds, aggregateOn, weightVariableId, aggregationFunction } = this.props;
-
+    const { fieldProperties, aggregationSelector, selectAggregationIndependentVariable, selectBinningConfigX, selectBinningConfigY, conditionals, selectConditional, aggregationVariablesIds, aggregationDependentVariableId, weightVariableId, aggregationFunction } = this.props;
+    const { binningConfigX, binningConfigY } = aggregationSelector;
     const nonAggregationVariables = fieldProperties.items.filter((item) => aggregationVariablesIds.indexOf(item.id) < 0)
-    const aggregationOptions = [{'id': 'count', 'name' : 'count'}, ...nonAggregationVariables.filter((item) => item.generalType == 'q')]
-    const numAggregationVariables = fieldProperties.items.filter((item) => item.generalType == 'q' && aggregationVariablesIds.indexOf(item.id) >= 0 )
+    const aggregationOptions = [{'id': 'count', 'name' : 'count'}, ...nonAggregationVariables.filter((item) => (item.generalType == 'q' || item.generalType == 't'))]
+
+    const numAggregationVariables = fieldProperties.items.filter((item) => (item.generalType == 'q' || item.generalType == 't') && aggregationVariablesIds.indexOf(item.id) >= 0 )
     const n_q = numAggregationVariables.length;
 
     return (
       <Sidebar>
-        { this.props.fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Aggregation Variables">
-            { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupHeader }>
-                  <div className={ styles.fieldGroupLabel }>Categorical</div>
-                  { aggregationVariablesIds.length > 0 &&
-                    <div className={ styles.fieldGroupAction }
-                      onClick={ (v) => this.clickClearKeyFromQueryString('aggregationVariablesIds') }>
-                      Deselect All
-                    </div>
-                  }
+        { fieldProperties.items.length != 0 &&
+          <SidebarCategoryGroup heading="Variable Selection" iconName="variable">
+            <SidebarGroup
+              heading="Independent Variables"
+              rightAction={ aggregationVariablesIds.length > 0 &&
+                <span className={ 'pt-icon-standard pt-icon-delete' }
+                  onClick={ (v) => this.clickClearKeyFromQueryString('aggregationVariablesIds') } />
+              }
+            >
+              { fieldProperties.items.filter((property) => property.generalType == 'c').length > 0 &&
+                <div className={ styles.fieldGroup }>
+                  <div className={ styles.fieldGroupHeader }>
+                    <span className={ styles.fieldGroupLabel }>Categorical</span>
+                    <span className={ "pt-icon-standard pt-icon-font " + styles.generalTypeIcon } />
+                  </div>
+                  <ToggleButtonGroup
+                    toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c' && !property.isId).map((item) =>
+                      new Object({
+                        id: item.id,
+                        name: item.name,
+                        disabled: (item.id == aggregationDependentVariableId),
+                        color: item.color
+                      })
+                    )}
+                    displayTextMember="name"
+                    valueMember="id"
+                    colorMember="color"
+                    externalSelectedItems={ aggregationVariablesIds }
+                    separated={ true }
+                    onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationVariablesIds: [ parseInt(v) ]}) } />
                 </div>
-                <ToggleButtonGroup
-                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'c').map((item) =>
-                    new Object({
-                      id: item.id,
-                      name: item.name,
-                      disabled: (item.id == aggregateOn) || item.isId,
-                      color: item.color
-                    })
-                  )}
-                  displayTextMember="name"
-                  valueMember="id"
-                  colorMember="color"
-                  externalSelectedItems={ aggregationVariablesIds }
-                  separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationVariablesIds: [ parseInt(v) ]}) } />
-              </div>
-            }
-            { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Temporal</div>
-                <ToggleButtonGroup
-                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
-                    new Object({
-                      id: item.id,
-                      name: item.name,
-                      disabled: (item.id == aggregateOn),
-                      color: item.color
-                    })
-                  )}
-                  valueMember="id"
-                  colorMember="color"
-                  displayTextMember="name"
-                  externalSelectedItems={ aggregationVariablesIds }
-                  separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationVariablesIds: [ parseInt(v) ]}) } />
-              </div>
-            }
-            { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupLabel }>Quantitative</div>
-                <ToggleButtonGroup
-                  toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
-                    new Object({
-                      id: item.id,
-                      name: item.name,
-                      disabled: (item.id == aggregateOn) || item.isId,
-                      color: item.color
-                    })
-                  )}
-                  valueMember="id"
-                  colorMember="color"
-                  displayTextMember="name"
-                  externalSelectedItems={ aggregationVariablesIds }
-                  separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationVariablesIds: [ parseInt(v) ]}) } />
-              </div>
-            }
-          </SidebarGroup>
+              }
+              { fieldProperties.items.filter((property) => property.generalType == 't').length > 0 &&
+                <div className={ styles.fieldGroup }>
+                  <div className={ styles.fieldGroupHeader }>
+                    <span className={ styles.fieldGroupLabel }>Temporal</span>
+                    <span className={ "pt-icon-standard pt-icon-time " + styles.generalTypeIcon } />
+                  </div>
+                  <ToggleButtonGroup
+                    toggleItems={ fieldProperties.items.filter((property) => property.generalType == 't').map((item) =>
+                      new Object({
+                        id: item.id,
+                        name: item.name,
+                        disabled: (item.id == aggregationDependentVariableId),
+                        color: item.color
+                      })
+                    )}
+                    valueMember="id"
+                    colorMember="color"
+                    displayTextMember="name"
+                    externalSelectedItems={ aggregationVariablesIds }
+                    separated={ true }
+                    onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationVariablesIds: [ parseInt(v) ]}) } />
+                </div>
+              }
+              { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
+                <div className={ styles.fieldGroup }>
+                  <div className={ styles.fieldGroupHeader }>
+                    <span className={ styles.fieldGroupLabel }>Quantitative</span>
+                    <span className={ "pt-icon-standard pt-icon-numerical " + styles.generalTypeIcon } />
+                  </div>
+                  <ToggleButtonGroup
+                    toggleItems={ fieldProperties.items.filter((property) => property.generalType == 'q').map((item) =>
+                      new Object({
+                        id: item.id,
+                        name: item.name,
+                        disabled: (item.id == aggregationDependentVariableId) || item.isId,
+                        color: item.color
+                      })
+                    )}
+                    valueMember="id"
+                    colorMember="color"
+                    displayTextMember="name"
+                    externalSelectedItems={ aggregationVariablesIds }
+                    separated={ true }
+                    onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationVariablesIds: [ parseInt(v) ]}) } />
+                </div>
+              }
+            </SidebarGroup>
+          </SidebarCategoryGroup>
         }
-        { this.props.fieldProperties.items.length != 0 &&
+        { fieldProperties.items.length != 0 &&
           <SidebarGroup heading="Aggregate on">
             <DropDownMenu
-              value={ aggregateOn }
+              value={ aggregationDependentVariableId }
               options={ aggregationOptions }
               valueMember="id"
               displayTextMember="name"
-              onChange={ (v) => this.clickQueryStringTrackedItem({ aggregateOn: v }) }/>
+              onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationDependentVariableId: v }) }/>
           </SidebarGroup>
         }
-        { aggregateOn != 'count' &&
+        { aggregationDependentVariableId != 'count' &&
           <SidebarGroup heading="By">
             <DropDownMenu
               value={ aggregationFunction }
@@ -151,30 +162,30 @@ export class AggregationSidebar extends Component {
               onChange={ (v) => this.clickQueryStringTrackedItem({ aggregationFunction: v }) }/>
           </SidebarGroup>
         }
-        { this.props.aggregationSelector.aggregationFunction == 'MEAN' && aggregateOn != 'count' &&
+        { aggregationFunction == 'MEAN' && aggregationDependentVariableId != 'count' &&
           <SidebarGroup heading="Weighted by:">
             <DropDownMenu
               value={ weightVariableId }
-              options={ [{ 'id':'UNIFORM', 'name':'uniform' }, ...this.props.fieldProperties.items.filter((item) => item.generalType == 'q')] }
+              options={ [{ 'id':'UNIFORM', 'name':'uniform' }, ...fieldProperties.items.filter((item) => item.generalType == 'q' && item.id != aggregationDependentVariableId)] }
               valueMember="id"
               displayTextMember="name"
-              onChange={ (v) => this.clickQueryStringTrackedItem({ aggregateOn: v }) }/>
+              onChange={ (v) => this.clickQueryStringTrackedItem({ weightVariableId: v }) }/>
           </SidebarGroup>
         }
         { n_q >= 1 &&
           <BinningSelector
-            config={ this.props.aggregationSelector.binningConfigX }
+            config={ binningConfigX }
             selectBinningConfig={ selectBinningConfigX }
             name={ numAggregationVariables[0].name }/>
         }
         { n_q == 2 &&
           <BinningSelector
-            config={ this.props.aggregationSelector.binningConfigY }
+            config={ binningConfigY }
             selectBinningConfig={ selectBinningConfigY }
             name={ numAggregationVariables[1].name }/>
         }
         { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
-          <SidebarGroup heading="Filter by field">
+          <SidebarCategoryGroup heading="Filters" iconName="filter">
             { conditionals.items.map((conditional, i) =>
               <div key={ conditional.conditionalId }>
                 <ConditionalSelector
@@ -188,7 +199,7 @@ export class AggregationSidebar extends Component {
                   selectConditionalValue={ selectConditional }/>
               </div>
             )}
-          </SidebarGroup>
+          </SidebarCategoryGroup>
         }
       </Sidebar>
     );
@@ -203,7 +214,7 @@ AggregationSidebar.propTypes = {
   conditionals: PropTypes.object,
   queryObject: PropTypes.object.isRequired,
   aggregationVariablesIds: PropTypes.array.isRequired,
-  aggregateOn: PropTypes.any,
+  aggregationDependentVariableId: PropTypes.any,
   aggregationFunction: PropTypes.string,
   weightVariableId: PropTypes.string,
 };

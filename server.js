@@ -14,7 +14,7 @@ if (useExpress) {
       res.sendFile('index.html', {
         root: static_path
       });
-    }).listen(process.env.PORT || 8080, function (err) {
+    }).listen(process.env.PORT || 3009, function (err) {
       if (err) { console.log(err) };
       console.log(`>>> Listening at ${ host }:${ port }`);
     });
@@ -32,7 +32,21 @@ if (useExpress) {
     quiet: false,
     noInfo: false,
     historyApiFallback: {
-      index: 'index.html'
+      index: 'index.html',
+      rewrites: [
+        {
+            from: /^\/auth\/activate\/.*$/,
+            to: function() {
+                return 'index.html';
+            }
+        },
+        {
+            from: /^\/auth\/reset\/.*$/,
+            to: function() {
+                return 'index.html';
+            }
+        }
+    ]
     },
     open: true,
     stats: { colors: true }

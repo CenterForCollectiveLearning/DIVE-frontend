@@ -1,10 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import baseStyles from './AuthModal.sass';
-import { push } from 'react-router-redux';
+import { push, goBack } from 'react-router-redux';
 import { connect } from 'react-redux';
+
+import { Button, Classes, Dialog } from '@blueprintjs/core';
 
 import Logo from '../../../assets/DIVE_logo_white.svg?name=Logo';
 
+import RaisedButton from './RaisedButton';
+import Input from './Input';
+import TextArea from './TextArea';
 
 export class AuthModal extends Component {
   constructor(props) {
@@ -13,56 +18,52 @@ export class AuthModal extends Component {
     this.goHome = this.goHome.bind(this);
   }
 
-  goHome(){
+  goHome = () => {
     this.props.push(`/`);
   }
 
+  goBack = () => {
+    this.props.goBack();
+  }
+
   render() {
+    const { closeAction, isOpen, titleText, iconName, footer, className } = this.props;
     const styles = this.props.styles ? this.props.styles : baseStyles;
 
     return (
-      <div className={
-        styles.blockingModalMask
-        + (this.props.blackBackground ? ' ' + styles.blackBackground : '' )
-      }>
-        <div className={ styles.blockingModalContainer }>
-          <div className={ styles.topBar }>
-            <div className={ styles.backHome } onClick={ this.goHome }>
-              Back to DIVE
-            </div>
-          </div>
-          <div className={
-            styles.blockingModal
-            + ' ' + this.props.className
-            + (this.props.scrollable ? ' ' + styles.scrollable : '')
-            }>
-            <div className={ styles.modalHeader }>
-              { this.props.closeAction &&
-                <div className={ styles.actions }>
-                  <div className={ styles.closeAction } onClick={ this.props.closeAction }>&times;</div>
-                </div>
-              }
-              <div className={ styles.modalHeader }>
-                <div className={ styles.logoContainer } onClick={ this.goHome }>
-                  <div className={ styles.logoText }>
-                    DIVE
-                  </div>
-                  <Logo className={ styles.logo } />
-                </div>
-              </div>
-            </div>
-            <div className={ styles.modalContent }>
-              { this.props.children }
-            </div>
-            { this.props.footer &&
-              <div className={ styles.modalFooter }>
-                <div className={ styles.separator } />
-                { this.props.footer }
-              </div>
-            }
+      <Dialog
+        className={ className }
+        isOpen={ isOpen }
+        canOutsideClickClose={ false }
+        hasBackdrop={ true }
+        backdropClassName={ styles.blockingModalMask + ' ' + styles.blackBackground }
+      >
+        <div className={ Classes.DIALOG_HEADER }>
+          <span className={ "pt-icon-large pt-icon-" + iconName }/>
+          <h5>{ this.props.titleText }</h5>
+          <div className={ styles.rightButtons }>
+            <Button
+              className={ "pt-minimal" }
+              iconName="undo"
+              onClick={ this.goBack }
+            />
+            <Button
+              className={ "pt-minimal" }
+              iconName="home"
+              onClick={ this.goHome }
+            />
           </div>
         </div>
-      </div>
+        <div className={ Classes.DIALOG_BODY }>
+          { this.props.children }
+        </div>
+        { footer &&
+          <div className={ Classes.DIALOG_FOOTER }>
+            <div className={ styles.separator } />
+            { footer }
+          </div>
+        }
+      </Dialog>
     );
   }
 }
@@ -75,7 +76,9 @@ AuthModal.propTypes = {
   closeAction: PropTypes.func,
   children: PropTypes.node,
   scrollable: PropTypes.bool,
-  blackBackground: PropTypes.bool
+  blackBackground: PropTypes.bool,
+  isOpen: PropTypes.bool,
+  iconName: PropTypes.string
 }
 
 AuthModal.defaultProps = {
@@ -86,7 +89,9 @@ AuthModal.defaultProps = {
   closeAction: null,
   scrollable: false,
   className: '',
-  blackBackground: false
+  blackBackground: false,
+  isOpen: false,
+  iconName: 'log-in'
 }
 
 
@@ -95,5 +100,6 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  push
+  push,
+  goBack
 })(AuthModal);

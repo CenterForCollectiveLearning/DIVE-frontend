@@ -1,4 +1,5 @@
 import {
+  SELECT_DATASET,
   REQUEST_EXACT_SPECS,
   REQUEST_INDIVIDUAL_SPECS,
   REQUEST_SUBSET_SPECS,
@@ -11,6 +12,10 @@ import {
   PROGRESS_INDIVIDUAL_SPECS,
   PROGRESS_SUBSET_SPECS,
   PROGRESS_EXPANDED_SPECS,
+  ERROR_EXACT_SPECS,
+  ERROR_INDIVIDUAL_SPECS,
+  ERROR_SUBSET_SPECS,
+  ERROR_EXPANDED_SPECS,
   SELECT_FIELD_PROPERTY_VALUE,
   SELECT_AGGREGATION_FUNCTION,
   SELECT_SORTING_FUNCTION,
@@ -98,15 +103,27 @@ const baseState = {
   recommendationTypesToLevel: recommendationTypesToLevel,
   recommendationTypes: recommendationTypes,
   recommendationModes: recommendationModes,
-  selectedRecommendationMode: 'regular',
+  selectedRecommendationMode: 'expanded',
   specs: [],
   sortingFunctions: sortingFunctions,
   queryString: "",
   progressByLevel: [ null, null, null, null ],
   isFetchingSpecLevel: [ false, false, false, false ],
   loadedSpecLevel: [ false, false, false, false ],
-  allowExpandedSpecs: false,
+  errorByLevel: [ null, null, null, null],
+  allowExpandedSpecs: true,
   updatedAt: 0
+}
+
+const specActionTypeToIndex = {
+  PROGRESS_EXACT_SPECS: 0,
+  PROGRESS_SUBSET_SPECS: 1,
+  PROGRESS_INDIVIDUAL_SPECS: 2,
+  PROGRESS_EXPANDED_SPECS: 3,
+  ERROR_EXACT_SPECS: 0,
+  ERROR_SUBSET_SPECS: 1,
+  ERROR_INDIVIDUAL_SPECS: 2,
+  ERROR_EXPANDED_SPECS: 3
 }
 
 export default function exploreSelector(state = baseState, action) {
@@ -115,63 +132,36 @@ export default function exploreSelector(state = baseState, action) {
     case REQUEST_INDIVIDUAL_SPECS:
     case REQUEST_SUBSET_SPECS:
     case REQUEST_EXPANDED_SPECS:
-      var { isFetchingSpecLevel: requestIsFetchingSpecLevel } = state;
+      var {
+        isFetchingSpecLevel: requestIsFetchingSpecLevel,
+        errorByLevel: requestErrorByLevel
+      } = state;
       requestIsFetchingSpecLevel[action.selectedRecommendationLevel] = true;
+      requestErrorByLevel[action.selectedRecommendationLevel] = false;
 
       return {
         ...state,
+        errorByLevel: requestErrorByLevel,
         isFetchingSpecLevel: requestIsFetchingSpecLevel,
         isFetching: true,
         loading: false
       };
 
     case PROGRESS_EXACT_SPECS:
-      if (action.progress && action.progress.length){
-        var newProgress = state.progressByLevel.slice();
-        newProgress[0] = action.progress;
-        return { ...state, progressByLevel: newProgress};
-      }
-      return state;
-    case PROGRESS_SUBSET_SPECS:
-      if (action.progress && action.progress.length){
-        var newProgress = state.progressByLevel.slice();
-        newProgress[1] = action.progress;
-        return { ...state, progressByLevel: newProgress};
-      }
-      return state;
     case PROGRESS_INDIVIDUAL_SPECS:
-      if (action.progress && action.progress.length){
-        var newProgress = state.progressByLevel.slice();
-        newProgress[2] = action.progress;
-        return { ...state, progressByLevel: newProgress};
-      }
-      return state;
+    case PROGRESS_SUBSET_SPECS:
     case PROGRESS_EXPANDED_SPECS:
       if (action.progress && action.progress.length){
         var newProgress = state.progressByLevel.slice();
-        newProgress[3] = action.progress;
+        newProgress[specActionTypeToIndex[action.type]] = action.progress;
         return { ...state, progressByLevel: newProgress};
       }
       return state;
-
-    case REQUEST_EXACT_SPECS:
-    case REQUEST_INDIVIDUAL_SPECS:
-    case REQUEST_SUBSET_SPECS:
-    case REQUEST_EXPANDED_SPECS:
-      var { isFetchingSpecLevel: requestIsFetchingSpecLevel } = state;
-      requestIsFetchingSpecLevel[action.selectedRecommendationLevel] = true;
-
-      return {
-        ...state,
-        isFetchingSpecLevel: requestIsFetchingSpecLevel,
-        isFetching: true
-      };
 
     case RECEIVE_EXACT_SPECS:
     case RECEIVE_INDIVIDUAL_SPECS:
     case RECEIVE_SUBSET_SPECS:
     case RECEIVE_EXPANDED_SPECS:
-
       var {
         isFetchingSpecLevel: receiveIsFetchingSpecLevel,
         loadedSpecLevel: receiveLoadedSpecLevel
@@ -181,10 +171,33 @@ export default function exploreSelector(state = baseState, action) {
 
       return {
         ...state,
+        loadedSpecLevel: receiveLoadedSpecLevel,
         isFetchingSpecLevel: receiveIsFetchingSpecLevel,
-        loadedSpecLevel: receiveLoadedSpecLevel
       };
 
+    case ERROR_EXACT_SPECS:
+    case ERROR_INDIVIDUAL_SPECS:
+    case ERROR_SUBSET_SPECS:
+    case ERROR_EXPANDED_SPECS:
+      const {
+        isFetchingSpecLevel: errorIsFetchingSpecLevel,
+        errorByLevel: errorErrorByLevel,
+        loadedSpecLevel: errorLoadedSpecLevel } = state;
+      const specLevel = specActionTypeToIndex[action.type];
+
+      errorIsFetchingSpecLevel[specLevel] = false;
+      errorErrorByLevel[specLevel] = action.message;
+      errorLoadedSpecLevel[specLevel] = true;
+
+      return { ...state,
+        loadedSpecLevel: errorLoadedSpecLevel,
+        isFetchingSpecLevel: errorIsFetchingSpecLevel,
+        errorByLevel: errorErrorByLevel
+      };
+
+      return state;
+
+    case SELECT_DATASET:
     case WIPE_PROJECT_STATE:
       return baseState;
 
@@ -195,6 +208,7 @@ export default function exploreSelector(state = baseState, action) {
         return {
           ...state,
           queryString: action.queryString,
+          errorByLevel: [ null, null, null, null ],
           progressByLevel: [ null, null, null, null ],
           isFetchingSpecLevel: [ false, false, false, false ],
           loadedSpecLevel: [ false, false, false, false ],

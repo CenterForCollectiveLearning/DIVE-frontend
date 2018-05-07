@@ -11,23 +11,21 @@ import {
 
 import styles from './Compose.sass';
 
+import { Button, Intent } from '@blueprintjs/core';
+
 import Card from '../Base/Card';
-import RaisedButton from '../Base/RaisedButton';
 import DropDownMenu from '../Base/DropDownMenu';
 import HeaderBar from '../Base/HeaderBar';
 import ComposeEditor from './ComposeEditor';
+import ComposeSidebar from './ComposeSidebar';
+import ProjectTopBar from '../ProjectTopBar';
 
 import { saveDocumentTitle } from '../../actions/ComposeActions';
 
 export class ComposeView extends Component {
   constructor(props) {
     super(props);
-
-    this.onClickNewDocument = this.onClickNewDocument.bind(this);
-    this.onClickDeleteDocument = this.onClickDeleteDocument.bind(this);
-    this.onSelectDocument = this.onSelectDocument.bind(this);
-    this.onClickShareDocument = this.onClickShareDocument.bind(this);
-
+ 
     const { selectedDocument } = this.props;
 
     this.state = {
@@ -54,93 +52,109 @@ export class ComposeView extends Component {
     }
   }
 
-  onSelectDocument(documentId) {
-    const { projectId, push } = this.props;
+  onSelectDocument = (documentId) => {
+    const { projectId, datasetId, push } = this.props;
     if (documentId) {
-      push(`/projects/${ projectId }/compose/${ documentId }`);
+      push(`/projects/${ projectId }/datasets/${ datasetId }/stories/${ documentId }`);
     }
   }
 
-  onClickNewDocument() {
+  onClickNewDocument = () => {
     const { projectId, createNewDocument } = this.props;
     createNewDocument(projectId);
   }
 
-  onClickDeleteDocument() {
+  onClickDeleteDocument = () => {
     const { projectId, documents, composeSelector, deleteDocument, push } = this.props;
     deleteDocument(projectId, composeSelector.documentId);
     const nextDocId = documents.items.find((doc) => doc.id != composeSelector.documentId).id;
-    push(`/projects/${ projectId }/compose/${ nextDocId }`);
+    push(`/projects/${ projectId }/datasets/${ datasetId }/stories/${ nextDocId }`);
   }
 
-  onClickShareDocument() {
-    window.open(`/stories/${ this.props.composeSelector.documentId }`, '_blank');
+  onClickShareDocument = () => {
+    window.open(`/exportedstory/${ this.props.composeSelector.documentId }`, '_blank');
   }
 
   render() {
-    const { documents, composeSelector, selectedDocument, fieldNameToColor, exportedSpecs, exportedRegressions, exportedCorrelations, saveDocumentTitle, selectComposeContent } = this.props;
-    const saveStatus = composeSelector.saving ? 'Saving': 'Saved';
+    const { documents, composeSelector, selectedDocument, fieldNameToColor, exportedSpecs, exportedAnalyses, saveDocumentTitle, selectComposeContent } = this.props;
+    const saveStatus = composeSelector.saving ? <span>Saving</span>: <span>Saved <span className='pt-icon-standard pt-icon-saved'/></span>;
+
+    const headerBar = <HeaderBar
+      className={ styles.headerBar }
+      actions={
+        <div className={ styles.headerControlRow }>
+          <div className={ styles.headerControl }>
+            <Button
+              text="Delete"
+              onClick={ this.onClickDeleteDocument }
+              disabled={ documents.items.length <= 1 }
+              iconName='trash'
+            />
+          </div>
+          <div className={ styles.headerControl }>
+            <Button
+              text="New document"
+              onClick={ this.onClickNewDocument }
+              iconName='document'
+            />
+          </div>
+          <div className={ styles.headerControl }>
+            <Button
+              onClick={ this.onClickShareDocument }
+              text="Share"
+              iconName="share"
+            />
+          </div>
+          { !documents.isFetching && documents.items.length > 0 &&
+            <div className={ styles.headerControl + ' ' + styles.headerControlLong }>
+              <DropDownMenu
+                prefix="Document"
+                width={ 250 }
+                className={ styles.documentSelector }
+                value={ parseInt(composeSelector.documentId) }
+                options={ documents.items.length > 0 ? documents.items : [] }
+                valueMember="id"
+                displayTextMember="title"
+                onChange={ this.onSelectDocument } />
+            </div>
+          }
+        </div>
+      }/>
 
     return (
-      <div className={ styles.composeViewContainer }>
-        <HeaderBar
-          className={ styles.headerBar }
-          actions={
-            <div className={ styles.headerControlRow }>
-              <div className={ styles.headerControl }>
-                <RaisedButton icon altText="Delete document" onClick={ this.onClickDeleteDocument } disabled={ documents.items.length <= 1 }><i className="fa fa-trash"></i></RaisedButton>
-              </div>
-              <div className={ styles.headerControl }>
-                <RaisedButton icon altText="New document" onClick={ this.onClickNewDocument }><i className="fa fa-file-o"></i></RaisedButton>
-              </div>
-              <div className={ styles.headerControl }>
-                <RaisedButton onClick={ this.onClickShareDocument }>Share</RaisedButton>
-              </div>
-              { !documents.isFetching && documents.items.length > 0 &&
-                <div className={ styles.headerControl + ' ' + styles.headerControlLong }>
-                  <DropDownMenu
-                    prefix="Document"
-                    width={ 250 }
-                    className={ styles.documentSelector }
-                    value={ parseInt(composeSelector.documentId) }
-                    options={ documents.items.length > 0 ? documents.items : [] }
-                    valueMember="id"
-                    displayTextMember="title"
-                    onChange={ this.onSelectDocument } />
-                </div>
-              }
-            </div>
-          }/>
-        <ComposeEditor
-          selectComposeContent={ selectComposeContent }
+      <div className={ styles.fillContainer + ' ' + styles.composePageContainer }>
+        <div className={ styles.fillContainer }>
+          <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
+          { headerBar }
+          <div className={ styles.composeViewMainPane + ' ' + styles.fillContainer }>
+            <ComposeEditor
+              saveDocumentTitle={ saveDocumentTitle }
+              selectedDocument={ selectedDocument }
+              fieldNameToColor={ fieldNameToColor }
+              saveStatus={ saveStatus }
+              editable={ true }/>
+          </div>
+        </div>
+        <ComposeSidebar
           exportedSpecs={ exportedSpecs }
-          exportedRegressions={ exportedRegressions }
-          exportedCorrelations={ exportedCorrelations }
-          saveDocumentTitle={ saveDocumentTitle }
-          selectedDocument={ selectedDocument }
+          selectComposeContent={ selectComposeContent }
+          exportedAnalyses={ exportedAnalyses }
           fieldNameToColor={ fieldNameToColor }
-          saveStatus={ saveStatus }
-          editable={ true }/>
+        />
       </div>
     );
   }
 }
 
-ComposeView.propTypes = {
-  projectId: PropTypes.string,
-  documents: PropTypes.object.isRequired,
-  selectedDocument: PropTypes.object.isRequired
-}
-
 function mapStateToProps(state) {
-  const { project, fieldProperties, composeSelector, exportedSpecs, exportedRegressions, exportedCorrelations, documents } = state;
+  const { project, datasetSelector, fieldProperties, composeSelector, exportedSpecs, exportedAnalyses, documents } = state;
 
   return {
     projectId: (project.id ? `${ project.id }` : null),
+    datasetId: datasetSelector.id,
     composeSelector,
     exportedSpecs,
-    exportedRegressions,
-    exportedCorrelations,
+    exportedAnalyses,
     documents,
     fieldNameToColor: fieldProperties.fieldNameToColor,
   };

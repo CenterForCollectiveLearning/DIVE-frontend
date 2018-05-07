@@ -2,39 +2,73 @@ import _ from 'underscore';
 
 import {
   WIPE_PROJECT_STATE,
-  RECEIVE_NUMERICAL_COMPARISON,
-  UPDATE_COMPARISON_INPUT,
-  RECEIVE_ANOVA,
-  RECEIVE_ANOVA_BOXPLOT_DATA,
-  RECEIVE_PAIRWISE_COMPARISON_DATA,
+  CLEAR_ANALYSIS,
+  REQUEST_COMPARISON,
+  PROGRESS_COMPARISON,
+  RECEIVE_COMPARISON,
+  ERROR_COMPARISON,
   SELECT_DATASET,
+  UPDATE_COMPARISON_INPUT,
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_TYPE,
+  REQUEST_CREATE_SAVED_COMPARISON,    
+  RECEIVE_CREATED_SAVED_COMPARISON,  
   SET_COMPARISON_QUERY_STRING,
 } from '../constants/ActionTypes';
 
 const baseState = {
-  numericalComparisonResult: {},
-  anovaBoxplotData: {},
-  pairwiseComparisonData: {},
-  anovaResult: {},
+  comparisonResult: {
+    progress: null,
+    loading: false,
+    error: null,
+    exported: false,
+    exportedComparisonId: null,
+    data: {
+      numericalComparison: [],
+      anovaBoxplot: {},
+      pairwiseComparison: {},
+      anova: {}
+    }
+  },
   queryString: null
 }
 
 export default function comparisonSelector(state = baseState, action) {
   switch (action.type) {
 
-    case RECEIVE_NUMERICAL_COMPARISON:
-      return { ...state, numericalComparisonResult: action.data };
+    case REQUEST_COMPARISON:
+      return { ...state,
+        comparisonResult: {
+          ...state.comparisonResult,
+          loading: true
+        }
+      };
 
-    case RECEIVE_ANOVA:
-      return { ...state, anovaResult: action.data };
+    case PROGRESS_COMPARISON:
+      if (action.progress && action.progress.length){
+        return { ...state,
+          comparisonResult: {
+            ...state.comparisonResult,
+            progress: action.progress,
+            error: null
+        }};
+      }
+      return state;
 
-    case RECEIVE_ANOVA_BOXPLOT_DATA:
-      return { ...state, anovaBoxplotData: action.data };
+    case RECEIVE_COMPARISON:
+     return { ...state,
+       comparisonResult: {
+         ...state.comparisonResult,
+         exported: action.data.exported,
+         exportedComparisonId: action.data.exportedComparisonId,
+         error: null,
+         loading: false,
+         data: action.data
+       }
+     }
 
-    case RECEIVE_PAIRWISE_COMPARISON_DATA:
-      return { ...state, pairwiseComparisonData: action.data };
+    case ERROR_COMPARISON:
+      return { ...state, comparisonResult: { ...state.comparisonResult, loading: false, error: action.message } };
 
     case UPDATE_COMPARISON_INPUT:
       var inputDict = state.inputsDict;
@@ -46,10 +80,27 @@ export default function comparisonSelector(state = baseState, action) {
         ...state, queryString: action.queryString
       }
 
-    case WIPE_PROJECT_STATE:
-      return baseState;
+    case REQUEST_CREATE_SAVED_COMPARISON:
+      return { ...state,
+        comparisonResult: {
+          ...state.comparisonResult,
+          isExporting: true
+        }
+      };
+
+    case RECEIVE_CREATED_SAVED_COMPARISON:
+      return { ...state,
+        comparisonResult: {
+          ...state.comparisonResult,
+          isExporting: false,
+          exported: true,
+          exportedComparisonId: action.exportedComparisonId
+        }
+      };      
 
     case SELECT_DATASET:
+    case CLEAR_ANALYSIS:
+    case WIPE_PROJECT_STATE:
       return baseState;
 
     default:

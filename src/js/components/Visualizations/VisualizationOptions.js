@@ -15,8 +15,16 @@ export const MAX_ELEMENTS = {
 const baseOptions = {
   backgroundColor: 'transparent',
   fontName: 'Roboto, Helvetica, Arial, sans-serif',
-  fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+  fontFamily: 'Roboto, Helvetica, Arial, sans-serif'
 }
+
+const gray = "#777";
+const titleTextStyle = {
+  color: "#000",
+  fontSize: 16,
+  italic: false,
+  bold: true
+};
 
 export const fullOptions = {
   ...baseOptions,
@@ -38,34 +46,22 @@ export const fullOptions = {
     }
   },
   hAxis: {
-    titleTextStyle: {
-      color: "#333",
-      italic: false,
-      bold: true
-    },
+    minValue: 0,
+    titleTextStyle: titleTextStyle,
     textStyle: {
-      color: "#777",
-      italic: false
+      color: gray,
+      italic: false,
     }
   },
   vAxis: {
-    titleTextStyle: {
-      color: "#333",
-      italic: false,
-      bold: true
-    },
+    minValue: 0,
+    titleTextStyle:  titleTextStyle,
     textStyle: {
-      color: "#777",
-      italic: false
+      color: gray,
+      italic: false,
     }
   },
   vAxes: [
-    {
-      textStyle: {
-        color: "#777",
-        italic: false
-      }
-    },
     {
       textStyle: {
         color: "#777",
@@ -93,7 +89,7 @@ export const minimalOptions = {
     gridlines: {
       count: 0,
       color: 'transparent'
-    },
+    }
   },
   height: 140,
   highlightOnMouseOver: false,
@@ -111,22 +107,15 @@ export const minimalOptions = {
     trigger: 'none'
   },
   vAxis: {
-    minValue: 0,
     baselineColor: 'transparent',
     textPosition: 'none',
+    minValue: 0,
     gridlines: {
       count: 0,
       color: 'transparent'
     }
   },
   vAxes: [
-    {
-      baselineColor: 'transparent',
-      textPosition: 'none',
-      gridlines: {
-        count: 0
-      }
-    },
     {
       baselineColor: 'transparent',
       textPosition: 'none',

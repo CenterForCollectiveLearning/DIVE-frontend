@@ -5,6 +5,8 @@ import { updateProject, deleteProject } from '../../actions/ProjectActions.js';
 import { submitFeedback, closeFeedbackModal } from '../../actions/FeedbackActions.js';
 import styles from '../App/App.sass';
 
+import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
+
 import DropDownMenu from './DropDownMenu';
 import BlockingModal from './BlockingModal';
 import RaisedButton from './RaisedButton';
@@ -22,7 +24,7 @@ class FeedbackModal extends Component {
   }
 
   submit = () => {
-    const { project, user, closeAction, submitFeedback, location } = this.props;
+    const { project, user, closeAction, submitFeedback, location, isOpen } = this.props;
     const { pathname, search } = location;
     const { feedbackType, description } = this.state;
 
@@ -48,31 +50,35 @@ class FeedbackModal extends Component {
   }
     // Or contact us directly: <a href="mailto:dive@media.mit.edu?Subject=DIVE%20Feedback" target="_top">dive@media.mit.edu</a>
   render() {
-    const { closeAction, feedback } = this.props;
+    const { closeAction, feedback, isOpen } = this.props;
     const { feedbackType, description } = this.state;
 
     var footer = feedback.received ? null :
       <div className={ styles.footerContent }>
         <div className={ styles.rightActions }>
-          <RaisedButton primary normalHeight minWidth={ 100 } onClick={ this.submit }>Submit</RaisedButton>
+          <Button
+            intent={ Intent.PRIMARY }
+            onClick={ this.submit }
+            text="Submit"
+          />
         </div>
       </div>;
 
     return (
-      <BlockingModal
-        scrollable={ false }
-        closeAction={ this.props.closeAction }
-        heading={ feedback.received ? "Thank you for your feedback!" : "Help Us Make DIVE Better" }
-        footer={ footer }>
+      <Dialog
+        className={ styles.feedbackModal }
+        onClose={ this.props.closeAction }
+        title={ feedback.received ? "Thank you for your feedback!" : "Help Us Improve DIVE" }
+        isOpen={ isOpen }
+      >
+        <div className={ Classes.DIALOG_BODY }>
           { feedback.received &&
-            <div className={ styles.fillContainer }>
-              <div className={ styles.receivedFeedbackContainer }>
-                <i className="fa fa-check-circle"></i>
-              </div>
+            <div className={ styles.receivedFeedbackContainer } onClick={ this.props.closeAction }>
+              <span className="pt-icon-standard pt-icon-thumbs-up" />
             </div>
           }
           { !feedback.received &&
-            <div className={ styles.fillContainer }>
+            <div>
               <div className={ styles.controlSection }>
                 <div className={ styles.label }>Category</div>
                 <DropDownMenu
@@ -87,18 +93,22 @@ class FeedbackModal extends Component {
                   valueMember="id"
                   displayTextMember="name"
                   onChange={ this.selectFeedbackType }/>
+              </div>
+              <div className={ styles.controlSection }>
+                <div className={ styles.label }>Description</div>
+                <TextArea
+                  type="textarea"
+                  placeholder={ description }
+                  value={ description }
+                  onChange={ this.enteredFeedbackDescription }/>
+              </div>
             </div>
-            <div className={ styles.controlSection }>
-              <div className={ styles.label }>Description</div>
-              <TextArea
-                type="textarea"
-                placeholder={ description }
-                value={ description }
-                onChange={ this.enteredFeedbackDescription }/>
-            </div>
-          </div>
-        }
-      </BlockingModal>
+          }
+        </div>
+        <div className={ Classes.DIALOG_FOOTER }>
+          { footer }
+        </div>
+      </Dialog>
     );
   }
 }
@@ -108,8 +118,13 @@ FeedbackModal.propTypes = {
   user: PropTypes.object,
   project: PropTypes.object,
   feedback: PropTypes.object,
-  location: PropTypes.object
+  location: PropTypes.object,
+  isOpen: PropTypes.bool
 };
+
+FeedbackModal.defaultProps = {
+  isOpen: false
+}
 
 function mapStateToProps(state) {
   return {};

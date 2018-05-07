@@ -1,6 +1,25 @@
 @import '../../../css/flexbox.sass'
 @import '../../../css/mixins.sass'
-@import '../Base/BlockingModal.sass'
+
+@import '~react-select/scss/default'
+
+html, body, main
+  height: 100%
+  min-height: 100%
+
+main
+  display: flex
+  flex-direction: column
+  flex-grow:
+
+body
+  margin: 0
+  -webkit-font-smoothing: antialiased
+  background-color: rgba(0, 0, 0, 0.85)
+
+*
+  box-sizing: border-box
+
 
 .appContainer, .projectContainer
   +maxHeight100NoOverflow
@@ -45,7 +64,6 @@
   right: 0
   z-index: 20
   width: 150px
-  +smallCaps
   background-color: $orange
   display: flex
   flex-direction: row
@@ -112,27 +130,49 @@
       cursor: pointer
 
       .logo
-        width: 24px
-        height: 30px
+        width: 22px
+        height: 24px
         margin-left: 6px
-        margin-top: 7px
+        margin-top: 9px
 
       .logoText
-        font-size: 31px
+        font-size: 26px
         font-weight: 800
         margin-top: 4px
-        margin-left: 15px
+        margin-left: 11px
         color: $white
+        
     .projectTitle
-      +smallCaps
-      margin-left: 16px
+      margin-left: 5px
       margin-right: 10px
       word-wrap: break-word
       color: $white
 
   .bottom
     margin-top: auto
-    // border-top: 1px solid $left-sidebar-separator-grey
+    display: flex
+    align-items: center
+    justify-content: center
+    height: 55px
+    color: white
+    cursor: pointer
+
+    .anonymousUserBottom
+      text-align: center
+      padding-bottom: 10px
+
+      .temporary
+        +smallCaps
+        // color: $orange
+        padding-bottom: 5px
+        color: white
+        cursor: default
+
+      .register
+        color: white
+
+    .username
+      padding-right: 10px
 
     .userOptions
       display: flex
@@ -193,24 +233,29 @@
         display: flex
         flex-direction: column
         .label
-          +smallCaps
-          line-height: 0px
+          +smallCapsBold
+          line-height: 20px
           margin-top: 10px
           max-height: 0px
           padding-bottom: 3px
           margin-top: 11px
-          position: relative
-          top: 10px
+
+          .selectorChevron
+            margin-left: 0px
 
         .value
           color: $left-sidebar-grey
           font-size: 16px
 
+          &.multiple
+            +linkStyle(16px)
+
           &.projectPage
             text-transform: capitalize
 
       span.separator
-        padding: 0 14px
+        padding-left: 10px
+        padding-right: 20px
         position: relative
         top: 1px
         left: 7px
@@ -289,3 +334,26 @@
             > div  // .Select-option
               // display: block
               // height: 20px
+
+.projectCreateModal, .feedbackModal
+  .controlSection
+    .label
+      +smallCapsBold
+      padding-top: 10px
+
+    &:first-of-type
+      .label
+        padding-top: 0px
+
+  .registerLink, .loginLink
+    +linkStyle(14px)
+
+.receivedFeedbackContainer
+  text-align: center
+  span
+    cursor: pointer
+    color: $primary-accent
+    border: 3px solid $primary-accent
+    padding: 20px
+    border-radius: 80px
+    font-size: 55px

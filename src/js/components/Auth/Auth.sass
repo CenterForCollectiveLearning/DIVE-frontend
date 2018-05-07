@@ -1,5 +1,7 @@
 @import '../../../css/mixins.sass'
 
+.noFooter
+  padding-bottom: 0 !important
 
 .loginModal, .registerModal
   display: flex
@@ -22,37 +24,42 @@
 .authForm
   width: 100%
 
+  &.activationForm
+    padding-top: 10px
+
   .generalAuthError
-    font-size: 12px
+    font-size: 14px
     color: $red
     margin-top: 15px
 
   .authInputError
     +smallCaps
+    font-size: 14px
+    background-color: $red2
     position: absolute
-    background-color: #8E2323
     right: 0px
     color: white
     height: 40px
     padding: 0 10px
-    border-radius: 0 2px 2px 0
+    border-radius: 0 3px 3px 0
     line-height: 41px
+    z-index: 10
 
   .weak
-    background-color: #8E2323
+    background-color: $red2
 
   .good
-    background-color: #ffb400
+    background-color: $orange3
 
   .strong
-    background-color: #3fb34f
+    background-color: $green4
 
   .authInputGroup
     position: relative
     margin-top: 10px
 
     &:first-of-type
-      margin-top: 0px
+      margin-top: 10px
 
     &:last-of-type
       margin-bottom: 15px
@@ -73,47 +80,13 @@
         color:
         display: flex
 
-    input[type="text"], input[type="password"]
-      height: 40px
-      background-image: url(../../../assets/images/auth_icons.png)
-      background-repeat: no-repeat
-      background-size: 40px 171px
-      box-sizing: border-box
-      padding-right: 40px
-
-      &.username
-        background-position: 100% -7%
-
-      &.usernameOrEmail, &.email
-        background-position: 100% 30%
-
-      &.password
-        background-position: 100% 67%
-
-      &::-webkit-input-placeholder
-         text-align: left
-
-      &:-moz-placeholder
-         text-align: left
-
-      &::-moz-placeholder
-         text-align: left
-
-      &:-ms-input-placeholder
-         text-align: left
-
-    .checkbox
-      height: 10px
-
-      input[type="checkbox"]
-        margin-top: 0px
-        margin-right: 5px
-        margin-left: 0px
-        float: left
+    .rememberMe
+      float: left
 
     .forgotPassword
       +noSelect
-      +linkStyle(12px)
+      +linkStyle(14px)
+      float: right
       margin-top: -2px
       margin-left: auto
       // font-weight: normal
@@ -136,15 +109,13 @@
     justify-content: center
 
 
-.registerText, .loginText
-  +regularText
-  .registerLink, .loginLink
-    +linkStyle(12px)
+.registerLink, .loginLink
+  +linkStyle(14px)
 
 .footerLabel
   display: flex
   align-items: center
-  font-size: 13px
+  font-size: 14px
 
   label.error
     color: darkred

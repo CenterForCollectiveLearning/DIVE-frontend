@@ -3,22 +3,18 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
 
+import { Button, Intent } from '@blueprintjs/core';
 import { fetchDatasets } from '../../actions/DatasetActions';
 import { uploadDataset } from '../../actions/DatasetActions';
 import styles from './Datasets.sass';
 
+import ProjectTopBar from '../ProjectTopBar';
 import Dropzone from 'react-dropzone';
+import ErrorComponent from '../Base/ErrorComponent';
 import Loader from '../Base/Loader';
 import HeaderBar from '../Base/HeaderBar';
-import RaisedButton from '../Base/RaisedButton';
 
 export class DatasetUploadPage extends Component {
-  constructor(props) {
-    super(props);
-    this.onDrop = this.onDrop.bind(this);
-    this.onOpenClick = this.onOpenClick.bind(this);
-  }
-
   componentWillMount() {
     const { project, datasets, params, fetchDatasets, fetchFieldPropertiesIfNeeded } = this.props;
 
@@ -29,8 +25,8 @@ export class DatasetUploadPage extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { project, datasets, datasetSelector, push, params, fetchDatasets } = nextProps;
-    if (datasetSelector.datasetId != this.props.datasetSelector.datasetId) {
-      push(`/projects/${ params.projectId }/datasets/${ datasetSelector.datasetId }/inspect`);
+    if (datasetSelector.id != this.props.datasetSelector.id) {
+      push(`/projects/${ params.projectId }/datasets/${ datasetSelector.id }/inspect`);
     }
 
     if (project.id && !datasets.fetchedAll && !datasets.isFetching) {
@@ -38,42 +34,68 @@ export class DatasetUploadPage extends Component {
     }
   }
 
-  onDrop(files) {
+  onDrop = (files) => {
     this.props.uploadDataset(this.props.project.id, files[0]);
   }
 
-  onOpenClick() {
+  onOpenClick = () => {
     this.refs.dropzone.open();
+  }
+
+  onPreloadedClick = () => {
+    const { project, push } = this.props;
+    push(`/projects/${ project.id }/datasets/preloaded`);
   }
 
   render() {
     const { projectTitle, datasetSelector } = this.props;
+
     return (
       <DocumentTitle title={ 'Upload' + ( projectTitle ? ` | ${ projectTitle }` : '' ) }>
         <div className={ styles.fillContainer }>
+          <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />
           <div
             className={ styles.datasetUploadBox }>
             { datasetSelector.isUploading &&
               <div className={ styles.uploadingZone + ' ' + styles.centeredFill }>
-              { datasetSelector.progress &&
-                <Loader text={ datasetSelector.progress } />
-              }
-              { datasetSelector.error &&
-                <Loader text={ datasetSelector.error } error={ true }/>
-              }
+                { datasetSelector.progress && <Loader text={ datasetSelector.progress } /> }
+                { !datasetSelector.isUploading && datasetSelector.error &&
+                  <ErrorComponent
+                    title='Error uploading dataset'
+                    description={ datasetSelector.error }
+                  />
+                }
               </div>
             }
             { !datasetSelector.isUploading &&
-              <Dropzone ref="dropzone" className={ styles.dropzone + ' ' + styles.centeredFill } onDrop={ this.onDrop } disableClick={ true }>
-                { datasetSelector.uploadError &&
-                  <div className={ styles.errorDescription + ' ' + styles.watermark }>
-                    { datasetSelector.uploadError }
-                    <div className={ styles.separater }></div>
+              <Dropzone
+                ref="dropzone"
+                className={ styles.dropzone + ' ' + styles.centeredFill }
+                onDrop={ this.onDrop }
+                disableClick={ true }
+                multiple={ false }
+              >
+                <Button
+                  intent={ Intent.PRIMARY }
+                  className="pt-large"
+                  text="Upload Dataset"
+                  onClick={ this.onOpenClick } />
+                <div className={ styles.dragAndDrop }>or drag and drop files here</div>
+                { !datasetSelector.error &&
+                  <div className={ styles.uploadDescription }>
+                    <div>Supported file types: CSV, TSV, and Excel.</div>
                   </div>
                 }
-                <RaisedButton label="Upload dataset" primary={ true } onClick={ this.onOpenClick } />
-                  <span>or drag and drop files here</span>
-                  <span>Supported: CSV, TSV, JSON, EXCEL</span>
+                { datasetSelector.error &&
+                  <div className={ styles.errorDescription }>
+                    <div className="pt-callout pt-intent-danger pt-icon-error">
+                      <h5>Upload Error</h5>
+                      { datasetSelector.error } Please try another file.
+                    </div>
+                  </div>
+                }
+                <div className={ styles.separater }></div>
+                <div className={ styles.preloadedNav }>Or select from <span className={ styles.link } onClick={ this.onPreloadedClick }>preloaded datasets</span></div>
               </Dropzone>
             }
           </div>

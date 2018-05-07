@@ -2,48 +2,32 @@
 @import '../../../css/flexbox.sass'
 
 .landingPage
-  color: white
   overflow-y: auto
 
   .header
-    display: flex
-    background-color: rgba(0, 0, 0, 0.75)
-    // position: fixed
-    width: 100%
-    padding: 5px 40px 0
-    height: 70px
-    min-height: 70px
+    background-color: transparent !important
+    box-shadow: none !important
+    z-index: 20
+
+    &.opaque
+      background-color: black !important
+      box-shadow: inset 0 0 0 1px rgba(16, 22, 26, 0.2), 0 1px 1px rgba(16, 22, 26, 0.4) !important
 
     .logoContainer
       display: flex
-      flex-direction: row
-      padding-top: 4px
-      padding-right: 30px
+      align-items: center
       cursor: pointer
-      opacity: 0.86
-
       .logo
         width: 30px
         height: 38px
-        margin-left: 10px
-        margin-top: 7px
-
       .logoText
-        font-size: 40px
+        font-size: 30px
         font-weight: 600
-        margin-top: 4px
+        margin-left: 5px
+        margin-bottom: 5px
 
   .landingPageContent
-    z-index: 10
-    justify-content: center
-    align-items: center
-    position: relative
-
-    flex-grow: 1
-
     &.landingPageProjects
-      display: flex
-      flex-direction: column
 
 .background
   position: absolute
@@ -54,10 +38,9 @@
   height: 100vh
 
   opacity: 0.95
-  background: black
+  // background: black
   background-size: cover
   background-position: 50% 0%
-
 
 .ctaBox
   display: flex
@@ -65,15 +48,18 @@
   padding-bottom: 0px
   width: 100%
 
-  background-color: rgba(0, 0, 0, 0.75)
+  background-color: rgba(0, 0, 0, 0.8)
 
   flex-direction: column
   align-items: center
   flex-shrink: 0
   &:before
+    +move-bg-animation
+
     background: url(../../../assets/images/landing_background.png) no-repeat
     background-size: cover
-    background-position: 50% 0%
+    background-position: 0% 0%
+
     opacity: 0.7
 
     position: absolute
@@ -84,7 +70,7 @@
     content: ""
     z-index: -1
 
-  .primaryCopy, .secondaryCopy
+  .primaryCopy
     font-family: 'Roboto Condensed', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
     text-align: center
 
@@ -93,33 +79,30 @@
     align-items: center
     justify-content: center
 
-    margin: 45px auto 5px
+    margin: 120px auto 5px
 
     color: white
-    font-size: 38px
+    font-size: 34px
     font-weight: 600
     text-transform: uppercase
-    letter-spacing: 1px
 
   .secondaryCopy
     display: flex
-    margin: 10px auto 45px
+    margin: 5px auto 45px
+    font-size: 22px
     text-align: center
-    letter-spacing: 0.78px
-    font-size: 23px
-    font-weight: 300
     color: white
 
   .ctaContainer
     display: flex
-    margin: 0px auto 50px auto
+    margin: 0px auto 120px auto
 
     .uploadButton
       height: 50px
       line-height: 50px
       font-weight: 600
 
-      padding: 0 60px
+      padding-top: 80px
       font-size: 24px
 
   .video
@@ -129,18 +112,14 @@
     iframe
       border: none
 
-
-
 .projectsContainer
   width: 100%
-  padding: 60px 0
   background-color: white
   border-bottom: 1px solid $ui-line-grey
 
   &.myProjectsContainer
     flex-shrink: 0
     flex-grow: 1
-    align-items: center
     background-color: $landing-grey-background
     border-bottom: $ui-line-grey
 
@@ -157,7 +136,8 @@
   .projectListTopbar
     display: flex
     flex-direction: row
-    margin: 0 50px
+    margin: 100px 50px 20px 50px
+
     .pageLabel
       color: black
       font-size: 24px
@@ -165,6 +145,9 @@
       display: flex
       flex-direction: row
       margin-left: auto
+
+      .createProjectButton
+        margin-right: 10px
 
       > div
         margin-right: 10px
@@ -176,11 +159,13 @@
         width: 200px
 
   .projectListContainer
-    margin-top: 20px
+    // margin-top: 20px
     width: 100%
     display: flex
     flex-direction: column
     align-items: center
+    max-height: calc(100% - 300px)
+    overflow-y: auto
 
 .watermark
   +watermark
@@ -191,7 +176,7 @@
   flex-grow: 1
   flex-direction: row-reverse
   align-items: center
-  font-size: 12px
+  font-size: 14px
   font-weight: 400
 
   .linkContainer
@@ -299,12 +284,13 @@
   padding: 30px 0
 
   .logos
-    .macroConnectionsLogo, .mediaLabLogo
+    display: flex
+    .collectiveLearningLogo, .mediaLabLogo
       max-height: 70px
       width: auto
-      opacity: 0.5
 
-    .macroConnectionsLogo
+    .collectiveLearningLogo
+      max-height: 74px
       padding-right: 40px
 
 .sections
@@ -338,6 +324,9 @@
       img.gif
         margin-top: 30px
         border: 1px solid black
+
+      .textBox
+        padding-top: 15px
 
   .contentSection
     padding: 60px 0

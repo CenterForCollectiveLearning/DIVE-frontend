@@ -5,7 +5,7 @@ import styles from '../Analysis.sass';
 import Card from '../../Base/Card';
 import ColoredFieldItems from '../../Base/ColoredFieldItems';
 import RegressionTable from './RegressionTable';
-import RegressionSummary from './RegressionSummary';
+
 
 export default class RegressionTableCard extends Component {
   render() {
@@ -21,11 +21,6 @@ export default class RegressionTableCard extends Component {
         helperText='regression'
       >
         <RegressionTable regressionType={ regressionType } regressionResult={ regressionResult }/>
-        <RegressionSummary
-          dependentVariableName={ dependentVariableName }
-          independentVariableNames={ independentVariableNames }
-          regressionResult={ regressionResult }
-          contributionToRSquared={ contributionToRSquared }/>
       </Card>
     );
   }

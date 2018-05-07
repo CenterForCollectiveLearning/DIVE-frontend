@@ -1,5 +1,10 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import styles from './App.sass';
+import { push } from 'react-router-redux';
+
+import {
+  AUTH_ERROR
+} from '../../constants/ActionTypes';
 
 import { createAnonymousUserIfNeeded } from '../../actions/UserActions';
 import { connect } from 'react-redux';
@@ -9,10 +14,21 @@ require('react-select/less/select.less');
 require('../../../css/app.less');
 require('../../../css/griddle.less');
 
-export class App extends React.Component {
+export class App extends Component {
+  constructor(props) {
+    super(props);
+
+    const { user, createAnonymousUserIfNeeded } = this.props;
+
+    if (!user.id || user.anonymous) {
+      createAnonymousUserIfNeeded();
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user.loaded && !this.props.user.loaded) {
-      this.props.createAnonymousUserIfNeeded();
+    const { user, error, createAnonymousUserIfNeeded } = this.props;
+    if (user.id && !nextProps.user.id) {
+      createAnonymousUserIfNeeded();
     }
   }
 
@@ -31,10 +47,11 @@ App.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { user } = state;
+  const { user, error } = state;
   return {
-    user: user
+    user: user,
+    error: error
   };
 }
 
-export default connect(mapStateToProps, { createAnonymousUserIfNeeded })(App);
+export default connect(mapStateToProps, { createAnonymousUserIfNeeded, push })(App);

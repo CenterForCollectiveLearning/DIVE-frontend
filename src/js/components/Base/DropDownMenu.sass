@@ -1,66 +1,112 @@
 @import '../../../css/mixins.sass'
 
+.dropDownLabel
+  +smallCapsBold
+  padding-bottom: 2px
+
+.prefixIcon
+  margin-right: 8px
+  color: #888
+
 .dropDownMenu
-  .dropDownLabel
-    +smallCaps
-    padding-bottom: 2px
+  border: 1px solid
+  border-radius: 3px
+  cursor: pointer
+  vertical-align: middle
+  font-size: 14px
+  background: #f5f8fa
+  background: linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0)) left no-repeat, center no-repeat #f5f8fa
+  border-color: rgba(16, 22, 26, 0.1) rgba(16, 22, 26, 0.1) rgba(16, 22, 26, 0.17) rgba(16, 22, 26, 0.1)
+  box-shadow: 0 1px 1px rgba(16, 22, 26, 0.1)
+  background-clip: padding-box
+  color: #182026
 
-  > div // .Select
+  &:hover
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0)) left no-repeat, center no-repeat #ebf1f5;
+
+  &.minimal
+    border-color: transparent
+    background: transparent
+    box-shadow: none
+
+    &:hover
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0)) left no-repeat, center no-repeat #ebf1f5;
+      border-color: rgba(16, 22, 26, 0.1) rgba(16, 22, 26, 0.1) rgba(16, 22, 26, 0.17) rgba(16, 22, 26, 0.1)
+
+  > div  // .Select
     width: 100%
+    > div:first-child  // .Select-control
+      background-color: transparent
+      border: none
+      box-shadow: none
+      height: 30px
 
-    > div
-      &:first-of-type // .Select-value
-        height: 33px
-        line-height: 33px
+      > span  // .Select-multi-value-wrapper
+        > div  // .Select-value
+          height: 30px !important
+          line-height: 30px !important
+          border-radius: 3px
 
-        background-color: transparent
+          cursor: pointer
+          width: 100%
 
-        border: 1px solid $ui-line-grey
-        border-radius: 2px
+          > span  // .Select-value-label
+          > div  // combobox
 
-        cursor: pointer
-        width: 100%
+      > span:nth-of-type(2)  // .Select-arrow-zone
+        > span  // .Select-arrow
 
-        &:hover
-          box-shadow: none
-          background-color: $primary-accent-hover
-
-        > div
-          &:first-child // .Select-placeholder
-            font-size: 12px
-
-      &:nth-of-type(2) // .Select-menu-outer
-        background-color: white
-        border-bottom-left-radius: 2px
-        border-bottom-right-radius: 2px
-        border-bottom: 0
-        border-left: 0
-        border-right: 0
-        box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.01), 0px 2px 2px 0px rgba(0, 0, 0, 0.058), 0px 1px 5px 0px rgba(0, 0, 0, 0.034)
-
-        > div // .Select-menu
-          border-bottom-left-radius: 2px
-          border-bottom-right-radius: 2px
-
-          > div // .Select-option
-            font-size: 12px
-            font-weight: 400
-            padding: 9px 0 10px 12px
-            background-color: white
-            min-width: 150px
-
-            &:hover
-              background-color: whitesmoke
-
-.valueContainer
-  font-size: 12px
-  overflow: hidden
-  white-space: nowrap
-  text-overflow: ellipsis
-
-  span.prefix
-    +smallCaps
-
-  span.value
-    font-weight: 400
-    color: #333
+    > div:nth-of-type(2)  // .Select-menu-outer
+      z-index: 10
+// .dropDownMenu
+//
+//
+//
+//
+//   > div // .Select
+//
+//
+//     > div
+//       &:first-of-type // .Select-value
+//
+//
+//         > div
+//           &:first-child // .Select-placeholder
+//             font-size: 14px
+//
+//       &:nth-of-type(2) // .Select-menu-outer
+//         background-color: white
+//         border-bottom-left-radius: 2px
+//         border-bottom-right-radius: 2px
+//         border-bottom: 0
+//         border-left: 0
+//         border-right: 0
+//         box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.01), 0px 2px 2px 0px rgba(0, 0, 0, 0.058), 0px 1px 5px 0px rgba(0, 0, 0, 0.034)
+//         z-index: 100
+//
+//         > div // .Select-menu
+//           border-bottom-left-radius: 2px
+//           border-bottom-right-radius: 2px
+//
+//           > div // .Select-option
+//             font-size: 14px
+//             font-weight: 400
+//             padding: 9px 0 10px 12px
+//             background-color: white
+//             min-width: 150px
+//
+//             &:hover
+//               background-color: whitesmoke
+//
+// .valueContainer
+//   font-size: 14px
+//   overflow: hidden
+//   white-space: nowrap
+//   text-overflow: ellipsis
+//
+span.prefix
+  +smallCapsBold
+//
+//   span.value
+//     font-weight: 400
+//     color: #333

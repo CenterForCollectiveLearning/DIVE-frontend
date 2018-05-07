@@ -1,6 +1,7 @@
 import _ from 'underscore';
 
 import {
+  SELECT_DATASET,
   SELECT_REGRESSION_TYPE,
   SELECT_REGRESSION_MODE,
   SELECT_REGRESSION_INDEPENDENT_VARIABLE,
@@ -11,12 +12,15 @@ import {
   RECEIVE_RUN_REGRESSION,
   PROGRESS_RUN_REGRESSION,
   ERROR_RUN_REGRESSION,
+  REQUEST_INITIAL_REGRESSION_STATE,
+  RECEIVE_INITIAL_REGRESSION_STATE,
   RECEIVE_CONTRIBUTION_TO_R_SQUARED,
   RECEIVE_CREATED_SAVED_REGRESSION,
   WIPE_PROJECT_STATE,
   RECEIVE_SET_FIELD_IS_ID,
   RECEIVE_SET_FIELD_TYPE,
   SET_REGRESSION_QUERY_STRING,
+  SELECT_TRANSFORMATION_FUNCTION,
   CLEAR_ANALYSIS
 } from '../constants/ActionTypes';
 
@@ -36,19 +40,23 @@ const baseState = {
   dependentVariableId: null,
   independentVariableIds: [],
   interactionTermIds: [],
+  recommendationResult: {
+    loading: false,
+    progress: null,
+    data: null
+  },
   regressionResult: {
     exported: false,
     exportedRegressionId: null,
     loading: false,
     progress: null,
     error: null,
-    data: null
+    data: {
+      table: {},
+      contributionToRSquared: []
+    }
   },
-  SingleVisualizationSpec: {
-  },
-  regressionModes: regressionModes,
   selectedMode: null,
-  contributionToRSquared: [],
   queryString: ''
 }
 
@@ -140,36 +148,41 @@ export default function regressionSelector(state = baseState, action) {
       );
       return { ...state, fieldProperties: fieldProperties, updatedAt: action.receivedAt };
 
+    case REQUEST_INITIAL_REGRESSION_STATE:
+      return { ...state, recommendationResult: { loading: true, progress: 'Recommending initial state', data: null } };
+
+    case RECEIVE_INITIAL_REGRESSION_STATE:
+      return { ...state, recommendationResult: { loading: false, progress: null, data: state.data } };
+
     case REQUEST_RUN_REGRESSION:
-      return { ...state, regressionResult: { ...state.regressionResult, loading: true } };
+      return { ...state, regressionResult: { ...state.regressionResult, error: null, loading: true } };
 
     case RECEIVE_RUN_REGRESSION:
       return { ...state,
         regressionResult: {
+          ...state.regressionResult,
           exported: action.data.exported,
           exportedRegressionId: action.data.exportedRegressionId,
+          error: null,
           loading: false,
           data: action.data
         }
       };
 
-    case ERROR_RUN_REGRESSION:
-      return { ...state, regressionResult: { ...state.regressionResult, error: action.error } };
-
     case PROGRESS_RUN_REGRESSION:
       if (action.progress && action.progress.length){
-        return { ...state, regressionResult: { ...state.regressionResult, progress: action.progress} };
+        return { ...state, regressionResult: { ...state.regressionResult, progress: action.progress, error: null } };
       }
       return state;
 
     case ERROR_RUN_REGRESSION:
-      return { ...state, regressionResult: { loading: false, error: action.error } };
+      return { ...state, regressionResult: { ...state.regressionResult, loading: false, error: action.message } };
 
     case RECEIVE_CREATED_SAVED_REGRESSION:
       return { ...state,
         regressionResult: {
           ...state.regressionResult,
-          exportedRegression: true,
+          exported: true,
           exportedRegressionId: action.exportedRegressionId
         }
       };
@@ -179,10 +192,9 @@ export default function regressionSelector(state = baseState, action) {
         ...state, queryString: action.queryString
       }
 
-    case RECEIVE_CONTRIBUTION_TO_R_SQUARED:
-      return { ...state, contributionToRSquared: (action.data.data || []) };
-
-    case WIPE_PROJECT_STATE, CLEAR_ANALYSIS:
+    case SELECT_DATASET:
+    case WIPE_PROJECT_STATE:
+    case CLEAR_ANALYSIS:
       return baseState;
 
     default:

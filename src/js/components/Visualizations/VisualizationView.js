@@ -1,80 +1,97 @@
 import React, { Component, PropTypes } from 'react';
+import DynamicFont from 'react-dynamic-font';
 
 import styles from './Visualizations.sass';
 
+import { Button, Intent } from '@blueprintjs/core';
+
 import DataGrid from '../Base/DataGrid';
 import HeaderBar from '../Base/HeaderBar';
+import Loader from '../Base/Loader';
 import Visualization from './Visualization';
 import { useWhiteFontFromBackgroundHex } from '../../helpers/helpers';
 
 export default class VisualizationView extends Component {
   render() {
-    const { visualization, fieldNameToColor } = this.props;
+    const { visualization, fieldNameToColor, getTableData } = this.props;
 
     const visualizationTypes = visualization.visualizationType ? [ visualization.visualizationType ] : [];
 
     let visualizationTitle;
     let visualizationHeader;
+    let visualizationLegend;
     if (visualization.spec.id && !visualization.isFetching) {
       visualizationTitle = visualization.spec.meta.construction.map(function(construct, i) {
-        var style = {};
-        var whiteFont = true;
-        if (construct.type == 'field') {
-          var backgroundColor = fieldNameToColor[construct.string];
-          whiteFont = useWhiteFontFromBackgroundHex(backgroundColor);
-          style['backgroundColor'] = backgroundColor;
-        }
-
+        return construct.string + ' '
+      /* visualizationTitle = visualization.spec.meta.construction.map(function(construct, i) {
         return <span
-          style={ style }
           key={ `construct-${ construct.type }-${ i }` }
           className={
             `${styles.headerFragment} ${styles[construct.type]}`
-            + ' ' + ( whiteFont ? styles.whiteFont : styles.blackFont )
-        }>{ construct.string }</span>
+        }>{ construct.string }</span> */
       });
 
+      visualizationLegend = visualization.spec.meta.construction.filter((item) => item.type == 'field').map(function(construct, i) {
+        return <div
+          style={{ backgroundColor: fieldNameToColor[construct.string]}}
+          key={ `construct-${ construct.type }-${ i }` }
+          className={ styles.colorLegendBox }
+        />
+      })
+
       visualizationHeader = <div className={ styles.headerText }>
-        <div className={ styles.left }>{ visualizationTitle }</div>
-        <div className={ styles.right }>{ visualization.sampleSize } samples</div>
+        <div className={ styles.left }><DynamicFont smooth content={ visualizationTitle } /></div>
+        <div className={ styles.right}>
+          {/* <span className={ styles.colorLegend }>{ visualizationLegend }</span> */}
+          { visualization.sampleSize &&  <span>{visualization.sampleSize } samples</span> }
+        </div>  
       </div>;
       }
 
+
     return (
       <div className={ styles.visualizationViewContainer }>
+        <HeaderBar
+          header={ visualizationHeader }
+          actions={ this.props.children } />
         <div className={ styles.innerVisualizationViewContainer } >
-          { visualization.spec.id && !visualization.isFetching &&
-            <div>
-              <HeaderBar
-                header={ visualizationHeader }
-                actions={ this.props.children } />
-              <div className={ styles.chartsContainer }>
-                <Visualization
-                  containerClassName={ styles.visualizationContainer }
-                  visualizationTypes={ visualizationTypes }
-                  fieldNameToColor={ fieldNameToColor }
-                  config={ visualization.config }
-                  spec={ visualization.spec }
-                  bins={ visualization.bins }
-                  data={ visualization.visualizationData }
-                  sortOrders={ visualization.sortOrders }
-                  sortFields={ visualization.sortFields }/>
-              </div>
+          { visualization.isFetching &&
+            <div className={ styles.centeredFill }>
+              <Loader text='Fetching visualization...' />
             </div>
           }
-          { visualization.tableData.length != 0 &&
-            <div>
-              <HeaderBar
-                header={ <div>Data Table</div> }
-                actions={ this.props.children } />
-              <div className={ styles.tableContainer }>
-                <DataGrid
-                  id={ `${ visualization.spec.id }` }
-                  useFixedWidth={ false }
-                  data={ visualization.tableData }
-                  tableClassName={ styles.grid }
-                  containerClassName={ styles.gridContainer }/>
-              </div>
+          { visualization.spec.id && !visualization.isFetching &&
+            <div className={ styles.chartsContainer }>
+              <Visualization
+                containerClassName={ styles.visualizationContainer }
+                visualizationTypes={ visualizationTypes }
+                fieldNameToColor={ fieldNameToColor }
+                config={ visualization.config }
+                spec={ visualization.spec }
+                bins={ visualization.bins }
+                data={ visualization.visualizationData }
+                sortOrders={ visualization.sortOrders }
+                sortFields={ visualization.sortFields }/>
+            </div>
+          }
+          { !visualization.isFetching && !visualization.tableData.length &&
+            <div className={ styles.tableContainer + ' ' + styles.fillContainer + ' ' + styles.tableDataButton }>
+              <Button
+                intent={ Intent.PRIMARY }
+                iconName='th'
+                text='Get Table Data'
+                onClick={ getTableData }
+              />
+            </div>
+          }
+          { !visualization.isFetching && visualization.tableData.length != 0 &&
+            <div className={ styles.tableContainer }>
+              <DataGrid
+                id={ `${ visualization.spec.id }` }
+                useFixedWidth={ false }
+                data={ visualization.tableData }
+                tableClassName={ styles.grid }
+                containerClassName={ styles.gridContainer }/>
             </div>
           }
         </div>
@@ -86,5 +103,6 @@ export default class VisualizationView extends Component {
 VisualizationView.propTypes = {
   visualization: PropTypes.object.isRequired,
   children: PropTypes.node,
-  fieldNameToColor: PropTypes.object
+  fieldNameToColor: PropTypes.object,
+  getTableData: PropTypes.func
 }

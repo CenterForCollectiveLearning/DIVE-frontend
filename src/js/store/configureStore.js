@@ -3,6 +3,7 @@ import { browserHistory } from 'react-router';
 import { routerMiddleware } from 'react-router-redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
+import { enableBatching } from 'redux-batched-actions';
 import { analyticsMiddleware } from '../middleware/analytics';
 import debounce from 'redux-debounced';
 import {
@@ -34,11 +35,16 @@ export default function configureStore(initialState) {
 
   if (window.__env.NODE_ENV != "DEVELOPMENT") {
     middleware.push(analyticsMiddleware)
-    middleware.push(RavenMiddleware('https://34b21b0198eb43d4bebc0a35ddd11b5c@app.getsentry.com/75309'))
+    middleware.push(RavenMiddleware(
+      'https://34b21b0198eb43d4bebc0a35ddd11b5c@app.getsentry.com/75309', {
+        maxBreadcrumbs: 5,
+      }, {
+        stateTransformer: ((state) => {})
+    }))
   }
 
   const store = createStore(
-    rootReducer,
+    enableBatching(rootReducer),
     initialState,
     applyMiddleware(
       ...middleware

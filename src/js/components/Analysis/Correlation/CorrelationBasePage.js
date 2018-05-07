@@ -8,6 +8,7 @@ import styles from '../Analysis.sass';
 import { parseFromQueryObject, updateQueryString } from '../../../helpers/helpers';
 import { setPersistedQueryString, getInitialState } from '../../../actions/CorrelationActions';
 
+import ProjectTopBar from '../../ProjectTopBar';
 import CorrelationSidebar from './CorrelationSidebar';
 import CorrelationView from './CorrelationView';
 
@@ -37,7 +38,7 @@ export class CorrelationBasePage extends Component {
   setRecommendedInitialState(fieldProperties) {
     const { project, datasetSelector, pathname, queryObject, replace, setPersistedQueryString } = this.props;
 
-    const initialState = getInitialState(project.id, datasetSelector.datasetId, fieldProperties.items);
+    const initialState = getInitialState(project.id, datasetSelector.id, fieldProperties.items);
     const newQueryString = updateQueryString(queryObject, initialState);
     setPersistedQueryString(newQueryString);
     replace(`${ pathname }${ newQueryString }`);
@@ -48,9 +49,12 @@ export class CorrelationBasePage extends Component {
     return (
       <DocumentTitle title={ 'Correlation' + ( project.title ? ` | ${ project.title }` : '' ) }>
         <div className={ `${ styles.fillContainer } ${ styles.correlationContainer }` }>
-          <CorrelationView
-            correlationVariablesIds={ correlationVariablesIds }
-          />
+          <div className={ styles.fillContainer }>
+            <ProjectTopBar paramDatasetId={ this.props.params.datasetId } routes={ this.props.routes } />        
+            <CorrelationView
+              correlationVariablesIds={ correlationVariablesIds }
+            />
+          </div>
           <CorrelationSidebar
             pathname={ pathname }
             queryObject={ queryObject }

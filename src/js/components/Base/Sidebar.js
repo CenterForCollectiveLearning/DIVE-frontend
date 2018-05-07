@@ -5,7 +5,7 @@ import styles from './Sidebar.sass';
 export default class Sidebar extends Component {
   render() {
     return (
-      <div className={ styles.sidebar }>
+      <div className={ styles.sidebar + ' ' + this.props.className }>
         { this.props.children }
       </div>
     );
@@ -13,5 +13,6 @@ export default class Sidebar extends Component {
 }
 
 Sidebar.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
+  className: PropTypes.string
 };

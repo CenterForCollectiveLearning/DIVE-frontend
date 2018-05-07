@@ -1,35 +1,13 @@
 import React from 'react';
 import _ from 'underscore';
 
-// Update query string given old query object and new object
-// Note: not wholesale replacement of query string
-// export function updateQueryString(oldQueryObject, key, input, arrayValued=false) {
-//   var newQueryObject = { ...oldQueryObject };
-//   if (arrayValued) {  // Adding or removing arrays from arrays
-//     const oldValues = parseFromQueryObject(oldQueryObject, key, arrayValued);
-//     var newValues = oldValues
-//     if (!Array.isArray(input)) {
-//       input = [ input ];
-//     }
-//
-//     for (let e of input) {
-//       if (newValues.indexOf(e) == -1) {
-//         newValues.push(e);
-//       } else {
-//         newValues = oldValues.filter((oldValue) => oldValue !== e);
-//       }
-//     }
-//     newQueryObject[key] = newValues;
-//
-//   } else {  // Adding or removing single valued keys
-//     if (key in oldQueryObject && oldQueryObject[key] == input) {
-//       newQueryObject = _.omit(oldQueryObject, key);
-//     } else {
-//       newQueryObject[key] = input;
-//     }
-//   }
-//   return queryObjectToQueryString(newQueryObject);
-// }
+export function chunk(array, size) {
+  return array.reduce(function (res, item, index) {
+    if (index % size === 0) { res.push([]); }
+    res[res.length-1].push(item);
+    return res;
+  }, []);
+}
 
 export function removeFromQueryString(oldQueryObject, key) {
   const newQueryObject = _.omit(oldQueryObject, key);
@@ -82,7 +60,7 @@ export function parseFromQueryObject(queryObject, key, arrayValued=false) {
   }
 }
 
-function queryObjectToQueryString(queryObject) {
+export function queryObjectToQueryString(queryObject) {
   var queryString = '';
 
   Object.keys(queryObject).forEach(
@@ -156,6 +134,12 @@ export function getRoundedNum(num, decimalPlaces=3, useFixed=false) {
       +parseFloat(num).toPrecision(decimalPlaces);
   }
   return NaN;
+}
+
+function getExponent(x) {
+  x = Math.abs(x);
+  var exp = Math.floor(Math.log(x) / Math.log(10));
+  return exp;
 }
 
 export function numberWithCommas(x) {
@@ -300,12 +284,26 @@ export function filterInteractionTermSelection(item, alreadySelectedTerm, intera
   return showVariable;
 }
 
+export function formatPlaintextListWithCommas(li) {
+  const numEles = li.length;
+  var result = li.map(function(ele, i) {
+    if (i == 0) {
+      return `${ ele }`;
+    } else if (i > 0 && i < numEles - 1 && numEles > 2) {
+      return `, ${ ele }`;
+    } else {
+      return ` and ${ ele }`;
+    }
+  })
+  return result.join('');
+}
+
 export function formatListWithCommas(li) {
   const numEles = li.length;
   return li.map(function(ele, i) {
     if (i == 0) {
       return <span>{ ele }</span>
-    } else if (i > 0 && i < numEles - 1) {
+    } else if (i > 0 && i < numEles - 1 && numEles > 2) {
       return <span>, { ele }</span>
     } else {
       return <span> and { ele }</span>

@@ -14,6 +14,7 @@ import {
   FAILED_RECEIVE_SPECS,
   SELECT_FIELD_PROPERTY,
   SET_EXPLORE_QUERY_STRING,
+  SELECT_DATASET,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
@@ -27,6 +28,8 @@ const baseState = {
   error: null
 }
 
+import { SORT_ORDERS } from './visualization';
+
 export default function specs(state=baseState, action) {
   switch (action.type) {
     case RECEIVE_EXACT_SPECS:
@@ -34,7 +37,29 @@ export default function specs(state=baseState, action) {
     case RECEIVE_SUBSET_SPECS:
     case RECEIVE_EXPANDED_SPECS:
       var newSpecs = [ ...state.items, ...action.specs ];
-      return { ...state, isFetching: false, items: newSpecs, recommendationLevel: action.recommendationType.level, updatedAt: action.receivedAt, loaded: true, progress: null, error: null };
+      var newSpecsWithSortFields = newSpecs.map((spec) => {
+        const headers = spec.data.visualize[0].filter((header) =>
+          (typeof header === 'string' || header instanceof String)
+        );
+
+        const SORT_FIELDS = headers.map((field, index) => {
+          var selected = false;
+          if (index == 0)
+            selected = true;
+          return new Object({
+            id: index,
+            name: field,
+            selected: selected
+          })
+        });
+
+        return new Object({
+          ...spec,
+          sortFields: SORT_FIELDS,
+          sortOrders: SORT_ORDERS
+        })
+      })
+      return { ...state, isFetching: false, items: newSpecsWithSortFields, recommendationLevel: action.recommendationType.level, updatedAt: action.receivedAt, loaded: true, progress: null, error: null };
 
     case FAILED_RECEIVE_SPECS:
       return { ...state, isFetching: false, loaded: true, error: action.error };
@@ -46,6 +71,7 @@ export default function specs(state=baseState, action) {
         return state;
       }
 
+    case SELECT_DATASET:
     case WIPE_PROJECT_STATE:
       return baseState;
 

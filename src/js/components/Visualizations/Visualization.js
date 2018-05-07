@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import DynamicFont from 'react-dynamic-font';
 
 import styles from './Visualizations.sass';
 
@@ -41,9 +42,9 @@ export default class Visualization extends Component {
   }
 
   render() {
-    const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields, config } = this.props;
+    const { data, bins, spec, fieldNameToColor, containerClassName, showHeader, headerClassName, visualizationClassName, overflowTextClassName, isMinimalView, visualizationTypes, sortOrders, sortFields, config, isCard, subset } = this.props;
     const { args, meta } = spec;
-    const chartId = `${ this.props.chartId || spec.id  }${ ( sortIndex ? '-' + sortIndex : '') }`;
+    const chartId = `${ this.props.chartId || spec.id }${ ( sortIndex ? '-' + sortIndex : '') }`;
     const validVisualizationTypes = spec.vizTypes.filter((vizType) => visualizationTypes.length == 0 || visualizationTypes.indexOf(vizType) >= 0);
     const defaultVisualizationType = validVisualizationTypes[0];
 
@@ -115,7 +116,6 @@ export default class Visualization extends Component {
     }
 
     // Handle max elements
-
     const tooMuchDataToPreview =
       (isMinimalView &&
         (data.length > MAX_ELEMENTS.preview.all ||
@@ -129,12 +129,10 @@ export default class Visualization extends Component {
         )
       );
 
-
-
     var tooMuchDataString = '';
     if (tooMuchDataToPreview || tooMuchDataToShowFull) {
-      tooMuchDataString = 'Top 20';
-      finalDataArray = data.slice(0, 20);
+      tooMuchDataString = 'Top 1000';
+      finalDataArray = data.slice(0, 1000);
     }
 
     const noData = finalDataArray.length == 1;
@@ -146,39 +144,38 @@ export default class Visualization extends Component {
       );
     }
 
+    const headerSpans = spec.meta.construction.map(function(construct, i) {
+      return <span
+        key={ `construct-${ construct.type }-${ i }` }
+        className={ `${styles.headerFragment} ${styles[construct.type]}` }
+      >
+        { construct.string }</span>
+    });
+
+    const headerPlainText = spec.meta.construction.map(function(construct, i) {
+      return construct.string + ' '
+    });
+
     return (
-      <div className={ containerClassName } onClick={ this.handleClick }>
+      <div className={ ( isCard ? 'pt-card pt-interactive ' : '' )+ containerClassName } onClick={ this.handleClick }>
         { showHeader && spec.meta &&
           <div className={ headerClassName }>
-            { spec.meta.construction.map(function(construct, i) {
-              var style = {};
-              var whiteFont = true;
-              if (construct.type == 'field') {
-                var backgroundColor = fieldNameToColor[construct.string];
-                whiteFont = useWhiteFontFromBackgroundHex(backgroundColor);
-                style['backgroundColor'] = backgroundColor;
-              }
-
-              return <span
-                style={ style }
-                key={ `construct-${ construct.type }-${ i }` }
-                className={
-                  `${styles.headerFragment} ${styles[construct.type]}`
-                  + ' ' + ( whiteFont ? styles.whiteFont : styles.blackFont )
-              }>{ construct.string }</span>
-            })}
+            { headerPlainText }
             { (tooMuchDataToPreview || tooMuchDataToShowFull) &&
               <span className={ `${styles.headerFragment} ${styles.tooMuchData}` }>
                 ({ tooMuchDataString })
               </span>
             }
-          </div>
+          </div>        
         }
         <div className={ styles.visualization
             + ' ' + styles[defaultVisualizationType]
             + (isMinimalView ? ' ' + styles.minimal : '')
             + (visualizationClassName ? ' ' + visualizationClassName : '')
           }>
+            { subset && subset != 'all' &&
+              <div className={ styles.subsetMarker }>SUBSET ({ subset })</div>
+            }
             { (defaultVisualizationType == 'box') &&
               <BoxPlot
                 chartId={ `spec-box-${ chartId }` }
@@ -236,12 +233,12 @@ export default class Visualization extends Component {
             }
             { (defaultVisualizationType == 'line' ) &&
               <LineChart
-                chartId={ `spec-bar-${ chartId }` }
+                chartId={ `spec-line-${ chartId }` }
                 data={ finalDataArray }
                 colors={ colors }
                 labels={ labels }
                 isMinimalView={ isMinimalView }
-                config = { config }/>
+                config={ config }/>
             }
             { defaultVisualizationType == 'pie' &&
               <PieChart
@@ -283,11 +280,14 @@ Visualization.propTypes = {
   bins: PropTypes.array,
   sortOrders: PropTypes.array,
   sortFields: PropTypes.array,
-  config: PropTypes.object
+  config: PropTypes.object,
+  isCard: PropTypes.bool,
+  subset: PropTypes.any
 };
 
 Visualization.defaultProps = {
   chartId: null,
+  data: [],
   visualizationClassName: null,
   containerClassName: styles.visualizationBlock,
   headerClassName: styles.header,
@@ -298,5 +298,7 @@ Visualization.defaultProps = {
   sortOrders: [],
   sortFields: [],
   fieldNameToColor: {},
-  config: {}
+  config: {},
+  isCard: false,
+  subset: false
 };

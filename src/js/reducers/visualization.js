@@ -2,6 +2,8 @@ import {
   CLEAR_VISUALIZATION,
   REQUEST_VISUALIZATION_DATA,
   RECEIVE_VISUALIZATION_DATA,
+  REQUEST_VISUALIZATION_TABLE_DATA,
+  RECEIVE_VISUALIZATION_TABLE_DATA,
   REQUEST_CREATE_EXPORTED_SPEC,
   RECEIVE_CREATED_EXPORTED_SPEC,
   REQUEST_CREATE_SAVED_SPEC,
@@ -9,31 +11,74 @@ import {
   SELECT_SINGLE_VISUALIZATION_VISUALIZATION_TYPE,
   SELECT_SINGLE_VISUALIZATION_SORT_FIELD,
   SELECT_SINGLE_VISUALIZATION_SORT_ORDER,
-  SELECT_VISUALIZATION_BINNING_CONFIG,
-  SELECT_VISUALIZATION_CONFIG,
+  SELECT_VISUALIZATION_DATA_CONFIG,
+  SELECT_VISUALIZATION_DISPLAY_CONFIG,
   SET_SHARE_WINDOW,
+  SELECT_DATASET,
   WIPE_PROJECT_STATE
 } from '../constants/ActionTypes';
 
-const LEGEND_POSITION_OPTIONS = [
+const SUBSET_OPTIONS = [
   {
-    value:'top',
-    label:'Yes'
+    value: 50,
+    label: '50'
   },
   {
-    value:'none',
-    label:'No'
+    value: 100,
+    label: '100'
+  },
+  {
+    value: 200,
+    label: '200'
+  },
+  {
+    value: 500,
+    label: '500'
+  },  
+  {
+    value: 1000,
+    label: '1000'
+  },  
+  {
+    value: 'all',
+    label: 'All'
+  }
+];
+
+const LEGEND_POSITION_OPTIONS = [
+  {
+    value: 'top',
+    label: 'Yes'
+  },
+  {
+    value: 'none',
+    label: 'No'
   }
 ];
 
 const SCALE_OPTIONS = [
-  { 
+  {
     value:'mirrorLog',
     label:'Logarithmic'
   },
-  { 
+  {
     value: 'linear',
     label: 'Linear'
+  }
+];
+
+export const SORT_ORDERS = [
+  {
+    id: 'asc',
+    name: 'Ascending',
+    iconName: 'pt-icon-sort-asc',
+    selected: true
+  },
+  {
+    id: 'desc',
+    name: 'Descending',
+    iconName: 'pt-icon-sort-desc',
+    selected: false
   }
 ];
 
@@ -45,44 +90,49 @@ const baseState = {
   sortOrders: [],
   spec: {},
   sampleSize: null,
+  subset: null,
   visualizationType: null,
   exported: false,
   exportedSpecId: null,
   shareWindow: null,
+  isFetchingTableData: null,
   isExporting: false,
   isSaving: false,
   isFetching: false,
   lastUpdated: null,
   configOptions: {
-    'legendPosition': LEGEND_POSITION_OPTIONS,
-    'scaleType': SCALE_OPTIONS
+    legendPosition: LEGEND_POSITION_OPTIONS,
+    scaleType: SCALE_OPTIONS,
+    subset: SUBSET_OPTIONS
   },
   config: {
-    'hScaleType': 'linear',
-    'legendPosition': 'none',
-    'vScaleType': 'linear'
+    display: {
+      hScaleType: 'linear',
+      legendPosition: 'none',
+      vScaleType: 'linear',
+    },
+    data: {
+      subset: null,
+      binning_type: 'procedural',
+      binning_procedure: 'freedman',
+      num_bins: 7
+    }
   }
 }
 
 export default function visualization(state = baseState, action) {
-  const SORT_ORDERS = [
-    {
-      id: 'asc',
-      name: 'Ascending',
-      iconName: 'fa fa-rotate-270 fa-sort-amount-asc',
-      selected: true
-    },
-    {
-      id: 'desc',
-      name: 'Descending',
-      iconName: 'fa fa-rotate-270 fa-sort-amount-desc',
-      selected: false
-    }
-  ];
-
   switch (action.type) {
     case CLEAR_VISUALIZATION:
       return baseState;
+
+    case REQUEST_VISUALIZATION_TABLE_DATA:
+      return { ...state, isFetchingTableData: true};
+
+    case RECEIVE_VISUALIZATION_TABLE_DATA:
+      return { ...state,
+        isFetchingTableData: false,
+        tableData: action.tableData
+      }
 
     case REQUEST_VISUALIZATION_DATA:
       return { ...state, isFetching: true };
@@ -103,14 +153,21 @@ export default function visualization(state = baseState, action) {
         })
       });
 
+      var config = { ...state.config };
+      if (action.subset) {
+        config.data = { ...state.config.data, subset: action.subset, lastUpdated: Date.now() };
+      }
+
       return {
         ...state,
+        config: config,
         exported: action.exported,
         exportedSpecId: action.exportedSpecId,
         spec: action.spec,
         bins: action.bins,
         tableData: action.tableData,
         visualizationData: action.visualizationData,
+        subset: action.subset,
         sampleSize: action.sampleSize,
         sortFields: SORT_FIELDS,
         sortOrders: SORT_ORDERS,
@@ -139,13 +196,17 @@ export default function visualization(state = baseState, action) {
     case SELECT_SINGLE_VISUALIZATION_VISUALIZATION_TYPE:
       return { ...state, visualizationType: action.selectedType };
 
-    case SELECT_VISUALIZATION_BINNING_CONFIG:
-      return { ...state, config: action.config, lastUpdated: Date.now() };
+    case SELECT_VISUALIZATION_DISPLAY_CONFIG:
+      var modifiedDisplayConfig = state.config.display;
+      modifiedDisplayConfig[action.key] = action.value;
+      modifiedDisplayConfig.lastUpdated = Date.now();
+      return { ...state, config: { ...state.config, display: modifiedDisplayConfig }};
 
-    case SELECT_VISUALIZATION_CONFIG:
-      var modifiedConfig = state.config;
-      modifiedConfig[action.key] = action.value;
-      return { ...state, config: modifiedConfig, lastUpdated: Date.now() };
+    case SELECT_VISUALIZATION_DATA_CONFIG:
+      var modifiedDataConfig = { ...state.config.data };
+      modifiedDataConfig[action.key] = action.value;
+      modifiedDataConfig.lastUpdated = Date.now();
+      return { ...state, config: { ...state.config, data: modifiedDataConfig }};
 
     case REQUEST_CREATE_EXPORTED_SPEC:
       return { ...state, isExporting: true };
@@ -162,6 +223,7 @@ export default function visualization(state = baseState, action) {
     case SET_SHARE_WINDOW:
       return { ...state, shareWindow: action.shareWindow };
 
+    case SELECT_DATASET:
     case WIPE_PROJECT_STATE:
       return baseState;
 

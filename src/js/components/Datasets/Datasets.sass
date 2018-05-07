@@ -1,5 +1,43 @@
 @import '../../../css/mixins.sass'
 @import '../../../css/flexbox.sass'
+@import './DatasetGrid.sass'
+@import './DatasetProperties.sass'
+
+.datasetMenuPageContainer
+  flex-grow: 1
+  display: flex
+  flex-direction: row
+  align-items: center
+
+  .menuOption
+    display: flex
+    flex-direction: column
+    padding: 20px
+    height: 200px
+    width: 250px
+
+    margin-left: 10px
+
+    align-items: center
+    justify-content: center
+    text-align: center
+
+    background-color: $white
+    color: $black
+
+    cursor: pointer
+    text-decoration: none
+
+    &.disabled
+      opacity: 0.3
+      pointer-events: none
+
+    .menuOptionIcon
+      padding-top: 10px
+      font-size: 48px
+
+    .description
+      padding-top: 15px
 
 .datasetDataList
   display: flex
@@ -11,7 +49,7 @@
 
 .datasetPageContainer, .datasetContainer
   background-color: $center-grey
-  overflow: scroll
+  overflow: auto
 
 .uploadingZone
   background-color: #FDFDFD
@@ -21,16 +59,28 @@
 .watermark
   +watermark
 
-.errorDescription
+.dragAndDrop
+  padding-top: 8px
+
+.uploadDescription, .errorDescription
   display: flex
   flex-direction: column
-  margin-bottom: 20px
   align-items: center
+  margin-top: 20px
+  line-height: 20px
+
+.errorDescription
+  color: $red1
 
 .separater
   border-bottom: 1px solid #eee
-  margin-top: 10px
+  margin-top: 20px
+  margin-bottom: 20px
   width: 70%
+
+.preloadedNav
+  .link
+    +linkStyle(14px)
 
 .datasetSelectorContainer
   display: flex
@@ -48,196 +98,18 @@
   .dropzone
     background-color: rgba(255, 255, 255, 0.8)
     border: 2px dashed #BBB
-    justify-content: center
+    -content: center
 
-    span
-      color: #2a2d33
-      font-size: 12px
-      font-weight: 400
-      line-height: 35px
+.dimensions
+  
 
-.cellContent
-  display: flex
-  flex-grow: 1
-  align-items: center
-  max-width: 100%
-
-  .fieldType
-    display: flex
-
-  .fieldValue
-    display: inline
-    flex-grow: 1
-    overflow: hidden
-    text-overflow: ellipsis
-    white-space: nowrap
-
-.datasetPropertiesPane
-  height: 80px
-
-.gridContainer
-  display: flex
-  flex-grow: 1
-  flex-direction: column
-  overflow-x: scroll
+.formatToggle
   position: relative
-  margin-top: -1px
+  top: 2px
 
-  .scrollContainer
-    position: absolute
-    display: flex
-    flex-direction: column
-    flex-grow: 1
-    max-height: 100%
-    height: 100%
-    min-width: 100%
-
-.headerRowTable, .metadataRowTable, .dataRowsTable
-  > div
-    width: auto!important
-    overflow: visible!important
-
-  .fieldTypeDropDown.dropDownMenu
-    max-width: 100px
-    height: 20px
-
-    > div
-      > div:first-of-type
-        height: 20px
-        line-height: 20px
-        padding: 0
-        background-color: transparent
-        border: none
-        box-shadow: none
-        text-align: right
-        position: relative
-
-        > div:first-child
-          height: 20px
-          line-height: 20px
-          padding-right: 12px
-
-        > span:last-child
-          position: absolute
-          right: -9px
-          top: -1px
-
-          > span:first-child
-            border-width: 4px 3px 0
-
-      > div:nth-of-type(2)
-        width: auto
-        right: 0
-
-        > div
-          > div
-            text-align: right
-            padding-right: 10px
-
-    .fieldTypeValue
-      font-weight: 400
-      font-size: 12px
-      color: #888
-
-.dataRowsTable
-  overflow-y: auto
-  height: 100%
-
-  .cell
-    overflow: hidden
-    white-space: nowrap
-    border: 1px solid #EBEBEB
-    padding: 3px 10px 2px
-    text-overflow: ellipsis
-    background-color: white
-
-    &.decimal, &.datetime, &.integer
-      .fieldValue
-        text-align: right
-
-.headerRowTable, .metadataRowTable
-  .row
-    .cell
-      background-color: white
-      border: 1px solid #CCCCCC
-      border-left-width: 0
-      border-top-color: #C0C0C0
-      border-bottom-color: #CDCDCD
-      border-bottom-width: 2px
-
-      font-weight: 500
-      padding: 5px 10px 4px
-      text-align: left
-      height: 31px
-      align-items: flex-start
-
-      &:last-child
-        border-right-width: 0px
-
-.headerRowTable
-  .row
-    .cell
-      border-bottom: 1px solid $ui-line-grey
-      background-color: $ui-header-grey
-
-.metadataRowTable
-  .row
-    .cell
-      position: relative
-      padding-top: 5px
-      font-weight: 400
-      border-top: 0px
-      height: 170px
-      overflow-x: hidden
-      overflow-y: auto
-      overflow: visible
-
-      div
-        width: 100%
-
-      .statistics, .typeScores
-        padding-top: 5px
-
-        .field
-          font-weight: 500
-
-      .toggles
-        position: absolute
-        display: flex
-        flex-direction: row
-        bottom: 5px33
-
-        .left
-          input
-            margin-left: 0px
-
-        .right
-          .colorPickerButton
-            cursor: pointer
-            border: 1px solid $ui-line-grey
-            border-radius: 10px
-            width: 15px
-            height: 15px
-            margin-right: 20px
-            margin-left: auto
-
-.row
-  display: flex
-  flex-direction: row
-
-  .cell
-    display: flex
-    flex-grow: 1
-    align-items: center
-    height: 24px
-    font-size: 12px
-    color: #333
-    border-left-width: 0
-    border-bottom-width: 0
-    width: 200px
-
-    &:last-child
-      border-right-width: 0px
+  button
+    ::before
+      margin-right: 0
 
 .headerControlRow
   display: flex

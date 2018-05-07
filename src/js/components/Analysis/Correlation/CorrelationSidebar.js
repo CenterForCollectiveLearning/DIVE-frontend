@@ -11,6 +11,7 @@ import styles from '../Analysis.sass';
 import ConditionalSelector from '../../Base/ConditionalSelector';
 import Sidebar from '../../Base/Sidebar';
 import SidebarGroup from '../../Base/SidebarGroup';
+import SidebarCategoryGroup from '../../Base/SidebarCategoryGroup';
 import ToggleButtonGroup from '../../Base/ToggleButtonGroup';
 import DropDownMenu from '../../Base/DropDownMenu';
 
@@ -18,17 +19,17 @@ export class CorrelationSidebar extends Component {
   componentWillMount(props) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = this.props;
 
-    if (project.id && datasetSelector.datasetId && !fieldProperties.items.length && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
+    if (project.id && datasetSelector.id && !fieldProperties.items.length && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.id)
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { project, datasetSelector, fieldProperties, fetchFieldPropertiesIfNeeded } = nextProps;
-    const datasetIdChanged = datasetSelector.datasetId != this.props.datasetSelector.datasetId;
+    const datasetIdChanged = datasetSelector.id != this.props.datasetSelector.id;
 
-    if (project.id && datasetSelector.datasetId && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
-      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.datasetId)
+    if (project.id && datasetSelector.id && (datasetIdChanged || !fieldProperties.items.length) && !fieldProperties.fetching) {
+      fetchFieldPropertiesIfNeeded(project.id, datasetSelector.id)
     }
   }
 
@@ -48,59 +49,55 @@ export class CorrelationSidebar extends Component {
 
   render() {
     const { fieldProperties, conditionals, correlationVariablesIds, selectConditional } = this.props;
-    const quantitativeVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q')
+    const quantitativeVariables = this.props.fieldProperties.items.filter((item) => item.generalType == 'q' && item.scale == 'continuous')
     return (
       <Sidebar selectedTab="correlation">
-        { fieldProperties.items.length != 0 &&
-          <SidebarGroup heading="Correlation Variables">
-            { fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
-              <div className={ styles.fieldGroup }>
-                <div className={ styles.fieldGroupHeader }>
-                  <div className={ styles.fieldGroupLabel }>Quantitative</div>
-                  { correlationVariablesIds.length > 0 &&
-                    <div className={ styles.fieldGroupAction }
-                      onClick={ (v) => this.clickClearKeyFromQueryString('correlationVariablesIds') }>
-                      Deselect All
-                    </div>
-                  }
-                </div>
-                <ToggleButtonGroup
-                  toggleItems={ quantitativeVariables.map((item) =>
-                    new Object({
-                      id: item.id,
-                      name: item.name,
-                      color: item.color,
-                      disabled: item.isId
-                    })
-                  )}
-                  valueMember="id"
-                  colorMember="color"
-                  displayTextMember="name"
-                  externalSelectedItems={ correlationVariablesIds }
-                  separated={ true }
-                  onChange={ (v) => this.clickQueryStringTrackedItem({ correlationVariablesIds: [ parseInt(v)] }) } />
+        <SidebarCategoryGroup
+          heading="Variable Selection"
+          iconName="variable"
+          rightAction={ correlationVariablesIds.length > 0 &&
+            <span className={ 'pt-icon-standard pt-icon-delete'}
+              onClick={ (v) => this.clickClearKeyFromQueryString('correlationVariablesIds') } />
+          }>
+          { fieldProperties.items.length != 0 && fieldProperties.items.filter((property) => property.generalType == 'q').length > 0 &&
+            <div className={ styles.fieldGroup }>
+              <div className={ styles.fieldGroupHeader }>
+                <span className={ styles.fieldGroupLabel }>Quantitative</span>
+                <span className={ "pt-icon-standard pt-icon-numerical " + styles.generalTypeIcon } />
               </div>
-            }
-          </SidebarGroup>
-        }
-        { fieldProperties.items.length != 0 && conditionals.items.length != 0 &&
-          <SidebarGroup heading="Filter by field">
-            { conditionals.items.map((conditional, i) =>
-              <div key={ conditional.conditionalId }>
-                <ConditionalSelector
-                  conditionalIndex={ i }
-                  conditionalId={ conditional.conditionalId }
-                  fieldId={ conditional.fieldId }
-                  combinator={ conditional.combinator }
-                  operator={ conditional.operator }
-                  value={ conditional.value }
-                  fieldProperties={ fieldProperties.items }
-                  selectConditionalValue={ selectConditional }/>
-              </div>
-            )}
-          </SidebarGroup>
-        }
-
+              <ToggleButtonGroup
+                toggleItems={ quantitativeVariables.map((item) =>
+                  new Object({
+                    id: item.id,
+                    name: item.name,
+                    color: item.color,
+                    disabled: item.isId
+                  })
+                )}
+                valueMember="id"
+                colorMember="color"
+                displayTextMember="name"
+                externalSelectedItems={ correlationVariablesIds }
+                separated={ true }
+                onChange={ (v) => this.clickQueryStringTrackedItem({ correlationVariablesIds: [ parseInt(v)] }) } />
+            </div>
+          }
+        </SidebarCategoryGroup>
+        <SidebarCategoryGroup heading="Filters" initialCollapse={ true } iconName="filter">
+          { fieldProperties.items.length != 0 && conditionals.items.length != 0 && conditionals.items.map((conditional, i) =>
+            <div key={ conditional.conditionalId }>
+              <ConditionalSelector
+                conditionalIndex={ i }
+                conditionalId={ conditional.conditionalId }
+                fieldId={ conditional.fieldId }
+                combinator={ conditional.combinator }
+                operator={ conditional.operator }
+                value={ conditional.value }
+                fieldProperties={ fieldProperties.items }
+                selectConditionalValue={ selectConditional }/>
+            </div>
+          )}
+        </SidebarCategoryGroup>
       </Sidebar>
     );
   }

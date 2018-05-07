@@ -3,24 +3,26 @@ import React, { Component, PropTypes } from 'react';
 import styles from '../Analysis.sass';
 
 import BareDataGrid from '../../Base/BareDataGrid';
-import { getRoundedString } from '../../../helpers/helpers';
+import Number from '../../Base/Number';
 
 export default class AnovaTable extends Component {
 
   render() {
     const { anovaData } = this.props;
 
+    console.log('In AnovaTable', anovaData.columnHeaders);
+
     const data = [
       {
         rowClass: styles.tableHeaderRow,
         columnClass: styles.tableHeaderColumn,
-        items: ["", ...anovaData.columnHeaders]
+        items: ["", ...anovaData.columnHeaders.slice(0, anovaData.columnHeaders.length - 2), 'Identical']
       },
       ...anovaData.stats.map(function(object) {
         return new Object({
           rowClass: styles.dataRow,
           columnClass: styles.dataColumn,
-          items: [ object.field, ...object.stats.map((num) => <div className={ styles.dataCell }>{ getRoundedString(num, 2, true) }</div>) ]
+          items: [ object.field, ...object.stats.map((num) => <Number className={ styles.dataCell } value={ num } />) ]
         })
       })
     ];

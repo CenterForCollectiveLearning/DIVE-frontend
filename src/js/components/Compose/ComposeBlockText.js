@@ -26,7 +26,7 @@ export default class ComposeBlockText extends Component {
 
   render() {
     return (
-      <div className={ styles.composeBlockText }>
+      <div className={ styles.composeBlockText + ' pt-running-text' }>
         <ReactQuill
           readOnly={ !this.state.editable }
           value={ this.state.text }

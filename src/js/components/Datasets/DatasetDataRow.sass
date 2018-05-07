@@ -31,7 +31,7 @@
       display: flex
       flex-direction: column
       justify-content: center
-      padding-top: 10px
+      font-size: 14px
 
     div.name, div.type
       display: flex
@@ -41,17 +41,22 @@
     div.name
       font-weight: bold
       min-width: 200px
-      font-size: 12px
-      line-height: 12px
+      font-size: 14px
+      line-height: 14px
       text-overflow: ellipsis
 
     div.type
       min-width: 80px
       margin-right: 20px
+      padding-top: 10px
+      padding-left: 0px
+
+      .prefixIcon
+        margin-right: 5px
 
     div.statistics
-      +smallCaps
       display: flex
+      margin-left: auto
 
       div.statistic
         display: flex
@@ -59,7 +64,6 @@
         justify-content: center
         text-align: center
         white-space: wrap
-        padding: 0 15px
 
         min-width: 100px
         width: 100px
@@ -69,9 +73,17 @@
           width: 160px
 
         .field
+          +smallCapsBold
+          // color: $small-caps-grey
+
         .value
-          color: $primary-accent
           font-size: 14px
+          &.inlineElements
+            display: flex
+            justify-content: center
+
+          .inline
+            display: inline
 
     div.toggles
       +smallCaps
@@ -89,6 +101,7 @@
     align-items: center
     justify-content: center
     width: 35px
+    height: 100%
 
     .dropdown
       position: absolute
@@ -120,29 +133,9 @@
           background-color: $primary-accent
           color: white
 
-    &:after
-      content: "︿"
-      font-weight: bold
-      position: relative
-      top: -3px
-
     &:hover
       background-color: $ui-header-grey
-
-      &:after
-        content: "﹀"
-        top: 3px
-
-      .dropdown
-        opacity: 1
-        pointer-events: auto
-        user-select: text
 
   .fieldTypeDropDown.dropDownMenu
     margin-top: -5px
     margin-left: -10px
-    > div
-      > div:first-of-type
-        background-color: transparent
-        border: none
-        box-shadow: none

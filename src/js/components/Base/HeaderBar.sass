@@ -11,17 +11,16 @@
   &.hasHeaderText
     height: auto
     min-height: 20px
+    // border-bottom: 1px solid $ui-line-grey
     padding-top: 15px
     padding-left: 8px
-    border-bottom: 1px solid $ui-line-grey
     margin-left: 15px
-    margin-bottom: 15px
+    // margin-bottom: 15px
 
   .headerText
-    line-height: 26px
-    color: $black
-    font-weight: bold
-    font-size: 18px
+    // line-height: 26px
+    // color: $black
+    // font-size: 18px
     width: 100%
     display: flex
 
@@ -70,7 +69,16 @@
     flex-grow: 1
     position: absolute
     top: 10px
-    right: 15px
+    right: 10px
 
-    > div
+    > div > div, > div > button
       margin-left: 10px
+
+  &.hasSidebar
+    .pageRightActions
+      right: 295px
+
+@media screen and (max-width: $break-large)
+  .headerBar.hasSidebar
+    .pageRightActions
+      right: calc(100% - #{$left-sidebar-width} - #{$center-pane-width})

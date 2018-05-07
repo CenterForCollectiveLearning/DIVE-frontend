@@ -5,8 +5,10 @@ import canvg from 'canvg-browser';
 import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
 
+import { Button } from '@blueprintjs/core';
+
 import { fetchDatasets } from '../../../actions/DatasetActions';
-import { fetchSpecVisualizationIfNeeded, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
+import { fetchSpecVisualizationIfNeeded, getVisualizationTableData, createExportedSpec, setShareWindow } from '../../../actions/VisualizationActions';
 import styles from '../Visualizations.sass';
 
 import VisualizationView from '../VisualizationView';
@@ -14,18 +16,10 @@ import BareDataGrid from '../../Base/BareDataGrid';
 import RaisedButton from '../../Base/RaisedButton';
 
 export class SingleVisualizationView extends Component {
-  constructor(props) {
-    super(props);
-
-    this.saveVisualization = this.saveVisualization.bind(this);
-    this.onClickShare = this.onClickShare.bind(this);
-    this.onClickExplore = this.onClickExplore.bind(this);
-  }
-
   componentWillMount() {
     const { project, datasetSelector, datasets, specId, visualization, fetchSpecVisualizationIfNeeded } = this.props;
 
-    if (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded))) {
+    if (project.id && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded))) {
       fetchDatasets(project.id);
     }
 
@@ -35,18 +29,18 @@ export class SingleVisualizationView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { visualization, conditionals, datasets, datasetSelector, project, fetchSpecVisualizationIfNeeded, fetchDatasets } = this.props;
+    const { visualization, dataConfig, conditionals, datasets, datasetSelector, project, fetchSpecVisualizationIfNeeded, fetchDatasets } = this.props;
 
     const exportingChanged = visualization.isExporting != nextProps.visualization.isExporting;
     const conditionalsChanged = nextProps.conditionals.lastUpdated != conditionals.lastUpdated;
-    const configChanged = nextProps.visualization.config != visualization.config;
+    const dataConfigChanged = nextProps.dataConfig.lastUpdated != dataConfig.lastUpdated;
     const projectChanged = (nextProps.project.id !== project.id);
 
-    if (projectChanged || (project.id && (!datasetSelector.datasetId || (!datasets.isFetching && !datasets.loaded)))) {
-      fetchDatasets(project.id);
+    if ((projectChanged && nextProps.project.id) || (project.id && (!datasetSelector.id || (!datasets.isFetching && !datasets.loaded)))) {
+      fetchDatasets(nextProps.project.id);
     }
 
-    if (nextProps.project.id && !visualization.isFetching && (!visualization.spec.id || conditionalsChanged || configChanged)) {
+    if (nextProps.project.id && !visualization.isFetching && (!visualization.spec.id || conditionalsChanged || dataConfigChanged)) {
       fetchSpecVisualizationIfNeeded(nextProps.project.id, nextProps.specId, nextProps.conditionals.items, nextProps.visualization.config);
     }
 
@@ -55,7 +49,7 @@ export class SingleVisualizationView extends Component {
     }
   }
 
-  saveAs(filetitle = 'test', format = 'png') {
+  saveAs = (filetitle = 'test', format = 'png') => {
     const svgElement = document.querySelectorAll('*[id^="spec-"]')[0].getElementsByTagName('svg')[0];
     svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     svgElement.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
@@ -100,19 +94,25 @@ export class SingleVisualizationView extends Component {
     }
   }
 
-  saveVisualization(saveAction = true) {
+  saveVisualization = (saveAction = true) => {
     const { project, visualization, createExportedSpec, conditionals } = this.props;
-    createExportedSpec(project.id, visualization.spec.id, visualization.visualizationData, conditionals.items, visualization.config, saveAction);
+    const { bins, visualizationData, tableData } = visualization;
+    createExportedSpec(project.id, visualization.spec.id, { 'visualize': visualizationData, 'table': tableData, 'bins': bins}, conditionals.items, visualization.config, saveAction);
   }
 
-  onClickShare() {
+  onClickShare = () => {
     setShareWindow(window.open('about:blank'));
     this.saveVisualization(false);
   }
 
-  onClickExplore() {
+  onClickExplore = () => {
     const { project, datasetSelector, exploreSelector, push } = this.props;
-    push(`/projects/${ project.id }/datasets/${ datasetSelector.datasetId }/visualize/explore${ exploreSelector.queryString }`);
+    push(`/projects/${ project.id }/datasets/${ datasetSelector.id }/visualize/explore${ exploreSelector.queryString }`);
+  }
+
+  getTableData = () => {
+    const { project, visualization, conditionals, getVisualizationTableData, dataConfig } = this.props;
+    getVisualizationTableData(project.id, visualization.spec.id, conditionals.items, dataConfig);
   }
 
   render() {
@@ -125,30 +125,40 @@ export class SingleVisualizationView extends Component {
       visualizationTitle = (visualization.spec.meta.desc || 'visualization');
       fileName = 'DIVE | ' + visualizationTitle.charAt(0).toUpperCase() + visualizationTitle.slice(1);
     }
-
     return (
-      <VisualizationView visualization={ visualization } fieldNameToColor={ fieldNameToColor }>
+      <VisualizationView
+        className={ styles.fillContainer }
+        visualization={ visualization }
+        fieldNameToColor={ fieldNameToColor }
+        getTableData={ this.getTableData }
+      >
         <div className={ styles.hidden }>
           <canvas id="export-canvas"/>
         </div>
         <div className={ styles.headerControlRow }>
           <div className={ styles.headerControl }>
-            <RaisedButton label="Back to Explore" onClick={ this.onClickExplore } fullWidth={ true }/>
+            <Button iconName='undo' text="Back to Explore" onClick={ this.onClickExplore } fullWidth={ true }/>
           </div>
           <div className={ styles.headerControl }>
-            <RaisedButton onClick={ this.onClickShare }>
-              { visualization.isExporting && "Exporting..." }
-              { !visualization.isExporting && "URL" }
-            </RaisedButton>
-            <RaisedButton label="SVG" onClick={ this.saveAs.bind(this, fileName, 'svg') } fullWidth={ true }/>
-            <RaisedButton label="PNG" onClick={ this.saveAs.bind(this, fileName, 'png') } fullWidth={ true }/>
-            <RaisedButton label="PDF" onClick={ this.saveAs.bind(this, fileName, 'pdf') } fullWidth={ true }/>
+            <div className="pt-button-group">
+              {/* <Button onClick={ this.onClickShare }>
+                { visualization.isExporting && "Exporting..." }
+                { !visualization.isExporting && "URL" }
+              </Button> */}
+              <Button text="SVG" onClick={ () => this.saveAs(fileName, 'svg') } fullWidth={ true }/>
+              <Button text="PNG" onClick={ () => this.saveAs(fileName, 'png') } fullWidth={ true }/>
+              <Button text="PDF" onClick={ () => this.saveAs(fileName, 'pdf') } fullWidth={ true }/>
+            </div>
           </div>
           <div className={ styles.headerControl }>
-            <RaisedButton onClick={ this.saveVisualization } active={ saved } buttonStyle='blueActive'>
-              { !visualization.isSaving && visualization.exportedSpecId && <i className="fa fa-star"></i> }
-              { !visualization.exportedSpecId && <i className="fa fa-star-o"></i> }
-            </RaisedButton>
+            <Button onClick={ this.saveVisualization } active={ saved } buttonStyle='blueActive' loading={ visualization.isSaving }>
+              { !visualization.isSaving && !visualization.exportedSpecId &&
+                <div><span className='pt-icon-standard pt-icon-star-empty' />Save</div>
+              }
+              { visualization.exportedSpecId &&
+                <div><span className='pt-icon-standard pt-icon-star' />Saved</div>
+              }
+            </Button>
           </div>
         </div>
       </VisualizationView>
@@ -165,10 +175,12 @@ SingleVisualizationView.propTypes = {
 
 function mapStateToProps(state) {
   const { project, conditionals, datasets, datasetSelector, fieldProperties, visualization, exploreSelector } = state;
+
   return {
     project,
     fieldNameToColor: fieldProperties.fieldNameToColor,
     visualization,
+    dataConfig: visualization.config.data,
     exploreSelector,
     conditionals,
     datasets,
@@ -179,6 +191,7 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   push,
   fetchSpecVisualizationIfNeeded,
+  getVisualizationTableData,
   createExportedSpec,
   setShareWindow,
   fetchDatasets,

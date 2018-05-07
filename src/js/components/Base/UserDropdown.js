@@ -24,7 +24,7 @@ class UserDropdown extends Component {
     this.setState({ dropdownOpen: false });
   }
 
-  _logout() {
+  _logout = () => {
     const { logoutUser } = this.props;
     logoutUser();
   }
@@ -40,11 +40,11 @@ class UserDropdown extends Component {
             onClick={ this._handleClick.bind(this) }
           >
             { user.username }
-            <div className={ styles.chevron + ' fa fa-caret-down'}></div>
+            <span className={ styles.chevron + ' pt-icon-standard pt-icon-symbol-triangle-down'} />
           </div>
           { dropdownOpen &&
             <div className={ styles.dropdown }>
-              <div className={ styles.dropdownItem } onClick={ this._logout.bind(this) } >Logout</div>
+              <div className={ styles.dropdownItem } onClick={ this._logout } >Logout</div>
             </div>
           }
         </div>

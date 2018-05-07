@@ -1,6 +1,41 @@
+export class Task {
+  constructor(taskId, taskMode, taskType) {
+    const creationTime = Date.now();
+    this.id = taskId;
+    this.mode = taskMode;
+    this.type = taskType;
+    this.creationTime = creationTime;
+    this.lastPollTime = creationTime;
+  }
+
+  updatePollTime() {
+    this.lastPollTime = Date.now();
+  }
+}
+
 export default class TaskManager {
   constructor() {
     this.currentTasks = [];
+  }
+
+  outputStateAsTable() {
+    console.table(this.currentTasks);
+  }
+
+  getTask(taskId) {
+    return this.currentTasks.find((task) => task.id == taskId);
+  }
+
+  updateTask(taskId) {
+    const task = this.currentTasks.find((task) => task.id == taskId);
+    if (task) {
+      task.updatePollTime();
+    }
+    return task;
+  }
+
+  isActiveTask(taskId) {
+    return (this.currentTasks.findIndex((task) => task.id == taskId) > -1);
   }
 
   getAllTasks() {
@@ -21,19 +56,26 @@ export default class TaskManager {
     return tasks.map((task) => task.id);
   }
 
-  addTask(taskId, taskType) {
-    var tasks = this.currentTasks;
+  addTask(taskId, taskMode, taskType) {
+    var existingTasks = this.currentTasks.slice();
+    var newTask = new Task(taskId, taskMode, taskType);
 
-    const otherTaskIds = tasks
-      .filter((task) => ((task.id != taskId) && (task.type == taskType)))
+    const tasksOfDifferentMode = existingTasks
+      .filter((task) => (task.mode != taskMode))
       .map((task) => task.id);
 
-    if (tasks.find((oldTask) => (oldTask.id == taskId)) == undefined) {
-       tasks.push({ id: taskId, type: taskType });
+    const otherTaskIdsOfSameType = existingTasks
+      .filter((task) => ((task.id != taskId) && (task.type == taskType) && (task.creationTime < newTask.creationTime)))
+      .map((task) => task.id);
+
+    if (existingTasks.find((t) => (t.id == taskId)) == undefined) {
+       this.setTasks([...existingTasks, newTask]);
     }
 
-    this.setTasks(tasks);
-    return otherTaskIds;
+    return {
+      differentMode: tasksOfDifferentMode,
+      sameType: otherTaskIdsOfSameType
+    }
   }
 
   removeTask(taskId) {
