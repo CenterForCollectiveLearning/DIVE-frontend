@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
@@ -142,7 +143,7 @@ class ResetPasswordEmailPage extends Component {
 }
 
 ResetPasswordEmailPage.propTypes = {
-  authRequired: React.PropTypes.bool
+  authRequired: PropTypes.bool
 };
 
 function mapStateToProps(state) {

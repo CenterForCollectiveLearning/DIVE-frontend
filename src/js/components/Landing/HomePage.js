@@ -1,9 +1,9 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styles from './Landing.sass';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
-import cookie from 'react-cookie';
 import { createProject, fetchPreloadedProjects, fetchUserProjects, wipeProjectState } from '../../actions/ProjectActions';
 
 import { Button, Intent } from '@blueprintjs/core';
@@ -136,41 +136,10 @@ export class HomePage extends Component {
               </div>
             </div>
             <div className={ styles.section + ' ' + styles.contentSection + ' ' + styles.aboutContainer }>
-              <div className={ styles.sectionHeader }>DIVE Development Team</div>
+              <div className={ styles.sectionHeader }>Team</div>
               <div className={ styles.sectionContent }>
                 <div className={ styles.textBox }>
                   <p className="pt-running-text">DIVE is built by <a target="_blank" href="https://twitter.com/KevinZengHu">Kevin Hu</a> and <a target="_blank" href="https://twitter.com/cesifoti">César Hidalgo</a> in the <a target="_blank" href="http://macro.media.mit.edu">Collective Learning Group</a> at the <a target="_blank" href="http://media.mit.edu">MIT Media Lab</a>. To give feedback, compliments, or complaints, please e-mail us at <a href="mailto:dive@media.mit.edu" target="_top">dive@media.mit.edu</a>.</p>
-                </div>
-                <div className={ styles.mugshotBox }>
-                  <div className={ styles.mugshots }>
-                    <div className={ styles.mugshotContainer }>
-                      <a href="http://twitter.com/kevinzenghu" target="_blank">
-                        <img className={ styles.mugshot } src="/assets/images/kevin.mugshot.jpg"/>
-                      </a>
-                      <div className={ styles.mugCaption }>
-                        <span className={ styles.mugCaptionName }>Kevin Hu</span>
-                        <span className={ styles.mugCaptionRole }>PhD Candidate</span>
-                      </div>
-                    </div>
-                    <div className={ styles.mugshotContainer }>
-                      <a href="" target="_blank">
-                        <img className={ styles.mugshot } src="/assets/images/suzanne.mugshot.jpg"/>
-                      </a>
-                      <div className={ styles.mugCaption }>
-                        <span className={ styles.mugCaptionName }>Suzanne Wang</span>
-                        <span className={ styles.mugCaptionRole }>Undergraduate Intern</span>
-                      </div>
-                    </div>
-                    <div className={ styles.mugshotContainer }>
-                      <a href="http://twitter.com/cesifoti" target="_blank">
-                        <img className={ styles.mugshot } src="/assets/images/cesar.mugshot.jpg"/>
-                      </a>
-                      <div className={ styles.mugCaption }>
-                        <span className={ styles.mugCaptionName }>César Hidalgo</span>
-                        <span className={ styles.mugCaptionRole }>Principal Investigator</span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

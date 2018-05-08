@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
@@ -49,7 +50,7 @@ class LoginPage extends Component {
 
   closeLoginPage = () => {
     const { push } = this.props;
-    push('/')
+    this.props.history.push('/')
   }
 
   handleUsernameOrEmailChange = (e) => {
@@ -74,11 +75,11 @@ class LoginPage extends Component {
   }
 
   clickRegister = () => {
-    this.props.push('/auth/register');
+    this.props.history.push('/auth/register');
   }
 
   clickForgot = () => {
-    this.props.push('/auth/reset');
+    this.props.history.push('/auth/reset');
   }
 
   handleRememberMeChange = (e) => {
@@ -93,8 +94,10 @@ class LoginPage extends Component {
   ensureNotLoggedIn(props) {
     const { user, push } = props;
 
+    console.log('Props in location', props);
     if (user.isAuthenticated && !user.anonymous){
-      push(props.location.query.next || '/projects');
+      const query = new URLSearchParams(location.search)
+      this.props.history.push(query.get('next') || '/projects');
     }
   };
 
@@ -114,6 +117,8 @@ class LoginPage extends Component {
     if (authRequired) {
       openModal();
     }
+
+    console.log('Logging in');
 
     return (
       <DocumentTitle title='DIVE | Login'>
@@ -186,7 +191,7 @@ class LoginPage extends Component {
 }
 
 LoginPage.propTypes = {
-  authRequired: React.PropTypes.bool
+  authRequired: PropTypes.bool
 };
 
 function mapStateToProps(state) {

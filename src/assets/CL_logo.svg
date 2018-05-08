@@ -5,11 +5,46 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.1"
    id="svg2"
    viewBox="0 0 571.37102 260.56888"
    height="73.53833mm"
-   width="161.2536mm">
+   width="161.2536mm"
+   sodipodi:docname="CL_logo.svg"
+   inkscape:version="0.92.3 (3ce5693, 2018-03-11)">
+  <metadata
+     id="metadata30">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
+     id="namedview28"
+     showgrid="false"
+     inkscape:zoom="1.3922567"
+     inkscape:cx="-68.056638"
+     inkscape:cy="138.97007"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g4222" />
   <defs
      id="defs4" />
   <g
@@ -94,13 +129,17 @@
            style="fill:#100f0d;fill-opacity:1;fill-rule:nonzero;stroke:none"
            id="path4258" />
         <path
-           d="m 2557.4,2273.39 0,284.27 -1989.607,0 0,-1990.23 852.927,0 0,284.281 -568.599,0 0,1421.679 1705.279,0"
+           d="m 1420.7561,2273.39 10e-5,284.27 H 567.793 V 567.43 H 1420.72 V 851.711 H 852.121 v 1421.679 0"
            style="fill:#100f0d;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           id="path4260" />
+           id="path4260"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccccccccc" />
         <path
-           d="m 1988.91,570.02 0,1421.58 -284.33,0 0,-1421.659"
+           d="m 1988.91,570.02 0,1987.2085 h -284.33 l 0,-1987.2875"
            style="fill:#100f0d;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           id="path4262" />
+           id="path4262"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cccc" />
         <path
            d="m 1704.45,851.648 0,-284.187 852.94,0 0,284.269 -852.91,0"
            style="fill:#100f0d;fill-opacity:1;fill-rule:nonzero;stroke:none"

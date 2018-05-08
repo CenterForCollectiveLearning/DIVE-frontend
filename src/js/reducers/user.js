@@ -26,17 +26,18 @@ import {
 } from '../constants/ActionTypes';
 import { LOCATION_CHANGE } from 'react-router-redux'
 
-import cookie from 'react-cookie';
+import Cookies from 'universal-cookie';
+const cookie = new Cookies();
 
 const baseState = {
-  anonymous: (cookie.load('anonymous') == 'False') ? false : true,
-  showToast: (cookie.load('show_toast') == 'False') ? false : true,
-  rememberToken: cookie.load('remember_token') || null,
-  isAuthenticated: cookie.load('remember_token') ? true : false,
-  username: cookie.load('username') || '',
-  email: cookie.load('email') || '',
-  id: cookie.load('user_id') || '',
-  confirmed: (cookie.load('confirmed') == 'True') ? true : false,
+  anonymous: (cookie.get('anonymous') == 'False') ? false : true,
+  showToast: (cookie.get('show_toast') == 'False') ? false : true,
+  rememberToken: cookie.get('remember_token') || null,
+  isAuthenticated: cookie.get('remember_token') ? true : false,
+  username: cookie.get('username') || '',
+  email: cookie.get('email') || '',
+  id: cookie.get('user_id') || '',
+  confirmed: (cookie.get('confirmed') == 'True') ? true : false,
   login: {
     error: null,
     success: false,

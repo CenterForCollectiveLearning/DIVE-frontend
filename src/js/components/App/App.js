@@ -1,6 +1,18 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styles from './App.sass';
+import { ConnectedRouter as Router } from 'react-router-redux';
 import { push } from 'react-router-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
+
+import { requireAuthentication } from '../../routes';
+
+import ProjectListPage from '../Landing/ProjectListPage';
+import LandingPage from '../Landing/LandingPage';
+import NotFoundPage from '../Landing/NotFoundPage';
+import AboutPage from '../Landing/AboutPage';
+import AuthPage from '../Auth/AuthPage';
+import ProjectsPage from '../ProjectsPage';
 
 import {
   AUTH_ERROR
@@ -8,6 +20,10 @@ import {
 
 import { createAnonymousUserIfNeeded } from '../../actions/UserActions';
 import { connect } from 'react-redux';
+
+const ConnectedSwitch = connect(state => ({
+  location: state.location
+}))(Switch);
 
 // this seems real dumb;
 require('react-select/less/select.less');
@@ -33,9 +49,16 @@ export class App extends Component {
   }
 
   render() {
+    console.o
     return (
       <div className={ styles.fillContainer + ' ' + styles.appContainer }>
-        { this.props.children }
+        <Router history={ this.props.history }>
+          <Switch>
+            <Route path="/" component={ LandingPage }/> 
+            <Route path="/projects/:projectId" component={ requireAuthentication(ProjectsPage) }/> 
+            <Redirect to="/notfound" />
+          </Switch>
+        </Router>
       </div>
     );
   }
@@ -48,9 +71,10 @@ App.propTypes = {
 
 function mapStateToProps(state) {
   const { user, error } = state;
+
   return {
-    user: user,
-    error: error
+    user,
+    error
   };
 }
 

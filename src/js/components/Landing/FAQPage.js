@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 
@@ -12,6 +13,7 @@ import Footer from './Footer';
 
 export class FAQPage extends Component {
   render() {
+    console.log('In FAQPage');
     return (
       <DocumentTitle title={ 'DIVE | FAQ' }>
         <div className={ styles.contentPage + ' ' + styles.sections }>

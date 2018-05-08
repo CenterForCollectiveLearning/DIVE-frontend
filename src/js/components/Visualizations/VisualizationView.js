@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from 'react';
-import DynamicFont from 'react-dynamic-font';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import styles from './Visualizations.sass';
 
@@ -40,7 +40,7 @@ export default class VisualizationView extends Component {
       })
 
       visualizationHeader = <div className={ styles.headerText }>
-        <div className={ styles.left }><DynamicFont smooth content={ visualizationTitle } /></div>
+        <div className={ styles.left }><ReactFitText>{ visualizationTitle }</ReactFitText></div>
         <div className={ styles.right}>
           {/* <span className={ styles.colorLegend }>{ visualizationLegend }</span> */}
           { visualization.sampleSize &&  <span>{visualization.sampleSize } samples</span> }

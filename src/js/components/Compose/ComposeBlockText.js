@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styles from './Compose.sass';
 import ReactQuill from 'react-quill';
 
