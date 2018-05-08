@@ -19,6 +19,8 @@ export class HomePage extends Component {
 
     this.state = {
       projectCreateModalOpen: false,
+      showPlainTextCitation: true,
+      showBibtexCitation: true
     };
   }
 
@@ -45,9 +47,20 @@ export class HomePage extends Component {
     }
   }
 
+  _showPlainTextCitation = () => {
+    this.setState({ showPlainTextCitation: !this.state.showPlainTextCitation })
+  }
+
+  _showBibtexCitation = () => {
+    this.setState({ showBibtexCitation: !this.state.showBibtexCitation })
+  }
+
   render() {
     const { projects, user } = this.props;
     const { userProjects, preloadedProjects } = projects;
+    const { showBibtexCitation, showPlainTextCitation } = this.state;
+
+    console.log(showPlainTextCitation, showBibtexCitation);
     return (
       <DocumentTitle title='DIVE | Projects'>
         <div>
@@ -136,41 +149,31 @@ export class HomePage extends Component {
               </div>
             </div>
             <div className={ styles.section + ' ' + styles.contentSection + ' ' + styles.aboutContainer }>
-              <div className={ styles.sectionHeader }>DIVE Development Team</div>
+              <div className={ styles.sectionHeader }>About</div>
               <div className={ styles.sectionContent }>
                 <div className={ styles.textBox }>
                   <p className="pt-running-text">DIVE is built by <a target="_blank" href="https://twitter.com/KevinZengHu">Kevin Hu</a> and <a target="_blank" href="https://twitter.com/cesifoti">César Hidalgo</a> in the <a target="_blank" href="http://macro.media.mit.edu">Collective Learning Group</a> at the <a target="_blank" href="http://media.mit.edu">MIT Media Lab</a>. To give feedback, compliments, or complaints, please e-mail us at <a href="mailto:dive@media.mit.edu" target="_top">dive@media.mit.edu</a>.</p>
-                </div>
-                <div className={ styles.mugshotBox }>
-                  <div className={ styles.mugshots }>
-                    <div className={ styles.mugshotContainer }>
-                      <a href="http://twitter.com/kevinzenghu" target="_blank">
-                        <img className={ styles.mugshot } src="/assets/images/kevin.mugshot.jpg"/>
-                      </a>
-                      <div className={ styles.mugCaption }>
-                        <span className={ styles.mugCaptionName }>Kevin Hu</span>
-                        <span className={ styles.mugCaptionRole }>PhD Candidate</span>
-                      </div>
-                    </div>
-                    <div className={ styles.mugshotContainer }>
-                      <a href="" target="_blank">
-                        <img className={ styles.mugshot } src="/assets/images/suzanne.mugshot.jpg"/>
-                      </a>
-                      <div className={ styles.mugCaption }>
-                        <span className={ styles.mugCaptionName }>Suzanne Wang</span>
-                        <span className={ styles.mugCaptionRole }>Undergraduate Intern</span>
-                      </div>
-                    </div>
-                    <div className={ styles.mugshotContainer }>
-                      <a href="http://twitter.com/cesifoti" target="_blank">
-                        <img className={ styles.mugshot } src="/assets/images/cesar.mugshot.jpg"/>
-                      </a>
-                      <div className={ styles.mugCaption }>
-                        <span className={ styles.mugCaptionName }>César Hidalgo</span>
-                        <span className={ styles.mugCaptionRole }>Principal Investigator</span>
-                      </div>
-                    </div>
-                  </div>
+                  <p className="pt-running-text">
+                    For more information about DIVE, you can read our <a href="/assets/DIVE_HILDA_2018.pdf" download>workshop paper</a> to be presented at HILDA 2018. To reference this paper in your publication or project, you can use these formats: <span className={ styles.citationButton } onClick={ this._showPlainTextCitation }>plain text</span> or <span className={ styles.citationButton } onClick={ this._showBibtexCitation }>bibtex</span>.
+                  </p>
+                  { showPlainTextCitation ? 
+                    <div className={ styles.citation + ' ' + styles.plainTextCitation }>
+                    Kevin Hu, Diana Orghian, and César Hidalgo. 2018. DIVE: A Mixed-Initiative System Supporting Integrated Data Exploration Workflows. In HILDA’18: Workshop on Human-In-the-Loop Data Analytics, June 10, 2018, Houston, TX, USA. ACM, New York, NY, USA, Article 4, 7 pages. https://doi.org/10.1145/3209900.3209910
+                    </div> : null }
+                  { showBibtexCitation ? 
+                    <div className={ styles.citation + ' ' + styles.bibtextCitation }>
+                      @inproceedings&#123;2018-dive,{'\n'}
+                        {' '}title=&#123;DIVE: A Mixed-Initiative System Supporting Integrated Data Exploration Workflows&#125;,{'\n'}
+                        {' '}author=&#123;Kevin Hu AND Diana Orghian AND César Hidalgo&#125;,{'\n'}
+                        {' '}booktitle=&#123;HILDA’18: Workshop on Human-In-the-Loop Data Analytics&#125;{'\n'}
+                        {' '}year=&#123;2018&#125;,{'\n'}
+                        {' '}publisher=&#123;ACM&#125;,{'\n'}
+                        {' '}url=&#123;dive.media.mit.edu&#125;{'\n'}
+                      }
+                    </div> : null }
+                  <p className="pt-running-text" >
+                    The DIVE codebase is open-source on Github under the MIT license: <a href="https://github.com/MacroConnections/dive-frontend" target="_blank">front-end</a> and <a href="https://github.com/MacroConnections/dive-backend" target="_blank">back-end</a>.
+                  </p>
                 </div>
               </div>
             </div>
