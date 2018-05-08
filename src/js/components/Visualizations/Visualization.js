@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, PropTypes } from 'react';
+import DynamicFont from 'react-dynamic-font';
 
 import styles from './Visualizations.sass';
 

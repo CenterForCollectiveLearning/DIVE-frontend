@@ -25,6 +25,7 @@ import {
 import { push } from 'react-router-redux';
 
 import { detectClient } from '../helpers/auth';
+import cookie from 'react-cookie';
 import MD5 from 'crypto-js/md5';
 import { rawFetch } from './api';
 
@@ -228,7 +229,6 @@ function goHome() {
 }
 
 export function logoutUser() {
-  console.log('In logoutUser');
   const params = {};
 
   return (dispatch) => {

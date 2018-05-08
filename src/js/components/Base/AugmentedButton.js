@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import ReactFitText from 'react-fittext';
+import React, { Component, PropTypes } from 'react';
+import DynamicFont from 'react-dynamic-font';
 import toggleButtonGroupStyles from './ToggleButtonGroup.sass';
 import augmentedButtonStyles from './AugmentedButton.sass';
 const styles = { ...toggleButtonGroupStyles, ...augmentedButtonStyles };
@@ -65,7 +64,7 @@ export default class AugmentedButton extends Component {
         : this.props.content
       }
       { !imageNameMember && item[displayTextMember] &&
-        <ReactFitText>{ item[displayTextMember] }</ReactFitText>
+        <DynamicFont smooth content={ item[displayTextMember] } />
       }
     </Button>
 

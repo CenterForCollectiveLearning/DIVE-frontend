@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, PropTypes } from 'react';
 import styles from './Landing.sass';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -73,8 +72,6 @@ export class ProjectListPage extends Component {
     const { projects, userId, user } = this.props;
     const { userProjects, isFetchingUserProjects } = projects;
     const { sortField, viewMode } = this.state;
-
-    console.log('In ProjectListPage');
 
     const sortedProjects = userProjects
       .sort(function(a, b) {

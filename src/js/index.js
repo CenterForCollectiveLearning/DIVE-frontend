@@ -4,14 +4,14 @@ import ReactGA from 'react-ga';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import { Provider } from 'react-redux';
-import createHistory from 'history/createBrowserHistory';
+import { Router, browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux'
 
 import { FocusStyleManager } from '@blueprintjs/core';
 
 import configureStore from './store/configureStore';
-import App from './components/App/App';
 
-// import routes from './routes';
+import routes from './routes'
 
 if (window.__env.NODE_ENV == "PRODUCTION") {
   ReactGA.initialize('UA-84666930-1');
@@ -28,19 +28,22 @@ injectTapEventPlugin();
 // Focus management
 FocusStyleManager.onlyShowFocusOnTabs();
 
-const history = createHistory();
-const store = configureStore(history);
+const store = configureStore();
+const history = syncHistoryWithStore(browserHistory, store);
 
-history.listen((location, action) => {
+history.listen(function(location) {
   const fullPath = location.pathname + location.search;
   window.amplitude.logEvent('Page View', { pathname: fullPath });
   window.ReactGA.set({ page: fullPath });
   window.ReactGA.pageview(fullPath);
 });
 
-ReactDOM.render((
+ReactDOM.render(
   <Provider store={ store }>
-    <App history={ history } /> 
-  </Provider>
-  ), document.getElementById('main')
+    <Router
+      history={ history }
+      routes={ routes }
+    />
+  </Provider>,
+  document.getElementById('main')
 );

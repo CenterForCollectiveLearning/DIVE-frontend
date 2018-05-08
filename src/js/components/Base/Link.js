@@ -1,14 +1,12 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import styles from './Link.sass';
 
 export class Link extends Component {
-  goToRoute = () => {
+  goToRoute() {
     const { route, push } = this.props;
-    console.log('go to', route, this, this.props, this.props.push);
     push(route);
   }
 
@@ -17,7 +15,7 @@ export class Link extends Component {
     return (
       <div
         className={ styles.link + (className ? ' ' + className : '') }
-        onClick={ route ? this.goToRoute : onClick }>
+        onClick={ route ? this.goToRoute.bind(this) : onClick }>
         { children }
       </div>
     );

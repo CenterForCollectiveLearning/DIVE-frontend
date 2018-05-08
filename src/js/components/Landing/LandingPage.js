@@ -1,20 +1,14 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, PropTypes } from 'react';
 import styles from './Landing.sass';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
-import { Route, Switch, Link } from 'react-router-dom';
+import { push } from 'react-router-redux';
 import { logoutUser } from '../../actions/AuthActions'
 import { showToast } from '../../actions/UserActions';
 
-// import Link from '../Base/Link';
+import Link from '../Base/Link';
 import HomePage from './HomePage';
-import AboutPage from './AboutPage';
-import FAQPage from './FAQPage';
-import NotFoundPage from './NotFoundPage';
-import AuthPage from '../Auth/AuthPage';
 import { wipeProjectState } from '../../actions/ProjectActions';
-import ProjectListPage from './ProjectListPage';
 
 import { Position, Toaster, Button, Intent } from '@blueprintjs/core';
 
@@ -26,6 +20,7 @@ const betaToaster = Toaster.create({
   timeout: 2000,
   position: Position.TOP,
 })
+
 
 export class LandingPage extends Component {
   constructor(props) {
@@ -39,7 +34,7 @@ export class LandingPage extends Component {
   }
 
   componentWillMount() {
-    const { user, wipeProjectState, showToast } = this.props;
+    const { user, push, wipeProjectState, showToast } = this.props;
 
     if (this.state.betaToastOpen && user.showToast) {
       betaToaster.show({
@@ -56,7 +51,7 @@ export class LandingPage extends Component {
   }
 
   _onClickLogo = () => {
-    this.props.history.push('/');
+    this.props.push(`/`);
   }
 
   _getSelectedTab = () => {
@@ -96,7 +91,6 @@ export class LandingPage extends Component {
     const { user, location } = this.props;
     const onLandingPage = (location.pathname == '/');
 
-    console.log('In LandingPage', this.props);
     return (
       <DocumentTitle title='DIVE | Landing'>
         <div className={ styles.fillContainer + ' ' + styles.landingPage } onScroll={ this._handleScroll }>
@@ -110,34 +104,27 @@ export class LandingPage extends Component {
                 <div className={ styles.logoText }>DIVE</div>
               </div>
               <span className="pt-navbar-divider"></span>
-              <Link className="pt-button pt-minimal pt-icon-help" to="/faq">FAQ</Link>
-              <Link className="pt-button pt-minimal pt-icon-info-sign" to="/about">About</Link>
+              <Link className="pt-button pt-minimal pt-icon-help" route="/faq">FAQ</Link>
+              <Link className="pt-button pt-minimal pt-icon-info-sign" route="/about">About</Link>
             </div>
               <div className="pt-navbar-group pt-align-right">
                 { (user.id && !user.anonymous) &&
                   <div className={ styles.rightButtons }>
-                    <Link className="pt-button pt-minimal pt-icon-projects" to="/projects">Projects</Link>
+                    <Link className="pt-button pt-minimal pt-icon-projects" route="/projects">Projects</Link>
                     <span className="pt-navbar-divider"></span>
                     <div className="pt-button pt-minimal pt-icon-log-out" onClick={ this.props.logoutUser }>Log Out of { user.username }</div>
                   </div>
                 }
                 { (user.anonymous || !user.id) &&
                   <div className={ styles.rightButtons }>
-                    <Link className="pt-button pt-minimal pt-icon-log-in" to="/auth/login">Log In</Link>
-                    <Link className="pt-button pt-minimal pt-icon-user" to="/auth/register">Register</Link>
+                    <Link className="pt-button pt-minimal pt-icon-log-in" route="/auth/login">Log In</Link>
+                    <Link className="pt-button pt-minimal pt-icon-user" route="/auth/register">Register</Link>
                   </div>
                 }
               </div>
             </nav>
             <div className={ styles.fillContainer }>
-              <Switch>   
-                <Route path="/" exact component={ HomePage }/>                        
-                <Route path="/projects" exact component={ ProjectListPage }/>  
-                <Route path="/about" exact component={ AboutPage }/>
-                <Route path="/faq" exact component={ FAQPage }/>
-                <Route path="/notfound" exact component={ NotFoundPage }/>          
-                <Route path="/auth" exact component={ AuthPage }/>                           
-              </Switch>
+              { this.props.children || <HomePage /> }
             </div>
           </div>
         </div>
@@ -155,10 +142,4 @@ function mapStateToProps(state) {
   return { user };
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  showToast: () => dispatch(showToast()),
-  wipeProjectState: () => dispatch(wipeProjectState()),
-  logoutUser: () => dispatch(logoutUser())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(LandingPage);
+export default connect(mapStateToProps, { showToast, wipeProjectState, push, logoutUser })(LandingPage);

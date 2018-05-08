@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, PropTypes } from 'react';
 import styles from './NotFoundPage.sass';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
@@ -16,7 +15,6 @@ import Logo from '../../../assets/DIVE_logo_white.svg?name=Logo';
 
 export class NotFoundPage extends Component {
   render() {
-    console.log('In not found page');
     return (
       <DocumentTitle title='DIVE | Error'>
         <div className={ styles.fillContainer + ' ' + styles.notFoundPage }>
