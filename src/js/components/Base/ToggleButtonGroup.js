@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, PropTypes } from 'react';
 import styles from './ToggleButtonGroup.sass';
 
 import { Button } from '@blueprintjs/core';

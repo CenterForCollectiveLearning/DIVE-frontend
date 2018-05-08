@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, PropTypes } from 'react';
 
 import { push } from 'react-router-redux';
 import DocumentTitle from 'react-document-title';
@@ -257,7 +256,7 @@ class RegisterPage extends Component {
 }
 
 RegisterPage.propTypes = {
-  authRequired: PropTypes.bool
+  authRequired: React.PropTypes.bool
 };
 
 function mapStateToProps(state) {

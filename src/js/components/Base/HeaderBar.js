@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, PropTypes } from 'react';
 
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import { HELPER_TEXT } from './HelperText'

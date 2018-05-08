@@ -6,9 +6,7 @@ import {
   SHOW_TOAST
 } from '../constants/ActionTypes';
 
-import Cookies from 'universal-cookie';
-const cookie = new Cookies();
-
+import cookie from 'react-cookie';
 import uuid from 'uuid';
 import { fetch } from './api.js';
 
