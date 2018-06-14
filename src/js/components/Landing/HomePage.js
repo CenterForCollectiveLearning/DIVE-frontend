@@ -76,23 +76,25 @@ export class HomePage extends Component {
                 <div className={ styles.video + ' ' + styles.small}>
                   <iframe src="https://www.youtube.com/embed/J3FceN2lYdA" color="#007BD7" width="600" height="340" frameBorder="0"a llow="autoplay; encrypted-media" allowFullScreen />
                 </div>
-                <Button
-                  text="Upload Data"
-                  intent={ Intent.PRIMARY }
-                  className="pt-large"
-                  iconName="cloud-upload"
-                  onClick={ this._onUploadClick }
-                />
-                { !user.id &&
+                <div className={ styles.buttons }>
                   <Button
-                    text="Create Account"
+                    text="Upload Data"
                     intent={ Intent.PRIMARY }
                     className="pt-large"
-                    iconName="user"
-                    style={{'marginLeft': '10px'}}
+                    iconName="cloud-upload"
                     onClick={ this._onUploadClick }
                   />
-                }
+                  { !user.id &&
+                    <Button
+                      text="Create Account"
+                      intent={ Intent.PRIMARY }
+                      className="pt-large"
+                      iconName="user"
+                      style={{'marginLeft': '10px'}}
+                      onClick={ this._onUploadClick }
+                    />
+                  }
+                </div>
               </div>
             </div>
             <div className={ styles.right }>
