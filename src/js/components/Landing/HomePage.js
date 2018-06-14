@@ -64,33 +64,41 @@ export class HomePage extends Component {
       <DocumentTitle title='DIVE | Projects'>
         <div>
           <div className={ styles.ctaBox }>
-            <div className={ styles.primaryCopy }>
-              <span>Easy and powerful data exploration</span>
-            </div>
-            <div className={ styles.secondaryCopy + ' pt-running-text' }>
-              DIVE lets you turn data into stories within minutes, without writing a single line of code
-            </div>
-            <div className={ styles.video }>
-              <iframe src="https://www.youtube.com/embed/J3FceN2lYdA" color="#007BD7" width="600" height="340" frameBorder="0"a llow="autoplay; encrypted-media" allowFullScreen />
-            </div>
-            <div className={ styles.ctaContainer }>
-              <Button
-                text="Upload Data"
-                intent={ Intent.PRIMARY }
-                className="pt-large"
-                iconName="cloud-upload"
-                onClick={ this._onUploadClick }
-              />
-              { !user.id &&
+            <div className={ styles.left }>
+              <div className={ styles.ctaContainer }>
+                <div className={ styles.primaryCopy }>
+                  <span>Recommendation-driven data exploration</span>
+                </div>
+                <div className={ styles.secondaryCopy + ' pt-running-text' }>
+                  <p>DIVE aims to let you work with your data and share results without writing a single line of code.</p>
+                  <p>Our system integrates state-of-the-art semi-automated visualization and statistical analysis functionality into a unified workflow.</p>
+                </div>
+                <div className={ styles.video + ' ' + styles.small}>
+                  <iframe src="https://www.youtube.com/embed/J3FceN2lYdA" color="#007BD7" width="600" height="340" frameBorder="0"a llow="autoplay; encrypted-media" allowFullScreen />
+                </div>
                 <Button
-                  text="Create Account"
+                  text="Upload Data"
                   intent={ Intent.PRIMARY }
                   className="pt-large"
-                  iconName="user"
-                  style={{'marginLeft': '10px'}}
+                  iconName="cloud-upload"
                   onClick={ this._onUploadClick }
                 />
-              }
+                { !user.id &&
+                  <Button
+                    text="Create Account"
+                    intent={ Intent.PRIMARY }
+                    className="pt-large"
+                    iconName="user"
+                    style={{'marginLeft': '10px'}}
+                    onClick={ this._onUploadClick }
+                  />
+                }
+              </div>
+            </div>
+            <div className={ styles.right }>
+              <div className={ styles.video }>
+                <iframe src="https://www.youtube.com/embed/J3FceN2lYdA" color="#007BD7" width="600" height="340" frameBorder="0"a llow="autoplay; encrypted-media" allowFullScreen />
+              </div>
             </div>
           </div>
           <div className={ styles.sections + ' ' + styles.fillContainer }>
@@ -158,7 +166,7 @@ export class HomePage extends Component {
                 <div className={ styles.textBox }>
                   <p className="pt-running-text">DIVE is built by <a target="_blank" href="https://twitter.com/KevinZengHu">Kevin Hu</a> and <a target="_blank" href="https://twitter.com/cesifoti">César Hidalgo</a> in the <a target="_blank" href="http://macro.media.mit.edu">Collective Learning Group</a> at the <a target="_blank" href="http://media.mit.edu">MIT Media Lab</a>. To give feedback, compliments, or complaints, please e-mail us at <a href="mailto:dive@media.mit.edu" target="_top">dive@media.mit.edu</a>.</p>
                   <p className="pt-running-text">
-                    For more information about DIVE, you can read our <a href="/assets/DIVE_HILDA_2018.pdf" download>workshop paper</a> to be presented at HILDA 2018. To reference this paper in your publication or project, you can use these formats: <span className={ styles.citationButton } onClick={ this._showPlainTextCitation }>plain text</span> or <span className={ styles.citationButton } onClick={ this._showBibtexCitation }>bibtex</span>.
+                    For more information about DIVE, you can read our <a href="/assets/DIVE_HILDA_2018.pdf" download>paper</a> published in the proceedings of HILDA 2018. To reference this paper in your publication or project, you can use these formats: <span className={ styles.citationButton } onClick={ this._showPlainTextCitation }>plain text</span> or <span className={ styles.citationButton } onClick={ this._showBibtexCitation }>bibtex</span>.
                   </p>
                   { showPlainTextCitation ? 
                     <div className={ styles.citation + ' ' + styles.plainTextCitation }>

@@ -45,12 +45,12 @@
 .ctaBox
   display: flex
   // margin-top: 70px
-  padding-bottom: 0px
+  padding: 150px 250px
   width: 100%
 
   background-color: rgba(0, 0, 0, 0.8)
 
-  flex-direction: column
+  flex-direction: row
   align-items: center
   flex-shrink: 0
   &:before
@@ -70,40 +70,42 @@
     content: ""
     z-index: -1
 
-  .primaryCopy
-    font-family: 'Roboto Condensed', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
-    text-align: center
+  div.left, div.right
+    flex-grow: 1
+    flex-basis: 0
 
   .primaryCopy
     display: flex
-    align-items: center
-    justify-content: center
+    align-items: left
+    justify-content: left
 
-    margin: 120px auto 5px
+    font-family: 'Roboto Condensed', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif
+    text-align: left    
 
     color: white
     font-size: 34px
     font-weight: 600
     text-transform: uppercase
+    max-width: 800px
 
   .secondaryCopy
     display: flex
-    margin: 5px auto 45px
-    font-size: 22px
-    text-align: center
+    flex-direction: column
+    margin: 30px 0px 45px
+    font-size: 16px
+    text-align: left
     color: white
+    max-width: 500px
 
   .ctaContainer
     display: flex
-    margin: 0px auto 120px auto
+    flex-direction: column
+    margin-right: 100px
+    height: 340px    
 
-    .uploadButton
-      height: 50px
-      line-height: 50px
-      font-weight: 600
-
-      padding-top: 80px
-      font-size: 24px
+    button
+      margin-top: auto
+      width: 200px
 
   .video
     height: 340px
@@ -111,6 +113,37 @@
 
     iframe
       border: none
+
+    &.small
+      display: none
+
+@media screen and (max-width: 1400px)
+  .ctaBox
+    padding: 150px 50px
+
+    .ctaContainer
+      margin-right: 50px
+
+      .primaryCopy
+        font-size: 30px
+
+@media screen and (max-width: 1080px)
+  .ctaBox
+    padding: 100px 50px
+
+    .ctaContainer
+      align-items: center
+      height: auto
+
+      div
+        text-align: center
+
+      .video.small
+        display: inline
+        margin-bottom: 60px
+
+    .right
+      display: none
 
 .projectsContainer
   width: 100%
