@@ -60,21 +60,19 @@ export class HomePage extends Component {
     const { userProjects, preloadedProjects } = projects;
     const { showBibtexCitation, showPlainTextCitation } = this.state;
 
-    console.log(showPlainTextCitation, showBibtexCitation);
     return (
       <DocumentTitle title='DIVE | Projects'>
         <div>
           <div className={ styles.ctaBox }>
             <div className={ styles.primaryCopy }>
-              {/* <span>Turn Data into Stories</span> */}
               <span>Easy and powerful data exploration</span>
             </div>
             <div className={ styles.secondaryCopy + ' pt-running-text' }>
               DIVE lets you turn data into stories within minutes, without writing a single line of code
             </div>
-            {/* <div className={ styles.video }>
-              <iframe src="https://player.vimeo.com/video/179173590" color="#007BD7" width="600" height="340" frameBorder="0" allowFullScreen />
-            </div> */}
+            <div className={ styles.video }>
+              <iframe src="https://www.youtube.com/embed/J3FceN2lYdA" color="#007BD7" width="600" height="340" frameBorder="0"a llow="autoplay; encrypted-media" allowFullScreen />
+            </div>
             <div className={ styles.ctaContainer }>
               <Button
                 text="Upload Data"
@@ -111,6 +109,12 @@ export class HomePage extends Component {
                 </div>
               </div>
             }
+{/*            <div className={ styles.section + ' ' + styles.contentSection }>
+              <div className={ styles.sectionHeader }>Demo Video</div>
+              <div className={ styles.sectionContent }>
+                <iframe src="https://www.youtube.com/embed/J3FceN2lYdA" color="#007BD7" width="600" height="340" frameBorder="0"a llow="autoplay; encrypted-media" allowFullScreen />
+              </div>
+            </div>*/}
             <div className={ styles.section + ' ' + styles.contentSection }>
               <div className={ styles.sectionHeader }>1. Intelligent Data Ingestion</div>
               <div className={ styles.sectionContent }>

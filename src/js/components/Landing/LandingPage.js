@@ -103,25 +103,24 @@ export class LandingPage extends Component {
                 <Logo className={ styles.logo } />
                 <div className={ styles.logoText }>DIVE</div>
               </div>
-              <span className="pt-navbar-divider"></span>
-              {/*<Link className="pt-button pt-minimal pt-icon-help" route="/faq">FAQ</Link>*/}
-              {/*<Link className="pt-button pt-minimal pt-icon-info-sign" route="/about">About</Link>*/}
+              {/*<span className="pt-navbar-divider"></span>
+              <Link className="pt-button pt-minimal pt-icon-help" route="/faq">FAQ</Link>*/}
             </div>
-              <div className="pt-navbar-group pt-align-right">
-                { (user.id && !user.anonymous) &&
-                  <div className={ styles.rightButtons }>
-                    <Link className="pt-button pt-minimal pt-icon-projects" route="/projects">Projects</Link>
-                    <span className="pt-navbar-divider"></span>
-                    <div className="pt-button pt-minimal pt-icon-log-out" onClick={ this.props.logoutUser }>Log Out of { user.username }</div>
-                  </div>
-                }
-                { (user.anonymous || !user.id) &&
-                  <div className={ styles.rightButtons }>
-                    <Link className="pt-button pt-minimal pt-icon-log-in" route="/auth/login">Log In</Link>
-                    <Link className="pt-button pt-minimal pt-icon-user" route="/auth/register">Register</Link>
-                  </div>
-                }
-              </div>
+            <div className="pt-navbar-group pt-align-right">
+              { (user.id && !user.anonymous) &&
+                <div className={ styles.rightButtons }>
+                  <Link className="pt-button pt-minimal pt-icon-projects" route="/projects">Projects</Link>
+                  <span className="pt-navbar-divider"></span>
+                  <div className="pt-button pt-minimal pt-icon-log-out" onClick={ this.props.logoutUser }>Log Out of { user.username }</div>
+                </div>
+              }
+              { (user.anonymous || !user.id) &&
+                <div className={ styles.rightButtons }>
+                  <Link className="pt-button pt-minimal pt-icon-log-in" route="/auth/login">Log In</Link>
+                  <Link className="pt-button pt-minimal pt-icon-user" route="/auth/register">Register</Link>
+                </div>
+              }
+            </div>
             </nav>
             <div className={ styles.fillContainer }>
               { this.props.children || <HomePage /> }
