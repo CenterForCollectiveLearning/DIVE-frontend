@@ -61,7 +61,7 @@ export class HomePage extends Component {
     const { showBibtexCitation, showPlainTextCitation } = this.state;
 
     return (
-      <DocumentTitle title='DIVE | Projects'>
+      <DocumentTitle title='DIVE | Landing'>
         <div>
           <div className={ styles.ctaBox }>
             <div className={ styles.left }>
