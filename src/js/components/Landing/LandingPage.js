@@ -92,7 +92,7 @@ export class LandingPage extends Component {
     const onLandingPage = (location.pathname == '/');
 
     return (
-      <DocumentTitle title='DIVE | Landing'>
+      <DocumentTitle title='DIVE | DIVE: Turn Data into Stories Without Writing Code'>
         <div className={ styles.fillContainer + ' ' + styles.landingPage } onScroll={ this._handleScroll }>
           <div
             className={ styles.fillContainer + ' ' + styles.landingPageContent + ( this.props.children ? ' ' + styles.landingPageProjects : ' ' + styles.landingPageHome) }

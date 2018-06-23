@@ -37,7 +37,7 @@ export class App extends Component {
     return (
       <div className={ styles.fillContainer + ' ' + styles.appContainer }>
         <Helmet>
-          <title>DIVE: Turn Data into Stories Without Writing Code</title>
+          <title>DIVE | Turn Data into Stories Without Writing Code</title>
           <meta name="description" content="Explore your data with recommendation-driven data visualization, statistical analysis, and story creation, integrated into a single system." />
         </Helmet>
         { this.props.children }
