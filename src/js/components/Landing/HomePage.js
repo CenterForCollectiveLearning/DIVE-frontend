@@ -61,7 +61,7 @@ export class HomePage extends Component {
     const { showBibtexCitation, showPlainTextCitation } = this.state;
 
     return (
-      <DocumentTitle title='DIVE | Landing'>
+      <DocumentTitle title='DIVE | L'>
         <div>
           <div className={ styles.ctaBox }>
             <div className={ styles.left }>
@@ -72,6 +72,7 @@ export class HomePage extends Component {
                 <div className={ styles.secondaryCopy + ' pt-running-text' }>
                   <p>DIVE aims to let you work with your data and share results without writing a single line of code.</p>
                   <p>Our system integrates state-of-the-art semi-automated visualization and statistical analysis functionality into a unified workflow.</p>
+                  <p>DIVE is a publicly available, open source research project from the MIT Media Lab</p>
                 </div>
                 <div className={ styles.video + ' ' + styles.small}>
                   <iframe src="https://www.youtube.com/embed/J3FceN2lYdA" color="#007BD7" width="600" height="340" frameBorder="0"a llow="autoplay; encrypted-media" allowFullScreen />
@@ -186,7 +187,7 @@ export class HomePage extends Component {
                       }
                     </div> : null }
                   <p className="pt-running-text" >
-                    The DIVE codebase is open-source on Github under the MIT license: <a href="https://github.com/MacroConnections/dive-frontend" target="_blank">front-end</a> and <a href="https://github.com/MacroConnections/dive-backend" target="_blank">back-end</a>.
+                    The DIVE codebase is open-source on Github: <a href="https://github.com/MacroConnections/dive-frontend" target="_blank">front-end</a> and <a href="https://github.com/MacroConnections/dive-backend" target="_blank">back-end</a>.
                   </p>
                 </div>
               </div>
