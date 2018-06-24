@@ -70,9 +70,8 @@ export class HomePage extends Component {
                   <span>Recommendation-driven data exploration</span>
                 </div>
                 <div className={ styles.secondaryCopy + ' pt-running-text' }>
-                  <p>DIVE aims to let you work with your data and share results without writing a single line of code.</p>
-                  <p>Our system integrates state-of-the-art semi-automated visualization and statistical analysis functionality into a unified workflow.</p>
-                  <p>DIVE is a publicly available, open source research project from the MIT Media Lab</p>
+                  <p><b>Turn your data into stories</b> without writing code. Our system integrates <b>semi-automated visualization and statistical analysis</b> features into a unified workflow.</p>
+                  <p>DIVE is a <b>publicly available</b> (free as in beer) and <b>open source</b> research project from the MIT Media Lab.</p>
                 </div>
                 <div className={ styles.video + ' ' + styles.small}>
                   <iframe src="https://www.youtube.com/embed/J3FceN2lYdA" color="#007BD7" width="600" height="340" frameBorder="0"a llow="autoplay; encrypted-media" allowFullScreen />
@@ -135,7 +134,6 @@ export class HomePage extends Component {
                 </div>
               </div>
             </div>
-
             <div className={ styles.section + ' ' + styles.contentSection }>
               <div className={ styles.sectionHeader }>2. Semi-automated Visualization Recommendation</div>
               <div className={ styles.sectionContent }>
@@ -169,18 +167,18 @@ export class HomePage extends Component {
                 <div className={ styles.textBox }>
                   <p className="pt-running-text">DIVE is built by <a target="_blank" href="https://twitter.com/KevinZengHu">Kevin Hu</a> and <a target="_blank" href="https://twitter.com/cesifoti">César Hidalgo</a> in the <a target="_blank" href="http://macro.media.mit.edu">Collective Learning Group</a> at the <a target="_blank" href="http://media.mit.edu">MIT Media Lab</a>. To give feedback, compliments, or complaints, please e-mail us at <a href="mailto:dive@media.mit.edu" target="_top">dive@media.mit.edu</a>.</p>
                   <p className="pt-running-text">
-                    For more information about DIVE, you can read our <a href="/assets/DIVE_HILDA_2018.pdf" target="_blank">paper</a> published in the proceedings of HILDA 2018. To reference this paper in your publication or project, you can use these formats: <span className={ styles.citationButton } onClick={ this._showPlainTextCitation }>plain text</span> or <span className={ styles.citationButton } onClick={ this._showBibtexCitation }>bibtex</span>.
+                    For more information about DIVE, you can read our <a href="/assets/DIVE_HILDA_2018.pdf" target="_blank">systems paper</a>. To reference this paper in your publication or project, you can use these formats: <span className={ styles.citationButton } onClick={ this._showPlainTextCitation }>plain text</span> or <span className={ styles.citationButton } onClick={ this._showBibtexCitation }>bibtex</span>.
                   </p>
                   { showPlainTextCitation ? 
                     <div className={ styles.citation + ' ' + styles.plainTextCitation }>
-                    Kevin Hu, Diana Orghian, and César Hidalgo. 2018. DIVE: A Mixed-Initiative System Supporting Integrated Data Exploration Workflows. In HILDA’18: Workshop on Human-In-the-Loop Data Analytics, June 10, 2018, Houston, TX, USA. ACM, New York, NY, USA, Article 4, 7 pages. https://doi.org/10.1145/3209900.3209910
+                    Kevin Hu, Diana Orghian, and César Hidalgo. 2018. DIVE: A Mixed-Initiative System Supporting Integrated Data Exploration Workflows. In ACM SIGMOD Workshop on Human-In-the-Loop Data Analytics (HILDA), June 10, 2018, Houston, TX, USA. ACM, New York, NY, USA, Article 4, 7 pages. https://doi.org/10.1145/3209900.3209910
                     </div> : null }
                   { showBibtexCitation ? 
                     <div className={ styles.citation + ' ' + styles.bibtextCitation }>
                       @inproceedings&#123;2018-dive,{'\n'}
                         {' '}title=&#123;DIVE: A Mixed-Initiative System Supporting Integrated Data Exploration Workflows&#125;,{'\n'}
                         {' '}author=&#123;Kevin Hu AND Diana Orghian AND César Hidalgo&#125;,{'\n'}
-                        {' '}booktitle=&#123;HILDA’18: Workshop on Human-In-the-Loop Data Analytics&#125;{'\n'}
+                        {' '}booktitle=&#123;ACM SIGMOD Workshop on Human-In-the-Loop Data Analytics (HILDA)&#125;{'\n'}
                         {' '}year=&#123;2018&#125;,{'\n'}
                         {' '}publisher=&#123;ACM&#125;,{'\n'}
                         {' '}url=&#123;dive.media.mit.edu&#125;{'\n'}
