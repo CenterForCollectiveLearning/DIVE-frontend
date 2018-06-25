@@ -42,13 +42,12 @@
   background-size: cover
   background-position: 50% 0%
 
+.ctaSection
+  background-color: rgba(0, 0, 0, 0.8)
+
 .ctaBox
   display: flex
-  // margin-top: 70px
-  padding: 150px 250px
-  width: 100%
-
-  background-color: rgba(0, 0, 0, 0.8)
+  margin: 60px auto
 
   flex-direction: row
   align-items: center
@@ -74,6 +73,10 @@
     flex-grow: 1
     flex-basis: 0
 
+  .left
+    max-width: 550px
+    margin-right: 50px
+
   .primaryCopy
     display: flex
     align-items: left
@@ -85,22 +88,21 @@
     color: white
     font-size: 34px
     font-weight: 600
+    max-width: 420px
     text-transform: uppercase
-    max-width: 800px
 
   .secondaryCopy
     display: flex
     flex-direction: column
-    margin: 30px 0px 45px
+    margin: 20px 0px 45px
     font-size: 16px
     text-align: left
     color: white
-    max-width: 500px
 
   .ctaContainer
     display: flex
     flex-direction: column
-    margin-right: 80px
+    // margin-right: 80px
     height: 340px    
 
     p
@@ -123,23 +125,19 @@
     &.small
       display: none
 
-@media screen and (max-width: 1400px)
+@media screen and (max-width: 1300px)
   .ctaBox
-    padding: 150px 50px
+    padding-top: 50px
 
-    .ctaContainer
-      margin-right: 50px
+    .left
+      margin-right: 0
 
-      .primaryCopy
-        font-size: 30px
+      .ctaContainer
+        align-items: center
+        height: auto
 
-@media screen and (max-width: 1080px)
-  .ctaBox
-    padding: 100px 50px
-
-    .ctaContainer
-      align-items: center
-      height: auto
+        p
+          text-align: justify
 
       div
         text-align: center

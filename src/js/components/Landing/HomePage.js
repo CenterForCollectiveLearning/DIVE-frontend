@@ -63,43 +63,45 @@ export class HomePage extends Component {
     return (
       <DocumentTitle title='DIVE | Turn Data into Stories Without Writing Code'>
         <div>
-          <div className={ styles.ctaBox }>
-            <div className={ styles.left }>
-              <div className={ styles.ctaContainer }>
-                <div className={ styles.primaryCopy }>
-                  <span>Recommendation-driven data exploration</span>
-                </div>
-                <div className={ styles.secondaryCopy + ' pt-running-text' }>
-                  <p><b>Turn your data into stories</b> without writing code. Our system integrates <b>semi-automated visualization and statistical analysis</b> features into a unified workflow.</p>
-                  <p>DIVE is a <b>publicly available</b> (free as in beer) and <b>open source</b> research project from the MIT Media Lab.</p>
-                </div>
-                <div className={ styles.video + ' ' + styles.small}>
-                  <iframe src="https://www.youtube.com/embed/J3FceN2lYdA" color="#007BD7" width="600" height="340" frameBorder="0"a llow="autoplay; encrypted-media" allowFullScreen />
-                </div>
-                <div className={ styles.buttons }>
-                  <Button
-                    text="Upload Data"
-                    intent={ Intent.PRIMARY }
-                    className="pt-large"
-                    iconName="cloud-upload"
-                    onClick={ this._onUploadClick }
-                  />
-                  { !user.id &&
+          <div className={ styles.sections + ' ' + styles.ctaSection + ' ' + styles.fillContainer }>
+            <div className={ styles.ctaBox }>
+              <div className={ styles.left }>
+                <div className={ styles.ctaContainer }>
+                  <div className={ styles.primaryCopy }>
+                    <span>Recommendation-driven<br/>data exploration</span>
+                  </div>
+                  <div className={ styles.secondaryCopy + ' pt-running-text' }>
+                    <p><b>Turn your data into stories</b> without writing code. Our system integrates <b>semi-automated visualization and statistical analysis</b> features into a unified workflow.</p>
+                    <p>DIVE is a <b>publicly available</b> (free as in beer) and <b>open source</b> research project from the MIT Media Lab.</p>
+                  </div>
+                  <div className={ styles.video + ' ' + styles.small}>
+                    <iframe src="https://www.youtube.com/embed/J3FceN2lYdA" color="#007BD7" width="600" height="340" frameBorder="0"a llow="autoplay; encrypted-media" allowFullScreen />
+                  </div>
+                  <div className={ styles.buttons }>
                     <Button
-                      text="Create Account"
+                      text="Upload Data"
                       intent={ Intent.PRIMARY }
                       className="pt-large"
-                      iconName="user"
-                      style={{'marginLeft': '10px'}}
+                      iconName="cloud-upload"
                       onClick={ this._onUploadClick }
                     />
-                  }
+                    { !user.id &&
+                      <Button
+                        text="Create Account"
+                        intent={ Intent.PRIMARY }
+                        className="pt-large"
+                        iconName="user"
+                        style={{'marginLeft': '10px'}}
+                        onClick={ this._onUploadClick }
+                      />
+                    }
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className={ styles.right }>
-              <div className={ styles.video }>
-                <iframe src="https://www.youtube.com/embed/J3FceN2lYdA" color="#007BD7" width="600" height="340" frameBorder="0"a llow="autoplay; encrypted-media" allowFullScreen />
+              <div className={ styles.right }>
+                <div className={ styles.video }>
+                  <iframe src="https://www.youtube.com/embed/J3FceN2lYdA" color="#007BD7" width="600" height="340" frameBorder="0"a llow="autoplay; encrypted-media" allowFullScreen />
+                </div>
               </div>
             </div>
           </div>
